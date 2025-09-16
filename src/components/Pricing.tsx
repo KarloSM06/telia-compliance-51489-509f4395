@@ -6,49 +6,47 @@ import { DemoBooking } from "@/components/DemoBooking";
 export const Pricing = () => {
   const plans = [
     {
-      name: "Starter",
+      name: "💼 Starter",
       price: "699 kr",
       period: "/agent/månad",
-      description: "För mindre team (1-5 agenter)",
+      description: "Få en komplett översikt över era säljsamtal med vår AI-drivna analys.",
       features: [
-        "1-5 agenter",
-        "GPT-3.5 för icke-order, GPT-4 för order",
-        "Compliance mot regler och riktlinjer",
-        "Fullständig dashboard med totalscore 0-100%",
-        "Veckovis sammanfattning",
+        "1–5 agenter",
+        "Automatiserad kvalitetsgranskning av alla samtal",
+        "Kontroll mot Telias riktlinjer och produktregler",
+        "Dashboard med totalscore 0–100% per samtal",
+        "Veckovisa sammanfattningar och förbättringstips",
         "Standard integration & e-postsupport",
       ],
       buttonText: "Boka demo",
       popular: false,
     },
     {
-      name: "Business",
+      name: "📈 Business",
       price: "599 kr",
       period: "/agent/månad",
-      description: "För växande organisationer (6-20 agenter)",
+      description: "Samma kraftfulla analys som Starter, men med extra support och enklare systemintegration.",
       features: [
-        "6-20 agenter",
-        "GPT-3.5 för icke-order, GPT-4 för order",
-        "Compliance mot regler och riktlinjer",
-        "Fullständig dashboard med totalscore 0-100%",
-        "Veckovis sammanfattning",
-        "Prioriterad support & enkel integration",
+        "6–20 agenter",
+        "Automatiserad kvalitetskontroll och förbättringsförslag",
+        "Dashboard med totalscore och trendanalys per agent",
+        "Veckovisa insikter och rekommendationer",
+        "Prioriterad support & enkel CRM-integration",
       ],
       buttonText: "Boka demo",
       popular: true,
     },
     {
-      name: "Enterprise",
+      name: "🏢 Enterprise",
       price: "499 kr",
       period: "/agent/månad",
-      description: "För stora organisationer (21+ agenter)",
+      description: "För större team som vill ha full kontroll över kvalitet och compliance.",
       features: [
         "21+ agenter",
-        "GPT-3.5 för icke-order, GPT-4 för order",
-        "Compliance mot regler och riktlinjer",
-        "Fullständig dashboard med totalscore 0-100%",
-        "Veckovis sammanfattning",
-        "Dedikerad kundansvarig & full integration",
+        "AI-driven analys och automatiserad kvalitetsgranskning",
+        "Skräddarsydd dashboard med realtidsinsikter per agent och team",
+        "Veckovisa rapporter och trendanalys",
+        "Dedikerad kundansvarig & full systemintegration",
       ],
       buttonText: "Kontakta oss",
       popular: false,
@@ -63,7 +61,8 @@ export const Pricing = () => {
             Välj din plan
           </h2>
           <p className="mt-4 text-lg text-muted-foreground">
-            Flexibla priser som växer med dina behov
+            Alla paket inkluderar samma AI-analyser och kvalitetskontroll.<br />
+            Skillnaden ligger i supportnivå och integration, samt pris per agent.
           </p>
         </div>
         
