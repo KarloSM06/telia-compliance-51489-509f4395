@@ -25,6 +25,13 @@ interface Call {
   duration: string | null;
 }
 
+interface UploadProgress {
+  fileName: string;
+  status: 'uploading' | 'processing' | 'completed' | 'error';
+  progress: number;
+  error?: string;
+}
+
 interface UserAnalysis {
   total_calls: number;
   average_score: number | null;
@@ -42,6 +49,7 @@ const Dashboard = () => {
   const [userAnalysis, setUserAnalysis] = useState<UserAnalysis | null>(null);
   const [uploading, setUploading] = useState(false);
   const [loadingCalls, setLoadingCalls] = useState(true);
+  const [uploadProgress, setUploadProgress] = useState<UploadProgress[]>([]);
 
   useEffect(() => {
     if (!loading && !user) {
@@ -53,6 +61,7 @@ const Dashboard = () => {
     if (user) {
       fetchCalls();
       fetchUserAnalysis();
+      setupRealtimeSubscription();
     }
   }, [user]);
 
@@ -91,57 +100,131 @@ const Dashboard = () => {
     }
   };
 
+  const setupRealtimeSubscription = () => {
+    const channel = supabase
+      .channel('calls_updates')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'calls',
+          filter: `user_id=eq.${user?.id}`
+        },
+        (payload) => {
+          console.log('Realtime update:', payload);
+          fetchCalls(); // Refresh calls when any change occurs
+          fetchUserAnalysis(); // Refresh analysis too
+          
+          // Update progress if status changed
+          if (payload.new && payload.new.file_name) {
+            setUploadProgress(prev => prev.map(item => 
+              item.fileName === payload.new.file_name 
+                ? { 
+                    ...item, 
+                    status: payload.new.status === 'completed' ? 'completed' : 
+                           payload.new.status === 'error' ? 'error' : 'processing',
+                    progress: payload.new.status === 'completed' ? 100 : 
+                             payload.new.status === 'error' ? 0 : item.progress
+                  }
+                : item
+            ));
+          }
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  };
+
   const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
     if (!files || files.length === 0) return;
 
     setUploading(true);
+    
+    // Initialize progress tracking for all files
+    const initialProgress: UploadProgress[] = Array.from(files).map(file => ({
+      fileName: file.name,
+      status: 'uploading',
+      progress: 0
+    }));
+    setUploadProgress(initialProgress);
 
-    for (const file of files) {
-      try {
-        // Upload file to Supabase Storage
-        const fileExt = file.name.split('.').pop();
-        const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
-        const filePath = `${user?.id}/${fileName}`;
-
-        const { error: uploadError } = await supabase.storage
-          .from('audio-files')
-          .upload(filePath, file);
-
-        if (uploadError) throw uploadError;
-
-        // Create call record
-        const { error: insertError } = await supabase
-          .from('calls')
-          .insert({
-            user_id: user?.id,
-            file_name: file.name,
-            file_path: filePath,
-            file_size: file.size,
-            status: 'uploaded'
-          });
-
-        if (insertError) throw insertError;
-
-        // Start processing
-        await processCall(filePath);
-
-      } catch (error) {
-        console.error('Upload error:', error);
-        toast({
-          title: "Uppladdningsfel",
-          description: `Kunde inte ladda upp ${file.name}`,
-          variant: "destructive",
-        });
-      }
+    // Process files in parallel with concurrency limit
+    const MAX_CONCURRENT = 3; // Process max 3 files simultaneously
+    const fileArray = Array.from(files);
+    
+    for (let i = 0; i < fileArray.length; i += MAX_CONCURRENT) {
+      const batch = fileArray.slice(i, i + MAX_CONCURRENT);
+      
+      await Promise.allSettled(
+        batch.map(file => uploadAndProcessFile(file))
+      );
     }
 
     setUploading(false);
-    fetchCalls();
     event.target.value = '';
   };
 
-  const processCall = async (filePath: string) => {
+  const uploadAndProcessFile = async (file: File): Promise<void> => {
+    const updateProgress = (status: UploadProgress['status'], progress: number, error?: string) => {
+      setUploadProgress(prev => prev.map(item => 
+        item.fileName === file.name 
+          ? { ...item, status, progress, error }
+          : item
+      ));
+    };
+
+    try {
+      updateProgress('uploading', 25);
+
+      // Upload file to Supabase Storage
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
+      const filePath = `${user?.id}/${fileName}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from('audio-files')
+        .upload(filePath, file);
+
+      if (uploadError) throw uploadError;
+
+      updateProgress('uploading', 50);
+
+      // Create call record
+      const { error: insertError } = await supabase
+        .from('calls')
+        .insert({
+          user_id: user?.id,
+          file_name: file.name,
+          file_path: filePath,
+          file_size: file.size,
+          status: 'uploaded'
+        });
+
+      if (insertError) throw insertError;
+
+      updateProgress('processing', 75);
+
+      // Start processing (this will update via realtime)
+      await processCall(filePath, file.name);
+
+    } catch (error) {
+      console.error('Upload error for', file.name, ':', error);
+      updateProgress('error', 0, error instanceof Error ? error.message : 'Okänt fel');
+      
+      toast({
+        title: "Uppladdningsfel",
+        description: `Kunde inte ladda upp ${file.name}`,
+        variant: "destructive",
+      });
+    }
+  };
+
+  const processCall = async (filePath: string, fileName: string) => {
     try {
       const { error } = await supabase.functions.invoke('process-call', {
         body: { filePath }
@@ -151,15 +234,15 @@ const Dashboard = () => {
 
       toast({
         title: "Bearbetning startad",
-        description: "Samtalet bearbetas och analyseras",
+        description: `Analyserar ${fileName}`,
       });
     } catch (error) {
       console.error('Processing error:', error);
-      toast({
-        title: "Bearbetningsfel",
-        description: "Kunde inte starta analys",
-        variant: "destructive",
-      });
+      setUploadProgress(prev => prev.map(item => 
+        item.fileName === fileName 
+          ? { ...item, status: 'error', error: 'Kunde inte starta analys' }
+          : item
+      ));
     }
   };
 
@@ -238,11 +321,28 @@ const Dashboard = () => {
               </label>
             </div>
             {uploading && (
-              <div className="mt-4">
-                <div className="flex items-center space-x-2">
+              <div className="mt-4 space-y-3">
+                <div className="flex items-center space-x-2 mb-2">
                   <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-primary"></div>
-                  <span className="text-sm">Laddar upp filer...</span>
+                  <span className="text-sm font-medium">Bearbetar {uploadProgress.length} filer parallellt</span>
                 </div>
+                {uploadProgress.map((progress, index) => (
+                  <div key={index} className="space-y-2">
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="truncate max-w-48">{progress.fileName}</span>
+                      <div className="flex items-center space-x-2">
+                        {progress.status === 'uploading' && <span className="text-blue-600">Laddar upp...</span>}
+                        {progress.status === 'processing' && <span className="text-yellow-600">Analyserar...</span>}
+                        {progress.status === 'completed' && <span className="text-green-600">Klar!</span>}
+                        {progress.status === 'error' && <span className="text-red-600">Fel</span>}
+                      </div>
+                    </div>
+                    <Progress value={progress.progress} className="h-2" />
+                    {progress.error && (
+                      <p className="text-xs text-red-600">{progress.error}</p>
+                    )}
+                  </div>
+                ))}
               </div>
             )}
           </CardContent>
