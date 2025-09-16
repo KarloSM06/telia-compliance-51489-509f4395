@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { PlayCircle, Shield, TrendingUp } from "lucide-react";
+import { Link } from "react-router-dom";
 
 export const Hero = () => {
   return (
@@ -22,10 +23,12 @@ export const Hero = () => {
             <Button variant="hero" size="lg">
               Boka demo
             </Button>
-            <Button variant="ghost" size="lg" className="text-white hover:bg-white/10">
-              <PlayCircle className="mr-2 h-5 w-5" />
-              Se exempelrapport
-            </Button>
+            <Link to="/exempelrapport">
+              <Button variant="ghost" size="lg" className="text-white hover:bg-white/10">
+                <PlayCircle className="mr-2 h-5 w-5" />
+                Se exempelrapport
+              </Button>
+            </Link>
           </div>
         </div>
         
