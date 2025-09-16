@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Shield } from "lucide-react";
+import { Snowflake } from "lucide-react";
 
 export const Header = () => {
   return (
@@ -9,9 +9,9 @@ export const Header = () => {
           <div className="flex items-center">
             <div className="flex items-center space-x-2">
               <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-primary">
-                <Shield className="h-5 w-5 text-white" />
+                <Snowflake className="h-5 w-5 text-white" />
               </div>
-              <span className="text-xl font-bold text-foreground">Telia Compliance</span>
+              <span className="text-xl font-bold text-foreground">Hiems</span>
             </div>
           </div>
           
