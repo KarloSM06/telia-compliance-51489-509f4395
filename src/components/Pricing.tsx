@@ -13,7 +13,7 @@ export const Pricing = () => {
       features: [
         "1–5 agenter",
         "Automatiserad kvalitetsgranskning av alla samtal",
-        "Kontroll mot Telias riktlinjer och produktregler",
+        "Kontroll mot aktuella riktlinjer och produktregler",
         "Dashboard med totalscore 0–100% per samtal",
         "Veckovisa sammanfattningar och förbättringstips",
         "Standard integration & e-postsupport",
