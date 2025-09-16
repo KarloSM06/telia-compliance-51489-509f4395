@@ -1,8 +1,13 @@
 import { Button } from "@/components/ui/button";
 import { PlayCircle, Shield, TrendingUp } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useAuth } from "@/hooks/useAuth";
+import { useNavigate } from "react-router-dom";
 
 export const Hero = () => {
+  const { user } = useAuth();
+  const navigate = useNavigate();
+
   return (
     <section className="relative overflow-hidden bg-gradient-hero py-20">
       <div className="absolute inset-0 bg-grid-pattern opacity-5"></div>
@@ -20,8 +25,12 @@ export const Hero = () => {
             Automatisk analys av säljsamtal enligt era företagsriktlinjer.
           </p>
           <div className="mt-10 flex items-center justify-center gap-x-6">
-            <Button variant="hero" size="lg">
-              Boka demo
+            <Button 
+              variant="hero" 
+              size="lg"
+              onClick={() => user ? navigate("/dashboard") : navigate("/auth")}
+            >
+              {user ? "Gå till Dashboard" : "Kom igång gratis"}
             </Button>
             <Link to="/exempelrapport">
               <Button variant="ghost" size="lg" className="text-white hover:bg-white/10">
