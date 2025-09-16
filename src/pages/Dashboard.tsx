@@ -10,6 +10,7 @@ import { Upload, Download, Play, Pause, FileAudio, BarChart3, TrendingUp, AlertC
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { Header } from "@/components/Header";
+import { CallDetailModal } from "@/components/CallDetailModal";
 
 interface Call {
   id: string;
@@ -23,6 +24,7 @@ interface Call {
   weaknesses: string[] | null;
   improvements: string[] | null;
   duration: string | null;
+  violations: any[] | null;
 }
 
 interface UploadProgress {
@@ -50,6 +52,8 @@ const Dashboard = () => {
   const [uploading, setUploading] = useState(false);
   const [loadingCalls, setLoadingCalls] = useState(true);
   const [uploadProgress, setUploadProgress] = useState<UploadProgress[]>([]);
+  const [selectedCall, setSelectedCall] = useState<Call | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     if (!loading && !user) {
@@ -73,7 +77,7 @@ const Dashboard = () => {
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-      setCalls(data || []);
+      setCalls((data || []) as Call[]);
     } catch (error) {
       console.error('Error fetching calls:', error);
       toast({
@@ -360,7 +364,7 @@ const Dashboard = () => {
               <CardHeader>
                 <CardTitle>Samtalshistorik</CardTitle>
                 <CardDescription>
-                  Alla dina uppladdade och analyserade samtal
+                  Röd = Regelöverträdelse | Grön = Inga överträdelser
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -373,38 +377,95 @@ const Dashboard = () => {
                     </p>
                   </div>
                 ) : (
-                  <div className="space-y-4">
-                    {calls.map((call) => (
-                      <div key={call.id} className="flex items-center justify-between p-4 border rounded-lg">
-                        <div className="flex items-center space-x-4">
-                          <FileAudio className="h-8 w-8 text-primary" />
-                          <div>
-                            <h3 className="font-medium">{call.file_name}</h3>
-                            <div className="flex items-center space-x-2 mt-1">
-                              {getStatusBadge(call.status)}
-                              {call.duration && (
-                                <span className="text-sm text-muted-foreground">{call.duration}</span>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-3">
+                    {calls.map((call) => {
+                      const hasViolations = call.violations && Array.isArray(call.violations) && call.violations.length > 0;
+                      const isCompleted = call.status === 'completed';
+                      const complianceColor = isCompleted ? (hasViolations ? 'border-red-500 bg-red-50' : 'border-green-500 bg-green-50') : 'border-gray-300 bg-gray-50';
+                      const textColor = isCompleted ? (hasViolations ? 'text-red-700' : 'text-green-700') : 'text-gray-600';
+                      
+                      return (
+                        <div 
+                          key={call.id} 
+                          className={`relative p-3 border-2 rounded-lg cursor-pointer hover:shadow-md transition-all ${complianceColor} group`}
+                          onClick={() => {
+                            setSelectedCall(call);
+                            setIsModalOpen(true);
+                          }}
+                          title={`${call.file_name} - ${hasViolations ? `${call.violations?.length} överträdelser` : 'Inga överträdelser'}`}
+                        >
+                          <div className="space-y-2">
+                            {/* Status indicator */}
+                            <div className="flex justify-center">
+                              {call.status === 'completed' ? (
+                                hasViolations ? (
+                                  <AlertCircle className="h-6 w-6 text-red-500" />
+                                ) : (
+                                  <div className="h-6 w-6 rounded-full bg-green-500 flex items-center justify-center">
+                                    <div className="h-2 w-2 rounded-full bg-white"></div>
+                                  </div>
+                                )
+                              ) : (
+                                <div className="h-6 w-6 animate-spin rounded-full border-2 border-gray-300 border-t-primary"></div>
                               )}
                             </div>
+                            
+                            {/* File name (truncated) */}
+                            <div className={`text-xs font-medium text-center truncate ${textColor}`}>
+                              {call.file_name.replace(/\.[^/.]+$/, "")}
+                            </div>
+                            
+                            {/* Duration */}
+                            {call.duration && (
+                              <div className="text-xs text-center text-gray-500">
+                                {call.duration}
+                              </div>
+                            )}
+                            
+                            {/* Score or violation count */}
+                            {isCompleted && (
+                              <div className="text-center">
+                                {hasViolations ? (
+                                  <div className="text-xs font-bold text-red-600">
+                                    {call.violations?.length} övertr.
+                                  </div>
+                                ) : (
+                                  <div className="text-xs font-bold text-green-600">
+                                    OK
+                                  </div>
+                                )}
+                              </div>
+                            )}
+                            
+                            {/* Sale outcome */}
+                            {call.sale_outcome !== null && (
+                              <div className="text-center">
+                                <div className={`text-xs px-1 py-0.5 rounded ${call.sale_outcome ? 'bg-blue-100 text-blue-700' : 'bg-gray-100 text-gray-600'}`}>
+                                  {call.sale_outcome ? '💰' : '❌'}
+                                </div>
+                              </div>
+                            )}
+                            
+                            {/* Violations details on hover/click */}
+                            {hasViolations && call.violations && (
+                              <div className="absolute top-full left-0 right-0 z-10 mt-1 p-2 bg-white border border-red-200 rounded shadow-lg opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-opacity">
+                                <div className="text-xs text-red-700 space-y-1">
+                                  {call.violations.slice(0, 3).map((violation: any, idx: number) => (
+                                    <div key={idx} className="border-b border-red-100 pb-1">
+                                      <div className="font-medium">{violation.timestamp}</div>
+                                      <div>{violation.rule}</div>
+                                    </div>
+                                  ))}
+                                  {call.violations.length > 3 && (
+                                    <div className="text-center text-red-500">+{call.violations.length - 3} fler</div>
+                                  )}
+                                </div>
+                              </div>
+                            )}
                           </div>
                         </div>
-                        <div className="flex items-center space-x-4">
-                          {call.score && (
-                            <div className="text-right">
-                              <div className={`text-lg font-bold ${getScoreColor(call.score)}`}>
-                                {call.score}/100
-                              </div>
-                              <div className="text-sm text-muted-foreground">Kvalitetspoäng</div>
-                            </div>
-                          )}
-                          {call.sale_outcome !== null && (
-                            <Badge variant={call.sale_outcome ? "default" : "secondary"}>
-                              {call.sale_outcome ? "Försäljning" : "Ingen försäljning"}
-                            </Badge>
-                          )}
-                        </div>
-                      </div>
-                    ))}
+                      );
+                    })}
                   </div>
                 )}
               </CardContent>
@@ -504,6 +565,15 @@ const Dashboard = () => {
           </TabsContent>
         </Tabs>
       </main>
+
+      <CallDetailModal 
+        call={selectedCall}
+        isOpen={isModalOpen}
+        onClose={() => {
+          setIsModalOpen(false);
+          setSelectedCall(null);
+        }}
+      />
     </div>
   );
 };
