@@ -20,7 +20,7 @@ export const Benefits = () => {
     {
       icon: CheckCircle2,
       title: "Säkrar varumärket",
-      description: "Skydda Telias rykte genom att säkerställa kvalitet i alla säljsamtal.",
+      description: "Skydda ert företags rykte genom att säkerställa kvalitet i alla säljsamtal.",
     },
   ];
 

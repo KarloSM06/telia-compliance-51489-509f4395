@@ -16,7 +16,7 @@ export const Hero = () => {
           </h1>
           <p className="mt-6 text-lg leading-8 text-blue-100">
             AI-baserad kvalitetsgranskning – inga regelbrott, inga risker. 
-            Automatisk analys av säljsamtal enligt Telias riktlinjer.
+            Automatisk analys av säljsamtal enligt era företagsriktlinjer.
           </p>
           <div className="mt-10 flex items-center justify-center gap-x-6">
             <Button variant="hero" size="lg">
