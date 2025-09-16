@@ -116,16 +116,17 @@ const Dashboard = () => {
           fetchCalls(); // Refresh calls when any change occurs
           fetchUserAnalysis(); // Refresh analysis too
           
-          // Update progress if status changed
-          if (payload.new && payload.new.file_name) {
+          // Safely read new row values
+          const row = (payload as any).new as { file_name?: string; status?: string } | null;
+          if (row && row.file_name) {
             setUploadProgress(prev => prev.map(item => 
-              item.fileName === payload.new.file_name 
+              item.fileName === row.file_name 
                 ? { 
                     ...item, 
-                    status: payload.new.status === 'completed' ? 'completed' : 
-                           payload.new.status === 'error' ? 'error' : 'processing',
-                    progress: payload.new.status === 'completed' ? 100 : 
-                             payload.new.status === 'error' ? 0 : item.progress
+                    status: row.status === 'completed' ? 'completed' :
+                           row.status === 'error' ? 'error' : 'processing',
+                    progress: row.status === 'completed' ? 100 :
+                             row.status === 'error' ? 0 : item.progress
                   }
                 : item
             ));
