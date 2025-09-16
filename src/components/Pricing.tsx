@@ -1,49 +1,53 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Check } from "lucide-react";
+import { DemoBooking } from "@/components/DemoBooking";
 
 export const Pricing = () => {
   const plans = [
     {
-      name: "Bas",
-      price: "999 kr",
-      period: "/månad",
+      name: "Starter",
+      price: "499 kr",
+      period: "/agent/månad",
       description: "Perfekt för mindre team",
       features: [
-        "500 samtal per månad",
+        "1-5 agenter",
+        "AI kvalitetskontroll",
         "Grundläggande dashboard", 
         "E-postrapporter",
         "Standard support",
       ],
-      buttonText: "Kom igång",
+      buttonText: "Boka demo",
       popular: false,
     },
     {
-      name: "Pro",
-      price: "2 999 kr",
-      period: "/månad",
+      name: "Business",
+      price: "399 kr",
+      period: "/agent/månad",
       description: "För växande organisationer",
       features: [
-        "Obegränsade samtal",
-        "Avancerad dashboard",
+        "6-20 agenter",
+        "Avancerad AI-analys",
         "Realtidsrapporter",
         "API-integration",
         "Prioriterad support",
+        "Anpassade regler",
       ],
       buttonText: "Boka demo",
       popular: true,
     },
     {
       name: "Enterprise",
-      price: "Anpassad",
-      period: "",
-      description: "Skräddarsydda lösningar",
+      price: "299 kr",
+      period: "/agent/månad",
+      description: "För stora organisationer",
       features: [
-        "Allt i Pro",
+        "21+ agenter",
         "Dedikerad kundhanterare",
         "Anpassad integration",
         "On-premise möjlighet",
         "SLA-garantier",
+        "White-label lösning",
       ],
       buttonText: "Kontakta oss",
       popular: false,
@@ -97,13 +101,25 @@ export const Pricing = () => {
                   ))}
                 </ul>
                 
-                <Button
-                  variant={plan.popular ? "hero" : "default"}
-                  className="w-full mt-6"
-                  size="lg"
-                >
-                  {plan.buttonText}
-                </Button>
+                {plan.name === "Enterprise" ? (
+                  <Button
+                    variant={plan.popular ? "hero" : "default"}
+                    className="w-full mt-6"
+                    size="lg"
+                  >
+                    {plan.buttonText}
+                  </Button>
+                ) : (
+                  <DemoBooking>
+                    <Button
+                      variant={plan.popular ? "hero" : "default"}
+                      className="w-full mt-6"
+                      size="lg"
+                    >
+                      {plan.buttonText}
+                    </Button>
+                  </DemoBooking>
+                )}
               </CardContent>
             </Card>
           ))}
