@@ -255,6 +255,28 @@ const Dashboard = () => {
     }
   };
 
+  const startAnalysisForAllUploaded = async () => {
+    try {
+      const readyCalls = calls.filter(call => call.status === 'uploaded');
+      for (const call of readyCalls) {
+        // Optimistic UI update to "processing"
+        setCalls(prev => prev.map(c => c.id === call.id ? { ...c, status: 'processing' } : c));
+        await processCall(call.file_path, call.file_name);
+      }
+      toast({
+        title: "Analys startad",
+        description: `Startar analys för ${readyCalls.length} samtal`,
+      });
+    } catch (error) {
+      console.error('Error starting analysis:', error);
+      toast({
+        title: "Fel",
+        description: "Kunde inte starta analysen",
+        variant: "destructive",
+      });
+    }
+  };
+
   const getStatusBadge = (status: string) => {
     const statusMap = {
       'uploaded': { label: 'Uppladdad', variant: 'secondary' as const },
@@ -355,38 +377,11 @@ const Dashboard = () => {
               </div>
             )}
             
-            {/* Start Analysis Button */}
-            {!uploading && uploadProgress.length > 0 && uploadProgress.every(p => p.status === 'completed') && (
+            {calls.some(c => c.status === 'uploaded') && (
               <div className="mt-4 text-center">
-                <Button 
-                  onClick={async () => {
-                    try {
-                      // Start analysis for all uploaded calls that are ready
-                      const readyCalls = calls.filter(call => call.status === 'uploaded');
-                      
-                      for (const call of readyCalls) {
-                        await processCall(call.file_path, call.file_name);
-                      }
-                      
-                      setUploadProgress([]); // Clear progress after starting analysis
-                      
-                      toast({
-                        title: "Analys startad",
-                        description: `Startar analys för ${readyCalls.length} samtal`,
-                      });
-                    } catch (error) {
-                      console.error('Error starting analysis:', error);
-                      toast({
-                        title: "Fel",
-                        description: "Kunde inte starta analysen",
-                        variant: "destructive",
-                      });
-                    }
-                  }}
-                  className="bg-primary hover:bg-primary/90"
-                >
+                <Button onClick={startAnalysisForAllUploaded} className="bg-primary hover:bg-primary/90">
                   <Play className="mr-2 h-4 w-4" />
-                  Påbörja analys
+                  Påbörja analys för uppladdade samtal
                 </Button>
               </div>
             )}
