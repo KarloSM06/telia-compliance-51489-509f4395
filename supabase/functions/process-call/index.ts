@@ -231,7 +231,10 @@ Svara ENDAST med JSON-objektet, ingen annan text.
         Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
       );
       
-      const { filePath } = await req.json();
+      // Parse request body only once at the beginning
+      const requestBody = await req.clone().json();
+      const filePath = requestBody.filePath;
+      
       if (filePath) {
         await supabase
           .from('calls')
