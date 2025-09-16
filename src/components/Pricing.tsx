@@ -7,7 +7,7 @@ export const Pricing = () => {
   const plans = [
     {
       name: "Starter",
-      price: "499 kr",
+      price: "699 kr",
       period: "/agent/månad",
       description: "Perfekt för mindre team",
       features: [
@@ -22,7 +22,7 @@ export const Pricing = () => {
     },
     {
       name: "Business",
-      price: "399 kr",
+      price: "599 kr",
       period: "/agent/månad",
       description: "För växande organisationer",
       features: [
@@ -38,7 +38,7 @@ export const Pricing = () => {
     },
     {
       name: "Enterprise",
-      price: "299 kr",
+      price: "499 kr",
       period: "/agent/månad",
       description: "För stora organisationer",
       features: [
