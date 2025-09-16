@@ -3,6 +3,7 @@ import { PlayCircle, Shield, TrendingUp } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { useNavigate } from "react-router-dom";
+import { DemoBooking } from "@/components/DemoBooking";
 
 export const Hero = () => {
   const { user } = useAuth();
@@ -25,13 +26,21 @@ export const Hero = () => {
             Automatisk analys av säljsamtal enligt era företagsriktlinjer.
           </p>
           <div className="mt-10 flex items-center justify-center gap-x-6">
-            <Button 
-              variant="hero" 
-              size="lg"
-              onClick={() => user ? navigate("/dashboard") : navigate("/auth")}
-            >
-              {user ? "Gå till Dashboard" : "Kom igång gratis"}
-            </Button>
+            {user ? (
+              <Button 
+                variant="hero" 
+                size="lg"
+                onClick={() => navigate("/dashboard")}
+              >
+                Gå till Dashboard
+              </Button>
+            ) : (
+              <DemoBooking>
+                <Button variant="hero" size="lg">
+                  Kom igång - Boka demo
+                </Button>
+              </DemoBooking>
+            )}
             <Link to="/exempelrapport">
               <Button variant="ghost" size="lg" className="text-white hover:bg-white/10">
                 <PlayCircle className="mr-2 h-5 w-5" />
