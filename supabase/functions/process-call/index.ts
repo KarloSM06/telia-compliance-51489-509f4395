@@ -87,51 +87,60 @@ serve(async (req) => {
     console.log('Starting AI analysis...');
     
     const analysisPrompt = `
-Du är en AI som fungerar som kvalitetskontrollant för mobilförsäljning
-Din uppgift är att analysera säljsamtal och kontrollera att säljaren följer alla regler och riktlinjer för produkten (bredband, TV, streaming).
+Du är en AI som kontrollerar att säljsamtal följer Telias kvalitetsriktlinjer.
 
-⚖️ Kontrollområden:
+KVALITETSRIKTLINJER SOM MÅSTE FÖLJAS:
 
-1. IDENTIFIERING & INTRODUKTION
-- Presenterade agenten sig korrekt med namn och Telia?
-- Kontrollerade agenten att det var rätt kund?
-- Artigt bemötande?  
+GENERELLA RIKTLINJER:
+- Vi ska ALLTID vara trevlig och väl bemötande emot kund
+- Vi ska ALDRIG klicka en kund
+- Vi får INTE under några omständigheter uppmana kund att avsluta befintliga tjänster
+- Vi får INTE under några omständigheter ljuga om pris eller bindningstid
+- Vi får INTE säga till kund att de får samma pris efter 12 månader
 
-2. TRANSPARENS & PRODUKTINFORMATION
-- Gav agenten korrekt information om tjänster och priser?
-- Angavs att Telia sköter flytten och vad kunden ska godkänna?
-- Ingen vilseledande information, överdrifter eller falska löften?
+TV & STREAMING:
+- Vi får ABSOLUT INTE ljuga eller missleda att en viss kanal ingår i vårat TV paket
+- Vi får ABSOLUT INTE ljuga eller missleda om innehåll och kvalité på streamingtjänster
+- Om kund frågar om reklam på en viss streamingtjänst så måste det ALLTID svaras ärligt
 
-3. ERBJUDANDE & VÄRDE
-- Besparingen visades korrekt i kronor per månad?
-- Alla erbjudanden (t.ex. uppgraderingar, streaming) presenterades korrekt?
-- Kunden förstår tydligt vad de säger ja till?
+TELIA PLAY & TV BOX:
+- I Telia play appen så kan max 2 enheter kolla samtidigt men vara inloggad på 5 enheter samtidigt
+- TV boxar räknas inte in i antal max enheter om kunden kollar på vanliga program, vid streaming av innehåll i Telia play som exempelvis filmer, serier & dokumentärer så räknas det in i begränsningen
+- Vi får säga till kund att fortsätta med befintlig TV utrustning endast om vi klargör för kunden att de kommer behöva ladda ner Telia play appen i boxen
 
-4. AVSLUT & GODKÄNNANDE
-- Summerade agenten erbjudandet korrekt?
-- Rätt avslutsfråga användes?
-- Kunden fick möjlighet att förstå och godkänna?
-
-5. REGLER & RIKTLINJER
-- Säljaren följde Telias rutiner och lagkrav (ex. inga dolda kostnader, korrekt info om bindningstid, router, invändningar hanterade korrekt)?
+UPPSÄGNING OCH BINDNINGSTID:
+- Vi får ABSOLUT INTE säga till kund att vi avslutar befintliga tjänster (förutom streamingtjänster)
+- Skjut ALLTID upp ett abonnemang i minst 1 månad med hänsyn till kundens uppsägningstid (gäller ej vid streamingtjänster)
+- Det måste framgå i varje samtal där vi säljer bredband och TV att kunden behöver säga upp sitt nuvarande abonnemang
+- Vi får som max skjuta fram ett abonnemang i 3 månader
+- Om Kund har bindningstid i mer än 3 månader så behöver säljaren och kund komma överens om att kunden tar en slutfaktura (Vid TV och streaming så är det OK att kunden betalar dubbelt)
 
 SAMTALSTEXT:
 ${transcript}
 
+ANALYSERA SAMTALET ENLIGT FÖLJANDE:
+1. Gå igenom samtalet kronologiskt
+2. Flagga ALLA överträdelser av riktlinjerna med röd markering
+3. Ange tidpunkt i samtalet när överträdelsen sker
+4. Om INGA överträdelser hittas, markera med grön text
+
 📊 Ge din analys i följande JSON-format:
 {
-  "score": [0-100],
   "sale_outcome": [true/false],
   "duration_estimate": "[X minuter Y sekunder]",
-  "analysis": "INTRODUKTION: XX% – kommentar\\nTRANSPARENS & PRODUKTINFORMATION: XX% – kommentar\\nERBJUDANDE & VÄRDE: XX% – kommentar\\nAVSLUT & GODKÄNNANDE: XX% – kommentar\\nREGLER & RIKTLINJER: XX% – kommentar\\nTOTALSCORE: XX%\\nEVENTUELLA RISKER / REGELBROTT: ...\\nREKOMMENDANTION: ...",
-  "strengths": ["styrka 1", "styrka 2", "styrka 3"],
-  "weaknesses": ["svaghet 1", "svaghet 2", "svaghet 3"],
-  "improvements": ["förbättring 1", "förbättring 2", "förbättring 3"]
+  "analysis": "Kronologisk analys av samtalet med röda/gröna markeringar",
+  "violations": [
+    {
+      "timestamp": "tidpunkt i samtalet",
+      "rule": "vilken regel som bröts",
+      "description": "vad som sa/gjordes",
+      "severity": "high/medium/low"
+    }
+  ],
+  "compliance_status": "compliant/violations_found",
+  "strengths": ["positiva aspekter av samtalet"],
+  "improvements": ["förbättringsområden"]
 }
-
-⚡ Djupnivå:
-- Om order=True → gör en extra noggrann kontroll eftersom detta leder till avtal.  
-- Om order=False → gör en enklare kontroll men markera om säljaren bröt mot någon regel.
 
 Svara ENDAST med JSON-objektet, ingen annan text.
 `;
@@ -178,17 +187,21 @@ Svara ENDAST med JSON-objektet, ingen annan text.
       console.error('Failed to parse analysis JSON:', parseError);
       // Fallback analysis
       analysisData = {
-        score: 50,
         sale_outcome: false,
         duration_estimate: "Okänd",
         analysis: "Analys kunde inte genomföras fullständigt",
+        violations: [],
+        compliance_status: "violations_found",
         strengths: ["Samtalet genomfördes"],
-        weaknesses: ["Teknisk analys misslyckades"],
         improvements: ["Försök igen med bättre ljudkvalitet"]
       };
     }
 
     console.log('Parsed analysis data:', analysisData);
+
+    // Calculate score based on violations
+    const violationCount = analysisData.violations ? analysisData.violations.length : 0;
+    const calculatedScore = analysisData.compliance_status === 'compliant' ? 100 : Math.max(0, 100 - (violationCount * 20));
 
     // Update call record with analysis
     const { error: finalUpdateError } = await supabase
@@ -196,12 +209,12 @@ Svara ENDAST med JSON-objektet, ingen annan text.
       .update({
         status: 'completed',
         transcript: transcript,
-        score: analysisData.score,
+        score: calculatedScore,
         sale_outcome: analysisData.sale_outcome,
         duration: analysisData.duration_estimate,
         analysis: analysisData.analysis,
-        strengths: analysisData.strengths,
-        weaknesses: analysisData.weaknesses,
+        strengths: analysisData.strengths || [],
+        weaknesses: analysisData.violations ? analysisData.violations.map(v => v.description) : [],
         improvements: analysisData.improvements,
       })
       .eq('file_path', filePath);
