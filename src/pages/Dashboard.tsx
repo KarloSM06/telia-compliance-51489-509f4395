@@ -15,6 +15,7 @@ import { CallDetailModal } from "@/components/CallDetailModal";
 interface Call {
   id: string;
   file_name: string;
+  file_path: string;
   status: string;
   score: number | null;
   sale_outcome: boolean | null;
@@ -214,8 +215,11 @@ const Dashboard = () => {
 
       updateProgress('processing', 75);
 
-      // Start processing (this will update via realtime)
-      await processCall(filePath, file.name);
+      // File uploaded successfully, will be shown in call history
+      updateProgress('completed', 100);
+      
+      // Refresh calls to show newly uploaded file
+      fetchCalls();
 
     } catch (error) {
       console.error('Upload error for', file.name, ':', error);
@@ -348,6 +352,42 @@ const Dashboard = () => {
                     )}
                   </div>
                 ))}
+              </div>
+            )}
+            
+            {/* Start Analysis Button */}
+            {!uploading && uploadProgress.length > 0 && uploadProgress.every(p => p.status === 'completed') && (
+              <div className="mt-4 text-center">
+                <Button 
+                  onClick={async () => {
+                    try {
+                      // Start analysis for all uploaded calls that are ready
+                      const readyCalls = calls.filter(call => call.status === 'uploaded');
+                      
+                      for (const call of readyCalls) {
+                        await processCall(call.file_path, call.file_name);
+                      }
+                      
+                      setUploadProgress([]); // Clear progress after starting analysis
+                      
+                      toast({
+                        title: "Analys startad",
+                        description: `Startar analys för ${readyCalls.length} samtal`,
+                      });
+                    } catch (error) {
+                      console.error('Error starting analysis:', error);
+                      toast({
+                        title: "Fel",
+                        description: "Kunde inte starta analysen",
+                        variant: "destructive",
+                      });
+                    }
+                  }}
+                  className="bg-primary hover:bg-primary/90"
+                >
+                  <Play className="mr-2 h-4 w-4" />
+                  Påbörja analys
+                </Button>
               </div>
             )}
           </CardContent>
