@@ -31,6 +31,7 @@ export type Database = {
           transcript: string | null
           updated_at: string
           user_id: string
+          violations: Json | null
           weaknesses: string[] | null
         }
         Insert: {
@@ -49,6 +50,7 @@ export type Database = {
           transcript?: string | null
           updated_at?: string
           user_id: string
+          violations?: Json | null
           weaknesses?: string[] | null
         }
         Update: {
@@ -67,6 +69,7 @@ export type Database = {
           transcript?: string | null
           updated_at?: string
           user_id?: string
+          violations?: Json | null
           weaknesses?: string[] | null
         }
         Relationships: []

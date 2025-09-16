@@ -216,6 +216,7 @@ Svara ENDAST med JSON-objektet, ingen annan text.
         strengths: analysisData.strengths || [],
         weaknesses: analysisData.violations ? analysisData.violations.map(v => v.description) : [],
         improvements: analysisData.improvements,
+        violations: analysisData.violations || [],
       })
       .eq('file_path', filePath);
 
