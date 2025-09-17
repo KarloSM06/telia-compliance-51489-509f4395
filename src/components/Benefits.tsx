@@ -10,7 +10,7 @@ export const Benefits = () => {
     {
       icon: Shield,
       title: "Fångar regelbrott direkt",
-      description: "Identifierar skumrasksälj och regelbrott innan de blir problem.",
+      description: "Identifierar samtal som bryter mot lagar eller interna riktlinjer innan det blir problem",
     },
     {
       icon: CheckCircle2,
