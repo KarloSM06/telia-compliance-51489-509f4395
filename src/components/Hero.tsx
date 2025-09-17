@@ -15,7 +15,7 @@ export const Hero = () => {
       <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
         <div className="mx-auto max-w-3xl text-center">
           <h1 className="text-4xl font-bold tracking-tight text-white sm:text-6xl">
-            Säkerställ att varje{" "}
+            Öka försäljningen och säkerställ att varje{" "}
             <span className="bg-gradient-to-r from-blue-200 to-blue-100 bg-clip-text text-transparent">
               säljsamtal
             </span>{" "}
