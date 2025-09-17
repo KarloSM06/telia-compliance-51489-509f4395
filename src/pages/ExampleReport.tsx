@@ -21,7 +21,7 @@ const ExampleReport = () => {
     description: "I verkligheten finns det startavgifter och tilläggskostnader som inte nämns. Bryter mot Marknadsföringslagen (MFL) eftersom konsumenten vilseleds med felaktig prisinformation.",
     quote: "\"Det här abonnemanget kostar bara 299 kr i månaden, inga avgifter tillkommer.\"",
     timestamp: "03:42",
-    recommendation: "AI-analys flaggar samtalet och markerar att fullständig prisinformation saknas."
+    recommendation: "Informera alltid om tillägskostnader"
   }, {
     id: 2,
     severity: "error",
