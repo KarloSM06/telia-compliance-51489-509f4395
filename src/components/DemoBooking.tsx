@@ -96,7 +96,7 @@ export const DemoBooking = ({ children }: DemoBookingProps) => {
             <div className="space-y-1 text-sm text-muted-foreground">
               {[
                 "AI-baserad kvalitetsgranskning",
-                "GPT-3.5 för icke-order, GPT-4 för order",
+                "Avancerad AI-modeller för optimal precision",
                 "Compliance mot regler och riktlinjer",
                 "Fullständig dashboard med totalscore 0-100%",
                 "Veckovis sammanfattning"
