@@ -73,7 +73,7 @@ export const Hero = () => {
               <div className="flex items-center">
                 <TrendingUp className="h-8 w-8 text-blue-200" />
                 <div className="ml-4">
-                  <p className="text-2xl font-bold text-white">94%</p>
+                  <p className="text-2xl font-bold text-white">utveckla dina säljare</p>
                   <p className="text-sm text-blue-200">Godkända samtal</p>
                 </div>
               </div>
