@@ -16,28 +16,20 @@ const ExampleReport = () => {
   };
   const violations = [{
     id: 1,
-    severity: "warning",
-    rule: "Prisuppgifter",
-    description: "Prisuppgift utan moms nämndes",
-    quote: "\"Det kostar bara 299 kronor per månad\"",
+    severity: "error",
+    rule: "Felaktig prisinformation",
+    description: "I verkligheten finns det startavgifter och tilläggskostnader som inte nämns. Bryter mot Marknadsföringslagen (MFL) eftersom konsumenten vilseleds med felaktig prisinformation.",
+    quote: "\"Det här abonnemanget kostar bara 299 kr i månaden, inga avgifter tillkommer.\"",
     timestamp: "03:42",
-    recommendation: "Ange alltid priser inklusive moms enligt lag"
+    recommendation: "AI-analys flaggar samtalet och markerar att fullständig prisinformation saknas."
   }, {
     id: 2,
     severity: "error",
-    rule: "Bindningstid",
-    description: "Felaktig information om bindningstid",
-    quote: "\"Du kan säga upp när som helst utan kostnad\"",
+    rule: "Felaktig information om ångerrätt",
+    description: "Konsumenten har enligt Distansavtalslagen rätt till 14 dagars ångerrätt. Bryter mot lag, konsumenten får felaktig information om sina rättigheter.",
+    quote: "\"När vi har lagt beställningen kan du inte ångra dig.\"",
     timestamp: "07:18",
-    recommendation: "Informera korrekt om 24 månaders bindningstid"
-  }, {
-    id: 3,
-    severity: "warning",
-    rule: "Ångerrätt",
-    description: "Ångerrätt ej tydligt kommunicerad",
-    quote: "\"Vi skickar kontrakt via e-post\"",
-    timestamp: "09:55",
-    recommendation: "Påminn alltid om 14 dagars ångerrätt"
+    recommendation: "AI-analys flaggar samtalet för åtgärd och rekommenderar korrekt information att ge nästa gång."
   }];
   const getSeverityColor = (severity: string) => {
     switch (severity) {
