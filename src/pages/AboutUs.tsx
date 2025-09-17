@@ -38,12 +38,9 @@ const AboutUs = () => {
                 <div>
                   <h3 className="text-2xl font-bold text-foreground">Varför Hiems?</h3>
                   <p className="mt-4 text-muted-foreground">
-                    I dagens regulatoriska landskap behöver företag säkerställa att varje kundkontakt följer riktlinjerna. 
+                    Med ökande krav på regelefterlevnad behöver företag säkerställa att varje kundkontakt följer riktlinjerna. 
                     Samtidigt vill de utveckla sina säljares förmågor. Vi kombinerar dessa behov i en lösning som både 
-                    skyddar och utvecklar.
-                  </p>
-                  <p className="mt-4 text-muted-foreground">
-                    Vår AI-teknologi analyserar samtalen i realtid och ger både compliance-rapporter och 
+                    skyddar och utvecklar. Vår AI-teknologi analyserar samtalen i och ger både compliance-rapporter och 
                     personaliserade utvecklingsrekommendationer för säljteamet.
                   </p>
                 </div>
