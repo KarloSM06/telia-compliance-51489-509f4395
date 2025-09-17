@@ -14,7 +14,7 @@ export const HowItWorks = () => {
     },
     {
       icon: BarChart3,
-      title: "3. Dagliga rapporter",
+      title: "3. Tydliga rapporter",
       description: "Få detaljerade rapporter och insikter direkt i dashboarden.",
     },
   ];
