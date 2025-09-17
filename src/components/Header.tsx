@@ -37,7 +37,7 @@ export const Header = () => {
                 Om oss
               </a>
               <a href="#pricing" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
-                Priser
+                Regelverk
               </a>
             </nav>
           )}
