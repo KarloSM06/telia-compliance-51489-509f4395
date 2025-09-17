@@ -191,23 +191,6 @@ const ExampleReport = () => {
               </div>
             </div>
 
-            <div className="border rounded-lg p-4 space-y-3 bg-amber-50/50">
-              <div className="flex items-center gap-2">
-                <Badge variant="outline" className="bg-amber-100 text-amber-800 border-amber-200">
-                  Utvecklingsområde
-                </Badge>
-                <span className="font-medium">Kundens rättigheter</span>
-              </div>
-              <div>
-                <div className="text-sm font-medium text-muted-foreground">Observation:</div>
-                <div className="text-sm">Felaktig information gavs om kundens ångerrätt, vilket är allvarligt eftersom det påverkar kundens lagliga rättigheter.</div>
-              </div>
-              <div>
-                <div className="text-sm font-medium text-muted-foreground">Rekommendation:</div>
-                <div className="text-sm text-amber-700">Genomgå utbildning om konsumenträttigheter. Lär dig standardfraserna för ångerrätt och bindningstider utantill för att undvika misstag.</div>
-              </div>
-            </div>
-
             <div className="border rounded-lg p-4 space-y-3 bg-green-50/50">
               <div className="flex items-center gap-2">
                 <Badge variant="outline" className="bg-green-100 text-green-800 border-green-200">
