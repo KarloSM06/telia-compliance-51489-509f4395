@@ -1,10 +1,13 @@
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { ArrowLeft, Calendar, User, Phone, AlertTriangle, CheckCircle, XCircle } from "lucide-react";
 import { Link } from "react-router-dom";
 const ExampleReport = () => {
+  const [isAnalysisOpen, setIsAnalysisOpen] = useState(false);
   const reportData = {
     date: "2024-01-15",
     agent: "Anna Andersson",
@@ -216,9 +219,121 @@ const ExampleReport = () => {
                 </div>
                 
                 <div className="pt-3 border-t border-blue-200">
-                  <Button variant="outline" size="sm" className="bg-blue-100/50 border-blue-300 text-blue-800 hover:bg-blue-200">
-                    Se utförlig säljteknisk analys
-                  </Button>
+                  <Dialog open={isAnalysisOpen} onOpenChange={setIsAnalysisOpen}>
+                    <DialogTrigger asChild>
+                      <Button variant="outline" size="sm" className="bg-blue-100/50 border-blue-300 text-blue-800 hover:bg-blue-200">
+                        Se utförlig säljteknisk analys
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
+                      <DialogHeader>
+                        <DialogTitle>Djupgående säljteknisk analys</DialogTitle>
+                      </DialogHeader>
+                      <div className="space-y-6">
+                        {/* Samtalsstruktur */}
+                        <div className="space-y-3">
+                          <h3 className="text-lg font-semibold">Samtalsstruktur och flöde</h3>
+                          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div className="p-3 border rounded-lg bg-green-50">
+                              <h4 className="font-medium text-green-800">Öppning (9/10)</h4>
+                              <p className="text-sm text-green-700 mt-1">Excellent rapport-building och engagemang. Säljaren skapade omedelbart förtroende genom att anpassa sig till kundens tonläge.</p>
+                            </div>
+                            <div className="p-3 border rounded-lg bg-amber-50">
+                              <h4 className="font-medium text-amber-800">Behovsanalys (6/10)</h4>
+                              <p className="text-sm text-amber-700 mt-1">Bra frågeteknik men missade att djupare utforska kundens verkliga behov och nuvarande situation.</p>
+                            </div>
+                            <div className="p-3 border rounded-lg bg-red-50">
+                              <h4 className="font-medium text-red-800">Presentation (4/10)</h4>
+                              <p className="text-sm text-red-700 mt-1">Informationen var ofullständig och vilseledande, särskilt gällande priser och villkor.</p>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Kommunikationstekniker */}
+                        <div className="space-y-3">
+                          <h3 className="text-lg font-semibold">Kommunikationstekniker</h3>
+                          <div className="space-y-3">
+                            <div className="border rounded-lg p-4">
+                              <h4 className="font-medium flex items-center gap-2">
+                                <CheckCircle className="h-4 w-4 text-green-500" />
+                                Aktiv lyssning och empati
+                              </h4>
+                              <p className="text-sm text-muted-foreground mt-1">Säljaren visade excellent förmåga att lyssna aktivt och spegla kundens känslor. Användning av bekräftande fraser som "Jag förstår" och "Det låter som att..."</p>
+                            </div>
+                            <div className="border rounded-lg p-4">
+                              <h4 className="font-medium flex items-center gap-2">
+                                <CheckCircle className="h-4 w-4 text-green-500" />
+                                Tonläge och tempo
+                              </h4>
+                              <p className="text-sm text-muted-foreground mt-1">Perfekt anpassning till kundens energinivå. Lugn och trygg kommunikation som skapade förtroende.</p>
+                            </div>
+                            <div className="border rounded-lg p-4">
+                              <h4 className="font-medium flex items-center gap-2">
+                                <AlertTriangle className="h-4 w-4 text-amber-500" />
+                                Hantering av invändningar
+                              </h4>
+                              <p className="text-sm text-muted-foreground mt-1">Bra grundteknik men förbättringspotential. Säljaren bemötte invändningar men missade att vända dem till fördelar.</p>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Försäljningspsykologi */}
+                        <div className="space-y-3">
+                          <h3 className="text-lg font-semibold">Försäljningspsykologi</h3>
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div className="space-y-2">
+                              <h4 className="font-medium text-green-700">Vad fungerade bra:</h4>
+                              <ul className="text-sm space-y-1">
+                                <li>• Skapade känslomässig koppling</li>
+                                <li>• Använde social proof effektivt</li>
+                                <li>• Byggde trovärdighet genom expertis</li>
+                                <li>• Skapade tidskänsla utan att pressa</li>
+                              </ul>
+                            </div>
+                            <div className="space-y-2">
+                              <h4 className="font-medium text-amber-700">Missade möjligheter:</h4>
+                              <ul className="text-sm space-y-1">
+                                <li>• Reciprocitet - kunde gett mer värde först</li>
+                                <li>• Commitment & consistency - få kunden att bekräfta behov</li>
+                                <li>• Authority - stärka sin expertposition</li>
+                                <li>• Scarcity - skapa mer genuint värde</li>
+                              </ul>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Specifika förbättringsområden */}
+                        <div className="space-y-3">
+                          <h3 className="text-lg font-semibold">Konkreta förbättringsförslag</h3>
+                          <div className="space-y-3">
+                            <div className="border rounded-lg p-4 bg-blue-50">
+                              <h4 className="font-medium text-blue-800">1. Compliance-säker presentation</h4>
+                              <p className="text-sm text-blue-700 mt-1">Utveckla en standardiserad "compliance-checkpoint" mitt i presentationen där alla villkor systematiskt gås igenom.</p>
+                            </div>
+                            <div className="border rounded-lg p-4 bg-purple-50">
+                              <h4 className="font-medium text-purple-800">2. Fördjupad behovsanalys</h4>
+                              <p className="text-sm text-purple-700 mt-1">Använd SPIN-selling tekniken: Situation → Problem → Implication → Need-payoff för att bygga starkare case.</p>
+                            </div>
+                            <div className="border rounded-lg p-4 bg-green-50">
+                              <h4 className="font-medium text-green-800">3. Värdebaserat avslut</h4>
+                              <p className="text-sm text-green-700 mt-1">Sammanfatta värdet utifrån kundens specifika behov innan du presenterar priset och villkoren.</p>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Coaching-rekommendationer */}
+                        <div className="space-y-3">
+                          <h3 className="text-lg font-semibold">Personliga utvecklingsrekommendationer</h3>
+                          <div className="bg-gradient-to-r from-blue-50 to-green-50 p-4 rounded-lg">
+                            <div className="space-y-2">
+                              <p className="font-medium">Fokusområde för kommande månad:</p>
+                              <p className="text-sm">Säljaren har stark grund i relationsskapande och kommunikation. Fokus bör ligga på att integrera compliance-kontroller utan att förlora det naturliga flödet. Rekommenderad träning: rollspel med compliance-scenarion och videogenomgång av egna samtal.</p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </DialogContent>
+                  </Dialog>
                 </div>
               </div>
             </div>
