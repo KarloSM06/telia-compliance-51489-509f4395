@@ -181,8 +181,7 @@ const ExampleReport = () => {
                 </Badge>
                 <span className="font-medium">Informationshantering</span>
               </div>
-              <div>
-                <div className="text-sm font-medium text-muted-foreground">Observation:</div>
+              <div className="space-y-3">
                 <div className="text-sm space-y-3">
                   <div>
                     <strong>Säljtekniska styrkor:</strong>
@@ -215,10 +214,12 @@ const ExampleReport = () => {
                     <strong>Sammanfattning:</strong> Samtalet var tekniskt starkt, men korrekt informationsgivning måste prioriteras för att säkerställa laglydighet och kundens förtroende.
                   </div>
                 </div>
-              </div>
-              <div>
-                <div className="text-sm font-medium text-muted-foreground">Rekommendation:</div>
-                <div className="text-sm text-blue-700">Använd checklistor för att säkerställa att all obligatorisk information tas upp tidigt i samtalet. Börja alltid med att gå igenom priser, bindningstider och ångerrätt.</div>
+                
+                <div className="pt-3 border-t border-blue-200">
+                  <Button variant="outline" size="sm" className="bg-blue-100/50 border-blue-300 text-blue-800 hover:bg-blue-200">
+                    Se utförlig säljteknisk analys
+                  </Button>
+                </div>
               </div>
             </div>
 
