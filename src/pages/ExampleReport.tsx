@@ -193,7 +193,7 @@ const ExampleReport = () => {
                   <div className="flex items-center gap-2">
                     <Badge variant={getSeverityColor(violation.severity)} className="flex items-center gap-1">
                       {getSeverityIcon(violation.severity)}
-                      {violation.severity === "error" ? "Allvarligt" : "Anmärkning"}
+                      {violation.severity === "error" ? "Lagbrott" : "Anmärkning"}
                     </Badge>
                     <span className="font-medium">{violation.rule}</span>
                     <span className="text-sm text-muted-foreground">({violation.timestamp})</span>
