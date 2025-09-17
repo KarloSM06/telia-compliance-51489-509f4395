@@ -37,12 +37,12 @@ const ExampleReport = () => {
     },
     {
       id: 3,
-      severity: "warning",
-      rule: "Ångerrätt",
-      description: "Ångerrätt ej tydligt kommunicerad",
-      quote: "\"Vi skickar kontrakt via e-post\"",
+      severity: "error",
+      rule: "Felaktig information om ångerrätt",
+      description: "Lagbrott: Konsumenten har enligt distansavtalslagen rätt till 14 dagars ångerrätt → att säga annat är vilseledande och olagligt",
+      quote: "\"Du kan inte ångra dig efter att vi har lagt beställningen.\"",
       timestamp: "09:55",
-      recommendation: "Påminn alltid om 14 dagars ångerrätt"
+      recommendation: "Informera alltid korrekt om 14 dagars ångerrätt enligt distansavtalslagen"
     }
   ];
 
