@@ -10,7 +10,7 @@ export const HowItWorks = () => {
     {
       icon: Bot,
       title: "2. AI granskar",
-      description: "Automatisk analys mot era företagsriktlinjer med AI-teknologi.",
+      description: "Samtalen granskas av AI för att säkerställa att lagar och riktlinjer följs",
     },
     {
       icon: BarChart3,
