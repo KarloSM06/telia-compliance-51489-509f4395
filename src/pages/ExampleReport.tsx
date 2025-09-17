@@ -30,7 +30,7 @@ const ExampleReport = () => {
       id: 2,
       severity: "error",
       rule: "Bindningstid",
-      description: "Felaktig information om bindningstid",
+      description: "Felaktig information om bindningstid. Bryter mot MFL (2008:486)",
       quote: "\"Du kan säga upp när som helst utan kostnad\"",
       timestamp: "07:18",
       recommendation: "Informera korrekt om 24 månaders bindningstid"
