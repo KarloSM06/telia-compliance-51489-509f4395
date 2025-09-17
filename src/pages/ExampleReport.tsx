@@ -183,7 +183,38 @@ const ExampleReport = () => {
               </div>
               <div>
                 <div className="text-sm font-medium text-muted-foreground">Observation:</div>
-                <div className="text-sm">Säljaren visade flera starka tekniska säljfärdigheter under samtalet, såsom tydlig kommunikation, bra tonläge, engagerande öppning och ett strukturerat flöde som höll kunden intresserad. Dock missade säljaren att ge korrekt information om viktiga villkor, vilket resulterade i flera regelöverträdelser: bindningstid kommunicerades felaktigt, priset gavs på ett vilseledande sätt, och informationen om ångerrätt var felaktig. För att förbättra både försäljning och compliance rekommenderas: Strukturerad genomgång av villkor: Säkerställ att alla avgifter, bindningstid och rättigheter kommuniceras korrekt innan avslut. Träning i korrekt informationsgivning: Använd AI-feedback och rollspel för att repetera hur man hanterar kritiska frågor om pris, bindningstid och ångerrätt. Balans mellan sälj och compliance: Fortsätt utnyttja säljtekniken som fungerade bra, men integrera kontrollpunkter för att undvika vilseledande information. Sammanfattningsvis: samtalet var tekniskt starkt, men korrekt informationsgivning måste prioriteras för att säkerställa laglydighet och kundens förtroende.</div>
+                <div className="text-sm space-y-3">
+                  <div>
+                    <strong>Säljtekniska styrkor:</strong>
+                    <ul className="ml-4 mt-1 list-disc space-y-1">
+                      <li>Tydlig kommunikation och bra tonläge</li>
+                      <li>Engagerande öppning som höll kunden intresserad</li>
+                      <li>Strukturerat samtalsflöde</li>
+                    </ul>
+                  </div>
+                  
+                  <div>
+                    <strong>Compliance-brister:</strong>
+                    <ul className="ml-4 mt-1 list-disc space-y-1">
+                      <li>Bindningstid kommunicerades felaktigt</li>
+                      <li>Priset gavs på ett vilseledande sätt</li>
+                      <li>Informationen om ångerrätt var felaktig</li>
+                    </ul>
+                  </div>
+                  
+                  <div>
+                    <strong>Förbättringsrekommendationer:</strong>
+                    <ul className="ml-4 mt-1 list-disc space-y-1">
+                      <li>Strukturerad genomgång av villkor innan avslut</li>
+                      <li>Träning i korrekt informationsgivning genom AI-feedback och rollspel</li>
+                      <li>Balansera säljtekniken med compliance-kontrollpunkter</li>
+                    </ul>
+                  </div>
+                  
+                  <div className="pt-2 border-t border-muted-foreground/20">
+                    <strong>Sammanfattning:</strong> Samtalet var tekniskt starkt, men korrekt informationsgivning måste prioriteras för att säkerställa laglydighet och kundens förtroende.
+                  </div>
+                </div>
               </div>
               <div>
                 <div className="text-sm font-medium text-muted-foreground">Rekommendation:</div>
