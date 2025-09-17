@@ -338,18 +338,6 @@ const ExampleReport = () => {
               </div>
             </div>
 
-            <div className="border rounded-lg p-4 space-y-3 bg-green-50/50">
-              <div className="flex items-center gap-2">
-                <Badge variant="outline" className="bg-green-100 text-green-800 border-green-200">
-                  Styrka
-                </Badge>
-                <span className="font-medium">Samtalsteknik</span>
-              </div>
-              <div>
-                <div className="text-sm font-medium text-muted-foreground">Positiv feedback:</div>
-                <div className="text-sm text-green-700">Säljaren öppnade samtalet engagerande och skapade snabbt kontakt genom att anpassa tonläge och tempo efter kunden. Under samtalet identifierade säljaren behov och ställde relevanta frågor för att guida kunden mot rätt lösning. Informationen presenterades tydligt och strukturerat, och säljaren hanterade invändningar på ett professionellt sätt. Avslutet genomfördes snyggt och resolut, vilket visade självförtroende och tydlighet, samtidigt som kunden kände sig trygg och väl informerad.</div>
-              </div>
-            </div>
           </CardContent>
         </Card>
 
