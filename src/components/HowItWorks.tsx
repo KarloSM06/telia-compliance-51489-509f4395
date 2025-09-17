@@ -4,7 +4,7 @@ export const HowItWorks = () => {
   const steps = [
     {
       icon: Upload,
-      title: "Samtal laddas upp",
+      title: "1. Samtal laddas upp",
       description: "Integrera ditt system eller ladda upp ljudfiler batch-vis.",
     },
     {
