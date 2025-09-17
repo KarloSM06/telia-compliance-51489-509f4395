@@ -31,19 +31,16 @@ export const Header = () => {
             </button>
           </div>
           
-          <nav className="hidden md:flex items-center space-x-8">
-            <a href="#features" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
-              Funktioner
-            </a>
-            {user && (
-              <a href="#dashboard" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
-                Dashboard
+          {!user && (
+            <nav className="hidden md:flex items-center space-x-8">
+              <a href="#features" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
+                Funktioner
               </a>
-            )}
-            <a href="#pricing" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
-              Priser
-            </a>
-          </nav>
+              <a href="#pricing" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
+                Priser
+              </a>
+            </nav>
+          )}
           
           <div className="flex items-center space-x-4">
             {user ? (
