@@ -15,7 +15,7 @@ export const Benefits = () => {
     {
       icon: CheckCircle2,
       title: "Säkrar varumärket",
-      description: "Skydda ert företags rykte genom att säkerställa kvalitet i alla säljsamtal.",
+      description: "Skydda ert företags rykte genom att säkerställa att lagar och interna riktlinjer följs i varje samtal.",
     },
     {
       icon: Calendar,
