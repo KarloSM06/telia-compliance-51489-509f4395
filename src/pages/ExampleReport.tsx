@@ -35,7 +35,7 @@ const ExampleReport = () => {
     severity: "error",
     rule: "Felaktig information om ångerrätt",
     description: "Konsumenten har enligt Distansavtalslagen rätt till 14 dagars ångerrätt. Bryter mot lag, konsumenten får felaktig information om sina rättigheter.",
-    quote: "\"När vi har lagt beställningen kan du inte ångra dig.\"",
+    quote: "\"Beställningen är nu lagd och du kan inte ångra dig\"",
     timestamp: "07:18",
     recommendation: "AI-analys flaggar samtalet för åtgärd och rekommenderar korrekt information att ge nästa gång."
   }];
