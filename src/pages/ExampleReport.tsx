@@ -200,7 +200,7 @@ const ExampleReport = () => {
               </div>
               <div>
                 <div className="text-sm font-medium text-muted-foreground">Positiv feedback:</div>
-                <div className="text-sm text-green-700">Skapar en god relation med kunden, matchar tonläge och samtalstempo. Säljaren genomförde avslutet snyggt och resolut, vilket visar självförtroende och tydlighet. AI-analysen bekräftar att kommunikationen var effektiv och att kunden vägleddes mot ett beslut på ett professionellt sätt.</div>
+                <div className="text-sm text-green-700">Säljaren öppnade samtalet engagerande och skapade snabbt kontakt genom att anpassa tonläge och tempo efter kunden. Under samtalet identifierade säljaren behov och ställde relevanta frågor för att guida kunden mot rätt lösning. Informationen presenterades tydligt och strukturerat, och säljaren hanterade invändningar på ett professionellt sätt. Avslutet genomfördes snyggt och resolut, vilket visade självförtroende och tydlighet, samtidigt som kunden kände sig trygg och väl informerad.</div>
               </div>
             </div>
           </CardContent>
