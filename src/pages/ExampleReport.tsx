@@ -183,7 +183,7 @@ const ExampleReport = () => {
               </div>
               <div>
                 <div className="text-sm font-medium text-muted-foreground">Observation:</div>
-                <div className="text-sm">Säljaren missade att informera om viktiga villkor och avgifter vilket ledde till regelbrott. Detta kan undvikas genom bättre struktur i samtalet.</div>
+                <div className="text-sm">Säljaren visade flera starka tekniska säljfärdigheter under samtalet, såsom tydlig kommunikation, bra tonläge, engagerande öppning och ett strukturerat flöde som höll kunden intresserad. Dock missade säljaren att ge korrekt information om viktiga villkor, vilket resulterade i flera regelöverträdelser: bindningstid kommunicerades felaktigt, priset gavs på ett vilseledande sätt, och informationen om ångerrätt var felaktig. För att förbättra både försäljning och compliance rekommenderas: Strukturerad genomgång av villkor: Säkerställ att alla avgifter, bindningstid och rättigheter kommuniceras korrekt innan avslut. Träning i korrekt informationsgivning: Använd AI-feedback och rollspel för att repetera hur man hanterar kritiska frågor om pris, bindningstid och ångerrätt. Balans mellan sälj och compliance: Fortsätt utnyttja säljtekniken som fungerade bra, men integrera kontrollpunkter för att undvika vilseledande information. Sammanfattningsvis: samtalet var tekniskt starkt, men korrekt informationsgivning måste prioriteras för att säkerställa laglydighet och kundens förtroende.</div>
               </div>
               <div>
                 <div className="text-sm font-medium text-muted-foreground">Rekommendation:</div>
