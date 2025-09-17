@@ -25,6 +25,14 @@ const ExampleReport = () => {
   }, {
     id: 2,
     severity: "error",
+    rule: "Felaktig information om bindningstid",
+    description: "Säljaren säger att det går att säga upp när som helst men egentligen är det 24 månaders bindningstid. Bryter mot Marknadsföringslagen.",
+    quote: "\"Du kan säga upp när som helst utan kostnad\"",
+    timestamp: "05:15",
+    recommendation: "Informera korrekt om 24 månaders bindningstid från början."
+  }, {
+    id: 3,
+    severity: "error",
     rule: "Felaktig information om ångerrätt",
     description: "Konsumenten har enligt Distansavtalslagen rätt till 14 dagars ångerrätt. Bryter mot lag, konsumenten får felaktig information om sina rättigheter.",
     quote: "\"När vi har lagt beställningen kan du inte ångra dig.\"",
