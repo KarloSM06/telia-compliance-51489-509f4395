@@ -33,8 +33,8 @@ export const Header = () => {
           
           {!user && (
             <nav className="hidden md:flex items-center space-x-8">
-              <a href="#features" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
-                Funktioner
+              <a href="/om-oss" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
+                Om oss
               </a>
               <a href="#pricing" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
                 Priser
