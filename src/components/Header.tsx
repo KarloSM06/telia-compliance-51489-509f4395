@@ -35,9 +35,11 @@ export const Header = () => {
             <a href="#features" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
               Funktioner
             </a>
-            <a href="#dashboard" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
-              Dashboard
-            </a>
+            {user && (
+              <a href="#dashboard" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
+                Dashboard
+              </a>
+            )}
             <a href="#pricing" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
               Priser
             </a>
