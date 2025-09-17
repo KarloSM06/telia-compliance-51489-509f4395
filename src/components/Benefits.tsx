@@ -9,7 +9,7 @@ export const Benefits = () => {
     },
     {
       icon: Calendar,
-      title: "Dagliga rapporter", 
+      title: "endast rapporter", 
       description: "Automatiska rapporter som skickas varje dag med trender och insikter.",
     },
     {
