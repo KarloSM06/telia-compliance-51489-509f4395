@@ -8,11 +8,6 @@ export const Benefits = () => {
       description: "Se exakt vilka riktlinjer som följs eller bryts i varje samtal.",
     },
     {
-      icon: Calendar,
-      title: "Tydliga rapporter", 
-      description: "Automatiska rapporter som skickas varje dag med trender och insikter.",
-    },
-    {
       icon: Shield,
       title: "Fångar regelbrott direkt",
       description: "Identifierar skumrasksälj och regelbrott innan de blir problem.",
@@ -21,6 +16,11 @@ export const Benefits = () => {
       icon: CheckCircle2,
       title: "Säkrar varumärket",
       description: "Skydda ert företags rykte genom att säkerställa kvalitet i alla säljsamtal.",
+    },
+    {
+      icon: Calendar,
+      title: "Tydliga rapporter", 
+      description: "Automatiska rapporter som skickas varje dag med trender och insikter.",
     },
   ];
 
