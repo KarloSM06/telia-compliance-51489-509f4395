@@ -165,6 +165,64 @@ const ExampleReport = () => {
           </CardContent>
         </Card>
 
+        {/* Sales Analysis */}
+        <Card className="mt-8">
+          <CardHeader>
+            <CardTitle>Säljteknisk analys</CardTitle>
+            <CardDescription>
+              Konstruktiv återkoppling och förbättringsförslag för säljaren
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="border rounded-lg p-4 space-y-3 bg-blue-50/50">
+              <div className="flex items-center gap-2">
+                <Badge variant="outline" className="bg-blue-100 text-blue-800 border-blue-200">
+                  Förbättringsområde
+                </Badge>
+                <span className="font-medium">Informationshantering</span>
+              </div>
+              <div>
+                <div className="text-sm font-medium text-muted-foreground">Observation:</div>
+                <div className="text-sm">Säljaren missade att informera om viktiga villkor och avgifter vilket ledde till regelbrott. Detta kan undvikas genom bättre struktur i samtalet.</div>
+              </div>
+              <div>
+                <div className="text-sm font-medium text-muted-foreground">Rekommendation:</div>
+                <div className="text-sm text-blue-700">Använd checklistor för att säkerställa att all obligatorisk information tas upp tidigt i samtalet. Börja alltid med att gå igenom priser, bindningstider och ångerrätt.</div>
+              </div>
+            </div>
+
+            <div className="border rounded-lg p-4 space-y-3 bg-amber-50/50">
+              <div className="flex items-center gap-2">
+                <Badge variant="outline" className="bg-amber-100 text-amber-800 border-amber-200">
+                  Utvecklingsområde
+                </Badge>
+                <span className="font-medium">Kundens rättigheter</span>
+              </div>
+              <div>
+                <div className="text-sm font-medium text-muted-foreground">Observation:</div>
+                <div className="text-sm">Felaktig information gavs om kundens ångerrätt, vilket är allvarligt eftersom det påverkar kundens lagliga rättigheter.</div>
+              </div>
+              <div>
+                <div className="text-sm font-medium text-muted-foreground">Rekommendation:</div>
+                <div className="text-sm text-amber-700">Genomgå utbildning om konsumenträttigheter. Lär dig standardfraserna för ångerrätt och bindningstider utantill för att undvika misstag.</div>
+              </div>
+            </div>
+
+            <div className="border rounded-lg p-4 space-y-3 bg-green-50/50">
+              <div className="flex items-center gap-2">
+                <Badge variant="outline" className="bg-green-100 text-green-800 border-green-200">
+                  Styrka
+                </Badge>
+                <span className="font-medium">Samtalsteknik</span>
+              </div>
+              <div>
+                <div className="text-sm font-medium text-muted-foreground">Positiv feedback:</div>
+                <div className="text-sm text-green-700">Bra samtalstempo och tydlig kommunikation. Säljaren höll en professionell ton genom hela samtalet och lyckades skapa en bra relation med kunden.</div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
         {/* Action Buttons */}
         <div className="mt-8 flex gap-4">
           <Button>
