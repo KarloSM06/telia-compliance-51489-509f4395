@@ -20,7 +20,7 @@ const ExampleReport = () => {
     {
       id: 1,
       severity: "warning",
-      rule: "Prisuppgifter",
+      rule: "Vilseledande prisuppgifter",
       description: "Prisuppgift utan moms nämndes",
       quote: "\"Det kostar bara 299 kronor per månad\"",
       timestamp: "03:42",
