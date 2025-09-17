@@ -20,12 +20,15 @@ export const Header = () => {
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
           <div className="flex items-center">
-            <div className="flex items-center space-x-2">
+            <button 
+              onClick={() => navigate("/")}
+              className="flex items-center space-x-2 hover:opacity-80 transition-opacity"
+            >
               <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-primary">
                 <Snowflake className="h-5 w-5 text-white" />
               </div>
               <span className="text-xl font-bold text-foreground">Hiems</span>
-            </div>
+            </button>
           </div>
           
           <nav className="hidden md:flex items-center space-x-8">
