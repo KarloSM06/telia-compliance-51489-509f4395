@@ -178,7 +178,7 @@ const ExampleReport = () => {
         {/* Violations */}
         <Card>
           <CardHeader>
-            <CardTitle>Identifierade regelavvikelser</CardTitle>
+            <CardTitle>Identifierade avvikelser</CardTitle>
             <CardDescription>
               Alla brott mot företagsriktlinjer som upptäckts i samtalet
             </CardDescription>
