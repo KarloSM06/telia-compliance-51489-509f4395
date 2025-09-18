@@ -35,10 +35,7 @@ const AboutUs = () => {
               <div className="grid grid-cols-1 gap-8 lg:grid-cols-2 lg:gap-16">
                 <div>
                   <h3 className="text-2xl font-bold text-foreground">Varför Hiems?</h3>
-                  <p className="mt-4 text-muted-foreground">Med ökande krav på regelefterlevnad behöver företag säkerställa att varje kundkontakt följer de lagar och riktlinjer som finns. Samtidigt vill de utveckla sina säljares förmågor. Vi kombinerar dessa behov i en lösning som både skyddar och utvecklar. 
-
-Vår AI-teknologi analyserar samtalen i och ger både compliance-rapporter och personaliserade utvecklingsrekommendationer för säljteamet.
-                </p>
+                  <p className="mt-4 text-muted-foreground">Med ökande krav på regelefterlevnad behöver företag säkerställa att varje kundkontakt följer de lagar och riktlinjer som finns. Samtidigt vill de utveckla sina säljares förmågor. Vi kombinerar dessa behov i en lösning som både skyddar och utvecklar. Vår AI-teknologi analyserar samtalen i och ger både compliance-rapporter och personaliserade utvecklingsrekommendationer för säljteamet.</p>
                 </div>
                 <div>
                   <h3 className="text-2xl font-bold text-foreground">Våra värderingar</h3>
