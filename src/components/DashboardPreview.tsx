@@ -5,10 +5,10 @@ import { CheckCircle2, AlertTriangle, XCircle, TrendingUp } from "lucide-react";
 
 export const DashboardPreview = () => {
   const agents = [
-    { name: "Anna Eriksson", calls: 12, status: "success", score: 98 },
-    { name: "Magnus Lindahl", calls: 8, status: "warning", score: 85 },
-    { name: "Sofia Johansson", calls: 15, status: "success", score: 96 },
-    { name: "Erik Pettersson", calls: 6, status: "violation", score: 72 },
+    { name: "Anna Eriksson", duration: "12:32", status: "success", score: 98 },
+    { name: "Magnus Lindahl", duration: "09:27", status: "warning", score: 85 },
+    { name: "Sofia Johansson", duration: "11:48", status: "success", score: 96 },
+    { name: "Erik Pettersson", duration: "23:51", status: "violation", score: 72 },
   ];
 
   const getStatusIcon = (status: string) => {
@@ -120,7 +120,7 @@ export const DashboardPreview = () => {
                     {getStatusIcon(agent.status)}
                     <div>
                       <p className="font-medium text-foreground">{agent.name}</p>
-                      <p className="text-sm text-muted-foreground">{agent.calls} samtal</p>
+                      <p className="text-sm text-muted-foreground">{agent.duration}</p>
                     </div>
                   </div>
                   <div className="flex items-center space-x-4">
