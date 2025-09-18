@@ -129,6 +129,9 @@ export const DashboardPreview = () => {
                       <p className="text-xs text-muted-foreground">Kvalitetspoäng</p>
                     </div>
                     {getStatusBadge(agent.status)}
+                    <button className="px-3 py-1 text-sm bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors">
+                      Se säljteknisk analys
+                    </button>
                   </div>
                 </div>
               ))}
