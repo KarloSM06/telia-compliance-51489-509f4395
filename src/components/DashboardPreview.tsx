@@ -106,7 +106,7 @@ export const DashboardPreview = () => {
           <CardHeader>
             <CardTitle className="flex items-center">
               <TrendingUp className="mr-2 h-5 w-5" />
-              Agentöversikt - Senaste veckan
+              Samtalshistorik
             </CardTitle>
           </CardHeader>
           <CardContent>
