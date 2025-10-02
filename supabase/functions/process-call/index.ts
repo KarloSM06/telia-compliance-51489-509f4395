@@ -21,6 +21,8 @@ serve(async (req) => {
 
     console.log('Processing call for file:', filePath);
 
+    const encryptionKey = Deno.env.get('ENCRYPTION_KEY') ?? '';
+
     // Initialize Supabase client
     const supabase = createClient(
       Deno.env.get('SUPABASE_URL') ?? '',
@@ -203,20 +205,28 @@ Svara ENDAST med JSON-objektet, ingen annan text.
     const violationCount = analysisData.violations ? analysisData.violations.length : 0;
     const calculatedScore = analysisData.compliance_status === 'compliant' ? 100 : Math.max(0, 100 - (violationCount * 20));
 
-    // Update call record with analysis
+    // Encrypt the transcript
+    const encryptedTranscript = await encryptText(transcript, encryptionKey);
+    
+    // Prepare encrypted analysis data
+    const encryptedAnalysisData = {
+      analysis: analysisData.analysis,
+      strengths: analysisData.strengths || [],
+      weaknesses: analysisData.violations ? analysisData.violations.map(v => v.description) : [],
+      improvements: analysisData.improvements,
+      violations: analysisData.violations || []
+    };
+
+    // Update call record with encrypted data
     const { error: finalUpdateError } = await supabase
       .from('calls')
       .update({
         status: 'completed',
-        transcript: transcript,
+        encrypted_transcript: encryptedTranscript,
+        encrypted_analysis: encryptedAnalysisData,
         score: calculatedScore,
         sale_outcome: analysisData.sale_outcome,
         duration: analysisData.duration_estimate,
-        analysis: analysisData.analysis,
-        strengths: analysisData.strengths || [],
-        weaknesses: analysisData.violations ? analysisData.violations.map(v => v.description) : [],
-        improvements: analysisData.improvements,
-        violations: analysisData.violations || [],
       })
       .eq('file_path', filePath);
 
@@ -358,6 +368,21 @@ function countOccurrences(arr: string[]): Record<string, number> {
     acc[item] = (acc[item] || 0) + 1;
     return acc;
   }, {} as Record<string, number>);
+}
+
+async function encryptText(text: string, key: string): Promise<string> {
+  const encoder = new TextEncoder();
+  const data = encoder.encode(text);
+  
+  // Simple XOR encryption with key mixing
+  const keyData = encoder.encode(key);
+  const encrypted = new Uint8Array(data.length);
+  
+  for (let i = 0; i < data.length; i++) {
+    encrypted[i] = data[i] ^ keyData[i % keyData.length];
+  }
+  
+  return btoa(String.fromCharCode(...encrypted));
 }
 
 function generateRecommendations(averageScore: number | null, successRate: number | null, biggestWeakness: string | null): string[] {

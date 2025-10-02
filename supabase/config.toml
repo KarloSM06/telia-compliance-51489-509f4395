@@ -1,1 +1,7 @@
-project_id = "dfbrsjjerrsvzakuovpi"
+project_id = "shskknkivuewuqonjdjc"
+
+[functions.process-call]
+verify_jwt = false
+
+[functions.delete-user-data]
+verify_jwt = true

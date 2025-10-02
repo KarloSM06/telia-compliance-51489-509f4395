@@ -20,12 +20,15 @@ interface Call {
   score: number | null;
   sale_outcome: boolean | null;
   created_at: string;
-  analysis: string | null;
-  strengths: string[] | null;
-  weaknesses: string[] | null;
-  improvements: string[] | null;
+  encrypted_transcript: string | null;
+  encrypted_analysis: any;
   duration: string | null;
-  violations: any[] | null;
+  // Computed fields from encrypted_analysis
+  analysis?: string | null;
+  strengths?: string[] | null;
+  weaknesses?: string[] | null;
+  improvements?: string[] | null;
+  violations?: any[] | null;
 }
 
 interface UploadProgress {
@@ -78,7 +81,21 @@ const Dashboard = () => {
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-      setCalls((data || []) as Call[]);
+      
+      // Parse encrypted_analysis to extract fields
+      const parsedCalls = (data || []).map(call => {
+        const encryptedAnalysis = typeof call.encrypted_analysis === 'object' ? call.encrypted_analysis as any : null;
+        return {
+          ...call,
+          analysis: encryptedAnalysis?.analysis || null,
+          strengths: encryptedAnalysis?.strengths || null,
+          weaknesses: encryptedAnalysis?.weaknesses || null,
+          improvements: encryptedAnalysis?.improvements || null,
+          violations: encryptedAnalysis?.violations || null,
+        };
+      });
+      
+      setCalls(parsedCalls as Call[]);
     } catch (error) {
       console.error('Error fetching calls:', error);
       toast({
@@ -99,7 +116,20 @@ const Dashboard = () => {
         .single();
 
       if (error && error.code !== 'PGRST116') throw error;
-      setUserAnalysis(data);
+      
+      // Parse encrypted_insights to extract fields
+      if (data) {
+        const encryptedInsights = typeof data.encrypted_insights === 'object' ? data.encrypted_insights as any : null;
+        const parsedAnalysis = {
+          total_calls: data.total_calls,
+          average_score: data.average_score,
+          success_rate: data.success_rate,
+          biggest_strength: encryptedInsights?.biggest_strength || null,
+          biggest_weakness: encryptedInsights?.biggest_weakness || null,
+          recommendations: encryptedInsights?.recommendations || null,
+        };
+        setUserAnalysis(parsedAnalysis);
+      }
     } catch (error) {
       console.error('Error fetching user analysis:', error);
     }

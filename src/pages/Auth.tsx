@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Label } from "@/components/ui/label";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Snowflake, ArrowLeft } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
@@ -13,6 +14,7 @@ const Auth = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [gdprConsent, setGdprConsent] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -27,11 +29,21 @@ const Auth = () => {
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (!gdprConsent) {
+      toast({
+        title: "GDPR-samtycke krävs",
+        description: "Du måste godkänna databehandlingen för att skapa ett konto.",
+        variant: "destructive",
+      });
+      return;
+    }
+    
     setLoading(true);
 
     const redirectUrl = `${window.location.origin}/`;
     
-    const { error } = await supabase.auth.signUp({
+    const { data, error } = await supabase.auth.signUp({
       email,
       password,
       options: {
@@ -56,6 +68,17 @@ const Auth = () => {
         });
       }
     } else {
+      // Update profile with GDPR consent
+      if (data.user) {
+        await supabase
+          .from('profiles')
+          .update({ 
+            gdpr_consent: true,
+            gdpr_consent_date: new Date().toISOString()
+          })
+          .eq('id', data.user.id);
+      }
+      
       toast({
         title: "Kontrollera din e-post",
         description: "Vi har skickat en bekräftelselänk till din e-postadress.",
@@ -179,10 +202,21 @@ const Auth = () => {
                       minLength={6}
                     />
                   </div>
+                  <div className="flex items-start space-x-2">
+                    <Checkbox 
+                      id="gdpr-consent" 
+                      checked={gdprConsent}
+                      onCheckedChange={(checked) => setGdprConsent(checked as boolean)}
+                    />
+                    <Label htmlFor="gdpr-consent" className="text-sm leading-tight cursor-pointer">
+                      Jag godkänner att Hiems behandlar mina personuppgifter enligt GDPR. 
+                      Data krypteras och lagras säkert.
+                    </Label>
+                  </div>
                   <Button
                     type="submit"
                     className="w-full"
-                    disabled={loading}
+                    disabled={loading || !gdprConsent}
                   >
                     {loading ? "Skapar konto..." : "Skapa konto"}
                   </Button>

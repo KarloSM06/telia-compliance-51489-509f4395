@@ -17,12 +17,15 @@ interface Call {
   score: number | null;
   sale_outcome: boolean | null;
   created_at: string;
-  analysis: string | null;
-  strengths: string[] | null;
-  weaknesses: string[] | null;
-  improvements: string[] | null;
+  encrypted_transcript: string | null;
+  encrypted_analysis: any;
   duration: string | null;
-  violations: any[] | null;
+  // Computed fields from encrypted_analysis
+  analysis?: string | null;
+  strengths?: string[] | null;
+  weaknesses?: string[] | null;
+  improvements?: string[] | null;
+  violations?: any[] | null;
 }
 
 interface CallDetailModalProps {
