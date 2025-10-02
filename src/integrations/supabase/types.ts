@@ -16,127 +16,180 @@ export type Database = {
     Tables: {
       calls: {
         Row: {
-          analysis: string | null
           created_at: string
+          deletion_scheduled_at: string | null
           duration: string | null
+          encrypted_analysis: Json | null
+          encrypted_transcript: string | null
           file_name: string
           file_path: string
-          file_size: number
+          file_size: number | null
           id: string
-          improvements: string[] | null
           sale_outcome: boolean | null
           score: number | null
           status: string
-          strengths: string[] | null
-          transcript: string | null
-          updated_at: string
           user_id: string
-          violations: Json | null
-          weaknesses: string[] | null
         }
         Insert: {
-          analysis?: string | null
           created_at?: string
+          deletion_scheduled_at?: string | null
           duration?: string | null
+          encrypted_analysis?: Json | null
+          encrypted_transcript?: string | null
           file_name: string
           file_path: string
-          file_size: number
+          file_size?: number | null
           id?: string
-          improvements?: string[] | null
           sale_outcome?: boolean | null
           score?: number | null
           status?: string
-          strengths?: string[] | null
-          transcript?: string | null
-          updated_at?: string
           user_id: string
-          violations?: Json | null
-          weaknesses?: string[] | null
         }
         Update: {
-          analysis?: string | null
           created_at?: string
+          deletion_scheduled_at?: string | null
           duration?: string | null
+          encrypted_analysis?: Json | null
+          encrypted_transcript?: string | null
           file_name?: string
           file_path?: string
-          file_size?: number
+          file_size?: number | null
           id?: string
-          improvements?: string[] | null
           sale_outcome?: boolean | null
           score?: number | null
           status?: string
-          strengths?: string[] | null
-          transcript?: string | null
-          updated_at?: string
           user_id?: string
-          violations?: Json | null
-          weaknesses?: string[] | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "calls_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      data_access_log: {
+        Row: {
+          action: string
+          created_at: string
+          id: string
+          ip_address: string | null
+          resource_id: string | null
+          resource_type: string | null
+          user_id: string
+        }
+        Insert: {
+          action: string
+          created_at?: string
+          id?: string
+          ip_address?: string | null
+          resource_id?: string | null
+          resource_type?: string | null
+          user_id: string
+        }
+        Update: {
+          action?: string
+          created_at?: string
+          id?: string
+          ip_address?: string | null
+          resource_id?: string | null
+          resource_type?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "data_access_log_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          created_at: string
+          data_retention_days: number
+          email: string | null
+          gdpr_consent: boolean | null
+          gdpr_consent_date: string | null
+          id: string
+        }
+        Insert: {
+          created_at?: string
+          data_retention_days?: number
+          email?: string | null
+          gdpr_consent?: boolean | null
+          gdpr_consent_date?: string | null
+          id: string
+        }
+        Update: {
+          created_at?: string
+          data_retention_days?: number
+          email?: string | null
+          gdpr_consent?: boolean | null
+          gdpr_consent_date?: string | null
+          id?: string
         }
         Relationships: []
       }
       user_analysis: {
         Row: {
-          activity_score: number | null
-          analysis_summary: string | null
-          average_call_duration: string | null
           average_score: number | null
-          biggest_strength: string | null
-          biggest_weakness: string | null
-          company_name: string | null
-          created_at: string
-          future_focus: string[] | null
+          encrypted_insights: Json | null
           id: string
-          recommendations: string[] | null
-          sales_technique_insights: Json | null
           success_rate: number | null
           total_calls: number
           updated_at: string
           user_id: string
         }
         Insert: {
-          activity_score?: number | null
-          analysis_summary?: string | null
-          average_call_duration?: string | null
           average_score?: number | null
-          biggest_strength?: string | null
-          biggest_weakness?: string | null
-          company_name?: string | null
-          created_at?: string
-          future_focus?: string[] | null
+          encrypted_insights?: Json | null
           id?: string
-          recommendations?: string[] | null
-          sales_technique_insights?: Json | null
           success_rate?: number | null
           total_calls?: number
           updated_at?: string
           user_id: string
         }
         Update: {
-          activity_score?: number | null
-          analysis_summary?: string | null
-          average_call_duration?: string | null
           average_score?: number | null
-          biggest_strength?: string | null
-          biggest_weakness?: string | null
-          company_name?: string | null
-          created_at?: string
-          future_focus?: string[] | null
+          encrypted_insights?: Json | null
           id?: string
-          recommendations?: string[] | null
-          sales_technique_insights?: Json | null
           success_rate?: number | null
           total_calls?: number
           updated_at?: string
           user_id?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "user_analysis_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: true
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      auto_delete_old_calls: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
+      decrypt_text: {
+        Args: { encrypted_data: string; key: string }
+        Returns: string
+      }
+      encrypt_text: {
+        Args: { data: string; key: string }
+        Returns: string
+      }
     }
     Enums: {
       [_ in never]: never
