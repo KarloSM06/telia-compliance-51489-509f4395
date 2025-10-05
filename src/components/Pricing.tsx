@@ -5,50 +5,56 @@ import { Check } from "lucide-react";
 export const Pricing = () => {
   const plans = [
     {
-      name: "Smart Analys",
-      price: "599 kr",
+      name: "Standard",
+      price: "500 kr",
       period: "/agent/månad",
-      yearlyPrice: "5 750 kr/år",
-      description: "AI-analys av dina säljsamtal",
+      description: "Compliance-fokus för QA och ledning",
       features: [
-        "Analys av säljsamtal (ej andra samtal)",
-        "Kontroll mot riktlinjer och produktregler",
-        "Dashboard med score 0–100%",
-        "Veckovisa sammanfattningar",
-        "AI-driven trendanalys",
-        "Support & systemintegration",
+        "Analys av alla säljsamtal",
+        "Identifiering av överträdelser mot riktlinjer eller lagar",
+        "Kvalitetsvarning för varje överträdelse",
+        "Visar tidpunkt & typ av regelbrott",
+        "Enkel rapportering per agent",
+        "Inkluderar upp till 100 samtal/månad",
       ],
-      priceId: "price_smart_monthly", // Replace with actual Stripe price ID
+      priceId: "price_standard_monthly",
+      addons: [
+        { name: "AI-coach", price: "+199 kr", description: "Analys & feedback på upp till 20 samtal/månad" },
+        { name: "Systemintegration", price: "+199 kr", description: "Integration mot Loxysoft/CRM" },
+      ],
+    },
+    {
+      name: "Pro",
+      price: "849 kr",
+      period: "/agent/månad",
+      description: "Bundle med coachning och integration",
+      features: [
+        "Allt i Standard",
+        "AI-coach: Analys & feedback på upp till 20 samtal/månad",
+        "Systemintegration mot Loxysoft/CRM",
+        "Inkluderar upp till 100 samtal/månad",
+      ],
+      priceId: "price_pro_monthly",
       highlighted: true,
+      badge: "Standard + Coach + Integration",
     },
     {
-      name: "Full Analys",
-      price: "+199 kr",
+      name: "Premium",
+      price: "1 300 kr",
       period: "/agent/månad",
-      description: "Analysera ALLA samtal, inte bara försäljning",
+      description: "Fullt ledningsverktyg med team-analys",
       features: [
-        "Allt i Smart Analys",
-        "Analys av ALLA samtal",
-        "Kundtjänst-samtal",
-        "Support-samtal",
-        "Allmänna kundinteraktioner",
+        "Allt i Pro",
+        "Avancerad dashboard för ledning",
+        "Team- och KPI-översikt",
+        "Proaktiva alerts & notifikationer",
+        "Risk för tappad kund",
+        "Låg följsamhet",
+        "Avvikelser i prestation",
+        "Inkluderar upp till 100 samtal/månad",
       ],
-      priceId: "price_full_addon", // Replace with actual Stripe price ID
-      addon: true,
-    },
-    {
-      name: "Leaddesk Integration",
-      price: "+199 kr",
-      period: "/agent/månad",
-      description: "Automatisk integration med Leaddesk",
-      features: [
-        "Automatisk hämtning av samtal",
-        "Realtidsanalys",
-        "Automatisk mappning av agenter",
-        "Inga manuella uppladdningar",
-      ],
-      priceId: "price_leaddesk_addon", // Replace with actual Stripe price ID
-      addon: true,
+      priceId: "price_premium_monthly",
+      badge: "Fokus på ledning",
     },
   ];
 
@@ -83,15 +89,20 @@ export const Pricing = () => {
                 </div>
               )}
               
+              {plan.badge && !plan.highlighted && (
+                <div className="absolute -top-4 left-1/2 -translate-x-1/2">
+                  <span className="bg-muted text-foreground px-4 py-1 rounded-full text-xs font-semibold">
+                    {plan.badge}
+                  </span>
+                </div>
+              )}
+              
               <CardHeader className="text-center">
                 <CardTitle className="text-xl text-foreground">{plan.name}</CardTitle>
                 <div className="mt-4">
                   <span className="text-4xl font-bold text-foreground">{plan.price}</span>
                   <span className="text-muted-foreground">{plan.period}</span>
                 </div>
-                {plan.yearlyPrice && (
-                  <p className="text-sm text-success mt-1">{plan.yearlyPrice}</p>
-                )}
                 <p className="text-sm text-muted-foreground mt-2">{plan.description}</p>
               </CardHeader>
               
@@ -105,13 +116,24 @@ export const Pricing = () => {
                   ))}
                 </ul>
                 
+                {plan.addons && (
+                  <div className="mt-4 pt-4 border-t border-border">
+                    <p className="text-xs font-semibold text-muted-foreground mb-2">TILLÄGG:</p>
+                    {plan.addons.map((addon, addonIndex) => (
+                      <div key={addonIndex} className="text-xs text-muted-foreground mb-1">
+                        <span className="font-semibold">{addon.name}</span> {addon.price} - {addon.description}
+                      </div>
+                    ))}
+                  </div>
+                )}
+                
                 <Button
                   variant={plan.highlighted ? "hero" : "outline"}
                   className="w-full mt-6"
                   size="lg"
                   onClick={() => window.location.href = '/auth'}
                 >
-                  {plan.addon ? "Lägg till" : "Kom igång"}
+                  Kom igång
                 </Button>
               </CardContent>
             </Card>
@@ -119,19 +141,18 @@ export const Pricing = () => {
         </div>
 
         <div className="mt-16 text-center">
-          <h3 className="text-xl font-semibold text-foreground mb-4">Volymrabatter</h3>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-3xl mx-auto">
-            <div className="p-4 rounded-lg bg-muted">
-              <p className="text-2xl font-bold text-foreground">549 kr</p>
-              <p className="text-sm text-muted-foreground">10-24 agenter</p>
-            </div>
-            <div className="p-4 rounded-lg bg-muted">
-              <p className="text-2xl font-bold text-foreground">499 kr</p>
-              <p className="text-sm text-muted-foreground">25-49 agenter</p>
-            </div>
-            <div className="p-4 rounded-lg bg-muted">
-              <p className="text-2xl font-bold text-foreground">449 kr</p>
-              <p className="text-sm text-muted-foreground">50+ agenter</p>
+          <h3 className="text-xl font-semibold text-foreground mb-4">Extra samtalsvolym</h3>
+          <div className="max-w-2xl mx-auto">
+            <div className="p-6 rounded-lg bg-muted">
+              <p className="text-sm text-muted-foreground mb-2">
+                Alla planer inkluderar upp till 100 samtal per agent och månad
+              </p>
+              <p className="text-lg font-semibold text-foreground">
+                Extra samtal: 2 kr/samtal
+              </p>
+              <p className="text-xs text-muted-foreground mt-2">
+                (Premium: 1 kr/samtal)
+              </p>
             </div>
           </div>
         </div>
