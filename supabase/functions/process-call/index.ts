@@ -238,6 +238,25 @@ Svara ENDAST med JSON-objektet, ingen annan text.
     // Update user analysis
     await updateUserAnalysis(supabase, filePath);
 
+    // Delete audio file from storage after successful analysis
+    console.log('Deleting audio file from storage:', filePath);
+    const { error: deleteError } = await supabase.storage
+      .from('audio-files')
+      .remove([filePath]);
+
+    if (deleteError) {
+      console.error('Error deleting audio file:', deleteError);
+      // Don't throw error - analysis is complete, deletion is cleanup
+    } else {
+      console.log('Audio file deleted successfully');
+      
+      // Clear file_path in database to indicate file no longer exists
+      await supabase
+        .from('calls')
+        .update({ file_path: null })
+        .eq('file_path', filePath);
+    }
+
     console.log('Call processing completed successfully');
 
     return new Response(

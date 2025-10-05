@@ -22,7 +22,7 @@ export type Database = {
           encrypted_analysis: Json | null
           encrypted_transcript: string | null
           file_name: string
-          file_path: string
+          file_path: string | null
           file_size: number | null
           id: string
           sale_outcome: boolean | null
@@ -37,7 +37,7 @@ export type Database = {
           encrypted_analysis?: Json | null
           encrypted_transcript?: string | null
           file_name: string
-          file_path: string
+          file_path?: string | null
           file_size?: number | null
           id?: string
           sale_outcome?: boolean | null
@@ -52,7 +52,7 @@ export type Database = {
           encrypted_analysis?: Json | null
           encrypted_transcript?: string | null
           file_name?: string
-          file_path?: string
+          file_path?: string | null
           file_size?: number | null
           id?: string
           sale_outcome?: boolean | null

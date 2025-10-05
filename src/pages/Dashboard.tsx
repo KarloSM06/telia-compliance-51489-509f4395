@@ -15,7 +15,7 @@ import { CallDetailModal } from "@/components/CallDetailModal";
 interface Call {
   id: string;
   file_name: string;
-  file_path: string;
+  file_path: string | null; // Nullable - file is deleted after analysis
   status: string;
   score: number | null;
   sale_outcome: boolean | null;
