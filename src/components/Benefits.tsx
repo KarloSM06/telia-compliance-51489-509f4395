@@ -3,24 +3,24 @@ import { CheckCircle2, Eye, Calendar, Shield } from "lucide-react";
 export const Benefits = () => {
   const benefits = [
     {
-      icon: Eye,
-      title: "Full transparens",
-      description: "Se exakt vilka riktlinjer som följs eller bryts i varje samtal.",
-    },
-    {
       icon: Shield,
-      title: "Fångar regelbrott direkt",
-      description: "Identifierar samtal som bryter mot lagar och interna riktlinjer innan det blir problem.",
+      title: "100% Compliance",
+      description: "AI granskar varje samtal mot era riktlinjer och lagar. Minska risken för böter och varumärkesskador.",
     },
     {
       icon: CheckCircle2,
-      title: "Säkrar varumärket",
-      description: "Skydda ert företags rykte genom att säkerställa att lagar och interna riktlinjer följs i varje samtal.",
+      title: "Öka försäljningen med 15-30%",
+      description: "Identifiera vad som fungerar i godkända samtal och coacha säljare till bättre resultat.",
+    },
+    {
+      icon: Eye,
+      title: "Spara 20 timmar/vecka",
+      description: "Automatisera kvalitetsgranskning istället för att lyssna manuellt på hundratals samtal.",
     },
     {
       icon: Calendar,
-      title: "Tydliga rapporter", 
-      description: "Automatiska rapporter som skickas varje dag med trender och insikter.",
+      title: "Dagliga insikter",
+      description: "Få automatiska rapporter med trender, varningar och förbättringsförslag varje dag.",
     },
   ];
 
@@ -29,10 +29,10 @@ export const Benefits = () => {
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div className="mx-auto max-w-2xl text-center">
           <h2 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
-            Fördelar med vår lösning
+            Konkreta resultat för ditt team
           </h2>
           <p className="mt-4 text-lg text-muted-foreground">
-            Skydda ditt varumärke och säkerställ kvalitet i varje kundinteraktion
+            Våra kunder ser mätbara förbättringar inom första månaden
           </p>
         </div>
         

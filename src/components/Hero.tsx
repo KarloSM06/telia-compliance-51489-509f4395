@@ -14,15 +14,14 @@ export const Hero = () => {
       <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
         <div className="mx-auto max-w-3xl text-center">
           <h1 className="text-4xl font-bold tracking-tight text-white sm:text-6xl">
-            Öka försäljningen och säkerställ att varje{" "}
+            Varje säljsamtal granskat –{" "}
             <span className="bg-gradient-to-r from-blue-200 to-blue-100 bg-clip-text text-transparent">
-              säljsamtal
-            </span>{" "}
-            följer riktlinjerna
+              automatiskt
+            </span>
           </h1>
           <p className="mt-6 text-lg leading-8 text-blue-100">
-            AI-baserad kvalitetsgranskning – inga regelbrott, inga risker. 
-            Automatisk analys av säljsamtal enligt era företagsriktlinjer.
+            Hiems AI analyserar era säljsamtal i realtid och säkerställer att lagar och riktlinjer följs. 
+            Spara tid, öka försäljningen och skydda ert varumärke.
           </p>
           <div className="mt-10 flex items-center justify-center gap-x-6">
             {user ? <Button variant="hero" size="lg" onClick={() => navigate("/dashboard")}>

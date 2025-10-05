@@ -8,11 +8,11 @@ export const CTA = () => {
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div className="mx-auto max-w-3xl text-center">
           <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">
-            Vill du veta hur många samtal som faktiskt följer riktlinjerna?
+            Redo att säkerställa 100% compliance?
           </h2>
           <p className="mt-6 text-lg text-blue-100">
-            Börja analysera era säljsamtal idag och säkerställ kvalitet i varje kundinteraktion.
-            Få fullständig kontroll över regelefterlevnad med AI-teknik.
+            Boka en kostnadsfri demo och se hur Hiems kan analysera era säljsamtal på 15 minuter. 
+            Ingen bindningstid – starta eller pausa när ni vill.
           </p>
           <div className="mt-10 flex items-center justify-center gap-x-6">
             <DemoBooking>

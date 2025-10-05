@@ -4,18 +4,18 @@ export const HowItWorks = () => {
   const steps = [
     {
       icon: Upload,
-      title: "1. Samtal laddas upp",
-      description: "Integrera ditt system eller ladda upp ljudfiler batch-vis.",
+      title: "1. Automatisk integration",
+      description: "Koppla Hiems till ert befintliga system (Loxysoft, CRM) eller ladda upp samtal manuellt.",
     },
     {
       icon: Bot,
-      title: "2. AI granskar",
-      description: "Samtalen granskas av AI för att säkerställa att lagar och riktlinjer följs",
+      title: "2. AI analyserar varje samtal",
+      description: "Transkribering, compliance-kontroll och kvalitetsanalys sker automatiskt inom minuter.",
     },
     {
       icon: BarChart3,
-      title: "3. Tydliga rapporter",
-      description: "Få detaljerade rapporter och insikter direkt i dashboarden.",
+      title: "3. Få insikter direkt",
+      description: "Se överträdelser, trender och förbättringsområden i er dashboard. Exportera rapporter enkelt.",
     },
   ];
 
@@ -24,10 +24,11 @@ export const HowItWorks = () => {
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div className="mx-auto max-w-2xl text-center">
           <h2 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
-            Så här fungerar det
+            Problemet vi löser
           </h2>
           <p className="mt-4 text-lg text-muted-foreground">
-            Tre enkla steg till full kontroll över era säljsamtal
+            Manuell kvalitetsgranskning är tidskrävande, inkonsekvent och skalas inte. 
+            Hiems AI analyserar 100% av era samtal automatiskt.
           </p>
         </div>
         
