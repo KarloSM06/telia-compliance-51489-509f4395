@@ -241,15 +241,57 @@ Deno.serve(async (req) => {
       ip_address: req.headers.get('x-forwarded-for') || 'leaddesk-webhook',
     });
 
-    // Trigger process-call function
-    console.log('Triggering process-call function...');
-    const { error: processError } = await supabase.functions.invoke('process-call', {
-      body: { filePath },
-    });
+    // Check subscription to determine processing
+    const { data: subscription } = await supabase
+      .from('subscriptions')
+      .select('smart_analysis_enabled, full_analysis_enabled, status')
+      .eq('user_id', userId)
+      .eq('status', 'active')
+      .maybeSingle();
 
-    if (processError) {
-      console.error('Failed to trigger process-call:', processError);
-      // Don't return error - the call is saved, processing can be retried
+    let shouldProcess = false;
+    let skipReason = null;
+
+    if (!subscription) {
+      console.log('No active subscription - skipping');
+      skipReason = 'no_subscription';
+    } else if (subscription.full_analysis_enabled) {
+      shouldProcess = true;
+      console.log('Full analysis enabled');
+    } else if (subscription.smart_analysis_enabled) {
+      // Check if it's a sale (outcome field from payload)
+      const isSale = payload.outcome === 'sale' || payload.disposition === 'sale';
+      if (isSale) {
+        shouldProcess = true;
+        console.log('Smart analysis - sale detected');
+      } else {
+        skipReason = 'not_sale';
+        console.log('Smart analysis - not a sale, skipping');
+      }
+    } else {
+      skipReason = 'analysis_disabled';
+    }
+
+    if (shouldProcess) {
+      console.log('Triggering process-call-lovable...');
+      const { error: processError } = await supabase.functions.invoke('process-call-lovable', {
+        body: { filePath },
+      });
+
+      if (processError) {
+        console.error('Failed to trigger processing:', processError);
+      }
+    } else {
+      // Mark call as skipped
+      await supabase
+        .from('calls')
+        .update({ 
+          status: 'skipped',
+          encrypted_analysis: { skip_reason: skipReason }
+        })
+        .eq('id', call.id);
+      
+      console.log(`Call skipped: ${skipReason}`);
     }
 
     console.log('Leaddesk webhook processed successfully');
