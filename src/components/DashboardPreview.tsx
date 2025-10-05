@@ -1,14 +1,43 @@
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { CheckCircle2, AlertTriangle, XCircle, TrendingUp } from "lucide-react";
+import { CheckCircle2, AlertTriangle, XCircle, TrendingUp, ThumbsUp, AlertCircle } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 
 export const DashboardPreview = () => {
   const agents = [
-    { name: "Anna Eriksson", duration: "12:32", status: "success", score: 98 },
-    { name: "Magnus Lindahl", duration: "09:27", status: "warning", score: 85 },
-    { name: "Sofia Johansson", duration: "11:48", status: "success", score: 96 },
-    { name: "Erik Pettersson", duration: "23:51", status: "violation", score: 72 },
+    { 
+      name: "Anna Eriksson", 
+      duration: "12:32", 
+      status: "success", 
+      score: 98,
+      strengths: ["Utmärkt behovskartläggning", "Professionell avslutning"],
+      improvements: ["Kan förkorta introduktionen", "Mer aktiv lyssning"]
+    },
+    { 
+      name: "Magnus Lindahl", 
+      duration: "09:27", 
+      status: "warning", 
+      score: 85,
+      strengths: ["Tydlig produktpresentation", "Bra tempo i samtalet"],
+      improvements: ["Följa upp kundfrågor bättre", "Tydligare prisupplägg"]
+    },
+    { 
+      name: "Sofia Johansson", 
+      duration: "11:48", 
+      status: "success", 
+      score: 96,
+      strengths: ["Empatisk kommunikation", "Stark invändningshantering"],
+      improvements: ["Kortare pauser", "Tidigare behövsbekräftelse"]
+    },
+    { 
+      name: "Erik Pettersson", 
+      duration: "23:51", 
+      status: "violation", 
+      score: 72,
+      strengths: ["Ihärdig attityd", "Produktkännedom"],
+      improvements: ["Undvik att avbryta kunden", "Följ kvalitetsriktlinjerna"]
+    },
   ];
 
   const getStatusIcon = (status: string) => {
@@ -129,9 +158,48 @@ export const DashboardPreview = () => {
                       <p className="text-xs text-muted-foreground">Kvalitetspoäng</p>
                     </div>
                     {getStatusBadge(agent.status)}
-                    <button className="px-3 py-1 text-sm bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors">
-                      Se säljteknisk analys
-                    </button>
+                    <Dialog>
+                      <DialogTrigger asChild>
+                        <button className="px-3 py-1 text-sm bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors">
+                          Se säljteknisk analys
+                        </button>
+                      </DialogTrigger>
+                      <DialogContent className="max-w-2xl">
+                        <DialogHeader>
+                          <DialogTitle>Säljteknisk analys - {agent.name}</DialogTitle>
+                        </DialogHeader>
+                        <div className="space-y-6 mt-4">
+                          <div>
+                            <div className="flex items-center gap-2 mb-3">
+                              <ThumbsUp className="h-5 w-5 text-success" />
+                              <h3 className="font-semibold text-foreground">Styrkor</h3>
+                            </div>
+                            <ul className="space-y-2">
+                              {agent.strengths.map((strength, idx) => (
+                                <li key={idx} className="flex items-start gap-2 text-muted-foreground">
+                                  <CheckCircle2 className="h-4 w-4 text-success mt-0.5 flex-shrink-0" />
+                                  <span>{strength}</span>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                          <div>
+                            <div className="flex items-center gap-2 mb-3">
+                              <AlertCircle className="h-5 w-5 text-warning" />
+                              <h3 className="font-semibold text-foreground">Förbättringsområden</h3>
+                            </div>
+                            <ul className="space-y-2">
+                              {agent.improvements.map((improvement, idx) => (
+                                <li key={idx} className="flex items-start gap-2 text-muted-foreground">
+                                  <AlertTriangle className="h-4 w-4 text-warning mt-0.5 flex-shrink-0" />
+                                  <span>{improvement}</span>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        </div>
+                      </DialogContent>
+                    </Dialog>
                   </div>
                 </div>
               ))}
