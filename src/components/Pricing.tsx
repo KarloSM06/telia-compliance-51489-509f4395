@@ -5,56 +5,68 @@ import { Check } from "lucide-react";
 export const Pricing = () => {
   const plans = [
     {
-      name: "Standard",
-      price: "500 kr",
+      name: "Basic",
+      agentRange: "0–10 agenter",
+      price: "499 kr",
       period: "/agent/månad",
-      description: "Compliance-fokus för QA och ledning",
+      description: "Compliance-analyser av säljsamtal",
       features: [
-        "Analys av alla säljsamtal",
+        "Compliance-analyser av säljsamtal",
+        "Kvalitetsvarning på överträdelser",
+        "Enkel rapportering",
         "Identifiering av överträdelser mot riktlinjer eller lagar",
-        "Kvalitetsvarning för varje överträdelse",
         "Visar tidpunkt & typ av regelbrott",
-        "Enkel rapportering per agent",
-        "Inkluderar upp till 100 samtal/månad",
+      ],
+      priceId: "price_basic_monthly",
+      addons: [
+        { name: "AI-coach", price: "+199 kr", description: "Analys & feedback på upp till 20 samtal/månad", optional: true },
+        { name: "Systemintegration", price: "+199 kr", description: "Integration mot Loxysoft/CRM", optional: true },
+      ],
+    },
+    {
+      name: "Standard",
+      agentRange: "11–49 agenter",
+      price: "449 kr",
+      period: "/agent/månad",
+      description: "Volymrabatt + valbara tillägg",
+      features: [
+        "Samma som Basic",
+        "5% volymrabatt",
+        "Compliance-analyser av säljsamtal",
+        "Kvalitetsvarning på överträdelser",
+        "Enkel rapportering",
       ],
       priceId: "price_standard_monthly",
-      addons: [
-        { name: "AI-coach", price: "+199 kr", description: "Analys & feedback på upp till 20 samtal/månad" },
-        { name: "Systemintegration", price: "+199 kr", description: "Integration mot Loxysoft/CRM" },
-      ],
-    },
-    {
-      name: "Pro",
-      price: "849 kr",
-      period: "/agent/månad",
-      description: "Bundle med coachning och integration",
-      features: [
-        "Allt i Standard",
-        "AI-coach: Analys & feedback på upp till 20 samtal/månad",
-        "Systemintegration mot Loxysoft/CRM",
-        "Inkluderar upp till 100 samtal/månad",
-      ],
-      priceId: "price_pro_monthly",
       highlighted: true,
-      badge: "Standard + Coach + Integration",
+      badge: "5% rabatt",
+      addons: [
+        { name: "AI-coach", price: "+199 kr", description: "Analys & feedback på upp till 20 samtal/månad", optional: true },
+        { name: "Systemintegration", price: "+99 kr", description: "Integration mot Loxysoft/CRM", optional: true },
+        { name: "Verksamhetsöversikt", price: "Valbart", description: "Avancerad dashboard för ledning", optional: true },
+        { name: "Proaktiva alerts", price: "Valbart", description: "Notifikationer & varningar", optional: true },
+      ],
     },
     {
-      name: "Premium",
-      price: "1 300 kr",
-      period: "/agent/månad",
-      description: "Fullt ledningsverktyg med team-analys",
+      name: "Enterprise",
+      agentRange: "50+ agenter",
+      price: "Offert",
+      period: "",
+      description: "Fullständig lösning för stora team",
       features: [
-        "Allt i Pro",
-        "Avancerad dashboard för ledning",
-        "Team- och KPI-översikt",
+        "Full compliance + dashboards + proaktiva alerts",
+        "Systemintegration inkluderat",
+        "Avancerad verksamhetsöversikt",
         "Proaktiva alerts & notifikationer",
         "Risk för tappad kund",
         "Låg följsamhet",
         "Avvikelser i prestation",
-        "Inkluderar upp till 100 samtal/månad",
       ],
-      priceId: "price_premium_monthly",
-      badge: "Fokus på ledning",
+      priceId: "price_enterprise_custom",
+      badge: "Kontakta oss",
+      isEnterprise: true,
+      addons: [
+        { name: "AI-coach", price: "+199 kr", description: "Analys & feedback på upp till 20 samtal/månad", optional: true },
+      ],
     },
   ];
 
@@ -69,7 +81,7 @@ export const Pricing = () => {
             Flexibel prissättning som växer med dina behov
           </p>
           <p className="mt-2 text-sm text-muted-foreground">
-            Spara 20% med årlig betalning • Volymrabatter från 10+ agenter
+            Volymrabatter från 11+ agenter • Enterprise från 50+ agenter
           </p>
         </div>
         
@@ -99,6 +111,9 @@ export const Pricing = () => {
               
               <CardHeader className="text-center">
                 <CardTitle className="text-xl text-foreground">{plan.name}</CardTitle>
+                {plan.agentRange && (
+                  <p className="text-xs text-muted-foreground mt-1">{plan.agentRange}</p>
+                )}
                 <div className="mt-4">
                   <span className="text-4xl font-bold text-foreground">{plan.price}</span>
                   <span className="text-muted-foreground">{plan.period}</span>
@@ -118,10 +133,17 @@ export const Pricing = () => {
                 
                 {plan.addons && (
                   <div className="mt-4 pt-4 border-t border-border">
-                    <p className="text-xs font-semibold text-muted-foreground mb-2">TILLÄGG:</p>
+                    <p className="text-xs font-semibold text-muted-foreground mb-2">
+                      {plan.addons.some(a => !a.optional) ? 'INKLUDERAT:' : 'VALBARA TILLÄGG:'}
+                    </p>
                     {plan.addons.map((addon, addonIndex) => (
-                      <div key={addonIndex} className="text-xs text-muted-foreground mb-1">
-                        <span className="font-semibold">{addon.name}</span> {addon.price} - {addon.description}
+                      <div key={addonIndex} className="text-xs text-muted-foreground mb-1 flex items-start">
+                        <span className={addon.optional ? 'mr-1' : 'mr-1'}>
+                          {addon.optional ? '☐' : '✅'}
+                        </span>
+                        <span>
+                          <span className="font-semibold">{addon.name}</span> {addon.price} - {addon.description}
+                        </span>
                       </div>
                     ))}
                   </div>
@@ -131,9 +153,9 @@ export const Pricing = () => {
                   variant={plan.highlighted ? "hero" : "outline"}
                   className="w-full mt-6"
                   size="lg"
-                  onClick={() => window.location.href = '/auth'}
+                  onClick={() => window.location.href = plan.isEnterprise ? '/demo' : '/auth'}
                 >
-                  Kom igång
+                  {plan.isEnterprise ? 'Kontakta oss för offert' : `Välj ${plan.name}`}
                 </Button>
               </CardContent>
             </Card>
