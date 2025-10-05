@@ -4,13 +4,12 @@ import { Link } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 import { DemoBooking } from "@/components/DemoBooking";
-
 export const Hero = () => {
-  const { user } = useAuth();
+  const {
+    user
+  } = useAuth();
   const navigate = useNavigate();
-
-  return (
-    <section className="relative overflow-hidden bg-gradient-hero py-20">
+  return <section className="relative overflow-hidden bg-gradient-hero py-20">
       <div className="absolute inset-0 bg-grid-pattern opacity-5"></div>
       <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
         <div className="mx-auto max-w-3xl text-center">
@@ -26,21 +25,13 @@ export const Hero = () => {
             Automatisk analys av säljsamtal enligt era företagsriktlinjer.
           </p>
           <div className="mt-10 flex items-center justify-center gap-x-6">
-            {user ? (
-              <Button 
-                variant="hero" 
-                size="lg"
-                onClick={() => navigate("/dashboard")}
-              >
+            {user ? <Button variant="hero" size="lg" onClick={() => navigate("/dashboard")}>
                 Gå till Dashboard
-              </Button>
-            ) : (
-              <DemoBooking>
+              </Button> : <DemoBooking>
                 <Button variant="hero" size="lg">
                   Kom igång - Boka demo
                 </Button>
-              </DemoBooking>
-            )}
+              </DemoBooking>}
             <div className="flex gap-4">
               <Link to="/demo">
                 <Button variant="ghost" size="lg" className="text-white hover:bg-white/10">
@@ -73,7 +64,7 @@ export const Hero = () => {
               <div className="flex items-center">
                 <TrendingUp className="h-8 w-8 text-blue-200" />
                 <div className="ml-4">
-                  <p className="text-2xl font-bold text-white">utveckla dina säljare</p>
+                  <p className="text-2xl font-bold text-white">Öka försäljning</p>
                   <p className="text-sm text-blue-200">Godkända samtal</p>
                 </div>
               </div>
@@ -91,6 +82,5 @@ export const Hero = () => {
           </div>
         </div>
       </div>
-    </section>
-  );
+    </section>;
 };
