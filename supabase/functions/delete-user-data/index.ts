@@ -57,9 +57,15 @@ Deno.serve(async (req) => {
       .delete()
       .eq('user_id', user.id)
 
-    // Delete calls
+    // Delete calls (including Leaddesk integration data)
     await supabaseClient
       .from('calls')
+      .delete()
+      .eq('user_id', user.id)
+
+    // Delete Leaddesk agent mappings
+    await supabaseClient
+      .from('leaddesk_agent_mapping')
       .delete()
       .eq('user_id', user.id)
 

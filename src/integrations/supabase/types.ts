@@ -19,12 +19,18 @@ export type Database = {
           created_at: string
           deletion_scheduled_at: string | null
           duration: string | null
+          encrypted_agent_name: string | null
           encrypted_analysis: Json | null
+          encrypted_customer_name: string | null
+          encrypted_customer_phone: string | null
           encrypted_transcript: string | null
+          external_call_id: string | null
           file_name: string
           file_path: string | null
           file_size: number | null
           id: string
+          leaddesk_campaign_id: string | null
+          leaddesk_metadata: Json | null
           sale_outcome: boolean | null
           score: number | null
           status: string
@@ -34,12 +40,18 @@ export type Database = {
           created_at?: string
           deletion_scheduled_at?: string | null
           duration?: string | null
+          encrypted_agent_name?: string | null
           encrypted_analysis?: Json | null
+          encrypted_customer_name?: string | null
+          encrypted_customer_phone?: string | null
           encrypted_transcript?: string | null
+          external_call_id?: string | null
           file_name: string
           file_path?: string | null
           file_size?: number | null
           id?: string
+          leaddesk_campaign_id?: string | null
+          leaddesk_metadata?: Json | null
           sale_outcome?: boolean | null
           score?: number | null
           status?: string
@@ -49,12 +61,18 @@ export type Database = {
           created_at?: string
           deletion_scheduled_at?: string | null
           duration?: string | null
+          encrypted_agent_name?: string | null
           encrypted_analysis?: Json | null
+          encrypted_customer_name?: string | null
+          encrypted_customer_phone?: string | null
           encrypted_transcript?: string | null
+          external_call_id?: string | null
           file_name?: string
           file_path?: string | null
           file_size?: number | null
           id?: string
+          leaddesk_campaign_id?: string | null
+          leaddesk_metadata?: Json | null
           sale_outcome?: boolean | null
           score?: number | null
           status?: string
@@ -108,6 +126,38 @@ export type Database = {
           },
         ]
       }
+      leaddesk_agent_mapping: {
+        Row: {
+          created_at: string | null
+          encrypted_agent_name: string | null
+          id: string
+          leaddesk_agent_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          encrypted_agent_name?: string | null
+          id?: string
+          leaddesk_agent_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          encrypted_agent_name?: string | null
+          id?: string
+          leaddesk_agent_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "leaddesk_agent_mapping_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           created_at: string
@@ -116,6 +166,9 @@ export type Database = {
           gdpr_consent: boolean | null
           gdpr_consent_date: string | null
           id: string
+          leaddesk_consent: boolean | null
+          leaddesk_consent_date: string | null
+          leaddesk_enabled: boolean | null
         }
         Insert: {
           created_at?: string
@@ -124,6 +177,9 @@ export type Database = {
           gdpr_consent?: boolean | null
           gdpr_consent_date?: string | null
           id: string
+          leaddesk_consent?: boolean | null
+          leaddesk_consent_date?: string | null
+          leaddesk_enabled?: boolean | null
         }
         Update: {
           created_at?: string
@@ -132,6 +188,9 @@ export type Database = {
           gdpr_consent?: boolean | null
           gdpr_consent_date?: string | null
           id?: string
+          leaddesk_consent?: boolean | null
+          leaddesk_consent_date?: string | null
+          leaddesk_enabled?: boolean | null
         }
         Relationships: []
       }
