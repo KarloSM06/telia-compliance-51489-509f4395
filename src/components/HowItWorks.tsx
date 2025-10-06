@@ -19,7 +19,7 @@ export const HowItWorks = () => {
           <h2 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
             Så här fungerar det
           </h2>
-          <p className="mt-4 text-lg text-muted-foreground">Manuell granskning av samtal är tidskrävande och inkonsekvent. Hiems AI analyserar 100% av era samtal automatiskt. Varje samtal granskas för att säkra att inga lagar eller riktlinjer bryts, samt analyseras säljtekniskt för att öka er försäljning.</p>
+          <p className="mt-4 text-lg text-muted-foreground">Manuell granskning av samtal är tidskrävande och inkonsekvent. Hiems AI analyserar era samtal automatiskt. Varje samtal granskas för att säkra att inga lagar eller riktlinjer bryts, samt analyseras säljtekniskt för att öka er försäljning. </p>
         </div>
         
         <div className="mx-auto mt-16 max-w-5xl">
