@@ -1,15 +1,17 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Phone, Shield, ArrowRight } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 export const ProductSelection = () => {
+  const navigate = useNavigate();
+
   const handleKronoClick = () => {
     window.location.href = "https://chronodesk.se";
   };
 
   const handleHermesClick = () => {
-    const hermesSection = document.getElementById("hermes-content");
-    hermesSection?.scrollIntoView({ behavior: "smooth" });
+    navigate("/hermes");
   };
 
   return (
