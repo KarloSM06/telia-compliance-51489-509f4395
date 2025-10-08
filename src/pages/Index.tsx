@@ -1,4 +1,5 @@
 import { Header } from "@/components/Header";
+import { ProductSelection } from "@/components/ProductSelection";
 import { Hero } from "@/components/Hero";
 import { HowItWorks } from "@/components/HowItWorks";
 import { Benefits } from "@/components/Benefits";
@@ -12,13 +13,16 @@ const Index = () => {
     <div className="min-h-screen bg-background">
       <Header />
       <main>
-        <Hero />
-        <HowItWorks />
-        <Benefits />
-        <DashboardPreview />
-        <TrustSection />
-        <Pricing />
-        <CTA />
+        <ProductSelection />
+        <div id="hermes-content">
+          <Hero />
+          <HowItWorks />
+          <Benefits />
+          <DashboardPreview />
+          <TrustSection />
+          <Pricing />
+          <CTA />
+        </div>
       </main>
     </div>
   );
