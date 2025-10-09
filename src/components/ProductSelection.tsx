@@ -52,19 +52,19 @@ export const ProductSelection = () => {
               <div className="absolute inset-0 bg-gradient-gold opacity-0 group-hover:opacity-5 rounded-2xl transition-opacity"></div>
               <CheckCircle className="h-12 w-12 text-accent mb-6 group-hover:scale-110 transition-transform" />
               <h3 className="text-xl font-display font-bold text-white mb-3">Analys av era behov och mål</h3>
-              <p className="text-white/70 leading-relaxed">Vi börjar med att förstå er verksamhet på djupet — era utmaningar, mål och möjligheter. Genom datadriven analys identifierar vi var AI kan skapa störst effekt, oavsett om det handlar om effektivisering, tillväxt eller beslutsstöd. Målet är att bygga en lösning som inte bara fungerar – utan faktiskt gör skillnad.</p>
+              <p className="text-white/70 leading-relaxed">Vi analyserar er verksamhet för att förstå era mål, processer och tillväxtpotential. Genom datadriven insikt identifierar vi hur AI kan effektivisera arbetet och öka intäkterna.</p>
             </div>
             <div className="group relative rounded-2xl bg-white/5 p-8 backdrop-blur-sm border border-white/10 hover:border-accent/50 transition-all duration-300 hover:shadow-glow animate-fade-in delay-100">
               <div className="absolute inset-0 bg-gradient-gold opacity-0 group-hover:opacity-5 rounded-2xl transition-opacity"></div>
               <Zap className="h-12 w-12 text-accent mb-6 group-hover:scale-110 transition-transform" />
-              <h3 className="text-xl font-display font-bold text-white mb-3">Skräddarsydda verktyg tas fram och integreras efter era behov</h3>
-              <p className="text-white/70 leading-relaxed">Utifrån analysen designar vi intelligenta AI-verktyg som är anpassade till just er verksamhet. Våra lösningar integreras smidigt i era befintliga system och processer – utan onödigt krångel. Resultatet är en skräddarsydd AI-lösning som känns som en naturlig del av ert arbete, inte något ni behöver anpassa er till.</p>
+              <h3 className="text-xl font-display font-bold text-white mb-3">Skräddarsydda verktyg</h3>
+              <p className="text-white/70 leading-relaxed">Utifrån analysen utvecklar vi skräddarsydda AI-verktyg anpassade till era behov. De integreras sömlöst i befintliga system och optimerar era flöden – för både effektivitet och lönsamhet.</p>
             </div>
             <div className="group relative rounded-2xl bg-white/5 p-8 backdrop-blur-sm border border-white/10 hover:border-accent/50 transition-all duration-300 hover:shadow-glow animate-fade-in delay-200">
               <div className="absolute inset-0 bg-gradient-gold opacity-0 group-hover:opacity-5 rounded-2xl transition-opacity"></div>
               <Target className="h-12 w-12 text-accent mb-6 group-hover:scale-110 transition-transform" />
-              <h3 className="text-xl font-display font-bold text-white mb-3">Lösningarna används i praktiken</h3>
-              <p className="text-white/70 leading-relaxed">När verktygen är på plats kan ni direkt börja dra nytta av deras fulla potential. Era team får tillgång till konkreta insikter, automatiserade flöden och effektiva arbetssätt som frigör tid och resurser. Vi följer upp, optimerar och säkerställer att er AI fortsätter leverera värde – varje dag.</p>
+              <h3 className="text-xl font-display font-bold text-white mb-3">Lösningar i praktiken</h3>
+              <p className="text-white/70 leading-relaxed">När lösningarna tas i bruk märks effekten direkt: snabbare processer, smartare beslut och ökade intäkter. Vi följer upp och vidareutvecklar så att era AI-verktyg fortsätter skapa värde över tid.</p>
             </div>
           </div>
         </div>
