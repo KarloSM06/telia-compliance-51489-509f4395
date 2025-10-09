@@ -34,7 +34,7 @@ export const ProductSelection = () => {
               </span>
             </h1>
             
-            <p className="text-xl leading-relaxed mb-6 font-light text-white/90">Vi bygger skräddarsydda intelligenta lösningar som gör ditt företag snabbare, smartare och mer lönsamt – utan att du behöver vara en kodexpert.</p>
+            <p className="text-xl leading-relaxed mb-6 font-light text-white/90">Vi bygger skräddarsydda intelligenta lösningar som gör ditt företag snabbare, smartare och framförallt mer lönsamt</p>
             <p className="text-lg leading-relaxed text-white/80 max-w-3xl mx-auto">   realtid för att upptäcka regelbrott, ge utvecklingsrekommendationer och säkerställa efterlevnad – allt enligt era egna riktlinjer.</p>
           </div>
         </div>
