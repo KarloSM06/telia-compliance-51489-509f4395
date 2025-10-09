@@ -88,7 +88,7 @@ export const ProductSelection = () => {
                   <Phone className="h-10 w-10 text-primary" />
                 </div>
                 <CardTitle className="text-3xl font-display mb-2">Krono</CardTitle>
-                <CardDescription className="text-lg text-muted-foreground">AI-receptionist/butler. Hanterar era samtal 24/7</CardDescription>
+                <CardDescription className="text-lg text-muted-foreground">AI-receptionist/butler. En supermedarbetare som hanterar era samtal, sms och mejl 24/7</CardDescription>
               </CardHeader>
               <CardContent className="relative space-y-6">
                 <ul className="space-y-4 mb-8">
