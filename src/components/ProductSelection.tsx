@@ -3,20 +3,15 @@ import { Button } from "@/components/ui/button";
 import { Phone, Shield, ArrowRight, CheckCircle, Zap, Target, Lightbulb, Sparkles } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
-
 export const ProductSelection = () => {
   const navigate = useNavigate();
-
   const handleKronoClick = () => {
     window.location.href = "https://chronodesk.se";
   };
-
   const handleHermesClick = () => {
     navigate("/hermes");
   };
-
-  return (
-    <div className="relative overflow-hidden bg-gradient-hero">
+  return <div className="relative overflow-hidden bg-gradient-hero">
       {/* Animated background elements */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute top-20 left-10 w-72 h-72 bg-accent/10 rounded-full blur-3xl animate-pulse"></div>
@@ -39,12 +34,8 @@ export const ProductSelection = () => {
               </span>
             </h1>
             
-            <p className="text-xl leading-relaxed text-white/90 mb-6 font-light">
-              Vi bygger intelligenta automationsflöden som gör ditt företag snabbare, smartare och mer lönsamt – utan att du behöver vara en kodexpert.
-            </p>
-            <p className="text-lg leading-relaxed text-white/80 max-w-3xl mx-auto">
-              Med vår AI-teknologi analyserar vi säljsamtal i realtid för att upptäcka regelbrott, ge utvecklingsrekommendationer och säkerställa efterlevnad – allt enligt era egna riktlinjer.
-            </p>
+            <p className="text-xl leading-relaxed mb-6 font-light text-white/90">Vi bygger skräddarsydda intelligenta lösningar som gör ditt företag snabbare, smartare och mer lönsamt – utan att du behöver vara en kodexpert.</p>
+            <p className="text-lg leading-relaxed text-white/80 max-w-3xl mx-auto">   realtid för att upptäcka regelbrott, ge utvecklingsrekommendationer och säkerställa efterlevnad – allt enligt era egna riktlinjer.</p>
           </div>
         </div>
       </section>
@@ -122,11 +113,7 @@ export const ProductSelection = () => {
                     <span className="text-foreground/80 leading-relaxed">Missa aldrig ett viktigt samtal</span>
                   </li>
                 </ul>
-                <Button 
-                  size="lg" 
-                  className="w-full bg-primary text-primary-foreground hover:bg-primary/90 shadow-button group-hover:shadow-glow transition-all duration-300 font-semibold text-base h-14"
-                  onClick={handleKronoClick}
-                >
+                <Button size="lg" className="w-full bg-primary text-primary-foreground hover:bg-primary/90 shadow-button group-hover:shadow-glow transition-all duration-300 font-semibold text-base h-14" onClick={handleKronoClick}>
                   Gå till Krono
                   <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
                 </Button>
@@ -169,11 +156,7 @@ export const ProductSelection = () => {
                     <span className="text-foreground/80 leading-relaxed">Spara tid och skydda ert varumärke</span>
                   </li>
                 </ul>
-                <Button 
-                  size="lg" 
-                  className="w-full bg-gradient-gold text-accent-foreground hover:opacity-90 shadow-button group-hover:shadow-glow transition-all duration-300 font-semibold text-base h-14"
-                  onClick={handleHermesClick}
-                >
+                <Button size="lg" className="w-full bg-gradient-gold text-accent-foreground hover:opacity-90 shadow-button group-hover:shadow-glow transition-all duration-300 font-semibold text-base h-14" onClick={handleHermesClick}>
                   Välj Hermes
                   <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
                 </Button>
@@ -248,10 +231,7 @@ export const ProductSelection = () => {
                   Vill du se hur det fungerar? Prova vår demo och upplev hur vår AI analyserar säljsamtal i realtid.
                 </p>
                 <Link to="/demo">
-                  <Button 
-                    size="lg" 
-                    className="bg-white text-primary hover:bg-white/90 shadow-button hover:shadow-glow transition-all duration-300 font-semibold text-base px-10 h-14 group"
-                  >
+                  <Button size="lg" className="bg-white text-primary hover:bg-white/90 shadow-button hover:shadow-glow transition-all duration-300 font-semibold text-base px-10 h-14 group">
                     Prova demon nu
                     <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
                   </Button>
@@ -261,6 +241,5 @@ export const ProductSelection = () => {
           </div>
         </div>
       </section>
-    </div>
-  );
+    </div>;
 };
