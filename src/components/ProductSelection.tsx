@@ -33,7 +33,7 @@ export const ProductSelection = () => {
             </div>
             
             <h1 className="text-5xl font-display font-bold tracking-tight text-white sm:text-7xl mb-8 leading-tight">
-              Skräddarsydda ai lösningar för{" "}
+              Skräddarsydda AI-lösningar för{" "}
               <span className="bg-gradient-gold bg-clip-text text-transparent">
                 framtidens företag
               </span>
