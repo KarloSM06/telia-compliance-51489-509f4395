@@ -24,7 +24,7 @@ export const ProductSelection = () => {
           <div className="mx-auto max-w-4xl text-center animate-fade-in">
             <div className="inline-flex items-center gap-2 rounded-full bg-accent/10 px-4 py-2 mb-8 backdrop-blur-sm border border-accent/20">
               <Sparkles className="h-4 w-4 text-accent" />
-              <span className="text-sm font-medium text-white">AI-driven automation för moderna företag</span>
+              <span className="text-sm font-medium text-white">AI-driven automation för företag</span>
             </div>
             
             <h1 className="text-5xl font-display font-bold tracking-tight text-white sm:text-7xl mb-8 leading-tight">
@@ -35,7 +35,7 @@ export const ProductSelection = () => {
             </h1>
             
             <p className="text-xl leading-relaxed mb-6 font-light text-white/90">Vi bygger skräddarsydda intelligenta lösningar som gör ditt företag snabbare, smartare och framförallt mer lönsamt</p>
-            <p className="text-lg leading-relaxed text-white/80 max-w-3xl mx-auto">   realtid för att upptäcka regelbrott, ge utvecklingsrekommendationer och säkerställa efterlevnad – allt enligt era egna riktlinjer.</p>
+            <p className="text-lg leading-relaxed text-white/80 max-w-3xl mx-auto">   Tillsammans med er jobbar vi dag in dag ut för att säkerställa att eran verksamhet blir den bästa versionen av sig själv</p>
           </div>
         </div>
       </section>
@@ -74,8 +74,7 @@ export const ProductSelection = () => {
       <section className="relative py-20">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <div className="mx-auto max-w-3xl text-center mb-16 animate-fade-in">
-            <h2 className="text-4xl font-display font-bold text-white mb-4">Köp rgedan ida
-          </h2>
+            <h2 className="text-4xl font-display font-bold text-white mb-4">Våra produkter</h2>
             <div className="w-20 h-1 bg-gradient-gold mx-auto rounded-full mb-6"></div>
             <p className="text-lg text-white/80">Våra färdiga AI-verktyg skräddarsys och levereras på högst två veckor – så ni snabbt kan börja effektivisera och växa er verksamhet. </p>
           </div>
