@@ -74,7 +74,7 @@ export const ProductSelection = () => {
       <section className="relative py-20">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <div className="mx-auto max-w-3xl text-center mb-16 animate-fade-in">
-            <h2 className="text-4xl font-display font-bold text-white mb-4">Våra produkter</h2>
+            <h2 className="text-4xl font-display font-bold text-white mb-4">Köp idag</h2>
             <div className="w-20 h-1 bg-gradient-gold mx-auto rounded-full mb-6"></div>
             <p className="text-lg text-white/80">Våra färdiga AI-verktyg skräddarsys och levereras på högst två veckor – så ni snabbt kan börja effektivisera och växa er verksamhet. </p>
           </div>
@@ -88,9 +88,7 @@ export const ProductSelection = () => {
                   <Phone className="h-10 w-10 text-primary" />
                 </div>
                 <CardTitle className="text-3xl font-display mb-2">Krono</CardTitle>
-                <CardDescription className="text-lg text-muted-foreground">
-                  AI-driven receptionist som hanterar era samtal 24/7
-                </CardDescription>
+                <CardDescription className="text-lg text-muted-foreground">AI-receptionist/butler. Hanterar era samtal 24/7</CardDescription>
               </CardHeader>
               <CardContent className="relative space-y-6">
                 <ul className="space-y-4 mb-8">
@@ -104,13 +102,14 @@ export const ProductSelection = () => {
                     <div className="flex-shrink-0 w-6 h-6 rounded-full bg-accent/10 flex items-center justify-center mt-0.5">
                       <CheckCircle className="h-4 w-4 text-accent" />
                     </div>
-                    <span className="text-foreground/80 leading-relaxed">Intelligent samtalshantering och routing</span>
+                    <span className="text-foreground/80 leading-relaxed">Hanterar beställningar, bokningar och avbokningar automatiskt. Sparar och delger information strukturerat
+                  </span>
                   </li>
                   <li className="flex items-start gap-3">
                     <div className="flex-shrink-0 w-6 h-6 rounded-full bg-accent/10 flex items-center justify-center mt-0.5">
                       <CheckCircle className="h-4 w-4 text-accent" />
                     </div>
-                    <span className="text-foreground/80 leading-relaxed">Missa aldrig ett viktigt samtal</span>
+                    <span className="text-foreground/80 leading-relaxed">Kan integreras i ert befintliga system</span>
                   </li>
                 </ul>
                 <Button size="lg" className="w-full bg-primary text-primary-foreground hover:bg-primary/90 shadow-button group-hover:shadow-glow transition-all duration-300 font-semibold text-base h-14" onClick={handleKronoClick}>
@@ -130,7 +129,7 @@ export const ProductSelection = () => {
                 <div className="flex items-center justify-center w-20 h-20 rounded-2xl bg-accent/10 mb-6 group-hover:scale-110 group-hover:rotate-3 transition-all duration-500">
                   <Shield className="h-10 w-10 text-accent" />
                 </div>
-                <CardTitle className="text-3xl font-display mb-2">Hermes</CardTitle>
+                <CardTitle className="text-3xl font-display mb-2">Thor</CardTitle>
                 <CardDescription className="text-lg text-muted-foreground">
                   AI-kvalitetsgranskning av säljsamtal
                 </CardDescription>
