@@ -178,10 +178,10 @@ export const ProductSelection = () => {
                 <div className="absolute inset-0 bg-gradient-gold opacity-0 group-hover:opacity-5 rounded-2xl transition-opacity"></div>
                 <div className="relative">
                   <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-accent/10 mb-6 group-hover:scale-110 transition-transform">
-                    <Lightbulb className="h-8 w-8 text-accent" />
+                    <Target className="h-8 w-8 text-accent" />
                   </div>
-                  <h3 className="text-2xl font-display font-bold text-white mb-3">Enkelhet</h3>
-                  <p className="text-white/70 leading-relaxed">Vi gör komplex automation enkel att använda.</p>
+                  <h3 className="text-2xl font-display font-bold text-white mb-3">Skräddarsydd AI</h3>
+                  <p className="text-white/70 leading-relaxed">Vi skapar AI-lösningar helt anpassade efter er verksamhet och era mål – inget standardpaket, allt designat för maximal effekt.</p>
                 </div>
               </div>
             </div>
@@ -190,10 +190,10 @@ export const ProductSelection = () => {
                 <div className="absolute inset-0 bg-gradient-gold opacity-0 group-hover:opacity-5 rounded-2xl transition-opacity"></div>
                 <div className="relative">
                   <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-accent/10 mb-6 group-hover:scale-110 transition-transform">
-                    <Target className="h-8 w-8 text-accent" />
+                    <CheckCircle className="h-8 w-8 text-accent" />
                   </div>
-                  <h3 className="text-2xl font-display font-bold text-white mb-3">Anpassningsbarhet</h3>
-                  <p className="text-white/70 leading-relaxed">Skräddarsy flöden som passar just din verksamhet.</p>
+                  <h3 className="text-2xl font-display font-bold text-white mb-3">Ni ser bara resultaten</h3>
+                  <p className="text-white/70 leading-relaxed">Vi tar hand om allt – från utveckling till implementation. Ni behöver inte lyfta ett finger, utan får direkt värde och mätbara resultat.</p>
                 </div>
               </div>
             </div>
@@ -202,10 +202,10 @@ export const ProductSelection = () => {
                 <div className="absolute inset-0 bg-gradient-gold opacity-0 group-hover:opacity-5 rounded-2xl transition-opacity"></div>
                 <div className="relative">
                   <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-accent/10 mb-6 group-hover:scale-110 transition-transform">
-                    <Zap className="h-8 w-8 text-accent" />
+                    <Shield className="h-8 w-8 text-accent" />
                   </div>
-                  <h3 className="text-2xl font-display font-bold text-white mb-3">Effektivitet</h3>
-                  <p className="text-white/70 leading-relaxed">Spara tid och resurser genom att automatisera repetitiva uppgifter.</p>
+                  <h3 className="text-2xl font-display font-bold text-white mb-3">Hiems som partner</h3>
+                  <p className="text-white/70 leading-relaxed">Vi vidareutvecklar lösningarna, erbjuder support och säkerställer att allt alltid fungerar snabbt och smidigt. Med Hiems får ni inte bara AI – ni får en pålitlig partner som skapar kontinuerlig tillväxt och långsiktigt värde.</p>
                 </div>
               </div>
             </div>
