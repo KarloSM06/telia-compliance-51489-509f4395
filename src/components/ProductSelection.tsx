@@ -51,20 +51,20 @@ export const ProductSelection = () => {
             <div className="group relative rounded-2xl bg-white/5 p-8 backdrop-blur-sm border border-white/10 hover:border-accent/50 transition-all duration-300 hover:shadow-glow animate-fade-in">
               <div className="absolute inset-0 bg-gradient-gold opacity-0 group-hover:opacity-5 rounded-2xl transition-opacity"></div>
               <CheckCircle className="h-12 w-12 text-accent mb-6 group-hover:scale-110 transition-transform" />
-              <h3 className="text-xl font-display font-bold text-white mb-3">Analys av era behov och mål</h3>
-              <p className="text-white/70 leading-relaxed">Vi börjar med en grundlig analys av er verksamhet för att förstå era unika utmaningar och möjligheter. Tillsammans identifierar vi var AI kan skapa störst värde.</p>
+              <h3 className="text-xl font-display font-bold text-white mb-3">Automatiserade säljsamtalsanalyser</h3>
+              <p className="text-white/70 leading-relaxed">Upptäck regelbrott och få utvecklingsrekommendationer direkt i realtid.</p>
             </div>
             <div className="group relative rounded-2xl bg-white/5 p-8 backdrop-blur-sm border border-white/10 hover:border-accent/50 transition-all duration-300 hover:shadow-glow animate-fade-in delay-100">
               <div className="absolute inset-0 bg-gradient-gold opacity-0 group-hover:opacity-5 rounded-2xl transition-opacity"></div>
               <Zap className="h-12 w-12 text-accent mb-6 group-hover:scale-110 transition-transform" />
-              <h3 className="text-xl font-display font-bold text-white mb-3">Skräddarsydda verktyg tas fram och integreras</h3>
-              <p className="text-white/70 leading-relaxed">Vi utvecklar och anpassar AI-lösningar som passar exakt era behov. Verktygen integreras sömlöst i era befintliga system och arbetssätt.</p>
+              <h3 className="text-xl font-display font-bold text-white mb-3">Skräddarsydda automationsflöden</h3>
+              <p className="text-white/70 leading-relaxed">Bygg flöden som passar just ditt företags behov – utan att du behöver vara en teknisk expert.</p>
             </div>
             <div className="group relative rounded-2xl bg-white/5 p-8 backdrop-blur-sm border border-white/10 hover:border-accent/50 transition-all duration-300 hover:shadow-glow animate-fade-in delay-200">
               <div className="absolute inset-0 bg-gradient-gold opacity-0 group-hover:opacity-5 rounded-2xl transition-opacity"></div>
               <Target className="h-12 w-12 text-accent mb-6 group-hover:scale-110 transition-transform" />
-              <h3 className="text-xl font-display font-bold text-white mb-3">Lösningarna används i praktiken</h3>
-              <p className="text-white/70 leading-relaxed">Era team börjar använda verktygen direkt i vardagen. Vi följer upp resultaten och optimerar kontinuerligt för att maximera värdet.</p>
+              <h3 className="text-xl font-display font-bold text-white mb-3">AI-driven insikt och kontroll</h3>
+              <p className="text-white/70 leading-relaxed">Få insikter som hjälper dig att fatta bättre beslut och hålla koll på verksamheten.</p>
             </div>
           </div>
         </div>
@@ -74,9 +74,10 @@ export const ProductSelection = () => {
       <section className="relative py-20">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <div className="mx-auto max-w-3xl text-center mb-16 animate-fade-in">
-            <h2 className="text-4xl font-display font-bold text-white mb-4">Våra produkter</h2>
+            <h2 className="text-4xl font-display font-bold text-white mb-4">Köp rgedan ida
+          </h2>
             <div className="w-20 h-1 bg-gradient-gold mx-auto rounded-full mb-6"></div>
-            <p className="text-lg text-white/80">Välj den AI-lösning som passar ditt behov</p>
+            <p className="text-lg text-white/80">Våra färdiga AI-verktyg skräddarsys och levereras på högst två veckor – så ni snabbt kan börja effektivisera och växa er verksamhet. </p>
           </div>
 
           <div className="grid grid-cols-1 gap-8 md:grid-cols-2 max-w-6xl mx-auto">
