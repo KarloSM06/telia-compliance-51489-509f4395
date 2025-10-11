@@ -2,10 +2,12 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { ArrowRight, CheckCircle, Zap, Target, Sparkles, ChefHat, Headphones, UserCheck, TrendingUp, MessageSquare, ShoppingCart, Award, Send, Loader2 } from "lucide-react";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { ArrowRight, CheckCircle, Zap, Target, Sparkles, ChefHat, Headphones, UserCheck, TrendingUp, MessageSquare, ShoppingCart, Award, Send, Loader2, Phone } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { useState, useRef, useEffect } from "react";
+import { useToast } from "@/hooks/use-toast";
 
 interface Message {
   role: 'user' | 'assistant';
@@ -16,6 +18,7 @@ const CHAT_URL = `https://shskknkivuewuqonjdjc.supabase.co/functions/v1/chat-ass
 
 export const ProductSelection = () => {
   const navigate = useNavigate();
+  const { toast } = useToast();
   const [messages, setMessages] = useState<Message[]>([
     {
       role: 'assistant',
@@ -24,6 +27,8 @@ export const ProductSelection = () => {
   ]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [phoneNumber, setPhoneNumber] = useState('');
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -153,6 +158,26 @@ export const ProductSelection = () => {
   };
   const handlePackageClick = (packageName: string) => {
     navigate(`/${packageName.toLowerCase()}`);
+  };
+
+  const handlePhoneSubmit = () => {
+    if (!phoneNumber.trim()) {
+      toast({
+        title: "Telefonnummer saknas",
+        description: "Vänligen ange ett telefonnummer",
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    // Here you would typically send the phone number to your backend
+    toast({
+      title: "Tack!",
+      description: "Vi ringer upp dig inom kort",
+    });
+    
+    setPhoneNumber('');
+    setIsDialogOpen(false);
   };
   return <div className="relative overflow-hidden bg-gradient-hero">
       {/* Animated background elements */}
@@ -577,12 +602,45 @@ export const ProductSelection = () => {
                     </Button>
                   </div>
                   <div className="mt-4 text-center">
-                    <Link to="/demo">
-                      <Button variant="outline" size="lg" className="bg-white/5 border-white/20 text-white hover:bg-white/10 font-semibold group">
-                        Prova receptionistdemo
-                        <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
-                      </Button>
-                    </Link>
+                    <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+                      <DialogTrigger asChild>
+                        <Button variant="outline" size="lg" className="bg-white/5 border-white/20 text-white hover:bg-white/10 font-semibold group">
+                          Prova receptionistdemo
+                          <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent className="sm:max-w-md bg-background border-border">
+                        <DialogHeader>
+                          <DialogTitle className="flex items-center gap-2">
+                            <Phone className="h-5 w-5 text-accent" />
+                            Prova Receptionistdemo
+                          </DialogTitle>
+                          <DialogDescription>
+                            Skriv in telefonnummer för att bli uppringd av vår receptionist
+                          </DialogDescription>
+                        </DialogHeader>
+                        <div className="space-y-4 pt-4">
+                          <Input
+                            placeholder="070-123 45 67"
+                            value={phoneNumber}
+                            onChange={(e) => setPhoneNumber(e.target.value)}
+                            onKeyDown={(e) => {
+                              if (e.key === 'Enter') {
+                                handlePhoneSubmit();
+                              }
+                            }}
+                            className="text-base"
+                          />
+                          <Button 
+                            onClick={handlePhoneSubmit}
+                            className="w-full bg-primary text-primary-foreground hover:bg-primary/90"
+                            size="lg"
+                          >
+                            Ring mig
+                          </Button>
+                        </div>
+                      </DialogContent>
+                    </Dialog>
                   </div>
                 </div>
               </div>
