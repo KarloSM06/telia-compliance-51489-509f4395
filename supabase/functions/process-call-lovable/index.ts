@@ -1,10 +1,19 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
+import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
+
+// Input validation schema
+const ProcessCallSchema = z.object({
+  filePath: z.string()
+    .min(1, "File path cannot be empty")
+    .max(500, "File path too long")
+    .regex(/^[a-zA-Z0-9\-_/]+\.(mp3|wav|m4a)$/, "Invalid file path format")
+});
 
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
@@ -12,11 +21,11 @@ serve(async (req) => {
   }
 
   try {
-    const { filePath } = await req.json();
+    const rawBody = await req.json();
     
-    if (!filePath) {
-      throw new Error('File path is required');
-    }
+    // Validate input
+    const validated = ProcessCallSchema.parse(rawBody);
+    const { filePath } = validated;
 
     console.log('Processing call for file:', filePath);
 

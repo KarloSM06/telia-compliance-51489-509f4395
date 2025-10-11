@@ -27,8 +27,12 @@ Deno.serve(async (req) => {
   try {
     console.log('Leaddesk webhook received');
 
-    // Verify webhook signature
+    const rawBody = await req.text();
+    const payload: LeaddeskWebhookPayload = JSON.parse(rawBody);
+    
+    // Verify webhook signature using HMAC-SHA256
     const signature = req.headers.get('x-leaddesk-signature');
+    const timestamp = req.headers.get('x-leaddesk-timestamp');
     const webhookSecret = Deno.env.get('LEADDESK_WEBHOOK_SECRET');
     
     if (!webhookSecret) {
@@ -39,17 +43,51 @@ Deno.serve(async (req) => {
       });
     }
 
-    // TODO: Implement proper signature verification when Leaddesk provides signing method
-    // For now, we'll require the secret as a header
-    if (signature !== webhookSecret) {
-      console.error('Invalid webhook signature');
+    if (!signature || !timestamp) {
+      console.error('Missing webhook signature or timestamp');
       return new Response(JSON.stringify({ error: 'Invalid signature' }), {
         status: 401,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
     }
 
-    const payload: LeaddeskWebhookPayload = await req.json();
+    // Validate timestamp to prevent replay attacks (max 5 minutes old)
+    const requestTime = parseInt(timestamp);
+    const currentTime = Math.floor(Date.now() / 1000);
+    if (Math.abs(currentTime - requestTime) > 300) {
+      console.error('Webhook timestamp too old or invalid');
+      return new Response(JSON.stringify({ error: 'Request expired' }), {
+        status: 401,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+
+    // Compute HMAC-SHA256 signature
+    const encoder = new TextEncoder();
+    const keyData = encoder.encode(webhookSecret);
+    const messageData = encoder.encode(`${timestamp}.${rawBody}`);
+    
+    const cryptoKey = await crypto.subtle.importKey(
+      'raw',
+      keyData,
+      { name: 'HMAC', hash: 'SHA-256' },
+      false,
+      ['sign']
+    );
+    
+    const signatureBuffer = await crypto.subtle.sign('HMAC', cryptoKey, messageData);
+    const expectedSignature = Array.from(new Uint8Array(signatureBuffer))
+      .map(b => b.toString(16).padStart(2, '0'))
+      .join('');
+
+    // Constant-time comparison to prevent timing attacks
+    if (signature !== expectedSignature) {
+      console.error('Invalid webhook signature');
+      return new Response(JSON.stringify({ error: 'Invalid signature' }), {
+        status: 401,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
     console.log('Webhook payload:', { 
       call_id: payload.call_id, 
       campaign_id: payload.campaign_id,

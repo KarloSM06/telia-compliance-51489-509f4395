@@ -1,6 +1,7 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import Stripe from "https://esm.sh/stripe@18.5.0";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.57.2";
+import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
 
 const stripe = new Stripe(Deno.env.get("STRIPE_SECRET_KEY") || "", {
   apiVersion: "2025-08-27.basil",
@@ -40,11 +41,24 @@ serve(async (req) => {
       case "checkout.session.completed": {
         const session = event.data.object;
         const subscription = await stripe.subscriptions.retrieve(session.subscription as string);
-        const userId = session.metadata?.user_id;
-        const numberOfAgents = parseInt(session.metadata?.number_of_agents || "1");
+        
+        // Validate metadata
+        const MetadataSchema = z.object({
+          user_id: z.string().uuid("Invalid user ID format"),
+          number_of_agents: z.string().regex(/^\d+$/, "Invalid number of agents")
+        });
 
-        if (!userId) {
-          console.error("No user_id in session metadata");
+        const validatedMetadata = MetadataSchema.safeParse(session.metadata);
+        if (!validatedMetadata.success) {
+          console.error("Invalid session metadata:", validatedMetadata.error);
+          break;
+        }
+
+        const userId = validatedMetadata.data.user_id;
+        const numberOfAgents = parseInt(validatedMetadata.data.number_of_agents);
+
+        if (numberOfAgents < 1 || numberOfAgents > 1000) {
+          console.error("Invalid number of agents:", numberOfAgents);
           break;
         }
 
