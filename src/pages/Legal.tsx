@@ -18,7 +18,12 @@ const Legal = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-muted/20 to-background">
+    <div className="relative overflow-hidden bg-gradient-hero min-h-screen">
+      {/* Animated background elements */}
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute top-20 left-10 w-72 h-72 bg-accent/10 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute bottom-20 right-10 w-96 h-96 bg-accent/5 rounded-full blur-3xl animate-pulse delay-1000"></div>
+      </div>
       <Header />
       
       {/* Premium Quick Links Section */}
@@ -41,7 +46,7 @@ const Legal = () => {
         </nav>
       </div>
 
-      <main className="mx-auto max-w-4xl px-6 py-12">
+      <main className="mx-auto max-w-4xl px-6 py-12 relative">
         
         <section id="integritetspolicy" className="mb-12 bg-gradient-card p-8 rounded-xl shadow-card border border-border/50 hover:shadow-elegant transition-all duration-300">
           <div className="flex items-center gap-3 mb-6 border-b border-accent/20 pb-4">

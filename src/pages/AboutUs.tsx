@@ -3,11 +3,16 @@ import { Sparkles, Users, Lightbulb, Rocket, TrendingUp, Shield } from "lucide-r
 
 const AboutUs = () => {
   return (
-    <div className="min-h-screen bg-background">
+    <div className="relative overflow-hidden bg-gradient-hero min-h-screen">
+      {/* Animated background elements */}
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute top-20 left-10 w-72 h-72 bg-accent/10 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute bottom-20 right-10 w-96 h-96 bg-accent/5 rounded-full blur-3xl animate-pulse delay-1000"></div>
+      </div>
       <Header />
-      <main className="pt-16">
+      <main className="pt-16 relative">
         {/* Hero Section */}
-        <section className="py-20 bg-gradient-hero">
+        <section className="py-20">
           <div className="mx-auto max-w-7xl px-6 lg:px-8">
             <div className="mx-auto max-w-3xl text-center">
               <h1 className="text-4xl font-bold tracking-tight text-white sm:text-6xl">
