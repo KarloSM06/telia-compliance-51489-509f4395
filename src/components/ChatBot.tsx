@@ -16,7 +16,7 @@ export const ChatBot = () => {
   const [messages, setMessages] = useState<Message[]>([
     {
       role: 'assistant',
-      content: 'Hej! 👋 Jag heter Krono och är er digitala AI-säljare från Hiems. Vilket paket passar bäst för ditt företag? Berätta lite om er verksamhet så hjälper jag er hitta rätt lösning!'
+      content: 'Hej! 👋 Jag heter Krono och är er digitala AI-rådgivare från Hiems. Vilket paket passar bäst för ditt företag? Berätta lite om er verksamhet så hjälper jag er hitta rätt lösning!'
     }
   ]);
   const [input, setInput] = useState('');
@@ -187,7 +187,7 @@ export const ChatBot = () => {
                 <MessageCircle className="h-5 w-5 text-accent-foreground" />
               </div>
               <div>
-                <h3 className="font-semibold">Krono - AI-säljare</h3>
+                <h3 className="font-semibold">Krono - AI-rådgivare</h3>
                 <p className="text-sm opacity-90">Alltid redo att hjälpa</p>
               </div>
             </div>
