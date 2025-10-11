@@ -2,10 +2,25 @@ import { Button } from "@/components/ui/button";
 import { Snowflake, LogOut } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { useToast } from "@/hooks/use-toast";
 
 export const Header = () => {
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
+  const { toast } = useToast();
+  const [email, setEmail] = useState("");
+  const [isNewsletterOpen, setIsNewsletterOpen] = useState(false);
 
   const handleAuthClick = () => {
     if (user) {
@@ -13,6 +28,16 @@ export const Header = () => {
     } else {
       navigate("/auth");
     }
+  };
+
+  const handleNewsletterSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    toast({
+      title: "Tack för din anmälan!",
+      description: "Du kommer snart få vårt nyhetsbrev.",
+    });
+    setEmail("");
+    setIsNewsletterOpen(false);
   };
 
   return (
@@ -39,6 +64,37 @@ export const Header = () => {
               <a href="/regelverk" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
                 Regelverk
               </a>
+              <Dialog open={isNewsletterOpen} onOpenChange={setIsNewsletterOpen}>
+                <DialogTrigger asChild>
+                  <button className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
+                    Nyhetsbrev
+                  </button>
+                </DialogTrigger>
+                <DialogContent className="sm:max-w-md">
+                  <DialogHeader>
+                    <DialogTitle>Gå med i Hiems nyhetsbrev – helt gratis!</DialogTitle>
+                    <DialogDescription>
+                      Få de senaste tipsen, insikterna och verktygen inom AI-driven automation direkt i din inkorg – utan kostnad. Lär dig hur du kan effektivisera ditt företag, spara tid och öka lönsamheten.
+                    </DialogDescription>
+                  </DialogHeader>
+                  <form onSubmit={handleNewsletterSubmit} className="space-y-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="newsletter-email">Ange din e-postadress och börja prenumerera helt gratis idag!</Label>
+                      <Input
+                        id="newsletter-email"
+                        type="email"
+                        placeholder="E-postadress"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        required
+                      />
+                    </div>
+                    <Button type="submit" className="w-full">
+                      Gå med gratis
+                    </Button>
+                  </form>
+                </DialogContent>
+              </Dialog>
             </nav>
           )}
           
