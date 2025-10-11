@@ -29,6 +29,7 @@ export const ProductSelection = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState('');
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [selectedPackage, setSelectedPackage] = useState<string | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -157,7 +158,34 @@ export const ProductSelection = () => {
     }
   };
   const handlePackageClick = (packageName: string) => {
-    navigate(`/${packageName.toLowerCase()}`);
+    setSelectedPackage(packageName);
+  };
+
+  const packageDetails: Record<string, { title: string; fullDescription: string }> = {
+    restaurang: {
+      title: "Restaurang",
+      fullDescription: "Vårt Restaurangpaket automatiserar alla rutinuppgifter i verksamheten. AI-agenten tar emot bokningar, hanterar beställningar och ser till att alla specialönskemål registreras korrekt. Genom intelligent schemaläggning och optimering av kök och servering kan personalen fokusera på service och kvalitet. Systemet samlar dessutom in och analyserar kundfeedback, så att ni snabbt kan åtgärda problem, belöna framgångar och förbättra gästers upplevelse. Resultatet blir snabbare flöden, nöjdare kunder och mer lönsam verksamhet."
+    },
+    receptionist: {
+      title: "Receptionist",
+      fullDescription: "Vår AI-receptionist, Krono, fungerar som er digitala medarbetare dygnet runt. Den hanterar inkommande samtal, SMS och e-post, vidarekopplar frågor till rätt avdelning och bokar möten automatiskt. Detta frigör tid för er personal och säkerställer att inga viktiga meddelanden missas. Krono ger alltid ett professionellt bemötande och kan anpassas efter ert företags ton och rutiner."
+    },
+    rekrytering: {
+      title: "Rekrytering",
+      fullDescription: "Vårt Rekryteringspaket hjälper HR och rekryterare att spara tid och hitta rätt kandidater snabbare. AI-agenten screener inkommande CV:n, rankar kandidater baserat på kompetens och erfarenhet, och föreslår de bästa matcherna. Systemet kan även analysera historiska data för att identifiera vilka egenskaper som leder till framgång i företaget. Detta minskar ledtider, förbättrar kandidatkvalitet och säkerställer att rätt personer rekryteras – utan manuellt arbete."
+    },
+    prospekt: {
+      title: "Prospektering",
+      fullDescription: "Med Prospekteringspaketet får försäljningsteamet hjälp att fokusera på de mest lovande affärsmöjligheterna. AI-agenten identifierar potentiella kunder, kvalificerar dem baserat på intresse och beteende, och skapar en lista med varma leads. Systemet prioriterar de kontakter som är mest sannolika att konvertera, vilket gör att säljarbetet blir mer effektivt. Resultatet är fler affärer, kortare säljcykler och en pipeline som ständigt fylls med kvalificerade prospects."
+    },
+    kvalitet: {
+      title: "Compliance",
+      fullDescription: "Compliance-paketet analyserar alla säljsamtal automatiskt och säkerställer att de följer företagets riktlinjer och regulatoriska krav. AI:n ger direkt feedback till säljteamet, visar förbättringsområden och coachar med konkreta råd. Detta garanterar konsekvent kvalitet i alla kundkontakter, minskar risker och skyddar varumärket. Teamet kan träna på riktiga exempel och utvecklas snabbare, samtidigt som ledningen får överblick över prestation och compliance."
+    },
+    hemsideoptimering: {
+      title: "Produktoptimering för hemsidor",
+      fullDescription: "Vårt hemsideoptimeringspaket analyserar varje besökares beteende och köphistorik. AI-agenten prioriterar och visar de produkter som är mest relevanta för varje kund, i realtid. Genom att anpassa erbjudanden och innehåll individuellt ökar konverteringen och varje besök blir mer lönsamt. Systemet lär sig kontinuerligt av användardata, vilket gör att rekommendationerna blir mer precisa över tid och att försäljningen växer utan extra manuellt arbete."
+    }
   };
 
   const handlePhoneSubmit = () => {
@@ -279,10 +307,22 @@ export const ProductSelection = () => {
                     <span className="text-foreground/80 leading-relaxed">Intelligent kundfeedback-hantering</span>
                   </li>
                 </ul>
-                <Button size="lg" className="w-full bg-primary text-primary-foreground hover:bg-primary/90 shadow-button group-hover:shadow-glow transition-all duration-300 font-semibold text-base h-14" onClick={() => handlePackageClick('restaurang')}>
-                  Läs mer
-                  <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
-                </Button>
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <Button size="lg" className="w-full bg-primary text-primary-foreground hover:bg-primary/90 shadow-button group-hover:shadow-glow transition-all duration-300 font-semibold text-base h-14" onClick={() => handlePackageClick('restaurang')}>
+                      Läs mer
+                      <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="sm:max-w-2xl max-h-[80vh] overflow-y-auto">
+                    <DialogHeader>
+                      <DialogTitle className="text-2xl font-display">Restaurang</DialogTitle>
+                      <DialogDescription className="text-base leading-relaxed pt-4">
+                        {packageDetails.restaurang.fullDescription}
+                      </DialogDescription>
+                    </DialogHeader>
+                  </DialogContent>
+                </Dialog>
               </CardContent>
             </Card>
 
@@ -317,10 +357,22 @@ export const ProductSelection = () => {
                     <span className="text-foreground/80 leading-relaxed">Snabb och professionell service</span>
                   </li>
                 </ul>
-                <Button size="lg" className="w-full bg-primary text-primary-foreground hover:bg-primary/90 shadow-button group-hover:shadow-glow transition-all duration-300 font-semibold text-base h-14" onClick={() => handlePackageClick('receptionist')}>
-                  Läs mer
-                  <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
-                </Button>
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <Button size="lg" className="w-full bg-primary text-primary-foreground hover:bg-primary/90 shadow-button group-hover:shadow-glow transition-all duration-300 font-semibold text-base h-14" onClick={() => handlePackageClick('receptionist')}>
+                      Läs mer
+                      <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="sm:max-w-2xl max-h-[80vh] overflow-y-auto">
+                    <DialogHeader>
+                      <DialogTitle className="text-2xl font-display">Receptionist</DialogTitle>
+                      <DialogDescription className="text-base leading-relaxed pt-4">
+                        {packageDetails.receptionist.fullDescription}
+                      </DialogDescription>
+                    </DialogHeader>
+                  </DialogContent>
+                </Dialog>
               </CardContent>
             </Card>
 
@@ -355,10 +407,22 @@ export const ProductSelection = () => {
                     <span className="text-foreground/80 leading-relaxed">Snabbare rekrytering av rätt talanger</span>
                   </li>
                 </ul>
-                <Button size="lg" className="w-full bg-primary text-primary-foreground hover:bg-primary/90 shadow-button group-hover:shadow-glow transition-all duration-300 font-semibold text-base h-14" onClick={() => handlePackageClick('rekrytering')}>
-                  Läs mer
-                  <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
-                </Button>
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <Button size="lg" className="w-full bg-primary text-primary-foreground hover:bg-primary/90 shadow-button group-hover:shadow-glow transition-all duration-300 font-semibold text-base h-14" onClick={() => handlePackageClick('rekrytering')}>
+                      Läs mer
+                      <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="sm:max-w-2xl max-h-[80vh] overflow-y-auto">
+                    <DialogHeader>
+                      <DialogTitle className="text-2xl font-display">Rekrytering</DialogTitle>
+                      <DialogDescription className="text-base leading-relaxed pt-4">
+                        {packageDetails.rekrytering.fullDescription}
+                      </DialogDescription>
+                    </DialogHeader>
+                  </DialogContent>
+                </Dialog>
               </CardContent>
             </Card>
 
@@ -393,10 +457,22 @@ export const ProductSelection = () => {
                     <span className="text-foreground/80 leading-relaxed">Maximerar affärsmöjligheter</span>
                   </li>
                 </ul>
-                <Button size="lg" className="w-full bg-primary text-primary-foreground hover:bg-primary/90 shadow-button group-hover:shadow-glow transition-all duration-300 font-semibold text-base h-14" onClick={() => handlePackageClick('prospekt')}>
-                  Läs mer
-                  <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
-                </Button>
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <Button size="lg" className="w-full bg-primary text-primary-foreground hover:bg-primary/90 shadow-button group-hover:shadow-glow transition-all duration-300 font-semibold text-base h-14" onClick={() => handlePackageClick('prospekt')}>
+                      Läs mer
+                      <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="sm:max-w-2xl max-h-[80vh] overflow-y-auto">
+                    <DialogHeader>
+                      <DialogTitle className="text-2xl font-display">Prospektering</DialogTitle>
+                      <DialogDescription className="text-base leading-relaxed pt-4">
+                        {packageDetails.prospekt.fullDescription}
+                      </DialogDescription>
+                    </DialogHeader>
+                  </DialogContent>
+                </Dialog>
               </CardContent>
             </Card>
 
@@ -434,10 +510,22 @@ export const ProductSelection = () => {
                     <span className="text-foreground/80 leading-relaxed">Skyddar varumärket med konsekvent kvalitet</span>
                   </li>
                 </ul>
-                <Button size="lg" className="w-full bg-gradient-gold text-accent-foreground hover:opacity-90 shadow-button group-hover:shadow-glow transition-all duration-300 font-semibold text-base h-14" onClick={() => handlePackageClick('kvalitet')}>
-                  Läs mer
-                  <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
-                </Button>
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <Button size="lg" className="w-full bg-gradient-gold text-accent-foreground hover:opacity-90 shadow-button group-hover:shadow-glow transition-all duration-300 font-semibold text-base h-14" onClick={() => handlePackageClick('kvalitet')}>
+                      Läs mer
+                      <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="sm:max-w-2xl max-h-[80vh] overflow-y-auto">
+                    <DialogHeader>
+                      <DialogTitle className="text-2xl font-display">Compliance</DialogTitle>
+                      <DialogDescription className="text-base leading-relaxed pt-4">
+                        {packageDetails.kvalitet.fullDescription}
+                      </DialogDescription>
+                    </DialogHeader>
+                  </DialogContent>
+                </Dialog>
               </CardContent>
             </Card>
 
@@ -472,10 +560,22 @@ export const ProductSelection = () => {
                     <span className="text-foreground/80 leading-relaxed">Högre konvertering och ökad försäljning</span>
                   </li>
                 </ul>
-                <Button size="lg" className="w-full bg-primary text-primary-foreground hover:bg-primary/90 shadow-button group-hover:shadow-glow transition-all duration-300 font-semibold text-base h-14" onClick={() => handlePackageClick('hemsideoptimering')}>
-                  Läs mer
-                  <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
-                </Button>
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <Button size="lg" className="w-full bg-primary text-primary-foreground hover:bg-primary/90 shadow-button group-hover:shadow-glow transition-all duration-300 font-semibold text-base h-14" onClick={() => handlePackageClick('hemsideoptimering')}>
+                      Läs mer
+                      <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="sm:max-w-2xl max-h-[80vh] overflow-y-auto">
+                    <DialogHeader>
+                      <DialogTitle className="text-2xl font-display">Produktoptimering för hemsidor</DialogTitle>
+                      <DialogDescription className="text-base leading-relaxed pt-4">
+                        {packageDetails.hemsideoptimering.fullDescription}
+                      </DialogDescription>
+                    </DialogHeader>
+                  </DialogContent>
+                </Dialog>
               </CardContent>
             </Card>
           </div>
