@@ -230,7 +230,7 @@ export const ProductSelection = () => {
                 <div className="flex items-center justify-center w-20 h-20 rounded-2xl bg-accent/10 mb-6 group-hover:scale-110 group-hover:rotate-3 transition-all duration-500">
                   <ChefHat className="h-10 w-10 text-accent" />
                 </div>
-                <CardTitle className="text-2xl font-display mb-2">Restaurangpaketet</CardTitle>
+                <CardTitle className="text-2xl font-display mb-2">Restaurang</CardTitle>
                 <CardDescription className="text-base text-muted-foreground">Automatisera rutiner för restauranger och caféer med AI som hanterar bokningar, beställningar och kundfeedback</CardDescription>
               </CardHeader>
               <CardContent className="relative space-y-6">
@@ -268,7 +268,7 @@ export const ProductSelection = () => {
                 <div className="flex items-center justify-center w-20 h-20 rounded-2xl bg-accent/10 mb-6 group-hover:scale-110 group-hover:rotate-3 transition-all duration-500">
                   <Headphones className="h-10 w-10 text-accent" />
                 </div>
-                <CardTitle className="text-2xl font-display mb-2">Receptionistpaketet</CardTitle>
+                <CardTitle className="text-2xl font-display mb-2">Receptionist</CardTitle>
                 <CardDescription className="text-base text-muted-foreground">Virtuell AI-receptionist som hanterar samtal, SMS och mejl dygnet runt</CardDescription>
               </CardHeader>
               <CardContent className="relative space-y-6">
@@ -306,7 +306,7 @@ export const ProductSelection = () => {
                 <div className="flex items-center justify-center w-20 h-20 rounded-2xl bg-accent/10 mb-6 group-hover:scale-110 group-hover:rotate-3 transition-all duration-500">
                   <UserCheck className="h-10 w-10 text-accent" />
                 </div>
-                <CardTitle className="text-2xl font-display mb-2">Rekryteringspaketet</CardTitle>
+                <CardTitle className="text-2xl font-display mb-2">Rekrytering</CardTitle>
                 <CardDescription className="text-base text-muted-foreground">Effektivisera rekrytering med AI som screener, rankar och föreslår bästa kandidater</CardDescription>
               </CardHeader>
               <CardContent className="relative space-y-6">
@@ -344,7 +344,7 @@ export const ProductSelection = () => {
                 <div className="flex items-center justify-center w-20 h-20 rounded-2xl bg-accent/10 mb-6 group-hover:scale-110 group-hover:rotate-3 transition-all duration-500">
                   <TrendingUp className="h-10 w-10 text-accent" />
                 </div>
-                <CardTitle className="text-2xl font-display mb-2">Prospektpaketet</CardTitle>
+                <CardTitle className="text-2xl font-display mb-2">Prospektering</CardTitle>
                 <CardDescription className="text-base text-muted-foreground">Öka er pipeline med AI som identifierar och kvalificerar potentiella kunder</CardDescription>
               </CardHeader>
               <CardContent className="relative space-y-6">
@@ -385,7 +385,7 @@ export const ProductSelection = () => {
                 <div className="flex items-center justify-center w-20 h-20 rounded-2xl bg-accent/10 mb-6 group-hover:scale-110 group-hover:rotate-3 transition-all duration-500">
                   <MessageSquare className="h-10 w-10 text-accent" />
                 </div>
-                <CardTitle className="text-2xl font-display mb-2">Kvalitets- och feedbackpaketet</CardTitle>
+                <CardTitle className="text-2xl font-display mb-2">Compliance</CardTitle>
                 <CardDescription className="text-base text-muted-foreground">Analysera säljsamtal med AI för kvalitetsgranskning och coaching</CardDescription>
               </CardHeader>
               <CardContent className="relative space-y-6">
@@ -423,7 +423,7 @@ export const ProductSelection = () => {
                 <div className="flex items-center justify-center w-20 h-20 rounded-2xl bg-accent/10 mb-6 group-hover:scale-110 group-hover:rotate-3 transition-all duration-500">
                   <ShoppingCart className="h-10 w-10 text-accent" />
                 </div>
-                <CardTitle className="text-2xl font-display mb-2">Hemsideoptimeringspaketet</CardTitle>
+                <CardTitle className="text-2xl font-display mb-2">Hemsideoptimering</CardTitle>
                 <CardDescription className="text-base text-muted-foreground">AI som visar rätt produkter till rätt kunder baserat på användarbeteende</CardDescription>
               </CardHeader>
               <CardContent className="relative space-y-6">
