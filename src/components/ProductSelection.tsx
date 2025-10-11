@@ -205,7 +205,7 @@ export const ProductSelection = () => {
                     <Shield className="h-8 w-8 text-accent" />
                   </div>
                   <h3 className="text-2xl font-display font-bold text-white mb-3">Hiems som partner</h3>
-                  <p className="text-white/70 leading-relaxed">Vi vidareutvecklar lösningarna, erbjuder support och säkerställer att allt alltid fungerar snabbt och smidigt. Med Hiems får ni inte bara AI – ni får en pålitlig partner som skapar kontinuerlig tillväxt och långsiktigt värde.</p>
+                  <p className="text-white/70 leading-relaxed"> Med Hiems får ni inte bara AI – ni får en pålitlig partner som skapar kontinuerlig tillväxt och långsiktigt värde.</p>
                 </div>
               </div>
             </div>
