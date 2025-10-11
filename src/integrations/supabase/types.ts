@@ -158,30 +158,6 @@ export type Database = {
           },
         ]
       }
-      offers: {
-        Row: {
-          created_at: string
-          email: string | null
-          id: string
-          phone_number: string
-          summary: string | null
-        }
-        Insert: {
-          created_at?: string
-          email?: string | null
-          id?: string
-          phone_number: string
-          summary?: string | null
-        }
-        Update: {
-          created_at?: string
-          email?: string | null
-          id?: string
-          phone_number?: string
-          summary?: string | null
-        }
-        Relationships: []
-      }
       phone_numbers: {
         Row: {
           created_at: string
