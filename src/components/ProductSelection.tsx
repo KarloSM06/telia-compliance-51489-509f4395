@@ -1,10 +1,156 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, CheckCircle, Zap, Target, Sparkles, ChefHat, Headphones, UserCheck, TrendingUp, MessageSquare, ShoppingCart, Award } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { ArrowRight, CheckCircle, Zap, Target, Sparkles, ChefHat, Headphones, UserCheck, TrendingUp, MessageSquare, ShoppingCart, Award, Send, Loader2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
+import { useState, useRef, useEffect } from "react";
+
+interface Message {
+  role: 'user' | 'assistant';
+  content: string;
+}
+
+const CHAT_URL = `https://shskknkivuewuqonjdjc.supabase.co/functions/v1/chat-assistant`;
+
 export const ProductSelection = () => {
   const navigate = useNavigate();
+  const [messages, setMessages] = useState<Message[]>([
+    {
+      role: 'assistant',
+      content: 'Hej! 👋 Jag heter Krono och är er digitala AI-rådgivare från Hiems. Vilket paket passar bäst för ditt företag? Berätta lite om er verksamhet så hjälper jag er hitta rätt lösning!'
+    }
+  ]);
+  const [input, setInput] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+    }
+  }, [messages]);
+
+  const streamChat = async (userMessage: string) => {
+    const userMsg: Message = { role: 'user', content: userMessage };
+    setMessages(prev => [...prev, userMsg]);
+    setIsLoading(true);
+
+    let assistantContent = '';
+
+    try {
+      const response = await fetch(CHAT_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ messages: [...messages, userMsg] }),
+      });
+
+      if (!response.ok || !response.body) {
+        throw new Error('Failed to start stream');
+      }
+
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder();
+      let textBuffer = '';
+      let streamDone = false;
+
+      while (!streamDone) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        
+        textBuffer += decoder.decode(value, { stream: true });
+
+        let newlineIndex: number;
+        while ((newlineIndex = textBuffer.indexOf('\n')) !== -1) {
+          let line = textBuffer.slice(0, newlineIndex);
+          textBuffer = textBuffer.slice(newlineIndex + 1);
+
+          if (line.endsWith('\r')) line = line.slice(0, -1);
+          if (line.startsWith(':') || line.trim() === '') continue;
+          if (!line.startsWith('data: ')) continue;
+
+          const jsonStr = line.slice(6).trim();
+          if (jsonStr === '[DONE]') {
+            streamDone = true;
+            break;
+          }
+
+          try {
+            const parsed = JSON.parse(jsonStr);
+            const content = parsed.choices?.[0]?.delta?.content as string | undefined;
+            if (content) {
+              assistantContent += content;
+              setMessages(prev => {
+                const last = prev[prev.length - 1];
+                if (last?.role === 'assistant') {
+                  return prev.map((m, i) => 
+                    i === prev.length - 1 ? { ...m, content: assistantContent } : m
+                  );
+                }
+                return [...prev, { role: 'assistant', content: assistantContent }];
+              });
+            }
+          } catch {
+            textBuffer = line + '\n' + textBuffer;
+            break;
+          }
+        }
+      }
+
+      if (textBuffer.trim()) {
+        for (let raw of textBuffer.split('\n')) {
+          if (!raw) continue;
+          if (raw.endsWith('\r')) raw = raw.slice(0, -1);
+          if (raw.startsWith(':') || raw.trim() === '') continue;
+          if (!raw.startsWith('data: ')) continue;
+          const jsonStr = raw.slice(6).trim();
+          if (jsonStr === '[DONE]') continue;
+          try {
+            const parsed = JSON.parse(jsonStr);
+            const content = parsed.choices?.[0]?.delta?.content as string | undefined;
+            if (content) {
+              assistantContent += content;
+              setMessages(prev => {
+                const last = prev[prev.length - 1];
+                if (last?.role === 'assistant') {
+                  return prev.map((m, i) => 
+                    i === prev.length - 1 ? { ...m, content: assistantContent } : m
+                  );
+                }
+                return [...prev, { role: 'assistant', content: assistantContent }];
+              });
+            }
+          } catch {}
+        }
+      }
+    } catch (error) {
+      console.error('Chat error:', error);
+      setMessages(prev => [...prev, {
+        role: 'assistant',
+        content: 'Ursäkta, något gick fel. Vänligen försök igen eller kontakta oss direkt.'
+      }]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleSend = async () => {
+    if (!input.trim() || isLoading) return;
+    const userMessage = input.trim();
+    setInput('');
+    await streamChat(userMessage);
+  };
+
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleSend();
+    }
+  };
   const handlePackageClick = (packageName: string) => {
     navigate(`/${packageName.toLowerCase()}`);
   };
@@ -363,24 +509,82 @@ export const ProductSelection = () => {
       <section className="relative py-24">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <div className="mx-auto max-w-4xl">
-            <div className="relative rounded-3xl bg-gradient-primary p-12 md:p-16 overflow-hidden shadow-elegant">
+            <div className="relative rounded-3xl bg-gradient-primary overflow-hidden shadow-elegant">
               <div className="absolute inset-0 bg-gradient-gold opacity-10"></div>
               <div className="absolute top-0 right-0 w-64 h-64 bg-accent/20 rounded-full blur-3xl"></div>
-              <div className="relative text-center">
+              
+              {/* Header */}
+              <div className="relative p-8 md:p-12 text-center border-b border-white/10">
                 <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 mb-6 backdrop-blur-sm border border-white/20">
                   <Sparkles className="h-4 w-4 text-accent" />
                   <span className="text-sm font-medium text-white">Kostnadsfri demonstration</span>
                 </div>
-                <h2 className="text-4xl font-display font-bold text-white mb-6">Se hur AI hade kunnat effektivisera er verksamhet</h2>
-                <p className="text-xl text-white/90 mb-10 leading-relaxed max-w-2xl mx-auto">
-                  Vill du se hur det fungerar? Prova vår demo och upplev hur vår AI analyserar säljsamtal i realtid.
+                <h2 className="text-4xl font-display font-bold text-white mb-4">Se hur AI hade kunnat effektivisera er verksamhet</h2>
+                <p className="text-lg text-white/90 leading-relaxed max-w-2xl mx-auto">
+                  Prata med Krono, vår AI-rådgivare, eller prova vår demo för att se hur AI kan analysera säljsamtal i realtid.
                 </p>
-                <Link to="/demo">
-                  <Button size="lg" className="bg-white text-primary hover:bg-white/90 shadow-button hover:shadow-glow transition-all duration-300 font-semibold text-base px-10 h-14 group">
-                    Prova demon nu
-                    <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
-                  </Button>
-                </Link>
+              </div>
+
+              {/* Chat Area */}
+              <div className="relative bg-white/5 backdrop-blur-sm">
+                <ScrollArea className="h-[400px] p-6" ref={scrollRef}>
+                  <div className="space-y-4">
+                    {messages.map((msg, idx) => (
+                      <div
+                        key={idx}
+                        className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
+                      >
+                        <div
+                          className={`max-w-[80%] rounded-2xl px-4 py-2.5 ${
+                            msg.role === 'user'
+                              ? 'bg-white text-primary'
+                              : 'bg-white/10 text-white backdrop-blur-sm border border-white/20'
+                          }`}
+                        >
+                          <p className="text-sm whitespace-pre-wrap">{msg.content}</p>
+                        </div>
+                      </div>
+                    ))}
+                    {isLoading && (
+                      <div className="flex justify-start">
+                        <div className="bg-white/10 rounded-2xl px-4 py-2.5 backdrop-blur-sm border border-white/20">
+                          <Loader2 className="h-4 w-4 animate-spin text-white" />
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </ScrollArea>
+
+                {/* Input */}
+                <div className="p-6 border-t border-white/10">
+                  <div className="flex gap-3">
+                    <Input
+                      ref={inputRef}
+                      value={input}
+                      onChange={(e) => setInput(e.target.value)}
+                      onKeyDown={handleKeyPress}
+                      placeholder="Skriv ditt meddelande till Krono..."
+                      disabled={isLoading}
+                      className="flex-1 bg-white/10 border-white/20 text-white placeholder:text-white/50 focus:bg-white/15"
+                    />
+                    <Button
+                      onClick={handleSend}
+                      disabled={!input.trim() || isLoading}
+                      size="icon"
+                      className="bg-white text-primary hover:bg-white/90 h-10 w-10"
+                    >
+                      <Send className="h-4 w-4" />
+                    </Button>
+                  </div>
+                  <div className="mt-4 text-center">
+                    <Link to="/demo">
+                      <Button variant="outline" size="lg" className="bg-white/5 border-white/20 text-white hover:bg-white/10 font-semibold group">
+                        Eller prova vår demo
+                        <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                      </Button>
+                    </Link>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
