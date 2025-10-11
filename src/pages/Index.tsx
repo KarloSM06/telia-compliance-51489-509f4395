@@ -1,5 +1,6 @@
 import { Header } from "@/components/Header";
 import { ProductSelection } from "@/components/ProductSelection";
+import { Footer } from "@/components/Footer";
 
 const Index = () => {
   return (
@@ -8,6 +9,7 @@ const Index = () => {
       <main>
         <ProductSelection />
       </main>
+      <Footer />
     </div>
   );
 };
