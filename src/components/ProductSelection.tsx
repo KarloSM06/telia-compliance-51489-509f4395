@@ -517,7 +517,7 @@ export const ProductSelection = () => {
               <div className="relative p-8 md:p-12 text-center border-b border-white/10">
                 <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 mb-6 backdrop-blur-sm border border-white/20">
                   <Sparkles className="h-4 w-4 text-accent" />
-                  <span className="text-sm font-medium text-white">Kostnadsfri demonstration</span>
+                  <span className="text-sm font-medium text-white">Hur hade AI hjälpt er verksamhet?</span>
                 </div>
                 <h2 className="text-4xl font-display font-bold text-white mb-4">Se hur AI hade kunnat effektivisera er verksamhet</h2>
                 <p className="text-lg text-white/90 leading-relaxed max-w-2xl mx-auto">
