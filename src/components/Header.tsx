@@ -117,8 +117,11 @@ export const Header = () => {
                 Logga in
               </Button>
             )}
-            <Button variant="default">
-              Boka demo
+            <Button 
+              variant="default"
+              className="bg-gradient-gold text-white hover:shadow-glow transition-all duration-300 font-semibold"
+            >
+              Prova vår receptionist
             </Button>
           </div>
         </div>
