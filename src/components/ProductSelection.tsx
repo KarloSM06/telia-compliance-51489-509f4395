@@ -1,15 +1,12 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Phone, Shield, ArrowRight, CheckCircle, Zap, Target, Lightbulb, Sparkles } from "lucide-react";
+import { ArrowRight, CheckCircle, Zap, Target, Sparkles, ChefHat, Headphones, UserCheck, TrendingUp, MessageSquare, ShoppingCart, Award } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 export const ProductSelection = () => {
   const navigate = useNavigate();
-  const handleKronoClick = () => {
-    window.location.href = "https://chronodesk.se";
-  };
-  const handleHermesClick = () => {
-    navigate("/hermes");
+  const handlePackageClick = (packageName: string) => {
+    navigate(`/${packageName.toLowerCase()}`);
   };
   return <div className="relative overflow-hidden bg-gradient-hero">
       {/* Animated background elements */}
@@ -79,16 +76,16 @@ export const ProductSelection = () => {
             <p className="text-lg text-white/80">Våra färdiga AI-paket är kombinationer av flera verktyg gjorda för att passa olika branscher. Dessa skräddarsys för att passa just er verksamhet och levereras på högst två veckor – så ni snabbt kan börja effektivisera och växa er verksamhet. </p>
           </div>
 
-          <div className="grid grid-cols-1 gap-8 md:grid-cols-2 max-w-6xl mx-auto">
-            {/* Krono Card */}
+          <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3 max-w-7xl mx-auto">
+            {/* Restaurangpaketet */}
             <Card className="group relative overflow-hidden border-2 border-white/10 bg-gradient-card backdrop-blur-sm hover:border-accent/50 transition-all duration-500 hover:shadow-glow animate-scale-in">
               <div className="absolute inset-0 bg-gradient-gold opacity-0 group-hover:opacity-10 transition-opacity duration-500"></div>
               <CardHeader className="relative">
-                <div className="flex items-center justify-center w-20 h-20 rounded-2xl bg-primary/5 mb-6 group-hover:scale-110 group-hover:rotate-3 transition-all duration-500">
-                  <Phone className="h-10 w-10 text-primary" />
+                <div className="flex items-center justify-center w-20 h-20 rounded-2xl bg-accent/10 mb-6 group-hover:scale-110 group-hover:rotate-3 transition-all duration-500">
+                  <ChefHat className="h-10 w-10 text-accent" />
                 </div>
-                <CardTitle className="text-3xl font-display mb-2">Krono</CardTitle>
-                <CardDescription className="text-lg text-muted-foreground">AI-receptionist/butler. En supermedarbetare som hanterar era samtal, sms och mejl 24/7</CardDescription>
+                <CardTitle className="text-2xl font-display mb-2">Restaurangpaketet</CardTitle>
+                <CardDescription className="text-base text-muted-foreground">Automatisera rutiner för restauranger och caféer med AI som hanterar bokningar, beställningar och kundfeedback</CardDescription>
               </CardHeader>
               <CardContent className="relative space-y-6">
                 <ul className="space-y-4 mb-8">
@@ -96,43 +93,154 @@ export const ProductSelection = () => {
                     <div className="flex-shrink-0 w-6 h-6 rounded-full bg-accent/10 flex items-center justify-center mt-0.5">
                       <CheckCircle className="h-4 w-4 text-accent" />
                     </div>
-                    <span className="text-foreground/80 leading-relaxed">Automatisk samtalsmottagning dygnet runt</span>
+                    <span className="text-foreground/80 leading-relaxed">Automatisk hantering av bokningar och beställningar</span>
                   </li>
                   <li className="flex items-start gap-3">
                     <div className="flex-shrink-0 w-6 h-6 rounded-full bg-accent/10 flex items-center justify-center mt-0.5">
                       <CheckCircle className="h-4 w-4 text-accent" />
                     </div>
-                    <span className="text-foreground/80 leading-relaxed">Hanterar beställningar, bokningar och avbokningar automatiskt. Sparar och delger information strukturerat
-                  </span>
+                    <span className="text-foreground/80 leading-relaxed">Optimering av kök och serviceflöden</span>
                   </li>
                   <li className="flex items-start gap-3">
                     <div className="flex-shrink-0 w-6 h-6 rounded-full bg-accent/10 flex items-center justify-center mt-0.5">
                       <CheckCircle className="h-4 w-4 text-accent" />
                     </div>
-                    <span className="text-foreground/80 leading-relaxed">Kan integreras i ert befintliga system</span>
+                    <span className="text-foreground/80 leading-relaxed">Intelligent kundfeedback-hantering</span>
                   </li>
                 </ul>
-                <Button size="lg" className="w-full bg-primary text-primary-foreground hover:bg-primary/90 shadow-button group-hover:shadow-glow transition-all duration-300 font-semibold text-base h-14" onClick={handleKronoClick}>
-                  Gå till Krono
+                <Button size="lg" className="w-full bg-primary text-primary-foreground hover:bg-primary/90 shadow-button group-hover:shadow-glow transition-all duration-300 font-semibold text-base h-14" onClick={() => handlePackageClick('restaurang')}>
+                  Läs mer
                   <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
                 </Button>
               </CardContent>
             </Card>
 
-            {/* Hermes Card */}
-            <Card className="group relative overflow-hidden border-2 border-accent/30 bg-gradient-card backdrop-blur-sm hover:border-accent transition-all duration-500 hover:shadow-glow animate-scale-in delay-200">
+            {/* Receptionistpaketet */}
+            <Card className="group relative overflow-hidden border-2 border-white/10 bg-gradient-card backdrop-blur-sm hover:border-accent/50 transition-all duration-500 hover:shadow-glow animate-scale-in delay-100">
+              <div className="absolute inset-0 bg-gradient-gold opacity-0 group-hover:opacity-10 transition-opacity duration-500"></div>
+              <CardHeader className="relative">
+                <div className="flex items-center justify-center w-20 h-20 rounded-2xl bg-accent/10 mb-6 group-hover:scale-110 group-hover:rotate-3 transition-all duration-500">
+                  <Headphones className="h-10 w-10 text-accent" />
+                </div>
+                <CardTitle className="text-2xl font-display mb-2">Receptionistpaketet</CardTitle>
+                <CardDescription className="text-base text-muted-foreground">Virtuell AI-receptionist som hanterar samtal, SMS och mejl dygnet runt</CardDescription>
+              </CardHeader>
+              <CardContent className="relative space-y-6">
+                <ul className="space-y-4 mb-8">
+                  <li className="flex items-start gap-3">
+                    <div className="flex-shrink-0 w-6 h-6 rounded-full bg-accent/10 flex items-center justify-center mt-0.5">
+                      <CheckCircle className="h-4 w-4 text-accent" />
+                    </div>
+                    <span className="text-foreground/80 leading-relaxed">24/7 hantering av samtal, SMS och mejl</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <div className="flex-shrink-0 w-6 h-6 rounded-full bg-accent/10 flex items-center justify-center mt-0.5">
+                      <CheckCircle className="h-4 w-4 text-accent" />
+                    </div>
+                    <span className="text-foreground/80 leading-relaxed">Automatiska bokningar och vidarekoppling</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <div className="flex-shrink-0 w-6 h-6 rounded-full bg-accent/10 flex items-center justify-center mt-0.5">
+                      <CheckCircle className="h-4 w-4 text-accent" />
+                    </div>
+                    <span className="text-foreground/80 leading-relaxed">Snabb och professionell service</span>
+                  </li>
+                </ul>
+                <Button size="lg" className="w-full bg-primary text-primary-foreground hover:bg-primary/90 shadow-button group-hover:shadow-glow transition-all duration-300 font-semibold text-base h-14" onClick={() => handlePackageClick('receptionist')}>
+                  Läs mer
+                  <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                </Button>
+              </CardContent>
+            </Card>
+
+            {/* Rekryteringspaketet */}
+            <Card className="group relative overflow-hidden border-2 border-white/10 bg-gradient-card backdrop-blur-sm hover:border-accent/50 transition-all duration-500 hover:shadow-glow animate-scale-in delay-200">
+              <div className="absolute inset-0 bg-gradient-gold opacity-0 group-hover:opacity-10 transition-opacity duration-500"></div>
+              <CardHeader className="relative">
+                <div className="flex items-center justify-center w-20 h-20 rounded-2xl bg-accent/10 mb-6 group-hover:scale-110 group-hover:rotate-3 transition-all duration-500">
+                  <UserCheck className="h-10 w-10 text-accent" />
+                </div>
+                <CardTitle className="text-2xl font-display mb-2">Rekryteringspaketet</CardTitle>
+                <CardDescription className="text-base text-muted-foreground">Effektivisera rekrytering med AI som screener, rankar och föreslår bästa kandidater</CardDescription>
+              </CardHeader>
+              <CardContent className="relative space-y-6">
+                <ul className="space-y-4 mb-8">
+                  <li className="flex items-start gap-3">
+                    <div className="flex-shrink-0 w-6 h-6 rounded-full bg-accent/10 flex items-center justify-center mt-0.5">
+                      <CheckCircle className="h-4 w-4 text-accent" />
+                    </div>
+                    <span className="text-foreground/80 leading-relaxed">Automatisk screening av ansökningar</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <div className="flex-shrink-0 w-6 h-6 rounded-full bg-accent/10 flex items-center justify-center mt-0.5">
+                      <CheckCircle className="h-4 w-4 text-accent" />
+                    </div>
+                    <span className="text-foreground/80 leading-relaxed">Rankning och matchning av kandidater</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <div className="flex-shrink-0 w-6 h-6 rounded-full bg-accent/10 flex items-center justify-center mt-0.5">
+                      <CheckCircle className="h-4 w-4 text-accent" />
+                    </div>
+                    <span className="text-foreground/80 leading-relaxed">Snabbare rekrytering av rätt talanger</span>
+                  </li>
+                </ul>
+                <Button size="lg" className="w-full bg-primary text-primary-foreground hover:bg-primary/90 shadow-button group-hover:shadow-glow transition-all duration-300 font-semibold text-base h-14" onClick={() => handlePackageClick('rekrytering')}>
+                  Läs mer
+                  <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                </Button>
+              </CardContent>
+            </Card>
+
+            {/* Prospektpaketet */}
+            <Card className="group relative overflow-hidden border-2 border-white/10 bg-gradient-card backdrop-blur-sm hover:border-accent/50 transition-all duration-500 hover:shadow-glow animate-scale-in">
+              <div className="absolute inset-0 bg-gradient-gold opacity-0 group-hover:opacity-10 transition-opacity duration-500"></div>
+              <CardHeader className="relative">
+                <div className="flex items-center justify-center w-20 h-20 rounded-2xl bg-accent/10 mb-6 group-hover:scale-110 group-hover:rotate-3 transition-all duration-500">
+                  <TrendingUp className="h-10 w-10 text-accent" />
+                </div>
+                <CardTitle className="text-2xl font-display mb-2">Prospektpaketet</CardTitle>
+                <CardDescription className="text-base text-muted-foreground">Öka er pipeline med AI som identifierar och kvalificerar potentiella kunder</CardDescription>
+              </CardHeader>
+              <CardContent className="relative space-y-6">
+                <ul className="space-y-4 mb-8">
+                  <li className="flex items-start gap-3">
+                    <div className="flex-shrink-0 w-6 h-6 rounded-full bg-accent/10 flex items-center justify-center mt-0.5">
+                      <CheckCircle className="h-4 w-4 text-accent" />
+                    </div>
+                    <span className="text-foreground/80 leading-relaxed">Automatisk identifiering av prospekt</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <div className="flex-shrink-0 w-6 h-6 rounded-full bg-accent/10 flex items-center justify-center mt-0.5">
+                      <CheckCircle className="h-4 w-4 text-accent" />
+                    </div>
+                    <span className="text-foreground/80 leading-relaxed">Kvalificering och skapande av leads</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <div className="flex-shrink-0 w-6 h-6 rounded-full bg-accent/10 flex items-center justify-center mt-0.5">
+                      <CheckCircle className="h-4 w-4 text-accent" />
+                    </div>
+                    <span className="text-foreground/80 leading-relaxed">Maximera affärsmöjligheter</span>
+                  </li>
+                </ul>
+                <Button size="lg" className="w-full bg-primary text-primary-foreground hover:bg-primary/90 shadow-button group-hover:shadow-glow transition-all duration-300 font-semibold text-base h-14" onClick={() => handlePackageClick('prospekt')}>
+                  Läs mer
+                  <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                </Button>
+              </CardContent>
+            </Card>
+
+            {/* Kvalitets- och feedbackpaketet */}
+            <Card className="group relative overflow-hidden border-2 border-accent/30 bg-gradient-card backdrop-blur-sm hover:border-accent transition-all duration-500 hover:shadow-glow animate-scale-in delay-100">
               <div className="absolute inset-0 bg-gradient-gold opacity-5 group-hover:opacity-20 transition-opacity duration-500"></div>
               <div className="absolute top-4 right-4 px-3 py-1 bg-accent/20 rounded-full border border-accent/50">
                 <span className="text-xs font-semibold text-accent">POPULÄR</span>
               </div>
               <CardHeader className="relative">
                 <div className="flex items-center justify-center w-20 h-20 rounded-2xl bg-accent/10 mb-6 group-hover:scale-110 group-hover:rotate-3 transition-all duration-500">
-                  <Shield className="h-10 w-10 text-accent" />
+                  <MessageSquare className="h-10 w-10 text-accent" />
                 </div>
-                <CardTitle className="text-3xl font-display mb-2">Thor</CardTitle>
-                <CardDescription className="text-lg text-muted-foreground">
-                  AI-kvalitetsgranskning av säljsamtal
-                </CardDescription>
+                <CardTitle className="text-2xl font-display mb-2">Kvalitets- och feedbackpaketet</CardTitle>
+                <CardDescription className="text-base text-muted-foreground">Analysera säljsamtal med AI för kvalitetsgranskning och coaching</CardDescription>
               </CardHeader>
               <CardContent className="relative space-y-6">
                 <ul className="space-y-4 mb-8">
@@ -140,23 +248,61 @@ export const ProductSelection = () => {
                     <div className="flex-shrink-0 w-6 h-6 rounded-full bg-accent/10 flex items-center justify-center mt-0.5">
                       <CheckCircle className="h-4 w-4 text-accent" />
                     </div>
-                    <span className="text-foreground/80 leading-relaxed">100% automatisk compliance-kontroll</span>
+                    <span className="text-foreground/80 leading-relaxed">100% automatisk kvalitetsgranskning</span>
                   </li>
                   <li className="flex items-start gap-3">
                     <div className="flex-shrink-0 w-6 h-6 rounded-full bg-accent/10 flex items-center justify-center mt-0.5">
                       <CheckCircle className="h-4 w-4 text-accent" />
                     </div>
-                    <span className="text-foreground/80 leading-relaxed">Öka försäljningen med AI-coach</span>
+                    <span className="text-foreground/80 leading-relaxed">AI-driven coaching och feedback</span>
                   </li>
                   <li className="flex items-start gap-3">
                     <div className="flex-shrink-0 w-6 h-6 rounded-full bg-accent/10 flex items-center justify-center mt-0.5">
                       <CheckCircle className="h-4 w-4 text-accent" />
                     </div>
-                    <span className="text-foreground/80 leading-relaxed">Spara tid och skydda ert varumärke</span>
+                    <span className="text-foreground/80 leading-relaxed">Skydda ert varumärke med konsekvent kvalitet</span>
                   </li>
                 </ul>
-                <Button size="lg" className="w-full bg-gradient-gold text-accent-foreground hover:opacity-90 shadow-button group-hover:shadow-glow transition-all duration-300 font-semibold text-base h-14" onClick={handleHermesClick}>
-                  Välj Hermes
+                <Button size="lg" className="w-full bg-gradient-gold text-accent-foreground hover:opacity-90 shadow-button group-hover:shadow-glow transition-all duration-300 font-semibold text-base h-14" onClick={() => handlePackageClick('kvalitet')}>
+                  Läs mer
+                  <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                </Button>
+              </CardContent>
+            </Card>
+
+            {/* Hemside- och produktoptimeringspaketet */}
+            <Card className="group relative overflow-hidden border-2 border-white/10 bg-gradient-card backdrop-blur-sm hover:border-accent/50 transition-all duration-500 hover:shadow-glow animate-scale-in delay-200">
+              <div className="absolute inset-0 bg-gradient-gold opacity-0 group-hover:opacity-10 transition-opacity duration-500"></div>
+              <CardHeader className="relative">
+                <div className="flex items-center justify-center w-20 h-20 rounded-2xl bg-accent/10 mb-6 group-hover:scale-110 group-hover:rotate-3 transition-all duration-500">
+                  <ShoppingCart className="h-10 w-10 text-accent" />
+                </div>
+                <CardTitle className="text-2xl font-display mb-2">Hemsideoptimeringspaketet</CardTitle>
+                <CardDescription className="text-base text-muted-foreground">AI som visar rätt produkter till rätt kunder baserat på användarbeteende</CardDescription>
+              </CardHeader>
+              <CardContent className="relative space-y-6">
+                <ul className="space-y-4 mb-8">
+                  <li className="flex items-start gap-3">
+                    <div className="flex-shrink-0 w-6 h-6 rounded-full bg-accent/10 flex items-center justify-center mt-0.5">
+                      <CheckCircle className="h-4 w-4 text-accent" />
+                    </div>
+                    <span className="text-foreground/80 leading-relaxed">Analys av användarbeteende och köphistorik</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <div className="flex-shrink-0 w-6 h-6 rounded-full bg-accent/10 flex items-center justify-center mt-0.5">
+                      <CheckCircle className="h-4 w-4 text-accent" />
+                    </div>
+                    <span className="text-foreground/80 leading-relaxed">Automatisk produktprioritering per besökare</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <div className="flex-shrink-0 w-6 h-6 rounded-full bg-accent/10 flex items-center justify-center mt-0.5">
+                      <CheckCircle className="h-4 w-4 text-accent" />
+                    </div>
+                    <span className="text-foreground/80 leading-relaxed">Högre konvertering och ökad försäljning</span>
+                  </li>
+                </ul>
+                <Button size="lg" className="w-full bg-primary text-primary-foreground hover:bg-primary/90 shadow-button group-hover:shadow-glow transition-all duration-300 font-semibold text-base h-14" onClick={() => handlePackageClick('hemsideoptimering')}>
+                  Läs mer
                   <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
                 </Button>
               </CardContent>
@@ -202,7 +348,7 @@ export const ProductSelection = () => {
                 <div className="absolute inset-0 bg-gradient-gold opacity-0 group-hover:opacity-5 rounded-2xl transition-opacity"></div>
                 <div className="relative">
                   <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-accent/10 mb-6 group-hover:scale-110 transition-transform">
-                    <Shield className="h-8 w-8 text-accent" />
+                    <Award className="h-8 w-8 text-accent" />
                   </div>
                   <h3 className="text-2xl font-display font-bold text-white mb-3">Hiems som partner</h3>
                   <p className="text-white/70 leading-relaxed"> Med Hiems får ni inte bara AI – ni får en pålitlig partner som skapar kontinuerlig tillväxt och långsiktigt värde.</p>
