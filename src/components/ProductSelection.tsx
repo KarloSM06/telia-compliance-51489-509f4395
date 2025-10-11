@@ -579,7 +579,7 @@ export const ProductSelection = () => {
                   <div className="mt-4 text-center">
                     <Link to="/demo">
                       <Button variant="outline" size="lg" className="bg-white/5 border-white/20 text-white hover:bg-white/10 font-semibold group">
-                        Eller prova vår demo
+                        Prova receptionistdemo
                         <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
                       </Button>
                     </Link>
