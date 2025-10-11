@@ -36,7 +36,7 @@ export const Header = () => {
               <a href="/om-oss" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
                 Om oss
               </a>
-              <a href="#pricing" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
+              <a href="/regelverk" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
                 Regelverk
               </a>
             </nav>
