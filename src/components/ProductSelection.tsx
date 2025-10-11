@@ -76,7 +76,7 @@ export const ProductSelection = () => {
           <div className="mx-auto max-w-3xl text-center mb-16 animate-fade-in">
             <h2 className="text-4xl font-display font-bold text-white mb-4">Färdiga paket</h2>
             <div className="w-20 h-1 bg-gradient-gold mx-auto rounded-full mb-6"></div>
-            <p className="text-lg text-white/80">Våra färdiga AI-paket är kombinationer av flera verktyg. Dessa skräddarsys för att passa just er verksamhet och levereras på högst två veckor – så ni snabbt kan börja effektivisera och växa er verksamhet. </p>
+            <p className="text-lg text-white/80">Våra färdiga AI-paket är kombinationer av flera verktyg gjorda för att passa olika branscher. Dessa skräddarsys för att passa just er verksamhet och levereras på högst två veckor – så ni snabbt kan börja effektivisera och växa er verksamhet. </p>
           </div>
 
           <div className="grid grid-cols-1 gap-8 md:grid-cols-2 max-w-6xl mx-auto">
