@@ -14,12 +14,14 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
+import { ReceptionistModal } from "./ReceptionistModal";
 
 export const Header = () => {
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
   const [email, setEmail] = useState("");
+  const [showReceptionistModal, setShowReceptionistModal] = useState(false);
   const [isNewsletterOpen, setIsNewsletterOpen] = useState(false);
 
   const handleAuthClick = () => {
@@ -41,7 +43,8 @@ export const Header = () => {
   };
 
   return (
-    <header className="sticky top-0 z-50 bg-background/80 backdrop-blur-md border-b border-border">
+    <>
+      <header className="sticky top-0 z-50 bg-background/80 backdrop-blur-md border-b border-border">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
           <div className="flex items-center">
@@ -120,12 +123,18 @@ export const Header = () => {
             <Button 
               variant="default"
               className="bg-gradient-gold text-white hover:shadow-glow transition-all duration-300 font-semibold"
+              onClick={() => setShowReceptionistModal(true)}
             >
               Prova vår receptionist
             </Button>
           </div>
         </div>
       </div>
-    </header>
+      </header>
+      <ReceptionistModal 
+        open={showReceptionistModal} 
+        onOpenChange={setShowReceptionistModal} 
+      />
+    </>
   );
 };
