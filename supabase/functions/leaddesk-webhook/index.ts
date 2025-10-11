@@ -33,7 +33,7 @@ Deno.serve(async (req) => {
     
     if (!webhookSecret) {
       console.error('LEADDESK_WEBHOOK_SECRET not configured');
-      return new Response(JSON.stringify({ error: 'Webhook secret not configured' }), {
+      return new Response(JSON.stringify({ error: 'Internal server error' }), {
         status: 500,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
@@ -69,10 +69,9 @@ Deno.serve(async (req) => {
       .single();
 
     if (mappingError || !agentMapping) {
-      console.error('Agent mapping not found:', payload.agent_id);
+      console.error('Agent mapping not found:', payload.agent_id, mappingError);
       return new Response(JSON.stringify({ 
-        error: 'Agent not mapped to user',
-        agent_id: payload.agent_id 
+        error: 'Agent not found'
       }), {
         status: 404,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -90,8 +89,8 @@ Deno.serve(async (req) => {
       .single();
 
     if (profileError || !profile) {
-      console.error('Profile not found:', userId);
-      return new Response(JSON.stringify({ error: 'User profile not found' }), {
+      console.error('Profile not found:', userId, profileError);
+      return new Response(JSON.stringify({ error: 'User not found' }), {
         status: 404,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
@@ -100,7 +99,7 @@ Deno.serve(async (req) => {
     if (!profile.leaddesk_enabled || !profile.leaddesk_consent) {
       console.error('Leaddesk not enabled or no consent for user:', userId);
       return new Response(JSON.stringify({ 
-        error: 'Leaddesk integration not enabled or consent not given' 
+        error: 'Access denied' 
       }), {
         status: 403,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -111,7 +110,7 @@ Deno.serve(async (req) => {
     const encryptionKey = Deno.env.get('ENCRYPTION_KEY');
     if (!encryptionKey) {
       console.error('ENCRYPTION_KEY not configured');
-      return new Response(JSON.stringify({ error: 'Encryption key not configured' }), {
+      return new Response(JSON.stringify({ error: 'Internal server error' }), {
         status: 500,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
@@ -143,7 +142,7 @@ Deno.serve(async (req) => {
     
     if (!leaddeskApiKey) {
       console.error('LEADDESK_API_KEY not configured');
-      return new Response(JSON.stringify({ error: 'Leaddesk API key not configured' }), {
+      return new Response(JSON.stringify({ error: 'Internal server error' }), {
         status: 500,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
@@ -158,8 +157,7 @@ Deno.serve(async (req) => {
     if (!audioResponse.ok) {
       console.error('Failed to download audio from Leaddesk:', audioResponse.status);
       return new Response(JSON.stringify({ 
-        error: 'Failed to download audio',
-        status: audioResponse.status 
+        error: 'Failed to download audio file'
       }), {
         status: 502,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -185,8 +183,7 @@ Deno.serve(async (req) => {
     if (uploadError) {
       console.error('Storage upload error:', uploadError);
       return new Response(JSON.stringify({ 
-        error: 'Failed to upload audio',
-        details: uploadError.message 
+        error: 'Failed to upload audio file'
       }), {
         status: 500,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -224,8 +221,7 @@ Deno.serve(async (req) => {
       // Clean up uploaded file
       await supabase.storage.from('audio-files').remove([filePath]);
       return new Response(JSON.stringify({ 
-        error: 'Failed to create call record',
-        details: callError.message 
+        error: 'Failed to process request'
       }), {
         status: 500,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -307,7 +303,7 @@ Deno.serve(async (req) => {
   } catch (error) {
     console.error('Webhook processing error:', error);
     return new Response(JSON.stringify({ 
-      error: error instanceof Error ? error.message : 'Unknown error' 
+      error: 'Internal server error' 
     }), {
       status: 500,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },

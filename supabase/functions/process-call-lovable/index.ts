@@ -128,7 +128,7 @@ Svara med JSON enligt detta format:
     if (!aiResponse.ok) {
       const errorText = await aiResponse.text();
       console.error('Lovable AI error:', errorText);
-      throw new Error(`AI analysis failed: ${errorText}`);
+      throw new Error('AI analysis failed');
     }
 
     const aiResult = await aiResponse.json();
@@ -211,7 +211,7 @@ Svara med JSON enligt detta format:
     }
 
     return new Response(
-      JSON.stringify({ error: error.message }),
+      JSON.stringify({ error: 'Internal server error' }),
       { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
   }
