@@ -158,6 +158,24 @@ export type Database = {
           },
         ]
       }
+      phone_numbers: {
+        Row: {
+          created_at: string
+          id: string
+          phone_number: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          phone_number: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          phone_number?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string

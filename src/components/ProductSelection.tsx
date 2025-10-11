@@ -343,7 +343,23 @@ export const ProductSelection = () => {
     }
   };
 
-  const handlePhoneSubmit = () => {
+  const normalizePhoneNumber = (phone: string): string => {
+    // Remove all spaces, dashes, and parentheses
+    let normalized = phone.replace(/[\s\-\(\)]/g, '');
+    
+    // If it starts with 0, assume it's Swedish and convert to +46
+    if (normalized.startsWith('0')) {
+      normalized = '+46' + normalized.substring(1);
+    }
+    // If it doesn't start with +, assume Swedish and add +46
+    else if (!normalized.startsWith('+')) {
+      normalized = '+46' + normalized;
+    }
+    
+    return normalized;
+  };
+
+  const handlePhoneSubmit = async () => {
     if (!phoneNumber.trim()) {
       toast({
         title: "Telefonnummer saknas",
@@ -352,15 +368,33 @@ export const ProductSelection = () => {
       });
       return;
     }
-    
-    // Here you would typically send the phone number to your backend
-    toast({
-      title: "Tack!",
-      description: "Vi ringer upp dig inom kort",
-    });
-    
-    setPhoneNumber('');
-    setIsDialogOpen(false);
+
+    try {
+      // Normalize phone number to international format
+      const normalizedPhone = normalizePhoneNumber(phoneNumber);
+      
+      // Save to Supabase
+      const { error } = await supabase
+        .from('phone_numbers')
+        .insert({ phone_number: normalizedPhone });
+
+      if (error) throw error;
+
+      toast({
+        title: "Tack!",
+        description: `Vi ringer upp dig inom kort på ${normalizedPhone}`,
+      });
+      
+      setPhoneNumber('');
+      setIsDialogOpen(false);
+    } catch (error) {
+      console.error('Error saving phone number:', error);
+      toast({
+        title: "Ett fel uppstod",
+        description: "Kunde inte spara ditt telefonnummer. Vänligen försök igen.",
+        variant: "destructive",
+      });
+    }
   };
   return <div className="relative overflow-hidden bg-gradient-hero">
       {/* Animated background elements */}
