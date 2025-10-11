@@ -371,7 +371,7 @@ export const ProductSelection = () => {
                   <Sparkles className="h-4 w-4 text-accent" />
                   <span className="text-sm font-medium text-white">Kostnadsfri demonstration</span>
                 </div>
-                <h2 className="text-4xl font-display font-bold text-white mb-6">Testa själv</h2>
+                <h2 className="text-4xl font-display font-bold text-white mb-6">Se hur AI hade kunnat effektivisera er verksamhet</h2>
                 <p className="text-xl text-white/90 mb-10 leading-relaxed max-w-2xl mx-auto">
                   Vill du se hur det fungerar? Prova vår demo och upplev hur vår AI analyserar säljsamtal i realtid.
                 </p>
