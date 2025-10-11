@@ -1,13 +1,55 @@
 import { Header } from "@/components/Header";
+import { FileText, Shield, Scale, Cookie, FileCheck } from "lucide-react";
 
 const Legal = () => {
+  const quickLinks = [
+    { id: "integritetspolicy", label: "Integritetspolicy", icon: Shield },
+    { id: "villkor", label: "Användarvillkor", icon: FileText },
+    { id: "aup", label: "Acceptable Use Policy", icon: Scale },
+    { id: "cookie-policy", label: "Cookie-policy", icon: Cookie },
+    { id: "dpa", label: "Databehandlingsavtal", icon: FileCheck },
+  ];
+
+  const scrollToSection = (id: string) => {
+    const element = document.getElementById(id);
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  };
+
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-gradient-to-br from-background via-muted/20 to-background">
       <Header />
+      
+      {/* Premium Quick Links Section */}
+      <div className="sticky top-0 z-40 bg-primary/95 backdrop-blur-lg border-b border-primary/20 shadow-elegant">
+        <nav className="mx-auto max-w-6xl px-6 py-4">
+          <div className="flex flex-wrap items-center justify-center gap-3">
+            {quickLinks.map(({ id, label, icon: Icon }) => (
+              <button
+                key={id}
+                onClick={() => scrollToSection(id)}
+                className="group flex items-center gap-2 px-4 py-2 bg-primary-foreground/10 hover:bg-accent hover:text-accent-foreground rounded-lg transition-all duration-300 hover:shadow-button hover:scale-105"
+              >
+                <Icon className="w-4 h-4" />
+                <span className="text-sm font-medium text-primary-foreground group-hover:text-accent-foreground">
+                  {label}
+                </span>
+              </button>
+            ))}
+          </div>
+        </nav>
+      </div>
+
       <main className="mx-auto max-w-4xl px-6 py-12">
         
-        <section id="integritetspolicy" className="mb-12 bg-card p-8 rounded-xl shadow-sm">
-          <h1 className="text-3xl font-bold text-foreground border-b border-border pb-3 mb-6">Integritetspolicy</h1>
+        <section id="integritetspolicy" className="mb-12 bg-gradient-card p-8 rounded-xl shadow-card border border-border/50 hover:shadow-elegant transition-all duration-300">
+          <div className="flex items-center gap-3 mb-6 border-b border-accent/20 pb-4">
+            <div className="p-2 bg-accent/10 rounded-lg">
+              <Shield className="w-6 h-6 text-accent" />
+            </div>
+            <h1 className="text-3xl font-display font-bold text-primary">Integritetspolicy</h1>
+          </div>
           <p className="text-muted-foreground mb-2"><strong>Hiems Handelsbolag</strong> värnar om din integritet och är transparent om hur vi hanterar dina personuppgifter.</p>
           <p className="text-muted-foreground mb-6"><strong>Senast uppdaterad:</strong> 2025-10-11</p>
 
@@ -67,8 +109,13 @@ const Legal = () => {
           </article>
         </section>
 
-        <section id="villkor" className="mb-12 bg-card p-8 rounded-xl shadow-sm">
-          <h1 className="text-3xl font-bold text-foreground border-b border-border pb-3 mb-6">Användarvillkor</h1>
+        <section id="villkor" className="mb-12 bg-gradient-card p-8 rounded-xl shadow-card border border-border/50 hover:shadow-elegant transition-all duration-300">
+          <div className="flex items-center gap-3 mb-6 border-b border-accent/20 pb-4">
+            <div className="p-2 bg-accent/10 rounded-lg">
+              <FileText className="w-6 h-6 text-accent" />
+            </div>
+            <h1 className="text-3xl font-display font-bold text-primary">Användarvillkor</h1>
+          </div>
           <p className="text-muted-foreground mb-6"><strong>Senast uppdaterad:</strong> 2025-10-11</p>
 
           <article className="mb-6">
@@ -128,8 +175,13 @@ const Legal = () => {
           </article>
         </section>
 
-        <section id="aup" className="mb-12 bg-card p-8 rounded-xl shadow-sm">
-          <h1 className="text-3xl font-bold text-foreground border-b border-border pb-3 mb-6">Acceptable Use Policy (AUP)</h1>
+        <section id="aup" className="mb-12 bg-gradient-card p-8 rounded-xl shadow-card border border-border/50 hover:shadow-elegant transition-all duration-300">
+          <div className="flex items-center gap-3 mb-6 border-b border-accent/20 pb-4">
+            <div className="p-2 bg-accent/10 rounded-lg">
+              <Scale className="w-6 h-6 text-accent" />
+            </div>
+            <h1 className="text-3xl font-display font-bold text-primary">Acceptable Use Policy (AUP)</h1>
+          </div>
           <p className="text-muted-foreground mb-6"><strong>Senast uppdaterad:</strong> 2025-10-11</p>
 
           <article className="mb-6">
@@ -162,8 +214,13 @@ const Legal = () => {
           </article>
         </section>
 
-        <section id="cookie-policy" className="mb-12 bg-card p-8 rounded-xl shadow-sm">
-          <h1 className="text-3xl font-bold text-foreground border-b border-border pb-3 mb-6">Cookie-policy</h1>
+        <section id="cookie-policy" className="mb-12 bg-gradient-card p-8 rounded-xl shadow-card border border-border/50 hover:shadow-elegant transition-all duration-300">
+          <div className="flex items-center gap-3 mb-6 border-b border-accent/20 pb-4">
+            <div className="p-2 bg-accent/10 rounded-lg">
+              <Cookie className="w-6 h-6 text-accent" />
+            </div>
+            <h1 className="text-3xl font-display font-bold text-primary">Cookie-policy</h1>
+          </div>
           <p className="text-muted-foreground mb-6"><strong>Senast uppdaterad:</strong> 2025-10-11</p>
 
           <article className="mb-6">
@@ -193,8 +250,13 @@ const Legal = () => {
           </article>
         </section>
 
-        <section id="dpa" className="mb-12 bg-card p-8 rounded-xl shadow-sm">
-          <h1 className="text-3xl font-bold text-foreground border-b border-border pb-3 mb-6">Databehandlingsavtal (DPA)</h1>
+        <section id="dpa" className="mb-12 bg-gradient-card p-8 rounded-xl shadow-card border border-border/50 hover:shadow-elegant transition-all duration-300">
+          <div className="flex items-center gap-3 mb-6 border-b border-accent/20 pb-4">
+            <div className="p-2 bg-accent/10 rounded-lg">
+              <FileCheck className="w-6 h-6 text-accent" />
+            </div>
+            <h1 className="text-3xl font-display font-bold text-primary">Databehandlingsavtal (DPA)</h1>
+          </div>
           <p className="text-muted-foreground mb-6"><strong>Senast uppdaterad:</strong> 2025-10-11</p>
 
           <article className="mb-6">
