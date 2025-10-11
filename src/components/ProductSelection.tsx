@@ -256,7 +256,7 @@ export const ProductSelection = () => {
                   <ChefHat className="h-10 w-10 text-accent" />
                 </div>
                 <CardTitle className="text-2xl font-display mb-2">Restaurang</CardTitle>
-                <CardDescription className="text-base text-muted-foreground">Automatisera rutiner för restauranger och caféer med AI som hanterar bokningar, beställningar och kundfeedback</CardDescription>
+                <CardDescription className="text-base text-muted-foreground">Automatisera rutiner för restauranger och caféer med AI som hanterar bokningar, beställningar och kundfeedback.</CardDescription>
               </CardHeader>
               <CardContent className="relative space-y-6">
                 <ul className="space-y-4 mb-8">
@@ -294,7 +294,7 @@ export const ProductSelection = () => {
                   <Headphones className="h-10 w-10 text-accent" />
                 </div>
                 <CardTitle className="text-2xl font-display mb-2">Receptionist</CardTitle>
-                <CardDescription className="text-base text-muted-foreground">Virtuell AI-receptionist som hanterar samtal, SMS och mejl dygnet runt</CardDescription>
+                <CardDescription className="text-base text-muted-foreground">Virtuell AI-receptionist som hanterar samtal, SMS och mejl dygnet runt.</CardDescription>
               </CardHeader>
               <CardContent className="relative space-y-6">
                 <ul className="space-y-4 mb-8">
@@ -332,7 +332,7 @@ export const ProductSelection = () => {
                   <UserCheck className="h-10 w-10 text-accent" />
                 </div>
                 <CardTitle className="text-2xl font-display mb-2">Rekrytering</CardTitle>
-                <CardDescription className="text-base text-muted-foreground">Effektivisera rekrytering med AI som screener, rankar och föreslår bästa kandidater</CardDescription>
+                <CardDescription className="text-base text-muted-foreground">Effektivisera rekrytering med AI som screener, rankar och föreslår de bästa kandidaterna.</CardDescription>
               </CardHeader>
               <CardContent className="relative space-y-6">
                 <ul className="space-y-4 mb-8">
@@ -370,7 +370,7 @@ export const ProductSelection = () => {
                   <TrendingUp className="h-10 w-10 text-accent" />
                 </div>
                 <CardTitle className="text-2xl font-display mb-2">Prospektering</CardTitle>
-                <CardDescription className="text-base text-muted-foreground">Öka er pipeline med AI som identifierar och kvalificerar potentiella kunder</CardDescription>
+                <CardDescription className="text-base text-muted-foreground">Öka er försäljningspipeline med AI som identifierar och kvalificerar potentiella kunder.</CardDescription>
               </CardHeader>
               <CardContent className="relative space-y-6">
                 <ul className="space-y-4 mb-8">
@@ -390,7 +390,7 @@ export const ProductSelection = () => {
                     <div className="flex-shrink-0 w-6 h-6 rounded-full bg-accent/10 flex items-center justify-center mt-0.5">
                       <CheckCircle className="h-4 w-4 text-accent" />
                     </div>
-                    <span className="text-foreground/80 leading-relaxed">Maximera affärsmöjligheter</span>
+                    <span className="text-foreground/80 leading-relaxed">Maximerar affärsmöjligheter</span>
                   </li>
                 </ul>
                 <Button size="lg" className="w-full bg-primary text-primary-foreground hover:bg-primary/90 shadow-button group-hover:shadow-glow transition-all duration-300 font-semibold text-base h-14" onClick={() => handlePackageClick('prospekt')}>
@@ -431,7 +431,7 @@ export const ProductSelection = () => {
                     <div className="flex-shrink-0 w-6 h-6 rounded-full bg-accent/10 flex items-center justify-center mt-0.5">
                       <CheckCircle className="h-4 w-4 text-accent" />
                     </div>
-                    <span className="text-foreground/80 leading-relaxed">Skydda ert varumärke med konsekvent kvalitet</span>
+                    <span className="text-foreground/80 leading-relaxed">Skyddar varumärket med konsekvent kvalitet</span>
                   </li>
                 </ul>
                 <Button size="lg" className="w-full bg-gradient-gold text-accent-foreground hover:opacity-90 shadow-button group-hover:shadow-glow transition-all duration-300 font-semibold text-base h-14" onClick={() => handlePackageClick('kvalitet')}>
@@ -448,8 +448,8 @@ export const ProductSelection = () => {
                 <div className="flex items-center justify-center w-20 h-20 rounded-2xl bg-accent/10 mb-6 group-hover:scale-110 group-hover:rotate-3 transition-all duration-500">
                   <ShoppingCart className="h-10 w-10 text-accent" />
                 </div>
-                <CardTitle className="text-2xl font-display mb-2">Hemsideoptimering</CardTitle>
-                <CardDescription className="text-base text-muted-foreground">AI som visar rätt produkter till rätt kunder baserat på användarbeteende</CardDescription>
+                <CardTitle className="text-2xl font-display mb-2">Produktoptimering för hemsidor</CardTitle>
+                <CardDescription className="text-base text-muted-foreground">AI som visar rätt produkter till rätt kunder baserat på användarbeteende.</CardDescription>
               </CardHeader>
               <CardContent className="relative space-y-6">
                 <ul className="space-y-4 mb-8">
