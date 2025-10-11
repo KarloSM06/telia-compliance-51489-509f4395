@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { MessageCircle, X, Send, Loader2 } from 'lucide-react';
+import { MessageCircle, X, Send, Loader2, Maximize2, Minimize2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -13,6 +13,7 @@ const CHAT_URL = `https://shskknkivuewuqonjdjc.supabase.co/functions/v1/chat-ass
 
 export const ChatBot = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
     {
       role: 'assistant',
@@ -179,22 +180,37 @@ export const ChatBot = () => {
 
       {/* Chat window */}
       {isOpen && (
-        <div className="fixed bottom-24 right-6 w-[380px] h-[600px] bg-card rounded-2xl shadow-elegant border border-border overflow-hidden z-50 animate-scale-in">
+        <div className={`fixed bg-card rounded-2xl shadow-elegant border border-border overflow-hidden z-50 animate-scale-in transition-all duration-300 ${
+          isExpanded 
+            ? 'inset-4 w-auto h-auto' 
+            : 'bottom-24 right-6 w-[380px] h-[600px]'
+        }`}>
           {/* Header */}
           <div className="bg-gradient-primary p-4 text-primary-foreground">
-            <div className="flex items-center gap-3">
-              <div className="h-10 w-10 rounded-full bg-accent flex items-center justify-center">
-                <MessageCircle className="h-5 w-5 text-accent-foreground" />
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="h-10 w-10 rounded-full bg-accent flex items-center justify-center">
+                  <MessageCircle className="h-5 w-5 text-accent-foreground" />
+                </div>
+                <div>
+                  <h3 className="font-semibold">Krono - AI-rådgivare</h3>
+                  <p className="text-sm opacity-90">Alltid redo att hjälpa</p>
+                </div>
               </div>
-              <div>
-                <h3 className="font-semibold">Krono - AI-rådgivare</h3>
-                <p className="text-sm opacity-90">Alltid redo att hjälpa</p>
-              </div>
+              <Button
+                onClick={() => setIsExpanded(!isExpanded)}
+                variant="ghost"
+                size="icon"
+                className="h-8 w-8 text-primary-foreground hover:bg-white/10"
+                aria-label={isExpanded ? 'Förminska' : 'Expandera'}
+              >
+                {isExpanded ? <Minimize2 className="h-4 w-4" /> : <Maximize2 className="h-4 w-4" />}
+              </Button>
             </div>
           </div>
 
           {/* Messages */}
-          <ScrollArea className="h-[420px] p-4" ref={scrollRef}>
+          <ScrollArea className={`p-4 ${isExpanded ? 'h-[calc(100vh-280px)]' : 'h-[420px]'}`} ref={scrollRef}>
             <div className="space-y-4">
               {messages.map((msg, idx) => (
                 <div
