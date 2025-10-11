@@ -1,8 +1,26 @@
 import { Link } from "react-router-dom";
+import { useState } from "react";
+import { QuoteModal } from "@/components/QuoteModal";
+import { Button } from "@/components/ui/button";
 
 export const Footer = () => {
+  const [isQuoteModalOpen, setIsQuoteModalOpen] = useState(false);
+  
   return (
     <footer className="bg-[#0A0A0A] text-white py-10 px-5">
+      {/* CTA Section */}
+      <div className="max-w-7xl mx-auto text-center pb-10 border-b border-white/10 mb-10">
+        <h3 className="text-2xl font-bold mb-4">Redo att transformera ditt företag?</h3>
+        <p className="text-muted-foreground mb-6">Få en skräddarsydd offert idag</p>
+        <Button 
+          size="lg"
+          className="bg-gradient-gold text-white hover:shadow-glow transition-all duration-300 font-semibold"
+          onClick={() => setIsQuoteModalOpen(true)}
+        >
+          Få offert
+        </Button>
+      </div>
+
       <div className="max-w-7xl mx-auto flex flex-wrap gap-10 justify-between">
         
         {/* Om företaget */}
@@ -55,6 +73,8 @@ export const Footer = () => {
       <div className="border-t border-white/10 mt-8 pt-5 text-center text-muted-foreground text-xs">
         © 2025 Hiems HB. Alla rättigheter förbehållna.
       </div>
+      
+      <QuoteModal open={isQuoteModalOpen} onOpenChange={setIsQuoteModalOpen} />
     </footer>
   );
 };

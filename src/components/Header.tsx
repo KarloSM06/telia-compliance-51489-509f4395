@@ -3,6 +3,7 @@ import { Snowflake, LogOut } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { ReceptionistModal } from "@/components/ReceptionistModal";
 import {
   Dialog,
   DialogContent,
@@ -21,6 +22,7 @@ export const Header = () => {
   const { toast } = useToast();
   const [email, setEmail] = useState("");
   const [isNewsletterOpen, setIsNewsletterOpen] = useState(false);
+  const [isReceptionistOpen, setIsReceptionistOpen] = useState(false);
 
   const handleAuthClick = () => {
     if (user) {
@@ -120,12 +122,14 @@ export const Header = () => {
             <Button 
               variant="default"
               className="bg-gradient-gold text-white hover:shadow-glow transition-all duration-300 font-semibold"
+              onClick={() => setIsReceptionistOpen(true)}
             >
               Prova vår receptionist
             </Button>
           </div>
         </div>
       </div>
+      <ReceptionistModal open={isReceptionistOpen} onOpenChange={setIsReceptionistOpen} />
     </header>
   );
 };

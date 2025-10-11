@@ -10,6 +10,8 @@ import { useState, useRef, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { Slider } from "@/components/ui/slider";
 import { supabase } from "@/integrations/supabase/client";
+import { QuoteModal } from "@/components/QuoteModal";
+import { normalizePhoneNumber } from "@/lib/phoneUtils";
 
 interface Message {
   role: 'user' | 'assistant';
@@ -32,6 +34,7 @@ export const ProductSelection = () => {
   const [phoneNumber, setPhoneNumber] = useState('');
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [selectedPackage, setSelectedPackage] = useState<string | null>(null);
+  const [isQuoteModalOpen, setIsQuoteModalOpen] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -370,10 +373,8 @@ export const ProductSelection = () => {
     }
 
     try {
-      // Normalize phone number to international format
       const normalizedPhone = normalizePhoneNumber(phoneNumber);
       
-      // Save to Supabase
       const { error } = await supabase
         .from('phone_numbers')
         .insert({ phone_number: normalizedPhone });
@@ -421,6 +422,21 @@ export const ProductSelection = () => {
             
             <p className="text-xl leading-relaxed mb-6 font-light text-white/90">Vi bygger skräddarsydda intelligenta lösningar som gör ditt företag snabbare, smartare och framförallt mer lönsamt</p>
             <p className="text-lg leading-relaxed text-white/80 max-w-3xl mx-auto">   Med Hiems får ni inte bara tillgång till marknadens främsta AI-lösningar. Ni får en trogen partner som ser till att eran verksamhet alltid befinner sig i framkant </p>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section - Få offert ovanför Vad vi gör */}
+      <section className="relative py-12">
+        <div className="mx-auto max-w-7xl px-6 lg:px-8">
+          <div className="mx-auto max-w-2xl text-center">
+            <Button 
+              size="lg"
+              className="bg-gradient-gold text-white hover:shadow-glow transition-all duration-300 font-semibold"
+              onClick={() => setIsQuoteModalOpen(true)}
+            >
+              Få offert
+            </Button>
           </div>
         </div>
       </section>
@@ -1273,5 +1289,7 @@ export const ProductSelection = () => {
           </div>
         </div>
       </section>
+      
+      <QuoteModal open={isQuoteModalOpen} onOpenChange={setIsQuoteModalOpen} />
     </div>;
 };
