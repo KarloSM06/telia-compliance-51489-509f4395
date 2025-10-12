@@ -13,23 +13,20 @@ import { supabase } from "@/integrations/supabase/client";
 import { QuoteModal } from "@/components/QuoteModal";
 import { ConsultationModal } from "@/components/ConsultationModal";
 import { normalizePhoneNumber } from "@/lib/phoneUtils";
-
 interface Message {
   role: 'user' | 'assistant';
   content: string;
 }
-
 const CHAT_URL = `https://shskknkivuewuqonjdjc.supabase.co/functions/v1/chat-assistant`;
-
 export const ProductSelection = () => {
   const navigate = useNavigate();
-  const { toast } = useToast();
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      role: 'assistant',
-      content: 'Hej! 👋 Jag heter Krono och är er digitala AI-rådgivare från Hiems. Vilket paket passar bäst för ditt företag? Berätta lite om er verksamhet så hjälper jag er hitta rätt lösning!'
-    }
-  ]);
+  const {
+    toast
+  } = useToast();
+  const [messages, setMessages] = useState<Message[]>([{
+    role: 'assistant',
+    content: 'Hej! 👋 Jag heter Krono och är er digitala AI-rådgivare från Hiems. Vilket paket passar bäst för ditt företag? Berätta lite om er verksamhet så hjälper jag er hitta rätt lösning!'
+  }]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState('');
@@ -39,59 +36,57 @@ export const ProductSelection = () => {
   const [isConsultationModalOpen, setIsConsultationModalOpen] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
-
   useEffect(() => {
     if (scrollRef.current) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
     }
   }, [messages]);
-
   const streamChat = async (userMessage: string) => {
-    const userMsg: Message = { role: 'user', content: userMessage };
+    const userMsg: Message = {
+      role: 'user',
+      content: userMessage
+    };
     setMessages(prev => [...prev, userMsg]);
     setIsLoading(true);
-
     let assistantContent = '';
-
     try {
       const response = await fetch(CHAT_URL, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ messages: [...messages, userMsg] }),
+        body: JSON.stringify({
+          messages: [...messages, userMsg]
+        })
       });
-
       if (!response.ok || !response.body) {
         throw new Error('Failed to start stream');
       }
-
       const reader = response.body.getReader();
       const decoder = new TextDecoder();
       let textBuffer = '';
       let streamDone = false;
-
       while (!streamDone) {
-        const { done, value } = await reader.read();
+        const {
+          done,
+          value
+        } = await reader.read();
         if (done) break;
-        
-        textBuffer += decoder.decode(value, { stream: true });
-
+        textBuffer += decoder.decode(value, {
+          stream: true
+        });
         let newlineIndex: number;
         while ((newlineIndex = textBuffer.indexOf('\n')) !== -1) {
           let line = textBuffer.slice(0, newlineIndex);
           textBuffer = textBuffer.slice(newlineIndex + 1);
-
           if (line.endsWith('\r')) line = line.slice(0, -1);
           if (line.startsWith(':') || line.trim() === '') continue;
           if (!line.startsWith('data: ')) continue;
-
           const jsonStr = line.slice(6).trim();
           if (jsonStr === '[DONE]') {
             streamDone = true;
             break;
           }
-
           try {
             const parsed = JSON.parse(jsonStr);
             const content = parsed.choices?.[0]?.delta?.content as string | undefined;
@@ -100,11 +95,15 @@ export const ProductSelection = () => {
               setMessages(prev => {
                 const last = prev[prev.length - 1];
                 if (last?.role === 'assistant') {
-                  return prev.map((m, i) => 
-                    i === prev.length - 1 ? { ...m, content: assistantContent } : m
-                  );
+                  return prev.map((m, i) => i === prev.length - 1 ? {
+                    ...m,
+                    content: assistantContent
+                  } : m);
                 }
-                return [...prev, { role: 'assistant', content: assistantContent }];
+                return [...prev, {
+                  role: 'assistant',
+                  content: assistantContent
+                }];
               });
             }
           } catch {
@@ -113,7 +112,6 @@ export const ProductSelection = () => {
           }
         }
       }
-
       if (textBuffer.trim()) {
         for (let raw of textBuffer.split('\n')) {
           if (!raw) continue;
@@ -130,11 +128,15 @@ export const ProductSelection = () => {
               setMessages(prev => {
                 const last = prev[prev.length - 1];
                 if (last?.role === 'assistant') {
-                  return prev.map((m, i) => 
-                    i === prev.length - 1 ? { ...m, content: assistantContent } : m
-                  );
+                  return prev.map((m, i) => i === prev.length - 1 ? {
+                    ...m,
+                    content: assistantContent
+                  } : m);
                 }
-                return [...prev, { role: 'assistant', content: assistantContent }];
+                return [...prev, {
+                  role: 'assistant',
+                  content: assistantContent
+                }];
               });
             }
           } catch {}
@@ -150,14 +152,12 @@ export const ProductSelection = () => {
       setIsLoading(false);
     }
   };
-
   const handleSend = async () => {
     if (!input.trim() || isLoading) return;
     const userMessage = input.trim();
     setInput('');
     await streamChat(userMessage);
   };
-
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
@@ -167,191 +167,199 @@ export const ProductSelection = () => {
   const handlePackageClick = (packageName: string) => {
     setSelectedPackage(packageName);
   };
-
   const [selectedMinutes, setSelectedMinutes] = useState(100);
   const [isCheckingOut, setIsCheckingOut] = useState(false);
-
   const minuteOptions = [100, 250, 500, 1000];
-  const minutePricing: Record<number, { pro: number; business: number; enterprise: string }> = {
-    100: { pro: 1000, business: 1500, enterprise: "Offert" },
-    250: { pro: 2500, business: 3750, enterprise: "Offert" },
-    500: { pro: 5000, business: 7500, enterprise: "Offert" },
-    1000: { pro: 10000, business: 15000, enterprise: "Offert" },
+  const minutePricing: Record<number, {
+    pro: number;
+    business: number;
+    enterprise: string;
+  }> = {
+    100: {
+      pro: 1000,
+      business: 1500,
+      enterprise: "Offert"
+    },
+    250: {
+      pro: 2500,
+      business: 3750,
+      enterprise: "Offert"
+    },
+    500: {
+      pro: 5000,
+      business: 7500,
+      enterprise: "Offert"
+    },
+    1000: {
+      pro: 10000,
+      business: 15000,
+      enterprise: "Offert"
+    }
   };
-
-  const packageDetails: Record<string, { 
-    title: string; 
+  const packageDetails: Record<string, {
+    title: string;
     fullDescription: string;
     features: string[];
     pricing?: {
-      pro: { price: string | number; features: string[] };
-      business: { price: string | number; features: string[] };
-      enterprise: { price: string; features: string[] };
+      pro: {
+        price: string | number;
+        features: string[];
+      };
+      business: {
+        price: string | number;
+        features: string[];
+      };
+      enterprise: {
+        price: string;
+        features: string[];
+      };
     };
   }> = {
     restaurang: {
       title: "AI-Receptionist & Restaurang (Krono)",
       fullDescription: "Vår AI-receptionist, Krono, fungerar som er digitala medarbetare dygnet runt. Den hanterar inkommande samtal, SMS och e-post, vidarekopplar frågor till rätt avdelning och bokar möten automatiskt. Detta frigör tid för er personal och säkerställer att inga viktiga meddelanden missas.",
-      features: [
-        "AI hanterar samtal, SMS och mejl 24/7",
-        "Automatiska bokningar och vidarekoppling",
-        "Snabb och professionell service",
-        "Rapportering via dashboard",
-        "Integration med befintliga system"
-      ],
+      features: ["AI hanterar samtal, SMS och mejl 24/7", "Automatiska bokningar och vidarekoppling", "Snabb och professionell service", "Rapportering via dashboard", "Integration med befintliga system"],
       pricing: {
-        pro: { price: "Från 1 000 kr", features: ["Grundläggande funktioner", "Email support"] },
-        business: { price: "Från 1 500 kr", features: ["Avancerade funktioner", "Prioriterad support", "Anpassningar"] },
-        enterprise: { price: "Offert", features: ["Fullständig lösning", "Dedikerad support", "Konsultation"] }
+        pro: {
+          price: "Från 1 000 kr",
+          features: ["Grundläggande funktioner", "Email support"]
+        },
+        business: {
+          price: "Från 1 500 kr",
+          features: ["Avancerade funktioner", "Prioriterad support", "Anpassningar"]
+        },
+        enterprise: {
+          price: "Offert",
+          features: ["Fullständig lösning", "Dedikerad support", "Konsultation"]
+        }
       }
     },
     receptionist: {
       title: "AI-Receptionist (Krono)",
       fullDescription: "Vår AI-receptionist, Krono, fungerar som er digitala medarbetare dygnet runt. Den hanterar inkommande samtal, SMS och e-post, vidarekopplar frågor till rätt avdelning och bokar möten automatiskt.",
-      features: [
-        "AI hanterar samtal, SMS och mejl 24/7",
-        "Automatiska bokningar och vidarekoppling",
-        "Snabb och professionell service",
-        "Rapportering via dashboard",
-        "Integration med befintliga system"
-      ],
+      features: ["AI hanterar samtal, SMS och mejl 24/7", "Automatiska bokningar och vidarekoppling", "Snabb och professionell service", "Rapportering via dashboard", "Integration med befintliga system"],
       pricing: {
-        pro: { price: "Från 1 000 kr", features: ["Grundläggande funktioner", "Email support"] },
-        business: { price: "Från 1 500 kr", features: ["Avancerade funktioner", "Prioriterad support"] },
-        enterprise: { price: "Offert", features: ["Fullständig lösning", "Dedikerad support"] }
+        pro: {
+          price: "Från 1 000 kr",
+          features: ["Grundläggande funktioner", "Email support"]
+        },
+        business: {
+          price: "Från 1 500 kr",
+          features: ["Avancerade funktioner", "Prioriterad support"]
+        },
+        enterprise: {
+          price: "Offert",
+          features: ["Fullständig lösning", "Dedikerad support"]
+        }
       }
     },
     rekrytering: {
       title: "Rekrytering",
       fullDescription: "Vårt Rekryteringspaket hjälper HR och rekryterare att spara tid och hitta rätt kandidater snabbare. AI-agenten screener inkommande CV:n, rankar kandidater baserat på kompetens och erfarenhet, och föreslår de bästa matcherna.",
-      features: [
-        "Automatisk screening av kandidater",
-        "Rankning och matchning",
-        "Snabbare rekrytering av rätt talanger",
-        "Dashboard med insikter",
-        "Integration med befintliga HR-system"
-      ],
+      features: ["Automatisk screening av kandidater", "Rankning och matchning", "Snabbare rekrytering av rätt talanger", "Dashboard med insikter", "Integration med befintliga HR-system"],
       pricing: {
-        pro: { 
-          price: 2000, 
-          features: ["Screening av ansökningar", "LinkedIn-kandidatverktyg", "Grundläggande rapportering"] 
+        pro: {
+          price: 2000,
+          features: ["Screening av ansökningar", "LinkedIn-kandidatverktyg", "Grundläggande rapportering"]
         },
-        business: { 
-          price: 4000, 
-          features: ["Screening + ranking", "LinkedIn-kandidatverktyg", "Avancerad analys"] 
+        business: {
+          price: 4000,
+          features: ["Screening + ranking", "LinkedIn-kandidatverktyg", "Avancerad analys"]
         },
-        enterprise: { 
-          price: "Offert", 
-          features: ["Fullt AI-rekryteringssystem", "Full dashboard + integrationer", "Offertsupport"] 
+        enterprise: {
+          price: "Offert",
+          features: ["Fullt AI-rekryteringssystem", "Full dashboard + integrationer", "Offertsupport"]
         }
       }
     },
     prospekt: {
       title: "Prospektering",
       fullDescription: "Med Prospekteringspaketet får försäljningsteamet hjälp att fokusera på de mest lovande affärsmöjligheterna. AI-agenten identifierar potentiella kunder, kvalificerar dem baserat på intresse och beteende, och skapar en lista med varma leads.",
-      features: [
-        "Identifiering av potentiella kunder",
-        "Automatiserad kommunikation",
-        "Lead scoring och prioritering",
-        "Rapportering och analys"
-      ],
+      features: ["Identifiering av potentiella kunder", "Automatiserad kommunikation", "Lead scoring och prioritering", "Rapportering och analys"],
       pricing: {
-        pro: { 
-          price: 3000, 
-          features: ["100 prospekt/månad", "Automatiserade mejl", "Grundläggande uppföljning"] 
+        pro: {
+          price: 3000,
+          features: ["100 prospekt/månad", "Automatiserade mejl", "Grundläggande uppföljning"]
         },
-        business: { 
-          price: 7500, 
-          features: ["250 prospekt/månad", "Automatiserade mejl", "Avancerad uppföljning & lead scoring"] 
+        business: {
+          price: 7500,
+          features: ["250 prospekt/månad", "Automatiserade mejl", "Avancerad uppföljning & lead scoring"]
         },
-        enterprise: { 
-          price: "Offert", 
-          features: ["Obegränsat antal prospekt", "Fullt integrerat system", "Dedikerad support"] 
+        enterprise: {
+          price: "Offert",
+          features: ["Obegränsat antal prospekt", "Fullt integrerat system", "Dedikerad support"]
         }
       }
     },
     kvalitet: {
       title: "Compliance",
       fullDescription: "Compliance-paketet analyserar alla säljsamtal automatiskt och säkerställer att de följer företagets riktlinjer och regulatoriska krav. AI:n ger direkt feedback till säljteamet, visar förbättringsområden och coachar med konkreta råd.",
-      features: [
-        "Automatisk analys av säljsamtal",
-        "AI-driven feedback och coaching",
-        "Skyddar varumärke med konsekvent kvalitet"
-      ],
+      features: ["Automatisk analys av säljsamtal", "AI-driven feedback och coaching", "Skyddar varumärke med konsekvent kvalitet"],
       pricing: {
-        pro: { 
-          price: 2000, 
-          features: ["5 säljare", "Automatiserad kvalitetskontroll", "Grundläggande coaching"] 
+        pro: {
+          price: 2000,
+          features: ["5 säljare", "Automatiserad kvalitetskontroll", "Grundläggande coaching"]
         },
-        business: { 
-          price: 5000, 
-          features: ["15 säljare", "Automatiserad kvalitetskontroll", "Avancerad coaching & feedback"] 
+        business: {
+          price: 5000,
+          features: ["15 säljare", "Automatiserad kvalitetskontroll", "Avancerad coaching & feedback"]
         },
-        enterprise: { 
-          price: "Offert", 
-          features: ["Obegränsat antal säljare", "Fullt system + konsultation", "Dedikerad support"] 
+        enterprise: {
+          price: "Offert",
+          features: ["Obegränsat antal säljare", "Fullt system + konsultation", "Dedikerad support"]
         }
       }
     },
     hemsideoptimering: {
       title: "Hemsideoptimering",
       fullDescription: "Vårt hemsideoptimeringspaket analyserar varje besökares beteende och köphistorik. AI-agenten prioriterar och visar de produkter som är mest relevanta för varje kund, i realtid.",
-      features: [
-        "Analys av användarbeteende",
-        "Automatiskt visa rätt produkter för rätt kunder",
-        "Högre konvertering & försäljning",
-        "Dashboard med insikter"
-      ],
+      features: ["Analys av användarbeteende", "Automatiskt visa rätt produkter för rätt kunder", "Högre konvertering & försäljning", "Dashboard med insikter"],
       pricing: {
-        pro: { 
-          price: 2500, 
-          features: ["Grundläggande analys", "Automatiserad produktprioritering", "Grundläggande rapportering"] 
+        pro: {
+          price: 2500,
+          features: ["Grundläggande analys", "Automatiserad produktprioritering", "Grundläggande rapportering"]
         },
-        business: { 
-          price: 5000, 
-          features: ["Optimering + A/B-test", "Automatiserad produktprioritering", "Avancerad rapportering"] 
+        business: {
+          price: 5000,
+          features: ["Optimering + A/B-test", "Automatiserad produktprioritering", "Avancerad rapportering"]
         },
-        enterprise: { 
-          price: "Offert", 
-          features: ["Full optimering + anpassade AI-lösningar", "Full dashboard + integrationer", "Dedikerad support"] 
+        enterprise: {
+          price: "Offert",
+          features: ["Full optimering + anpassade AI-lösningar", "Full dashboard + integrationer", "Dedikerad support"]
         }
       }
     }
   };
-
   const handleCheckout = async (packageName: string, tier: 'pro' | 'business' | 'enterprise') => {
     if (tier === 'enterprise') {
       toast({
         title: "Kontakta oss för offert",
-        description: "Vi hör av oss inom kort för att diskutera era behov.",
+        description: "Vi hör av oss inom kort för att diskutera era behov."
       });
       return;
     }
-
     setIsCheckingOut(true);
     try {
       // TODO: Replace with actual Stripe price IDs
       const priceId = `price_${packageName}_${tier}`;
-      
       toast({
         title: "Checkout öppnas snart",
-        description: "Stripe integration kommer snart...",
+        description: "Stripe integration kommer snart..."
       });
     } catch (error) {
       toast({
         title: "Ett fel uppstod",
         description: "Vänligen försök igen senare.",
-        variant: "destructive",
+        variant: "destructive"
       });
     } finally {
       setIsCheckingOut(false);
     }
   };
-
   const normalizePhoneNumber = (phone: string): string => {
     // Remove all spaces, dashes, and parentheses
     let normalized = phone.replace(/[\s\-\(\)]/g, '');
-    
+
     // If it starts with 0, assume it's Swedish and convert to +46
     if (normalized.startsWith('0')) {
       normalized = '+46' + normalized.substring(1);
@@ -360,34 +368,29 @@ export const ProductSelection = () => {
     else if (!normalized.startsWith('+')) {
       normalized = '+46' + normalized;
     }
-    
     return normalized;
   };
-
   const handlePhoneSubmit = async () => {
     if (!phoneNumber.trim()) {
       toast({
         title: "Telefonnummer saknas",
         description: "Vänligen ange ett telefonnummer",
-        variant: "destructive",
+        variant: "destructive"
       });
       return;
     }
-
     try {
       const normalizedPhone = normalizePhoneNumber(phoneNumber);
-      
-      const { error } = await supabase
-        .from('phone_numbers')
-        .insert({ phone_number: normalizedPhone });
-
+      const {
+        error
+      } = await supabase.from('phone_numbers').insert({
+        phone_number: normalizedPhone
+      });
       if (error) throw error;
-
       toast({
         title: "Tack!",
-        description: `Vi ringer upp dig inom kort på ${normalizedPhone}`,
+        description: `Vi ringer upp dig inom kort på ${normalizedPhone}`
       });
-      
       setPhoneNumber('');
       setIsDialogOpen(false);
     } catch (error) {
@@ -395,7 +398,7 @@ export const ProductSelection = () => {
       toast({
         title: "Ett fel uppstod",
         description: "Kunde inte spara ditt telefonnummer. Vänligen försök igen.",
-        variant: "destructive",
+        variant: "destructive"
       });
     }
   };
@@ -422,26 +425,14 @@ export const ProductSelection = () => {
               </span>
             </h1>
             
-            <p className="text-xl leading-relaxed mb-6 font-light text-white/90">Vi bygger skräddarsydda intelligenta lösningar som gör ditt företag snabbare, smartare och framförallt mer lönsamt</p>
-            <p className="text-lg leading-relaxed text-white/80 max-w-3xl mx-auto">   Med Hiems får ni inte bara tillgång till marknadens främsta AI-lösningar. Ni får en trogen partner som ser till att eran verksamhet alltid befinner sig i framkant </p>
+            <p className="text-xl leading-relaxed mb-6 font-light text-white/90">Vi tar fram skräddarsydda intelligenta lösningar som gör ditt företag snabbare, smartare och framförallt mer lönsamt</p>
+            <p className="text-lg leading-relaxed text-white/80 max-w-3xl mx-auto">   Med Hiems får ni inte bara tillgång till marknadens främsta AI-lösningar. Ni får en trogen partner som ser till att eran verksamhet alltid befinner sig i framkant. 
+Boka en konsultation med oss redan idag!</p>
             
-            <div className="mt-12 flex flex-col items-center gap-4">
-              <Button 
-                size="lg"
-                className="bg-gradient-gold text-white hover:shadow-glow transition-all duration-300 font-semibold text-lg px-8 py-6"
-                onClick={() => setIsConsultationModalOpen(true)}
-              >
+            <div className="mt-12">
+              <Button size="lg" className="bg-gradient-gold text-white hover:shadow-glow transition-all duration-300 font-semibold text-lg px-8 py-6" onClick={() => setIsConsultationModalOpen(true)}>
                 Boka konsultation
               </Button>
-              <p className="text-white/70 text-sm">
-                Inte tid för en konsultation?{" "}
-                <button
-                  onClick={() => setIsQuoteModalOpen(true)}
-                  className="text-accent hover:text-accent/80 underline transition-colors"
-                >
-                  Prata med Krono
-                </button>
-              </p>
             </div>
           </div>
         </div>
@@ -451,11 +442,7 @@ export const ProductSelection = () => {
       <section className="relative py-12">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <div className="mx-auto max-w-2xl text-center">
-            <Button 
-              size="lg"
-              className="bg-gradient-gold text-white hover:shadow-glow transition-all duration-300 font-semibold"
-              onClick={() => setIsQuoteModalOpen(true)}
-            >
+            <Button size="lg" className="bg-gradient-gold text-white hover:shadow-glow transition-all duration-300 font-semibold" onClick={() => setIsQuoteModalOpen(true)}>
               Få offert
             </Button>
           </div>
@@ -551,24 +538,16 @@ export const ProductSelection = () => {
                     <div className="py-6">
                       <h3 className="text-xl font-semibold mb-4">Vad ingår:</h3>
                       <ul className="space-y-2 mb-6">
-                        {packageDetails.restaurang.features.map((feature, idx) => (
-                          <li key={idx} className="flex items-start gap-2">
+                        {packageDetails.restaurang.features.map((feature, idx) => <li key={idx} className="flex items-start gap-2">
                             <CheckCircle className="h-5 w-5 text-accent mt-0.5 flex-shrink-0" />
                             <span>{feature}</span>
-                          </li>
-                        ))}
+                          </li>)}
                       </ul>
 
                       <div className="mb-6">
                         <label className="text-sm font-medium mb-2 block">Välj antal minuter:</label>
                         <div className="flex items-center gap-4 mb-4">
-                          <Slider
-                            value={[minuteOptions.indexOf(selectedMinutes)]}
-                            onValueChange={(value) => setSelectedMinutes(minuteOptions[value[0]])}
-                            max={minuteOptions.length - 1}
-                            step={1}
-                            className="flex-1"
-                          />
+                          <Slider value={[minuteOptions.indexOf(selectedMinutes)]} onValueChange={value => setSelectedMinutes(minuteOptions[value[0]])} max={minuteOptions.length - 1} step={1} className="flex-1" />
                           <span className="font-semibold min-w-[80px]">{selectedMinutes} min</span>
                         </div>
                       </div>
@@ -581,12 +560,10 @@ export const ProductSelection = () => {
                           </CardHeader>
                           <CardContent>
                             <ul className="space-y-2 mb-4">
-                              {packageDetails.restaurang.pricing?.pro.features.map((f, i) => (
-                                <li key={i} className="flex items-start gap-2 text-sm">
+                              {packageDetails.restaurang.pricing?.pro.features.map((f, i) => <li key={i} className="flex items-start gap-2 text-sm">
                                   <CheckCircle className="h-4 w-4 text-accent mt-0.5 flex-shrink-0" />
                                   <span>{f}</span>
-                                </li>
-                              ))}
+                                </li>)}
                             </ul>
                             <Button onClick={() => handleCheckout('restaurang', 'pro')} className="w-full" disabled={isCheckingOut}>
                               Välj Pro
@@ -604,12 +581,10 @@ export const ProductSelection = () => {
                           </CardHeader>
                           <CardContent>
                             <ul className="space-y-2 mb-4">
-                              {packageDetails.restaurang.pricing?.business.features.map((f, i) => (
-                                <li key={i} className="flex items-start gap-2 text-sm">
+                              {packageDetails.restaurang.pricing?.business.features.map((f, i) => <li key={i} className="flex items-start gap-2 text-sm">
                                   <CheckCircle className="h-4 w-4 text-accent mt-0.5 flex-shrink-0" />
                                   <span>{f}</span>
-                                </li>
-                              ))}
+                                </li>)}
                             </ul>
                             <Button onClick={() => handleCheckout('restaurang', 'business')} className="w-full bg-accent hover:bg-accent/90" disabled={isCheckingOut}>
                               Välj Business
@@ -624,12 +599,10 @@ export const ProductSelection = () => {
                           </CardHeader>
                           <CardContent>
                             <ul className="space-y-2 mb-4">
-                              {packageDetails.restaurang.pricing?.enterprise.features.map((f, i) => (
-                                <li key={i} className="flex items-start gap-2 text-sm">
+                              {packageDetails.restaurang.pricing?.enterprise.features.map((f, i) => <li key={i} className="flex items-start gap-2 text-sm">
                                   <CheckCircle className="h-4 w-4 text-accent mt-0.5 flex-shrink-0" />
                                   <span>{f}</span>
-                                </li>
-                              ))}
+                                </li>)}
                             </ul>
                             <Button onClick={() => handleCheckout('restaurang', 'enterprise')} variant="outline" className="w-full" disabled={isCheckingOut}>
                               Kontakta oss
@@ -692,22 +665,17 @@ export const ProductSelection = () => {
                     <div className="py-6">
                       <h3 className="text-xl font-semibold mb-4">Vad ingår:</h3>
                       <ul className="space-y-2 mb-6">
-                        {packageDetails.receptionist.features.map((feature, idx) => (
-                          <li key={idx} className="flex items-start gap-2">
+                        {packageDetails.receptionist.features.map((feature, idx) => <li key={idx} className="flex items-start gap-2">
                             <CheckCircle className="h-5 w-5 text-accent mt-0.5 flex-shrink-0" />
                             <span>{feature}</span>
-                          </li>
-                        ))}
+                          </li>)}
                       </ul>
 
                       <div className="grid md:grid-cols-3 gap-4">
-                        {['pro', 'business', 'enterprise'].map((tier) => (
-                          <Card key={tier} className={`border-2 ${tier === 'business' ? 'border-accent/50 relative' : 'hover:border-accent/50'} transition-colors`}>
-                            {tier === 'business' && (
-                              <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-accent text-accent-foreground px-3 py-1 rounded-full text-xs font-semibold">
+                        {['pro', 'business', 'enterprise'].map(tier => <Card key={tier} className={`border-2 ${tier === 'business' ? 'border-accent/50 relative' : 'hover:border-accent/50'} transition-colors`}>
+                            {tier === 'business' && <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-accent text-accent-foreground px-3 py-1 rounded-full text-xs font-semibold">
                                 POPULÄR
-                              </div>
-                            )}
+                              </div>}
                             <CardHeader>
                               <CardTitle className="text-xl capitalize">{tier}</CardTitle>
                               <div className="text-3xl font-bold">
@@ -717,24 +685,16 @@ export const ProductSelection = () => {
                             </CardHeader>
                             <CardContent>
                               <ul className="space-y-2 mb-4">
-                                {packageDetails.receptionist.pricing?.[tier as 'pro' | 'business' | 'enterprise'].features.map((f, i) => (
-                                  <li key={i} className="flex items-start gap-2 text-sm">
+                                {packageDetails.receptionist.pricing?.[tier as 'pro' | 'business' | 'enterprise'].features.map((f, i) => <li key={i} className="flex items-start gap-2 text-sm">
                                     <CheckCircle className="h-4 w-4 text-accent mt-0.5 flex-shrink-0" />
                                     <span>{f}</span>
-                                  </li>
-                                ))}
+                                  </li>)}
                               </ul>
-                              <Button 
-                                onClick={() => handleCheckout('receptionist', tier as 'pro' | 'business' | 'enterprise')} 
-                                className={`w-full ${tier === 'business' ? 'bg-accent hover:bg-accent/90' : ''}`}
-                                variant={tier === 'enterprise' ? 'outline' : 'default'}
-                                disabled={isCheckingOut}
-                              >
+                              <Button onClick={() => handleCheckout('receptionist', tier as 'pro' | 'business' | 'enterprise')} className={`w-full ${tier === 'business' ? 'bg-accent hover:bg-accent/90' : ''}`} variant={tier === 'enterprise' ? 'outline' : 'default'} disabled={isCheckingOut}>
                                 {tier === 'enterprise' ? 'Kontakta oss' : `Välj ${tier}`}
                               </Button>
                             </CardContent>
-                          </Card>
-                        ))}
+                          </Card>)}
                       </div>
                     </div>
                   </DialogContent>
@@ -791,22 +751,17 @@ export const ProductSelection = () => {
                     <div className="py-6">
                       <h3 className="text-xl font-semibold mb-4">Vad ingår:</h3>
                       <ul className="space-y-2 mb-6">
-                        {packageDetails.rekrytering.features.map((feature, idx) => (
-                          <li key={idx} className="flex items-start gap-2">
+                        {packageDetails.rekrytering.features.map((feature, idx) => <li key={idx} className="flex items-start gap-2">
                             <CheckCircle className="h-5 w-5 text-accent mt-0.5 flex-shrink-0" />
                             <span>{feature}</span>
-                          </li>
-                        ))}
+                          </li>)}
                       </ul>
 
                       <div className="grid md:grid-cols-3 gap-4">
-                        {['pro', 'business', 'enterprise'].map((tier) => (
-                          <Card key={tier} className={`border-2 ${tier === 'business' ? 'border-accent/50 relative' : 'hover:border-accent/50'} transition-colors`}>
-                            {tier === 'business' && (
-                              <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-accent text-accent-foreground px-3 py-1 rounded-full text-xs font-semibold">
+                        {['pro', 'business', 'enterprise'].map(tier => <Card key={tier} className={`border-2 ${tier === 'business' ? 'border-accent/50 relative' : 'hover:border-accent/50'} transition-colors`}>
+                            {tier === 'business' && <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-accent text-accent-foreground px-3 py-1 rounded-full text-xs font-semibold">
                                 POPULÄR
-                              </div>
-                            )}
+                              </div>}
                             <CardHeader>
                               <CardTitle className="text-xl capitalize">{tier}</CardTitle>
                               <div className="text-3xl font-bold">
@@ -816,24 +771,16 @@ export const ProductSelection = () => {
                             </CardHeader>
                             <CardContent>
                               <ul className="space-y-2 mb-4">
-                                {packageDetails.rekrytering.pricing?.[tier as 'pro' | 'business' | 'enterprise'].features.map((f, i) => (
-                                  <li key={i} className="flex items-start gap-2 text-sm">
+                                {packageDetails.rekrytering.pricing?.[tier as 'pro' | 'business' | 'enterprise'].features.map((f, i) => <li key={i} className="flex items-start gap-2 text-sm">
                                     <CheckCircle className="h-4 w-4 text-accent mt-0.5 flex-shrink-0" />
                                     <span>{f}</span>
-                                  </li>
-                                ))}
+                                  </li>)}
                               </ul>
-                              <Button 
-                                onClick={() => handleCheckout('rekrytering', tier as 'pro' | 'business' | 'enterprise')} 
-                                className={`w-full ${tier === 'business' ? 'bg-accent hover:bg-accent/90' : ''}`}
-                                variant={tier === 'enterprise' ? 'outline' : 'default'}
-                                disabled={isCheckingOut}
-                              >
+                              <Button onClick={() => handleCheckout('rekrytering', tier as 'pro' | 'business' | 'enterprise')} className={`w-full ${tier === 'business' ? 'bg-accent hover:bg-accent/90' : ''}`} variant={tier === 'enterprise' ? 'outline' : 'default'} disabled={isCheckingOut}>
                                 {tier === 'enterprise' ? 'Kontakta oss' : `Välj ${tier}`}
                               </Button>
                             </CardContent>
-                          </Card>
-                        ))}
+                          </Card>)}
                       </div>
                     </div>
                   </DialogContent>
@@ -890,22 +837,17 @@ export const ProductSelection = () => {
                     <div className="py-6">
                       <h3 className="text-xl font-semibold mb-4">Vad ingår:</h3>
                       <ul className="space-y-2 mb-6">
-                        {packageDetails.prospekt.features.map((feature, idx) => (
-                          <li key={idx} className="flex items-start gap-2">
+                        {packageDetails.prospekt.features.map((feature, idx) => <li key={idx} className="flex items-start gap-2">
                             <CheckCircle className="h-5 w-5 text-accent mt-0.5 flex-shrink-0" />
                             <span>{feature}</span>
-                          </li>
-                        ))}
+                          </li>)}
                       </ul>
 
                       <div className="grid md:grid-cols-3 gap-4">
-                        {['pro', 'business', 'enterprise'].map((tier) => (
-                          <Card key={tier} className={`border-2 ${tier === 'business' ? 'border-accent/50 relative' : 'hover:border-accent/50'} transition-colors`}>
-                            {tier === 'business' && (
-                              <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-accent text-accent-foreground px-3 py-1 rounded-full text-xs font-semibold">
+                        {['pro', 'business', 'enterprise'].map(tier => <Card key={tier} className={`border-2 ${tier === 'business' ? 'border-accent/50 relative' : 'hover:border-accent/50'} transition-colors`}>
+                            {tier === 'business' && <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-accent text-accent-foreground px-3 py-1 rounded-full text-xs font-semibold">
                                 POPULÄR
-                              </div>
-                            )}
+                              </div>}
                             <CardHeader>
                               <CardTitle className="text-xl capitalize">{tier}</CardTitle>
                               <div className="text-3xl font-bold">
@@ -915,24 +857,16 @@ export const ProductSelection = () => {
                             </CardHeader>
                             <CardContent>
                               <ul className="space-y-2 mb-4">
-                                {packageDetails.prospekt.pricing?.[tier as 'pro' | 'business' | 'enterprise'].features.map((f, i) => (
-                                  <li key={i} className="flex items-start gap-2 text-sm">
+                                {packageDetails.prospekt.pricing?.[tier as 'pro' | 'business' | 'enterprise'].features.map((f, i) => <li key={i} className="flex items-start gap-2 text-sm">
                                     <CheckCircle className="h-4 w-4 text-accent mt-0.5 flex-shrink-0" />
                                     <span>{f}</span>
-                                  </li>
-                                ))}
+                                  </li>)}
                               </ul>
-                              <Button 
-                                onClick={() => handleCheckout('prospekt', tier as 'pro' | 'business' | 'enterprise')} 
-                                className={`w-full ${tier === 'business' ? 'bg-accent hover:bg-accent/90' : ''}`}
-                                variant={tier === 'enterprise' ? 'outline' : 'default'}
-                                disabled={isCheckingOut}
-                              >
+                              <Button onClick={() => handleCheckout('prospekt', tier as 'pro' | 'business' | 'enterprise')} className={`w-full ${tier === 'business' ? 'bg-accent hover:bg-accent/90' : ''}`} variant={tier === 'enterprise' ? 'outline' : 'default'} disabled={isCheckingOut}>
                                 {tier === 'enterprise' ? 'Kontakta oss' : `Välj ${tier}`}
                               </Button>
                             </CardContent>
-                          </Card>
-                        ))}
+                          </Card>)}
                       </div>
                     </div>
                   </DialogContent>
@@ -992,22 +926,17 @@ export const ProductSelection = () => {
                     <div className="py-6">
                       <h3 className="text-xl font-semibold mb-4">Vad ingår:</h3>
                       <ul className="space-y-2 mb-6">
-                        {packageDetails.kvalitet.features.map((feature, idx) => (
-                          <li key={idx} className="flex items-start gap-2">
+                        {packageDetails.kvalitet.features.map((feature, idx) => <li key={idx} className="flex items-start gap-2">
                             <CheckCircle className="h-5 w-5 text-accent mt-0.5 flex-shrink-0" />
                             <span>{feature}</span>
-                          </li>
-                        ))}
+                          </li>)}
                       </ul>
 
                       <div className="grid md:grid-cols-3 gap-4">
-                        {['pro', 'business', 'enterprise'].map((tier) => (
-                          <Card key={tier} className={`border-2 ${tier === 'business' ? 'border-accent/50 relative' : 'hover:border-accent/50'} transition-colors`}>
-                            {tier === 'business' && (
-                              <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-accent text-accent-foreground px-3 py-1 rounded-full text-xs font-semibold">
+                        {['pro', 'business', 'enterprise'].map(tier => <Card key={tier} className={`border-2 ${tier === 'business' ? 'border-accent/50 relative' : 'hover:border-accent/50'} transition-colors`}>
+                            {tier === 'business' && <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-accent text-accent-foreground px-3 py-1 rounded-full text-xs font-semibold">
                                 POPULÄR
-                              </div>
-                            )}
+                              </div>}
                             <CardHeader>
                               <CardTitle className="text-xl capitalize">{tier}</CardTitle>
                               <div className="text-3xl font-bold">
@@ -1017,24 +946,16 @@ export const ProductSelection = () => {
                             </CardHeader>
                             <CardContent>
                               <ul className="space-y-2 mb-4">
-                                {packageDetails.kvalitet.pricing?.[tier as 'pro' | 'business' | 'enterprise'].features.map((f, i) => (
-                                  <li key={i} className="flex items-start gap-2 text-sm">
+                                {packageDetails.kvalitet.pricing?.[tier as 'pro' | 'business' | 'enterprise'].features.map((f, i) => <li key={i} className="flex items-start gap-2 text-sm">
                                     <CheckCircle className="h-4 w-4 text-accent mt-0.5 flex-shrink-0" />
                                     <span>{f}</span>
-                                  </li>
-                                ))}
+                                  </li>)}
                               </ul>
-                              <Button 
-                                onClick={() => handleCheckout('kvalitet', tier as 'pro' | 'business' | 'enterprise')} 
-                                className={`w-full ${tier === 'business' ? 'bg-accent hover:bg-accent/90' : ''}`}
-                                variant={tier === 'enterprise' ? 'outline' : 'default'}
-                                disabled={isCheckingOut}
-                              >
+                              <Button onClick={() => handleCheckout('kvalitet', tier as 'pro' | 'business' | 'enterprise')} className={`w-full ${tier === 'business' ? 'bg-accent hover:bg-accent/90' : ''}`} variant={tier === 'enterprise' ? 'outline' : 'default'} disabled={isCheckingOut}>
                                 {tier === 'enterprise' ? 'Kontakta oss' : `Välj ${tier}`}
                               </Button>
                             </CardContent>
-                          </Card>
-                        ))}
+                          </Card>)}
                       </div>
                     </div>
                   </DialogContent>
@@ -1091,22 +1012,17 @@ export const ProductSelection = () => {
                     <div className="py-6">
                       <h3 className="text-xl font-semibold mb-4">Vad ingår:</h3>
                       <ul className="space-y-2 mb-6">
-                        {packageDetails.hemsideoptimering.features.map((feature, idx) => (
-                          <li key={idx} className="flex items-start gap-2">
+                        {packageDetails.hemsideoptimering.features.map((feature, idx) => <li key={idx} className="flex items-start gap-2">
                             <CheckCircle className="h-5 w-5 text-accent mt-0.5 flex-shrink-0" />
                             <span>{feature}</span>
-                          </li>
-                        ))}
+                          </li>)}
                       </ul>
 
                       <div className="grid md:grid-cols-3 gap-4">
-                        {['pro', 'business', 'enterprise'].map((tier) => (
-                          <Card key={tier} className={`border-2 ${tier === 'business' ? 'border-accent/50 relative' : 'hover:border-accent/50'} transition-colors`}>
-                            {tier === 'business' && (
-                              <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-accent text-accent-foreground px-3 py-1 rounded-full text-xs font-semibold">
+                        {['pro', 'business', 'enterprise'].map(tier => <Card key={tier} className={`border-2 ${tier === 'business' ? 'border-accent/50 relative' : 'hover:border-accent/50'} transition-colors`}>
+                            {tier === 'business' && <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-accent text-accent-foreground px-3 py-1 rounded-full text-xs font-semibold">
                                 POPULÄR
-                              </div>
-                            )}
+                              </div>}
                             <CardHeader>
                               <CardTitle className="text-xl capitalize">{tier}</CardTitle>
                               <div className="text-3xl font-bold">
@@ -1116,24 +1032,16 @@ export const ProductSelection = () => {
                             </CardHeader>
                             <CardContent>
                               <ul className="space-y-2 mb-4">
-                                {packageDetails.hemsideoptimering.pricing?.[tier as 'pro' | 'business' | 'enterprise'].features.map((f, i) => (
-                                  <li key={i} className="flex items-start gap-2 text-sm">
+                                {packageDetails.hemsideoptimering.pricing?.[tier as 'pro' | 'business' | 'enterprise'].features.map((f, i) => <li key={i} className="flex items-start gap-2 text-sm">
                                     <CheckCircle className="h-4 w-4 text-accent mt-0.5 flex-shrink-0" />
                                     <span>{f}</span>
-                                  </li>
-                                ))}
+                                  </li>)}
                               </ul>
-                              <Button 
-                                onClick={() => handleCheckout('hemsideoptimering', tier as 'pro' | 'business' | 'enterprise')} 
-                                className={`w-full ${tier === 'business' ? 'bg-accent hover:bg-accent/90' : ''}`}
-                                variant={tier === 'enterprise' ? 'outline' : 'default'}
-                                disabled={isCheckingOut}
-                              >
+                              <Button onClick={() => handleCheckout('hemsideoptimering', tier as 'pro' | 'business' | 'enterprise')} className={`w-full ${tier === 'business' ? 'bg-accent hover:bg-accent/90' : ''}`} variant={tier === 'enterprise' ? 'outline' : 'default'} disabled={isCheckingOut}>
                                 {tier === 'enterprise' ? 'Kontakta oss' : `Välj ${tier}`}
                               </Button>
                             </CardContent>
-                          </Card>
-                        ))}
+                          </Card>)}
                       </div>
                     </div>
                   </DialogContent>
@@ -1216,50 +1124,24 @@ export const ProductSelection = () => {
               <div className="relative bg-white/5 backdrop-blur-sm">
                 <ScrollArea className="h-[400px] p-6" ref={scrollRef}>
                   <div className="space-y-4">
-                    {messages.map((msg, idx) => (
-                      <div
-                        key={idx}
-                        className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
-                      >
-                        <div
-                          className={`max-w-[80%] rounded-2xl px-4 py-2.5 ${
-                            msg.role === 'user'
-                              ? 'bg-white text-primary'
-                              : 'bg-white/10 text-white backdrop-blur-sm border border-white/20'
-                          }`}
-                        >
+                    {messages.map((msg, idx) => <div key={idx} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+                        <div className={`max-w-[80%] rounded-2xl px-4 py-2.5 ${msg.role === 'user' ? 'bg-white text-primary' : 'bg-white/10 text-white backdrop-blur-sm border border-white/20'}`}>
                           <p className="text-sm whitespace-pre-wrap">{msg.content}</p>
                         </div>
-                      </div>
-                    ))}
-                    {isLoading && (
-                      <div className="flex justify-start">
+                      </div>)}
+                    {isLoading && <div className="flex justify-start">
                         <div className="bg-white/10 rounded-2xl px-4 py-2.5 backdrop-blur-sm border border-white/20">
                           <Loader2 className="h-4 w-4 animate-spin text-white" />
                         </div>
-                      </div>
-                    )}
+                      </div>}
                   </div>
                 </ScrollArea>
 
                 {/* Input */}
                 <div className="p-6 border-t border-white/10">
                   <div className="flex gap-3">
-                    <Input
-                      ref={inputRef}
-                      value={input}
-                      onChange={(e) => setInput(e.target.value)}
-                      onKeyDown={handleKeyPress}
-                      placeholder="Skriv ditt meddelande till Krono..."
-                      disabled={isLoading}
-                      className="flex-1 bg-white/10 border-white/20 text-white placeholder:text-white/50 focus:bg-white/15"
-                    />
-                    <Button
-                      onClick={handleSend}
-                      disabled={!input.trim() || isLoading}
-                      size="icon"
-                      className="bg-white text-primary hover:bg-white/90 h-10 w-10"
-                    >
+                    <Input ref={inputRef} value={input} onChange={e => setInput(e.target.value)} onKeyDown={handleKeyPress} placeholder="Skriv ditt meddelande till Krono..." disabled={isLoading} className="flex-1 bg-white/10 border-white/20 text-white placeholder:text-white/50 focus:bg-white/15" />
+                    <Button onClick={handleSend} disabled={!input.trim() || isLoading} size="icon" className="bg-white text-primary hover:bg-white/90 h-10 w-10">
                       <Send className="h-4 w-4" />
                     </Button>
                   </div>
@@ -1282,22 +1164,12 @@ export const ProductSelection = () => {
                           </DialogDescription>
                         </DialogHeader>
                         <div className="space-y-4 pt-4">
-                          <Input
-                            placeholder="070-123 45 67"
-                            value={phoneNumber}
-                            onChange={(e) => setPhoneNumber(e.target.value)}
-                            onKeyDown={(e) => {
-                              if (e.key === 'Enter') {
-                                handlePhoneSubmit();
-                              }
-                            }}
-                            className="text-base"
-                          />
-                          <Button 
-                            onClick={handlePhoneSubmit}
-                            className="w-full bg-primary text-primary-foreground hover:bg-primary/90"
-                            size="lg"
-                          >
+                          <Input placeholder="070-123 45 67" value={phoneNumber} onChange={e => setPhoneNumber(e.target.value)} onKeyDown={e => {
+                          if (e.key === 'Enter') {
+                            handlePhoneSubmit();
+                          }
+                        }} className="text-base" />
+                          <Button onClick={handlePhoneSubmit} className="w-full bg-primary text-primary-foreground hover:bg-primary/90" size="lg">
                             Ring mig
                           </Button>
                         </div>
