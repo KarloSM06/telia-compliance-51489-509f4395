@@ -430,9 +430,8 @@ export const ProductSelection = () => {
 Boka en konsultation med oss redan idag!</p>
             
             <div className="mt-12">
-              <Button size="lg" className="bg-gradient-gold text-white hover:shadow-glow transition-all duration-300 font-semibold text-lg px-8 py-6" onClick={() => setIsConsultationModalOpen(true)}>
-                Boka konsultation
-              </Button>
+              <Button size="lg" className="bg-gradient-gold text-white hover:shadow-glow transition-all duration-300 font-semibold text-lg px-8 py-6" onClick={() => setIsConsultationModalOpen(true)}>   Med Hiems får ni inte bara tillgång till marknadens främsta AI-lösningar. Ni får en trogen partner som ser till att eran verksamhet alltid befinner sig i framkant. 
+ Boka en konsultation med oss redan idag!</Button>
             </div>
           </div>
         </div>
