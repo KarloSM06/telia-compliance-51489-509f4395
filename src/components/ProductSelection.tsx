@@ -1187,7 +1187,7 @@ export const ProductSelection = () => {
                 </div>
                 <h2 className="text-4xl font-display font-bold text-white mb-4">Se hur AI hade kunnat effektivisera er verksamhet</h2>
                 <p className="text-lg text-white/90 leading-relaxed max-w-2xl mx-auto">
-                  Prata med Krono, vår AI-rådgivare, eller prova vår demo för att se hur AI kan analysera säljsamtal i realtid.
+                  Prata med vår AI-rådgivare Krono eller prova vårt demo för att se hur en AI-receptionist fungerar
                 </p>
               </div>
 
