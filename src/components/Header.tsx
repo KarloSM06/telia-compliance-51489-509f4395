@@ -1,7 +1,8 @@
 import { Button } from "@/components/ui/button";
-import { Snowflake, LogOut } from "lucide-react";
+import { LogOut } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { useNavigate } from "react-router-dom";
+import hiems_logo from "@/assets/hiems_logo.png";
 import { useState } from "react";
 import { ReceptionistModal } from "@/components/ReceptionistModal";
 import {
@@ -51,9 +52,7 @@ export const Header = () => {
               onClick={() => navigate("/")}
               className="flex items-center space-x-2 hover:opacity-80 transition-opacity"
             >
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-primary">
-                <Snowflake className="h-5 w-5 text-white" />
-              </div>
+              <img src={hiems_logo} alt="Hiems logo" className="h-8 w-8 rounded-lg" />
               <span className="text-xl font-bold text-foreground">Hiems</span>
             </button>
           </div>
