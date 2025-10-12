@@ -425,7 +425,7 @@ export const ProductSelection = () => {
             <p className="text-xl leading-relaxed mb-6 font-light text-white/90">Vi bygger skräddarsydda intelligenta lösningar som gör ditt företag snabbare, smartare och framförallt mer lönsamt</p>
             <p className="text-lg leading-relaxed text-white/80 max-w-3xl mx-auto">   Med Hiems får ni inte bara tillgång till marknadens främsta AI-lösningar. Ni får en trogen partner som ser till att eran verksamhet alltid befinner sig i framkant </p>
             
-            <div className="mt-12">
+            <div className="mt-12 flex flex-col items-center gap-4">
               <Button 
                 size="lg"
                 className="bg-gradient-gold text-white hover:shadow-glow transition-all duration-300 font-semibold text-lg px-8 py-6"
@@ -433,6 +433,15 @@ export const ProductSelection = () => {
               >
                 Boka konsultation
               </Button>
+              <p className="text-white/70 text-sm">
+                Inte tid för en konsultation?{" "}
+                <button
+                  onClick={() => setIsQuoteModalOpen(true)}
+                  className="text-accent hover:text-accent/80 underline transition-colors"
+                >
+                  Prata med Krono
+                </button>
+              </p>
             </div>
           </div>
         </div>
