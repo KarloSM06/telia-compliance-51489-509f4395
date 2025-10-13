@@ -35,26 +35,31 @@ export const StatCard = ({
   };
 
   return (
-    <Card className="transition-all hover:shadow-card">
-      <CardContent className="p-6">
-        <div className="flex items-start justify-between mb-2">
-          <p className="text-sm font-medium text-muted-foreground">{title}</p>
-          {icon && <div className="text-muted-foreground">{icon}</div>}
+    <Card className="transition-all hover:shadow-lg group overflow-hidden">
+      <CardContent className="p-6 relative">
+        <div className="flex items-start justify-between mb-4">
+          <div className="flex-1">
+            <p className="text-sm font-medium text-muted-foreground mb-2">{title}</p>
+            <p className="text-4xl font-bold tracking-tight">{value}</p>
+          </div>
+          {icon && (
+            <div className="p-3 rounded-xl bg-gradient-to-br from-primary/10 to-primary/5 text-primary transition-transform group-hover:scale-110">
+              {icon}
+            </div>
+          )}
         </div>
         
-        <div className="space-y-2">
-          <p className="text-3xl font-bold">{value}</p>
-          
+        <div className="space-y-3">
           {change !== undefined && (
-            <div className={cn("flex items-center gap-1 text-sm", getTrendColor())}>
+            <div className={cn("flex items-center gap-1.5 text-sm font-medium", getTrendColor())}>
               {getTrendIcon()}
-              <span className="font-medium">{Math.abs(change)}%</span>
-              {changeLabel && <span className="text-muted-foreground ml-1">{changeLabel}</span>}
+              <span>{Math.abs(change)}%</span>
+              {changeLabel && <span className="text-muted-foreground ml-1 font-normal">{changeLabel}</span>}
             </div>
           )}
           
           {sparklineData && sparklineData.length > 0 && (
-            <div className="mt-4">
+            <div className="mt-3 -mb-2">
               <SparklineComponent data={sparklineData} />
             </div>
           )}

@@ -6,11 +6,12 @@ import { BarChartComponent } from "@/components/dashboard/charts/BarChartCompone
 import { PieChartComponent } from "@/components/dashboard/charts/PieChartComponent";
 import { LineChartComponent } from "@/components/dashboard/charts/LineChartComponent";
 import { StatCard } from "@/components/dashboard/charts/StatCard";
+import { ObjectiveCard } from "@/components/dashboard/charts/ObjectiveCard";
 import { DateRangePicker, DateRange } from "@/components/dashboard/filters/DateRangePicker";
 import { ProductSelector, ProductType } from "@/components/dashboard/filters/ProductSelector";
 import { useAnalytics } from "@/hooks/useAnalytics";
 import { Button } from "@/components/ui/button";
-import { Download, Phone, Calendar, MessageSquare, TrendingUp } from "lucide-react";
+import { Download, Phone, Calendar, MessageSquare, TrendingUp, Target, Award, Users, Clock } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 
 const DashboardAnalytics = () => {
@@ -79,6 +80,34 @@ const DashboardAnalytics = () => {
           <DateRangePicker value={dateRange} onChange={setDateRange} />
         </div>
 
+        {/* Objective Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <ObjectiveCard
+            title="Månatlig svarsgrad"
+            current={data?.calls.total || 0}
+            target={1500}
+            unit=" svar"
+            icon={Phone}
+            color="hsl(142, 76%, 36%)"
+          />
+          <ObjectiveCard
+            title="Bokningskonvertering"
+            current={data?.bookings.total || 0}
+            target={5000}
+            unit=" bokningar"
+            icon={Target}
+            color="hsl(43, 96%, 56%)"
+          />
+          <ObjectiveCard
+            title="AI Kvalitetsbetyg"
+            current={Math.round(data?.callAnalysis.averageScore || 0)}
+            target={90}
+            unit="/100"
+            icon={Award}
+            color="hsl(38, 92%, 50%)"
+          />
+        </div>
+
         {/* Top KPI Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           <StatCard
@@ -118,11 +147,11 @@ const DashboardAnalytics = () => {
           />
         </div>
 
-        {/* Main Charts - 2 columns */}
+        {/* Large Trend Analysis Charts - 2 columns */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Left: Statistics Area Chart */}
+          {/* Left: Multi-metric Area Chart */}
           <AreaChartComponent
-            title="Aktivitet över tid"
+            title="Aktivitet över tid - Översikt"
             data={data?.calls.byDay.map((day, index) => ({
               name: day.date,
               samtal: day.count,
@@ -139,18 +168,18 @@ const DashboardAnalytics = () => {
 
           {/* Right: Performance Radar Chart */}
           <RadarChartComponent
-            title="Performance Metrics"
+            title="Performance Metrics - 360° Översikt"
             data={getPerformanceData()}
             color="hsl(43, 96%, 56%)"
             height={400}
           />
         </div>
 
-        {/* Secondary Charts - 3 columns */}
+        {/* Detailed Distribution & Comparison - 3 columns */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {/* Activity Line Chart */}
           <LineChartComponent
-            title="Samtalstrend"
+            title="14-dagars Samtalstrend"
             data={data?.calls.byDay.slice(-14).map(d => ({
               name: d.date,
               count: d.count,
@@ -162,9 +191,9 @@ const DashboardAnalytics = () => {
             ]}
           />
 
-          {/* Expense/Revenue Bar Chart */}
+          {/* Weekly Distribution Bar Chart */}
           <BarChartComponent
-            title="Veckovis fördelning"
+            title="Veckofördelning - Bokningar"
             data={data?.bookings.byWeekday.map(d => ({
               name: d.day,
               count: d.count,
@@ -175,52 +204,76 @@ const DashboardAnalytics = () => {
             xAxisKey="name"
           />
 
-          {/* Distribution Pie Chart */}
+          {/* Score Distribution Pie Chart */}
           <PieChartComponent
-            title="Score-fördelning"
+            title="Betygsfördelning"
             data={data?.callAnalysis.scoreDistribution.filter(s => s.count > 0).map(s => ({
               name: s.range,
               value: s.count,
             })) || []}
-            innerRadius={60}
+            innerRadius={50}
           />
         </div>
 
-        {/* Call Analysis Section - Thor specific */}
+        {/* Product Deep Dive - Thor/Krono/Gastro Specific - 2 columns */}
         {selectedProduct === "all" || selectedProduct === "thor" ? (
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <BarChartComponent
-              title="Samtalsanalys - Score Distribution"
-              data={data?.callAnalysis.scoreDistribution.map(s => ({
-                name: s.range,
-                count: s.count,
-              })) || []}
-              dataKeys={[
-                { key: "count", color: "hsl(38, 92%, 50%)", name: "Antal samtal" },
-              ]}
-              xAxisKey="name"
-            />
-            
-            <div className="bg-card p-6 rounded-lg border space-y-4">
-              <h3 className="text-lg font-semibold">Analysöversikt</h3>
-              <div className="space-y-3">
-                <div className="flex justify-between items-center p-3 bg-muted/50 rounded">
-                  <span className="text-sm font-medium">Totalt analyserade samtal</span>
-                  <span className="text-2xl font-bold">{data?.callAnalysis.totalAnalyzed || 0}</span>
+          <div className="space-y-4">
+            <div className="flex items-center gap-2 mb-2">
+              <Award className="h-5 w-5 text-primary" />
+              <h2 className="text-xl font-bold">Thor - AI Samtalsanalys</h2>
+            </div>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <BarChartComponent
+                title="Score Distribution - Detaljerad Översikt"
+                data={data?.callAnalysis.scoreDistribution.map(s => ({
+                  name: s.range,
+                  count: s.count,
+                })) || []}
+                dataKeys={[
+                  { key: "count", color: "hsl(38, 92%, 50%)", name: "Antal samtal" },
+                ]}
+                xAxisKey="name"
+                height={350}
+              />
+              
+              <div className="bg-gradient-to-br from-card to-muted/20 p-8 rounded-xl border shadow-lg space-y-6">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="p-3 rounded-lg bg-primary/10">
+                    <TrendingUp className="h-6 w-6 text-primary" />
+                  </div>
+                  <h3 className="text-xl font-bold">Kvalitetsöversikt</h3>
                 </div>
-                <div className="flex justify-between items-center p-3 bg-muted/50 rounded">
-                  <span className="text-sm font-medium">Genomsnittligt betyg</span>
-                  <span className="text-2xl font-bold text-success">
-                    {data?.callAnalysis.averageScore?.toFixed(1) || "N/A"}
-                  </span>
-                </div>
-                <div className="flex justify-between items-center p-3 bg-muted/50 rounded">
-                  <span className="text-sm font-medium">Compliance Rate</span>
-                  <span className="text-2xl font-bold text-warning">
-                    {data?.callAnalysis.totalAnalyzed > 0
-                      ? Math.round((data.callAnalysis.averageScore / 100) * 100) + "%"
-                      : "N/A"}
-                  </span>
+                
+                <div className="space-y-4">
+                  <div className="flex justify-between items-center p-4 bg-card rounded-lg shadow-sm border hover:shadow-md transition-shadow">
+                    <div className="flex items-center gap-3">
+                      <Phone className="h-5 w-5 text-muted-foreground" />
+                      <span className="font-medium">Totalt analyserade samtal</span>
+                    </div>
+                    <span className="text-3xl font-bold text-primary">{data?.callAnalysis.totalAnalyzed || 0}</span>
+                  </div>
+                  
+                  <div className="flex justify-between items-center p-4 bg-card rounded-lg shadow-sm border hover:shadow-md transition-shadow">
+                    <div className="flex items-center gap-3">
+                      <Award className="h-5 w-5 text-muted-foreground" />
+                      <span className="font-medium">Genomsnittligt betyg</span>
+                    </div>
+                    <span className="text-3xl font-bold text-success">
+                      {data?.callAnalysis.averageScore?.toFixed(1) || "N/A"}
+                    </span>
+                  </div>
+                  
+                  <div className="flex justify-between items-center p-4 bg-card rounded-lg shadow-sm border hover:shadow-md transition-shadow">
+                    <div className="flex items-center gap-3">
+                      <Target className="h-5 w-5 text-muted-foreground" />
+                      <span className="font-medium">Compliance Rate</span>
+                    </div>
+                    <span className="text-3xl font-bold text-warning">
+                      {data?.callAnalysis.totalAnalyzed > 0
+                        ? Math.round((data.callAnalysis.averageScore / 100) * 100) + "%"
+                        : "N/A"}
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>

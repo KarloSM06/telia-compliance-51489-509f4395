@@ -1,5 +1,6 @@
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { ChartToolbar } from "./ChartToolbar";
 
 interface BarChartData {
   name: string;
@@ -22,14 +23,15 @@ export const BarChartComponent = ({
   height = 300,
 }: BarChartComponentProps) => {
   return (
-    <Card>
-      <CardHeader>
+    <Card className="transition-all hover:shadow-card">
+      <CardHeader className="flex flex-row items-center justify-between pb-4">
         <CardTitle className="text-lg font-semibold">{title}</CardTitle>
+        <ChartToolbar />
       </CardHeader>
       <CardContent>
         <ResponsiveContainer width="100%" height={height}>
           <BarChart data={data}>
-            <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
+            <CartesianGrid strokeDasharray="3 3" className="stroke-muted/50" />
             <XAxis
               dataKey={xAxisKey}
               className="text-xs text-muted-foreground"
@@ -44,10 +46,11 @@ export const BarChartComponent = ({
                 backgroundColor: "hsl(var(--card))",
                 border: "1px solid hsl(var(--border))",
                 borderRadius: "var(--radius)",
+                boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
               }}
             />
             {dataKeys.map((dk) => (
-              <Bar key={dk.key} dataKey={dk.key} fill={dk.color} name={dk.name} radius={[4, 4, 0, 0]} />
+              <Bar key={dk.key} dataKey={dk.key} fill={dk.color} name={dk.name} radius={[6, 6, 0, 0]} />
             ))}
           </BarChart>
         </ResponsiveContainer>
