@@ -26,10 +26,15 @@ interface Message {
 const CHAT_URL = `https://shskknkivuewuqonjdjc.supabase.co/functions/v1/chat-assistant`;
 export const ProductSelection = () => {
   const navigate = useNavigate();
-  const { toast } = useToast();
-  const { user } = useAuth();
-  const { addItem } = useCart();
-  
+  const {
+    toast
+  } = useToast();
+  const {
+    user
+  } = useAuth();
+  const {
+    addItem
+  } = useCart();
   const [messages, setMessages] = useState<Message[]>([{
     role: 'assistant',
     content: 'Hej! 👋 Jag heter Krono och är er digitala AI-rådgivare från Hiems. Vilket paket passar bäst för ditt företag? Berätta lite om er verksamhet så hjälper jag er hitta rätt lösning!'
@@ -350,7 +355,6 @@ export const ProductSelection = () => {
 
     // Hämta rätt price ID
     let priceId: string | undefined;
-    
     if (packageData.hasMinutes && packageData.stripePriceIds) {
       // För Krono & Gastro med minuter
       priceId = packageData.stripePriceIds[tier]?.[selectedMinutes];
@@ -359,7 +363,6 @@ export const ProductSelection = () => {
       const tierData = packageData.tiers.find(t => t.name === tier);
       priceId = tierData?.stripePriceId;
     }
-
     if (!priceId) {
       toast({
         title: "Fel",
@@ -376,14 +379,11 @@ export const ProductSelection = () => {
       tier: tier,
       minutes: packageData.hasMinutes ? selectedMinutes : undefined,
       priceId: priceId,
-      price: packageData.hasMinutes 
-        ? packageData.minutePricing?.[selectedMinutes]?.[tier] as number
-        : (packageData.tiers?.find(t => t.name === tier)?.price as number)
+      price: packageData.hasMinutes ? packageData.minutePricing?.[selectedMinutes]?.[tier] as number : packageData.tiers?.find(t => t.name === tier)?.price as number
     });
-
     toast({
       title: "Tillagd i kundvagnen!",
-      description: `${packageData.fullName} (${tier.toUpperCase()}) har lagts till`,
+      description: `${packageData.fullName} (${tier.toUpperCase()}) har lagts till`
     });
   };
   const normalizePhoneNumber = (phone: string): string => {
@@ -436,8 +436,12 @@ export const ProductSelection = () => {
       {/* Animated background elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-20 left-10 w-72 h-72 bg-accent/10 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute bottom-20 right-10 w-96 h-96 bg-accent/5 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-accent/5 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }}></div>
+        <div className="absolute bottom-20 right-10 w-96 h-96 bg-accent/5 rounded-full blur-3xl animate-pulse" style={{
+        animationDelay: '1s'
+      }}></div>
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-accent/5 rounded-full blur-3xl animate-pulse" style={{
+        animationDelay: '2s'
+      }}></div>
       </div>
       
       {/* Quick Navigation */}
@@ -468,7 +472,9 @@ export const ProductSelection = () => {
               <Button size="lg" className="bg-gradient-gold text-primary hover:shadow-glow hover:scale-105 transition-all duration-300 font-semibold text-lg px-10 py-7" onClick={() => setIsConsultationModalOpen(true)}>
                 Boka konsultation
               </Button>
-              <Button size="lg" variant="outline" className="border-2 border-white text-white bg-white/10 hover:bg-white hover:text-primary hover:scale-105 transition-all duration-300 font-semibold text-lg px-10 py-7 backdrop-blur-sm" onClick={() => document.getElementById('krono-chat')?.scrollIntoView({ behavior: 'smooth' })}>
+              <Button size="lg" variant="outline" className="border-2 border-white text-white bg-white/10 hover:bg-white hover:text-primary hover:scale-105 transition-all duration-300 font-semibold text-lg px-10 py-7 backdrop-blur-sm" onClick={() => document.getElementById('krono-chat')?.scrollIntoView({
+              behavior: 'smooth'
+            })}>
                 Prata med Krono
               </Button>
             </div>
@@ -484,7 +490,7 @@ export const ProductSelection = () => {
               <div className="flex items-center justify-center mb-4">
                 <BarChart3 className="h-12 w-12 text-accent group-hover:scale-110 transition-transform" />
               </div>
-              <div className="text-5xl font-display font-bold text-white mb-2">AI</div>
+              <div className="text-5xl font-display font-bold text-white mb-2">AI-experter</div>
               <div className="text-white/70 text-lg">Få hjälp av AI experter</div>
             </AnimatedSection>
             <AnimatedSection delay={100} className="text-center group">
@@ -558,14 +564,12 @@ export const ProductSelection = () => {
               </CardHeader>
               <CardContent className="relative space-y-6 p-10 pt-0 flex-1 flex flex-col">
                 <ul className="space-y-4 mb-8 flex-1">
-                  {packageDetails.krono.features.slice(0, 3).map((feature, idx) => (
-                    <li key={idx} className="flex items-start gap-3">
+                  {packageDetails.krono.features.slice(0, 3).map((feature, idx) => <li key={idx} className="flex items-start gap-3">
                       <div className="flex-shrink-0 w-6 h-6 rounded-full bg-accent/10 flex items-center justify-center mt-0.5">
                         <CheckCircle className="h-4 w-4 text-accent" />
                       </div>
                       <span className="text-foreground/80 leading-relaxed">{feature}</span>
-                    </li>
-                  ))}
+                    </li>)}
                 </ul>
                 <Dialog>
                   <DialogTrigger asChild>
@@ -670,14 +674,12 @@ export const ProductSelection = () => {
               </CardHeader>
               <CardContent className="relative space-y-6 p-10 pt-0 flex-1 flex flex-col">
                 <ul className="space-y-4 mb-8 flex-1">
-                  {packageDetails.gastro.features.map((feature, idx) => (
-                    <li key={idx} className="flex items-start gap-3">
+                  {packageDetails.gastro.features.map((feature, idx) => <li key={idx} className="flex items-start gap-3">
                       <div className="flex-shrink-0 w-6 h-6 rounded-full bg-accent/10 flex items-center justify-center mt-0.5">
                         <CheckCircle className="h-4 w-4 text-accent" />
                       </div>
                       <span className="text-foreground/80 leading-relaxed">{feature}</span>
-                    </li>
-                  ))}
+                    </li>)}
                 </ul>
                 <Dialog>
                   <DialogTrigger asChild>
@@ -705,8 +707,7 @@ export const ProductSelection = () => {
                       </div>
 
                       <div className="grid md:grid-cols-3 gap-4">
-                        {['pro', 'business', 'enterprise'].map(tier => (
-                          <Card key={tier} className={`border-2 ${tier === 'business' ? 'border-accent/50 relative' : 'hover:border-accent/50'} transition-colors`}>
+                        {['pro', 'business', 'enterprise'].map(tier => <Card key={tier} className={`border-2 ${tier === 'business' ? 'border-accent/50 relative' : 'hover:border-accent/50'} transition-colors`}>
                             {tier === 'business' && <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-accent text-accent-foreground px-3 py-1 rounded-full text-xs font-semibold">POPULÄR</div>}
                             <CardHeader>
                               <CardTitle className="text-xl capitalize">{tier}</CardTitle>
@@ -717,24 +718,16 @@ export const ProductSelection = () => {
                             </CardHeader>
                             <CardContent>
                               <ul className="space-y-2 mb-4 text-sm">
-                                {packageDetails.gastro.pricing?.[tier as 'pro' | 'business' | 'enterprise'].features.map((f, i) => (
-                                  <li key={i} className="flex items-start gap-2">
+                                {packageDetails.gastro.pricing?.[tier as 'pro' | 'business' | 'enterprise'].features.map((f, i) => <li key={i} className="flex items-start gap-2">
                                     <CheckCircle className="h-4 w-4 text-accent mt-0.5 flex-shrink-0" />
                                     <span>{f}</span>
-                                  </li>
-                                ))}
+                                  </li>)}
                               </ul>
-                              <Button 
-                                onClick={() => handleCheckout('gastro', tier as 'pro' | 'business' | 'enterprise')} 
-                                className={`w-full ${tier === 'business' ? 'bg-accent hover:bg-accent/90' : ''}`} 
-                                variant={tier === 'enterprise' ? 'outline' : 'default'} 
-                                disabled={isCheckingOut}
-                              >
+                              <Button onClick={() => handleCheckout('gastro', tier as 'pro' | 'business' | 'enterprise')} className={`w-full ${tier === 'business' ? 'bg-accent hover:bg-accent/90' : ''}`} variant={tier === 'enterprise' ? 'outline' : 'default'} disabled={isCheckingOut}>
                                 {tier === 'enterprise' ? 'Kontakta oss' : `Välj ${tier}`}
                               </Button>
                             </CardContent>
-                          </Card>
-                        ))}
+                          </Card>)}
                       </div>
                     </div>
                   </DialogContent>
@@ -756,14 +749,12 @@ export const ProductSelection = () => {
               </CardHeader>
               <CardContent className="relative space-y-6 p-10 pt-0">
                 <ul className="space-y-4 mb-8">
-                  {packageDetails.talent.features.map((feature, idx) => (
-                    <li key={idx} className="flex items-start gap-3">
+                  {packageDetails.talent.features.map((feature, idx) => <li key={idx} className="flex items-start gap-3">
                       <div className="flex-shrink-0 w-6 h-6 rounded-full bg-accent/10 flex items-center justify-center mt-0.5">
                         <CheckCircle className="h-4 w-4 text-accent" />
                       </div>
                       <span className="text-foreground/80 leading-relaxed">{feature}</span>
-                    </li>
-                  ))}
+                    </li>)}
                 </ul>
                 <Dialog>
                   <DialogTrigger asChild>
@@ -782,8 +773,7 @@ export const ProductSelection = () => {
                     
                     <div className="py-6">
                       <div className="grid md:grid-cols-3 gap-4">
-                        {['pro', 'business', 'enterprise'].map(tier => (
-                          <Card key={tier} className={`border-2 ${tier === 'business' ? 'border-accent/50 relative' : 'hover:border-accent/50'} transition-colors`}>
+                        {['pro', 'business', 'enterprise'].map(tier => <Card key={tier} className={`border-2 ${tier === 'business' ? 'border-accent/50 relative' : 'hover:border-accent/50'} transition-colors`}>
                             {tier === 'business' && <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-accent text-accent-foreground px-3 py-1 rounded-full text-xs font-semibold">POPULÄR</div>}
                             <CardHeader>
                               <CardTitle className="text-xl capitalize">{tier}</CardTitle>
@@ -794,19 +784,16 @@ export const ProductSelection = () => {
                             </CardHeader>
                             <CardContent>
                               <ul className="space-y-2 mb-4 text-sm">
-                                {packageDetails.talent.pricing?.[tier as 'pro' | 'business' | 'enterprise'].features.map((f, i) => (
-                                  <li key={i} className="flex items-start gap-2">
+                                {packageDetails.talent.pricing?.[tier as 'pro' | 'business' | 'enterprise'].features.map((f, i) => <li key={i} className="flex items-start gap-2">
                                     <CheckCircle className="h-4 w-4 text-accent mt-0.5 flex-shrink-0" />
                                     <span>{f}</span>
-                                  </li>
-                                ))}
+                                  </li>)}
                               </ul>
                               <Button onClick={() => handleCheckout('talent', tier as 'pro' | 'business' | 'enterprise')} className={`w-full ${tier === 'business' ? 'bg-accent hover:bg-accent/90' : ''}`} variant={tier === 'enterprise' ? 'outline' : 'default'} disabled={isCheckingOut}>
                                 {tier === 'enterprise' ? 'Kontakta oss' : `Välj ${tier}`}
                               </Button>
                             </CardContent>
-                          </Card>
-                        ))}
+                          </Card>)}
                       </div>
                     </div>
                   </DialogContent>
@@ -828,14 +815,12 @@ export const ProductSelection = () => {
               </CardHeader>
               <CardContent className="relative space-y-6 p-10 pt-0">
                 <ul className="space-y-4 mb-8">
-                  {packageDetails.lead.features.map((feature, idx) => (
-                    <li key={idx} className="flex items-start gap-3">
+                  {packageDetails.lead.features.map((feature, idx) => <li key={idx} className="flex items-start gap-3">
                       <div className="flex-shrink-0 w-6 h-6 rounded-full bg-accent/10 flex items-center justify-center mt-0.5">
                         <CheckCircle className="h-4 w-4 text-accent" />
                       </div>
                       <span className="text-foreground/80 leading-relaxed">{feature}</span>
-                    </li>
-                  ))}
+                    </li>)}
                 </ul>
                 <Dialog>
                   <DialogTrigger asChild>
@@ -854,8 +839,7 @@ export const ProductSelection = () => {
                     
                     <div className="py-6">
                       <div className="grid md:grid-cols-3 gap-4">
-                        {['pro', 'business', 'enterprise'].map(tier => (
-                          <Card key={tier} className={`border-2 ${tier === 'business' ? 'border-accent/50 relative' : 'hover:border-accent/50'} transition-colors`}>
+                        {['pro', 'business', 'enterprise'].map(tier => <Card key={tier} className={`border-2 ${tier === 'business' ? 'border-accent/50 relative' : 'hover:border-accent/50'} transition-colors`}>
                             {tier === 'business' && <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-accent text-accent-foreground px-3 py-1 rounded-full text-xs font-semibold">POPULÄR</div>}
                             <CardHeader>
                               <CardTitle className="text-xl capitalize">{tier}</CardTitle>
@@ -866,19 +850,16 @@ export const ProductSelection = () => {
                             </CardHeader>
                             <CardContent>
                               <ul className="space-y-2 mb-4 text-sm">
-                                {packageDetails.lead.pricing?.[tier as 'pro' | 'business' | 'enterprise'].features.map((f, i) => (
-                                  <li key={i} className="flex items-start gap-2">
+                                {packageDetails.lead.pricing?.[tier as 'pro' | 'business' | 'enterprise'].features.map((f, i) => <li key={i} className="flex items-start gap-2">
                                     <CheckCircle className="h-4 w-4 text-accent mt-0.5 flex-shrink-0" />
                                     <span>{f}</span>
-                                  </li>
-                                ))}
+                                  </li>)}
                               </ul>
                               <Button onClick={() => handleCheckout('lead', tier as 'pro' | 'business' | 'enterprise')} className={`w-full ${tier === 'business' ? 'bg-accent hover:bg-accent/90' : ''}`} variant={tier === 'enterprise' ? 'outline' : 'default'} disabled={isCheckingOut}>
                                 {tier === 'enterprise' ? 'Kontakta oss' : `Välj ${tier}`}
                               </Button>
                             </CardContent>
-                          </Card>
-                        ))}
+                          </Card>)}
                       </div>
                     </div>
                   </DialogContent>
@@ -903,14 +884,12 @@ export const ProductSelection = () => {
               </CardHeader>
               <CardContent className="relative space-y-6 p-10 pt-0">
                 <ul className="space-y-4 mb-8">
-                  {packageDetails.thor.features.map((feature, idx) => (
-                    <li key={idx} className="flex items-start gap-3">
+                  {packageDetails.thor.features.map((feature, idx) => <li key={idx} className="flex items-start gap-3">
                       <div className="flex-shrink-0 w-6 h-6 rounded-full bg-accent/10 flex items-center justify-center mt-0.5">
                         <CheckCircle className="h-4 w-4 text-accent" />
                       </div>
                       <span className="text-foreground/80 leading-relaxed">{feature}</span>
-                    </li>
-                  ))}
+                    </li>)}
                 </ul>
                 <Dialog>
                   <DialogTrigger asChild>
@@ -929,8 +908,7 @@ export const ProductSelection = () => {
                     
                     <div className="py-6">
                       <div className="grid md:grid-cols-3 gap-4">
-                        {['pro', 'business', 'enterprise'].map(tier => (
-                          <Card key={tier} className={`border-2 ${tier === 'business' ? 'border-accent/50 relative' : 'hover:border-accent/50'} transition-colors`}>
+                        {['pro', 'business', 'enterprise'].map(tier => <Card key={tier} className={`border-2 ${tier === 'business' ? 'border-accent/50 relative' : 'hover:border-accent/50'} transition-colors`}>
                             {tier === 'business' && <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-accent text-accent-foreground px-3 py-1 rounded-full text-xs font-semibold">POPULÄR</div>}
                             <CardHeader>
                               <CardTitle className="text-xl capitalize">{tier}</CardTitle>
@@ -941,19 +919,16 @@ export const ProductSelection = () => {
                             </CardHeader>
                             <CardContent>
                               <ul className="space-y-2 mb-4 text-sm">
-                                {packageDetails.thor.pricing?.[tier as 'pro' | 'business' | 'enterprise'].features.map((f, i) => (
-                                  <li key={i} className="flex items-start gap-2">
+                                {packageDetails.thor.pricing?.[tier as 'pro' | 'business' | 'enterprise'].features.map((f, i) => <li key={i} className="flex items-start gap-2">
                                     <CheckCircle className="h-4 w-4 text-accent mt-0.5 flex-shrink-0" />
                                     <span>{f}</span>
-                                  </li>
-                                ))}
+                                  </li>)}
                               </ul>
                               <Button onClick={() => handleCheckout('thor', tier as 'pro' | 'business' | 'enterprise')} className={`w-full ${tier === 'business' ? 'bg-accent hover:bg-accent/90' : ''}`} variant={tier === 'enterprise' ? 'outline' : 'default'} disabled={isCheckingOut}>
                                 {tier === 'enterprise' ? 'Kontakta oss' : `Välj ${tier}`}
                               </Button>
                             </CardContent>
-                          </Card>
-                        ))}
+                          </Card>)}
                       </div>
                     </div>
                   </DialogContent>
@@ -1098,10 +1073,6 @@ export const ProductSelection = () => {
       
       <QuoteModal open={isQuoteModalOpen} onOpenChange={setIsQuoteModalOpen} />
       <ConsultationModal open={isConsultationModalOpen} onOpenChange={setIsConsultationModalOpen} />
-      <EnterpriseContactModal 
-        open={isEnterpriseModalOpen} 
-        onOpenChange={setIsEnterpriseModalOpen}
-        productName={selectedEnterpriseProduct}
-      />
+      <EnterpriseContactModal open={isEnterpriseModalOpen} onOpenChange={setIsEnterpriseModalOpen} productName={selectedEnterpriseProduct} />
     </div>;
 };
