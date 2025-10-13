@@ -460,7 +460,7 @@ export const ProductSelection = () => {
               <Button size="lg" className="bg-gradient-gold text-primary hover:shadow-glow hover:scale-105 transition-all duration-300 font-semibold text-lg px-10 py-7" onClick={() => setIsConsultationModalOpen(true)}>
                 Boka konsultation
               </Button>
-              <Button size="lg" variant="outline" className="border-white/30 text-white hover:bg-white/10 hover:scale-105 transition-all duration-300 font-semibold text-lg px-10 py-7" onClick={() => document.getElementById('krono-chat')?.scrollIntoView({ behavior: 'smooth' })}>
+              <Button size="lg" variant="outline" className="border-2 border-white text-white bg-white/10 hover:bg-white hover:text-primary hover:scale-105 transition-all duration-300 font-semibold text-lg px-10 py-7 backdrop-blur-sm" onClick={() => document.getElementById('krono-chat')?.scrollIntoView({ behavior: 'smooth' })}>
                 Prata med Krono
               </Button>
             </div>
