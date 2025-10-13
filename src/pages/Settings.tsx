@@ -18,8 +18,8 @@ export default function Settings() {
   const showTeamTab = organizationId || isHiemsAdmin;
 
   return (
-    <div className="container mx-auto py-8 px-4 max-w-6xl">
-      <div className="mb-8">
+    <div className="container mx-auto py-8 px-4 max-w-6xl animate-fade-in">
+      <div className="mb-8 animate-scale-in">
         <h1 className="text-3xl font-bold mb-2">Inställningar</h1>
         <p className="text-muted-foreground">
           Hantera ditt konto, säkerhet och preferenser
@@ -27,53 +27,53 @@ export default function Settings() {
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-        <TabsList className="grid grid-cols-2 lg:grid-cols-4 gap-2 h-auto p-1">
-          <TabsTrigger value="profile" className="gap-2">
+        <TabsList className="grid grid-cols-2 lg:grid-cols-4 gap-2 h-auto p-1 animate-slide-in-right">
+          <TabsTrigger value="profile" className="gap-2 hover-scale">
             <User className="h-4 w-4" />
             <span className="hidden sm:inline">Profil</span>
           </TabsTrigger>
-          <TabsTrigger value="security" className="gap-2">
+          <TabsTrigger value="security" className="gap-2 hover-scale">
             <Shield className="h-4 w-4" />
             <span className="hidden sm:inline">Säkerhet</span>
           </TabsTrigger>
-          <TabsTrigger value="products" className="gap-2">
+          <TabsTrigger value="products" className="gap-2 hover-scale">
             <Package className="h-4 w-4" />
             <span className="hidden sm:inline">Produkter</span>
           </TabsTrigger>
           {showTeamTab && (
-            <TabsTrigger value="team" className="gap-2">
+            <TabsTrigger value="team" className="gap-2 hover-scale">
               <Users className="h-4 w-4" />
               <span className="hidden sm:inline">Team</span>
             </TabsTrigger>
           )}
           {isHiemsAdmin && (
-            <TabsTrigger value="hiems-admin" className="gap-2 bg-gradient-to-r from-purple-600/10 to-pink-600/10">
+            <TabsTrigger value="hiems-admin" className="gap-2 bg-gradient-to-r from-purple-600/10 to-pink-600/10 hover-scale">
               <ShieldCheck className="h-4 w-4 text-purple-600" />
               <span className="hidden sm:inline text-purple-600">Hiems Admin</span>
             </TabsTrigger>
           )}
         </TabsList>
 
-        <TabsContent value="profile" className="space-y-6">
+        <TabsContent value="profile" className="space-y-6 animate-enter">
           <ProfileSettings />
         </TabsContent>
 
-        <TabsContent value="security" className="space-y-6">
+        <TabsContent value="security" className="space-y-6 animate-enter">
           <SecuritySettings />
         </TabsContent>
 
-        <TabsContent value="products" className="space-y-6">
+        <TabsContent value="products" className="space-y-6 animate-enter">
           <ProductsSettings />
         </TabsContent>
 
         {showTeamTab && (
-          <TabsContent value="team" className="space-y-6">
+          <TabsContent value="team" className="space-y-6 animate-enter">
             <TeamSettings />
           </TabsContent>
         )}
 
         {isHiemsAdmin && (
-          <TabsContent value="hiems-admin" className="space-y-6">
+          <TabsContent value="hiems-admin" className="space-y-6 animate-enter">
             <HiemsAdminPanel />
           </TabsContent>
         )}

@@ -16,9 +16,9 @@ export function ProfileSettings() {
   const [timezone, setTimezone] = useState("Europe/Stockholm");
 
   return (
-    <div className="space-y-6">
-      <Card>
-        <CardHeader>
+    <div className="space-y-6 animate-fade-in">
+      <Card className="hover-scale transition-all">
+        <CardHeader className="animate-scale-in">
           <div className="flex items-center gap-3">
             <div className="p-2 bg-primary/10 rounded-lg">
               <User className="h-5 w-5 text-primary" />
@@ -94,8 +94,8 @@ export function ProfileSettings() {
         </CardContent>
       </Card>
 
-      <Card>
-        <CardHeader>
+      <Card className="hover-scale transition-all" style={{ animationDelay: '100ms' }}>
+        <CardHeader className="animate-scale-in">
           <div className="flex items-center gap-3">
             <div className="p-2 bg-primary/10 rounded-lg">
               <Globe className="h-5 w-5 text-primary" />

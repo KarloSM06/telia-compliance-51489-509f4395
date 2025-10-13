@@ -58,10 +58,12 @@ export default function CustomDashboard() {
   };
 
   return (
-    <div className="flex h-screen w-full bg-background">
-      <WidgetLibrary onAddWidget={handleAddWidget} />
+    <div className="flex h-screen w-full bg-background animate-fade-in">
+      <div className="animate-slide-in-right">
+        <WidgetLibrary onAddWidget={handleAddWidget} />
+      </div>
       
-      <div className="flex-1 flex flex-col">
+      <div className="flex-1 flex flex-col animate-scale-in" style={{ animationDelay: '100ms' }}>
         <LayoutToolbar
           title="Min Custom Dashboard"
           currentPage={currentPage}

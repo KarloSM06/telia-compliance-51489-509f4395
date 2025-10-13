@@ -5,8 +5,8 @@ import { GDPRDashboard } from "@/components/GDPRDashboard";
 
 export function SecuritySettings() {
   return (
-    <div className="space-y-6">
-      <Card>
+    <div className="space-y-6 animate-fade-in">
+      <Card className="hover-scale transition-all">
         <CardHeader>
           <div className="flex items-center gap-3">
             <div className="p-2 bg-primary/10 rounded-lg">
@@ -46,8 +46,8 @@ export function SecuritySettings() {
         </CardContent>
       </Card>
 
-      <Card>
-        <CardHeader>
+      <Card className="hover-scale transition-all" style={{ animationDelay: '100ms' }}>
+        <CardHeader className="animate-scale-in">
           <div className="flex items-center gap-3">
             <div className="p-2 bg-primary/10 rounded-lg">
               <Activity className="h-5 w-5 text-primary" />
@@ -75,8 +75,8 @@ export function SecuritySettings() {
         </CardContent>
       </Card>
 
-      <Card>
-        <CardHeader>
+      <Card className="hover-scale transition-all" style={{ animationDelay: '200ms' }}>
+        <CardHeader className="animate-scale-in">
           <div className="flex items-center gap-3">
             <div className="p-2 bg-primary/10 rounded-lg">
               <Database className="h-5 w-5 text-primary" />

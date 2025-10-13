@@ -16,8 +16,8 @@ export function ProductsSettings() {
   }
 
   return (
-    <div className="space-y-6">
-      <Card>
+    <div className="space-y-6 animate-fade-in">
+      <Card className="hover-scale transition-all">
         <CardHeader>
           <div className="flex items-center gap-3">
             <div className="p-2 bg-primary/10 rounded-lg">
@@ -50,7 +50,8 @@ export function ProductsSettings() {
                 return (
                   <div
                     key={product.id}
-                    className="flex items-start justify-between p-4 border rounded-lg hover:bg-accent/50 transition-colors"
+                    className="flex items-start justify-between p-4 border rounded-lg hover:bg-accent/50 transition-all hover-scale animate-scale-in"
+                    style={{ animationDelay: `${productDetails.indexOf(product) * 50}ms` }}
                   >
                     <div className="flex items-start gap-4">
                       <div className="p-3 bg-primary/10 rounded-lg">

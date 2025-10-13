@@ -153,9 +153,9 @@ export function TeamSettings() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 animate-fade-in">
       {canManageTeam && (
-        <Card>
+        <Card className="hover-scale transition-all">
           <CardHeader>
             <div className="flex items-center gap-3">
               <div className="p-2 bg-primary/10 rounded-lg">
@@ -203,8 +203,8 @@ export function TeamSettings() {
         </Card>
       )}
 
-      <Card>
-        <CardHeader>
+      <Card className="hover-scale transition-all" style={{ animationDelay: canManageTeam ? '100ms' : '0ms' }}>
+        <CardHeader className="animate-scale-in">
           <div className="flex items-center gap-3">
             <div className="p-2 bg-primary/10 rounded-lg">
               <Users className="h-5 w-5 text-primary" />
@@ -222,7 +222,8 @@ export function TeamSettings() {
             {members.map((member) => (
               <div
                 key={member.id}
-                className="flex items-center justify-between p-4 border rounded-lg"
+                className="flex items-center justify-between p-4 border rounded-lg animate-scale-in hover-scale transition-all"
+                style={{ animationDelay: `${members.indexOf(member) * 50}ms` }}
               >
                 <div className="flex items-center gap-4">
                   <div className="p-2 bg-muted rounded-full">

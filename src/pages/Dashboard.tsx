@@ -35,46 +35,48 @@ const Dashboard = () => {
   }
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 animate-fade-in">
       {/* Product Overview */}
-      <ProductOverview />
+      <div className="animate-scale-in">
+        <ProductOverview />
+      </div>
 
       {/* Main Content - Tabs for different products */}
       <Tabs defaultValue="overview" className="space-y-6">
-        <TabsList className="grid w-full max-w-2xl grid-cols-4">
-          <TabsTrigger value="overview">Översikt</TabsTrigger>
-          {hasKronoPackage && <TabsTrigger value="krono">Krono</TabsTrigger>}
-          {hasGastroPackage && <TabsTrigger value="gastro">Gastro</TabsTrigger>}
-          {hasCompliancePackage && <TabsTrigger value="thor">Thor</TabsTrigger>}
+        <TabsList className="grid w-full max-w-2xl grid-cols-4 animate-slide-in-right">
+          <TabsTrigger value="overview" className="hover-scale">Översikt</TabsTrigger>
+          {hasKronoPackage && <TabsTrigger value="krono" className="hover-scale">Krono</TabsTrigger>}
+          {hasGastroPackage && <TabsTrigger value="gastro" className="hover-scale">Gastro</TabsTrigger>}
+          {hasCompliancePackage && <TabsTrigger value="thor" className="hover-scale">Thor</TabsTrigger>}
         </TabsList>
 
-        <TabsContent value="overview" className="space-y-6">
+        <TabsContent value="overview" className="space-y-6 animate-enter">
           <div className="grid gap-6 lg:grid-cols-3">
-            <div className="lg:col-span-2">
+            <div className="lg:col-span-2 animate-scale-in">
               <QuickActions />
             </div>
-            <div className="lg:col-span-1">
+            <div className="lg:col-span-1 animate-scale-in" style={{ animationDelay: '100ms' }}>
               <ActivityFeed />
             </div>
           </div>
         </TabsContent>
 
         {hasKronoPackage && (
-          <TabsContent value="krono">
+          <TabsContent value="krono" className="animate-enter">
             <KronoSection />
           </TabsContent>
         )}
 
         {hasGastroPackage && (
-          <TabsContent value="gastro">
+          <TabsContent value="gastro" className="animate-enter">
             <GastroSection />
           </TabsContent>
         )}
 
         {hasCompliancePackage && (
-          <TabsContent value="thor">
+          <TabsContent value="thor" className="animate-enter">
             <div>
-              <div className="mb-4">
+              <div className="mb-4 animate-fade-in">
                 <h2 className="text-2xl font-bold">AI Compliance & Coaching</h2>
                 {complianceProduct?.tier && (
                   <p className="text-muted-foreground">
@@ -82,7 +84,9 @@ const Dashboard = () => {
                   </p>
                 )}
               </div>
-              <CallAnalysisSection />
+              <div className="animate-scale-in" style={{ animationDelay: '100ms' }}>
+                <CallAnalysisSection />
+              </div>
             </div>
           </TabsContent>
         )}

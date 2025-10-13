@@ -72,8 +72,8 @@ export function HiemsAdminPanel() {
   }
 
   return (
-    <div className="space-y-6">
-      <Card className="border-purple-200 bg-gradient-to-r from-purple-50 to-pink-50">
+    <div className="space-y-6 animate-fade-in">
+      <Card className="border-purple-200 bg-gradient-to-r from-purple-50 to-pink-50 hover-scale transition-all animate-scale-in">
         <CardHeader>
           <div className="flex items-center gap-3">
             <div className="p-2 bg-purple-100 rounded-lg">
@@ -89,7 +89,7 @@ export function HiemsAdminPanel() {
         </CardHeader>
         <CardContent>
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-            <div className="p-4 bg-white rounded-lg border border-purple-100">
+            <div className="p-4 bg-white rounded-lg border border-purple-100 hover-scale transition-all animate-scale-in" style={{ animationDelay: '50ms' }}>
               <div className="flex items-center gap-3">
                 <div className="p-2 bg-blue-100 rounded-lg">
                   <Users className="h-5 w-5 text-blue-600" />
@@ -101,7 +101,7 @@ export function HiemsAdminPanel() {
               </div>
             </div>
 
-            <div className="p-4 bg-white rounded-lg border border-purple-100">
+            <div className="p-4 bg-white rounded-lg border border-purple-100 hover-scale transition-all animate-scale-in" style={{ animationDelay: '100ms' }}>
               <div className="flex items-center gap-3">
                 <div className="p-2 bg-green-100 rounded-lg">
                   <Database className="h-5 w-5 text-green-600" />
@@ -113,7 +113,7 @@ export function HiemsAdminPanel() {
               </div>
             </div>
 
-            <div className="p-4 bg-white rounded-lg border border-purple-100">
+            <div className="p-4 bg-white rounded-lg border border-purple-100 hover-scale transition-all animate-scale-in" style={{ animationDelay: '150ms' }}>
               <div className="flex items-center gap-3">
                 <div className="p-2 bg-orange-100 rounded-lg">
                   <Activity className="h-5 w-5 text-orange-600" />
@@ -125,7 +125,7 @@ export function HiemsAdminPanel() {
               </div>
             </div>
 
-            <div className="p-4 bg-white rounded-lg border border-purple-100">
+            <div className="p-4 bg-white rounded-lg border border-purple-100 hover-scale transition-all animate-scale-in" style={{ animationDelay: '200ms' }}>
               <div className="flex items-center gap-3">
                 <div className="p-2 bg-purple-100 rounded-lg">
                   <ShieldCheck className="h-5 w-5 text-purple-600" />
@@ -140,8 +140,8 @@ export function HiemsAdminPanel() {
         </CardContent>
       </Card>
 
-      <Card>
-        <CardHeader>
+      <Card className="hover-scale transition-all animate-scale-in" style={{ animationDelay: '100ms' }}>
+        <CardHeader className="animate-fade-in">
           <CardTitle>Admin-privilegier</CardTitle>
           <CardDescription>
             Som Hiems Admin har du fullständig tillgång till systemet
