@@ -483,33 +483,7 @@ export const ProductSelection = () => {
       </section>
 
       {/* Stats Section */}
-      <section className="relative py-20 bg-white/5 backdrop-blur-sm">
-        <div className="mx-auto max-w-7xl px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <AnimatedSection delay={0} className="text-center group">
-              <div className="flex items-center justify-center mb-4">
-                <BarChart3 className="h-12 w-12 text-accent group-hover:scale-110 transition-transform" />
-              </div>
-              <div className="text-5xl font-display font-bold text-white mb-2">AI-experter</div>
-              <div className="text-white/70 text-lg">Få hjälp av AI experter</div>
-            </AnimatedSection>
-            <AnimatedSection delay={100} className="text-center group">
-              <div className="flex items-center justify-center mb-4">
-                <Clock className="h-12 w-12 text-accent group-hover:scale-110 transition-transform" />
-              </div>
-              <div className="text-5xl font-display font-bold text-white mb-2">24/7</div>
-              <div className="text-white/70 text-lg">Support och drift</div>
-            </AnimatedSection>
-            <AnimatedSection delay={200} className="text-center group">
-              <div className="flex items-center justify-center mb-4">
-                <Users className="h-12 w-12 text-accent group-hover:scale-110 transition-transform" />
-              </div>
-              <div className="text-5xl font-display font-bold text-white mb-2">99%</div>
-              <div className="text-white/70 text-lg">Uptime</div>
-            </AnimatedSection>
-          </div>
-        </div>
-      </section>
+      
 
       {/* Vad vi gör Section */}
       <section className="relative py-24">
