@@ -116,7 +116,7 @@ serve(async (req) => {
       customer: customerId,
       customer_email: customerId ? undefined : user.email,
       line_items: [{ price: priceId, quantity }],
-      mode: "payment",
+      mode: "subscription",
       success_url: `${origin}/dashboard?payment=success`,
       cancel_url: `${origin}/dashboard/packages?payment=canceled`,
       metadata: {
