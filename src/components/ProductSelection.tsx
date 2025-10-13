@@ -224,15 +224,15 @@ export const ProductSelection = () => {
       pricing: {
         pro: {
           price: "Från 899 kr",
-          features: ["✅ Hanterar samtal & SMS 24/7", "✅ Bokning & avbokning", "✅ Enkel röstprofil", "✅ Grundläggande rapportering", "✅ Integration med Google Kalender"]
+          features: ["Hanterar samtal & SMS 24/7", "Bokning & avbokning", "Enkel röstprofil", "Grundläggande rapportering", "Integration med Google Kalender"]
         },
         business: {
           price: "Från 1 499 kr",
-          features: ["Allt i Pro +", "✅ Flera röstprofiler", "✅ Anpassat samtalsflöde", "✅ Samtalsanalys & transkribering", "✅ Sammanfattning via mejl", "✅ CRM-integration (HubSpot, Pipedrive etc.)"]
+          features: ["Allt i Pro +", "Flera röstprofiler", "Anpassat samtalsflöde", "Samtalsanalys & transkribering", "Sammanfattning via mejl", "CRM-integration (HubSpot, Pipedrive etc.)"]
         },
         enterprise: {
           price: "Offert",
-          features: ["Allt i Business +", "✅ Fler språk & avancerad NLP", "✅ Egen AI-modellträning", "✅ Skräddarsydd dashboard", "✅ Obegränsad trafik & prioriterad support"]
+          features: ["Allt i Business +", "Fler språk & avancerad NLP", "Egen AI-modellträning", "Skräddarsydd dashboard", "Obegränsad trafik & prioriterad support"]
         }
       }
     },
@@ -244,15 +244,15 @@ export const ProductSelection = () => {
       pricing: {
         pro: {
           price: "Från 899 kr",
-          features: ["✅ Tar emot bokningar via telefon & SMS", "✅ Bekräftar, ändrar & avbokar", "✅ Enkel menyhantering", "✅ Daglig sammanställning via mejl"]
+          features: ["Tar emot bokningar via telefon & SMS", "Bekräftar, ändrar & avbokar", "Enkel menyhantering", "Daglig sammanställning via mejl"]
         },
         business: {
           price: "Från 1 499 kr",
-          features: ["Allt i Pro +", "✅ Integration med kassasystem (t.ex. Trivec)", "✅ Hanterar takeaway & leverans", "✅ Kundfeedback-analys", "✅ Statistik över toppbokningar & återkommande gäster"]
+          features: ["Allt i Pro +", "Integration med kassasystem (t.ex. Trivec)", "Hanterar takeaway & leverans", "Kundfeedback-analys", "Statistik över toppbokningar & återkommande gäster"]
         },
         enterprise: {
           price: "Offert",
-          features: ["Allt i Business +", "✅ Fler språk", "✅ Egen röstprofil per restaurang", "✅ Avancerad menyoptimering & upsell-funktion"]
+          features: ["Allt i Business +", "Fler språk", "Egen röstprofil per restaurang", "Avancerad menyoptimering & upsell-funktion"]
         }
       }
     },
@@ -263,15 +263,15 @@ export const ProductSelection = () => {
       pricing: {
         pro: {
           price: 2999,
-          features: ["✅ Automatisk screening av CV & ansökningar", "✅ Enkel rankning", "✅ Genererar shortlist", "✅ Rapport via e-post"]
+          features: ["Automatisk screening av CV & ansökningar", "Enkel rankning", "Genererar shortlist", "Rapport via e-post"]
         },
         business: {
           price: 5499,
-          features: ["Allt i Pro +", "✅ Automatisk kandidat-sökning på LinkedIn", "✅ Intervju-sammanfattningar", "✅ Integration med rekryteringssystem (Teamtailor etc.)"]
+          features: ["Allt i Pro +", "Automatisk kandidat-sökning på LinkedIn", "Intervju-sammanfattningar", "Integration med rekryteringssystem (Teamtailor etc.)"]
         },
         enterprise: {
           price: "Offert",
-          features: ["Allt i Business +", "✅ Skräddarsydd AI för branschspecifika roller", "✅ Prediktiv matchning baserat på kultur & värderingar"]
+          features: ["Allt i Business +", "Skräddarsydd AI för branschspecifika roller", "Prediktiv matchning baserat på kultur & värderingar"]
         }
       }
     },
@@ -282,15 +282,15 @@ export const ProductSelection = () => {
       pricing: {
         pro: {
           price: 3999,
-          features: ["✅ Identifierar potentiella kunder", "✅ Skapar kontaktlistor", "✅ Skickar automatiska mejl & uppföljningar"]
+          features: ["Identifierar potentiella kunder", "Skapar kontaktlistor", "Skickar automatiska mejl & uppföljningar"]
         },
         business: {
           price: 7499,
-          features: ["Allt i Pro +", "✅ AI skriver personliga mejl", "✅ CRM-integration", "✅ Automatiska uppföljningar tills svar"]
+          features: ["Allt i Pro +", "AI skriver personliga mejl", "CRM-integration", "Automatiska uppföljningar tills svar"]
         },
         enterprise: {
           price: "Offert",
-          features: ["Allt i Business +", "✅ Full funnel automation (mejl → möte → close)", "✅ Prediktiv lead scoring", "✅ Anpassad lead dashboard"]
+          features: ["Allt i Business +", "Full funnel automation (mejl → möte → close)", "Prediktiv lead scoring", "Anpassad lead dashboard"]
         }
       }
     },
@@ -301,15 +301,15 @@ export const ProductSelection = () => {
       pricing: {
         pro: {
           price: 499,
-          features: ["✅ Automatisk samtalsgranskning", "✅ Grundläggande feedback via e-post", "Per agent"]
+          features: ["Automatisk samtalsgranskning", "Grundläggande feedback via e-post", "Per agent"]
         },
         business: {
           price: 699,
-          features: ["Allt i Pro +", "✅ AI-coach", "✅ Anpassad rapport per säljare", "✅ Dashboard & statistik", "Per agent"]
+          features: ["Allt i Pro +", "AI-coach", "Anpassad rapport per säljare", "Dashboard & statistik", "Per agent"]
         },
         enterprise: {
           price: "Offert",
-          features: ["Allt i Business +", "✅ Obegränsade användare", "✅ Integration till CRM & samtalsplattformar"]
+          features: ["Allt i Business +", "Obegränsade användare", "Integration till CRM & samtalsplattformar"]
         }
       }
     },
@@ -320,15 +320,15 @@ export const ProductSelection = () => {
       pricing: {
         pro: {
           price: 2499,
-          features: ["✅ Analys av kundbeteende", "✅ Enkel produktprioritering per besökare", "✅ Grundläggande rapport"]
+          features: ["Analys av kundbeteende", "Enkel produktprioritering per besökare", "Grundläggande rapport"]
         },
         business: {
           price: 4999,
-          features: ["Allt i Pro +", "✅ AI som anpassar startsida & rekommendationer", "✅ A/B-testning", "✅ Integration med Shopify, WooCommerce m.fl."]
+          features: ["Allt i Pro +", "AI som anpassar startsida & rekommendationer", "A/B-testning", "Integration med Shopify, WooCommerce m.fl."]
         },
         enterprise: {
           price: "Offert",
-          features: ["Allt i Business +", "✅ Prediktiv AI som lär sig säsongstrender & kundsegment", "✅ Egen dashboard"]
+          features: ["Allt i Business +", "Prediktiv AI som lär sig säsongstrender & kundsegment", "Egen dashboard"]
         }
       }
     }
