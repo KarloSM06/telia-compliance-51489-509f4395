@@ -518,9 +518,9 @@ export const ProductSelection = () => {
       {/* Products Section */}
       <section id="products" className="relative py-32">
         <div className="mx-auto max-w-[1800px] px-6 lg:px-8">
-          <div className="mx-auto max-w-3xl text-center mb-16 animate-fade-in">
-            <h2 className="text-4xl font-display font-bold text-white mb-4">Färdiga paket</h2>
-            <div className="w-20 h-1 bg-gradient-gold mx-auto rounded-full mb-6"></div>
+          <div className="mx-auto max-w-4xl text-center mb-20 animate-fade-in">
+            <h2 className="text-5xl font-display font-bold text-white mb-6">Färdiga paket</h2>
+            <div className="w-24 h-1.5 bg-gradient-gold mx-auto rounded-full mb-8"></div>
             <p className="text-lg text-white/80">Vi har utvecklat färdiga paket för att göra processen så snabb och smidig som möjligt. Dessa skräddarsys för att passa just er verksamhet och levereras på högst två veckor – så ni snabbt kan börja effektivisera och växa er verksamhet. </p>
           </div>
 
