@@ -11,7 +11,17 @@ export function useCart() {
 
   useEffect(() => {
     localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(items));
+    window.dispatchEvent(new Event('cart:updated'));
   }, [items]);
+
+  useEffect(() => {
+    const handleCartUpdated = () => {
+      const stored = localStorage.getItem(CART_STORAGE_KEY);
+      setItems(stored ? JSON.parse(stored) : []);
+    };
+    window.addEventListener('cart:updated', handleCartUpdated);
+    return () => window.removeEventListener('cart:updated', handleCartUpdated);
+  }, []);
 
   const addItem = (item: CartItem) => {
     setItems(prev => [...prev, item]);
