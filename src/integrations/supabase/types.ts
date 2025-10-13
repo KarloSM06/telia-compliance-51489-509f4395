@@ -14,6 +14,84 @@ export type Database = {
   }
   public: {
     Tables: {
+      bookings: {
+        Row: {
+          bokningstyp: string | null
+          created_at: string | null
+          datum_tid: string | null
+          epost: string | null
+          extra_info: string | null
+          id: string
+          info: string | null
+          kundnamn: string | null
+          status: string | null
+          telefonnummer: string | null
+          user_id: string | null
+        }
+        Insert: {
+          bokningstyp?: string | null
+          created_at?: string | null
+          datum_tid?: string | null
+          epost?: string | null
+          extra_info?: string | null
+          id?: string
+          info?: string | null
+          kundnamn?: string | null
+          status?: string | null
+          telefonnummer?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          bokningstyp?: string | null
+          created_at?: string | null
+          datum_tid?: string | null
+          epost?: string | null
+          extra_info?: string | null
+          id?: string
+          info?: string | null
+          kundnamn?: string | null
+          status?: string | null
+          telefonnummer?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      call_history: {
+        Row: {
+          booking_id: string | null
+          callee: string | null
+          caller: string | null
+          created_at: string | null
+          duration: string | null
+          id: string
+          outcome: string | null
+          transcript: string | null
+          user_id: string | null
+        }
+        Insert: {
+          booking_id?: string | null
+          callee?: string | null
+          caller?: string | null
+          created_at?: string | null
+          duration?: string | null
+          id?: string
+          outcome?: string | null
+          transcript?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          booking_id?: string | null
+          callee?: string | null
+          caller?: string | null
+          created_at?: string | null
+          duration?: string | null
+          id?: string
+          outcome?: string | null
+          transcript?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       calls: {
         Row: {
           created_at: string
@@ -126,6 +204,54 @@ export type Database = {
           },
         ]
       }
+      Hiems_Kunddata: {
+        Row: {
+          Antaletminuter: number | null
+          AntaletSMS: number | null
+          call_transfers: string | null
+          Chrono_Nummer: number | null
+          concurrent_calls: string | null
+          created_at: string | null
+          email: string | null
+          Hermes_Nummer: number | null
+          minutes_transfed_call: string | null
+          plan: string | null
+          status: string | null
+          user_id: string
+          username: string | null
+        }
+        Insert: {
+          Antaletminuter?: number | null
+          AntaletSMS?: number | null
+          call_transfers?: string | null
+          Chrono_Nummer?: number | null
+          concurrent_calls?: string | null
+          created_at?: string | null
+          email?: string | null
+          Hermes_Nummer?: number | null
+          minutes_transfed_call?: string | null
+          plan?: string | null
+          status?: string | null
+          user_id: string
+          username?: string | null
+        }
+        Update: {
+          Antaletminuter?: number | null
+          AntaletSMS?: number | null
+          call_transfers?: string | null
+          Chrono_Nummer?: number | null
+          concurrent_calls?: string | null
+          created_at?: string | null
+          email?: string | null
+          Hermes_Nummer?: number | null
+          minutes_transfed_call?: string | null
+          plan?: string | null
+          status?: string | null
+          user_id?: string
+          username?: string | null
+        }
+        Relationships: []
+      }
       leaddesk_agent_mapping: {
         Row: {
           created_at: string | null
@@ -157,6 +283,66 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      messages: {
+        Row: {
+          Antal_segment: number | null
+          content: string | null
+          created_at: string | null
+          direction: string | null
+          id: string
+          recipient: number | null
+          sender: number | null
+          Twilio_ID: string | null
+          user_id: string | null
+        }
+        Insert: {
+          Antal_segment?: number | null
+          content?: string | null
+          created_at?: string | null
+          direction?: string | null
+          id?: string
+          recipient?: number | null
+          sender?: number | null
+          Twilio_ID?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          Antal_segment?: number | null
+          content?: string | null
+          created_at?: string | null
+          direction?: string | null
+          id?: string
+          recipient?: number | null
+          sender?: number | null
+          Twilio_ID?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      offers: {
+        Row: {
+          created_at: string
+          email: string | null
+          id: string
+          phone_number: string
+          summary: string | null
+        }
+        Insert: {
+          created_at?: string
+          email?: string | null
+          id?: string
+          phone_number: string
+          summary?: string | null
+        }
+        Update: {
+          created_at?: string
+          email?: string | null
+          id?: string
+          phone_number?: string
+          summary?: string | null
+        }
+        Relationships: []
       }
       phone_numbers: {
         Row: {
