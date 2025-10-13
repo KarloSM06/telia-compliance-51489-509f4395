@@ -17,6 +17,7 @@ import GDPRSettings from "./pages/GDPRSettings";
 import Legal from "./pages/Legal";
 import NotFound from "./pages/NotFound";
 import Checkout from "./pages/Checkout";
+import DashboardAnalytics from "./pages/DashboardAnalytics";
 import { DashboardLayout } from "./components/dashboard/DashboardLayout";
 
 const queryClient = new QueryClient();
@@ -32,6 +33,7 @@ const App = () => (
             <Route path="/" element={<Index />} />
             <Route path="/auth" element={<Auth />} />
             <Route path="/dashboard" element={<DashboardLayout><Dashboard /></DashboardLayout>} />
+            <Route path="/dashboard/analytics" element={<DashboardLayout><DashboardAnalytics /></DashboardLayout>} />
             <Route path="/dashboard/packages" element={<DashboardLayout><DashboardPackages /></DashboardLayout>} />
             <Route path="/dashboard/custom" element={<DashboardLayout><CustomDashboard /></DashboardLayout>} />
             <Route path="/dashboard/settings" element={<DashboardLayout><GDPRSettings /></DashboardLayout>} />
