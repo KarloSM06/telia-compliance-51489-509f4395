@@ -52,8 +52,8 @@ export const Header = () => {
               onClick={() => navigate("/")}
               className="flex items-center space-x-1 hover:opacity-80 transition-opacity"
             >
-              <img src={hiems_logo} alt="Hiems logo" className="h-16 w-16 rounded-lg" />
-              <span className="text-xl font-bold text-foreground">Hiems</span>
+              <img src={hiems_logo} alt="Hiems logo" className="h-12 w-12 rounded-lg" />
+              <span className="text-2xl font-bold text-foreground">Hiems</span>
             </button>
           </div>
           
