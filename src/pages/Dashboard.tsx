@@ -1,16 +1,15 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "@/hooks/useAuth";
-import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Upload, Download, Play, Pause, FileAudio, BarChart3, TrendingUp, AlertCircle } from "lucide-react";
+import { Upload, Play, FileAudio, BarChart3, TrendingUp, AlertCircle } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { Header } from "@/components/Header";
 import { CallDetailModal } from "@/components/CallDetailModal";
+import { DashboardStats } from "@/components/dashboard/DashboardStats";
 
 interface Call {
   id: string;
@@ -48,8 +47,7 @@ interface UserAnalysis {
 }
 
 const Dashboard = () => {
-  const { user, loading } = useAuth();
-  const navigate = useNavigate();
+  const { user } = useAuth();
   const { toast } = useToast();
   const [calls, setCalls] = useState<Call[]>([]);
   const [userAnalysis, setUserAnalysis] = useState<UserAnalysis | null>(null);
@@ -58,12 +56,6 @@ const Dashboard = () => {
   const [uploadProgress, setUploadProgress] = useState<UploadProgress[]>([]);
   const [selectedCall, setSelectedCall] = useState<Call | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-
-  useEffect(() => {
-    if (!loading && !user) {
-      navigate("/auth");
-    }
-  }, [user, loading, navigate]);
 
   useEffect(() => {
     if (user) {
@@ -326,41 +318,42 @@ const Dashboard = () => {
     return 'text-red-600';
   };
 
-  if (loading || loadingCalls) {
+  if (loadingCalls) {
     return (
-      <div className="min-h-screen bg-background">
-        <Header />
-        <div className="flex items-center justify-center h-96">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
-            <p>Laddar dashboard...</p>
-          </div>
+      <div className="flex items-center justify-center min-h-[400px]">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
+          <p>Laddar dashboard...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      <Header />
-      
-      <main className="mx-auto max-w-7xl px-6 lg:px-8 py-8">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-foreground mb-2">Samtalsanalys Dashboard</h1>
-          <p className="text-muted-foreground">Analysera och förbättra era säljsamtal med AI</p>
-        </div>
+    <div className="space-y-8 animate-fade-in">
+      <div>
+        <h1 className="text-4xl font-bold text-foreground mb-2">Samtalsanalys Dashboard</h1>
+        <p className="text-muted-foreground text-lg">Analysera och förbättra era säljsamtal med AI</p>
+      </div>
 
-        {/* Upload Section */}
-        <Card className="mb-8">
-          <CardHeader>
-            <CardTitle className="flex items-center">
-              <Upload className="mr-2 h-5 w-5" />
-              Ladda upp samtalsloggningar
-            </CardTitle>
-            <CardDescription>
-              Stöder MP3, WAV, M4A och andra ljudformat. Flera filer kan laddas upp samtidigt.
-            </CardDescription>
-          </CardHeader>
+      {/* KPI Stats */}
+      <DashboardStats
+        totalCalls={userAnalysis?.total_calls || 0}
+        averageScore={userAnalysis?.average_score || null}
+        successRate={userAnalysis?.success_rate || null}
+      />
+
+      {/* Upload Section */}
+      <Card className="transition-all hover:shadow-card">
+        <CardHeader>
+          <CardTitle className="flex items-center text-xl">
+            <Upload className="mr-2 h-5 w-5" />
+            Ladda upp samtalsloggningar
+          </CardTitle>
+          <CardDescription>
+            Stöder MP3, WAV, M4A och andra ljudformat. Flera filer kan laddas upp samtidigt.
+          </CardDescription>
+        </CardHeader>
           <CardContent>
             <div className="flex items-center justify-center w-full">
               <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-muted-foreground rounded-lg cursor-pointer hover:bg-accent/50 transition-colors">
@@ -415,44 +408,45 @@ const Dashboard = () => {
                 </Button>
               </div>
             )}
-          </CardContent>
-        </Card>
+        </CardContent>
+      </Card>
 
-        <Tabs defaultValue="calls" className="space-y-6">
-          <TabsList>
-            <TabsTrigger value="calls">Samtal</TabsTrigger>
-            <TabsTrigger value="analytics">Analys</TabsTrigger>
-          </TabsList>
+      <Tabs defaultValue="calls" className="space-y-6">
+        <TabsList className="grid w-full max-w-md grid-cols-2">
+          <TabsTrigger value="calls" className="transition-all">Samtal</TabsTrigger>
+          <TabsTrigger value="analytics" className="transition-all">Analys</TabsTrigger>
+        </TabsList>
 
-          <TabsContent value="calls" className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>Samtalshistorik</CardTitle>
-                <CardDescription>
-                  Röd = Regelöverträdelse | Grön = Inga överträdelser
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                {calls.length === 0 ? (
-                  <div className="text-center py-8">
-                    <FileAudio className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
-                    <p className="text-muted-foreground">Inga samtal uppladdade än</p>
-                    <p className="text-sm text-muted-foreground mt-2">
-                      Ladda upp dina första samtalsloggningar för att komma igång
-                    </p>
-                  </div>
-                ) : (
-                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-3">
-                    {calls.map((call) => {
+        <TabsContent value="calls" className="space-y-6 animate-fade-in">
+          <Card className="transition-all hover:shadow-card">
+            <CardHeader>
+              <CardTitle className="text-xl">Samtalshistorik</CardTitle>
+              <CardDescription>
+                Röd = Regelöverträdelse | Grön = Inga överträdelser
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              {calls.length === 0 ? (
+                <div className="text-center py-12 animate-fade-in">
+                  <FileAudio className="mx-auto h-16 w-16 text-muted-foreground mb-4 animate-pulse" />
+                  <p className="text-muted-foreground text-lg">Inga samtal uppladdade än</p>
+                  <p className="text-sm text-muted-foreground mt-2">
+                    Ladda upp dina första samtalsloggningar för att komma igång
+                  </p>
+                </div>
+              ) : (
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-3">
+                  {calls.map((call, index) => {
                       const hasViolations = call.violations && Array.isArray(call.violations) && call.violations.length > 0;
                       const isCompleted = call.status === 'completed';
                       const complianceColor = isCompleted ? (hasViolations ? 'border-red-500 bg-red-50' : 'border-green-500 bg-green-50') : 'border-gray-300 bg-gray-50';
                       const textColor = isCompleted ? (hasViolations ? 'text-red-700' : 'text-green-700') : 'text-gray-600';
-                      
-                      return (
-                        <div 
-                          key={call.id} 
-                          className={`relative p-3 border-2 rounded-lg cursor-pointer hover:shadow-md transition-all ${complianceColor} group`}
+                    
+                    return (
+                      <div 
+                        key={call.id} 
+                        className={`relative p-3 border-2 rounded-lg cursor-pointer hover:shadow-md transition-all animate-scale-in ${complianceColor} group`}
+                        style={{ animationDelay: `${index * 50}ms` }}
                           onClick={() => {
                             setSelectedCall(call);
                             setIsModalOpen(true);
@@ -530,106 +524,105 @@ const Dashboard = () => {
                           </div>
                         </div>
                       );
-                    })}
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-          </TabsContent>
+                  })}
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </TabsContent>
 
-          <TabsContent value="analytics" className="space-y-6">
-            {userAnalysis ? (
-              <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-                <Card>
-                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                    <CardTitle className="text-sm font-medium">Totalt antal samtal</CardTitle>
-                    <BarChart3 className="h-4 w-4 text-muted-foreground" />
-                  </CardHeader>
-                  <CardContent>
-                    <div className="text-2xl font-bold">{userAnalysis.total_calls}</div>
-                  </CardContent>
-                </Card>
+        <TabsContent value="analytics" className="space-y-6 animate-fade-in">
+          {userAnalysis ? (
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+              <Card className="transition-all hover:shadow-card hover:scale-105">
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">Totalt antal samtal</CardTitle>
+                  <BarChart3 className="h-4 w-4 text-muted-foreground" />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold">{userAnalysis.total_calls}</div>
+                </CardContent>
+              </Card>
 
-                <Card>
-                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                    <CardTitle className="text-sm font-medium">Genomsnittlig kvalitet</CardTitle>
-                    <TrendingUp className="h-4 w-4 text-muted-foreground" />
-                  </CardHeader>
-                  <CardContent>
-                    <div className={`text-2xl font-bold ${getScoreColor(userAnalysis.average_score)}`}>
-                      {userAnalysis.average_score ? `${Math.round(userAnalysis.average_score)}/100` : 'N/A'}
-                    </div>
-                  </CardContent>
-                </Card>
-
-                <Card>
-                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                    <CardTitle className="text-sm font-medium">Framgångsfrekvens</CardTitle>
-                    <TrendingUp className="h-4 w-4 text-muted-foreground" />
-                  </CardHeader>
-                  <CardContent>
-                    <div className="text-2xl font-bold">
-                      {userAnalysis.success_rate ? `${Math.round(userAnalysis.success_rate)}%` : 'N/A'}
-                    </div>
-                  </CardContent>
-                </Card>
-
-                {userAnalysis.biggest_strength && (
-                  <Card>
-                    <CardHeader>
-                      <CardTitle className="text-sm font-medium">Största styrka</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <p className="text-sm">{userAnalysis.biggest_strength}</p>
-                    </CardContent>
-                  </Card>
-                )}
-
-                {userAnalysis.biggest_weakness && (
-                  <Card>
-                    <CardHeader>
-                      <CardTitle className="text-sm font-medium">Utvecklingsområde</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <p className="text-sm">{userAnalysis.biggest_weakness}</p>
-                    </CardContent>
-                  </Card>
-                )}
-
-                {userAnalysis.recommendations && userAnalysis.recommendations.length > 0 && (
-                  <Card>
-                    <CardHeader>
-                      <CardTitle className="text-sm font-medium">Rekommendationer</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <ul className="text-sm space-y-1">
-                        {userAnalysis.recommendations.map((rec, index) => (
-                          <li key={index} className="flex items-start">
-                            <span className="mr-2">•</span>
-                            <span>{rec}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </CardContent>
-                  </Card>
-                )}
-              </div>
-            ) : (
-              <Card>
-                <CardContent className="flex items-center justify-center py-8">
-                  <div className="text-center">
-                    <AlertCircle className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
-                    <p className="text-muted-foreground">Ingen analysdata tillgänglig än</p>
-                    <p className="text-sm text-muted-foreground mt-2">
-                      Ladda upp och analysera samtal för att se statistik
-                    </p>
+              <Card className="transition-all hover:shadow-card hover:scale-105">
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">Genomsnittlig kvalitet</CardTitle>
+                  <TrendingUp className="h-4 w-4 text-muted-foreground" />
+                </CardHeader>
+                <CardContent>
+                  <div className={`text-2xl font-bold ${getScoreColor(userAnalysis.average_score)}`}>
+                    {userAnalysis.average_score ? `${Math.round(userAnalysis.average_score)}/100` : 'N/A'}
                   </div>
                 </CardContent>
               </Card>
-            )}
-          </TabsContent>
-        </Tabs>
-      </main>
+
+              <Card className="transition-all hover:shadow-card hover:scale-105">
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">Framgångsfrekvens</CardTitle>
+                  <TrendingUp className="h-4 w-4 text-muted-foreground" />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold">
+                    {userAnalysis.success_rate ? `${Math.round(userAnalysis.success_rate)}%` : 'N/A'}
+                  </div>
+                </CardContent>
+              </Card>
+
+              {userAnalysis.biggest_strength && (
+                <Card className="transition-all hover:shadow-card hover:scale-105">
+                  <CardHeader>
+                    <CardTitle className="text-sm font-medium">Största styrka</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-sm">{userAnalysis.biggest_strength}</p>
+                  </CardContent>
+                </Card>
+              )}
+
+              {userAnalysis.biggest_weakness && (
+                <Card className="transition-all hover:shadow-card hover:scale-105">
+                  <CardHeader>
+                    <CardTitle className="text-sm font-medium">Utvecklingsområde</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-sm">{userAnalysis.biggest_weakness}</p>
+                  </CardContent>
+                </Card>
+              )}
+
+              {userAnalysis.recommendations && userAnalysis.recommendations.length > 0 && (
+                <Card className="transition-all hover:shadow-card hover:scale-105">
+                  <CardHeader>
+                    <CardTitle className="text-sm font-medium">Rekommendationer</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <ul className="text-sm space-y-1">
+                      {userAnalysis.recommendations.map((rec, index) => (
+                        <li key={index} className="flex items-start">
+                          <span className="mr-2">•</span>
+                          <span>{rec}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </CardContent>
+                </Card>
+              )}
+            </div>
+          ) : (
+            <Card className="animate-fade-in">
+              <CardContent className="flex items-center justify-center py-12">
+                <div className="text-center">
+                  <AlertCircle className="mx-auto h-16 w-16 text-muted-foreground mb-4 animate-pulse" />
+                  <p className="text-muted-foreground text-lg">Ingen analysdata tillgänglig än</p>
+                  <p className="text-sm text-muted-foreground mt-2">
+                    Ladda upp och analysera samtal för att se statistik
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+          )}
+        </TabsContent>
+      </Tabs>
 
       <CallDetailModal 
         call={selectedCall}

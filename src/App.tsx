@@ -9,11 +9,14 @@ import Index from "./pages/Index";
 import ExampleReport from "./pages/ExampleReport";
 import Auth from "./pages/Auth";
 import Dashboard from "./pages/Dashboard";
+import DashboardPackages from "./pages/DashboardPackages";
+import CustomDashboard from "./pages/CustomDashboard";
 import Demo from "./pages/Demo";
 import AboutUs from "./pages/AboutUs";
 import GDPRSettings from "./pages/GDPRSettings";
 import Legal from "./pages/Legal";
 import NotFound from "./pages/NotFound";
+import { DashboardLayout } from "./components/dashboard/DashboardLayout";
 
 const queryClient = new QueryClient();
 
@@ -27,7 +30,10 @@ const App = () => (
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/auth" element={<Auth />} />
-            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/dashboard" element={<DashboardLayout><Dashboard /></DashboardLayout>} />
+            <Route path="/dashboard/packages" element={<DashboardLayout><DashboardPackages /></DashboardLayout>} />
+            <Route path="/dashboard/custom" element={<DashboardLayout><CustomDashboard /></DashboardLayout>} />
+            <Route path="/dashboard/settings" element={<DashboardLayout><GDPRSettings /></DashboardLayout>} />
             <Route path="/demo" element={<Demo />} />
             <Route path="/om-oss" element={<AboutUs />} />
             <Route path="/gdpr" element={<GDPRSettings />} />
