@@ -534,7 +534,7 @@ export const ProductSelection = () => {
                   <Headphones className="h-8 w-8 text-accent" />
                 </div>
                 <CardTitle className="text-xl font-display mb-2">AI Receptionist</CardTitle>
-                <CardDescription className="text-sm text-muted-foreground">Hanterar samtal, SMS & mejl dygnet runt.</CardDescription>
+                <CardDescription className="text-sm text-muted-foreground">Missa aldrig ett samtal eller en affär. AI-receptionisten hanterar samtal, SMS och mejl dygnet runt – bokar, avbokar och kvalificerar kunder automatiskt. Perfekt för serviceföretag, kliniker och byråer som vill frigöra tid utan att tappa kundkontakt.</CardDescription>
               </CardHeader>
               <CardContent className="relative space-y-4 p-6 pt-0 flex-1 flex flex-col">
                 <ul className="space-y-3 mb-6 flex-1">
@@ -644,7 +644,7 @@ export const ProductSelection = () => {
                   <ChefHat className="h-8 w-8 text-accent" />
                 </div>
                 <CardTitle className="text-xl font-display mb-2">Restaurang & Café</CardTitle>
-                <CardDescription className="text-sm text-muted-foreground">Hanterar bokningar, beställningar, menyfrågor och kundfeedback.</CardDescription>
+                <CardDescription className="text-sm text-muted-foreground">Missa aldrig en bokning eller beställning – även under rusningstid. AI hanterar bokningar, menyfrågor och kundfeedback via telefon och SMS. För restauranger, caféer och hotell som vill ge snabb service utan stress.</CardDescription>
               </CardHeader>
               <CardContent className="relative space-y-4 p-6 pt-0 flex-1 flex flex-col">
                 <ul className="space-y-3 mb-6 flex-1">
@@ -719,7 +719,7 @@ export const ProductSelection = () => {
                   <UserCheck className="h-8 w-8 text-accent" />
                 </div>
                 <CardTitle className="text-xl font-display mb-2">AI Rekrytering</CardTitle>
-                <CardDescription className="text-sm text-muted-foreground">Screening, kandidatidentifiering & matchning.</CardDescription>
+                <CardDescription className="text-sm text-muted-foreground">Hitta rätt kandidater snabbare. AI screenar ansökningar, rankar kandidater och hittar nya via LinkedIn – helt automatiskt. För HR-avdelningar och rekryteringsbyråer som vill effektivisera sin rekrytering.</CardDescription>
               </CardHeader>
               <CardContent className="relative space-y-4 p-6 pt-0 flex-1 flex flex-col">
                 <ul className="space-y-3 mb-6 flex-1">
@@ -785,7 +785,7 @@ export const ProductSelection = () => {
                   <TrendingUp className="h-8 w-8 text-accent" />
                 </div>
                 <CardTitle className="text-xl font-display mb-2">AI Prospektering</CardTitle>
-                <CardDescription className="text-sm text-muted-foreground">Identifierar, kvalificerar & följer upp leads automatiskt.</CardDescription>
+                <CardDescription className="text-sm text-muted-foreground">Fyll din säljpipeline automatiskt. AI hittar, kontaktar och följer upp leads med personliga mejl och meddelanden. För B2B-företag och säljteam som vill växa utan manuell prospektering.</CardDescription>
               </CardHeader>
               <CardContent className="relative space-y-4 p-6 pt-0 flex-1 flex flex-col">
                 <ul className="space-y-3 mb-6 flex-1">
@@ -854,7 +854,7 @@ export const ProductSelection = () => {
                   <MessageSquare className="h-8 w-8 text-accent" />
                 </div>
                 <CardTitle className="text-xl font-display mb-2">AI Compliance & Coaching</CardTitle>
-                <CardDescription className="text-sm text-muted-foreground">Analyserar säljsamtal, ger feedback & coaching.</CardDescription>
+                <CardDescription className="text-sm text-muted-foreground">Säkerställ kvalitet i varje samtal. AI analyserar säljsamtal, ger feedback och coachar säljare i realtid. För säljteam och kundservice som vill förbättra prestation och kundupplevelse.</CardDescription>
               </CardHeader>
               <CardContent className="relative space-y-4 p-6 pt-0 flex-1 flex flex-col">
                 <ul className="space-y-3 mb-6 flex-1">
