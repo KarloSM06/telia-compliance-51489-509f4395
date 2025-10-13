@@ -10,6 +10,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Slider } from "@/components/ui/slider";
 import { useCart } from "@/hooks/useCart";
 import { ShoppingCart as CartIcon } from "lucide-react";
+import { EnterpriseContactModal } from "@/components/EnterpriseContactModal";
 
 interface TierPackageCardProps {
   package: PackageData;
@@ -20,6 +21,7 @@ export function TierPackageCard({ package: pkg }: TierPackageCardProps) {
   const [selectedTier, setSelectedTier] = useState<'pro' | 'business' | 'enterprise'>('pro');
   const [selectedMinutes, setSelectedMinutes] = useState(100);
   const [isLoading, setIsLoading] = useState(false);
+  const [isEnterpriseModalOpen, setIsEnterpriseModalOpen] = useState(false);
   const { hasProduct } = useUserProducts();
   const { toast } = useToast();
   const { addItem } = useCart();
@@ -63,10 +65,7 @@ export function TierPackageCard({ package: pkg }: TierPackageCardProps) {
 
   const handlePurchase = async () => {
     if (selectedTier === 'enterprise') {
-      toast({
-        title: "Kontakta oss för offert",
-        description: "Vi hör av oss inom kort för att diskutera era behov."
-      });
+      setIsEnterpriseModalOpen(true);
       return;
     }
 
@@ -145,18 +144,25 @@ export function TierPackageCard({ package: pkg }: TierPackageCardProps) {
   const currentPrice = getCurrentPrice();
 
   return (
-    <Card className={`relative ${userOwnsPackage ? 'border-2 border-primary' : ''} hover:shadow-lg transition-all`}>
-      {userOwnsPackage && (
-        <Badge className="absolute top-4 right-4 bg-primary">
-          Äger
-        </Badge>
-      )}
+    <>
+      <EnterpriseContactModal 
+        open={isEnterpriseModalOpen} 
+        onOpenChange={setIsEnterpriseModalOpen}
+        productName={pkg.fullName}
+      />
       
-      {pkg.isPopular && !userOwnsPackage && (
-        <Badge className="absolute top-4 right-4 bg-gradient-gold">
-          Populär
-        </Badge>
-      )}
+      <Card className={`relative ${userOwnsPackage ? 'border-2 border-primary' : ''} hover:shadow-lg transition-all`}>
+        {userOwnsPackage && (
+          <Badge className="absolute top-4 right-4 bg-primary">
+            Äger
+          </Badge>
+        )}
+        
+        {pkg.isPopular && !userOwnsPackage && (
+          <Badge className="absolute top-4 right-4 bg-gradient-gold">
+            Populär
+          </Badge>
+        )}
 
       <CardHeader>
         <div className={`w-12 h-12 rounded-lg ${pkg.color} flex items-center justify-center mb-3`}>
@@ -311,5 +317,6 @@ export function TierPackageCard({ package: pkg }: TierPackageCardProps) {
         </div>
       </CardContent>
     </Card>
+    </>
   );
 }
