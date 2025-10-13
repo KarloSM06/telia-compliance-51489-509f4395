@@ -1,4 +1,4 @@
-import { Home, Package, LayoutDashboard, Settings, User, ChevronLeft } from "lucide-react";
+import { Home, Package, LayoutDashboard, Settings, BarChart3 } from "lucide-react";
 import { NavLink } from "react-router-dom";
 import {
   Sidebar,
@@ -19,6 +19,7 @@ import { Button } from "@/components/ui/button";
 
 const navigationItems = [
   { title: "Dashboard", url: "/dashboard", icon: Home },
+  { title: "Analytics", url: "/dashboard/analytics", icon: BarChart3 },
   { title: "Produkter / Paket", url: "/dashboard/packages", icon: Package },
   { title: "Custom Dashboard", url: "/dashboard/custom", icon: LayoutDashboard },
   { title: "Inställningar", url: "/dashboard/settings", icon: Settings },
