@@ -30,6 +30,12 @@ export interface PackageData {
     enterprise: string;
   }>;
   
+  // Stripe Price IDs för minut-baserad prissättning
+  stripePriceIds?: {
+    pro?: Record<number, string>;
+    business?: Record<number, string>;
+  };
+  
   // För enkla paket utan tiers (legacy support)
   price?: number;
   stripePriceId?: string;
@@ -57,6 +63,20 @@ export const availablePackages: PackageData[] = [
       500: { pro: 3799, business: 6499, enterprise: "Offert" },
       1000: { pro: 6999, business: 11999, enterprise: "Offert" }
     },
+    stripePriceIds: {
+      pro: {
+        100: "price_1SHjyXEAFWei6whjXkkf2iN8",
+        250: "price_1SHjyXEAFWei6whjlONwxZFs",
+        500: "price_1SHjz7EAFWei6whj4gd9Cqts",
+        1000: "price_1SHk00EAFWei6whj3tl7nqUg"
+      },
+      business: {
+        100: "price_1SHk4VEAFWei6whj7QONlp0T",
+        250: "price_1SHk4VEAFWei6whjdfYhqL4E",
+        500: "price_1SHk4VEAFWei6whj1SKZQCzH",
+        1000: "price_1SHk4VEAFWei6whjq324ZyHQ"
+      }
+    },
     tiers: [
       {
         name: 'pro',
@@ -67,8 +87,7 @@ export const availablePackages: PackageData[] = [
           "Enkel röstprofil",
           "Grundläggande rapportering",
           "Integration med Google Kalender"
-        ],
-        stripePriceId: "price_krono_pro"
+        ]
       },
       {
         name: 'business',
@@ -80,8 +99,7 @@ export const availablePackages: PackageData[] = [
           "Samtalsanalys & transkribering",
           "Sammanfattning via mejl",
           "CRM-integration (HubSpot, Pipedrive etc.)"
-        ],
-        stripePriceId: "price_krono_business"
+        ]
       },
       {
         name: 'enterprise',
@@ -117,6 +135,20 @@ export const availablePackages: PackageData[] = [
       500: { pro: 3799, business: 6499, enterprise: "Offert" },
       1000: { pro: 6999, business: 11999, enterprise: "Offert" }
     },
+    stripePriceIds: {
+      pro: {
+        100: "price_1SHk7aEAFWei6whj2YGivPJw",
+        250: "price_1SHk7aEAFWei6whjIsPZrvzB",
+        500: "price_1SHk7ZEAFWei6whjLgrbEtOZ",
+        1000: "price_1SHk7ZEAFWei6whjWDDppm9f"
+      },
+      business: {
+        100: "price_1SHkCGEAFWei6whjadEcSlVS",
+        250: "price_1SHkCGEAFWei6whjKTfcf0or",
+        500: "price_1SHkCGEAFWei6whjddDwrgPl",
+        1000: "price_1SHkCGEAFWei6whjAyLgW8Lg"
+      }
+    },
     tiers: [
       {
         name: 'pro',
@@ -126,8 +158,7 @@ export const availablePackages: PackageData[] = [
           "Bekräftar, ändrar & avbokar",
           "Enkel menyhantering",
           "Daglig sammanställning via mejl"
-        ],
-        stripePriceId: "price_gastro_pro"
+        ]
       },
       {
         name: 'business',
@@ -138,8 +169,7 @@ export const availablePackages: PackageData[] = [
           "Hanterar takeaway & leverans",
           "Kundfeedback-analys",
           "Statistik över toppbokningar & återkommande gäster"
-        ],
-        stripePriceId: "price_gastro_business"
+        ]
       },
       {
         name: 'enterprise',
@@ -177,7 +207,7 @@ export const availablePackages: PackageData[] = [
           "Genererar shortlist",
           "Rapport via e-post"
         ],
-        stripePriceId: "price_talent_pro"
+        stripePriceId: "price_1SHkDkEAFWei6whjuljypz19"
       },
       {
         name: 'business',
@@ -188,7 +218,7 @@ export const availablePackages: PackageData[] = [
           "Intervju-sammanfattningar",
           "Integration med rekryteringssystem (Teamtailor etc.)"
         ],
-        stripePriceId: "price_talent_business"
+        stripePriceId: "price_1SHkEtEAFWei6whjJORuM53G"
       },
       {
         name: 'enterprise',
@@ -223,7 +253,7 @@ export const availablePackages: PackageData[] = [
           "Skapar kontaktlistor",
           "Skickar automatiska mejl & uppföljningar"
         ],
-        stripePriceId: "price_lead_pro"
+        stripePriceId: "price_1SHkGpEAFWei6whjyCR7OnvD"
       },
       {
         name: 'business',
@@ -234,7 +264,7 @@ export const availablePackages: PackageData[] = [
           "CRM-integration",
           "Automatiska uppföljningar tills svar"
         ],
-        stripePriceId: "price_lead_business"
+        stripePriceId: "price_1SHkHbEAFWei6whjHWTmqLox"
       },
       {
         name: 'enterprise',
@@ -270,7 +300,7 @@ export const availablePackages: PackageData[] = [
           "Grundläggande feedback via e-post",
           "Per agent"
         ],
-        stripePriceId: "price_thor_pro"
+        stripePriceId: "price_1SHkJkEAFWei6whj3t1KRhSs"
       },
       {
         name: 'business',
@@ -282,7 +312,7 @@ export const availablePackages: PackageData[] = [
           "Dashboard & statistik",
           "Per agent"
         ],
-        stripePriceId: "price_thor_business"
+        stripePriceId: "price_1SHkLFEAFWei6whj68Dbb5op"
       },
       {
         name: 'enterprise',
@@ -291,52 +321,6 @@ export const availablePackages: PackageData[] = [
           "Allt i Business +",
           "Obegränsade användare",
           "Integration till CRM & samtalsplattformar"
-        ]
-      }
-    ]
-  },
-  {
-    id: "optimize",
-    name: "AI Hemsideoptimering",
-    fullName: "Hiems Hermes Optimize – AI Hemsideoptimering",
-    description: "Visa rätt produkter till rätt kunder, öka konvertering",
-    detailedDescription: "AI Hemsideoptimering analyserar hur besökare interagerar med din hemsida och ger rekommendationer för att öka konverteringar.",
-    features: [
-      "Analys av kundbeteende",
-      "Enkel produktprioritering per besökare",
-      "Grundläggande rapport"
-    ],
-    icon: <Globe className="h-6 w-6 text-primary" />,
-    color: "bg-secondary/10",
-    tiers: [
-      {
-        name: 'pro',
-        price: 2499,
-        features: [
-          "Analys av kundbeteende",
-          "Enkel produktprioritering per besökare",
-          "Grundläggande rapport"
-        ],
-        stripePriceId: "price_optimize_pro"
-      },
-      {
-        name: 'business',
-        price: 4999,
-        features: [
-          "Allt i Pro +",
-          "AI som anpassar startsida & rekommendationer",
-          "A/B-testning",
-          "Integration med Shopify, WooCommerce m.fl."
-        ],
-        stripePriceId: "price_optimize_business"
-      },
-      {
-        name: 'enterprise',
-        price: "Offert",
-        features: [
-          "Allt i Business +",
-          "Prediktiv AI som lär sig säsongstrender & kundsegment",
-          "Egen dashboard"
         ]
       }
     ]

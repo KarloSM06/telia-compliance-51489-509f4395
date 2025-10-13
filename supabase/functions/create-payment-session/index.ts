@@ -47,9 +47,14 @@ serve(async (req) => {
   );
 
   try {
-    console.log("[PAYMENT] Starting payment session creation");
+    console.log("[PAYMENT] ====== Starting payment session creation ======");
     
     const authHeader = req.headers.get("Authorization")!;
+    if (!authHeader) {
+      console.error("[PAYMENT] Missing Authorization header");
+      throw new Error("Missing Authorization header");
+    }
+    
     const token = authHeader.replace("Bearer ", "");
     const { data } = await supabaseClient.auth.getUser(token);
     const user = data.user;
@@ -62,28 +67,50 @@ serve(async (req) => {
     console.log("[PAYMENT] User authenticated:", user.email);
 
     const rawBody = await req.json();
+    console.log("[PAYMENT] Raw request body:", JSON.stringify(rawBody, null, 2));
     
     // Validate input
     const validated = PaymentSchema.parse(rawBody);
     const { priceId, productId, tier, minutes, quantity } = validated;
 
-    console.log("[PAYMENT] Validated input:", { priceId, tier, minutes, quantity });
+    console.log("[PAYMENT] ✓ Validated input:", { 
+      priceId, 
+      productId, 
+      tier, 
+      minutes, 
+      quantity 
+    });
 
     const stripe = new Stripe(Deno.env.get("STRIPE_SECRET_KEY") || "", { 
       apiVersion: "2025-08-27.basil" 
     });
 
     // Check if customer exists
+    console.log("[PAYMENT] Looking up Stripe customer for:", user.email);
     const customers = await stripe.customers.list({ email: user.email, limit: 1 });
     let customerId;
     if (customers.data.length > 0) {
       customerId = customers.data[0].id;
-      console.log("[PAYMENT] Existing customer found:", customerId);
+      console.log("[PAYMENT] ✓ Existing customer found:", customerId);
     } else {
-      console.log("[PAYMENT] No existing customer found");
+      console.log("[PAYMENT] ℹ No existing customer found, will create on checkout");
     }
 
     const origin = req.headers.get("origin") || "https://shskknkivuewuqonjdjc.supabase.co";
+    console.log("[PAYMENT] Origin:", origin);
+
+    console.log("[PAYMENT] Creating Stripe checkout session with:", {
+      customer: customerId,
+      priceId,
+      quantity,
+      metadata: {
+        user_id: user.id,
+        user_email: user.email,
+        product_id: productId,
+        tier: tier || '',
+        minutes: minutes?.toString() || '',
+      }
+    });
 
     const session = await stripe.checkout.sessions.create({
       customer: customerId,
@@ -101,15 +128,26 @@ serve(async (req) => {
       },
     });
 
-    console.log("[PAYMENT] Checkout session created:", session.id);
+    console.log("[PAYMENT] ✓ Checkout session created successfully");
+    console.log("[PAYMENT] Session ID:", session.id);
+    console.log("[PAYMENT] Session URL:", session.url);
+    console.log("[PAYMENT] ====== Payment session creation complete ======");
 
     return new Response(JSON.stringify({ url: session.url }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
       status: 200,
     });
   } catch (error) {
-    console.error("[PAYMENT] Error:", error);
-    return new Response(JSON.stringify({ error: error.message }), {
+    console.error("[PAYMENT] ====== ERROR ======");
+    console.error("[PAYMENT] Error type:", error.constructor.name);
+    console.error("[PAYMENT] Error message:", error.message);
+    console.error("[PAYMENT] Full error:", error);
+    console.error("[PAYMENT] ===================");
+    
+    return new Response(JSON.stringify({ 
+      error: error.message,
+      details: error.toString()
+    }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
       status: 500,
     });

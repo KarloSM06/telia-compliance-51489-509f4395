@@ -312,25 +312,6 @@ export const ProductSelection = () => {
           features: ["Allt i Business +", "Obegränsade användare", "Integration till CRM & samtalsplattformar"]
         }
       }
-    },
-    optimize: {
-      title: "🛍️ Hiems Hermes Optimize – AI Hemsideoptimering",
-      fullDescription: "Visa rätt produkter till rätt kunder, öka konvertering.",
-      features: ["Analys av kundbeteende", "Enkel produktprioritering per besökare", "Grundläggande rapport"],
-      pricing: {
-        pro: {
-          price: 2499,
-          features: ["Analys av kundbeteende", "Enkel produktprioritering per besökare", "Grundläggande rapport"]
-        },
-        business: {
-          price: 4999,
-          features: ["Allt i Pro +", "AI som anpassar startsida & rekommendationer", "A/B-testning", "Integration med Shopify, WooCommerce m.fl."]
-        },
-        enterprise: {
-          price: "Offert",
-          features: ["Allt i Business +", "Prediktiv AI som lär sig säsongstrender & kundsegment", "Egen dashboard"]
-        }
-      }
     }
   };
   const handleCheckout = async (packageName: string, tier: 'pro' | 'business' | 'enterprise') => {

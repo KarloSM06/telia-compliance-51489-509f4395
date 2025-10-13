@@ -40,6 +40,24 @@ export function TierPackageCard({ package: pkg }: TierPackageCardProps) {
     return tier.price;
   };
 
+  const getCurrentPriceId = () => {
+    // För paket med minut-baserad prissättning (Krono & Gastro)
+    if (pkg.stripePriceIds && pkg.hasMinutes) {
+      const tierPrices = pkg.stripePriceIds[selectedTier];
+      if (tierPrices && selectedMinutes) {
+        return tierPrices[selectedMinutes];
+      }
+    }
+    
+    // För paket med tier-baserad prissättning (Talent, Lead, Thor)
+    if (pkg.tiers) {
+      const tier = pkg.tiers.find(t => t.name === selectedTier);
+      return tier?.stripePriceId;
+    }
+    
+    return null;
+  };
+
   const handlePurchase = async () => {
     if (selectedTier === 'enterprise') {
       toast({
@@ -62,8 +80,16 @@ export function TierPackageCard({ package: pkg }: TierPackageCardProps) {
         return;
       }
 
-      const tier = pkg.tiers?.find(t => t.name === selectedTier);
-      if (!tier?.stripePriceId) {
+      const priceId = getCurrentPriceId();
+      
+      if (!priceId) {
+        console.error('[CHECKOUT] No price ID found', { 
+          packageId: pkg.id, 
+          tier: selectedTier, 
+          minutes: selectedMinutes,
+          hasStripePriceIds: !!pkg.stripePriceIds,
+          hasTiers: !!pkg.tiers
+        });
         toast({
           title: "Pris-ID saknas",
           description: "Kontakta support för detta paket.",
@@ -72,9 +98,16 @@ export function TierPackageCard({ package: pkg }: TierPackageCardProps) {
         return;
       }
 
+      console.log('[CHECKOUT] Starting checkout', {
+        packageId: pkg.id,
+        tier: selectedTier,
+        minutes: pkg.hasMinutes ? selectedMinutes : undefined,
+        priceId
+      });
+
       const { data, error } = await supabase.functions.invoke('create-payment-session', {
         body: {
-          priceId: tier.stripePriceId,
+          priceId,
           productId: pkg.id,
           tier: selectedTier,
           minutes: pkg.hasMinutes ? selectedMinutes : undefined,
@@ -82,13 +115,20 @@ export function TierPackageCard({ package: pkg }: TierPackageCardProps) {
         }
       });
 
-      if (error) throw error;
+      if (error) {
+        console.error('[CHECKOUT] Error from edge function:', error);
+        throw error;
+      }
 
       if (data?.url) {
+        console.log('[CHECKOUT] Redirecting to:', data.url);
         window.open(data.url, '_blank');
+      } else {
+        console.error('[CHECKOUT] No URL returned:', data);
+        throw new Error('Ingen checkout-URL returnerades');
       }
     } catch (error) {
-      console.error('Purchase error:', error);
+      console.error('[CHECKOUT] Purchase error:', error);
       toast({
         title: "Ett fel uppstod",
         description: "Kunde inte starta köpprocessen. Försök igen.",
