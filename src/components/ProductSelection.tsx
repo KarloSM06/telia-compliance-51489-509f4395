@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { ArrowRight, CheckCircle, Zap, Target, Sparkles, ChefHat, Headphones, UserCheck, TrendingUp, MessageSquare, ShoppingCart, Award, Send, Loader2, Phone } from "lucide-react";
+import { ArrowRight, CheckCircle, Zap, Target, Sparkles, ChefHat, Headphones, UserCheck, TrendingUp, MessageSquare, ShoppingCart, Award, Send, Loader2, Phone, BarChart3, Users, Clock } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { useState, useRef, useEffect } from "react";
@@ -17,6 +17,8 @@ import { useAuth } from "@/hooks/useAuth";
 import { useCart } from "@/hooks/useCart";
 import { EnterpriseContactModal } from "@/components/EnterpriseContactModal";
 import { availablePackages } from "@/components/dashboard/PackagesData";
+import { AnimatedSection } from "@/components/AnimatedSection";
+import { QuickNavigation } from "@/components/QuickNavigation";
 interface Message {
   role: 'user' | 'assistant';
   content: string;
@@ -432,28 +434,34 @@ export const ProductSelection = () => {
   };
   return <div className="relative overflow-hidden bg-gradient-hero">
       {/* Animated background elements */}
-      <div className="absolute inset-0 overflow-hidden">
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-20 left-10 w-72 h-72 bg-accent/10 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute bottom-20 right-10 w-96 h-96 bg-accent/5 rounded-full blur-3xl animate-pulse delay-1000"></div>
+        <div className="absolute bottom-20 right-10 w-96 h-96 bg-accent/5 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-accent/5 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }}></div>
       </div>
       
+      {/* Quick Navigation */}
+      <QuickNavigation />
+      
       {/* Hero Section */}
-      <section className="relative py-24 sm:py-32">
+      <section className="relative py-24 sm:py-32 lg:py-40">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
-          <div className="mx-auto max-w-4xl text-center animate-fade-in">
-            <div className="inline-flex items-center gap-2 rounded-full bg-accent/10 px-4 py-2 mb-8 backdrop-blur-sm border border-accent/20">
-              <Sparkles className="h-4 w-4 text-accent" />
+          <AnimatedSection className="mx-auto max-w-4xl text-center">
+            <div className="inline-flex items-center gap-2 rounded-full bg-accent/10 px-4 py-2 mb-8 backdrop-blur-sm border border-accent/20 hover:bg-accent/20 transition-all duration-300">
+              <Sparkles className="h-4 w-4 text-accent animate-pulse" />
               <span className="text-sm font-medium text-white">AI-driven automation för företag</span>
             </div>
             
             <h1 className="text-5xl font-display font-bold tracking-tight text-white sm:text-6xl lg:text-7xl mb-8 leading-tight">
               Skräddarsydda AI-lösningar för{" "}
-              <span className="bg-gradient-gold bg-clip-text text-transparent">
+              <span className="bg-gradient-gold bg-clip-text text-transparent animate-shimmer bg-[length:200%_100%]">
                 framtidens företag
               </span>
             </h1>
             
-            <p className="text-lg sm:text-xl leading-relaxed mb-8 font-light text-white/90 max-w-3xl mx-auto">Vi bygger skräddarsydda intelligenta lösningar som gör ditt företag snabbare, smartare och framförallt mer lönsamt</p>
+            <p className="text-lg sm:text-xl leading-relaxed mb-12 font-light text-white/90 max-w-3xl mx-auto">
+              Vi bygger skräddarsydda intelligenta lösningar som gör ditt företag snabbare, smartare och framförallt mer lönsamt
+            </p>
             <p className="text-lg leading-relaxed text-white/80 max-w-3xl mx-auto">   Med Hiems får ni inte bara tillgång till marknadens främsta AI-lösningar. Ni får en trogen partner som ser till att eran verksamhet alltid befinner sig i framkant </p>
             
             <div className="mt-12 flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -464,6 +472,35 @@ export const ProductSelection = () => {
                 Prata med Krono
               </Button>
             </div>
+          </AnimatedSection>
+        </div>
+      </section>
+
+      {/* Stats Section */}
+      <section className="relative py-20 bg-white/5 backdrop-blur-sm">
+        <div className="mx-auto max-w-7xl px-6 lg:px-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <AnimatedSection delay={0} className="text-center group">
+              <div className="flex items-center justify-center mb-4">
+                <BarChart3 className="h-12 w-12 text-accent group-hover:scale-110 transition-transform" />
+              </div>
+              <div className="text-5xl font-display font-bold text-white mb-2">500+</div>
+              <div className="text-white/70 text-lg">Nöjda företag</div>
+            </AnimatedSection>
+            <AnimatedSection delay={100} className="text-center group">
+              <div className="flex items-center justify-center mb-4">
+                <Clock className="h-12 w-12 text-accent group-hover:scale-110 transition-transform" />
+              </div>
+              <div className="text-5xl font-display font-bold text-white mb-2">24/7</div>
+              <div className="text-white/70 text-lg">Support & Drift</div>
+            </AnimatedSection>
+            <AnimatedSection delay={200} className="text-center group">
+              <div className="flex items-center justify-center mb-4">
+                <Users className="h-12 w-12 text-accent group-hover:scale-110 transition-transform" />
+              </div>
+              <div className="text-5xl font-display font-bold text-white mb-2">98%</div>
+              <div className="text-white/70 text-lg">Kundnöjdhet</div>
+            </AnimatedSection>
           </div>
         </div>
       </section>
@@ -471,35 +508,35 @@ export const ProductSelection = () => {
       {/* Vad vi gör Section */}
       <section className="relative py-24">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
-          <div className="mx-auto max-w-3xl text-center mb-16 animate-fade-in">
+          <AnimatedSection className="mx-auto max-w-3xl text-center mb-16">
             <h2 className="text-4xl font-display font-bold text-white mb-4">Vad vi gör</h2>
             <div className="w-20 h-1 bg-gradient-gold mx-auto rounded-full"></div>
-          </div>
+          </AnimatedSection>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-            <div className="group relative rounded-2xl bg-white/5 p-8 backdrop-blur-sm border border-white/10 hover:border-accent/50 transition-all duration-300 hover:shadow-glow animate-fade-in">
+            <AnimatedSection delay={0} className="group relative rounded-2xl bg-white/5 p-8 backdrop-blur-sm border border-white/10 hover:border-accent/50 transition-all duration-300 hover:shadow-glow">
               <div className="absolute inset-0 bg-gradient-gold opacity-0 group-hover:opacity-5 rounded-2xl transition-opacity"></div>
-              <CheckCircle className="h-12 w-12 text-accent mb-6 group-hover:scale-110 transition-transform" />
+              <CheckCircle className="h-12 w-12 text-accent mb-6 group-hover:scale-110 group-hover:rotate-12 transition-all duration-300" />
               <h3 className="text-xl font-display font-bold text-white mb-3">Analys av era behov och mål</h3>
               <p className="text-white/70 leading-relaxed">Vi analyserar er verksamhet för att förstå era mål, processer och tillväxtpotential. Genom datadriven insikt identifierar vi hur AI kan effektivisera arbetet och öka intäkterna.</p>
-            </div>
-            <div className="group relative rounded-2xl bg-white/5 p-8 backdrop-blur-sm border border-white/10 hover:border-accent/50 transition-all duration-300 hover:shadow-glow animate-fade-in delay-100">
+            </AnimatedSection>
+            <AnimatedSection delay={100} className="group relative rounded-2xl bg-white/5 p-8 backdrop-blur-sm border border-white/10 hover:border-accent/50 transition-all duration-300 hover:shadow-glow">
               <div className="absolute inset-0 bg-gradient-gold opacity-0 group-hover:opacity-5 rounded-2xl transition-opacity"></div>
-              <Zap className="h-12 w-12 text-accent mb-6 group-hover:scale-110 transition-transform" />
+              <Zap className="h-12 w-12 text-accent mb-6 group-hover:scale-110 group-hover:rotate-12 transition-all duration-300" />
               <h3 className="text-xl font-display font-bold text-white mb-3">Skräddarsydda verktyg</h3>
               <p className="text-white/70 leading-relaxed">Utifrån analysen utvecklar vi skräddarsydda AI-verktyg anpassade till era behov. De integreras sömlöst i befintliga system och optimerar era flöden – för både effektivitet och lönsamhet.</p>
-            </div>
-            <div className="group relative rounded-2xl bg-white/5 p-8 backdrop-blur-sm border border-white/10 hover:border-accent/50 transition-all duration-300 hover:shadow-glow animate-fade-in delay-200">
+            </AnimatedSection>
+            <AnimatedSection delay={200} className="group relative rounded-2xl bg-white/5 p-8 backdrop-blur-sm border border-white/10 hover:border-accent/50 transition-all duration-300 hover:shadow-glow">
               <div className="absolute inset-0 bg-gradient-gold opacity-0 group-hover:opacity-5 rounded-2xl transition-opacity"></div>
-              <Target className="h-12 w-12 text-accent mb-6 group-hover:scale-110 transition-transform" />
+              <Target className="h-12 w-12 text-accent mb-6 group-hover:scale-110 group-hover:rotate-12 transition-all duration-300" />
               <h3 className="text-xl font-display font-bold text-white mb-3">Lösningar i praktiken</h3>
               <p className="text-white/70 leading-relaxed">När lösningarna tas i bruk märks effekten direkt: snabbare processer, smartare beslut och ökade intäkter. Vi följer upp och vidareutvecklar så att era AI-verktyg fortsätter skapa värde över tid.</p>
-            </div>
+            </AnimatedSection>
           </div>
         </div>
       </section>
 
       {/* Products Section */}
-      <section className="relative py-24">
+      <section id="products" className="relative py-24">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <div className="mx-auto max-w-3xl text-center mb-16 animate-fade-in">
             <h2 className="text-4xl font-display font-bold text-white mb-4">Färdiga paket</h2>
@@ -518,8 +555,8 @@ export const ProductSelection = () => {
                 <CardTitle className="text-2xl font-display mb-2">AI Receptionist</CardTitle>
                 <CardDescription className="text-base text-muted-foreground">Hanterar samtal, SMS & mejl dygnet runt.</CardDescription>
               </CardHeader>
-              <CardContent className="relative space-y-6 p-10 pt-0">
-                <ul className="space-y-4 mb-8">
+              <CardContent className="relative space-y-6 p-10 pt-0 flex-1 flex flex-col">
+                <ul className="space-y-4 mb-8 flex-1">
                   {packageDetails.krono.features.slice(0, 3).map((feature, idx) => (
                     <li key={idx} className="flex items-start gap-3">
                       <div className="flex-shrink-0 w-6 h-6 rounded-full bg-accent/10 flex items-center justify-center mt-0.5">
@@ -531,7 +568,7 @@ export const ProductSelection = () => {
                 </ul>
                 <Dialog>
                   <DialogTrigger asChild>
-                    <Button size="lg" className="w-full bg-primary text-primary-foreground hover:bg-primary/90 shadow-button group-hover:shadow-glow transition-all duration-300 font-semibold text-base h-14" onClick={() => handlePackageClick('krono')}>
+                    <Button size="lg" className="w-full bg-primary text-primary-foreground hover:bg-primary/90 shadow-button group-hover:shadow-glow transition-all duration-300 font-semibold text-base h-14 mt-auto" onClick={() => handlePackageClick('krono')}>
                       Läs mer
                       <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
                     </Button>
@@ -617,9 +654,11 @@ export const ProductSelection = () => {
                 </Dialog>
               </CardContent>
             </Card>
+            </AnimatedSection>
 
             {/* AI Restaurang - Gastro */}
-            <Card className="group relative overflow-hidden border-2 border-white/10 bg-gradient-card backdrop-blur-sm hover:border-accent/50 hover:scale-[1.02] transition-all duration-500 hover:shadow-glow animate-scale-in delay-100">
+            <AnimatedSection delay={100}>
+            <Card className="group relative overflow-hidden border-2 border-white/10 bg-gradient-card backdrop-blur-sm hover:border-accent/50 hover:scale-[1.02] transition-all duration-500 hover:shadow-glow h-full flex flex-col">
               <div className="absolute inset-0 bg-gradient-gold opacity-0 group-hover:opacity-10 transition-opacity duration-500"></div>
               <CardHeader className="relative p-10">
                 <div className="flex items-center justify-center w-20 h-20 rounded-2xl bg-accent/10 mb-6 group-hover:scale-110 group-hover:rotate-3 transition-all duration-500">
@@ -628,8 +667,8 @@ export const ProductSelection = () => {
                 <CardTitle className="text-2xl font-display mb-2">Restaurang & Café</CardTitle>
                 <CardDescription className="text-base text-muted-foreground">Hanterar bokningar, beställningar, menyfrågor och kundfeedback.</CardDescription>
               </CardHeader>
-              <CardContent className="relative space-y-6 p-10 pt-0">
-                <ul className="space-y-4 mb-8">
+              <CardContent className="relative space-y-6 p-10 pt-0 flex-1 flex flex-col">
+                <ul className="space-y-4 mb-8 flex-1">
                   {packageDetails.gastro.features.map((feature, idx) => (
                     <li key={idx} className="flex items-start gap-3">
                       <div className="flex-shrink-0 w-6 h-6 rounded-full bg-accent/10 flex items-center justify-center mt-0.5">
@@ -641,7 +680,7 @@ export const ProductSelection = () => {
                 </ul>
                 <Dialog>
                   <DialogTrigger asChild>
-                    <Button size="lg" className="w-full bg-primary text-primary-foreground hover:bg-primary/90 shadow-button group-hover:shadow-glow transition-all duration-300 font-semibold text-base h-14" onClick={() => handlePackageClick('gastro')}>
+                    <Button size="lg" className="w-full bg-primary text-primary-foreground hover:bg-primary/90 shadow-button group-hover:shadow-glow transition-all duration-300 font-semibold text-base h-14 mt-auto" onClick={() => handlePackageClick('gastro')}>
                       Läs mer
                       <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
                     </Button>
@@ -701,9 +740,11 @@ export const ProductSelection = () => {
                 </Dialog>
               </CardContent>
             </Card>
+            </AnimatedSection>
 
             {/* AI Rekrytering - Talent */}
-            <Card className="group relative overflow-hidden border-2 border-white/10 bg-gradient-card backdrop-blur-sm hover:border-accent/50 hover:scale-[1.02] transition-all duration-500 hover:shadow-glow animate-scale-in delay-200">
+            <AnimatedSection delay={200}>
+            <Card className="group relative overflow-hidden border-2 border-white/10 bg-gradient-card backdrop-blur-sm hover:border-accent/50 hover:scale-[1.02] transition-all duration-500 hover:shadow-glow h-full">
               <div className="absolute inset-0 bg-gradient-gold opacity-0 group-hover:opacity-10 transition-opacity duration-500"></div>
               <CardHeader className="relative p-10">
                 <div className="flex items-center justify-center w-20 h-20 rounded-2xl bg-accent/10 mb-6 group-hover:scale-110 group-hover:rotate-3 transition-all duration-500">
@@ -725,7 +766,7 @@ export const ProductSelection = () => {
                 </ul>
                 <Dialog>
                   <DialogTrigger asChild>
-                    <Button size="lg" className="w-full bg-primary text-primary-foreground hover:bg-primary/90 shadow-button group-hover:shadow-glow transition-all duration-300 font-semibold text-base h-14" onClick={() => handlePackageClick('talent')}>
+                    <Button size="lg" className="w-full bg-primary text-primary-foreground hover:bg-primary/90 shadow-button group-hover:shadow-glow transition-all duration-300 font-semibold text-base h-14 mt-auto" onClick={() => handlePackageClick('talent')}>
                       Läs mer
                       <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
                     </Button>
@@ -771,9 +812,11 @@ export const ProductSelection = () => {
                 </Dialog>
               </CardContent>
             </Card>
+            </AnimatedSection>
 
             {/* AI Prospektering - Lead */}
-            <Card className="group relative overflow-hidden border-2 border-white/10 bg-gradient-card backdrop-blur-sm hover:border-accent/50 hover:scale-[1.02] transition-all duration-500 hover:shadow-glow animate-scale-in">
+            <AnimatedSection delay={300}>
+            <Card className="group relative overflow-hidden border-2 border-white/10 bg-gradient-card backdrop-blur-sm hover:border-accent/50 hover:scale-[1.02] transition-all duration-500 hover:shadow-glow h-full">
               <div className="absolute inset-0 bg-gradient-gold opacity-0 group-hover:opacity-10 transition-opacity duration-500"></div>
               <CardHeader className="relative p-10">
                 <div className="flex items-center justify-center w-20 h-20 rounded-2xl bg-accent/10 mb-6 group-hover:scale-110 group-hover:rotate-3 transition-all duration-500">
@@ -795,7 +838,7 @@ export const ProductSelection = () => {
                 </ul>
                 <Dialog>
                   <DialogTrigger asChild>
-                    <Button size="lg" className="w-full bg-primary text-primary-foreground hover:bg-primary/90 shadow-button group-hover:shadow-glow transition-all duration-300 font-semibold text-base h-14" onClick={() => handlePackageClick('lead')}>
+                    <Button size="lg" className="w-full bg-primary text-primary-foreground hover:bg-primary/90 shadow-button group-hover:shadow-glow transition-all duration-300 font-semibold text-base h-14 mt-auto" onClick={() => handlePackageClick('lead')}>
                       Läs mer
                       <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
                     </Button>
@@ -841,9 +884,11 @@ export const ProductSelection = () => {
                 </Dialog>
               </CardContent>
             </Card>
+            </AnimatedSection>
 
             {/* AI Compliance - Thor */}
-            <Card className="group relative overflow-hidden border-2 border-accent/30 bg-gradient-card backdrop-blur-sm hover:border-accent hover:scale-[1.02] transition-all duration-500 hover:shadow-glow animate-scale-in delay-100">
+            <AnimatedSection delay={400}>
+            <Card className="group relative overflow-hidden border-2 border-accent/30 bg-gradient-card backdrop-blur-sm hover:border-accent hover:scale-[1.02] transition-all duration-500 hover:shadow-glow h-full">
               <div className="absolute inset-0 bg-gradient-gold opacity-5 group-hover:opacity-20 transition-opacity duration-500"></div>
               <div className="absolute top-4 right-4 px-3 py-1 bg-accent/20 rounded-full border border-accent/50">
                 <span className="text-xs font-semibold text-accent">POPULÄR</span>
@@ -914,6 +959,7 @@ export const ProductSelection = () => {
                 </Dialog>
               </CardContent>
             </Card>
+            </AnimatedSection>
           </div>
         </div>
       </section>
@@ -921,36 +967,36 @@ export const ProductSelection = () => {
       {/* Varför Hiems Section */}
       <section className="relative py-24 bg-white/5">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
-          <div className="mx-auto max-w-3xl text-center mb-16 animate-fade-in">
+          <AnimatedSection className="mx-auto max-w-3xl text-center mb-16">
             <h2 className="text-4xl font-display font-bold text-white mb-4">Varför Hiems?</h2>
             <div className="w-20 h-1 bg-gradient-gold mx-auto rounded-full"></div>
-          </div>
+          </AnimatedSection>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-            <div className="group text-center animate-fade-in">
-              <div className="relative rounded-2xl bg-white/5 p-10 backdrop-blur-sm border border-white/10 hover:border-accent/50 transition-all duration-300">
+            <AnimatedSection delay={0} className="group text-center">
+              <div className="relative rounded-2xl bg-white/5 p-10 backdrop-blur-sm border border-white/10 hover:border-accent/50 transition-all duration-300 h-full">
                 <div className="absolute inset-0 bg-gradient-gold opacity-0 group-hover:opacity-5 rounded-2xl transition-opacity"></div>
                 <div className="relative">
-                  <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-accent/10 mb-6 group-hover:scale-110 transition-transform">
+                  <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-accent/10 mb-6 group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
                     <Target className="h-8 w-8 text-accent" />
                   </div>
                   <h3 className="text-2xl font-display font-bold text-white mb-3">Skräddarsydd AI</h3>
                   <p className="text-white/70 leading-relaxed">Vi skapar AI-lösningar helt anpassade efter er verksamhet och era mål – inget standardpaket, allt designat för maximal effekt.</p>
                 </div>
               </div>
-            </div>
-            <div className="group text-center animate-fade-in delay-100">
-              <div className="relative rounded-2xl bg-white/5 p-10 backdrop-blur-sm border border-white/10 hover:border-accent/50 transition-all duration-300">
+            </AnimatedSection>
+            <AnimatedSection delay={100} className="group text-center">
+              <div className="relative rounded-2xl bg-white/5 p-10 backdrop-blur-sm border border-white/10 hover:border-accent/50 transition-all duration-300 h-full">
                 <div className="absolute inset-0 bg-gradient-gold opacity-0 group-hover:opacity-5 rounded-2xl transition-opacity"></div>
                 <div className="relative">
-                  <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-accent/10 mb-6 group-hover:scale-110 transition-transform">
+                  <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-accent/10 mb-6 group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
                     <CheckCircle className="h-8 w-8 text-accent" />
                   </div>
                   <h3 className="text-2xl font-display font-bold text-white mb-3">Ni ser bara resultaten</h3>
                   <p className="text-white/70 leading-relaxed">Vi tar hand om allt – från utveckling till implementation. Ni behöver inte lyfta ett finger, utan får direkt värde och mätbara resultat.</p>
                 </div>
               </div>
-            </div>
-            <div className="group text-center animate-fade-in delay-200">
+            </AnimatedSection>
+            <AnimatedSection delay={200} className="group text-center">
               <div className="relative rounded-2xl bg-white/5 p-10 backdrop-blur-sm border border-white/10 hover:border-accent/50 transition-all duration-300">
                 <div className="absolute inset-0 bg-gradient-gold opacity-0 group-hover:opacity-5 rounded-2xl transition-opacity"></div>
                 <div className="relative">
@@ -967,9 +1013,9 @@ export const ProductSelection = () => {
       </section>
 
       {/* Testa själv Section */}
-      <section id="krono-chat" className="relative py-24">
+      <section id="contact" className="relative py-24">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
-          <div className="mx-auto max-w-4xl">
+          <AnimatedSection className="mx-auto max-w-4xl">
             <div className="relative rounded-3xl bg-gradient-primary overflow-hidden shadow-elegant">
               <div className="absolute inset-0 bg-gradient-gold opacity-10"></div>
               <div className="absolute top-0 right-0 w-64 h-64 bg-accent/20 rounded-full blur-3xl"></div>
@@ -1045,7 +1091,7 @@ export const ProductSelection = () => {
                 </div>
               </div>
             </div>
-          </div>
+          </AnimatedSection>
         </div>
       </section>
       
