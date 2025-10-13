@@ -437,7 +437,7 @@ export const ProductSelection = () => {
               </Button>
               <p className="text-white/70 text-sm">
                 Inte tid för en konsultation?{" "}
-                <button onClick={() => setIsQuoteModalOpen(true)} className="text-accent hover:text-accent/80 underline transition-colors">
+                <button onClick={() => document.getElementById('krono-chat')?.scrollIntoView({ behavior: 'smooth' })} className="text-accent hover:text-accent/80 underline transition-colors">
                   Prata med Krono
                 </button>
               </p>
@@ -1015,7 +1015,7 @@ export const ProductSelection = () => {
       </section>
 
       {/* Testa själv Section */}
-      <section className="relative py-24">
+      <section id="krono-chat" className="relative py-24">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <div className="mx-auto max-w-4xl">
             <div className="relative rounded-3xl bg-gradient-primary overflow-hidden shadow-elegant">
