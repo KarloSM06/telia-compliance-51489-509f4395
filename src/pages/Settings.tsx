@@ -1,10 +1,13 @@
 import { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { User, Shield, Package, Users, Code, Bell, Puzzle, CreditCard, ShieldCheck } from "lucide-react";
+import { User, Shield, Package, Users, ShieldCheck } from "lucide-react";
 import { useHiemsAdmin } from "@/hooks/useHiemsAdmin";
 import { useOrganizationRole } from "@/hooks/useOrganizationRole";
 import { ProfileSettings } from "@/components/settings/ProfileSettings";
 import { SecuritySettings } from "@/components/settings/SecuritySettings";
+import { ProductsSettings } from "@/components/settings/ProductsSettings";
+import { TeamSettings } from "@/components/settings/TeamSettings";
+import { HiemsAdminPanel } from "@/components/settings/HiemsAdminPanel";
 
 export default function Settings() {
   const { isHiemsAdmin } = useHiemsAdmin();
@@ -60,24 +63,18 @@ export default function Settings() {
         </TabsContent>
 
         <TabsContent value="products" className="space-y-6">
-          <div className="text-center py-12 text-muted-foreground">
-            Produktinställningar kommer snart...
-          </div>
+          <ProductsSettings />
         </TabsContent>
 
         {showTeamTab && (
           <TabsContent value="team" className="space-y-6">
-            <div className="text-center py-12 text-muted-foreground">
-              Team management kommer snart...
-            </div>
+            <TeamSettings />
           </TabsContent>
         )}
 
         {isHiemsAdmin && (
           <TabsContent value="hiems-admin" className="space-y-6">
-            <div className="text-center py-12 text-muted-foreground">
-              Hiems Admin Panel kommer snart...
-            </div>
+            <HiemsAdminPanel />
           </TabsContent>
         )}
       </Tabs>
