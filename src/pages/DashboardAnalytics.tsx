@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { DashboardLayout } from "@/components/dashboard/DashboardLayout";
+
 import { AreaChartComponent } from "@/components/dashboard/charts/AreaChartComponent";
 import { RadarChartComponent } from "@/components/dashboard/charts/RadarChartComponent";
 import { BarChartComponent } from "@/components/dashboard/charts/BarChartComponent";
@@ -38,25 +38,21 @@ const DashboardAnalytics = () => {
     return baseMetrics;
   };
 
-  if (loading) {
     return (
-      <DashboardLayout>
-        <div className="space-y-6">
-          <Skeleton className="h-12 w-full" />
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            {[1, 2, 3, 4].map(i => <Skeleton key={i} className="h-32" />)}
-          </div>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <Skeleton className="h-96" />
-            <Skeleton className="h-96" />
-          </div>
+      <div className="space-y-6">
+        <Skeleton className="h-12 w-full" />
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          {[1, 2, 3, 4].map(i => <Skeleton key={i} className="h-32" />)}
         </div>
-      </DashboardLayout>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <Skeleton className="h-96" />
+          <Skeleton className="h-96" />
+        </div>
+      </div>
     );
-  }
 
   return (
-    <DashboardLayout>
+    
       <div className="space-y-6 animate-fade-in">
         {/* Header with filters */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 bg-card p-6 rounded-lg border">
@@ -229,7 +225,7 @@ const DashboardAnalytics = () => {
           </div>
         ) : null}
       </div>
-    </DashboardLayout>
+    
   );
 };
 
