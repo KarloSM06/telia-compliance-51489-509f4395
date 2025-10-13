@@ -166,6 +166,130 @@ export type Database = {
           },
         ]
       }
+      dashboard_shares: {
+        Row: {
+          created_at: string
+          dashboard_id: string
+          expires_at: string | null
+          id: string
+          permission_level: string
+          share_token: string | null
+          shared_with_user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          dashboard_id: string
+          expires_at?: string | null
+          id?: string
+          permission_level?: string
+          share_token?: string | null
+          shared_with_user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          dashboard_id?: string
+          expires_at?: string | null
+          id?: string
+          permission_level?: string
+          share_token?: string | null
+          shared_with_user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "dashboard_shares_dashboard_id_fkey"
+            columns: ["dashboard_id"]
+            isOneToOne: false
+            referencedRelation: "dashboards"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      dashboard_widgets: {
+        Row: {
+          config: Json
+          created_at: string
+          dashboard_id: string
+          data_source: Json | null
+          id: string
+          page_id: string
+          position: Json
+          widget_type: string
+        }
+        Insert: {
+          config?: Json
+          created_at?: string
+          dashboard_id: string
+          data_source?: Json | null
+          id?: string
+          page_id?: string
+          position?: Json
+          widget_type: string
+        }
+        Update: {
+          config?: Json
+          created_at?: string
+          dashboard_id?: string
+          data_source?: Json | null
+          id?: string
+          page_id?: string
+          position?: Json
+          widget_type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "dashboard_widgets_dashboard_id_fkey"
+            columns: ["dashboard_id"]
+            isOneToOne: false
+            referencedRelation: "dashboards"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      dashboards: {
+        Row: {
+          category: string | null
+          created_at: string
+          description: string | null
+          id: string
+          is_public: boolean | null
+          is_template: boolean | null
+          layout: Json | null
+          pages: Json | null
+          theme: Json | null
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          category?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_public?: boolean | null
+          is_template?: boolean | null
+          layout?: Json | null
+          pages?: Json | null
+          theme?: Json | null
+          title: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          category?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_public?: boolean | null
+          is_template?: boolean | null
+          layout?: Json | null
+          pages?: Json | null
+          theme?: Json | null
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       data_access_log: {
         Row: {
           action: string
@@ -550,6 +674,51 @@ export type Database = {
           id?: string
           role?: Database["public"]["Enums"]["app_role"]
           user_id?: string
+        }
+        Relationships: []
+      }
+      widget_templates: {
+        Row: {
+          category: string | null
+          config_template: Json
+          created_at: string
+          creator_id: string | null
+          description: string | null
+          downloads: number | null
+          id: string
+          is_public: boolean | null
+          name: string
+          preview_image: string | null
+          rating: number | null
+          widget_type: string
+        }
+        Insert: {
+          category?: string | null
+          config_template?: Json
+          created_at?: string
+          creator_id?: string | null
+          description?: string | null
+          downloads?: number | null
+          id?: string
+          is_public?: boolean | null
+          name: string
+          preview_image?: string | null
+          rating?: number | null
+          widget_type: string
+        }
+        Update: {
+          category?: string | null
+          config_template?: Json
+          created_at?: string
+          creator_id?: string | null
+          description?: string | null
+          downloads?: number | null
+          id?: string
+          is_public?: boolean | null
+          name?: string
+          preview_image?: string | null
+          rating?: number | null
+          widget_type?: string
         }
         Relationships: []
       }

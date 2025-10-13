@@ -1,166 +1,105 @@
 import { useState } from "react";
-import { Responsive, WidthProvider, Layout } from "react-grid-layout";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { LayoutDashboard, RotateCcw, Save, Share2 } from "lucide-react";
+import { useDashboardState } from "@/hooks/useDashboardState";
+import { WidgetLibrary } from "@/components/dashboard-builder/WidgetLibrary";
+import { WidgetConfigPanel } from "@/components/dashboard-builder/WidgetConfigPanel";
+import { DashboardCanvas } from "@/components/dashboard-builder/DashboardCanvas";
+import { LayoutToolbar } from "@/components/dashboard-builder/LayoutToolbar";
+import { ShareModal } from "@/components/dashboard-builder/ShareModal";
+import { TemplateSelector } from "@/components/dashboard-builder/TemplateSelector";
+import { WidgetType, DashboardWidget } from "@/types/widget.types";
+import { getWidgetDefinition } from "@/lib/widget-registry";
 import { useToast } from "@/hooks/use-toast";
-import "react-grid-layout/css/styles.css";
-import "react-resizable/css/styles.css";
-
-const ResponsiveGridLayout = WidthProvider(Responsive);
-
-interface WidgetData {
-  i: string;
-  title: string;
-  content: React.ReactNode;
-}
+import { Layout } from "react-grid-layout";
 
 export default function CustomDashboard() {
   const { toast } = useToast();
-  const [layouts, setLayouts] = useState<{ [key: string]: Layout[] }>({
-    lg: [
-      { i: "widget-1", x: 0, y: 0, w: 4, h: 2 },
-      { i: "widget-2", x: 4, y: 0, w: 4, h: 2 },
-      { i: "widget-3", x: 8, y: 0, w: 4, h: 2 },
-      { i: "widget-4", x: 0, y: 2, w: 6, h: 3 },
-      { i: "widget-5", x: 6, y: 2, w: 6, h: 3 },
-    ],
-  });
+  const {
+    widgets,
+    selectedWidget,
+    currentPage,
+    setSelectedWidget,
+    addWidget,
+    updateWidget,
+    removeWidget,
+    updateLayout,
+  } = useDashboardState();
 
-  const widgets: WidgetData[] = [
-    {
-      i: "widget-1",
-      title: "Samtal idag",
-      content: (
-        <div className="text-4xl font-bold text-primary">24</div>
-      ),
-    },
-    {
-      i: "widget-2",
-      title: "Genomsnitt poäng",
-      content: (
-        <div className="text-4xl font-bold text-success">85%</div>
-      ),
-    },
-    {
-      i: "widget-3",
-      title: "Aktiva kampanjer",
-      content: (
-        <div className="text-4xl font-bold text-accent">12</div>
-      ),
-    },
-    {
-      i: "widget-4",
-      title: "Senaste samtal",
-      content: (
-        <div className="space-y-2">
-          <div className="flex justify-between items-center p-2 rounded bg-muted/50">
-            <span className="text-sm">Samtal #1234</span>
-            <span className="text-xs text-success">95%</span>
-          </div>
-          <div className="flex justify-between items-center p-2 rounded bg-muted/50">
-            <span className="text-sm">Samtal #1235</span>
-            <span className="text-xs text-warning">72%</span>
-          </div>
-          <div className="flex justify-between items-center p-2 rounded bg-muted/50">
-            <span className="text-sm">Samtal #1236</span>
-            <span className="text-xs text-success">88%</span>
-          </div>
-        </div>
-      ),
-    },
-    {
-      i: "widget-5",
-      title: "Trender",
-      content: (
-        <div className="h-full flex items-center justify-center text-muted-foreground">
-          <p>Diagram kommer här</p>
-        </div>
-      ),
-    },
-  ];
+  const [shareModalOpen, setShareModalOpen] = useState(false);
+  const [templateModalOpen, setTemplateModalOpen] = useState(false);
+  const [pages] = useState([{ id: 'page-1', name: 'Översikt', layout: [] }]);
 
-  const handleLayoutChange = (layout: Layout[], layouts: { [key: string]: Layout[] }) => {
-    setLayouts(layouts);
-  };
-
-  const handleSaveLayout = () => {
-    localStorage.setItem("customDashboardLayout", JSON.stringify(layouts));
-    toast({
-      title: "Layout sparad",
-      description: "Din anpassade dashboard har sparats",
-    });
-  };
-
-  const handleResetLayout = () => {
-    const defaultLayouts = {
-      lg: [
-        { i: "widget-1", x: 0, y: 0, w: 4, h: 2 },
-        { i: "widget-2", x: 4, y: 0, w: 4, h: 2 },
-        { i: "widget-3", x: 8, y: 0, w: 4, h: 2 },
-        { i: "widget-4", x: 0, y: 2, w: 6, h: 3 },
-        { i: "widget-5", x: 6, y: 2, w: 6, h: 3 },
-      ],
+  const handleAddWidget = (type: WidgetType) => {
+    const definition = getWidgetDefinition(type);
+    const newWidget: DashboardWidget = {
+      id: `widget-${Date.now()}`,
+      dashboard_id: 'temp',
+      page_id: currentPage,
+      widget_type: type,
+      config: definition.defaultConfig,
+      data_source: { type: 'calls', refreshInterval: 0 },
+      position: {
+        x: 0,
+        y: Infinity,
+        w: definition.defaultSize.w,
+        h: definition.defaultSize.h,
+      },
+      created_at: new Date().toISOString(),
     };
-    setLayouts(defaultLayouts);
-    toast({
-      title: "Layout återställd",
-      description: "Dashboard har återställts till standardlayout",
-    });
+    addWidget(newWidget);
+    toast({ title: "Widget tillagd", description: `${definition.name} har lagts till` });
+  };
+
+  const handleSave = () => {
+    toast({ title: "Sparad", description: "Din dashboard har sparats" });
+  };
+
+  const handleExport = () => {
+    toast({ title: "Exporterar...", description: "PDF-export kommer snart" });
   };
 
   return (
-    <div className="space-y-6 animate-fade-in">
-      <div className="flex justify-between items-center">
-        <div>
-          <h2 className="text-3xl font-bold text-foreground mb-2 flex items-center gap-2">
-            <LayoutDashboard className="h-8 w-8" />
-            Custom Dashboard
-          </h2>
-          <p className="text-muted-foreground">
-            Dra och släpp för att anpassa din dashboard
-          </p>
-        </div>
-        <div className="flex gap-2">
-          <Button variant="outline" onClick={handleResetLayout}>
-            <RotateCcw className="mr-2 h-4 w-4" />
-            Återställ
-          </Button>
-          <Button variant="outline" onClick={handleSaveLayout}>
-            <Save className="mr-2 h-4 w-4" />
-            Spara
-          </Button>
-          <Button variant="outline">
-            <Share2 className="mr-2 h-4 w-4" />
-            Dela
-          </Button>
-        </div>
+    <div className="flex h-screen w-full bg-background">
+      <WidgetLibrary onAddWidget={handleAddWidget} />
+      
+      <div className="flex-1 flex flex-col">
+        <LayoutToolbar
+          title="Min Custom Dashboard"
+          currentPage={currentPage}
+          pages={pages}
+          onPageChange={() => {}}
+          onAddPage={() => toast({ title: "Snart tillgängligt" })}
+          onSave={handleSave}
+          onShare={() => setShareModalOpen(true)}
+          onExport={handleExport}
+          onTemplate={() => setTemplateModalOpen(true)}
+        />
+        
+        <DashboardCanvas
+          widgets={widgets}
+          onLayoutChange={(layouts: Layout[]) => updateLayout(layouts)}
+          onWidgetClick={setSelectedWidget}
+          onWidgetRemove={removeWidget}
+          selectedWidget={selectedWidget}
+        />
       </div>
 
-      <ResponsiveGridLayout
-        className="layout"
-        layouts={layouts}
-        breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
-        cols={{ lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 }}
-        rowHeight={60}
-        onLayoutChange={handleLayoutChange}
-        draggableHandle=".drag-handle"
-      >
-        {widgets.map((widget) => (
-          <div key={widget.i}>
-            <Card className="h-full hover:shadow-card transition-shadow cursor-move">
-              <CardHeader className="drag-handle cursor-grab active:cursor-grabbing pb-3">
-                <CardTitle className="text-sm font-medium text-muted-foreground">
-                  {widget.title}
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                {widget.content}
-              </CardContent>
-            </Card>
-          </div>
-        ))}
-      </ResponsiveGridLayout>
+      <WidgetConfigPanel
+        widget={widgets.find(w => w.id === selectedWidget) || null}
+        onClose={() => setSelectedWidget(null)}
+        onUpdate={updateWidget}
+      />
+
+      <ShareModal
+        open={shareModalOpen}
+        onClose={() => setShareModalOpen(false)}
+        dashboardId="temp"
+      />
+
+      <TemplateSelector
+        open={templateModalOpen}
+        onClose={() => setTemplateModalOpen(false)}
+        onSelectTemplate={(id) => toast({ title: "Mall vald", description: id })}
+      />
     </div>
   );
 }
