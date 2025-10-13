@@ -490,6 +490,42 @@ export type Database = {
           },
         ]
       }
+      user_products: {
+        Row: {
+          created_at: string
+          id: string
+          product_id: string
+          purchased_at: string
+          status: string
+          stripe_price_id: string
+          stripe_session_id: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          product_id: string
+          purchased_at?: string
+          status?: string
+          stripe_price_id: string
+          stripe_session_id?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          product_id?: string
+          purchased_at?: string
+          status?: string
+          stripe_price_id?: string
+          stripe_session_id?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

@@ -43,25 +43,34 @@ serve(async (req) => {
         const session = event.data.object;
         console.log("[WEBHOOK] Checkout completed:", session.id);
         
-        // Here you can add logic to:
-        // - Record the payment in your database
-        // - Send confirmation emails
-        // - Activate user access
-        // - Log the purchase
-        
         const userId = session.metadata?.user_id;
         const userEmail = session.metadata?.user_email;
+        const productId = session.metadata?.product_id;
         
-        console.log("[WEBHOOK] Payment successful for user:", userEmail);
+        console.log("[WEBHOOK] Payment successful for user:", userEmail, "Product:", productId);
         
-        // Example: You could store payment records in a payments table
-        // await supabase.from('payments').insert({
-        //   user_id: userId,
-        //   stripe_session_id: session.id,
-        //   amount: session.amount_total,
-        //   currency: session.currency,
-        //   status: 'completed'
-        // });
+        // Retrieve line items to get the price_id
+        const lineItems = await stripe.checkout.sessions.listLineItems(session.id, { limit: 1 });
+        const priceId = lineItems.data[0]?.price?.id;
+        
+        if (userId && productId && priceId) {
+          // Save product purchase to database
+          const { error: insertError } = await supabase
+            .from('user_products')
+            .insert({
+              user_id: userId,
+              product_id: productId,
+              stripe_price_id: priceId,
+              stripe_session_id: session.id,
+              status: 'active'
+            });
+          
+          if (insertError) {
+            console.error("[WEBHOOK] Error saving product purchase:", insertError);
+          } else {
+            console.log("[WEBHOOK] Product purchase saved successfully for user:", userId);
+          }
+        }
         
         break;
       }

@@ -6,6 +6,7 @@ import { CheckCircle, Info, ShoppingCart } from "lucide-react";
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { useUserProducts } from "@/hooks/useUserProducts";
 
 export interface PackageData {
   id: string;
@@ -27,6 +28,9 @@ interface PackageCardProps {
 export function PackageCard({ package: pkg }: PackageCardProps) {
   const [isHovered, setIsHovered] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const { hasProduct } = useUserProducts();
+  
+  const isOwned = hasProduct(pkg.id);
 
   const handlePurchase = async () => {
     try {
@@ -39,10 +43,10 @@ export function PackageCard({ package: pkg }: PackageCardProps) {
         return;
       }
 
-      const { data, error } = await supabase.functions.invoke("create-checkout-session", {
+      const { data, error } = await supabase.functions.invoke("create-payment-session", {
         body: { 
           priceId: pkg.stripePriceId,
-          numberOfAgents: 1
+          productId: pkg.id
         },
       });
 
@@ -64,11 +68,19 @@ export function PackageCard({ package: pkg }: PackageCardProps) {
     <Card
       className={`relative overflow-hidden transition-all duration-300 hover:shadow-elegant hover:scale-105 ${
         isHovered ? "border-primary" : ""
-      }`}
+      } ${isOwned ? "border-2 border-success" : ""}`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      {pkg.isPopular && (
+      {isOwned && (
+        <div className="absolute top-4 right-4">
+          <Badge className="bg-success text-success-foreground flex items-center gap-1">
+            <CheckCircle className="h-3 w-3" />
+            Äger
+          </Badge>
+        </div>
+      )}
+      {!isOwned && pkg.isPopular && (
         <div className="absolute top-4 right-4">
           <Badge className="bg-gradient-gold text-primary font-semibold">
             Populär
@@ -101,14 +113,25 @@ export function PackageCard({ package: pkg }: PackageCardProps) {
           </div>
         </div>
 
-        <Button 
-          onClick={handlePurchase} 
-          disabled={isLoading}
-          className="w-full mb-2"
-        >
-          <ShoppingCart className="mr-2 h-4 w-4" />
-          {isLoading ? "Laddar..." : "Köp nu"}
-        </Button>
+        {isOwned ? (
+          <Button 
+            disabled
+            variant="outline"
+            className="w-full mb-2"
+          >
+            <CheckCircle className="mr-2 h-4 w-4" />
+            Äger redan
+          </Button>
+        ) : (
+          <Button 
+            onClick={handlePurchase} 
+            disabled={isLoading}
+            className="w-full mb-2"
+          >
+            <ShoppingCart className="mr-2 h-4 w-4" />
+            {isLoading ? "Laddar..." : "Köp nu"}
+          </Button>
+        )}
 
         <Dialog>
           <DialogTrigger asChild>

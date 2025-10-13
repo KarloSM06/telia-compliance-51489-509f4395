@@ -27,6 +27,9 @@ const PaymentSchema = z.object({
       (id) => ALLOWED_PRICE_IDS.includes(id),
       "Invalid or unauthorized price ID"
     ),
+  productId: z.string()
+    .min(1, "Product ID is required")
+    .max(100, "Product ID too long"),
   quantity: z.number()
     .int("Quantity must be an integer")
     .min(1, "Must order at least 1")
@@ -64,7 +67,7 @@ serve(async (req) => {
     
     // Validate input
     const validated = PaymentSchema.parse(rawBody);
-    const { priceId, quantity } = validated;
+    const { priceId, productId, quantity } = validated;
 
     console.log("[PAYMENT] Validated input:", { priceId, quantity });
 
@@ -94,6 +97,7 @@ serve(async (req) => {
       metadata: {
         user_id: user.id,
         user_email: user.email,
+        product_id: productId,
       },
     });
 
