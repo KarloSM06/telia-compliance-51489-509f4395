@@ -49,12 +49,12 @@ export function ConsultationModal({ open, onOpenChange }: ConsultationModalProps
         });
         onOpenChange(false);
       } else {
-        // Paid consultation - create Stripe checkout
-        const { data, error } = await supabase.functions.invoke("create-checkout-session", {
+        // Paid consultation - create Stripe checkout for one-time payment
+        const { data, error } = await supabase.functions.invoke("create-payment-session", {
           body: {
-            priceId: "price_consultation_2000", // This should match your Stripe price ID
-            successUrl: `${window.location.origin}/consultation-success`,
-            cancelUrl: `${window.location.origin}`,
+            priceId: "price_REPLACE_WITH_CONSULTATION_PRICE_ID", // TODO: Replace with actual Stripe price ID for consultation
+            productId: "consultation",
+            quantity: 1,
           },
         });
 
