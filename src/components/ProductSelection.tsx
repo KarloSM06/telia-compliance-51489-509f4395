@@ -963,7 +963,7 @@ export const ProductSelection = () => {
       </section>
 
       {/* Testa själv Section */}
-      <section id="contact" className="relative py-24">
+      <section id="krono-chat" className="relative py-24">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <AnimatedSection className="mx-auto max-w-4xl">
             <div className="relative rounded-3xl bg-gradient-primary overflow-hidden shadow-elegant">
