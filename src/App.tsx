@@ -16,6 +16,7 @@ import AboutUs from "./pages/AboutUs";
 import GDPRSettings from "./pages/GDPRSettings";
 import Legal from "./pages/Legal";
 import NotFound from "./pages/NotFound";
+import Checkout from "./pages/Checkout";
 import { DashboardLayout } from "./components/dashboard/DashboardLayout";
 
 const queryClient = new QueryClient();
@@ -39,6 +40,7 @@ const App = () => (
             <Route path="/gdpr" element={<GDPRSettings />} />
             <Route path="/regelverk" element={<Legal />} />
             <Route path="/exempelrapport" element={<ExampleReport />} />
+            <Route path="/checkout" element={<Checkout />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

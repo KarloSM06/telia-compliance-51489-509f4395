@@ -8,6 +8,8 @@ import { useUserProducts } from "@/hooks/useUserProducts";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { Slider } from "@/components/ui/slider";
+import { useCart } from "@/hooks/useCart";
+import { ShoppingCart as CartIcon } from "lucide-react";
 
 interface TierPackageCardProps {
   package: PackageData;
@@ -20,6 +22,7 @@ export function TierPackageCard({ package: pkg }: TierPackageCardProps) {
   const [isLoading, setIsLoading] = useState(false);
   const { hasProduct } = useUserProducts();
   const { toast } = useToast();
+  const { addItem } = useCart();
   
   const userOwnsPackage = hasProduct(pkg.id);
   const minuteOptions = pkg.hasMinutes ? [100, 250, 500, 1000] : [];
@@ -250,23 +253,62 @@ export function TierPackageCard({ package: pkg }: TierPackageCardProps) {
         )}
 
         {/* Purchase Button */}
-        <Button
-          onClick={handlePurchase}
-          disabled={userOwnsPackage || isLoading}
-          className="w-full"
-          size="lg"
-        >
-          {isLoading ? (
-            <>
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              Laddar...
-            </>
-          ) : userOwnsPackage ? (
-            "Äger redan"
-          ) : (
-            "Köp nu"
-          )}
-        </Button>
+        <div className="flex gap-2">
+          <Button
+            onClick={() => {
+              const price = getCurrentPrice();
+              const priceId = getCurrentPriceId();
+              
+              if (typeof price !== 'number' || !priceId) {
+                toast({
+                  title: "Fel",
+                  description: "Kunde inte hitta prisinformation",
+                  variant: "destructive"
+                });
+                return;
+              }
+
+              addItem({
+                productId: pkg.id,
+                productName: pkg.name,
+                tier: selectedTier,
+                minutes: pkg.hasMinutes ? selectedMinutes : undefined,
+                price,
+                priceId
+              });
+
+              toast({
+                title: "Tillagd i kundvagn",
+                description: `${pkg.name} (${selectedTier}) har lagts till i kundvagnen`
+              });
+            }}
+            disabled={userOwnsPackage}
+            variant="outline"
+            className="flex-1"
+            size="lg"
+          >
+            <CartIcon className="mr-2 h-4 w-4" />
+            Lägg i kundvagn
+          </Button>
+          
+          <Button
+            onClick={handlePurchase}
+            disabled={userOwnsPackage || isLoading}
+            className="flex-1"
+            size="lg"
+          >
+            {isLoading ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Laddar...
+              </>
+            ) : userOwnsPackage ? (
+              "Äger redan"
+            ) : (
+              "Köp nu"
+            )}
+          </Button>
+        </div>
       </CardContent>
     </Card>
   );

@@ -16,11 +16,14 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
+import { ShoppingCart } from "@/components/cart/ShoppingCart";
+import { useCart } from "@/hooks/useCart";
 
 export const Header = () => {
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { items, removeItem, clearCart } = useCart();
   const [email, setEmail] = useState("");
   const [isNewsletterOpen, setIsNewsletterOpen] = useState(false);
   const [isReceptionistOpen, setIsReceptionistOpen] = useState(false);
@@ -100,6 +103,12 @@ export const Header = () => {
           )}
           
           <div className="flex items-center space-x-4">
+            <ShoppingCart 
+              items={items} 
+              onRemoveItem={removeItem} 
+              onClearCart={clearCart}
+            />
+            
             {user ? (
               <>
                 <Button variant="ghost" onClick={() => navigate("/dashboard")}>
