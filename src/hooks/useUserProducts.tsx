@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
-import { useAdminStatus } from "@/hooks/useAdminStatus";
+import { useHiemsAdmin } from "@/hooks/useHiemsAdmin";
 import { availablePackages } from "@/components/dashboard/PackagesData";
 
 export interface UserProduct {
@@ -16,7 +16,7 @@ export interface UserProduct {
 
 export const useUserProducts = () => {
   const { user } = useAuth();
-  const { isAdmin, loading: adminLoading } = useAdminStatus();
+  const { isHiemsAdmin: isAdmin, loading: adminLoading } = useHiemsAdmin();
   const [products, setProducts] = useState<string[]>([]);
   const [productDetails, setProductDetails] = useState<UserProduct[]>([]);
   const [loading, setLoading] = useState(true);

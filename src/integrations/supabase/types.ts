@@ -468,6 +468,36 @@ export type Database = {
         }
         Relationships: []
       }
+      organizations: {
+        Row: {
+          created_at: string | null
+          id: string
+          max_members: number | null
+          name: string
+          owner_id: string | null
+          plan_type: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          max_members?: number | null
+          name: string
+          owner_id?: string | null
+          plan_type?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          max_members?: number | null
+          name?: string
+          owner_id?: string | null
+          plan_type?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       phone_numbers: {
         Row: {
           created_at: string
@@ -519,6 +549,39 @@ export type Database = {
           leaddesk_consent?: boolean | null
           leaddesk_consent_date?: string | null
           leaddesk_enabled?: boolean | null
+        }
+        Relationships: []
+      }
+      settings_audit_log: {
+        Row: {
+          action: string
+          created_at: string | null
+          details: Json | null
+          id: string
+          is_hiems_admin: boolean | null
+          target_id: string | null
+          target_type: string | null
+          user_id: string | null
+        }
+        Insert: {
+          action: string
+          created_at?: string | null
+          details?: Json | null
+          id?: string
+          is_hiems_admin?: boolean | null
+          target_id?: string | null
+          target_type?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          action?: string
+          created_at?: string | null
+          details?: Json | null
+          id?: string
+          is_hiems_admin?: boolean | null
+          target_id?: string | null
+          target_type?: string | null
+          user_id?: string | null
         }
         Relationships: []
       }
@@ -575,6 +638,50 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      team_members: {
+        Row: {
+          email: string
+          id: string
+          invited_at: string | null
+          invited_by: string | null
+          joined_at: string | null
+          organization_id: string
+          role: string
+          status: string
+          user_id: string | null
+        }
+        Insert: {
+          email: string
+          id?: string
+          invited_at?: string | null
+          invited_by?: string | null
+          joined_at?: string | null
+          organization_id: string
+          role: string
+          status?: string
+          user_id?: string | null
+        }
+        Update: {
+          email?: string
+          id?: string
+          invited_at?: string | null
+          invited_by?: string | null
+          joined_at?: string | null
+          organization_id?: string
+          role?: string
+          status?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "team_members_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       user_analysis: {
         Row: {

@@ -2,7 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Headphones, ChefHat, UserCheck, TrendingUp, MessageSquare } from "lucide-react";
 import { useUserProducts } from "@/hooks/useUserProducts";
-import { AdminBadge } from "./AdminBadge";
+import { HiemsAdminBadge } from "./HiemsAdminBadge";
 
 const productIcons: Record<string, any> = {
   krono: Headphones,
@@ -39,7 +39,7 @@ export function ProductOverview() {
     <div className="space-y-4">
       <div className="flex items-center gap-3">
         <h2 className="text-2xl font-bold">Dina AI-Produkter</h2>
-        {isAdmin && <AdminBadge />}
+        {isAdmin && <HiemsAdminBadge />}
       </div>
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         {productDetails.map((product) => {

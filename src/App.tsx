@@ -11,6 +11,7 @@ import Auth from "./pages/Auth";
 import Dashboard from "./pages/Dashboard";
 import DashboardPackages from "./pages/DashboardPackages";
 import CustomDashboard from "./pages/CustomDashboard";
+import Settings from "./pages/Settings";
 import Demo from "./pages/Demo";
 import AboutUs from "./pages/AboutUs";
 import GDPRSettings from "./pages/GDPRSettings";
@@ -36,7 +37,7 @@ const App = () => (
             <Route path="/dashboard/analytics" element={<DashboardLayout><DashboardAnalytics /></DashboardLayout>} />
             <Route path="/dashboard/packages" element={<DashboardLayout><DashboardPackages /></DashboardLayout>} />
             <Route path="/dashboard/custom" element={<DashboardLayout><CustomDashboard /></DashboardLayout>} />
-            <Route path="/dashboard/settings" element={<DashboardLayout><GDPRSettings /></DashboardLayout>} />
+            <Route path="/dashboard/settings" element={<DashboardLayout><Settings /></DashboardLayout>} />
             <Route path="/demo" element={<Demo />} />
             <Route path="/om-oss" element={<AboutUs />} />
             <Route path="/gdpr" element={<GDPRSettings />} />
