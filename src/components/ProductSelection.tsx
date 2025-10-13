@@ -176,23 +176,23 @@ export const ProductSelection = () => {
     enterprise: string;
   }> = {
     100: {
-      pro: 1000,
-      business: 1500,
+      pro: 899,
+      business: 1499,
       enterprise: "Offert"
     },
     250: {
-      pro: 2500,
-      business: 3750,
+      pro: 1999,
+      business: 3499,
       enterprise: "Offert"
     },
     500: {
-      pro: 5000,
-      business: 7500,
+      pro: 3799,
+      business: 6499,
       enterprise: "Offert"
     },
     1000: {
-      pro: 10000,
-      business: 15000,
+      pro: 6999,
+      business: 11999,
       enterprise: "Offert"
     }
   };
@@ -200,6 +200,7 @@ export const ProductSelection = () => {
     title: string;
     fullDescription: string;
     features: string[];
+    hasMinutes?: boolean;
     pricing?: {
       pro: {
         price: string | number;
@@ -215,117 +216,119 @@ export const ProductSelection = () => {
       };
     };
   }> = {
-    restaurang: {
-      title: "AI-Receptionist & Restaurang (Krono)",
-      fullDescription: "Vår AI-receptionist, Krono, fungerar som er digitala medarbetare dygnet runt. Den hanterar inkommande samtal, SMS och e-post, vidarekopplar frågor till rätt avdelning och bokar möten automatiskt. Detta frigör tid för er personal och säkerställer att inga viktiga meddelanden missas.",
-      features: ["AI hanterar samtal, SMS och mejl 24/7", "Automatiska bokningar och vidarekoppling", "Snabb och professionell service", "Rapportering via dashboard", "Integration med befintliga system"],
+    krono: {
+      title: "🧠 Hiems Krono – AI Receptionist",
+      fullDescription: "Hanterar samtal, SMS & mejl dygnet runt.",
+      features: ["Hanterar samtal & SMS 24/7", "Bokning & avbokning", "Enkel röstprofil", "Grundläggande rapportering", "Integration med Google Kalender"],
+      hasMinutes: true,
       pricing: {
         pro: {
-          price: "Från 1 000 kr",
-          features: ["Grundläggande funktioner", "Email support"]
+          price: "Från 899 kr",
+          features: ["✅ Hanterar samtal & SMS 24/7", "✅ Bokning & avbokning", "✅ Enkel röstprofil", "✅ Grundläggande rapportering", "✅ Integration med Google Kalender"]
         },
         business: {
-          price: "Från 1 500 kr",
-          features: ["Avancerade funktioner", "Prioriterad support", "Anpassningar"]
+          price: "Från 1 499 kr",
+          features: ["Allt i Pro +", "✅ Flera röstprofiler", "✅ Anpassat samtalsflöde", "✅ Samtalsanalys & transkribering", "✅ Sammanfattning via mejl", "✅ CRM-integration (HubSpot, Pipedrive etc.)"]
         },
         enterprise: {
           price: "Offert",
-          features: ["Fullständig lösning", "Dedikerad support", "Konsultation"]
+          features: ["Allt i Business +", "✅ Fler språk & avancerad NLP", "✅ Egen AI-modellträning", "✅ Skräddarsydd dashboard", "✅ Obegränsad trafik & prioriterad support"]
         }
       }
     },
-    receptionist: {
-      title: "AI-Receptionist (Krono)",
-      fullDescription: "Vår AI-receptionist, Krono, fungerar som er digitala medarbetare dygnet runt. Den hanterar inkommande samtal, SMS och e-post, vidarekopplar frågor till rätt avdelning och bokar möten automatiskt.",
-      features: ["AI hanterar samtal, SMS och mejl 24/7", "Automatiska bokningar och vidarekoppling", "Snabb och professionell service", "Rapportering via dashboard", "Integration med befintliga system"],
+    gastro: {
+      title: "🍽️ Hiems Krono Gastro – AI Restaurang & Café",
+      fullDescription: "Hanterar bokningar, beställningar, menyfrågor och kundfeedback.",
+      features: ["Tar emot bokningar via telefon & SMS", "Bekräftar, ändrar & avbokar", "Enkel menyhantering", "Daglig sammanställning via mejl"],
+      hasMinutes: true,
       pricing: {
         pro: {
-          price: "Från 1 000 kr",
-          features: ["Grundläggande funktioner", "Email support"]
+          price: "Från 899 kr",
+          features: ["✅ Tar emot bokningar via telefon & SMS", "✅ Bekräftar, ändrar & avbokar", "✅ Enkel menyhantering", "✅ Daglig sammanställning via mejl"]
         },
         business: {
-          price: "Från 1 500 kr",
-          features: ["Avancerade funktioner", "Prioriterad support"]
+          price: "Från 1 499 kr",
+          features: ["Allt i Pro +", "✅ Integration med kassasystem (t.ex. Trivec)", "✅ Hanterar takeaway & leverans", "✅ Kundfeedback-analys", "✅ Statistik över toppbokningar & återkommande gäster"]
         },
         enterprise: {
           price: "Offert",
-          features: ["Fullständig lösning", "Dedikerad support"]
+          features: ["Allt i Business +", "✅ Fler språk", "✅ Egen röstprofil per restaurang", "✅ Avancerad menyoptimering & upsell-funktion"]
         }
       }
     },
-    rekrytering: {
-      title: "Rekrytering",
-      fullDescription: "Vårt Rekryteringspaket hjälper HR och rekryterare att spara tid och hitta rätt kandidater snabbare. AI-agenten screener inkommande CV:n, rankar kandidater baserat på kompetens och erfarenhet, och föreslår de bästa matcherna.",
-      features: ["Automatisk screening av kandidater", "Rankning och matchning", "Snabbare rekrytering av rätt talanger", "Dashboard med insikter", "Integration med befintliga HR-system"],
+    talent: {
+      title: "👔 Hiems Hermes Talent – AI Rekrytering",
+      fullDescription: "Screening, kandidatidentifiering & matchning.",
+      features: ["Automatisk screening av CV & ansökningar", "Enkel rankning", "Genererar shortlist", "Rapport via e-post"],
       pricing: {
         pro: {
-          price: 2000,
-          features: ["Screening av ansökningar", "LinkedIn-kandidatverktyg", "Grundläggande rapportering"]
+          price: 2999,
+          features: ["✅ Automatisk screening av CV & ansökningar", "✅ Enkel rankning", "✅ Genererar shortlist", "✅ Rapport via e-post"]
         },
         business: {
-          price: 4000,
-          features: ["Screening + ranking", "LinkedIn-kandidatverktyg", "Avancerad analys"]
+          price: 5499,
+          features: ["Allt i Pro +", "✅ Automatisk kandidat-sökning på LinkedIn", "✅ Intervju-sammanfattningar", "✅ Integration med rekryteringssystem (Teamtailor etc.)"]
         },
         enterprise: {
           price: "Offert",
-          features: ["Fullt AI-rekryteringssystem", "Full dashboard + integrationer", "Offertsupport"]
+          features: ["Allt i Business +", "✅ Skräddarsydd AI för branschspecifika roller", "✅ Prediktiv matchning baserat på kultur & värderingar"]
         }
       }
     },
-    prospekt: {
-      title: "Prospektering",
-      fullDescription: "Med Prospekteringspaketet får försäljningsteamet hjälp att fokusera på de mest lovande affärsmöjligheterna. AI-agenten identifierar potentiella kunder, kvalificerar dem baserat på intresse och beteende, och skapar en lista med varma leads.",
-      features: ["Identifiering av potentiella kunder", "Automatiserad kommunikation", "Lead scoring och prioritering", "Rapportering och analys"],
+    lead: {
+      title: "🚀 Hiems Hermes Lead – AI Prospektering",
+      fullDescription: "Identifierar, kvalificerar & följer upp leads automatiskt.",
+      features: ["Identifierar potentiella kunder", "Skapar kontaktlistor", "Skickar automatiska mejl & uppföljningar"],
       pricing: {
         pro: {
-          price: 3000,
-          features: ["100 prospekt/månad", "Automatiserade mejl", "Grundläggande uppföljning"]
+          price: 3999,
+          features: ["✅ Identifierar potentiella kunder", "✅ Skapar kontaktlistor", "✅ Skickar automatiska mejl & uppföljningar"]
         },
         business: {
-          price: 7500,
-          features: ["250 prospekt/månad", "Automatiserade mejl", "Avancerad uppföljning & lead scoring"]
+          price: 7499,
+          features: ["Allt i Pro +", "✅ AI skriver personliga mejl", "✅ CRM-integration", "✅ Automatiska uppföljningar tills svar"]
         },
         enterprise: {
           price: "Offert",
-          features: ["Obegränsat antal prospekt", "Fullt integrerat system", "Dedikerad support"]
+          features: ["Allt i Business +", "✅ Full funnel automation (mejl → möte → close)", "✅ Prediktiv lead scoring", "✅ Anpassad lead dashboard"]
         }
       }
     },
-    kvalitet: {
-      title: "Compliance",
-      fullDescription: "Compliance-paketet analyserar alla säljsamtal automatiskt och säkerställer att de följer företagets riktlinjer och regulatoriska krav. AI:n ger direkt feedback till säljteamet, visar förbättringsområden och coachar med konkreta råd.",
-      features: ["Automatisk analys av säljsamtal", "AI-driven feedback och coaching", "Skyddar varumärke med konsekvent kvalitet"],
+    thor: {
+      title: "🎧 Hiems Thor – AI Compliance & Coaching",
+      fullDescription: "Analyserar säljsamtal, ger feedback & coaching.",
+      features: ["Automatisk samtalsgranskning", "Grundläggande feedback via e-post"],
       pricing: {
         pro: {
-          price: 2000,
-          features: ["5 säljare", "Automatiserad kvalitetskontroll", "Grundläggande coaching"]
+          price: 499,
+          features: ["✅ Automatisk samtalsgranskning", "✅ Grundläggande feedback via e-post", "Per agent"]
         },
         business: {
-          price: 5000,
-          features: ["15 säljare", "Automatiserad kvalitetskontroll", "Avancerad coaching & feedback"]
+          price: 699,
+          features: ["Allt i Pro +", "✅ AI-coach", "✅ Anpassad rapport per säljare", "✅ Dashboard & statistik", "Per agent"]
         },
         enterprise: {
           price: "Offert",
-          features: ["Obegränsat antal säljare", "Fullt system + konsultation", "Dedikerad support"]
+          features: ["Allt i Business +", "✅ Obegränsade användare", "✅ Integration till CRM & samtalsplattformar"]
         }
       }
     },
-    hemsideoptimering: {
-      title: "Hemsideoptimering",
-      fullDescription: "Vårt hemsideoptimeringspaket analyserar varje besökares beteende och köphistorik. AI-agenten prioriterar och visar de produkter som är mest relevanta för varje kund, i realtid.",
-      features: ["Analys av användarbeteende", "Automatiskt visa rätt produkter för rätt kunder", "Högre konvertering & försäljning", "Dashboard med insikter"],
+    optimize: {
+      title: "🛍️ Hiems Hermes Optimize – AI Hemsideoptimering",
+      fullDescription: "Visa rätt produkter till rätt kunder, öka konvertering.",
+      features: ["Analys av kundbeteende", "Enkel produktprioritering per besökare", "Grundläggande rapport"],
       pricing: {
         pro: {
-          price: 2500,
-          features: ["Grundläggande analys", "Automatiserad produktprioritering", "Grundläggande rapportering"]
+          price: 2499,
+          features: ["✅ Analys av kundbeteende", "✅ Enkel produktprioritering per besökare", "✅ Grundläggande rapport"]
         },
         business: {
-          price: 5000,
-          features: ["Optimering + A/B-test", "Automatiserad produktprioritering", "Avancerad rapportering"]
+          price: 4999,
+          features: ["Allt i Pro +", "✅ AI som anpassar startsida & rekommendationer", "✅ A/B-testning", "✅ Integration med Shopify, WooCommerce m.fl."]
         },
         enterprise: {
           price: "Offert",
-          features: ["Full optimering + anpassade AI-lösningar", "Full dashboard + integrationer", "Dedikerad support"]
+          features: ["Allt i Business +", "✅ Prediktiv AI som lär sig säsongstrender & kundsegment", "✅ Egen dashboard"]
         }
       }
     }
@@ -483,67 +486,50 @@ export const ProductSelection = () => {
           </div>
 
           <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3 max-w-7xl mx-auto">
-            {/* Restaurangpaketet */}
+            {/* AI Receptionist - Krono */}
             <Card className="group relative overflow-hidden border-2 border-white/10 bg-gradient-card backdrop-blur-sm hover:border-accent/50 transition-all duration-500 hover:shadow-glow animate-scale-in">
               <div className="absolute inset-0 bg-gradient-gold opacity-0 group-hover:opacity-10 transition-opacity duration-500"></div>
               <CardHeader className="relative">
                 <div className="flex items-center justify-center w-20 h-20 rounded-2xl bg-accent/10 mb-6 group-hover:scale-110 group-hover:rotate-3 transition-all duration-500">
-                  <ChefHat className="h-10 w-10 text-accent" />
+                  <Headphones className="h-10 w-10 text-accent" />
                 </div>
-                <CardTitle className="text-2xl font-display mb-2">Restaurang</CardTitle>
-                <CardDescription className="text-base text-muted-foreground">Automatisera rutiner för restauranger och caféer med AI som hanterar bokningar, beställningar och kundfeedback.</CardDescription>
+                <CardTitle className="text-2xl font-display mb-2">AI Receptionist</CardTitle>
+                <CardDescription className="text-base text-muted-foreground">Hanterar samtal, SMS & mejl dygnet runt.</CardDescription>
               </CardHeader>
               <CardContent className="relative space-y-6">
                 <ul className="space-y-4 mb-8">
-                  <li className="flex items-start gap-3">
-                    <div className="flex-shrink-0 w-6 h-6 rounded-full bg-accent/10 flex items-center justify-center mt-0.5">
-                      <CheckCircle className="h-4 w-4 text-accent" />
-                    </div>
-                    <span className="text-foreground/80 leading-relaxed">Automatisk hantering av bokningar och beställningar</span>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <div className="flex-shrink-0 w-6 h-6 rounded-full bg-accent/10 flex items-center justify-center mt-0.5">
-                      <CheckCircle className="h-4 w-4 text-accent" />
-                    </div>
-                    <span className="text-foreground/80 leading-relaxed">Optimering av kök och serviceflöden</span>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <div className="flex-shrink-0 w-6 h-6 rounded-full bg-accent/10 flex items-center justify-center mt-0.5">
-                      <CheckCircle className="h-4 w-4 text-accent" />
-                    </div>
-                    <span className="text-foreground/80 leading-relaxed">Intelligent kundfeedback-hantering</span>
-                  </li>
+                  {packageDetails.krono.features.slice(0, 3).map((feature, idx) => (
+                    <li key={idx} className="flex items-start gap-3">
+                      <div className="flex-shrink-0 w-6 h-6 rounded-full bg-accent/10 flex items-center justify-center mt-0.5">
+                        <CheckCircle className="h-4 w-4 text-accent" />
+                      </div>
+                      <span className="text-foreground/80 leading-relaxed">{feature}</span>
+                    </li>
+                  ))}
                 </ul>
                 <Dialog>
                   <DialogTrigger asChild>
-                    <Button size="lg" className="w-full bg-primary text-primary-foreground hover:bg-primary/90 shadow-button group-hover:shadow-glow transition-all duration-300 font-semibold text-base h-14" onClick={() => handlePackageClick('restaurang')}>
+                    <Button size="lg" className="w-full bg-primary text-primary-foreground hover:bg-primary/90 shadow-button group-hover:shadow-glow transition-all duration-300 font-semibold text-base h-14" onClick={() => handlePackageClick('krono')}>
                       Läs mer
                       <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
                     </Button>
                   </DialogTrigger>
                   <DialogContent className="sm:max-w-4xl max-h-[90vh] overflow-y-auto">
                     <DialogHeader>
-                      <DialogTitle className="text-3xl font-display mb-4">{packageDetails.restaurang.title}</DialogTitle>
+                      <DialogTitle className="text-3xl font-display mb-4">{packageDetails.krono.title}</DialogTitle>
                       <DialogDescription className="text-base leading-relaxed">
-                        {packageDetails.restaurang.fullDescription}
+                        {packageDetails.krono.fullDescription}
                       </DialogDescription>
                     </DialogHeader>
                     
                     <div className="py-6">
-                      <h3 className="text-xl font-semibold mb-4">Vad ingår:</h3>
-                      <ul className="space-y-2 mb-6">
-                        {packageDetails.restaurang.features.map((feature, idx) => <li key={idx} className="flex items-start gap-2">
-                            <CheckCircle className="h-5 w-5 text-accent mt-0.5 flex-shrink-0" />
-                            <span>{feature}</span>
-                          </li>)}
-                      </ul>
-
                       <div className="mb-6">
                         <label className="text-sm font-medium mb-2 block">Välj antal minuter:</label>
                         <div className="flex items-center gap-4 mb-4">
                           <Slider value={[minuteOptions.indexOf(selectedMinutes)]} onValueChange={value => setSelectedMinutes(minuteOptions[value[0]])} max={minuteOptions.length - 1} step={1} className="flex-1" />
                           <span className="font-semibold min-w-[80px]">{selectedMinutes} min</span>
                         </div>
+                        <p className="text-sm text-muted-foreground">Överanvändning: 5 kr/min | SMS: 3 kr/st</p>
                       </div>
 
                       <div className="grid md:grid-cols-3 gap-4">
@@ -553,13 +539,13 @@ export const ProductSelection = () => {
                             <div className="text-3xl font-bold">{minutePricing[selectedMinutes].pro} kr<span className="text-sm font-normal">/mån</span></div>
                           </CardHeader>
                           <CardContent>
-                            <ul className="space-y-2 mb-4">
-                              {packageDetails.restaurang.pricing?.pro.features.map((f, i) => <li key={i} className="flex items-start gap-2 text-sm">
+                            <ul className="space-y-2 mb-4 text-sm">
+                              {packageDetails.krono.pricing?.pro.features.map((f, i) => <li key={i} className="flex items-start gap-2">
                                   <CheckCircle className="h-4 w-4 text-accent mt-0.5 flex-shrink-0" />
                                   <span>{f}</span>
                                 </li>)}
                             </ul>
-                            <Button onClick={() => handleCheckout('restaurang', 'pro')} className="w-full" disabled={isCheckingOut}>
+                            <Button onClick={() => handleCheckout('krono', 'pro')} className="w-full" disabled={isCheckingOut}>
                               Välj Pro
                             </Button>
                           </CardContent>
@@ -574,13 +560,13 @@ export const ProductSelection = () => {
                             <div className="text-3xl font-bold">{minutePricing[selectedMinutes].business} kr<span className="text-sm font-normal">/mån</span></div>
                           </CardHeader>
                           <CardContent>
-                            <ul className="space-y-2 mb-4">
-                              {packageDetails.restaurang.pricing?.business.features.map((f, i) => <li key={i} className="flex items-start gap-2 text-sm">
+                            <ul className="space-y-2 mb-4 text-sm">
+                              {packageDetails.krono.pricing?.business.features.map((f, i) => <li key={i} className="flex items-start gap-2">
                                   <CheckCircle className="h-4 w-4 text-accent mt-0.5 flex-shrink-0" />
                                   <span>{f}</span>
                                 </li>)}
                             </ul>
-                            <Button onClick={() => handleCheckout('restaurang', 'business')} className="w-full bg-accent hover:bg-accent/90" disabled={isCheckingOut}>
+                            <Button onClick={() => handleCheckout('krono', 'business')} className="w-full bg-accent hover:bg-accent/90" disabled={isCheckingOut}>
                               Välj Business
                             </Button>
                           </CardContent>
@@ -592,13 +578,13 @@ export const ProductSelection = () => {
                             <div className="text-3xl font-bold">{minutePricing[selectedMinutes].enterprise}</div>
                           </CardHeader>
                           <CardContent>
-                            <ul className="space-y-2 mb-4">
-                              {packageDetails.restaurang.pricing?.enterprise.features.map((f, i) => <li key={i} className="flex items-start gap-2 text-sm">
+                            <ul className="space-y-2 mb-4 text-sm">
+                              {packageDetails.krono.pricing?.enterprise.features.map((f, i) => <li key={i} className="flex items-start gap-2">
                                   <CheckCircle className="h-4 w-4 text-accent mt-0.5 flex-shrink-0" />
                                   <span>{f}</span>
                                 </li>)}
                             </ul>
-                            <Button onClick={() => handleCheckout('restaurang', 'enterprise')} variant="outline" className="w-full" disabled={isCheckingOut}>
+                            <Button onClick={() => handleCheckout('krono', 'enterprise')} variant="outline" className="w-full" disabled={isCheckingOut}>
                               Kontakta oss
                             </Button>
                           </CardContent>
@@ -610,85 +596,83 @@ export const ProductSelection = () => {
               </CardContent>
             </Card>
 
-            {/* Receptionistpaketet */}
+            {/* AI Restaurang - Gastro */}
             <Card className="group relative overflow-hidden border-2 border-white/10 bg-gradient-card backdrop-blur-sm hover:border-accent/50 transition-all duration-500 hover:shadow-glow animate-scale-in delay-100">
               <div className="absolute inset-0 bg-gradient-gold opacity-0 group-hover:opacity-10 transition-opacity duration-500"></div>
               <CardHeader className="relative">
                 <div className="flex items-center justify-center w-20 h-20 rounded-2xl bg-accent/10 mb-6 group-hover:scale-110 group-hover:rotate-3 transition-all duration-500">
-                  <Headphones className="h-10 w-10 text-accent" />
+                  <ChefHat className="h-10 w-10 text-accent" />
                 </div>
-                <CardTitle className="text-2xl font-display mb-2">Receptionist</CardTitle>
-                <CardDescription className="text-base text-muted-foreground">Virtuell AI-receptionist som hanterar samtal, SMS och mejl dygnet runt.</CardDescription>
+                <CardTitle className="text-2xl font-display mb-2">Restaurang & Café</CardTitle>
+                <CardDescription className="text-base text-muted-foreground">Hanterar bokningar, beställningar, menyfrågor och kundfeedback.</CardDescription>
               </CardHeader>
               <CardContent className="relative space-y-6">
                 <ul className="space-y-4 mb-8">
-                  <li className="flex items-start gap-3">
-                    <div className="flex-shrink-0 w-6 h-6 rounded-full bg-accent/10 flex items-center justify-center mt-0.5">
-                      <CheckCircle className="h-4 w-4 text-accent" />
-                    </div>
-                    <span className="text-foreground/80 leading-relaxed">24/7 hantering av samtal, SMS och mejl</span>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <div className="flex-shrink-0 w-6 h-6 rounded-full bg-accent/10 flex items-center justify-center mt-0.5">
-                      <CheckCircle className="h-4 w-4 text-accent" />
-                    </div>
-                    <span className="text-foreground/80 leading-relaxed">Automatiska bokningar och vidarekoppling</span>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <div className="flex-shrink-0 w-6 h-6 rounded-full bg-accent/10 flex items-center justify-center mt-0.5">
-                      <CheckCircle className="h-4 w-4 text-accent" />
-                    </div>
-                    <span className="text-foreground/80 leading-relaxed">Snabb och professionell service</span>
-                  </li>
+                  {packageDetails.gastro.features.map((feature, idx) => (
+                    <li key={idx} className="flex items-start gap-3">
+                      <div className="flex-shrink-0 w-6 h-6 rounded-full bg-accent/10 flex items-center justify-center mt-0.5">
+                        <CheckCircle className="h-4 w-4 text-accent" />
+                      </div>
+                      <span className="text-foreground/80 leading-relaxed">{feature}</span>
+                    </li>
+                  ))}
                 </ul>
                 <Dialog>
                   <DialogTrigger asChild>
-                    <Button size="lg" className="w-full bg-primary text-primary-foreground hover:bg-primary/90 shadow-button group-hover:shadow-glow transition-all duration-300 font-semibold text-base h-14" onClick={() => handlePackageClick('receptionist')}>
+                    <Button size="lg" className="w-full bg-primary text-primary-foreground hover:bg-primary/90 shadow-button group-hover:shadow-glow transition-all duration-300 font-semibold text-base h-14" onClick={() => handlePackageClick('gastro')}>
                       Läs mer
                       <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
                     </Button>
                   </DialogTrigger>
                   <DialogContent className="sm:max-w-4xl max-h-[90vh] overflow-y-auto">
                     <DialogHeader>
-                      <DialogTitle className="text-3xl font-display mb-4">{packageDetails.receptionist.title}</DialogTitle>
+                      <DialogTitle className="text-3xl font-display mb-4">{packageDetails.gastro.title}</DialogTitle>
                       <DialogDescription className="text-base leading-relaxed">
-                        {packageDetails.receptionist.fullDescription}
+                        {packageDetails.gastro.fullDescription}
                       </DialogDescription>
                     </DialogHeader>
                     
                     <div className="py-6">
-                      <h3 className="text-xl font-semibold mb-4">Vad ingår:</h3>
-                      <ul className="space-y-2 mb-6">
-                        {packageDetails.receptionist.features.map((feature, idx) => <li key={idx} className="flex items-start gap-2">
-                            <CheckCircle className="h-5 w-5 text-accent mt-0.5 flex-shrink-0" />
-                            <span>{feature}</span>
-                          </li>)}
-                      </ul>
+                      <div className="mb-6">
+                        <label className="text-sm font-medium mb-2 block">Välj antal minuter:</label>
+                        <div className="flex items-center gap-4 mb-4">
+                          <Slider value={[minuteOptions.indexOf(selectedMinutes)]} onValueChange={value => setSelectedMinutes(minuteOptions[value[0]])} max={minuteOptions.length - 1} step={1} className="flex-1" />
+                          <span className="font-semibold min-w-[80px]">{selectedMinutes} min</span>
+                        </div>
+                        <p className="text-sm text-muted-foreground">Överanvändning: 5 kr/min | SMS: 3 kr/st</p>
+                      </div>
 
                       <div className="grid md:grid-cols-3 gap-4">
-                        {['pro', 'business', 'enterprise'].map(tier => <Card key={tier} className={`border-2 ${tier === 'business' ? 'border-accent/50 relative' : 'hover:border-accent/50'} transition-colors`}>
-                            {tier === 'business' && <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-accent text-accent-foreground px-3 py-1 rounded-full text-xs font-semibold">
-                                POPULÄR
-                              </div>}
+                        {['pro', 'business', 'enterprise'].map(tier => (
+                          <Card key={tier} className={`border-2 ${tier === 'business' ? 'border-accent/50 relative' : 'hover:border-accent/50'} transition-colors`}>
+                            {tier === 'business' && <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-accent text-accent-foreground px-3 py-1 rounded-full text-xs font-semibold">POPULÄR</div>}
                             <CardHeader>
                               <CardTitle className="text-xl capitalize">{tier}</CardTitle>
                               <div className="text-3xl font-bold">
-                                {packageDetails.receptionist.pricing?.[tier as 'pro' | 'business' | 'enterprise'].price}
-                                {tier !== 'enterprise' && <span className="text-sm font-normal"> kr/mån</span>}
+                                {tier === 'enterprise' ? minutePricing[selectedMinutes].enterprise : `${minutePricing[selectedMinutes][tier as 'pro' | 'business']} kr`}
+                                {tier !== 'enterprise' && <span className="text-sm font-normal">/mån</span>}
                               </div>
                             </CardHeader>
                             <CardContent>
-                              <ul className="space-y-2 mb-4">
-                                {packageDetails.receptionist.pricing?.[tier as 'pro' | 'business' | 'enterprise'].features.map((f, i) => <li key={i} className="flex items-start gap-2 text-sm">
+                              <ul className="space-y-2 mb-4 text-sm">
+                                {packageDetails.gastro.pricing?.[tier as 'pro' | 'business' | 'enterprise'].features.map((f, i) => (
+                                  <li key={i} className="flex items-start gap-2">
                                     <CheckCircle className="h-4 w-4 text-accent mt-0.5 flex-shrink-0" />
                                     <span>{f}</span>
-                                  </li>)}
+                                  </li>
+                                ))}
                               </ul>
-                              <Button onClick={() => handleCheckout('receptionist', tier as 'pro' | 'business' | 'enterprise')} className={`w-full ${tier === 'business' ? 'bg-accent hover:bg-accent/90' : ''}`} variant={tier === 'enterprise' ? 'outline' : 'default'} disabled={isCheckingOut}>
+                              <Button 
+                                onClick={() => handleCheckout('gastro', tier as 'pro' | 'business' | 'enterprise')} 
+                                className={`w-full ${tier === 'business' ? 'bg-accent hover:bg-accent/90' : ''}`} 
+                                variant={tier === 'enterprise' ? 'outline' : 'default'} 
+                                disabled={isCheckingOut}
+                              >
                                 {tier === 'enterprise' ? 'Kontakta oss' : `Välj ${tier}`}
                               </Button>
                             </CardContent>
-                          </Card>)}
+                          </Card>
+                        ))}
                       </div>
                     </div>
                   </DialogContent>
@@ -696,85 +680,69 @@ export const ProductSelection = () => {
               </CardContent>
             </Card>
 
-            {/* Rekryteringspaketet */}
+            {/* AI Rekrytering - Talent */}
             <Card className="group relative overflow-hidden border-2 border-white/10 bg-gradient-card backdrop-blur-sm hover:border-accent/50 transition-all duration-500 hover:shadow-glow animate-scale-in delay-200">
               <div className="absolute inset-0 bg-gradient-gold opacity-0 group-hover:opacity-10 transition-opacity duration-500"></div>
               <CardHeader className="relative">
                 <div className="flex items-center justify-center w-20 h-20 rounded-2xl bg-accent/10 mb-6 group-hover:scale-110 group-hover:rotate-3 transition-all duration-500">
                   <UserCheck className="h-10 w-10 text-accent" />
                 </div>
-                <CardTitle className="text-2xl font-display mb-2">Rekrytering</CardTitle>
-                <CardDescription className="text-base text-muted-foreground">Effektivisera rekrytering med AI som screener, rankar och föreslår de bästa kandidaterna.</CardDescription>
+                <CardTitle className="text-2xl font-display mb-2">AI Rekrytering</CardTitle>
+                <CardDescription className="text-base text-muted-foreground">Screening, kandidatidentifiering & matchning.</CardDescription>
               </CardHeader>
               <CardContent className="relative space-y-6">
                 <ul className="space-y-4 mb-8">
-                  <li className="flex items-start gap-3">
-                    <div className="flex-shrink-0 w-6 h-6 rounded-full bg-accent/10 flex items-center justify-center mt-0.5">
-                      <CheckCircle className="h-4 w-4 text-accent" />
-                    </div>
-                    <span className="text-foreground/80 leading-relaxed">Automatisk screening av ansökningar</span>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <div className="flex-shrink-0 w-6 h-6 rounded-full bg-accent/10 flex items-center justify-center mt-0.5">
-                      <CheckCircle className="h-4 w-4 text-accent" />
-                    </div>
-                    <span className="text-foreground/80 leading-relaxed">Rankning och matchning av kandidater</span>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <div className="flex-shrink-0 w-6 h-6 rounded-full bg-accent/10 flex items-center justify-center mt-0.5">
-                      <CheckCircle className="h-4 w-4 text-accent" />
-                    </div>
-                    <span className="text-foreground/80 leading-relaxed">Snabbare rekrytering av rätt talanger</span>
-                  </li>
+                  {packageDetails.talent.features.map((feature, idx) => (
+                    <li key={idx} className="flex items-start gap-3">
+                      <div className="flex-shrink-0 w-6 h-6 rounded-full bg-accent/10 flex items-center justify-center mt-0.5">
+                        <CheckCircle className="h-4 w-4 text-accent" />
+                      </div>
+                      <span className="text-foreground/80 leading-relaxed">{feature}</span>
+                    </li>
+                  ))}
                 </ul>
                 <Dialog>
                   <DialogTrigger asChild>
-                    <Button size="lg" className="w-full bg-primary text-primary-foreground hover:bg-primary/90 shadow-button group-hover:shadow-glow transition-all duration-300 font-semibold text-base h-14" onClick={() => handlePackageClick('rekrytering')}>
+                    <Button size="lg" className="w-full bg-primary text-primary-foreground hover:bg-primary/90 shadow-button group-hover:shadow-glow transition-all duration-300 font-semibold text-base h-14" onClick={() => handlePackageClick('talent')}>
                       Läs mer
                       <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
                     </Button>
                   </DialogTrigger>
                   <DialogContent className="sm:max-w-4xl max-h-[90vh] overflow-y-auto">
                     <DialogHeader>
-                      <DialogTitle className="text-3xl font-display mb-4">{packageDetails.rekrytering.title}</DialogTitle>
+                      <DialogTitle className="text-3xl font-display mb-4">{packageDetails.talent.title}</DialogTitle>
                       <DialogDescription className="text-base leading-relaxed">
-                        {packageDetails.rekrytering.fullDescription}
+                        {packageDetails.talent.fullDescription}
                       </DialogDescription>
                     </DialogHeader>
                     
                     <div className="py-6">
-                      <h3 className="text-xl font-semibold mb-4">Vad ingår:</h3>
-                      <ul className="space-y-2 mb-6">
-                        {packageDetails.rekrytering.features.map((feature, idx) => <li key={idx} className="flex items-start gap-2">
-                            <CheckCircle className="h-5 w-5 text-accent mt-0.5 flex-shrink-0" />
-                            <span>{feature}</span>
-                          </li>)}
-                      </ul>
-
                       <div className="grid md:grid-cols-3 gap-4">
-                        {['pro', 'business', 'enterprise'].map(tier => <Card key={tier} className={`border-2 ${tier === 'business' ? 'border-accent/50 relative' : 'hover:border-accent/50'} transition-colors`}>
-                            {tier === 'business' && <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-accent text-accent-foreground px-3 py-1 rounded-full text-xs font-semibold">
-                                POPULÄR
-                              </div>}
+                        {['pro', 'business', 'enterprise'].map(tier => (
+                          <Card key={tier} className={`border-2 ${tier === 'business' ? 'border-accent/50 relative' : 'hover:border-accent/50'} transition-colors`}>
+                            {tier === 'business' && <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-accent text-accent-foreground px-3 py-1 rounded-full text-xs font-semibold">POPULÄR</div>}
                             <CardHeader>
                               <CardTitle className="text-xl capitalize">{tier}</CardTitle>
                               <div className="text-3xl font-bold">
-                                {packageDetails.rekrytering.pricing?.[tier as 'pro' | 'business' | 'enterprise'].price}
+                                {packageDetails.talent.pricing?.[tier as 'pro' | 'business' | 'enterprise'].price}
                                 {tier !== 'enterprise' && <span className="text-sm font-normal"> kr/mån</span>}
                               </div>
                             </CardHeader>
                             <CardContent>
-                              <ul className="space-y-2 mb-4">
-                                {packageDetails.rekrytering.pricing?.[tier as 'pro' | 'business' | 'enterprise'].features.map((f, i) => <li key={i} className="flex items-start gap-2 text-sm">
+                              <ul className="space-y-2 mb-4 text-sm">
+                                {packageDetails.talent.pricing?.[tier as 'pro' | 'business' | 'enterprise'].features.map((f, i) => (
+                                  <li key={i} className="flex items-start gap-2">
                                     <CheckCircle className="h-4 w-4 text-accent mt-0.5 flex-shrink-0" />
                                     <span>{f}</span>
-                                  </li>)}
+                                  </li>
+                                ))}
                               </ul>
-                              <Button onClick={() => handleCheckout('rekrytering', tier as 'pro' | 'business' | 'enterprise')} className={`w-full ${tier === 'business' ? 'bg-accent hover:bg-accent/90' : ''}`} variant={tier === 'enterprise' ? 'outline' : 'default'} disabled={isCheckingOut}>
+                              <Button onClick={() => handleCheckout('talent', tier as 'pro' | 'business' | 'enterprise')} className={`w-full ${tier === 'business' ? 'bg-accent hover:bg-accent/90' : ''}`} variant={tier === 'enterprise' ? 'outline' : 'default'} disabled={isCheckingOut}>
                                 {tier === 'enterprise' ? 'Kontakta oss' : `Välj ${tier}`}
                               </Button>
                             </CardContent>
-                          </Card>)}
+                          </Card>
+                        ))}
                       </div>
                     </div>
                   </DialogContent>
@@ -782,85 +750,69 @@ export const ProductSelection = () => {
               </CardContent>
             </Card>
 
-            {/* Prospektpaketet */}
+            {/* AI Prospektering - Lead */}
             <Card className="group relative overflow-hidden border-2 border-white/10 bg-gradient-card backdrop-blur-sm hover:border-accent/50 transition-all duration-500 hover:shadow-glow animate-scale-in">
               <div className="absolute inset-0 bg-gradient-gold opacity-0 group-hover:opacity-10 transition-opacity duration-500"></div>
               <CardHeader className="relative">
                 <div className="flex items-center justify-center w-20 h-20 rounded-2xl bg-accent/10 mb-6 group-hover:scale-110 group-hover:rotate-3 transition-all duration-500">
                   <TrendingUp className="h-10 w-10 text-accent" />
                 </div>
-                <CardTitle className="text-2xl font-display mb-2">Prospektering</CardTitle>
-                <CardDescription className="text-base text-muted-foreground">Öka er försäljningspipeline med AI som identifierar och kvalificerar potentiella kunder.</CardDescription>
+                <CardTitle className="text-2xl font-display mb-2">AI Prospektering</CardTitle>
+                <CardDescription className="text-base text-muted-foreground">Identifierar, kvalificerar & följer upp leads automatiskt.</CardDescription>
               </CardHeader>
               <CardContent className="relative space-y-6">
                 <ul className="space-y-4 mb-8">
-                  <li className="flex items-start gap-3">
-                    <div className="flex-shrink-0 w-6 h-6 rounded-full bg-accent/10 flex items-center justify-center mt-0.5">
-                      <CheckCircle className="h-4 w-4 text-accent" />
-                    </div>
-                    <span className="text-foreground/80 leading-relaxed">Automatisk identifiering av prospekt</span>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <div className="flex-shrink-0 w-6 h-6 rounded-full bg-accent/10 flex items-center justify-center mt-0.5">
-                      <CheckCircle className="h-4 w-4 text-accent" />
-                    </div>
-                    <span className="text-foreground/80 leading-relaxed">Kvalificering och skapande av leads</span>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <div className="flex-shrink-0 w-6 h-6 rounded-full bg-accent/10 flex items-center justify-center mt-0.5">
-                      <CheckCircle className="h-4 w-4 text-accent" />
-                    </div>
-                    <span className="text-foreground/80 leading-relaxed">Maximerar affärsmöjligheter</span>
-                  </li>
+                  {packageDetails.lead.features.map((feature, idx) => (
+                    <li key={idx} className="flex items-start gap-3">
+                      <div className="flex-shrink-0 w-6 h-6 rounded-full bg-accent/10 flex items-center justify-center mt-0.5">
+                        <CheckCircle className="h-4 w-4 text-accent" />
+                      </div>
+                      <span className="text-foreground/80 leading-relaxed">{feature}</span>
+                    </li>
+                  ))}
                 </ul>
                 <Dialog>
                   <DialogTrigger asChild>
-                    <Button size="lg" className="w-full bg-primary text-primary-foreground hover:bg-primary/90 shadow-button group-hover:shadow-glow transition-all duration-300 font-semibold text-base h-14" onClick={() => handlePackageClick('prospekt')}>
+                    <Button size="lg" className="w-full bg-primary text-primary-foreground hover:bg-primary/90 shadow-button group-hover:shadow-glow transition-all duration-300 font-semibold text-base h-14" onClick={() => handlePackageClick('lead')}>
                       Läs mer
                       <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
                     </Button>
                   </DialogTrigger>
                   <DialogContent className="sm:max-w-4xl max-h-[90vh] overflow-y-auto">
                     <DialogHeader>
-                      <DialogTitle className="text-3xl font-display mb-4">{packageDetails.prospekt.title}</DialogTitle>
+                      <DialogTitle className="text-3xl font-display mb-4">{packageDetails.lead.title}</DialogTitle>
                       <DialogDescription className="text-base leading-relaxed">
-                        {packageDetails.prospekt.fullDescription}
+                        {packageDetails.lead.fullDescription}
                       </DialogDescription>
                     </DialogHeader>
                     
                     <div className="py-6">
-                      <h3 className="text-xl font-semibold mb-4">Vad ingår:</h3>
-                      <ul className="space-y-2 mb-6">
-                        {packageDetails.prospekt.features.map((feature, idx) => <li key={idx} className="flex items-start gap-2">
-                            <CheckCircle className="h-5 w-5 text-accent mt-0.5 flex-shrink-0" />
-                            <span>{feature}</span>
-                          </li>)}
-                      </ul>
-
                       <div className="grid md:grid-cols-3 gap-4">
-                        {['pro', 'business', 'enterprise'].map(tier => <Card key={tier} className={`border-2 ${tier === 'business' ? 'border-accent/50 relative' : 'hover:border-accent/50'} transition-colors`}>
-                            {tier === 'business' && <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-accent text-accent-foreground px-3 py-1 rounded-full text-xs font-semibold">
-                                POPULÄR
-                              </div>}
+                        {['pro', 'business', 'enterprise'].map(tier => (
+                          <Card key={tier} className={`border-2 ${tier === 'business' ? 'border-accent/50 relative' : 'hover:border-accent/50'} transition-colors`}>
+                            {tier === 'business' && <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-accent text-accent-foreground px-3 py-1 rounded-full text-xs font-semibold">POPULÄR</div>}
                             <CardHeader>
                               <CardTitle className="text-xl capitalize">{tier}</CardTitle>
                               <div className="text-3xl font-bold">
-                                {packageDetails.prospekt.pricing?.[tier as 'pro' | 'business' | 'enterprise'].price}
+                                {packageDetails.lead.pricing?.[tier as 'pro' | 'business' | 'enterprise'].price}
                                 {tier !== 'enterprise' && <span className="text-sm font-normal"> kr/mån</span>}
                               </div>
                             </CardHeader>
                             <CardContent>
-                              <ul className="space-y-2 mb-4">
-                                {packageDetails.prospekt.pricing?.[tier as 'pro' | 'business' | 'enterprise'].features.map((f, i) => <li key={i} className="flex items-start gap-2 text-sm">
+                              <ul className="space-y-2 mb-4 text-sm">
+                                {packageDetails.lead.pricing?.[tier as 'pro' | 'business' | 'enterprise'].features.map((f, i) => (
+                                  <li key={i} className="flex items-start gap-2">
                                     <CheckCircle className="h-4 w-4 text-accent mt-0.5 flex-shrink-0" />
                                     <span>{f}</span>
-                                  </li>)}
+                                  </li>
+                                ))}
                               </ul>
-                              <Button onClick={() => handleCheckout('prospekt', tier as 'pro' | 'business' | 'enterprise')} className={`w-full ${tier === 'business' ? 'bg-accent hover:bg-accent/90' : ''}`} variant={tier === 'enterprise' ? 'outline' : 'default'} disabled={isCheckingOut}>
+                              <Button onClick={() => handleCheckout('lead', tier as 'pro' | 'business' | 'enterprise')} className={`w-full ${tier === 'business' ? 'bg-accent hover:bg-accent/90' : ''}`} variant={tier === 'enterprise' ? 'outline' : 'default'} disabled={isCheckingOut}>
                                 {tier === 'enterprise' ? 'Kontakta oss' : `Välj ${tier}`}
                               </Button>
                             </CardContent>
-                          </Card>)}
+                          </Card>
+                        ))}
                       </div>
                     </div>
                   </DialogContent>
@@ -868,7 +820,7 @@ export const ProductSelection = () => {
               </CardContent>
             </Card>
 
-            {/* Kvalitets- och feedbackpaketet */}
+            {/* AI Compliance - Thor */}
             <Card className="group relative overflow-hidden border-2 border-accent/30 bg-gradient-card backdrop-blur-sm hover:border-accent transition-all duration-500 hover:shadow-glow animate-scale-in delay-100">
               <div className="absolute inset-0 bg-gradient-gold opacity-5 group-hover:opacity-20 transition-opacity duration-500"></div>
               <div className="absolute top-4 right-4 px-3 py-1 bg-accent/20 rounded-full border border-accent/50">
@@ -878,42 +830,66 @@ export const ProductSelection = () => {
                 <div className="flex items-center justify-center w-20 h-20 rounded-2xl bg-accent/10 mb-6 group-hover:scale-110 group-hover:rotate-3 transition-all duration-500">
                   <MessageSquare className="h-10 w-10 text-accent" />
                 </div>
-                <CardTitle className="text-2xl font-display mb-2">Compliance</CardTitle>
-                <CardDescription className="text-base text-muted-foreground">Analysera säljsamtal med AI för kvalitetsgranskning och coaching</CardDescription>
+                <CardTitle className="text-2xl font-display mb-2">AI Compliance & Coaching</CardTitle>
+                <CardDescription className="text-base text-muted-foreground">Analyserar säljsamtal, ger feedback & coaching.</CardDescription>
               </CardHeader>
               <CardContent className="relative space-y-6">
                 <ul className="space-y-4 mb-8">
-                  <li className="flex items-start gap-3">
-                    <div className="flex-shrink-0 w-6 h-6 rounded-full bg-accent/10 flex items-center justify-center mt-0.5">
-                      <CheckCircle className="h-4 w-4 text-accent" />
-                    </div>
-                    <span className="text-foreground/80 leading-relaxed">100% automatisk kvalitetsgranskning</span>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <div className="flex-shrink-0 w-6 h-6 rounded-full bg-accent/10 flex items-center justify-center mt-0.5">
-                      <CheckCircle className="h-4 w-4 text-accent" />
-                    </div>
-                    <span className="text-foreground/80 leading-relaxed">AI-driven coaching och feedback</span>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <div className="flex-shrink-0 w-6 h-6 rounded-full bg-accent/10 flex items-center justify-center mt-0.5">
-                      <CheckCircle className="h-4 w-4 text-accent" />
-                    </div>
-                    <span className="text-foreground/80 leading-relaxed">Skyddar varumärket med konsekvent kvalitet</span>
-                  </li>
+                  {packageDetails.thor.features.map((feature, idx) => (
+                    <li key={idx} className="flex items-start gap-3">
+                      <div className="flex-shrink-0 w-6 h-6 rounded-full bg-accent/10 flex items-center justify-center mt-0.5">
+                        <CheckCircle className="h-4 w-4 text-accent" />
+                      </div>
+                      <span className="text-foreground/80 leading-relaxed">{feature}</span>
+                    </li>
+                  ))}
                 </ul>
                 <Dialog>
                   <DialogTrigger asChild>
-                    <Button size="lg" className="w-full bg-gradient-gold text-accent-foreground hover:opacity-90 shadow-button group-hover:shadow-glow transition-all duration-300 font-semibold text-base h-14" onClick={() => handlePackageClick('kvalitet')}>
+                    <Button size="lg" className="w-full bg-gradient-gold text-accent-foreground hover:opacity-90 shadow-button group-hover:shadow-glow transition-all duration-300 font-semibold text-base h-14" onClick={() => handlePackageClick('thor')}>
                       Läs mer
                       <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
                     </Button>
                   </DialogTrigger>
                   <DialogContent className="sm:max-w-4xl max-h-[90vh] overflow-y-auto">
                     <DialogHeader>
-                      <DialogTitle className="text-3xl font-display mb-4">{packageDetails.kvalitet.title}</DialogTitle>
+                      <DialogTitle className="text-3xl font-display mb-4">{packageDetails.thor.title}</DialogTitle>
                       <DialogDescription className="text-base leading-relaxed">
-                        {packageDetails.kvalitet.fullDescription}
+                        {packageDetails.thor.fullDescription}
+                      </DialogDescription>
+                    </DialogHeader>
+                    
+                    <div className="py-6">
+                      <div className="grid md:grid-cols-3 gap-4">
+                        {['pro', 'business', 'enterprise'].map(tier => (
+                          <Card key={tier} className={`border-2 ${tier === 'business' ? 'border-accent/50 relative' : 'hover:border-accent/50'} transition-colors`}>
+                            {tier === 'business' && <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-accent text-accent-foreground px-3 py-1 rounded-full text-xs font-semibold">POPULÄR</div>}
+                            <CardHeader>
+                              <CardTitle className="text-xl capitalize">{tier}</CardTitle>
+                              <div className="text-3xl font-bold">
+                                {packageDetails.thor.pricing?.[tier as 'pro' | 'business' | 'enterprise'].price}
+                                {tier !== 'enterprise' && <span className="text-sm font-normal"> kr/mån</span>}
+                              </div>
+                            </CardHeader>
+                            <CardContent>
+                              <ul className="space-y-2 mb-4 text-sm">
+                                {packageDetails.thor.pricing?.[tier as 'pro' | 'business' | 'enterprise'].features.map((f, i) => (
+                                  <li key={i} className="flex items-start gap-2">
+                                    <CheckCircle className="h-4 w-4 text-accent mt-0.5 flex-shrink-0" />
+                                    <span>{f}</span>
+                                  </li>
+                                ))}
+                              </ul>
+                              <Button onClick={() => handleCheckout('thor', tier as 'pro' | 'business' | 'enterprise')} className={`w-full ${tier === 'business' ? 'bg-accent hover:bg-accent/90' : ''}`} variant={tier === 'enterprise' ? 'outline' : 'default'} disabled={isCheckingOut}>
+                                {tier === 'enterprise' ? 'Kontakta oss' : `Välj ${tier}`}
+                              </Button>
+                            </CardContent>
+                          </Card>
+                        ))}
+                      </div>
+                    </div>
+                  </DialogContent>
+                </Dialog>
                       </DialogDescription>
                     </DialogHeader>
                     
