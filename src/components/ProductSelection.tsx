@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { ArrowRight, CheckCircle, Zap, Target, Sparkles, ChefHat, Headphones, UserCheck, TrendingUp, MessageSquare, ShoppingCart, Award, Send, Loader2, Phone, Shield, Clock } from "lucide-react";
+import { ArrowRight, CheckCircle, Zap, Target, Sparkles, ChefHat, Headphones, UserCheck, TrendingUp, MessageSquare, ShoppingCart, Award, Send, Loader2, Phone } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { useState, useRef, useEffect } from "react";
@@ -17,16 +17,6 @@ import { useAuth } from "@/hooks/useAuth";
 import { useCart } from "@/hooks/useCart";
 import { EnterpriseContactModal } from "@/components/EnterpriseContactModal";
 import { availablePackages } from "@/components/dashboard/PackagesData";
-import { AnimatedBackground } from "@/components/AnimatedBackground";
-import { AnimatedCounter } from "@/components/AnimatedCounter";
-import { useInView } from 'react-intersection-observer';
-import heroImage from "@/assets/hero-dashboard.png";
-import kronoImage from "@/assets/krono-product.png";
-import gastroImage from "@/assets/gastro-product.png";
-import talentImage from "@/assets/talent-product.png";
-import leadImage from "@/assets/lead-product.png";
-import thorImage from "@/assets/thor-product.png";
-import kronoAvatar from "@/assets/krono-avatar.png";
 interface Message {
   role: 'user' | 'assistant';
   content: string;
@@ -53,28 +43,6 @@ export const ProductSelection = () => {
   const [selectedEnterpriseProduct, setSelectedEnterpriseProduct] = useState<string>('');
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
-
-  // Intersection Observer hooks for scroll animations
-  const [heroRef, heroInView] = useInView({
-    triggerOnce: true,
-    threshold: 0.1,
-  });
-
-  const [whatWeDoRef, whatWeDoInView] = useInView({
-    triggerOnce: true,
-    threshold: 0.2,
-  });
-
-  const [productsRef, productsInView] = useInView({
-    triggerOnce: true,
-    threshold: 0.1,
-  });
-
-  const [whyHiemsRef, whyHiemsInView] = useInView({
-    triggerOnce: true,
-    threshold: 0.2,
-  });
-
   useEffect(() => {
     if (scrollRef.current) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
@@ -651,19 +619,8 @@ export const ProductSelection = () => {
             </Card>
 
             {/* AI Restaurang - Gastro */}
-            <Card className={`group relative overflow-hidden border-2 border-white/10 bg-gradient-card backdrop-blur-sm hover:border-accent/50 transition-all duration-500 hover:shadow-elegant hover:-translate-y-2 ${productsInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`} style={{ transitionDelay: productsInView ? '100ms' : '0ms' }}>
+            <Card className="group relative overflow-hidden border-2 border-white/10 bg-gradient-card backdrop-blur-sm hover:border-accent/50 hover:scale-[1.02] transition-all duration-500 hover:shadow-glow animate-scale-in delay-100">
               <div className="absolute inset-0 bg-gradient-gold opacity-0 group-hover:opacity-10 transition-opacity duration-500"></div>
-              
-              {/* Product Image */}
-              <div className="relative h-64 overflow-hidden">
-                <img 
-                  src={gastroImage} 
-                  alt="Restaurant AI" 
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-card via-card/60 to-transparent"></div>
-              </div>
-
               <CardHeader className="relative p-10">
                 <div className="flex items-center justify-center w-20 h-20 rounded-2xl bg-accent/10 mb-6 group-hover:scale-110 group-hover:rotate-3 transition-all duration-500">
                   <ChefHat className="h-10 w-10 text-accent" />
@@ -746,19 +703,8 @@ export const ProductSelection = () => {
             </Card>
 
             {/* AI Rekrytering - Talent */}
-            <Card className={`group relative overflow-hidden border-2 border-white/10 bg-gradient-card backdrop-blur-sm hover:border-accent/50 transition-all duration-500 hover:shadow-elegant hover:-translate-y-2 ${productsInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`} style={{ transitionDelay: productsInView ? '200ms' : '0ms' }}>
+            <Card className="group relative overflow-hidden border-2 border-white/10 bg-gradient-card backdrop-blur-sm hover:border-accent/50 hover:scale-[1.02] transition-all duration-500 hover:shadow-glow animate-scale-in delay-200">
               <div className="absolute inset-0 bg-gradient-gold opacity-0 group-hover:opacity-10 transition-opacity duration-500"></div>
-              
-              {/* Product Image */}
-              <div className="relative h-64 overflow-hidden">
-                <img 
-                  src={talentImage} 
-                  alt="AI Recruitment" 
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-card via-card/60 to-transparent"></div>
-              </div>
-
               <CardHeader className="relative p-10">
                 <div className="flex items-center justify-center w-20 h-20 rounded-2xl bg-accent/10 mb-6 group-hover:scale-110 group-hover:rotate-3 transition-all duration-500">
                   <UserCheck className="h-10 w-10 text-accent" />
@@ -827,19 +773,8 @@ export const ProductSelection = () => {
             </Card>
 
             {/* AI Prospektering - Lead */}
-            <Card className={`group relative overflow-hidden border-2 border-white/10 bg-gradient-card backdrop-blur-sm hover:border-accent/50 transition-all duration-500 hover:shadow-elegant hover:-translate-y-2 ${productsInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`} style={{ transitionDelay: productsInView ? '300ms' : '0ms' }}>
+            <Card className="group relative overflow-hidden border-2 border-white/10 bg-gradient-card backdrop-blur-sm hover:border-accent/50 hover:scale-[1.02] transition-all duration-500 hover:shadow-glow animate-scale-in">
               <div className="absolute inset-0 bg-gradient-gold opacity-0 group-hover:opacity-10 transition-opacity duration-500"></div>
-              
-              {/* Product Image */}
-              <div className="relative h-64 overflow-hidden">
-                <img 
-                  src={leadImage} 
-                  alt="AI Lead Generation" 
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-card via-card/60 to-transparent"></div>
-              </div>
-
               <CardHeader className="relative p-10">
                 <div className="flex items-center justify-center w-20 h-20 rounded-2xl bg-accent/10 mb-6 group-hover:scale-110 group-hover:rotate-3 transition-all duration-500">
                   <TrendingUp className="h-10 w-10 text-accent" />
@@ -908,24 +843,11 @@ export const ProductSelection = () => {
             </Card>
 
             {/* AI Compliance - Thor */}
-            <Card className={`group relative overflow-hidden border-2 border-accent/30 bg-gradient-card backdrop-blur-sm hover:border-accent transition-all duration-500 hover:shadow-elegant hover:-translate-y-2 ${productsInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`} style={{ transitionDelay: productsInView ? '400ms' : '0ms' }}>
+            <Card className="group relative overflow-hidden border-2 border-accent/30 bg-gradient-card backdrop-blur-sm hover:border-accent hover:scale-[1.02] transition-all duration-500 hover:shadow-glow animate-scale-in delay-100">
               <div className="absolute inset-0 bg-gradient-gold opacity-5 group-hover:opacity-20 transition-opacity duration-500"></div>
-              
-              {/* Product Image */}
-              <div className="relative h-64 overflow-hidden">
-                <img 
-                  src={thorImage} 
-                  alt="AI Compliance" 
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-card via-card/60 to-transparent"></div>
-                <div className="absolute top-4 right-4">
-                  <div className="bg-accent/90 text-accent-foreground px-3 py-1 rounded-full text-xs font-semibold animate-scale-in">
-                    POPULÄR
-                  </div>
-                </div>
+              <div className="absolute top-4 right-4 px-3 py-1 bg-accent/20 rounded-full border border-accent/50">
+                <span className="text-xs font-semibold text-accent">POPULÄR</span>
               </div>
-
               <CardHeader className="relative p-10">
                 <div className="flex items-center justify-center w-20 h-20 rounded-2xl bg-accent/10 mb-6 group-hover:scale-110 group-hover:rotate-3 transition-all duration-500">
                   <MessageSquare className="h-10 w-10 text-accent" />
@@ -997,7 +919,7 @@ export const ProductSelection = () => {
       </section>
 
       {/* Varför Hiems Section */}
-      <section ref={whyHiemsRef} className="relative py-24 bg-white/5">
+      <section className="relative py-24 bg-white/5">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <div className="mx-auto max-w-3xl text-center mb-16 animate-fade-in">
             <h2 className="text-4xl font-display font-bold text-white mb-4">Varför Hiems?</h2>
@@ -1068,34 +990,14 @@ export const ProductSelection = () => {
               <div className="relative bg-white/5 backdrop-blur-sm">
                 <ScrollArea className="h-[400px] p-6" ref={scrollRef}>
                   <div className="space-y-4">
-                    {messages.map((msg, idx) => <div key={idx} className={`flex gap-3 ${msg.role === 'user' ? 'justify-end' : 'justify-start'} animate-fade-in`}>
-                        {msg.role === 'assistant' && (
-                          <div className="flex-shrink-0">
-                            <img 
-                              src={kronoAvatar} 
-                              alt="Krono" 
-                              className="w-10 h-10 rounded-full border-2 border-accent/50"
-                            />
-                          </div>
-                        )}
-                        <div className={`max-w-[80%] rounded-2xl px-4 py-2.5 ${msg.role === 'user' ? 'bg-white text-primary shadow-sm' : 'bg-white/10 text-white backdrop-blur-sm border border-white/20'}`}>
+                    {messages.map((msg, idx) => <div key={idx} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+                        <div className={`max-w-[80%] rounded-2xl px-4 py-2.5 ${msg.role === 'user' ? 'bg-white text-primary' : 'bg-white/10 text-white backdrop-blur-sm border border-white/20'}`}>
                           <p className="text-sm whitespace-pre-wrap">{msg.content}</p>
                         </div>
                       </div>)}
-                    {isLoading && <div className="flex justify-start gap-3 animate-fade-in">
-                        <div className="flex-shrink-0">
-                          <img 
-                            src={kronoAvatar} 
-                            alt="Krono" 
-                            className="w-10 h-10 rounded-full border-2 border-accent/50"
-                          />
-                        </div>
+                    {isLoading && <div className="flex justify-start">
                         <div className="bg-white/10 rounded-2xl px-4 py-2.5 backdrop-blur-sm border border-white/20">
-                          <div className="flex gap-1">
-                            <div className="w-2 h-2 bg-white/60 rounded-full animate-pulse" style={{ animationDelay: '0ms' }}></div>
-                            <div className="w-2 h-2 bg-white/60 rounded-full animate-pulse" style={{ animationDelay: '150ms' }}></div>
-                            <div className="w-2 h-2 bg-white/60 rounded-full animate-pulse" style={{ animationDelay: '300ms' }}></div>
-                          </div>
+                          <Loader2 className="h-4 w-4 animate-spin text-white" />
                         </div>
                       </div>}
                   </div>
@@ -1104,8 +1006,8 @@ export const ProductSelection = () => {
                 {/* Input */}
                 <div className="p-6 border-t border-white/10">
                   <div className="flex gap-3">
-                    <Input ref={inputRef} value={input} onChange={e => setInput(e.target.value)} onKeyDown={handleKeyPress} placeholder="Skriv ditt meddelande till Krono..." disabled={isLoading} className="flex-1 bg-white/10 border-white/20 text-white placeholder:text-white/50 focus:bg-white/15 focus:border-accent/50 transition-all" />
-                    <Button onClick={handleSend} disabled={!input.trim() || isLoading} size="icon" className="bg-gradient-gold text-deep-navy hover:opacity-90 h-10 w-10 transition-all hover:shadow-glow">
+                    <Input ref={inputRef} value={input} onChange={e => setInput(e.target.value)} onKeyDown={handleKeyPress} placeholder="Skriv ditt meddelande till Krono..." disabled={isLoading} className="flex-1 bg-white/10 border-white/20 text-white placeholder:text-white/50 focus:bg-white/15" />
+                    <Button onClick={handleSend} disabled={!input.trim() || isLoading} size="icon" className="bg-white text-primary hover:bg-white/90 h-10 w-10">
                       <Send className="h-4 w-4" />
                     </Button>
                   </div>
