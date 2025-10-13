@@ -550,30 +550,30 @@ export const ProductSelection = () => {
             <p className="text-lg text-white/80">Vi har utvecklat färdiga paket för att göra processen så snabb och smidig som möjligt. Dessa skräddarsys för att passa just er verksamhet och levereras på högst två veckor – så ni snabbt kan börja effektivisera och växa er verksamhet. </p>
           </div>
 
-          <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3 max-w-7xl mx-auto">
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-5 max-w-[1600px] mx-auto">
             {/* AI Receptionist - Krono */}
             <AnimatedSection delay={0}>
             <Card className="group relative overflow-hidden border-2 border-white/10 bg-gradient-card backdrop-blur-sm hover:border-accent/50 hover:scale-[1.02] transition-all duration-500 hover:shadow-glow h-full flex flex-col">
               <div className="absolute inset-0 bg-gradient-gold opacity-0 group-hover:opacity-10 transition-opacity duration-500"></div>
-              <CardHeader className="relative p-10">
-                <div className="flex items-center justify-center w-20 h-20 rounded-2xl bg-accent/10 mb-6 group-hover:scale-110 group-hover:rotate-3 transition-all duration-500">
-                  <Headphones className="h-10 w-10 text-accent" />
+              <CardHeader className="relative p-6">
+                <div className="flex items-center justify-center w-16 h-16 rounded-2xl bg-accent/10 mb-4 group-hover:scale-110 group-hover:rotate-3 transition-all duration-500">
+                  <Headphones className="h-8 w-8 text-accent" />
                 </div>
-                <CardTitle className="text-2xl font-display mb-2">AI Receptionist</CardTitle>
-                <CardDescription className="text-base text-muted-foreground">Hanterar samtal, SMS & mejl dygnet runt.</CardDescription>
+                <CardTitle className="text-xl font-display mb-2">AI Receptionist</CardTitle>
+                <CardDescription className="text-sm text-muted-foreground">Hanterar samtal, SMS & mejl dygnet runt.</CardDescription>
               </CardHeader>
-              <CardContent className="relative space-y-6 p-10 pt-0 flex-1 flex flex-col">
-                <ul className="space-y-4 mb-8 flex-1">
-                  {packageDetails.krono.features.slice(0, 3).map((feature, idx) => <li key={idx} className="flex items-start gap-3">
-                      <div className="flex-shrink-0 w-6 h-6 rounded-full bg-accent/10 flex items-center justify-center mt-0.5">
-                        <CheckCircle className="h-4 w-4 text-accent" />
+              <CardContent className="relative space-y-4 p-6 pt-0 flex-1 flex flex-col">
+                <ul className="space-y-3 mb-6 flex-1">
+                  {packageDetails.krono.features.slice(0, 3).map((feature, idx) => <li key={idx} className="flex items-start gap-2">
+                      <div className="flex-shrink-0 w-5 h-5 rounded-full bg-accent/10 flex items-center justify-center mt-0.5">
+                        <CheckCircle className="h-3 w-3 text-accent" />
                       </div>
-                      <span className="text-foreground/80 leading-relaxed">{feature}</span>
+                      <span className="text-foreground/80 leading-relaxed text-sm">{feature}</span>
                     </li>)}
                 </ul>
                 <Dialog>
                   <DialogTrigger asChild>
-                    <Button size="lg" className="w-full bg-primary text-primary-foreground hover:bg-primary/90 shadow-button group-hover:shadow-glow transition-all duration-300 font-semibold text-base h-14 mt-auto" onClick={() => handlePackageClick('krono')}>
+                    <Button size="lg" className="w-full bg-primary text-primary-foreground hover:bg-primary/90 shadow-button group-hover:shadow-glow transition-all duration-300 font-semibold text-sm h-12 mt-auto" onClick={() => handlePackageClick('krono')}>
                       Läs mer
                       <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
                     </Button>
@@ -665,25 +665,25 @@ export const ProductSelection = () => {
             <AnimatedSection delay={100}>
             <Card className="group relative overflow-hidden border-2 border-white/10 bg-gradient-card backdrop-blur-sm hover:border-accent/50 hover:scale-[1.02] transition-all duration-500 hover:shadow-glow h-full flex flex-col">
               <div className="absolute inset-0 bg-gradient-gold opacity-0 group-hover:opacity-10 transition-opacity duration-500"></div>
-              <CardHeader className="relative p-10">
-                <div className="flex items-center justify-center w-20 h-20 rounded-2xl bg-accent/10 mb-6 group-hover:scale-110 group-hover:rotate-3 transition-all duration-500">
-                  <ChefHat className="h-10 w-10 text-accent" />
+              <CardHeader className="relative p-6">
+                <div className="flex items-center justify-center w-16 h-16 rounded-2xl bg-accent/10 mb-4 group-hover:scale-110 group-hover:rotate-3 transition-all duration-500">
+                  <ChefHat className="h-8 w-8 text-accent" />
                 </div>
-                <CardTitle className="text-2xl font-display mb-2">Restaurang & Café</CardTitle>
-                <CardDescription className="text-base text-muted-foreground">Hanterar bokningar, beställningar, menyfrågor och kundfeedback.</CardDescription>
+                <CardTitle className="text-xl font-display mb-2">Restaurang & Café</CardTitle>
+                <CardDescription className="text-sm text-muted-foreground">Hanterar bokningar, beställningar, menyfrågor och kundfeedback.</CardDescription>
               </CardHeader>
-              <CardContent className="relative space-y-6 p-10 pt-0 flex-1 flex flex-col">
-                <ul className="space-y-4 mb-8 flex-1">
-                  {packageDetails.gastro.features.map((feature, idx) => <li key={idx} className="flex items-start gap-3">
-                      <div className="flex-shrink-0 w-6 h-6 rounded-full bg-accent/10 flex items-center justify-center mt-0.5">
-                        <CheckCircle className="h-4 w-4 text-accent" />
+              <CardContent className="relative space-y-4 p-6 pt-0 flex-1 flex flex-col">
+                <ul className="space-y-3 mb-6 flex-1">
+                  {packageDetails.gastro.features.map((feature, idx) => <li key={idx} className="flex items-start gap-2">
+                      <div className="flex-shrink-0 w-5 h-5 rounded-full bg-accent/10 flex items-center justify-center mt-0.5">
+                        <CheckCircle className="h-3 w-3 text-accent" />
                       </div>
-                      <span className="text-foreground/80 leading-relaxed">{feature}</span>
+                      <span className="text-foreground/80 leading-relaxed text-sm">{feature}</span>
                     </li>)}
                 </ul>
                 <Dialog>
                   <DialogTrigger asChild>
-                    <Button size="lg" className="w-full bg-primary text-primary-foreground hover:bg-primary/90 shadow-button group-hover:shadow-glow transition-all duration-300 font-semibold text-base h-14 mt-auto" onClick={() => handlePackageClick('gastro')}>
+                    <Button size="lg" className="w-full bg-primary text-primary-foreground hover:bg-primary/90 shadow-button group-hover:shadow-glow transition-all duration-300 font-semibold text-sm h-12 mt-auto" onClick={() => handlePackageClick('gastro')}>
                       Läs mer
                       <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
                     </Button>
@@ -738,27 +738,27 @@ export const ProductSelection = () => {
 
             {/* AI Rekrytering - Talent */}
             <AnimatedSection delay={200}>
-            <Card className="group relative overflow-hidden border-2 border-white/10 bg-gradient-card backdrop-blur-sm hover:border-accent/50 hover:scale-[1.02] transition-all duration-500 hover:shadow-glow h-full">
+            <Card className="group relative overflow-hidden border-2 border-white/10 bg-gradient-card backdrop-blur-sm hover:border-accent/50 hover:scale-[1.02] transition-all duration-500 hover:shadow-glow h-full flex flex-col">
               <div className="absolute inset-0 bg-gradient-gold opacity-0 group-hover:opacity-10 transition-opacity duration-500"></div>
-              <CardHeader className="relative p-10">
-                <div className="flex items-center justify-center w-20 h-20 rounded-2xl bg-accent/10 mb-6 group-hover:scale-110 group-hover:rotate-3 transition-all duration-500">
-                  <UserCheck className="h-10 w-10 text-accent" />
+              <CardHeader className="relative p-6">
+                <div className="flex items-center justify-center w-16 h-16 rounded-2xl bg-accent/10 mb-4 group-hover:scale-110 group-hover:rotate-3 transition-all duration-500">
+                  <UserCheck className="h-8 w-8 text-accent" />
                 </div>
-                <CardTitle className="text-2xl font-display mb-2">AI Rekrytering</CardTitle>
-                <CardDescription className="text-base text-muted-foreground">Screening, kandidatidentifiering & matchning.</CardDescription>
+                <CardTitle className="text-xl font-display mb-2">AI Rekrytering</CardTitle>
+                <CardDescription className="text-sm text-muted-foreground">Screening, kandidatidentifiering & matchning.</CardDescription>
               </CardHeader>
-              <CardContent className="relative space-y-6 p-10 pt-0">
-                <ul className="space-y-4 mb-8">
-                  {packageDetails.talent.features.map((feature, idx) => <li key={idx} className="flex items-start gap-3">
-                      <div className="flex-shrink-0 w-6 h-6 rounded-full bg-accent/10 flex items-center justify-center mt-0.5">
-                        <CheckCircle className="h-4 w-4 text-accent" />
+              <CardContent className="relative space-y-4 p-6 pt-0 flex-1 flex flex-col">
+                <ul className="space-y-3 mb-6 flex-1">
+                  {packageDetails.talent.features.map((feature, idx) => <li key={idx} className="flex items-start gap-2">
+                      <div className="flex-shrink-0 w-5 h-5 rounded-full bg-accent/10 flex items-center justify-center mt-0.5">
+                        <CheckCircle className="h-3 w-3 text-accent" />
                       </div>
-                      <span className="text-foreground/80 leading-relaxed">{feature}</span>
+                      <span className="text-foreground/80 leading-relaxed text-sm">{feature}</span>
                     </li>)}
                 </ul>
                 <Dialog>
                   <DialogTrigger asChild>
-                    <Button size="lg" className="w-full bg-primary text-primary-foreground hover:bg-primary/90 shadow-button group-hover:shadow-glow transition-all duration-300 font-semibold text-base h-14 mt-auto" onClick={() => handlePackageClick('talent')}>
+                    <Button size="lg" className="w-full bg-primary text-primary-foreground hover:bg-primary/90 shadow-button group-hover:shadow-glow transition-all duration-300 font-semibold text-sm h-12 mt-auto" onClick={() => handlePackageClick('talent')}>
                       Läs mer
                       <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
                     </Button>
@@ -804,27 +804,27 @@ export const ProductSelection = () => {
 
             {/* AI Prospektering - Lead */}
             <AnimatedSection delay={300}>
-            <Card className="group relative overflow-hidden border-2 border-white/10 bg-gradient-card backdrop-blur-sm hover:border-accent/50 hover:scale-[1.02] transition-all duration-500 hover:shadow-glow h-full">
+            <Card className="group relative overflow-hidden border-2 border-white/10 bg-gradient-card backdrop-blur-sm hover:border-accent/50 hover:scale-[1.02] transition-all duration-500 hover:shadow-glow h-full flex flex-col">
               <div className="absolute inset-0 bg-gradient-gold opacity-0 group-hover:opacity-10 transition-opacity duration-500"></div>
-              <CardHeader className="relative p-10">
-                <div className="flex items-center justify-center w-20 h-20 rounded-2xl bg-accent/10 mb-6 group-hover:scale-110 group-hover:rotate-3 transition-all duration-500">
-                  <TrendingUp className="h-10 w-10 text-accent" />
+              <CardHeader className="relative p-6">
+                <div className="flex items-center justify-center w-16 h-16 rounded-2xl bg-accent/10 mb-4 group-hover:scale-110 group-hover:rotate-3 transition-all duration-500">
+                  <TrendingUp className="h-8 w-8 text-accent" />
                 </div>
-                <CardTitle className="text-2xl font-display mb-2">AI Prospektering</CardTitle>
-                <CardDescription className="text-base text-muted-foreground">Identifierar, kvalificerar & följer upp leads automatiskt.</CardDescription>
+                <CardTitle className="text-xl font-display mb-2">AI Prospektering</CardTitle>
+                <CardDescription className="text-sm text-muted-foreground">Identifierar, kvalificerar & följer upp leads automatiskt.</CardDescription>
               </CardHeader>
-              <CardContent className="relative space-y-6 p-10 pt-0">
-                <ul className="space-y-4 mb-8">
-                  {packageDetails.lead.features.map((feature, idx) => <li key={idx} className="flex items-start gap-3">
-                      <div className="flex-shrink-0 w-6 h-6 rounded-full bg-accent/10 flex items-center justify-center mt-0.5">
-                        <CheckCircle className="h-4 w-4 text-accent" />
+              <CardContent className="relative space-y-4 p-6 pt-0 flex-1 flex flex-col">
+                <ul className="space-y-3 mb-6 flex-1">
+                  {packageDetails.lead.features.map((feature, idx) => <li key={idx} className="flex items-start gap-2">
+                      <div className="flex-shrink-0 w-5 h-5 rounded-full bg-accent/10 flex items-center justify-center mt-0.5">
+                        <CheckCircle className="h-3 w-3 text-accent" />
                       </div>
-                      <span className="text-foreground/80 leading-relaxed">{feature}</span>
+                      <span className="text-foreground/80 leading-relaxed text-sm">{feature}</span>
                     </li>)}
                 </ul>
                 <Dialog>
                   <DialogTrigger asChild>
-                    <Button size="lg" className="w-full bg-primary text-primary-foreground hover:bg-primary/90 shadow-button group-hover:shadow-glow transition-all duration-300 font-semibold text-base h-14 mt-auto" onClick={() => handlePackageClick('lead')}>
+                    <Button size="lg" className="w-full bg-primary text-primary-foreground hover:bg-primary/90 shadow-button group-hover:shadow-glow transition-all duration-300 font-semibold text-sm h-12 mt-auto" onClick={() => handlePackageClick('lead')}>
                       Läs mer
                       <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
                     </Button>
@@ -870,30 +870,30 @@ export const ProductSelection = () => {
 
             {/* AI Compliance - Thor */}
             <AnimatedSection delay={400}>
-            <Card className="group relative overflow-hidden border-2 border-accent/30 bg-gradient-card backdrop-blur-sm hover:border-accent hover:scale-[1.02] transition-all duration-500 hover:shadow-glow h-full">
+            <Card className="group relative overflow-hidden border-2 border-accent/30 bg-gradient-card backdrop-blur-sm hover:border-accent hover:scale-[1.02] transition-all duration-500 hover:shadow-glow h-full flex flex-col">
               <div className="absolute inset-0 bg-gradient-gold opacity-5 group-hover:opacity-20 transition-opacity duration-500"></div>
               <div className="absolute top-4 right-4 px-3 py-1 bg-accent/20 rounded-full border border-accent/50">
                 <span className="text-xs font-semibold text-accent">POPULÄR</span>
               </div>
-              <CardHeader className="relative p-10">
-                <div className="flex items-center justify-center w-20 h-20 rounded-2xl bg-accent/10 mb-6 group-hover:scale-110 group-hover:rotate-3 transition-all duration-500">
-                  <MessageSquare className="h-10 w-10 text-accent" />
+              <CardHeader className="relative p-6">
+                <div className="flex items-center justify-center w-16 h-16 rounded-2xl bg-accent/10 mb-4 group-hover:scale-110 group-hover:rotate-3 transition-all duration-500">
+                  <MessageSquare className="h-8 w-8 text-accent" />
                 </div>
-                <CardTitle className="text-2xl font-display mb-2">AI Compliance & Coaching</CardTitle>
-                <CardDescription className="text-base text-muted-foreground">Analyserar säljsamtal, ger feedback & coaching.</CardDescription>
+                <CardTitle className="text-xl font-display mb-2">AI Compliance & Coaching</CardTitle>
+                <CardDescription className="text-sm text-muted-foreground">Analyserar säljsamtal, ger feedback & coaching.</CardDescription>
               </CardHeader>
-              <CardContent className="relative space-y-6 p-10 pt-0">
-                <ul className="space-y-4 mb-8">
-                  {packageDetails.thor.features.map((feature, idx) => <li key={idx} className="flex items-start gap-3">
-                      <div className="flex-shrink-0 w-6 h-6 rounded-full bg-accent/10 flex items-center justify-center mt-0.5">
-                        <CheckCircle className="h-4 w-4 text-accent" />
+              <CardContent className="relative space-y-4 p-6 pt-0 flex-1 flex flex-col">
+                <ul className="space-y-3 mb-6 flex-1">
+                  {packageDetails.thor.features.map((feature, idx) => <li key={idx} className="flex items-start gap-2">
+                      <div className="flex-shrink-0 w-5 h-5 rounded-full bg-accent/10 flex items-center justify-center mt-0.5">
+                        <CheckCircle className="h-3 w-3 text-accent" />
                       </div>
-                      <span className="text-foreground/80 leading-relaxed">{feature}</span>
+                      <span className="text-foreground/80 leading-relaxed text-sm">{feature}</span>
                     </li>)}
                 </ul>
                 <Dialog>
                   <DialogTrigger asChild>
-                    <Button size="lg" className="w-full bg-gradient-gold text-accent-foreground hover:opacity-90 shadow-button group-hover:shadow-glow transition-all duration-300 font-semibold text-base h-14" onClick={() => handlePackageClick('thor')}>
+                    <Button size="lg" className="w-full bg-gradient-gold text-accent-foreground hover:opacity-90 shadow-button group-hover:shadow-glow transition-all duration-300 font-semibold text-sm h-12 mt-auto" onClick={() => handlePackageClick('thor')}>
                       Läs mer
                       <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
                     </Button>
