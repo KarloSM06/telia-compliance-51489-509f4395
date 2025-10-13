@@ -546,7 +546,8 @@ export const ProductSelection = () => {
 
           <div className="grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-3 max-w-7xl mx-auto [&>*:nth-child(5)]:lg:col-start-2">
             {/* AI Receptionist - Krono */}
-            <Card className="group relative overflow-hidden border-2 border-white/10 bg-gradient-card backdrop-blur-sm hover:border-accent/50 hover:scale-[1.02] transition-all duration-500 hover:shadow-glow animate-scale-in">
+            <AnimatedSection delay={0}>
+            <Card className="group relative overflow-hidden border-2 border-white/10 bg-gradient-card backdrop-blur-sm hover:border-accent/50 hover:scale-[1.02] transition-all duration-500 hover:shadow-glow h-full flex flex-col">
               <div className="absolute inset-0 bg-gradient-gold opacity-0 group-hover:opacity-10 transition-opacity duration-500"></div>
               <CardHeader className="relative p-10">
                 <div className="flex items-center justify-center w-20 h-20 rounded-2xl bg-accent/10 mb-6 group-hover:scale-110 group-hover:rotate-3 transition-all duration-500">
@@ -1000,14 +1001,14 @@ export const ProductSelection = () => {
               <div className="relative rounded-2xl bg-white/5 p-10 backdrop-blur-sm border border-white/10 hover:border-accent/50 transition-all duration-300">
                 <div className="absolute inset-0 bg-gradient-gold opacity-0 group-hover:opacity-5 rounded-2xl transition-opacity"></div>
                 <div className="relative">
-                  <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-accent/10 mb-6 group-hover:scale-110 transition-transform">
+                  <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-accent/10 mb-6 group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
                     <Award className="h-8 w-8 text-accent" />
                   </div>
                   <h3 className="text-2xl font-display font-bold text-white mb-3">Hiems som partner</h3>
                   <p className="text-white/70 leading-relaxed"> Med Hiems får ni inte bara AI – ni får en pålitlig partner som skapar kontinuerlig tillväxt och långsiktigt värde.</p>
                 </div>
               </div>
-            </div>
+            </AnimatedSection>
           </div>
         </div>
       </section>
