@@ -446,33 +446,30 @@ export const ProductSelection = () => {
               <span className="text-sm font-medium text-white">AI-driven automation för företag</span>
             </div>
             
-            <h1 className="text-5xl font-display font-bold tracking-tight text-white sm:text-7xl mb-8 leading-tight">
+            <h1 className="text-5xl font-display font-bold tracking-tight text-white sm:text-6xl lg:text-7xl mb-8 leading-tight">
               Skräddarsydda AI-lösningar för{" "}
               <span className="bg-gradient-gold bg-clip-text text-transparent">
                 framtidens företag
               </span>
             </h1>
             
-            <p className="text-xl leading-relaxed mb-6 font-light text-white/90">Vi bygger skräddarsydda intelligenta lösningar som gör ditt företag snabbare, smartare och framförallt mer lönsamt</p>
+            <p className="text-lg sm:text-xl leading-relaxed mb-8 font-light text-white/90 max-w-3xl mx-auto">Vi bygger skräddarsydda intelligenta lösningar som gör ditt företag snabbare, smartare och framförallt mer lönsamt</p>
             <p className="text-lg leading-relaxed text-white/80 max-w-3xl mx-auto">   Med Hiems får ni inte bara tillgång till marknadens främsta AI-lösningar. Ni får en trogen partner som ser till att eran verksamhet alltid befinner sig i framkant </p>
             
-            <div className="mt-12 flex flex-col items-center gap-4">
-              <Button size="lg" className="bg-gradient-gold text-white hover:shadow-glow transition-all duration-300 font-semibold text-lg px-8 py-6" onClick={() => setIsConsultationModalOpen(true)}>
+            <div className="mt-12 flex flex-col sm:flex-row items-center justify-center gap-4">
+              <Button size="lg" className="bg-gradient-gold text-primary hover:shadow-glow hover:scale-105 transition-all duration-300 font-semibold text-lg px-10 py-7" onClick={() => setIsConsultationModalOpen(true)}>
                 Boka konsultation
               </Button>
-              <p className="text-white/70 text-sm">
-                Inte tid för en konsultation?{" "}
-                <button onClick={() => document.getElementById('krono-chat')?.scrollIntoView({ behavior: 'smooth' })} className="text-accent hover:text-accent/80 underline transition-colors">
-                  Prata med Krono
-                </button>
-              </p>
+              <Button size="lg" variant="outline" className="border-white/30 text-white hover:bg-white/10 hover:scale-105 transition-all duration-300 font-semibold text-lg px-10 py-7" onClick={() => document.getElementById('krono-chat')?.scrollIntoView({ behavior: 'smooth' })}>
+                Prata med Krono
+              </Button>
             </div>
           </div>
         </div>
       </section>
 
       {/* Vad vi gör Section */}
-      <section className="relative py-20">
+      <section className="relative py-24">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <div className="mx-auto max-w-3xl text-center mb-16 animate-fade-in">
             <h2 className="text-4xl font-display font-bold text-white mb-4">Vad vi gör</h2>
@@ -502,7 +499,7 @@ export const ProductSelection = () => {
       </section>
 
       {/* Products Section */}
-      <section className="relative py-20">
+      <section className="relative py-24">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <div className="mx-auto max-w-3xl text-center mb-16 animate-fade-in">
             <h2 className="text-4xl font-display font-bold text-white mb-4">Färdiga paket</h2>
@@ -510,18 +507,18 @@ export const ProductSelection = () => {
             <p className="text-lg text-white/80">Vi har utvecklat färdiga paket för att göra processen så snabb och smidig som möjligt. Dessa skräddarsys för att passa just er verksamhet och levereras på högst två veckor – så ni snabbt kan börja effektivisera och växa er verksamhet. </p>
           </div>
 
-          <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3 max-w-7xl mx-auto">
+          <div className="grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-3 max-w-7xl mx-auto [&>*:nth-child(5)]:lg:col-start-2">
             {/* AI Receptionist - Krono */}
-            <Card className="group relative overflow-hidden border-2 border-white/10 bg-gradient-card backdrop-blur-sm hover:border-accent/50 transition-all duration-500 hover:shadow-glow animate-scale-in">
+            <Card className="group relative overflow-hidden border-2 border-white/10 bg-gradient-card backdrop-blur-sm hover:border-accent/50 hover:scale-[1.02] transition-all duration-500 hover:shadow-glow animate-scale-in">
               <div className="absolute inset-0 bg-gradient-gold opacity-0 group-hover:opacity-10 transition-opacity duration-500"></div>
-              <CardHeader className="relative">
+              <CardHeader className="relative p-10">
                 <div className="flex items-center justify-center w-20 h-20 rounded-2xl bg-accent/10 mb-6 group-hover:scale-110 group-hover:rotate-3 transition-all duration-500">
                   <Headphones className="h-10 w-10 text-accent" />
                 </div>
                 <CardTitle className="text-2xl font-display mb-2">AI Receptionist</CardTitle>
                 <CardDescription className="text-base text-muted-foreground">Hanterar samtal, SMS & mejl dygnet runt.</CardDescription>
               </CardHeader>
-              <CardContent className="relative space-y-6">
+              <CardContent className="relative space-y-6 p-10 pt-0">
                 <ul className="space-y-4 mb-8">
                   {packageDetails.krono.features.slice(0, 3).map((feature, idx) => (
                     <li key={idx} className="flex items-start gap-3">
@@ -558,25 +555,25 @@ export const ProductSelection = () => {
                       </div>
 
                       <div className="grid md:grid-cols-3 gap-4">
-                        <Card className="border-2 hover:border-accent/50 transition-colors">
+                        <Card className="border-2 hover:border-accent/50 transition-colors h-full flex flex-col">
                           <CardHeader>
                             <CardTitle className="text-xl">Pro</CardTitle>
                             <div className="text-3xl font-bold">{minutePricing[selectedMinutes].pro} kr<span className="text-sm font-normal">/mån</span></div>
                           </CardHeader>
-                          <CardContent>
-                            <ul className="space-y-2 mb-4 text-sm">
+                          <CardContent className="flex-1 flex flex-col">
+                            <ul className="space-y-2 mb-4 text-sm flex-1">
                               {packageDetails.krono.pricing?.pro.features.map((f, i) => <li key={i} className="flex items-start gap-2">
                                   <CheckCircle className="h-4 w-4 text-accent mt-0.5 flex-shrink-0" />
                                   <span>{f}</span>
                                 </li>)}
                             </ul>
-                            <Button onClick={() => handleCheckout('krono', 'pro')} className="w-full" disabled={isCheckingOut}>
+                            <Button onClick={() => handleCheckout('krono', 'pro')} className="w-full mt-auto" disabled={isCheckingOut}>
                               Välj Pro
                             </Button>
                           </CardContent>
                         </Card>
 
-                        <Card className="border-2 border-accent/50 relative">
+                        <Card className="border-2 border-accent/50 relative h-full flex flex-col">
                           <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-accent text-accent-foreground px-3 py-1 rounded-full text-xs font-semibold">
                             POPULÄR
                           </div>
@@ -584,32 +581,32 @@ export const ProductSelection = () => {
                             <CardTitle className="text-xl">Business</CardTitle>
                             <div className="text-3xl font-bold">{minutePricing[selectedMinutes].business} kr<span className="text-sm font-normal">/mån</span></div>
                           </CardHeader>
-                          <CardContent>
-                            <ul className="space-y-2 mb-4 text-sm">
+                          <CardContent className="flex-1 flex flex-col">
+                            <ul className="space-y-2 mb-4 text-sm flex-1">
                               {packageDetails.krono.pricing?.business.features.map((f, i) => <li key={i} className="flex items-start gap-2">
                                   <CheckCircle className="h-4 w-4 text-accent mt-0.5 flex-shrink-0" />
                                   <span>{f}</span>
                                 </li>)}
                             </ul>
-                            <Button onClick={() => handleCheckout('krono', 'business')} className="w-full bg-accent hover:bg-accent/90" disabled={isCheckingOut}>
+                            <Button onClick={() => handleCheckout('krono', 'business')} className="w-full bg-gradient-gold text-primary hover:shadow-glow hover:scale-105 transition-all duration-300 mt-auto" disabled={isCheckingOut}>
                               Välj Business
                             </Button>
                           </CardContent>
                         </Card>
 
-                        <Card className="border-2 hover:border-accent/50 transition-colors">
+                        <Card className="border-2 hover:border-accent/50 transition-colors h-full flex flex-col">
                           <CardHeader>
                             <CardTitle className="text-xl">Enterprise</CardTitle>
                             <div className="text-3xl font-bold">{minutePricing[selectedMinutes].enterprise}</div>
                           </CardHeader>
-                          <CardContent>
-                            <ul className="space-y-2 mb-4 text-sm">
+                          <CardContent className="flex-1 flex flex-col">
+                            <ul className="space-y-2 mb-4 text-sm flex-1">
                               {packageDetails.krono.pricing?.enterprise.features.map((f, i) => <li key={i} className="flex items-start gap-2">
                                   <CheckCircle className="h-4 w-4 text-accent mt-0.5 flex-shrink-0" />
                                   <span>{f}</span>
                                 </li>)}
                             </ul>
-                            <Button onClick={() => handleCheckout('krono', 'enterprise')} variant="outline" className="w-full" disabled={isCheckingOut}>
+                            <Button onClick={() => handleCheckout('krono', 'enterprise')} variant="outline" className="w-full mt-auto" disabled={isCheckingOut}>
                               Kontakta oss
                             </Button>
                           </CardContent>
@@ -622,16 +619,16 @@ export const ProductSelection = () => {
             </Card>
 
             {/* AI Restaurang - Gastro */}
-            <Card className="group relative overflow-hidden border-2 border-white/10 bg-gradient-card backdrop-blur-sm hover:border-accent/50 transition-all duration-500 hover:shadow-glow animate-scale-in delay-100">
+            <Card className="group relative overflow-hidden border-2 border-white/10 bg-gradient-card backdrop-blur-sm hover:border-accent/50 hover:scale-[1.02] transition-all duration-500 hover:shadow-glow animate-scale-in delay-100">
               <div className="absolute inset-0 bg-gradient-gold opacity-0 group-hover:opacity-10 transition-opacity duration-500"></div>
-              <CardHeader className="relative">
+              <CardHeader className="relative p-10">
                 <div className="flex items-center justify-center w-20 h-20 rounded-2xl bg-accent/10 mb-6 group-hover:scale-110 group-hover:rotate-3 transition-all duration-500">
                   <ChefHat className="h-10 w-10 text-accent" />
                 </div>
                 <CardTitle className="text-2xl font-display mb-2">Restaurang & Café</CardTitle>
                 <CardDescription className="text-base text-muted-foreground">Hanterar bokningar, beställningar, menyfrågor och kundfeedback.</CardDescription>
               </CardHeader>
-              <CardContent className="relative space-y-6">
+              <CardContent className="relative space-y-6 p-10 pt-0">
                 <ul className="space-y-4 mb-8">
                   {packageDetails.gastro.features.map((feature, idx) => (
                     <li key={idx} className="flex items-start gap-3">
@@ -706,16 +703,16 @@ export const ProductSelection = () => {
             </Card>
 
             {/* AI Rekrytering - Talent */}
-            <Card className="group relative overflow-hidden border-2 border-white/10 bg-gradient-card backdrop-blur-sm hover:border-accent/50 transition-all duration-500 hover:shadow-glow animate-scale-in delay-200">
+            <Card className="group relative overflow-hidden border-2 border-white/10 bg-gradient-card backdrop-blur-sm hover:border-accent/50 hover:scale-[1.02] transition-all duration-500 hover:shadow-glow animate-scale-in delay-200">
               <div className="absolute inset-0 bg-gradient-gold opacity-0 group-hover:opacity-10 transition-opacity duration-500"></div>
-              <CardHeader className="relative">
+              <CardHeader className="relative p-10">
                 <div className="flex items-center justify-center w-20 h-20 rounded-2xl bg-accent/10 mb-6 group-hover:scale-110 group-hover:rotate-3 transition-all duration-500">
                   <UserCheck className="h-10 w-10 text-accent" />
                 </div>
                 <CardTitle className="text-2xl font-display mb-2">AI Rekrytering</CardTitle>
                 <CardDescription className="text-base text-muted-foreground">Screening, kandidatidentifiering & matchning.</CardDescription>
               </CardHeader>
-              <CardContent className="relative space-y-6">
+              <CardContent className="relative space-y-6 p-10 pt-0">
                 <ul className="space-y-4 mb-8">
                   {packageDetails.talent.features.map((feature, idx) => (
                     <li key={idx} className="flex items-start gap-3">
@@ -776,16 +773,16 @@ export const ProductSelection = () => {
             </Card>
 
             {/* AI Prospektering - Lead */}
-            <Card className="group relative overflow-hidden border-2 border-white/10 bg-gradient-card backdrop-blur-sm hover:border-accent/50 transition-all duration-500 hover:shadow-glow animate-scale-in">
+            <Card className="group relative overflow-hidden border-2 border-white/10 bg-gradient-card backdrop-blur-sm hover:border-accent/50 hover:scale-[1.02] transition-all duration-500 hover:shadow-glow animate-scale-in">
               <div className="absolute inset-0 bg-gradient-gold opacity-0 group-hover:opacity-10 transition-opacity duration-500"></div>
-              <CardHeader className="relative">
+              <CardHeader className="relative p-10">
                 <div className="flex items-center justify-center w-20 h-20 rounded-2xl bg-accent/10 mb-6 group-hover:scale-110 group-hover:rotate-3 transition-all duration-500">
                   <TrendingUp className="h-10 w-10 text-accent" />
                 </div>
                 <CardTitle className="text-2xl font-display mb-2">AI Prospektering</CardTitle>
                 <CardDescription className="text-base text-muted-foreground">Identifierar, kvalificerar & följer upp leads automatiskt.</CardDescription>
               </CardHeader>
-              <CardContent className="relative space-y-6">
+              <CardContent className="relative space-y-6 p-10 pt-0">
                 <ul className="space-y-4 mb-8">
                   {packageDetails.lead.features.map((feature, idx) => (
                     <li key={idx} className="flex items-start gap-3">
@@ -846,19 +843,19 @@ export const ProductSelection = () => {
             </Card>
 
             {/* AI Compliance - Thor */}
-            <Card className="group relative overflow-hidden border-2 border-accent/30 bg-gradient-card backdrop-blur-sm hover:border-accent transition-all duration-500 hover:shadow-glow animate-scale-in delay-100">
+            <Card className="group relative overflow-hidden border-2 border-accent/30 bg-gradient-card backdrop-blur-sm hover:border-accent hover:scale-[1.02] transition-all duration-500 hover:shadow-glow animate-scale-in delay-100">
               <div className="absolute inset-0 bg-gradient-gold opacity-5 group-hover:opacity-20 transition-opacity duration-500"></div>
               <div className="absolute top-4 right-4 px-3 py-1 bg-accent/20 rounded-full border border-accent/50">
                 <span className="text-xs font-semibold text-accent">POPULÄR</span>
               </div>
-              <CardHeader className="relative">
+              <CardHeader className="relative p-10">
                 <div className="flex items-center justify-center w-20 h-20 rounded-2xl bg-accent/10 mb-6 group-hover:scale-110 group-hover:rotate-3 transition-all duration-500">
                   <MessageSquare className="h-10 w-10 text-accent" />
                 </div>
                 <CardTitle className="text-2xl font-display mb-2">AI Compliance & Coaching</CardTitle>
                 <CardDescription className="text-base text-muted-foreground">Analyserar säljsamtal, ger feedback & coaching.</CardDescription>
               </CardHeader>
-              <CardContent className="relative space-y-6">
+              <CardContent className="relative space-y-6 p-10 pt-0">
                 <ul className="space-y-4 mb-8">
                   {packageDetails.thor.features.map((feature, idx) => (
                     <li key={idx} className="flex items-start gap-3">

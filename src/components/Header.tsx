@@ -102,7 +102,7 @@ export const Header = () => {
             </nav>
           )}
           
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center gap-3">
             <ShoppingCart 
               items={items} 
               onRemoveItem={removeItem} 
@@ -111,28 +111,29 @@ export const Header = () => {
             
             {user ? (
               <>
-                <Button variant="ghost" onClick={() => navigate("/dashboard")}>
+                <Button variant="ghost" size="sm" onClick={() => navigate("/dashboard")} className="hidden md:flex">
                   Dashboard
                 </Button>
-                <span className="text-sm text-muted-foreground">
+                <span className="text-sm text-muted-foreground hidden lg:inline-block max-w-[150px] truncate">
                   {user.email}
                 </span>
-                <Button variant="ghost" onClick={handleAuthClick}>
-                  <LogOut className="mr-2 h-4 w-4" />
-                  Logga ut
+                <Button variant="ghost" size="sm" onClick={handleAuthClick}>
+                  <LogOut className="h-4 w-4 md:mr-2" />
+                  <span className="hidden md:inline">Logga ut</span>
                 </Button>
               </>
             ) : (
-              <Button variant="ghost" onClick={handleAuthClick}>
+              <Button variant="ghost" size="sm" onClick={handleAuthClick}>
                 Logga in
               </Button>
             )}
             <Button 
-              variant="default"
-              className="bg-gradient-gold text-white hover:shadow-glow transition-all duration-300 font-semibold"
+              className="bg-gradient-gold text-primary hover:shadow-glow hover:scale-105 transition-all duration-300 font-semibold"
               onClick={() => setIsReceptionistOpen(true)}
+              size="sm"
             >
-              Prova vår receptionist
+              <span className="hidden sm:inline">Prova vår receptionist</span>
+              <span className="sm:hidden">Prova</span>
             </Button>
           </div>
         </div>
