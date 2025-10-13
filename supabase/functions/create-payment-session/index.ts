@@ -64,10 +64,9 @@ serve(async (req) => {
       throw new Error("User not authenticated");
     }
 
-    console.log("[PAYMENT] User authenticated:", user.email);
+    console.log("[PAYMENT] User authenticated");
 
     const rawBody = await req.json();
-    console.log("[PAYMENT] Raw request body:", JSON.stringify(rawBody, null, 2));
     
     // Validate input
     const validated = PaymentSchema.parse(rawBody);

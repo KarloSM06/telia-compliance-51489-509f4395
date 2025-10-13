@@ -7,6 +7,7 @@ import { Phone } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { normalizePhoneNumber } from "@/lib/phoneUtils";
+import { z } from "zod";
 
 interface ReceptionistModalProps {
   open: boolean;
@@ -18,22 +19,32 @@ export const ReceptionistModal = ({ open, onOpenChange }: ReceptionistModalProps
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
 
+  const phoneSchema = z.object({
+    phone: z.string().trim()
+      .min(8, "Telefonnummer måste vara minst 8 siffror")
+      .max(15, "Telefonnummer får vara max 15 siffror")
+      .regex(/^[\d\s\-\+\(\)]+$/, "Ogiltigt telefonnummer format"),
+  });
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    if (!phoneNumber.trim()) {
-      toast({
-        title: "Telefonnummer saknas",
-        description: "Vänligen ange ett telefonnummer",
-        variant: "destructive",
-      });
-      return;
-    }
-
     setIsSubmitting(true);
+
     try {
+      phoneSchema.parse({ phone: phoneNumber });
+      
       const normalizedPhone = normalizePhoneNumber(phoneNumber);
       
+      if (!normalizedPhone) {
+        toast({
+          title: "Ogiltigt telefonnummer",
+          description: "Vänligen ange ett giltigt telefonnummer",
+          variant: "destructive",
+        });
+        setIsSubmitting(false);
+        return;
+      }
+
       const { error } = await supabase
         .from('phone_numbers')
         .insert({ phone_number: normalizedPhone });
@@ -48,12 +59,19 @@ export const ReceptionistModal = ({ open, onOpenChange }: ReceptionistModalProps
       setPhoneNumber("");
       onOpenChange(false);
     } catch (error) {
-      console.error('Error saving phone number:', error);
-      toast({
-        title: "Ett fel uppstod",
-        description: "Kunde inte spara ditt telefonnummer. Vänligen försök igen.",
-        variant: "destructive",
-      });
+      if (error instanceof z.ZodError) {
+        toast({
+          title: "Valideringsfel",
+          description: error.errors[0].message,
+          variant: "destructive",
+        });
+      } else {
+        toast({
+          title: "Ett fel uppstod",
+          description: "Kunde inte spara ditt telefonnummer. Vänligen försök igen.",
+          variant: "destructive",
+        });
+      }
     } finally {
       setIsSubmitting(false);
     }

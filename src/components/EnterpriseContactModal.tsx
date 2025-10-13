@@ -13,6 +13,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { Loader2 } from "lucide-react";
+import { z } from "zod";
 
 interface EnterpriseContactModalProps {
   open: boolean;
@@ -31,19 +32,29 @@ export function EnterpriseContactModal({ open, onOpenChange, productName }: Ente
   });
   const { toast } = useToast();
 
+  const contactSchema = z.object({
+    name: z.string().trim().min(1, "Namn krävs").max(100, "Namn får vara max 100 tecken"),
+    email: z.string().trim().email("Ogiltig e-postadress").max(255, "E-post får vara max 255 tecken"),
+    phone: z.string().trim().min(1, "Telefon krävs").max(20, "Telefon får vara max 20 tecken"),
+    company: z.string().trim().min(1, "Företag krävs").max(200, "Företag får vara max 200 tecken"),
+    message: z.string().trim().max(1000, "Meddelande får vara max 1000 tecken"),
+  });
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
 
     try {
+      const validatedData = contactSchema.parse(formData);
+
       const { error } = await supabase
         .from('bookings')
         .insert({
-          kundnamn: formData.name,
-          epost: formData.email,
-          telefonnummer: formData.phone,
+          kundnamn: validatedData.name,
+          epost: validatedData.email,
+          telefonnummer: validatedData.phone,
           bokningstyp: 'enterprise_quote',
-          info: `Företag: ${formData.company}\nProdukt: ${productName}\nMeddelande: ${formData.message}`,
+          info: `Företag: ${validatedData.company}\nProdukt: ${productName}\nMeddelande: ${validatedData.message}`,
           status: 'pending'
         });
 
@@ -63,12 +74,19 @@ export function EnterpriseContactModal({ open, onOpenChange, productName }: Ente
       });
       onOpenChange(false);
     } catch (error) {
-      console.error("Error submitting enterprise quote:", error);
-      toast({
-        title: "Ett fel uppstod",
-        description: "Kunde inte skicka förfrågan. Försök igen.",
-        variant: "destructive"
-      });
+      if (error instanceof z.ZodError) {
+        toast({
+          title: "Valideringsfel",
+          description: error.errors[0].message,
+          variant: "destructive"
+        });
+      } else {
+        toast({
+          title: "Ett fel uppstod",
+          description: "Kunde inte skicka förfrågan. Försök igen.",
+          variant: "destructive"
+        });
+      }
     } finally {
       setIsLoading(false);
     }
