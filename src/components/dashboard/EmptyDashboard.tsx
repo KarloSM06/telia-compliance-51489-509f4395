@@ -25,7 +25,7 @@ export function EmptyDashboard() {
         </CardHeader>
         <CardContent className="text-center">
           <Button 
-            onClick={() => navigate('/dashboard-packages')}
+            onClick={() => navigate('/dashboard/packages')}
             size="lg"
             className="gap-2"
           >
@@ -39,7 +39,7 @@ export function EmptyDashboard() {
         <h2 className="text-2xl font-bold mb-4">Populära paket</h2>
         <div className="grid gap-6 md:grid-cols-3">
           {topPackages.map((pkg) => (
-            <Card key={pkg.id} className="hover:shadow-lg transition-all cursor-pointer" onClick={() => navigate('/dashboard-packages')}>
+            <Card key={pkg.id} className="hover:shadow-lg transition-all cursor-pointer" onClick={() => navigate('/dashboard/packages')}>
               <CardHeader>
                 <div className={`w-12 h-12 rounded-lg ${pkg.color} flex items-center justify-center mb-3`}>
                   {pkg.icon}

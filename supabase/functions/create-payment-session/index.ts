@@ -93,7 +93,7 @@ serve(async (req) => {
       line_items: [{ price: priceId, quantity }],
       mode: "payment",
       success_url: `${origin}/dashboard?payment=success`,
-      cancel_url: `${origin}/dashboard-packages?payment=canceled`,
+      cancel_url: `${origin}/dashboard/packages?payment=canceled`,
       metadata: {
         user_id: user.id,
         user_email: user.email,
