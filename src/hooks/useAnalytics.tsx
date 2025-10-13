@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "./useAuth";
 import { format, subDays, eachDayOfInterval } from "date-fns";
@@ -30,13 +30,16 @@ export const useAnalytics = (dateRange?: { from: Date; to: Date }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
 
-  // Default to last 30 days
-  const defaultRange = {
-    from: subDays(new Date(), 30),
-    to: new Date(),
-  };
-
-  const range = dateRange || defaultRange;
+  // Default to last 30 days - use useMemo to prevent infinite loop
+  const range = useMemo(() => {
+    if (dateRange) {
+      return dateRange;
+    }
+    return {
+      from: subDays(new Date(), 30),
+      to: new Date(),
+    };
+  }, [dateRange]);
 
   useEffect(() => {
     if (!user) {
@@ -45,7 +48,8 @@ export const useAnalytics = (dateRange?: { from: Date; to: Date }) => {
     }
 
     fetchAnalytics();
-  }, [user, range.from, range.to]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user, range.from.getTime(), range.to.getTime()]);
 
   const fetchAnalytics = async () => {
     try {
