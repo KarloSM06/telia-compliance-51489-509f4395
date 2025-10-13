@@ -2,12 +2,20 @@ import { useAuth } from "@/hooks/useAuth";
 import { useUserProducts } from "@/hooks/useUserProducts";
 import { EmptyDashboard } from "@/components/dashboard/EmptyDashboard";
 import { CallAnalysisSection } from "@/components/dashboard/CallAnalysisSection";
+import { ProductOverview } from "@/components/dashboard/ProductOverview";
+import { KronoSection } from "@/components/dashboard/KronoSection";
+import { GastroSection } from "@/components/dashboard/GastroSection";
+import { ActivityFeed } from "@/components/dashboard/ActivityFeed";
+import { QuickActions } from "@/components/dashboard/QuickActions";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const Dashboard = () => {
   const { user } = useAuth();
   const { products, productDetails, loading } = useUserProducts();
 
   const hasCompliancePackage = products.includes('thor');
+  const hasKronoPackage = products.includes('krono');
+  const hasGastroPackage = products.includes('gastro');
   const complianceProduct = productDetails.find(p => p.product_id === 'thor');
 
   if (loading) {
@@ -28,24 +36,57 @@ const Dashboard = () => {
 
   return (
     <div className="space-y-8">
-      {/* Show AI Compliance & Coaching section if user owns it */}
-      {hasCompliancePackage && (
-        <div>
-          <div className="mb-4">
-            <h2 className="text-2xl font-bold">AI Compliance & Coaching</h2>
-            {complianceProduct?.tier && (
-              <p className="text-muted-foreground">
-                Din plan: <span className="font-semibold capitalize">{complianceProduct.tier}</span>
-              </p>
-            )}
+      {/* Product Overview */}
+      <ProductOverview />
+
+      {/* Main Content - Tabs for different products */}
+      <Tabs defaultValue="overview" className="space-y-6">
+        <TabsList className="grid w-full max-w-2xl grid-cols-4">
+          <TabsTrigger value="overview">Översikt</TabsTrigger>
+          {hasKronoPackage && <TabsTrigger value="krono">Krono</TabsTrigger>}
+          {hasGastroPackage && <TabsTrigger value="gastro">Gastro</TabsTrigger>}
+          {hasCompliancePackage && <TabsTrigger value="thor">Thor</TabsTrigger>}
+        </TabsList>
+
+        <TabsContent value="overview" className="space-y-6">
+          <div className="grid gap-6 lg:grid-cols-3">
+            <div className="lg:col-span-2">
+              <QuickActions />
+            </div>
+            <div className="lg:col-span-1">
+              <ActivityFeed />
+            </div>
           </div>
-          <CallAnalysisSection />
-        </div>
-      )}
-      
-      {/* Future: Add other product sections here based on product_id */}
-      {/* {products.includes('krono') && <KronoSection />} */}
-      {/* {products.includes('gastro') && <GastroSection />} */}
+        </TabsContent>
+
+        {hasKronoPackage && (
+          <TabsContent value="krono">
+            <KronoSection />
+          </TabsContent>
+        )}
+
+        {hasGastroPackage && (
+          <TabsContent value="gastro">
+            <GastroSection />
+          </TabsContent>
+        )}
+
+        {hasCompliancePackage && (
+          <TabsContent value="thor">
+            <div>
+              <div className="mb-4">
+                <h2 className="text-2xl font-bold">AI Compliance & Coaching</h2>
+                {complianceProduct?.tier && (
+                  <p className="text-muted-foreground">
+                    Din plan: <span className="font-semibold capitalize">{complianceProduct.tier}</span>
+                  </p>
+                )}
+              </div>
+              <CallAnalysisSection />
+            </div>
+          </TabsContent>
+        )}
+      </Tabs>
     </div>
   );
 };
