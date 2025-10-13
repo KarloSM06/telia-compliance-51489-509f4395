@@ -484,22 +484,22 @@ export const ProductSelection = () => {
               <div className="flex items-center justify-center mb-4">
                 <BarChart3 className="h-12 w-12 text-accent group-hover:scale-110 transition-transform" />
               </div>
-              <div className="text-5xl font-display font-bold text-white mb-2">500+</div>
-              <div className="text-white/70 text-lg">Nöjda företag</div>
+              <div className="text-5xl font-display font-bold text-white mb-2">AI</div>
+              <div className="text-white/70 text-lg">Få hjälp av AI experter</div>
             </AnimatedSection>
             <AnimatedSection delay={100} className="text-center group">
               <div className="flex items-center justify-center mb-4">
                 <Clock className="h-12 w-12 text-accent group-hover:scale-110 transition-transform" />
               </div>
               <div className="text-5xl font-display font-bold text-white mb-2">24/7</div>
-              <div className="text-white/70 text-lg">Support & Drift</div>
+              <div className="text-white/70 text-lg">Support och drift</div>
             </AnimatedSection>
             <AnimatedSection delay={200} className="text-center group">
               <div className="flex items-center justify-center mb-4">
                 <Users className="h-12 w-12 text-accent group-hover:scale-110 transition-transform" />
               </div>
-              <div className="text-5xl font-display font-bold text-white mb-2">98%</div>
-              <div className="text-white/70 text-lg">Kundnöjdhet</div>
+              <div className="text-5xl font-display font-bold text-white mb-2">99%</div>
+              <div className="text-white/70 text-lg">Uptime</div>
             </AnimatedSection>
           </div>
         </div>
