@@ -1,9 +1,18 @@
 import { Button } from "@/components/ui/button";
-import { LogOut, Menu, X } from "lucide-react";
+import { LogOut, Menu, X, Settings, LayoutDashboard } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 import hiems_logo from "@/assets/hiems_logo.png";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { cn } from "@/lib/utils";
 import { ReceptionistModal } from "@/components/ReceptionistModal";
 import {
   Dialog,
@@ -29,6 +38,15 @@ export const Header = () => {
   const [isNewsletterOpen, setIsNewsletterOpen] = useState(false);
   const [isReceptionistOpen, setIsReceptionistOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 20);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const getInitials = (email: string) => {
     return email.charAt(0).toUpperCase();
@@ -53,27 +71,42 @@ export const Header = () => {
   };
 
   return (
-    <header className="sticky top-0 z-50 bg-background/95 backdrop-blur-lg border-b border-border shadow-sm">
-      <div className="mx-auto max-w-[1400px] px-8 lg:px-12">
-        <div className="flex h-20 items-center justify-between">
+    <header className={cn(
+      "sticky top-0 z-50 bg-background/95 backdrop-blur-lg border-b border-border",
+      "transition-all duration-300",
+      isScrolled ? "shadow-elegant py-2" : "shadow-sm py-4"
+    )}>
+      <div className="mx-auto max-w-[1440px] px-6 md:px-8 lg:px-16">
+        <div className={cn(
+          "flex items-center justify-between transition-all duration-300",
+          isScrolled ? "h-16" : "h-24"
+        )}>
           <div className="flex items-center">
             <button 
               onClick={() => navigate("/")}
-              className="flex items-center space-x-2 hover:opacity-80 transition-opacity"
+              className="flex items-center space-x-3 group transition-all duration-300 hover:scale-[1.02]"
             >
-              <img src={hiems_logo} alt="Hiems logo" className="h-14 w-14 rounded-xl shadow-md" />
-              <span className="text-3xl font-bold bg-gradient-primary bg-clip-text text-transparent">Hiems</span>
+              <img 
+                src={hiems_logo} 
+                alt="Hiems logo" 
+                className="h-14 w-14 rounded-xl shadow-md transition-all duration-300 group-hover:shadow-glow group-hover:rotate-3" 
+              />
+              <span className="text-3xl font-bold bg-gradient-primary bg-clip-text text-transparent transition-all duration-300 group-hover:tracking-wide">
+                Hiems
+              </span>
             </button>
           </div>
           
           {/* Desktop Navigation */}
           {!user && (
-            <nav className="hidden lg:flex items-center space-x-8">
-              <a href="/om-oss" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
+            <nav className="hidden lg:flex items-center space-x-10">
+              <a href="/om-oss" className="relative text-sm font-medium text-muted-foreground hover:text-foreground transition-colors group">
                 Om oss
+                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-gold transition-all duration-300 group-hover:w-full" />
               </a>
-              <a href="/regelverk" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
+              <a href="/regelverk" className="relative text-sm font-medium text-muted-foreground hover:text-foreground transition-colors group">
                 Regelverk
+                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-gold transition-all duration-300 group-hover:w-full" />
               </a>
               <Dialog open={isNewsletterOpen} onOpenChange={setIsNewsletterOpen}>
                 <DialogTrigger asChild>
@@ -122,34 +155,60 @@ export const Header = () => {
 
             {/* Desktop Actions */}
             <div className="hidden lg:flex items-center gap-4">
-              <ShoppingCart 
-                items={items} 
-                onRemoveItem={removeItem} 
-                onClearCart={clearCart}
-              />
+              <div className="relative">
+                <ShoppingCart 
+                  items={items} 
+                  onRemoveItem={removeItem} 
+                  onClearCart={clearCart}
+                />
+                {items.length > 0 && (
+                  <span className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-gradient-gold text-primary text-xs font-bold flex items-center justify-center shadow-button animate-scale-in">
+                    {items.length}
+                  </span>
+                )}
+              </div>
               
               {user ? (
-                <>
-                  <Button variant="ghost" size="sm" onClick={() => navigate("/dashboard")}>
-                    Dashboard
-                  </Button>
-                  <Avatar className="h-10 w-10 cursor-pointer ring-2 ring-primary/20 hover:ring-primary/40 transition-all" onClick={() => navigate("/dashboard")}>
-                    <AvatarFallback className="bg-gradient-gold text-primary font-semibold text-lg">
-                      {getInitials(user.email || "")}
-                    </AvatarFallback>
-                  </Avatar>
-                  <Button variant="ghost" size="sm" onClick={handleAuthClick}>
-                    <LogOut className="h-4 w-4 md:mr-2" />
-                    <span className="hidden md:inline">Logga ut</span>
-                  </Button>
-                </>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Avatar className="h-11 w-11 cursor-pointer ring-2 ring-primary/20 hover:ring-primary/60 transition-all duration-300 hover:scale-110">
+                      <AvatarFallback className="bg-gradient-gold text-primary font-semibold text-lg">
+                        {getInitials(user.email || "")}
+                      </AvatarFallback>
+                    </Avatar>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-56">
+                    <DropdownMenuLabel>
+                      <div className="flex flex-col space-y-1">
+                        <p className="text-sm font-medium">Mitt konto</p>
+                        <p className="text-xs text-muted-foreground truncate">
+                          {user.email}
+                        </p>
+                      </div>
+                    </DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem onClick={() => navigate("/dashboard")}>
+                      <LayoutDashboard className="mr-2 h-4 w-4" />
+                      Dashboard
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => navigate("/gdpr-settings")}>
+                      <Settings className="mr-2 h-4 w-4" />
+                      Inställningar
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem onClick={handleAuthClick} className="text-destructive">
+                      <LogOut className="mr-2 h-4 w-4" />
+                      Logga ut
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
               ) : (
                 <Button variant="ghost" size="sm" onClick={handleAuthClick}>
                   Logga in
                 </Button>
               )}
               <Button 
-                className="bg-gradient-gold text-primary hover:shadow-glow hover:scale-105 transition-all duration-300 font-semibold"
+                className="relative overflow-hidden bg-gradient-gold text-primary hover:shadow-glow hover:scale-105 transition-all duration-300 font-semibold before:absolute before:inset-0 before:bg-white/20 before:translate-x-[-100%] before:transition-transform before:duration-500 hover:before:translate-x-[100%]"
                 onClick={() => setIsReceptionistOpen(true)}
                 size="sm"
               >
@@ -161,8 +220,9 @@ export const Header = () => {
 
         {/* Mobile Menu */}
         {isMobileMenuOpen && (
-          <div className="lg:hidden py-4 border-t border-border animate-fade-in">
-            <div className="flex flex-col gap-3">
+          <div className="lg:hidden absolute top-full left-0 right-0 bg-background/95 backdrop-blur-xl border-b border-border shadow-elegant animate-fade-in">
+            <div className="mx-auto max-w-[1440px] px-6 py-6">
+              <div className="flex flex-col gap-4">
               <ShoppingCart 
                 items={items} 
                 onRemoveItem={removeItem} 
@@ -187,23 +247,52 @@ export const Header = () => {
               )}
               
               {user ? (
-                <>
+                <div className="space-y-3">
                   <div className="flex items-center gap-3 py-2">
-                    <Avatar className="h-10 w-10 ring-2 ring-primary/20">
-                      <AvatarFallback className="bg-gradient-gold text-primary font-semibold">
+                    <Avatar className="h-11 w-11 ring-2 ring-primary/20">
+                      <AvatarFallback className="bg-gradient-gold text-primary font-semibold text-lg">
                         {getInitials(user.email || "")}
                       </AvatarFallback>
                     </Avatar>
-                    <span className="text-sm text-muted-foreground truncate">{user.email}</span>
+                    <div className="flex flex-col">
+                      <span className="text-sm font-medium">Mitt konto</span>
+                      <span className="text-xs text-muted-foreground truncate">{user.email}</span>
+                    </div>
                   </div>
-                  <Button variant="ghost" onClick={() => navigate("/dashboard")} className="justify-start">
+                  <Button 
+                    variant="ghost" 
+                    onClick={() => {
+                      navigate("/dashboard");
+                      setIsMobileMenuOpen(false);
+                    }} 
+                    className="justify-start w-full"
+                  >
+                    <LayoutDashboard className="mr-2 h-4 w-4" />
                     Dashboard
                   </Button>
-                  <Button variant="ghost" onClick={handleAuthClick} className="justify-start">
+                  <Button 
+                    variant="ghost" 
+                    onClick={() => {
+                      navigate("/gdpr-settings");
+                      setIsMobileMenuOpen(false);
+                    }} 
+                    className="justify-start w-full"
+                  >
+                    <Settings className="mr-2 h-4 w-4" />
+                    Inställningar
+                  </Button>
+                  <Button 
+                    variant="ghost" 
+                    onClick={() => {
+                      handleAuthClick();
+                      setIsMobileMenuOpen(false);
+                    }} 
+                    className="justify-start w-full text-destructive"
+                  >
                     <LogOut className="mr-2 h-4 w-4" />
                     Logga ut
                   </Button>
-                </>
+                </div>
               ) : (
                 <Button variant="ghost" onClick={handleAuthClick} className="justify-start">
                   Logga in
@@ -211,7 +300,7 @@ export const Header = () => {
               )}
               
               <Button 
-                className="bg-gradient-gold text-primary hover:shadow-glow transition-all duration-300 font-semibold w-full"
+                className="w-full relative overflow-hidden bg-gradient-gold text-primary hover:shadow-glow transition-all duration-300 font-semibold before:absolute before:inset-0 before:bg-white/20 before:translate-x-[-100%] before:transition-transform before:duration-500 hover:before:translate-x-[100%]"
                 onClick={() => {
                   setIsReceptionistOpen(true);
                   setIsMobileMenuOpen(false);
@@ -219,6 +308,7 @@ export const Header = () => {
               >
                 Prova vår receptionist
               </Button>
+              </div>
             </div>
           </div>
         )}
