@@ -38,6 +38,7 @@ const DashboardAnalytics = () => {
     return baseMetrics;
   };
 
+  if (loading) {
     return (
       <div className="space-y-6">
         <Skeleton className="h-12 w-full" />
@@ -50,6 +51,7 @@ const DashboardAnalytics = () => {
         </div>
       </div>
     );
+  }
 
   return (
     
@@ -170,7 +172,7 @@ const DashboardAnalytics = () => {
             dataKeys={[
               { key: "count", color: "hsl(142, 76%, 36%)", name: "Bokningar" },
             ]}
-            xAxisKey="day"
+            xAxisKey="name"
           />
 
           {/* Distribution Pie Chart */}
