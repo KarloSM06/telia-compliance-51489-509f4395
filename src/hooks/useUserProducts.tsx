@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
+import { useAdminStatus } from "@/hooks/useAdminStatus";
+import { availablePackages } from "@/components/dashboard/PackagesData";
 
 export interface UserProduct {
   id: string;
@@ -14,6 +16,7 @@ export interface UserProduct {
 
 export const useUserProducts = () => {
   const { user } = useAuth();
+  const { isAdmin, loading: adminLoading } = useAdminStatus();
   const [products, setProducts] = useState<string[]>([]);
   const [productDetails, setProductDetails] = useState<UserProduct[]>([]);
   const [loading, setLoading] = useState(true);
@@ -23,6 +26,25 @@ export const useUserProducts = () => {
     if (!user) {
       setProducts([]);
       setProductDetails([]);
+      setLoading(false);
+      return;
+    }
+
+    // If admin, show all available packages as owned
+    if (isAdmin) {
+      const allProducts = availablePackages.map(pkg => pkg.id);
+      const mockProductDetails: UserProduct[] = availablePackages.map(pkg => ({
+        id: `admin-${pkg.id}`,
+        product_id: pkg.id,
+        stripe_price_id: 'admin_access',
+        purchased_at: new Date().toISOString(),
+        status: 'active',
+        tier: 'enterprise',
+        minutes_purchased: pkg.hasMinutes ? 10000 : undefined,
+      }));
+      
+      setProducts(allProducts);
+      setProductDetails(mockProductDetails);
       setLoading(false);
       return;
     }
@@ -52,10 +74,13 @@ export const useUserProducts = () => {
   };
 
   useEffect(() => {
+    // Wait for admin status to load before fetching products
+    if (adminLoading) return;
+    
     fetchProducts();
 
-    // Set up realtime subscription
-    if (user) {
+    // Set up realtime subscription (not needed for admins)
+    if (user && !isAdmin) {
       const channel = supabase
         .channel('user_products_changes')
         .on(
@@ -76,16 +101,17 @@ export const useUserProducts = () => {
         supabase.removeChannel(channel);
       };
     }
-  }, [user]);
+  }, [user, isAdmin, adminLoading]);
 
   const hasProduct = (productId: string) => products.includes(productId);
 
   return {
     products,
     productDetails,
-    loading,
+    loading: loading || adminLoading,
     error,
     hasProduct,
     refetch: fetchProducts,
+    isAdmin,
   };
 };

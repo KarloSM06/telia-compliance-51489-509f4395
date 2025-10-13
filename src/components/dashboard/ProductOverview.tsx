@@ -2,6 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Headphones, ChefHat, UserCheck, TrendingUp, MessageSquare } from "lucide-react";
 import { useUserProducts } from "@/hooks/useUserProducts";
+import { AdminBadge } from "./AdminBadge";
 
 const productIcons: Record<string, any> = {
   krono: Headphones,
@@ -20,7 +21,7 @@ const productNames: Record<string, string> = {
 };
 
 export function ProductOverview() {
-  const { productDetails, loading } = useUserProducts();
+  const { productDetails, loading, isAdmin } = useUserProducts();
 
   if (loading) {
     return (
@@ -36,7 +37,10 @@ export function ProductOverview() {
 
   return (
     <div className="space-y-4">
-      <h2 className="text-2xl font-bold">Dina AI-Produkter</h2>
+      <div className="flex items-center gap-3">
+        <h2 className="text-2xl font-bold">Dina AI-Produkter</h2>
+        {isAdmin && <AdminBadge />}
+      </div>
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         {productDetails.map((product) => {
           const Icon = productIcons[product.product_id] || Headphones;
