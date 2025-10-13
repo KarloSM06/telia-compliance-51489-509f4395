@@ -516,7 +516,7 @@ export const ProductSelection = () => {
       </section>
 
       {/* Products Section */}
-      <section id="products" className="relative py-24">
+      <section id="products" className="relative py-32">
         <div className="mx-auto max-w-[1800px] px-6 lg:px-8">
           <div className="mx-auto max-w-3xl text-center mb-16 animate-fade-in">
             <h2 className="text-4xl font-display font-bold text-white mb-4">Färdiga paket</h2>
