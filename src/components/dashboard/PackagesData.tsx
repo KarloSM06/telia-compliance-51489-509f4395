@@ -17,6 +17,8 @@ export const availablePackages: PackageData[] = [
     color: "bg-primary/10",
     detailedDescription:
       "AI Receptionist är din digitala receptionist som aldrig tar paus. Systemet hanterar inkommande samtal, SMS och mejl professionellt, bokar möten, och kan besvara vanliga frågor. Perfekt för företag som vill ge bästa service dygnet runt.",
+    stripePriceId: "price_REPLACE_WITH_YOUR_PRICE_ID_1",
+    price: 2999,
   },
   {
     id: "restaurant-cafe",
@@ -33,6 +35,8 @@ export const availablePackages: PackageData[] = [
     color: "bg-secondary/10",
     detailedDescription:
       "Specialiserad AI för restaurang- och caféverksamhet. Hanterar bokningar, beställningar och kundförfrågningar om menyer och allergier. Ger dagliga rapporter och insikter om din verksamhet.",
+    stripePriceId: "price_REPLACE_WITH_YOUR_PRICE_ID_2",
+    price: 1999,
   },
   {
     id: "ai-recruitment",
@@ -49,6 +53,8 @@ export const availablePackages: PackageData[] = [
     color: "bg-accent/10",
     detailedDescription:
       "AI Rekrytering effektiviserar hela rekryteringsprocessen. Systemet screener kandidater automatiskt, identifierar de bäst lämpade och skapar shortlists. Spara tid och hitta rätt talang snabbare.",
+    stripePriceId: "price_REPLACE_WITH_YOUR_PRICE_ID_3",
+    price: 3999,
   },
   {
     id: "ai-prospecting",
@@ -65,6 +71,8 @@ export const availablePackages: PackageData[] = [
     color: "bg-primary/10",
     detailedDescription:
       "AI Prospektering identifierar potentiella kunder och skickar automatiska, personliga mejl. Systemet följer upp leads och integreras med ditt CRM för en sömlös säljprocess.",
+    stripePriceId: "price_REPLACE_WITH_YOUR_PRICE_ID_4",
+    price: 4999,
   },
   {
     id: "ai-compliance",
@@ -82,6 +90,8 @@ export const availablePackages: PackageData[] = [
     color: "bg-gradient-gold",
     detailedDescription:
       "Den mest populära lösningen! AI Compliance & Coaching analyserar dina samtal i realtid och identifierar regelöverträdelser. Ger omedelbar feedback och personliga förbättringsförslag till dina säljare. Perfekt för att säkerställa kvalitet och compliance.",
+    stripePriceId: "price_REPLACE_WITH_YOUR_PRICE_ID_5",
+    price: 5999,
   },
   {
     id: "ai-website-optimization",
@@ -98,5 +108,7 @@ export const availablePackages: PackageData[] = [
     color: "bg-secondary/10",
     detailedDescription:
       "AI Hemsideoptimering analyserar hur besökare interagerar med din hemsida och ger rekommendationer för att öka konverteringar. Få insikter om vilka produkter som intresserar dina kunder mest.",
+    stripePriceId: "price_REPLACE_WITH_YOUR_PRICE_ID_6",
+    price: 2499,
   },
 ];

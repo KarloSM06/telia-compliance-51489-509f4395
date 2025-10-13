@@ -2,8 +2,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { CheckCircle, Info } from "lucide-react";
+import { CheckCircle, Info, ShoppingCart } from "lucide-react";
 import { useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 export interface PackageData {
   id: string;
@@ -14,6 +16,8 @@ export interface PackageData {
   icon: React.ReactNode;
   color: string;
   detailedDescription: string;
+  stripePriceId: string;
+  price: number;
 }
 
 interface PackageCardProps {
@@ -22,6 +26,39 @@ interface PackageCardProps {
 
 export function PackageCard({ package: pkg }: PackageCardProps) {
   const [isHovered, setIsHovered] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handlePurchase = async () => {
+    try {
+      setIsLoading(true);
+      
+      const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
+      
+      if (sessionError || !sessionData?.session) {
+        toast.error("Du måste vara inloggad för att köpa");
+        return;
+      }
+
+      const { data, error } = await supabase.functions.invoke("create-checkout-session", {
+        body: { 
+          priceId: pkg.stripePriceId,
+          numberOfAgents: 1
+        },
+      });
+
+      if (error) throw error;
+
+      if (data?.url) {
+        window.open(data.url, '_blank');
+        toast.success("Omdirigerar till Stripe Checkout...");
+      }
+    } catch (error: any) {
+      console.error("Checkout error:", error);
+      toast.error(error.message || "Något gick fel. Försök igen.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <Card
@@ -56,6 +93,22 @@ export function PackageCard({ package: pkg }: PackageCardProps) {
             </div>
           ))}
         </div>
+
+        <div className="flex items-center justify-between mb-4">
+          <div>
+            <span className="text-2xl font-bold text-foreground">{pkg.price} kr</span>
+            <span className="text-sm text-muted-foreground">/månad</span>
+          </div>
+        </div>
+
+        <Button 
+          onClick={handlePurchase} 
+          disabled={isLoading}
+          className="w-full mb-2"
+        >
+          <ShoppingCart className="mr-2 h-4 w-4" />
+          {isLoading ? "Laddar..." : "Köp nu"}
+        </Button>
 
         <Dialog>
           <DialogTrigger asChild>
