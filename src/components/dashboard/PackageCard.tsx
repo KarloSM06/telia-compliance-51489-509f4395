@@ -17,8 +17,8 @@ export interface PackageData {
   icon: React.ReactNode;
   color: string;
   detailedDescription: string;
-  stripePriceId: string;
-  price: number;
+  stripePriceId?: string;
+  price?: number;
 }
 
 interface PackageCardProps {
@@ -33,6 +33,11 @@ export function PackageCard({ package: pkg }: PackageCardProps) {
   const isOwned = hasProduct(pkg.id);
 
   const handlePurchase = async () => {
+    if (!pkg.stripePriceId) {
+      toast.error("Detta paket kräver tier-val. Använd tier-kortet istället.");
+      return;
+    }
+    
     try {
       setIsLoading(true);
       
@@ -46,7 +51,8 @@ export function PackageCard({ package: pkg }: PackageCardProps) {
       const { data, error } = await supabase.functions.invoke("create-payment-session", {
         body: { 
           priceId: pkg.stripePriceId,
-          productId: pkg.id
+          productId: pkg.id,
+          quantity: 1
         },
       });
 
@@ -106,12 +112,14 @@ export function PackageCard({ package: pkg }: PackageCardProps) {
           ))}
         </div>
 
-        <div className="flex items-center justify-between mb-4">
-          <div>
-            <span className="text-2xl font-bold text-foreground">{pkg.price} kr</span>
-            <span className="text-sm text-muted-foreground">/månad</span>
+        {pkg.price && (
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <span className="text-2xl font-bold text-foreground">{pkg.price} kr</span>
+              <span className="text-sm text-muted-foreground">/månad</span>
+            </div>
           </div>
-        </div>
+        )}
 
         {isOwned ? (
           <Button 

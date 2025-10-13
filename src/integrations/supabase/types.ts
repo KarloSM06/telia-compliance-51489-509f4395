@@ -494,33 +494,39 @@ export type Database = {
         Row: {
           created_at: string
           id: string
+          minutes_purchased: number | null
           product_id: string
           purchased_at: string
           status: string
           stripe_price_id: string
           stripe_session_id: string | null
+          tier: string | null
           updated_at: string
           user_id: string
         }
         Insert: {
           created_at?: string
           id?: string
+          minutes_purchased?: number | null
           product_id: string
           purchased_at?: string
           status?: string
           stripe_price_id: string
           stripe_session_id?: string | null
+          tier?: string | null
           updated_at?: string
           user_id: string
         }
         Update: {
           created_at?: string
           id?: string
+          minutes_purchased?: number | null
           product_id?: string
           purchased_at?: string
           status?: string
           stripe_price_id?: string
           stripe_session_id?: string | null
+          tier?: string | null
           updated_at?: string
           user_id?: string
         }

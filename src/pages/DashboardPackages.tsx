@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { PackageCard } from "@/components/dashboard/PackageCard";
+import { TierPackageCard } from "@/components/dashboard/TierPackageCard";
 import { availablePackages } from "@/components/dashboard/PackagesData";
 import { Search } from "lucide-react";
 
@@ -57,7 +58,11 @@ export default function DashboardPackages() {
             className="animate-scale-in"
             style={{ animationDelay: `${index * 100}ms` }}
           >
-            <PackageCard package={pkg} />
+            {pkg.tiers ? (
+              <TierPackageCard package={pkg} />
+            ) : (
+              <PackageCard package={pkg} />
+            )}
           </div>
         ))}
       </div>

@@ -8,6 +8,8 @@ export interface UserProduct {
   stripe_price_id: string;
   purchased_at: string;
   status: string;
+  tier?: string;
+  minutes_purchased?: number;
 }
 
 export const useUserProducts = () => {

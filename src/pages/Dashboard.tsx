@@ -5,9 +5,10 @@ import { CallAnalysisSection } from "@/components/dashboard/CallAnalysisSection"
 
 const Dashboard = () => {
   const { user } = useAuth();
-  const { products, loading } = useUserProducts();
+  const { products, productDetails, loading } = useUserProducts();
 
-  const hasCompliancePackage = products.includes('ai-compliance');
+  const hasCompliancePackage = products.includes('thor');
+  const complianceProduct = productDetails.find(p => p.product_id === 'thor');
 
   if (loading) {
     return (
@@ -28,11 +29,23 @@ const Dashboard = () => {
   return (
     <div className="space-y-8">
       {/* Show AI Compliance & Coaching section if user owns it */}
-      {hasCompliancePackage && <CallAnalysisSection />}
+      {hasCompliancePackage && (
+        <div>
+          <div className="mb-4">
+            <h2 className="text-2xl font-bold">AI Compliance & Coaching</h2>
+            {complianceProduct?.tier && (
+              <p className="text-muted-foreground">
+                Din plan: <span className="font-semibold capitalize">{complianceProduct.tier}</span>
+              </p>
+            )}
+          </div>
+          <CallAnalysisSection />
+        </div>
+      )}
       
-      {/* Future: Add other product sections here */}
-      {/* {products.includes('ai-receptionist') && <ReceptionistSection />} */}
-      {/* {products.includes('restaurant-cafe') && <RestaurantSection />} */}
+      {/* Future: Add other product sections here based on product_id */}
+      {/* {products.includes('krono') && <KronoSection />} */}
+      {/* {products.includes('gastro') && <GastroSection />} */}
     </div>
   );
 };

@@ -1,114 +1,344 @@
 import { Phone, UtensilsCrossed, Users, Target, Award, Globe } from "lucide-react";
-import { PackageData } from "./PackageCard";
+import { ReactNode } from "react";
+
+export interface PackageTier {
+  name: 'pro' | 'business' | 'enterprise';
+  price: number | string;
+  features: string[];
+  stripePriceId?: string;
+}
+
+export interface PackageData {
+  id: string;
+  name: string;
+  fullName: string;
+  description: string;
+  detailedDescription: string;
+  features: string[];
+  icon: ReactNode;
+  color: string;
+  isPopular?: boolean;
+  
+  // Tier-baserad prissättning
+  tiers?: PackageTier[];
+  
+  // Minut-baserad prissättning (för Krono & Gastro)
+  hasMinutes?: boolean;
+  minutePricing?: Record<number, {
+    pro: number;
+    business: number;
+    enterprise: string;
+  }>;
+  
+  // För enkla paket utan tiers (legacy support)
+  price?: number;
+  stripePriceId?: string;
+}
 
 export const availablePackages: PackageData[] = [
   {
-    id: "ai-receptionist",
+    id: "krono",
     name: "AI Receptionist",
-    description: "Hantera samtal, SMS, mejl och bokningar automatiskt",
+    fullName: "Hiems Krono – AI Receptionist",
+    description: "Hanterar samtal, SMS & mejl dygnet runt",
+    detailedDescription: "Hanterar samtal, SMS & mejl dygnet runt. Hiems Krono är din digitala receptionist som aldrig tar paus.",
     features: [
-      "Automatisk hantering av samtal 24/7",
-      "SMS & mejl-hantering",
+      "Hanterar samtal & SMS 24/7",
       "Bokning & avbokning",
-      "Enkel röstprofil anpassad efter ditt företag",
-      "Integration med befintliga system",
+      "Enkel röstprofil",
+      "Integration med Google Kalender"
     ],
     icon: <Phone className="h-6 w-6 text-primary" />,
     color: "bg-primary/10",
-    detailedDescription:
-      "AI Receptionist är din digitala receptionist som aldrig tar paus. Systemet hanterar inkommande samtal, SMS och mejl professionellt, bokar möten, och kan besvara vanliga frågor. Perfekt för företag som vill ge bästa service dygnet runt.",
-    stripePriceId: "price_REPLACE_WITH_YOUR_PRICE_ID_1",
-    price: 2999,
+    hasMinutes: true,
+    minutePricing: {
+      100: { pro: 899, business: 1499, enterprise: "Offert" },
+      250: { pro: 1999, business: 3499, enterprise: "Offert" },
+      500: { pro: 3799, business: 6499, enterprise: "Offert" },
+      1000: { pro: 6999, business: 11999, enterprise: "Offert" }
+    },
+    tiers: [
+      {
+        name: 'pro',
+        price: "Från 899 kr",
+        features: [
+          "Hanterar samtal & SMS 24/7",
+          "Bokning & avbokning",
+          "Enkel röstprofil",
+          "Grundläggande rapportering",
+          "Integration med Google Kalender"
+        ],
+        stripePriceId: "price_krono_pro"
+      },
+      {
+        name: 'business',
+        price: "Från 1 499 kr",
+        features: [
+          "Allt i Pro +",
+          "Flera röstprofiler",
+          "Anpassat samtalsflöde",
+          "Samtalsanalys & transkribering",
+          "Sammanfattning via mejl",
+          "CRM-integration (HubSpot, Pipedrive etc.)"
+        ],
+        stripePriceId: "price_krono_business"
+      },
+      {
+        name: 'enterprise',
+        price: "Offert",
+        features: [
+          "Allt i Business +",
+          "Fler språk & avancerad NLP",
+          "Egen AI-modellträning",
+          "Skräddarsydd dashboard",
+          "Obegränsad trafik & prioriterad support"
+        ]
+      }
+    ]
   },
   {
-    id: "restaurant-cafe",
+    id: "gastro",
     name: "Restaurang & Café",
-    description: "Komplett lösning för restauranger och caféer",
+    fullName: "Hiems Krono Gastro – AI Restaurang & Café",
+    description: "Hanterar bokningar, beställningar & menyfrågor",
+    detailedDescription: "Specialiserad AI för restaurang- och caféverksamhet. Hanterar bokningar, beställningar och kundförfrågningar.",
     features: [
-      "Automatisk bordsbokning",
-      "Hantering av beställningar",
-      "Svar på menyfrågor och allergier",
-      "Dagliga rapporter om bokningar",
-      "Integration med bokningssystem",
+      "Tar emot bokningar via telefon & SMS",
+      "Bekräftar, ändrar & avbokar",
+      "Enkel menyhantering",
+      "Daglig sammanställning via mejl"
     ],
     icon: <UtensilsCrossed className="h-6 w-6 text-primary" />,
     color: "bg-secondary/10",
-    detailedDescription:
-      "Specialiserad AI för restaurang- och caféverksamhet. Hanterar bokningar, beställningar och kundförfrågningar om menyer och allergier. Ger dagliga rapporter och insikter om din verksamhet.",
-    stripePriceId: "price_REPLACE_WITH_YOUR_PRICE_ID_2",
-    price: 1999,
+    hasMinutes: true,
+    minutePricing: {
+      100: { pro: 899, business: 1499, enterprise: "Offert" },
+      250: { pro: 1999, business: 3499, enterprise: "Offert" },
+      500: { pro: 3799, business: 6499, enterprise: "Offert" },
+      1000: { pro: 6999, business: 11999, enterprise: "Offert" }
+    },
+    tiers: [
+      {
+        name: 'pro',
+        price: "Från 899 kr",
+        features: [
+          "Tar emot bokningar via telefon & SMS",
+          "Bekräftar, ändrar & avbokar",
+          "Enkel menyhantering",
+          "Daglig sammanställning via mejl"
+        ],
+        stripePriceId: "price_gastro_pro"
+      },
+      {
+        name: 'business',
+        price: "Från 1 499 kr",
+        features: [
+          "Allt i Pro +",
+          "Integration med kassasystem (t.ex. Trivec)",
+          "Hanterar takeaway & leverans",
+          "Kundfeedback-analys",
+          "Statistik över toppbokningar & återkommande gäster"
+        ],
+        stripePriceId: "price_gastro_business"
+      },
+      {
+        name: 'enterprise',
+        price: "Offert",
+        features: [
+          "Allt i Business +",
+          "Fler språk",
+          "Egen röstprofil per restaurang",
+          "Avancerad menyoptimering & upsell-funktion"
+        ]
+      }
+    ]
   },
   {
-    id: "ai-recruitment",
+    id: "talent",
     name: "AI Rekrytering",
-    description: "Automatisera din rekryteringsprocess",
+    fullName: "Hiems Hermes Talent – AI Rekrytering",
+    description: "Screening, kandidatidentifiering & matchning",
+    detailedDescription: "AI Rekrytering effektiviserar hela rekryteringsprocessen. Systemet screener kandidater automatiskt och identifierar de bäst lämpade.",
     features: [
-      "Automatisk screening av kandidater",
-      "Intelligent kandidatidentifiering",
-      "Automatisk shortlist av kvalificerade sökande",
-      "Detaljerade rapporter och rekommendationer",
-      "Tidsbesparing på upp till 70%",
+      "Automatisk screening av CV & ansökningar",
+      "Enkel rankning",
+      "Genererar shortlist",
+      "Rapport via e-post"
     ],
     icon: <Users className="h-6 w-6 text-primary" />,
     color: "bg-accent/10",
-    detailedDescription:
-      "AI Rekrytering effektiviserar hela rekryteringsprocessen. Systemet screener kandidater automatiskt, identifierar de bäst lämpade och skapar shortlists. Spara tid och hitta rätt talang snabbare.",
-    stripePriceId: "price_REPLACE_WITH_YOUR_PRICE_ID_3",
-    price: 3999,
+    tiers: [
+      {
+        name: 'pro',
+        price: 2999,
+        features: [
+          "Automatisk screening av CV & ansökningar",
+          "Enkel rankning",
+          "Genererar shortlist",
+          "Rapport via e-post"
+        ],
+        stripePriceId: "price_talent_pro"
+      },
+      {
+        name: 'business',
+        price: 5499,
+        features: [
+          "Allt i Pro +",
+          "Automatisk kandidat-sökning på LinkedIn",
+          "Intervju-sammanfattningar",
+          "Integration med rekryteringssystem (Teamtailor etc.)"
+        ],
+        stripePriceId: "price_talent_business"
+      },
+      {
+        name: 'enterprise',
+        price: "Offert",
+        features: [
+          "Allt i Business +",
+          "Skräddarsydd AI för branschspecifika roller",
+          "Prediktiv matchning baserat på kultur & värderingar"
+        ]
+      }
+    ]
   },
   {
-    id: "ai-prospecting",
+    id: "lead",
     name: "AI Prospektering",
-    description: "Automatisk leadgenerering och outreach",
+    fullName: "Hiems Hermes Lead – AI Prospektering",
+    description: "Identifierar, kvalificerar & följer upp leads automatiskt",
+    detailedDescription: "AI Prospektering identifierar potentiella kunder och skickar automatiska, personliga mejl. Systemet följer upp leads och integreras med ditt CRM.",
     features: [
-      "Intelligent leadidentifiering",
-      "Automatiska personliga mejl",
-      "Uppföljning och lead nurturing",
-      "CRM-integration",
-      "Detaljerad rapportering och analytics",
+      "Identifierar potentiella kunder",
+      "Skapar kontaktlistor",
+      "Skickar automatiska mejl & uppföljningar"
     ],
     icon: <Target className="h-6 w-6 text-primary" />,
     color: "bg-primary/10",
-    detailedDescription:
-      "AI Prospektering identifierar potentiella kunder och skickar automatiska, personliga mejl. Systemet följer upp leads och integreras med ditt CRM för en sömlös säljprocess.",
-    stripePriceId: "price_REPLACE_WITH_YOUR_PRICE_ID_4",
-    price: 4999,
+    tiers: [
+      {
+        name: 'pro',
+        price: 3999,
+        features: [
+          "Identifierar potentiella kunder",
+          "Skapar kontaktlistor",
+          "Skickar automatiska mejl & uppföljningar"
+        ],
+        stripePriceId: "price_lead_pro"
+      },
+      {
+        name: 'business',
+        price: 7499,
+        features: [
+          "Allt i Pro +",
+          "AI skriver personliga mejl",
+          "CRM-integration",
+          "Automatiska uppföljningar tills svar"
+        ],
+        stripePriceId: "price_lead_business"
+      },
+      {
+        name: 'enterprise',
+        price: "Offert",
+        features: [
+          "Allt i Business +",
+          "Full funnel automation (mejl → möte → close)",
+          "Prediktiv lead scoring",
+          "Anpassad lead dashboard"
+        ]
+      }
+    ]
   },
   {
-    id: "ai-compliance",
+    id: "thor",
     name: "AI Compliance & Coaching",
-    description: "Analysera samtal och ge feedback",
+    fullName: "Hiems Thor – AI Compliance & Coaching",
+    description: "Analyserar säljsamtal, ger feedback & coaching",
+    detailedDescription: "Den mest populära lösningen! AI Compliance & Coaching analyserar dina samtal i realtid och identifierar regelöverträdelser. Ger omedelbar feedback och personliga förbättringsförslag.",
     features: [
-      "Automatisk samtalsanalys enligt regelverk",
-      "Identifiering av regelöverträdelser",
-      "Personlig feedback och coaching",
-      "Trendanalys och förbättringsförslag",
-      "GDPR-kompatibel hantering",
+      "Automatisk samtalsgranskning",
+      "Grundläggande feedback via e-post"
     ],
-    isPopular: true,
     icon: <Award className="h-6 w-6 text-primary" />,
     color: "bg-gradient-gold",
-    detailedDescription:
-      "Den mest populära lösningen! AI Compliance & Coaching analyserar dina samtal i realtid och identifierar regelöverträdelser. Ger omedelbar feedback och personliga förbättringsförslag till dina säljare. Perfekt för att säkerställa kvalitet och compliance.",
-    stripePriceId: "price_REPLACE_WITH_YOUR_PRICE_ID_5",
-    price: 5999,
+    isPopular: true,
+    tiers: [
+      {
+        name: 'pro',
+        price: 499,
+        features: [
+          "Automatisk samtalsgranskning",
+          "Grundläggande feedback via e-post",
+          "Per agent"
+        ],
+        stripePriceId: "price_thor_pro"
+      },
+      {
+        name: 'business',
+        price: 699,
+        features: [
+          "Allt i Pro +",
+          "AI-coach",
+          "Anpassad rapport per säljare",
+          "Dashboard & statistik",
+          "Per agent"
+        ],
+        stripePriceId: "price_thor_business"
+      },
+      {
+        name: 'enterprise',
+        price: "Offert",
+        features: [
+          "Allt i Business +",
+          "Obegränsade användare",
+          "Integration till CRM & samtalsplattformar"
+        ]
+      }
+    ]
   },
   {
-    id: "ai-website-optimization",
+    id: "optimize",
     name: "AI Hemsideoptimering",
-    description: "Förstå kundbeteende och optimera konvertering",
+    fullName: "Hiems Hermes Optimize – AI Hemsideoptimering",
+    description: "Visa rätt produkter till rätt kunder, öka konvertering",
+    detailedDescription: "AI Hemsideoptimering analyserar hur besökare interagerar med din hemsida och ger rekommendationer för att öka konverteringar.",
     features: [
-      "Analys av kundbeteende på hemsidan",
-      "Produktprioritering baserat på intresse",
-      "A/B-testing rekommendationer",
-      "Detaljerade rapporter och insights",
-      "Konverteringsoptimering",
+      "Analys av kundbeteende",
+      "Enkel produktprioritering per besökare",
+      "Grundläggande rapport"
     ],
     icon: <Globe className="h-6 w-6 text-primary" />,
     color: "bg-secondary/10",
-    detailedDescription:
-      "AI Hemsideoptimering analyserar hur besökare interagerar med din hemsida och ger rekommendationer för att öka konverteringar. Få insikter om vilka produkter som intresserar dina kunder mest.",
-    stripePriceId: "price_REPLACE_WITH_YOUR_PRICE_ID_6",
-    price: 2499,
-  },
+    tiers: [
+      {
+        name: 'pro',
+        price: 2499,
+        features: [
+          "Analys av kundbeteende",
+          "Enkel produktprioritering per besökare",
+          "Grundläggande rapport"
+        ],
+        stripePriceId: "price_optimize_pro"
+      },
+      {
+        name: 'business',
+        price: 4999,
+        features: [
+          "Allt i Pro +",
+          "AI som anpassar startsida & rekommendationer",
+          "A/B-testning",
+          "Integration med Shopify, WooCommerce m.fl."
+        ],
+        stripePriceId: "price_optimize_business"
+      },
+      {
+        name: 'enterprise',
+        price: "Offert",
+        features: [
+          "Allt i Business +",
+          "Prediktiv AI som lär sig säsongstrender & kundsegment",
+          "Egen dashboard"
+        ]
+      }
+    ]
+  }
 ];

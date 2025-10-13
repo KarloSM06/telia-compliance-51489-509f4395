@@ -46,8 +46,10 @@ serve(async (req) => {
         const userId = session.metadata?.user_id;
         const userEmail = session.metadata?.user_email;
         const productId = session.metadata?.product_id;
+        const tier = session.metadata?.tier;
+        const minutes = session.metadata?.minutes ? parseInt(session.metadata.minutes) : null;
         
-        console.log("[WEBHOOK] Payment successful for user:", userEmail, "Product:", productId);
+        console.log("[WEBHOOK] Payment successful for user:", userEmail, "Product:", productId, "Tier:", tier, "Minutes:", minutes);
         
         // Retrieve line items to get the price_id
         const lineItems = await stripe.checkout.sessions.listLineItems(session.id, { limit: 1 });
@@ -62,13 +64,15 @@ serve(async (req) => {
               product_id: productId,
               stripe_price_id: priceId,
               stripe_session_id: session.id,
-              status: 'active'
+              status: 'active',
+              tier: tier || null,
+              minutes_purchased: minutes
             });
           
           if (insertError) {
             console.error("[WEBHOOK] Error saving product purchase:", insertError);
           } else {
-            console.log("[WEBHOOK] Product purchase saved successfully for user:", userId);
+            console.log("[WEBHOOK] Product purchase saved successfully with tier and minutes");
           }
         }
         

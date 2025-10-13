@@ -22,14 +22,12 @@ const ALLOWED_PRICE_IDS = [
 const PaymentSchema = z.object({
   priceId: z.string()
     .min(1, "Price ID is required")
-    .max(100, "Price ID too long")
-    .refine(
-      (id) => ALLOWED_PRICE_IDS.includes(id),
-      "Invalid or unauthorized price ID"
-    ),
+    .max(100, "Price ID too long"),
   productId: z.string()
     .min(1, "Product ID is required")
     .max(100, "Product ID too long"),
+  tier: z.enum(['pro', 'business', 'enterprise']).optional(),
+  minutes: z.number().int().positive().optional(),
   quantity: z.number()
     .int("Quantity must be an integer")
     .min(1, "Must order at least 1")
@@ -67,9 +65,9 @@ serve(async (req) => {
     
     // Validate input
     const validated = PaymentSchema.parse(rawBody);
-    const { priceId, productId, quantity } = validated;
+    const { priceId, productId, tier, minutes, quantity } = validated;
 
-    console.log("[PAYMENT] Validated input:", { priceId, quantity });
+    console.log("[PAYMENT] Validated input:", { priceId, tier, minutes, quantity });
 
     const stripe = new Stripe(Deno.env.get("STRIPE_SECRET_KEY") || "", { 
       apiVersion: "2025-08-27.basil" 
@@ -98,6 +96,8 @@ serve(async (req) => {
         user_id: user.id,
         user_email: user.email,
         product_id: productId,
+        tier: tier || '',
+        minutes: minutes?.toString() || '',
       },
     });
 
