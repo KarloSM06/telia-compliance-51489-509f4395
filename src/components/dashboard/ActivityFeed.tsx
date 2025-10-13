@@ -129,13 +129,13 @@ export function ActivityFeed() {
   const getActivityColor = (type: Activity['type']) => {
     switch (type) {
       case 'call':
-        return 'bg-blue-100 text-blue-700';
+        return 'bg-[hsl(222,47%,18%)]/10 text-[hsl(222,47%,18%)]'; // Krono blue
       case 'message':
-        return 'bg-green-100 text-green-700';
+        return 'bg-[hsl(142,76%,36%)]/10 text-[hsl(142,76%,36%)]'; // Thor green
       case 'booking':
-        return 'bg-purple-100 text-purple-700';
+        return 'bg-[hsl(38,92%,50%)]/10 text-[hsl(38,92%,50%)]'; // Gastro orange
       case 'analysis':
-        return 'bg-orange-100 text-orange-700';
+        return 'bg-[hsl(142,76%,36%)]/10 text-[hsl(142,76%,36%)]'; // Thor green
     }
   };
 

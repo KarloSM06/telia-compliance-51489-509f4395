@@ -7,6 +7,11 @@ import { KronoSection } from "@/components/dashboard/KronoSection";
 import { GastroSection } from "@/components/dashboard/GastroSection";
 import { ActivityFeed } from "@/components/dashboard/ActivityFeed";
 import { QuickActions } from "@/components/dashboard/QuickActions";
+import { DashboardHero } from "@/components/dashboard/DashboardHero";
+import { UnifiedStats } from "@/components/dashboard/UnifiedStats";
+import { SmartRecommendations } from "@/components/dashboard/SmartRecommendations";
+import { MonthlySummary } from "@/components/dashboard/MonthlySummary";
+import { ProductComparison } from "@/components/dashboard/ProductComparison";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const Dashboard = () => {
@@ -34,12 +39,48 @@ const Dashboard = () => {
     return <EmptyDashboard />;
   }
 
+  const allProducts = ['krono', 'gastro', 'thor', 'talent', 'lead'];
+  const availableProductsCount = allProducts.filter(p => !products.includes(p)).length;
+
   return (
-    <div className="space-y-8">
-      {/* Product Overview */}
+    <div className="space-y-6 animate-fade-in">
+      {/* Hero Section */}
+      <DashboardHero 
+        userName={user?.user_metadata?.name || user?.email?.split('@')[0]}
+        activeProducts={products.length}
+        availableProducts={availableProductsCount}
+        isAdmin={productDetails.some(p => p.product_id === 'admin')}
+      />
+
+      {/* Unified Stats - Aggregated from all products */}
+      <UnifiedStats />
+
+      {/* Product Portfolio - Active + Available */}
       <ProductOverview />
 
-      {/* Main Content - Tabs for different products */}
+      {/* Main Content Grid */}
+      <div className="grid gap-6 lg:grid-cols-3">
+        <div className="lg:col-span-2 space-y-6">
+          {/* Quick Actions */}
+          <QuickActions />
+          
+          {/* Monthly Summary */}
+          <MonthlySummary />
+        </div>
+        
+        <div className="lg:col-span-1 space-y-6">
+          {/* Activity Feed */}
+          <ActivityFeed />
+          
+          {/* Smart Recommendations */}
+          <SmartRecommendations />
+        </div>
+      </div>
+
+      {/* Product Comparison */}
+      <ProductComparison />
+
+      {/* Tabs for Deep Dive per Product */}
       <Tabs defaultValue="overview" className="space-y-6">
         <TabsList className="grid w-full max-w-2xl grid-cols-4">
           <TabsTrigger value="overview">Översikt</TabsTrigger>
@@ -49,13 +90,8 @@ const Dashboard = () => {
         </TabsList>
 
         <TabsContent value="overview" className="space-y-6">
-          <div className="grid gap-6 lg:grid-cols-3">
-            <div className="lg:col-span-2">
-              <QuickActions />
-            </div>
-            <div className="lg:col-span-1">
-              <ActivityFeed />
-            </div>
+          <div className="text-center py-12 text-muted-foreground">
+            <p>Välj en produkt-tab ovan för detaljerad information</p>
           </div>
         </TabsContent>
 
