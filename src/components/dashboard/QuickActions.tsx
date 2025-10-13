@@ -1,97 +1,67 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ShoppingCart, FileText, Settings, HelpCircle, BarChart3, Upload, Calendar, Sparkles } from "lucide-react";
+import { ShoppingCart, FileText, Settings, HelpCircle, BarChart3, Upload } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { useUserProducts } from "@/hooks/useUserProducts";
 
 export function QuickActions() {
   const navigate = useNavigate();
-  const { products } = useUserProducts();
 
-  const hasThor = products.includes('thor');
-  const hasKrono = products.includes('krono');
-  const hasGastro = products.includes('gastro');
-  const hasTalent = products.includes('talent');
-
-  // Dynamic actions based on products
   const actions = [
-    // Analytics - always show
     {
-      title: "Analytics Dashboard",
-      description: "Detaljerad analys av all data",
+      title: "Köp mer paket",
+      description: "Utöka dina AI-funktioner",
+      icon: ShoppingCart,
+      color: "text-blue-600",
+      bgColor: "bg-blue-100",
+      onClick: () => navigate('/dashboard/packages'),
+    },
+    {
+      title: "Visa rapport",
+      description: "Se din månadsrapport",
       icon: BarChart3,
-      color: "text-primary",
-      bgColor: "bg-primary/10",
-      onClick: () => navigate('/dashboard/analytics'),
-      priority: 1,
+      color: "text-green-600",
+      bgColor: "bg-green-100",
+      onClick: () => navigate('/example-report'),
     },
-    // Custom Dashboard - always show
     {
-      title: "Custom Dashboard",
-      description: "Skapa din egen dashboard",
-      icon: Sparkles,
-      color: "text-accent",
-      bgColor: "bg-accent/10",
-      onClick: () => navigate('/dashboard/custom'),
-      priority: 2,
-    },
-    // Thor - upload calls
-    ...(hasThor ? [{
       title: "Ladda upp samtal",
-      description: "Analysera nya samtal med AI",
+      description: "Analysera nya samtal",
       icon: Upload,
-      color: "text-success",
-      bgColor: "bg-success/10",
+      color: "text-purple-600",
+      bgColor: "bg-purple-100",
       onClick: () => {
+        // Scroll to upload section if on Thor dashboard
         const uploadSection = document.querySelector('[data-upload-section]');
         if (uploadSection) {
           uploadSection.scrollIntoView({ behavior: 'smooth' });
         }
       },
-      priority: 3,
-    }] : []),
-    // Krono/Gastro - view bookings
-    ...(hasKrono || hasGastro ? [{
-      title: "Kommande bokningar",
-      description: "Se alla dina bokningar",
-      icon: Calendar,
-      color: "text-warning",
-      bgColor: "bg-warning/10",
-      onClick: () => navigate('/dashboard'),
-      priority: 4,
-    }] : []),
-    // If missing products - recommend
-    ...(!hasThor && !hasTalent ? [{
-      title: "Upptäck Thor AI",
-      description: "Vår mest populära produkt",
-      icon: ShoppingCart,
-      color: "text-[hsl(142,76%,36%)]",
-      bgColor: "bg-[hsl(142,76%,36%)]/10",
-      onClick: () => navigate('/dashboard/packages'),
-      priority: 5,
-      isRecommended: true,
-    }] : []),
-    // Settings
+    },
     {
       title: "Inställningar",
       description: "Anpassa dina tjänster",
       icon: Settings,
-      color: "text-muted-foreground",
-      bgColor: "bg-muted",
+      color: "text-orange-600",
+      bgColor: "bg-orange-100",
       onClick: () => navigate('/gdpr-settings'),
-      priority: 6,
     },
-    // Support
+    {
+      title: "Dokumentation",
+      description: "Läs guider och FAQ",
+      icon: FileText,
+      color: "text-indigo-600",
+      bgColor: "bg-indigo-100",
+      onClick: () => window.open('https://docs.lovable.dev', '_blank'),
+    },
     {
       title: "Support",
       description: "Få hjälp från oss",
       icon: HelpCircle,
-      color: "text-muted-foreground",
-      bgColor: "bg-muted",
+      color: "text-pink-600",
+      bgColor: "bg-pink-100",
       onClick: () => navigate('/#contact'),
-      priority: 7,
     },
-  ].sort((a, b) => a.priority - b.priority);
+  ];
 
   return (
     <Card>
@@ -104,19 +74,14 @@ export function QuickActions() {
             <Button
               key={action.title}
               variant="outline"
-              className={`h-auto p-4 flex flex-col items-start gap-2 hover:shadow-md transition-all group ${
-                action.isRecommended ? 'border-2 border-warning/50 bg-warning/5' : ''
-              }`}
+              className="h-auto p-4 flex flex-col items-start gap-2 hover:shadow-md transition-all group"
               onClick={action.onClick}
             >
               <div className={`p-2 rounded-lg ${action.bgColor} group-hover:scale-110 transition-transform`}>
                 <action.icon className={`h-5 w-5 ${action.color}`} />
               </div>
               <div className="text-left">
-                <p className="font-semibold text-sm flex items-center gap-2">
-                  {action.title}
-                  {action.isRecommended && <span className="text-xs text-warning">⭐</span>}
-                </p>
+                <p className="font-semibold text-sm">{action.title}</p>
                 <p className="text-xs text-muted-foreground">{action.description}</p>
               </div>
             </Button>
