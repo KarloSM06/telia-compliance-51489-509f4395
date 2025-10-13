@@ -1,10 +1,10 @@
 import { Link } from "react-router-dom";
 import { useState } from "react";
-import { QuoteModal } from "@/components/QuoteModal";
+import { ConsultationModal } from "@/components/ConsultationModal";
 import { Button } from "@/components/ui/button";
 
 export const Footer = () => {
-  const [isQuoteModalOpen, setIsQuoteModalOpen] = useState(false);
+  const [isConsultationModalOpen, setIsConsultationModalOpen] = useState(false);
   
   return (
     <footer className="bg-[#0A0A0A] text-white py-10 px-5">
@@ -15,9 +15,9 @@ export const Footer = () => {
         <Button 
           size="lg"
           className="bg-gradient-gold text-white hover:shadow-glow transition-all duration-300 font-semibold"
-          onClick={() => setIsQuoteModalOpen(true)}
+          onClick={() => setIsConsultationModalOpen(true)}
         >
-          Få offert
+          Boka konsultation
         </Button>
       </div>
 
@@ -74,7 +74,7 @@ export const Footer = () => {
         © 2025 Hiems HB. Alla rättigheter förbehållna.
       </div>
       
-      <QuoteModal open={isQuoteModalOpen} onOpenChange={setIsQuoteModalOpen} />
+      <ConsultationModal open={isConsultationModalOpen} onOpenChange={setIsConsultationModalOpen} />
     </footer>
   );
 };
