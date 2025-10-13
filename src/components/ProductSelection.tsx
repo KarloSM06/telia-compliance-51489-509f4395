@@ -444,15 +444,7 @@ export const ProductSelection = () => {
       </section>
 
       {/* CTA Section - Få offert ovanför Vad vi gör */}
-      <section className="relative py-12">
-        <div className="mx-auto max-w-7xl px-6 lg:px-8">
-          <div className="mx-auto max-w-2xl text-center">
-            <Button size="lg" className="bg-gradient-gold text-white hover:shadow-glow transition-all duration-300 font-semibold" onClick={() => setIsQuoteModalOpen(true)}>
-              Få offert
-            </Button>
-          </div>
-        </div>
-      </section>
+      
 
       {/* Vad vi gör Section */}
       <section className="relative py-20">
