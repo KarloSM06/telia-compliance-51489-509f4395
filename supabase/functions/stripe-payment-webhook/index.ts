@@ -42,6 +42,7 @@ serve(async (req) => {
       case "checkout.session.completed": {
         const session = event.data.object;
         console.log("[WEBHOOK] Checkout completed:", session.id);
+        console.log("[WEBHOOK] Session mode:", session.mode);
         
         const userId = session.metadata?.user_id;
         const userEmail = session.metadata?.user_email;
@@ -74,6 +75,46 @@ serve(async (req) => {
           } else {
             console.log("[WEBHOOK] Product purchase saved successfully with tier and minutes");
           }
+        }
+        
+        break;
+      }
+
+      case "customer.subscription.created":
+      case "customer.subscription.updated": {
+        const subscription = event.data.object;
+        console.log("[WEBHOOK] Subscription event:", event.type, subscription.id);
+        
+        // Get customer email
+        const customer = await stripe.customers.retrieve(subscription.customer as string);
+        const customerEmail = (customer as Stripe.Customer).email;
+        
+        console.log("[WEBHOOK] Subscription for customer:", customerEmail);
+        
+        // Get product info from subscription items
+        const subscriptionItem = subscription.items.data[0];
+        const priceId = subscriptionItem.price.id;
+        const productId = subscriptionItem.price.product as string;
+        
+        console.log("[WEBHOOK] Subscription price ID:", priceId, "Product ID:", productId);
+        
+        break;
+      }
+
+      case "customer.subscription.deleted": {
+        const subscription = event.data.object;
+        console.log("[WEBHOOK] Subscription cancelled:", subscription.id);
+        
+        // Update user_products status to cancelled
+        const { error: updateError } = await supabase
+          .from('user_products')
+          .update({ status: 'cancelled' })
+          .eq('stripe_price_id', subscription.items.data[0].price.id);
+        
+        if (updateError) {
+          console.error("[WEBHOOK] Error updating cancelled subscription:", updateError);
+        } else {
+          console.log("[WEBHOOK] Subscription marked as cancelled");
         }
         
         break;
