@@ -1,4 +1,4 @@
-import { Phone, UtensilsCrossed, Users, Target, Award, Globe } from "lucide-react";
+import { Phone, UtensilsCrossed, Users, Target, Award } from "lucide-react";
 import { ReactNode } from "react";
 
 export interface PackageTier {
@@ -12,12 +12,20 @@ export interface PackageData {
   id: string;
   name: string;
   fullName: string;
+  category: 'customer-service' | 'sales-growth' | 'hr';
+  tagline: string;
   description: string;
   detailedDescription: string;
   features: string[];
+  topFeatures: string[];
   icon: ReactNode;
+  iconName: string;
   color: string;
+  gradientFrom: string;
+  gradientTo: string;
   isPopular?: boolean;
+  badge?: 'POPULÄR' | 'NY';
+  startingPrice: number | string;
   
   // Tier-baserad prissättning
   tiers?: PackageTier[];
@@ -46,16 +54,27 @@ export const availablePackages: PackageData[] = [
     id: "krono",
     name: "AI Receptionist",
     fullName: "Hiems Krono – AI Receptionist",
+    category: "customer-service",
+    tagline: "Dygnet-runt-kommunikation som aldrig missar ett samtal",
     description: "Hanterar samtal, SMS & mejl dygnet runt",
     detailedDescription: "Hanterar samtal, SMS & mejl dygnet runt. Hiems Krono är din digitala receptionist som aldrig tar paus.",
+    startingPrice: 899,
+    topFeatures: [
+      "Hanterar samtal & SMS 24/7",
+      "Bokning & avbokning direkt i kalendern",
+      "Svarar på svenska & engelska"
+    ],
     features: [
       "Hanterar samtal & SMS 24/7",
       "Bokning & avbokning",
       "Enkel röstprofil",
       "Integration med Google Kalender"
     ],
-    icon: <Phone className="h-6 w-6 text-primary" />,
-    color: "bg-primary/10",
+    icon: <Phone className="h-6 w-6" />,
+    iconName: "Phone",
+    color: "bg-blue-500/10",
+    gradientFrom: "from-blue-500/20",
+    gradientTo: "to-cyan-500/20",
     hasMinutes: true,
     minutePricing: {
       100: { pro: 899, business: 1499, enterprise: "Offert" },
@@ -118,16 +137,27 @@ export const availablePackages: PackageData[] = [
     id: "gastro",
     name: "Restaurang & Café",
     fullName: "Hiems Krono Gastro – AI Restaurang & Café",
+    category: "customer-service",
+    tagline: "Perfekt bordshantering för restauranger och caféer",
     description: "Hanterar bokningar, beställningar & menyfrågor",
     detailedDescription: "Specialiserad AI för restaurang- och caféverksamhet. Hanterar bokningar, beställningar och kundförfrågningar.",
+    startingPrice: 899,
+    topFeatures: [
+      "Tar emot bokningar via telefon & SMS",
+      "Bekräftar, ändrar & avbokar automatiskt",
+      "Integreras med kassasystem"
+    ],
     features: [
       "Tar emot bokningar via telefon & SMS",
       "Bekräftar, ändrar & avbokar",
       "Enkel menyhantering",
       "Daglig sammanställning via mejl"
     ],
-    icon: <UtensilsCrossed className="h-6 w-6 text-primary" />,
-    color: "bg-secondary/10",
+    icon: <UtensilsCrossed className="h-6 w-6" />,
+    iconName: "UtensilsCrossed",
+    color: "bg-green-500/10",
+    gradientFrom: "from-green-500/20",
+    gradientTo: "to-emerald-500/20",
     hasMinutes: true,
     minutePricing: {
       100: { pro: 899, business: 1499, enterprise: "Offert" },
@@ -187,16 +217,27 @@ export const availablePackages: PackageData[] = [
     id: "talent",
     name: "AI Rekrytering",
     fullName: "Hiems Hermes Talent – AI Rekrytering",
+    category: "hr",
+    tagline: "Hitta rätt talang snabbare med AI-driven screening",
     description: "Screening, kandidatidentifiering & matchning",
     detailedDescription: "AI Rekrytering effektiviserar hela rekryteringsprocessen. Systemet screener kandidater automatiskt och identifierar de bäst lämpade.",
+    startingPrice: 2999,
+    topFeatures: [
+      "Automatisk screening av CV & ansökningar",
+      "AI-driven kandidatrankning",
+      "Genererar shortlist automatiskt"
+    ],
     features: [
       "Automatisk screening av CV & ansökningar",
       "Enkel rankning",
       "Genererar shortlist",
       "Rapport via e-post"
     ],
-    icon: <Users className="h-6 w-6 text-primary" />,
-    color: "bg-accent/10",
+    icon: <Users className="h-6 w-6" />,
+    iconName: "Users",
+    color: "bg-purple-500/10",
+    gradientFrom: "from-purple-500/20",
+    gradientTo: "to-pink-500/20",
     tiers: [
       {
         name: 'pro',
@@ -235,15 +276,26 @@ export const availablePackages: PackageData[] = [
     id: "lead",
     name: "AI Prospektering",
     fullName: "Hiems Hermes Lead – AI Prospektering",
+    category: "sales-growth",
+    tagline: "Automatisk prospektering som genererar kvalificerade leads",
     description: "Identifierar, kvalificerar & följer upp leads automatiskt",
     detailedDescription: "AI Prospektering identifierar potentiella kunder och skickar automatiska, personliga mejl. Systemet följer upp leads och integreras med ditt CRM.",
+    startingPrice: 3999,
+    topFeatures: [
+      "Identifierar potentiella kunder automatiskt",
+      "AI-genererade personliga mejl",
+      "Automatisk uppföljning till svar"
+    ],
     features: [
       "Identifierar potentiella kunder",
       "Skapar kontaktlistor",
       "Skickar automatiska mejl & uppföljningar"
     ],
-    icon: <Target className="h-6 w-6 text-primary" />,
-    color: "bg-primary/10",
+    icon: <Target className="h-6 w-6" />,
+    iconName: "Target",
+    color: "bg-green-500/10",
+    gradientFrom: "from-green-500/20",
+    gradientTo: "to-emerald-500/20",
     tiers: [
       {
         name: 'pro',
@@ -282,14 +334,26 @@ export const availablePackages: PackageData[] = [
     id: "thor",
     name: "AI Compliance & Coaching",
     fullName: "Hiems Thor – AI Compliance & Coaching",
+    category: "sales-growth",
+    tagline: "Säkerställ regelefterlevnad och förbättra säljprestanda",
     description: "Analyserar säljsamtal, ger feedback & coaching",
     detailedDescription: "Den mest populära lösningen! AI Compliance & Coaching analyserar dina samtal i realtid och identifierar regelöverträdelser. Ger omedelbar feedback och personliga förbättringsförslag.",
+    startingPrice: 499,
+    badge: "POPULÄR",
+    topFeatures: [
+      "Automatisk samtalsgranskning i realtid",
+      "AI-driven compliance-kontroll",
+      "Personlig coaching per säljare"
+    ],
     features: [
       "Automatisk samtalsgranskning",
       "Grundläggande feedback via e-post"
     ],
-    icon: <Award className="h-6 w-6 text-primary" />,
-    color: "bg-gradient-gold",
+    icon: <Award className="h-6 w-6" />,
+    iconName: "Award",
+    color: "bg-yellow-500/10",
+    gradientFrom: "from-yellow-500/20",
+    gradientTo: "to-amber-500/20",
     isPopular: true,
     tiers: [
       {

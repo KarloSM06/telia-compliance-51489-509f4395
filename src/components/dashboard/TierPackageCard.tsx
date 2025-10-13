@@ -151,25 +151,26 @@ export function TierPackageCard({ package: pkg }: TierPackageCardProps) {
         productName={pkg.fullName}
       />
       
-      <Card className={`relative ${userOwnsPackage ? 'border-2 border-primary' : ''} hover:shadow-lg transition-all`}>
+      <Card className={`group relative overflow-hidden border-2 border-transparent bg-gradient-to-br ${pkg.gradientFrom} ${pkg.gradientTo} backdrop-blur-sm hover:border-primary/30 hover:scale-[1.02] transition-all duration-500 hover:shadow-2xl h-full flex flex-col`}>
+        {/* Badges */}
         {userOwnsPackage && (
-          <Badge className="absolute top-4 right-4 bg-primary">
+          <Badge className="absolute top-4 right-4 bg-primary z-10">
             Äger
           </Badge>
         )}
         
-        {pkg.isPopular && !userOwnsPackage && (
-          <Badge className="absolute top-4 right-4 bg-gradient-gold">
-            Populär
+        {pkg.badge && !userOwnsPackage && (
+          <Badge className="absolute top-4 right-4 bg-gradient-to-r from-yellow-500 to-amber-500 text-primary z-10">
+            {pkg.badge}
           </Badge>
         )}
 
-      <CardHeader>
-        <div className={`w-12 h-12 rounded-lg ${pkg.color} flex items-center justify-center mb-3`}>
+      <CardHeader className="space-y-3">
+        <div className={`w-14 h-14 rounded-xl ${pkg.color} flex items-center justify-center mb-2 group-hover:scale-110 transition-transform duration-300`}>
           {pkg.icon}
         </div>
-        <CardTitle className="text-xl">{pkg.name}</CardTitle>
-        <CardDescription>{pkg.description}</CardDescription>
+        <CardTitle className="text-2xl font-display">{pkg.name}</CardTitle>
+        <p className="text-sm text-muted-foreground leading-relaxed">{pkg.tagline}</p>
       </CardHeader>
 
       <CardContent className="space-y-4">
@@ -211,19 +212,23 @@ export function TierPackageCard({ package: pkg }: TierPackageCardProps) {
         )}
 
         {/* Current Price */}
-        <div className="py-4 border-t border-b">
-          <p className="text-3xl font-bold">
-            {typeof currentPrice === 'number' ? `${currentPrice} kr` : currentPrice}
-            {typeof currentPrice === 'number' && <span className="text-sm font-normal text-muted-foreground">/mån</span>}
+        <div className="py-6 border-t border-b">
+          <p className="text-sm text-muted-foreground mb-1">Pris</p>
+          <p className="text-4xl font-bold bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
+            {typeof currentPrice === 'number' ? `${currentPrice.toLocaleString('sv-SE')} kr` : currentPrice}
           </p>
+          {typeof currentPrice === 'number' && <span className="text-sm font-normal text-muted-foreground">per månad</span>}
         </div>
 
-        {/* Features Preview */}
-        <div className="space-y-2">
-          {pkg.tiers?.find(t => t.name === selectedTier)?.features.slice(0, 3).map((feature, index) => (
-            <div key={index} className="flex items-start gap-2">
-              <Check className="h-4 w-4 text-primary mt-0.5 flex-shrink-0" />
-              <span className="text-sm">{feature}</span>
+        {/* Features Preview - Use topFeatures */}
+        <div className="space-y-3 flex-1">
+          <p className="text-sm font-medium text-muted-foreground">Inkluderar:</p>
+          {pkg.topFeatures.map((feature, index) => (
+            <div key={index} className="flex items-start gap-3">
+              <div className="mt-0.5">
+                <Check className="h-5 w-5 text-primary flex-shrink-0" />
+              </div>
+              <span className="text-sm leading-relaxed">{feature}</span>
             </div>
           ))}
         </div>
