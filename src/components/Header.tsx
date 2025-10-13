@@ -50,9 +50,9 @@ export const Header = () => {
           <div className="flex items-center">
             <button 
               onClick={() => navigate("/")}
-              className="flex items-center space-x-2 hover:opacity-80 transition-opacity"
+              className="flex items-center space-x-1 hover:opacity-80 transition-opacity"
             >
-              <img src={hiems_logo} alt="Hiems logo" className="h-8 w-8 rounded-lg" />
+              <img src={hiems_logo} alt="Hiems logo" className="h-16 w-16 rounded-lg" />
               <span className="text-xl font-bold text-foreground">Hiems</span>
             </button>
           </div>
