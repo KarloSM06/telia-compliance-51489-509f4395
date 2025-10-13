@@ -20,7 +20,7 @@ export function ConsultationModal({ open, onOpenChange }: ConsultationModalProps
   const [phoneNumber, setPhoneNumber] = useState("");
   const { toast } = useToast();
 
-  const PRICE = 2000;
+  const PRICE = 1999;
   const finalPrice = isValidCode ? 0 : PRICE;
 
   const validateDiscountCode = (code: string) => {
