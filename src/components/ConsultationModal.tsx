@@ -16,6 +16,8 @@ export function ConsultationModal({ open, onOpenChange }: ConsultationModalProps
   const [discountCode, setDiscountCode] = useState("");
   const [isValidCode, setIsValidCode] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [email, setEmail] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
   const { toast } = useToast();
 
   const PRICE = 2000;
@@ -39,8 +41,30 @@ export function ConsultationModal({ open, onOpenChange }: ConsultationModalProps
   };
 
   const handleBooking = async () => {
+    if (!email || !phoneNumber) {
+      toast({
+        title: "Fyll i alla fält",
+        description: "E-post och telefonnummer krävs för att boka.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setIsLoading(true);
     try {
+      // Save booking to database
+      const { error: bookingError } = await supabase
+        .from('bookings')
+        .insert({
+          epost: email,
+          telefonnummer: phoneNumber,
+          bokningstyp: 'konsultation',
+          status: finalPrice === 0 ? 'bekräftad' : 'väntande_betalning',
+          info: `AI Konsultation - ${finalPrice === 0 ? 'Gratis med rabattkod' : `${finalPrice} kr`}`,
+        });
+
+      if (bookingError) throw bookingError;
+
       if (finalPrice === 0) {
         // Free consultation - just show confirmation
         toast({
@@ -52,7 +76,7 @@ export function ConsultationModal({ open, onOpenChange }: ConsultationModalProps
         // Paid consultation - create Stripe checkout for one-time payment
         const { data, error } = await supabase.functions.invoke("create-payment-session", {
           body: {
-            priceId: "price_REPLACE_WITH_CONSULTATION_PRICE_ID", // TODO: Replace with actual Stripe price ID for consultation
+            priceId: "price_REPLACE_WITH_CONSULTATION_PRICE_ID",
             productId: "consultation",
             quantity: 1,
           },
@@ -145,6 +169,32 @@ export function ConsultationModal({ open, onOpenChange }: ConsultationModalProps
                   Använd
                 </Button>
               </div>
+            </div>
+          </div>
+
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="email">E-postadress *</Label>
+              <Input
+                id="email"
+                type="email"
+                placeholder="din@epost.se"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="phone">Telefonnummer *</Label>
+              <Input
+                id="phone"
+                type="tel"
+                placeholder="070-123 45 67"
+                value={phoneNumber}
+                onChange={(e) => setPhoneNumber(e.target.value)}
+                required
+              />
             </div>
           </div>
 
