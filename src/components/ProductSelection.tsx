@@ -13,6 +13,10 @@ import { supabase } from "@/integrations/supabase/client";
 import { QuoteModal } from "@/components/QuoteModal";
 import { ConsultationModal } from "@/components/ConsultationModal";
 import { normalizePhoneNumber } from "@/lib/phoneUtils";
+import { useAuth } from "@/hooks/useAuth";
+import { useCart } from "@/hooks/useCart";
+import { EnterpriseContactModal } from "@/components/EnterpriseContactModal";
+import { availablePackages } from "@/components/dashboard/PackagesData";
 interface Message {
   role: 'user' | 'assistant';
   content: string;
@@ -20,9 +24,10 @@ interface Message {
 const CHAT_URL = `https://shskknkivuewuqonjdjc.supabase.co/functions/v1/chat-assistant`;
 export const ProductSelection = () => {
   const navigate = useNavigate();
-  const {
-    toast
-  } = useToast();
+  const { toast } = useToast();
+  const { user } = useAuth();
+  const { addItem } = useCart();
+  
   const [messages, setMessages] = useState<Message[]>([{
     role: 'assistant',
     content: 'Hej! 👋 Jag heter Krono och är er digitala AI-rådgivare från Hiems. Vilket paket passar bäst för ditt företag? Berätta lite om er verksamhet så hjälper jag er hitta rätt lösning!'
@@ -34,6 +39,8 @@ export const ProductSelection = () => {
   const [selectedPackage, setSelectedPackage] = useState<string | null>(null);
   const [isQuoteModalOpen, setIsQuoteModalOpen] = useState(false);
   const [isConsultationModalOpen, setIsConsultationModalOpen] = useState(false);
+  const [isEnterpriseModalOpen, setIsEnterpriseModalOpen] = useState(false);
+  const [selectedEnterpriseProduct, setSelectedEnterpriseProduct] = useState<string>('');
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   useEffect(() => {
@@ -315,30 +322,67 @@ export const ProductSelection = () => {
     }
   };
   const handleCheckout = async (packageName: string, tier: 'pro' | 'business' | 'enterprise') => {
+    // Kontrollera om användaren är inloggad
+    if (!user) {
+      navigate('/auth');
+      return;
+    }
+
+    // Om Enterprise tier, öppna kontakt-modal istället
     if (tier === 'enterprise') {
+      setSelectedEnterpriseProduct(packageDetails[packageName]?.title || packageName);
+      setIsEnterpriseModalOpen(true);
+      return;
+    }
+
+    // Hitta rätt paket från PackagesData
+    const packageData = availablePackages.find(pkg => pkg.id === packageName);
+    if (!packageData) {
       toast({
-        title: "Kontakta oss för offert",
-        description: "Vi hör av oss inom kort för att diskutera era behov."
+        title: "Fel",
+        description: "Kunde inte hitta paketet",
+        variant: "destructive"
       });
       return;
     }
-    setIsCheckingOut(true);
-    try {
-      // TODO: Replace with actual Stripe price IDs
-      const priceId = `price_${packageName}_${tier}`;
+
+    // Hämta rätt price ID
+    let priceId: string | undefined;
+    
+    if (packageData.hasMinutes && packageData.stripePriceIds) {
+      // För Krono & Gastro med minuter
+      priceId = packageData.stripePriceIds[tier]?.[selectedMinutes];
+    } else if (packageData.tiers) {
+      // För övriga paket med tiers
+      const tierData = packageData.tiers.find(t => t.name === tier);
+      priceId = tierData?.stripePriceId;
+    }
+
+    if (!priceId) {
       toast({
-        title: "Checkout öppnas snart",
-        description: "Stripe integration kommer snart..."
-      });
-    } catch (error) {
-      toast({
-        title: "Ett fel uppstod",
-        description: "Vänligen försök igen senare.",
+        title: "Fel",
+        description: "Kunde inte hitta pris-ID för detta alternativ",
         variant: "destructive"
       });
-    } finally {
-      setIsCheckingOut(false);
+      return;
     }
+
+    // Lägg till i kundvagnen
+    addItem({
+      productId: packageData.id,
+      productName: packageData.fullName,
+      tier: tier,
+      minutes: packageData.hasMinutes ? selectedMinutes : undefined,
+      priceId: priceId,
+      price: packageData.hasMinutes 
+        ? packageData.minutePricing?.[selectedMinutes]?.[tier] as number
+        : (packageData.tiers?.find(t => t.name === tier)?.price as number)
+    });
+
+    toast({
+      title: "Tillagd i kundvagnen!",
+      description: `${packageData.fullName} (${tier.toUpperCase()}) har lagts till`,
+    });
   };
   const normalizePhoneNumber = (phone: string): string => {
     // Remove all spaces, dashes, and parentheses
@@ -1010,5 +1054,10 @@ export const ProductSelection = () => {
       
       <QuoteModal open={isQuoteModalOpen} onOpenChange={setIsQuoteModalOpen} />
       <ConsultationModal open={isConsultationModalOpen} onOpenChange={setIsConsultationModalOpen} />
+      <EnterpriseContactModal 
+        open={isEnterpriseModalOpen} 
+        onOpenChange={setIsEnterpriseModalOpen}
+        productName={selectedEnterpriseProduct}
+      />
     </div>;
 };
