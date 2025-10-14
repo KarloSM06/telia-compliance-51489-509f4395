@@ -13,7 +13,26 @@ serve(async (req) => {
   }
 
   try {
+    // Verify authentication
+    const authHeader = req.headers.get('Authorization');
+    if (!authHeader) {
+      throw new Error('Unauthorized - No authentication token provided');
+    }
+
+    const token = authHeader.replace('Bearer ', '');
+    const { data: { user }, error: authError } = await supabase.auth.getUser(token);
+    
+    if (authError || !user) {
+      throw new Error('Unauthorized - Invalid authentication token');
+    }
+
     const { filePath } = await req.json();
+    
+    // Verify file ownership - user can only process their own files
+    const fileUserId = filePath.split('/')[0];
+    if (fileUserId !== user.id) {
+      throw new Error('Forbidden - You can only process your own files');
+    }
     
     if (!filePath) {
       throw new Error('File path is required');
@@ -205,8 +224,8 @@ Svara ENDAST med JSON-objektet, ingen annan text.
     const violationCount = analysisData.violations ? analysisData.violations.length : 0;
     const calculatedScore = analysisData.compliance_status === 'compliant' ? 100 : Math.max(0, 100 - (violationCount * 20));
 
-    // Encrypt the transcript
-    const encryptedTranscript = await encryptText(transcript, encryptionKey);
+    // Encrypt the transcript using secure encryption
+    const encryptedTranscript = await encryptText(transcript, encryptionKey, supabase);
     
     // Prepare encrypted analysis data
     const encryptedAnalysisData = {
@@ -265,7 +284,15 @@ Svara ENDAST med JSON-objektet, ingen annan text.
     );
 
   } catch (error) {
-    console.error('Error processing call:', error);
+    // Generate request ID for tracking
+    const requestId = crypto.randomUUID();
+    
+    console.error('Processing error:', {
+      request_id: requestId,
+      error: error.message,
+      stack: error.stack,
+      timestamp: new Date().toISOString()
+    });
 
     // Try to update status to error if possible
     try {
@@ -274,7 +301,6 @@ Svara ENDAST med JSON-objektet, ingen annan text.
         Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
       );
       
-      // Parse request body only once at the beginning
       const requestBody = await req.clone().json();
       const filePath = requestBody.filePath;
       
@@ -288,10 +314,20 @@ Svara ENDAST med JSON-objektet, ingen annan text.
       console.error('Error updating error status:', updateError);
     }
 
+    // Generic client error response (don't expose internal details)
+    const statusCode = error.message?.includes('Unauthorized') ? 401 
+      : error.message?.includes('Forbidden') ? 403 
+      : 500;
+
     return new Response(
-      JSON.stringify({ error: error.message }),
+      JSON.stringify({ 
+        error: statusCode === 401 ? 'Authentication required' 
+          : statusCode === 403 ? 'Access denied' 
+          : 'Processing failed',
+        request_id: requestId
+      }),
       {
-        status: 500,
+        status: statusCode,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       }
     );
@@ -389,19 +425,15 @@ function countOccurrences(arr: string[]): Record<string, number> {
   }, {} as Record<string, number>);
 }
 
-async function encryptText(text: string, key: string): Promise<string> {
-  const encoder = new TextEncoder();
-  const data = encoder.encode(text);
+// Use Supabase's secure encryption via RPC instead of weak XOR
+async function encryptText(text: string, key: string, supabaseClient: any): Promise<string> {
+  const { data, error } = await supabaseClient.rpc('encrypt_text', {
+    data: text,
+    key: key
+  });
   
-  // Simple XOR encryption with key mixing
-  const keyData = encoder.encode(key);
-  const encrypted = new Uint8Array(data.length);
-  
-  for (let i = 0; i < data.length; i++) {
-    encrypted[i] = data[i] ^ keyData[i % keyData.length];
-  }
-  
-  return btoa(String.fromCharCode(...encrypted));
+  if (error) throw error;
+  return data;
 }
 
 function generateRecommendations(averageScore: number | null, successRate: number | null, biggestWeakness: string | null): string[] {

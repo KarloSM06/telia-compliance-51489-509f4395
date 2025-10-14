@@ -204,6 +204,17 @@ Deno.serve(async (req) => {
 
     const audioBlob = await audioResponse.arrayBuffer();
     const audioSize = audioBlob.byteLength;
+    
+    // Double-check size after download
+    if (audioSize > MAX_AUDIO_SIZE) {
+      console.error('Downloaded audio file too large:', audioSize);
+      return new Response(JSON.stringify({ 
+        error: 'Audio file exceeds maximum size (100MB)' 
+      }), {
+        status: 413,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+      });
+    }
     console.log('Audio downloaded, size:', audioSize);
 
     // Upload to Supabase Storage

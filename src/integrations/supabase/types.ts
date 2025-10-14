@@ -846,9 +846,21 @@ export type Database = {
         Args: { data: string; key: string }
         Returns: string
       }
+      has_org_role: {
+        Args: { required_roles: string[]; user_uuid: string }
+        Returns: boolean
+      }
       is_admin: {
         Args: { user_id: string }
         Returns: boolean
+      }
+      user_can_access_dashboard: {
+        Args: { dashboard_uuid: string; user_uuid: string }
+        Returns: boolean
+      }
+      user_organization_id: {
+        Args: { user_uuid: string }
+        Returns: string
       }
     }
     Enums: {

@@ -5,6 +5,9 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
+const MAX_MESSAGES_PER_SESSION = 50;
+const MAX_MESSAGE_LENGTH = 2000;
+
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
@@ -12,6 +15,21 @@ serve(async (req) => {
 
   try {
     const { messages } = await req.json();
+    
+    // Input validation
+    if (!Array.isArray(messages)) {
+      throw new Error('Invalid messages format');
+    }
+    
+    if (messages.length > MAX_MESSAGES_PER_SESSION) {
+      throw new Error('Too many messages in session');
+    }
+    
+    for (const msg of messages) {
+      if (msg.content && msg.content.length > MAX_MESSAGE_LENGTH) {
+        throw new Error('Message too long');
+      }
+    }
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     
     if (!LOVABLE_API_KEY) {
@@ -153,9 +171,21 @@ Kom ihåg: Du representerar ett premium AI-företag. Var professionell men perso
       headers: { ...corsHeaders, "Content-Type": "text/event-stream" },
     });
   } catch (error) {
-    console.error("Chat assistant error:", error);
-    return new Response(JSON.stringify({ error: error instanceof Error ? error.message : "Ett okänt fel uppstod" }), {
-      status: 500,
+    const requestId = crypto.randomUUID();
+    
+    console.error("Chat assistant error:", {
+      request_id: requestId,
+      error: error.message,
+      timestamp: new Date().toISOString()
+    });
+    
+    return new Response(JSON.stringify({ 
+      error: error.message === 'Too many messages in session' || error.message === 'Message too long' || error.message === 'Invalid messages format'
+        ? error.message 
+        : "Ett fel uppstod vid kommunikation med AI:n",
+      request_id: requestId
+    }), {
+      status: error.message.includes('Too many') ? 429 : 500,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   }

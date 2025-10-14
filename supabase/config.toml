@@ -1,13 +1,13 @@
 project_id = "shskknkivuewuqonjdjc"
 
 [functions.process-call]
-verify_jwt = false
+verify_jwt = true
 
 [functions.process-call-lovable]
-verify_jwt = false
+verify_jwt = true
 
 [functions.process-queue]
-verify_jwt = false
+verify_jwt = true
 
 [functions.delete-user-data]
 verify_jwt = true
