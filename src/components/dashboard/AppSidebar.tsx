@@ -1,5 +1,5 @@
-import { Home, Package, LayoutDashboard, Settings, BarChart3 } from "lucide-react";
-import { NavLink } from "react-router-dom";
+import { Home, Package, LayoutDashboard, Settings, BarChart3, LogOut } from "lucide-react";
+import { NavLink, useNavigate } from "react-router-dom";
 import {
   Sidebar,
   SidebarContent,
@@ -15,7 +15,14 @@ import {
 } from "@/components/ui/sidebar";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { useAuth } from "@/hooks/useAuth";
-import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const navigationItems = [
   { title: "Dashboard", url: "/dashboard", icon: Home },
@@ -26,30 +33,63 @@ const navigationItems = [
 ];
 
 export function AppSidebar() {
-  const { user } = useAuth();
+  const { user, signOut } = useAuth();
   const { state } = useSidebar();
+  const navigate = useNavigate();
   const isCollapsed = state === "collapsed";
+
+  const getInitials = (email: string) => {
+    return email.charAt(0).toUpperCase();
+  };
 
   return (
     <Sidebar collapsible="icon" className="border-r border-sidebar-border">
       <SidebarHeader className="border-b border-sidebar-border p-4">
-        <div className="flex items-center gap-3">
-          <Avatar className="h-10 w-10">
-            <AvatarFallback className="bg-primary text-primary-foreground">
-              {user?.email?.charAt(0).toUpperCase() || "U"}
-            </AvatarFallback>
-          </Avatar>
-          {!isCollapsed && (
-            <div className="flex-1 overflow-hidden">
-              <p className="text-sm font-semibold truncate text-sidebar-foreground">
-                {user?.email?.split("@")[0] || "Användare"}
-              </p>
-              <p className="text-xs text-sidebar-foreground/60 truncate">
-                {user?.email}
-              </p>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <div className="flex items-center gap-3 cursor-pointer hover:bg-sidebar-accent/50 rounded-md p-2 -m-2 transition-all">
+              <Avatar className="h-10 w-10 ring-2 ring-yellow-500/20 hover:ring-yellow-500/60 transition-all duration-300">
+                <AvatarFallback className="bg-yellow-500 text-primary font-semibold">
+                  {getInitials(user?.email || "")}
+                </AvatarFallback>
+              </Avatar>
+              {!isCollapsed && (
+                <div className="flex-1 overflow-hidden">
+                  <p className="text-sm font-semibold truncate text-sidebar-foreground">
+                    {user?.email?.split("@")[0] || "Användare"}
+                  </p>
+                  <p className="text-xs text-sidebar-foreground/60 truncate">
+                    {user?.email}
+                  </p>
+                </div>
+              )}
             </div>
-          )}
-        </div>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="w-56">
+            <DropdownMenuLabel>
+              <div className="flex flex-col space-y-1">
+                <p className="text-sm font-medium">Mitt konto</p>
+                <p className="text-xs text-muted-foreground truncate">
+                  {user?.email}
+                </p>
+              </div>
+            </DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem onClick={() => navigate("/")}>
+              <Home className="mr-2 h-4 w-4" />
+              Hem
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => navigate("/dashboard/settings")}>
+              <Settings className="mr-2 h-4 w-4" />
+              Inställningar
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem onClick={signOut} className="text-destructive">
+              <LogOut className="mr-2 h-4 w-4" />
+              Logga ut
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </SidebarHeader>
 
       <SidebarContent>
