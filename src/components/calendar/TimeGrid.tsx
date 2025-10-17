@@ -1,5 +1,5 @@
 import { format, setHours, setMinutes } from 'date-fns';
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { AvailabilitySlot } from '@/hooks/useAvailability';
 
 interface TimeGridProps {
@@ -9,12 +9,35 @@ interface TimeGridProps {
 }
 
 export const TimeGrid = ({ onTimeSlotClick, availabilitySlots = [], currentDate = new Date() }: TimeGridProps) => {
-  const hours = Array.from({ length: 24 }, (_, i) => i);
   const [hoveredSlot, setHoveredSlot] = useState<{ hour: number; quarter: number } | null>(null);
 
   // Get availability slots for current day of week (0 = Monday, 6 = Sunday)
   const dayOfWeek = currentDate.getDay() === 0 ? 6 : currentDate.getDay() - 1; // Convert to 0=Mon, 6=Sun
   const daySlots = availabilitySlots.filter(slot => slot.day_of_week === dayOfWeek && slot.is_active);
+
+  // Calculate visible hour range based on availability slots
+  const { startHour, endHour } = useMemo(() => {
+    if (daySlots.length === 0) {
+      // No availability slots - show full day
+      return { startHour: 0, endHour: 23 };
+    }
+
+    // Find earliest start and latest end from availability slots
+    const times = daySlots.flatMap(slot => [
+      parseInt(slot.start_time.split(':')[0]),
+      parseInt(slot.end_time.split(':')[0])
+    ]);
+
+    const earliest = Math.max(0, Math.min(...times) - 1); // Add 1 hour buffer before
+    const latest = Math.min(23, Math.max(...times) + 1); // Add 1 hour buffer after
+
+    return { startHour: earliest, endHour: latest };
+  }, [daySlots]);
+
+  const hours = useMemo(() => 
+    Array.from({ length: endHour - startHour + 1 }, (_, i) => startHour + i),
+    [startHour, endHour]
+  );
 
   const isAvailableAt = (hour: number, minutes: number) => {
     const timeString = `${hour.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:00`;

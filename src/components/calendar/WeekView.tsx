@@ -70,6 +70,28 @@ export const WeekView = ({
   const weekEnd = endOfWeek(date, { locale: sv, weekStartsOn: 1 });
   const daysInWeek = eachDayOfInterval({ start: weekStart, end: weekEnd });
 
+  // Calculate visible hour range based on availability slots
+  const { startHour, endHour } = useMemo(() => {
+    if (slots.length === 0) {
+      return { startHour: 0, endHour: 23 };
+    }
+
+    const times = slots.flatMap(slot => [
+      parseInt(slot.start_time.split(':')[0]),
+      parseInt(slot.end_time.split(':')[0])
+    ]);
+
+    const earliest = Math.max(0, Math.min(...times) - 1);
+    const latest = Math.min(23, Math.max(...times) + 1);
+
+    return { startHour: earliest, endHour: latest };
+  }, [slots]);
+
+  const visibleHours = useMemo(() => 
+    Array.from({ length: endHour - startHour + 1 }, (_, i) => startHour + i),
+    [startHour, endHour]
+  );
+
   // Check if time is available for a specific day
   const isAvailableAt = (dayIndex: number, hour: number) => {
     const daySlots = slots.filter(slot => slot.day_of_week === dayIndex && slot.is_active);
@@ -251,7 +273,7 @@ export const WeekView = ({
           <div className="flex">
             {/* Time labels column */}
             <div className="w-16 flex-shrink-0 relative">
-              {Array.from({ length: 24 }, (_, hour) => (
+              {visibleHours.map((hour) => (
                 <div
                   key={hour}
                   className="relative h-[60px] border-b border-r border-border"
@@ -275,7 +297,7 @@ export const WeekView = ({
                   onDrop={handleDrop}
                 >
                   {/* Hourly grid lines */}
-                  {Array.from({ length: 24 }, (_, hour) => (
+                  {visibleHours.map((hour) => (
                     <div
                       key={hour}
                       className={`relative h-[60px] border-b border-border transition-all cursor-pointer group ${
