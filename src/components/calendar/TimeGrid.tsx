@@ -70,7 +70,7 @@ export const TimeGrid = ({ onTimeSlotClick, availabilitySlots = [], currentDate 
         return (
           <div
             key={hour}
-            className={`relative h-[60px] border-b border-border transition-all cursor-pointer group ${
+            className={`relative h-[80px] border-b border-border transition-all cursor-pointer group ${
               isHourAvailable ? 'bg-emerald-500/10' : 'hover:bg-accent/30'
             }`}
             onClick={(e) => handleClick(e, hour)}
@@ -87,16 +87,16 @@ export const TimeGrid = ({ onTimeSlotClick, availabilitySlots = [], currentDate 
                 key={quarter}
                 className={`absolute left-0 right-0 border-t transition-all ${
                   quarter === 0 ? 'top-0 border-border' : ''
-                }${quarter === 1 ? 'top-[15px] border-dashed border-border/30' : ''}${
-                  quarter === 2 ? 'top-[30px] border-dashed border-border/30' : ''
-                }${quarter === 3 ? 'top-[45px] border-dashed border-border/30' : ''}${
+                }${quarter === 1 ? 'top-[20px] border-dashed border-border/30' : ''}${
+                  quarter === 2 ? 'top-[40px] border-dashed border-border/30' : ''
+                }${quarter === 3 ? 'top-[60px] border-dashed border-border/30' : ''}${
                   hoveredSlot?.hour === hour && hoveredSlot?.quarter === quarter
                     ? ' bg-primary/10'
                     : ''
                 }`}
                 style={{
-                  height: quarter === 0 ? '0' : '15px',
-                  top: quarter === 0 ? '0' : `${quarter * 15}px`,
+                  height: quarter === 0 ? '0' : '20px',
+                  top: quarter === 0 ? '0' : `${quarter * 20}px`,
                 }}
               />
             ))}
@@ -105,7 +105,7 @@ export const TimeGrid = ({ onTimeSlotClick, availabilitySlots = [], currentDate 
             {hoveredSlot?.hour === hour && (
               <div 
                 className="absolute left-2 text-xs font-medium text-primary pointer-events-none bg-background/90 px-2 py-0.5 rounded shadow-sm"
-                style={{ top: `${hoveredSlot.quarter * 15}px` }}
+                style={{ top: `${hoveredSlot.quarter * 20}px` }}
               >
                 {hour.toString().padStart(2, '0')}:{(hoveredSlot.quarter * 15).toString().padStart(2, '0')}
               </div>

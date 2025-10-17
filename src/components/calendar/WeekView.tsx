@@ -276,7 +276,7 @@ export const WeekView = ({
               {visibleHours.map((hour) => (
                 <div
                   key={hour}
-                  className="relative h-[60px] border-b border-r border-border"
+                  className="relative h-[80px] border-b border-r border-border"
                 >
                   <div className="absolute -top-2 right-2 text-xs text-muted-foreground font-medium">
                     {hour.toString().padStart(2, '0')}:00
@@ -300,13 +300,13 @@ export const WeekView = ({
                   {visibleHours.map((hour) => (
                     <div
                       key={hour}
-                      className={`relative h-[60px] border-b border-border transition-all cursor-pointer group ${
+                      className={`relative h-[80px] border-b border-border transition-all cursor-pointer group ${
                         isAvailableAt(dayIndex, hour) ? 'bg-emerald-500/10' : 'hover:bg-accent/30'
                       }`}
                       onClick={(e) => {
                         const rect = e.currentTarget.getBoundingClientRect();
                         const relativeY = e.clientY - rect.top;
-                        const minutes = Math.floor((relativeY / 60) * 60);
+                        const minutes = Math.floor((relativeY / 80) * 60);
                         const snappedMinutes = Math.round(minutes / 15) * 15;
                         const clickedTime = new Date(
                           day.getFullYear(),
@@ -323,7 +323,7 @@ export const WeekView = ({
                         <div
                           key={quarter}
                           className="absolute left-0 right-0 border-t border-dashed border-border/30"
-                          style={{ top: `${quarter * 15}px` }}
+                          style={{ top: `${quarter * 20}px` }}
                         />
                       ))}
                     </div>
