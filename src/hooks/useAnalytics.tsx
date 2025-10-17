@@ -109,7 +109,7 @@ export const useAnalytics = (dateRange?: { from: Date; to: Date }) => {
         );
         
         const totalDuration = dayHistory.reduce((sum, call) => {
-          const duration = call.duration ? parseFloat(call.duration) : 0;
+          const duration = call.duration ? (typeof call.duration === 'number' ? call.duration : parseFloat(call.duration)) : 0;
           return sum + duration;
         }, 0);
 

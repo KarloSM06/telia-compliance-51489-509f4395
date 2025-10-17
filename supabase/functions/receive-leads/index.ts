@@ -37,17 +37,6 @@ serve(async (req) => {
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
     );
 
-    // Verify API key from n8n
-    const apiKey = req.headers.get('x-api-key');
-    const expectedKey = Deno.env.get('N8N_API_KEY');
-    
-    if (!apiKey || apiKey !== expectedKey) {
-      return new Response(
-        JSON.stringify({ error: 'Unauthorized' }),
-        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
-    }
-
     const body: RequestBody = await req.json();
     const { search_id, user_id, leads } = body;
 

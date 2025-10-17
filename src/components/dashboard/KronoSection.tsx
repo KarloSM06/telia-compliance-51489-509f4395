@@ -46,11 +46,8 @@ export function KronoSection() {
         .select('id');
 
       const minutesUsed = (callData || []).reduce((acc, call) => {
-        if (call.duration) {
-          // Parse duration if it's in format like "2:30"
-          const parts = call.duration.split(':');
-          const minutes = parseInt(parts[0] || '0') + (parseInt(parts[1] || '0') / 60);
-          return acc + minutes;
+        if (call.duration && typeof call.duration === 'number') {
+          return acc + call.duration;
         }
         return acc;
       }, 0);
