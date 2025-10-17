@@ -2,12 +2,14 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { CalendarView } from "@/components/calendar/CalendarView";
 import { DayView } from "@/components/calendar/DayView";
 import { WeekView } from "@/components/calendar/WeekView";
 import { YearView } from "@/components/calendar/YearView";
 import { EventModal } from "@/components/calendar/EventModal";
 import { IntegrationSetupModal } from "@/components/calendar/IntegrationSetupModal";
+import { AvailabilitySettings } from "@/components/calendar/AvailabilitySettings";
 import { useCalendarEvents, CalendarEvent } from "@/hooks/useCalendarEvents";
 import { useBookingIntegrations } from "@/hooks/useBookingIntegrations";
 import { Plus, Settings, Calendar, CalendarDays, CalendarRange, CalendarClock } from "lucide-react";
@@ -171,9 +173,13 @@ const CalendarPage = () => {
                 <Settings className="h-4 w-4 mr-2" />
                 Integrationer
               </Button>
-              <Button onClick={() => handleQuickCreate(new Date())}>
+              <Button onClick={() => {
+                setSelectedEvent(null);
+                setSelectedDate(new Date());
+                setShowEventModal(true);
+              }}>
                 <Plus className="h-4 w-4 mr-2" />
-                Ny händelse
+                Skapa händelse
               </Button>
             </div>
           </div>
@@ -197,8 +203,14 @@ const CalendarPage = () => {
       {/* Month view */}
       {currentView === 'month' && (
         <div className="container mx-auto p-6 space-y-6 flex-1 overflow-auto">
-
-      {integrations.length > 0 && (
+          <Tabs defaultValue="calendar" className="w-full">
+            <TabsList>
+              <TabsTrigger value="calendar">Kalender</TabsTrigger>
+              <TabsTrigger value="availability">Min Tillgänglighet</TabsTrigger>
+            </TabsList>
+            
+            <TabsContent value="calendar" className="space-y-6">
+              {integrations.length > 0 && (
         <Card>
           <CardHeader>
             <CardTitle>Aktiva integrationer</CardTitle>
@@ -294,22 +306,28 @@ const CalendarPage = () => {
         </Card>
       )}
 
-      <CalendarView 
-        events={events}
-        onEventClick={handleEventClick}
-        onDateClick={handleDateClick}
-      />
+              <CalendarView 
+                events={events}
+                onEventClick={handleEventClick}
+                onDateClick={handleDateClick}
+              />
 
-      {showEventModal && (
-        <EventModal
-          open={showEventModal}
-          onClose={handleCloseModal}
-          event={selectedEvent}
-          defaultDate={selectedDate || undefined}
-          onSave={handleEventSave}
-          onDelete={deleteEvent}
-        />
-      )}
+              {showEventModal && (
+                <EventModal
+                  open={showEventModal}
+                  onClose={handleCloseModal}
+                  event={selectedEvent}
+                  defaultDate={selectedDate || undefined}
+                  onSave={handleEventSave}
+                  onDelete={deleteEvent}
+                />
+              )}
+            </TabsContent>
+
+            <TabsContent value="availability">
+              <AvailabilitySettings />
+            </TabsContent>
+          </Tabs>
         </div>
       )}
 
