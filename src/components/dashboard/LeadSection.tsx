@@ -1,13 +1,16 @@
 import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Target, Plus, Settings } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Plus, Settings, Sparkles, BookOpen, List, LayoutGrid, Home, Building } from "lucide-react";
 import { useLeadSearches } from "@/hooks/useLeadSearches";
 import { useLeads, Lead } from "@/hooks/useLeads";
-import { LeadSearchForm } from "@/components/lead/LeadSearchForm";
-import { LeadsTable } from "@/components/lead/LeadsTable";
 import { LeadDetailModal } from "@/components/lead/LeadDetailModal";
 import { LeadSearchList } from "@/components/lead/LeadSearchList";
+import { LeadWizard } from "@/components/lead/LeadWizard";
+import { LeadStats } from "@/components/lead/LeadStats";
+import { KanbanView } from "@/components/lead/KanbanView";
+import { LeadsTable } from "@/components/lead/LeadsTable";
 
 export function LeadSection() {
   const { searches, loading: searchesLoading, createSearch, pauseSearch, resumeSearch, deleteSearch } = useLeadSearches();
@@ -15,37 +18,12 @@ export function LeadSection() {
   const [showSearchForm, setShowSearchForm] = useState(false);
   const [selectedLead, setSelectedLead] = useState<Lead | null>(null);
   const [showLeadDetail, setShowLeadDetail] = useState(false);
+  const [view, setView] = useState<'table' | 'kanban'>('table');
+  const [leadTypeFilter, setLeadTypeFilter] = useState<'all' | 'brf' | 'business'>('all');
 
-  const statCards = [
-    {
-      title: "Totalt Leads",
-      value: stats.totalLeads,
-      icon: Target,
-      color: "text-blue-600",
-      bgColor: "bg-blue-100 dark:bg-blue-900/20",
-    },
-    {
-      title: "Nya",
-      value: stats.newLeads,
-      icon: Target,
-      color: "text-green-600",
-      bgColor: "bg-green-100 dark:bg-green-900/20",
-    },
-    {
-      title: "Kontaktade",
-      value: stats.contacted,
-      icon: Target,
-      color: "text-purple-600",
-      bgColor: "bg-purple-100 dark:bg-purple-900/20",
-    },
-    {
-      title: "Konverteringar",
-      value: stats.conversions,
-      icon: Target,
-      color: "text-orange-600",
-      bgColor: "bg-orange-100 dark:bg-orange-900/20",
-    },
-  ];
+  const filteredLeads = leadTypeFilter === 'all' 
+    ? leads 
+    : leads.filter(lead => lead.lead_type === leadTypeFilter);
 
   const handleViewDetails = (lead: Lead) => {
     setSelectedLead(lead);
@@ -54,41 +32,35 @@ export function LeadSection() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h2 className="text-2xl font-bold">AI Prospektering (Lead)</h2>
-          <p className="text-muted-foreground">Hitta och hantera leads med AI</p>
+      {/* Hero Section */}
+      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-blue-600 via-purple-600 to-pink-600 p-8 text-white">
+        <div className="relative z-10">
+          <h1 className="text-4xl font-bold mb-2">AI-driven Prospektering</h1>
+          <p className="text-lg opacity-90 mb-6">
+            Hitta perfekta leads för bostadsrättsföreningar och företag med AI
+          </p>
+          <div className="flex gap-3">
+            <Button 
+              size="lg" 
+              variant="secondary"
+              onClick={() => setShowSearchForm(true)}
+            >
+              <Sparkles className="h-5 w-5 mr-2" />
+              Ny sökning
+            </Button>
+            <Button size="lg" variant="outline" className="border-white/20 text-white hover:bg-white/10">
+              <BookOpen className="h-5 w-5 mr-2" />
+              Visa guiden
+            </Button>
+          </div>
         </div>
-        <div className="flex gap-2">
-          <Button onClick={() => setShowSearchForm(true)}>
-            <Plus className="h-4 w-4 mr-2" />
-            Ny lead-sökning
-          </Button>
-          <Button variant="outline" size="sm">
-            <Settings className="h-4 w-4 mr-2" />
-            Inställningar
-          </Button>
-        </div>
+        <div className="absolute inset-0 bg-grid-white/[0.05] bg-[length:20px_20px]" />
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        {statCards.map((stat) => (
-          <Card key={stat.title} className="hover:shadow-md transition-all">
-            <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-sm font-medium text-muted-foreground">
-                {stat.title}
-              </CardTitle>
-              <div className={`p-2 rounded-lg ${stat.bgColor}`}>
-                <stat.icon className={`h-4 w-4 ${stat.color}`} />
-              </div>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{stat.value}</div>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
+      {/* Stats Cards */}
+      <LeadStats stats={stats} />
 
+      {/* Active Searches */}
       {searches.length > 0 && (
         <Card>
           <CardHeader>
@@ -106,25 +78,81 @@ export function LeadSection() {
         </Card>
       )}
 
+      {/* Leads Section with Tabs and Views */}
       <Card>
         <CardHeader>
-          <CardTitle>Alla Leads</CardTitle>
-          <CardDescription>
-            {stats.totalLeads} totalt
-          </CardDescription>
+          <div className="flex items-center justify-between">
+            <div>
+              <CardTitle>Alla Leads</CardTitle>
+              <CardDescription>
+                {stats.totalLeads} totalt
+              </CardDescription>
+            </div>
+            <div className="flex gap-2">
+              <Button 
+                variant={view === 'table' ? 'default' : 'outline'}
+                size="sm"
+                onClick={() => setView('table')}
+              >
+                <List className="h-4 w-4 mr-2" />
+                Tabell
+              </Button>
+              <Button 
+                variant={view === 'kanban' ? 'default' : 'outline'}
+                size="sm"
+                onClick={() => setView('kanban')}
+              >
+                <LayoutGrid className="h-4 w-4 mr-2" />
+                Kanban
+              </Button>
+            </div>
+          </div>
         </CardHeader>
         <CardContent>
+          <Tabs value={leadTypeFilter} onValueChange={(v) => setLeadTypeFilter(v as any)} className="mb-6">
+            <TabsList className="grid w-full grid-cols-3 h-12">
+              <TabsTrigger value="all" className="text-sm">
+                <Building className="h-4 w-4 mr-2" />
+                Alla Leads
+              </TabsTrigger>
+              <TabsTrigger value="brf" className="text-sm">
+                <Home className="h-4 w-4 mr-2" />
+                Bostadsrättsföreningar
+              </TabsTrigger>
+              <TabsTrigger value="business" className="text-sm">
+                <Building className="h-4 w-4 mr-2" />
+                Företag
+              </TabsTrigger>
+            </TabsList>
+          </Tabs>
+
           {leadsLoading ? (
             <div className="text-center py-8 text-muted-foreground">
               Laddar leads...
             </div>
+          ) : filteredLeads.length === 0 ? (
+            <div className="text-center py-16">
+              <div className="inline-flex h-20 w-20 items-center justify-center rounded-full bg-blue-500/10 mb-4">
+                <Sparkles className="h-10 w-10 text-blue-600" />
+              </div>
+              <h3 className="text-xl font-semibold mb-2">Inga leads än</h3>
+              <p className="text-muted-foreground mb-6 max-w-sm mx-auto">
+                Skapa din första AI-driven sökning och låt systemet hitta perfekta leads åt dig
+              </p>
+              <Button size="lg" onClick={() => setShowSearchForm(true)}>
+                <Plus className="mr-2" />
+                Skapa första sökningen
+              </Button>
+            </div>
+          ) : view === 'kanban' ? (
+            <KanbanView leads={filteredLeads} onViewDetails={handleViewDetails} />
           ) : (
-            <LeadsTable leads={leads} onViewDetails={handleViewDetails} />
+            <LeadsTable leads={filteredLeads} onViewDetails={handleViewDetails} />
           )}
         </CardContent>
       </Card>
 
-      <LeadSearchForm
+      <LeadWizard
         open={showSearchForm}
         onOpenChange={setShowSearchForm}
         onSubmit={async (data) => {

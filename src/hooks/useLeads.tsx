@@ -19,7 +19,7 @@ export interface Lead {
   description: string | null;
   ai_score: number | null;
   ai_reasoning: string | null;
-  status: 'new' | 'contacted' | 'qualified' | 'converted' | 'rejected';
+  status: 'new' | 'contacted' | 'qualified' | 'converted' | 'rejected' | 'lost';
   priority: 'low' | 'medium' | 'high';
   notes: string | null;
   source: 'n8n' | 'manual' | 'imported';
@@ -27,6 +27,12 @@ export interface Lead {
   converted_at: string | null;
   created_at: string;
   updated_at: string;
+  lead_type?: 'brf' | 'business';
+  organization_type?: string | null;
+  apartment_count?: number | null;
+  construction_year?: number | null;
+  monthly_fee?: number | null;
+  employee_count?: number | null;
 }
 
 export interface LeadActivity {

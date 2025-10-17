@@ -416,16 +416,22 @@ export type Database = {
       }
       lead_searches: {
         Row: {
+          apartment_range: string | null
           company_size: string | null
+          construction_year_range: string | null
           created_at: string
+          employee_range: string | null
           id: string
           industry: string[] | null
           keywords: string[] | null
           last_run_at: string | null
+          lead_type: string | null
           leads_generated: number | null
           leads_target: number | null
           location: string[] | null
+          monthly_fee_range: string | null
           organization_id: string | null
+          organization_type: string | null
           revenue_range: string | null
           search_name: string
           status: string
@@ -433,16 +439,22 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          apartment_range?: string | null
           company_size?: string | null
+          construction_year_range?: string | null
           created_at?: string
+          employee_range?: string | null
           id?: string
           industry?: string[] | null
           keywords?: string[] | null
           last_run_at?: string | null
+          lead_type?: string | null
           leads_generated?: number | null
           leads_target?: number | null
           location?: string[] | null
+          monthly_fee_range?: string | null
           organization_id?: string | null
+          organization_type?: string | null
           revenue_range?: string | null
           search_name: string
           status?: string
@@ -450,16 +462,22 @@ export type Database = {
           user_id: string
         }
         Update: {
+          apartment_range?: string | null
           company_size?: string | null
+          construction_year_range?: string | null
           created_at?: string
+          employee_range?: string | null
           id?: string
           industry?: string[] | null
           keywords?: string[] | null
           last_run_at?: string | null
+          lead_type?: string | null
           leads_generated?: number | null
           leads_target?: number | null
           location?: string[] | null
+          monthly_fee_range?: string | null
           organization_id?: string | null
+          organization_type?: string | null
           revenue_range?: string | null
           search_name?: string
           status?: string
@@ -512,19 +530,25 @@ export type Database = {
         Row: {
           ai_reasoning: string | null
           ai_score: number | null
+          apartment_count: number | null
           company_name: string
           company_size: string | null
+          construction_year: number | null
           contact_person: string | null
           contacted_at: string | null
           converted_at: string | null
           created_at: string
           description: string | null
           email: string | null
+          employee_count: number | null
           id: string
           industry: string | null
+          lead_type: string | null
           location: string | null
+          monthly_fee: number | null
           notes: string | null
           organization_id: string | null
+          organization_type: string | null
           phone: string | null
           priority: string | null
           search_id: string | null
@@ -537,19 +561,25 @@ export type Database = {
         Insert: {
           ai_reasoning?: string | null
           ai_score?: number | null
+          apartment_count?: number | null
           company_name: string
           company_size?: string | null
+          construction_year?: number | null
           contact_person?: string | null
           contacted_at?: string | null
           converted_at?: string | null
           created_at?: string
           description?: string | null
           email?: string | null
+          employee_count?: number | null
           id?: string
           industry?: string | null
+          lead_type?: string | null
           location?: string | null
+          monthly_fee?: number | null
           notes?: string | null
           organization_id?: string | null
+          organization_type?: string | null
           phone?: string | null
           priority?: string | null
           search_id?: string | null
@@ -562,19 +592,25 @@ export type Database = {
         Update: {
           ai_reasoning?: string | null
           ai_score?: number | null
+          apartment_count?: number | null
           company_name?: string
           company_size?: string | null
+          construction_year?: number | null
           contact_person?: string | null
           contacted_at?: string | null
           converted_at?: string | null
           created_at?: string
           description?: string | null
           email?: string | null
+          employee_count?: number | null
           id?: string
           industry?: string | null
+          lead_type?: string | null
           location?: string | null
+          monthly_fee?: number | null
           notes?: string | null
           organization_id?: string | null
+          organization_type?: string | null
           phone?: string | null
           priority?: string | null
           search_id?: string | null
