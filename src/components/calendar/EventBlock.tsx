@@ -118,9 +118,9 @@ const EventBlockComponent = ({
         )}
         
         {/* Address - visible for events > 45px */}
-        {(event as any).address && height > 45 && (
+        {event.address && height > 45 && (
           <div className="text-xs opacity-80 truncate">
-            📍 {(event as any).address}
+            📍 {event.address}
           </div>
         )}
         

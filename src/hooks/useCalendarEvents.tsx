@@ -15,6 +15,7 @@ export interface CalendarEvent {
   contact_person?: string;
   contact_email?: string;
   contact_phone?: string;
+  address?: string;
   lead_id?: string;
   external_id?: string;
   booking_system_integration_id?: string;
@@ -62,6 +63,7 @@ export const useCalendarEvents = () => {
         contact_person: event.contact_person,
         contact_email: event.contact_email,
         contact_phone: event.contact_phone,
+        address: event.address,
         lead_id: event.lead_id,
       };
 
