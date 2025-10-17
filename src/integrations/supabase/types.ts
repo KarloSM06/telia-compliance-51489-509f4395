@@ -272,6 +272,7 @@ export type Database = {
       }
       calendar_events: {
         Row: {
+          address: string | null
           all_day: boolean | null
           attendees: Json | null
           booking_system_integration_id: string | null
@@ -302,6 +303,7 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          address?: string | null
           all_day?: boolean | null
           attendees?: Json | null
           booking_system_integration_id?: string | null
@@ -332,6 +334,7 @@ export type Database = {
           user_id: string
         }
         Update: {
+          address?: string | null
           all_day?: boolean | null
           attendees?: Json | null
           booking_system_integration_id?: string | null
