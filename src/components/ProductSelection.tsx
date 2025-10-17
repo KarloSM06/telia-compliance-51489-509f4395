@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { ArrowRight, CheckCircle, Zap, Target, Sparkles, ChefHat, Headphones, UserCheck, TrendingUp, MessageSquare, ShoppingCart, Award, Send, Loader2, Phone, BarChart3, Users, Clock } from "lucide-react";
+import { ArrowRight, CheckCircle, Zap, Target, Sparkles, ChefHat, Headphones, UserCheck, TrendingUp, MessageSquare, ShoppingCart, Award, Send, Loader2, Phone, BarChart3, Users, Clock, Star } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { useState, useRef, useEffect } from "react";
@@ -326,6 +326,25 @@ export const ProductSelection = () => {
           features: ["Allt i Business +", "Obegränsade användare", "Integration till CRM & samtalsplattformar"]
         }
       }
+    },
+    eko: {
+      title: "⭐ Hiems Eko – AI Omdömeshantering",
+      fullDescription: "Samlar, analyserar & agerar på kundomdömen från alla plattformar.",
+      features: ["Samlar omdömen från alla plattformar", "AI-analys av sentiments & trender", "Automatiska svar på recensioner"],
+      pricing: {
+        pro: {
+          price: 1999,
+          features: ["Samlar omdömen från Google, Facebook & TripAdvisor", "AI-analys av sentiments & nyckelord", "Automatiska svar på positiva recensioner", "Veckorapport via e-post"]
+        },
+        business: {
+          price: 3999,
+          features: ["Allt i Pro +", "Svar på alla recensioner (inklusive negativa)", "Trendanalys & konkurrensjämförelse", "Integration med CRM & notifieringar vid negativa omdömen", "Anpassade AI-svar baserat på varumärke"]
+        },
+        enterprise: {
+          price: "Offert",
+          features: ["Allt i Business +", "Multi-location hantering", "Prediktiv analys & varningar", "White-label dashboard", "API-integration för egna system"]
+        }
+      }
     }
   };
   const handleCheckout = async (packageName: string, tier: 'pro' | 'business' | 'enterprise') => {
@@ -524,7 +543,7 @@ export const ProductSelection = () => {
             <p className="text-lg text-white/80">Vi har utvecklat färdiga paket för att göra processen så snabb och smidig som möjligt. Dessa skräddarsys för att passa just er verksamhet och levereras på högst två veckor – så ni snabbt kan börja effektivisera och växa er verksamhet. </p>
           </div>
 
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-5 max-w-[1600px] mx-auto">
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-6 max-w-[1800px] mx-auto">
             {/* AI Receptionist - Krono */}
             <AnimatedSection delay={0}>
             <Card className="group relative overflow-hidden border-2 border-white/10 bg-gradient-card backdrop-blur-sm hover:border-accent/50 hover:scale-[1.02] transition-all duration-500 hover:shadow-glow h-full flex flex-col">
@@ -899,6 +918,72 @@ export const ProductSelection = () => {
                                   </li>)}
                               </ul>
                               <Button onClick={() => handleCheckout('thor', tier as 'pro' | 'business' | 'enterprise')} className={`w-full ${tier === 'business' ? 'bg-accent hover:bg-accent/90' : ''}`} variant={tier === 'enterprise' ? 'outline' : 'default'} disabled={isCheckingOut}>
+                                {tier === 'enterprise' ? 'Kontakta oss' : `Välj ${tier}`}
+                              </Button>
+                            </CardContent>
+                          </Card>)}
+                      </div>
+                    </div>
+                  </DialogContent>
+                </Dialog>
+              </CardContent>
+            </Card>
+            </AnimatedSection>
+
+            {/* AI Omdömeshantering - Eko */}
+            <AnimatedSection delay={500}>
+            <Card className="group relative overflow-hidden border-2 border-white/10 bg-gradient-card backdrop-blur-sm hover:border-accent/50 hover:scale-[1.02] transition-all duration-500 hover:shadow-glow h-full flex flex-col">
+              <div className="absolute inset-0 bg-gradient-gold opacity-0 group-hover:opacity-10 transition-opacity duration-500"></div>
+              <CardHeader className="relative p-6">
+                <div className="flex items-center justify-center w-16 h-16 rounded-2xl bg-accent/10 mb-4 group-hover:scale-110 group-hover:rotate-3 transition-all duration-500">
+                  <Star className="h-8 w-8 text-accent" />
+                </div>
+                <CardTitle className="text-xl font-display mb-2">AI Omdömen</CardTitle>
+                <CardDescription className="text-sm text-muted-foreground">Förvandla kundfeedback till konkurrensfördelar. AI samlar, analyserar och svarar på omdömen från alla plattformar – så ni kan fokusera på att förbättra er verksamhet baserat på data.</CardDescription>
+              </CardHeader>
+              <CardContent className="relative space-y-4 p-6 pt-0 flex-1 flex flex-col">
+                <ul className="space-y-3 mb-6 flex-1">
+                  {packageDetails.eko.features.map((feature, idx) => <li key={idx} className="flex items-start gap-2">
+                      <div className="flex-shrink-0 w-5 h-5 rounded-full bg-accent/10 flex items-center justify-center mt-0.5">
+                        <CheckCircle className="h-3 w-3 text-accent" />
+                      </div>
+                      <span className="text-foreground/80 leading-relaxed text-sm">{feature}</span>
+                    </li>)}
+                </ul>
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <Button size="lg" className="w-full bg-primary text-primary-foreground hover:bg-primary/90 shadow-button group-hover:shadow-glow transition-all duration-300 font-semibold text-sm h-12 mt-auto" onClick={() => handlePackageClick('eko')}>
+                      Läs mer
+                      <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="sm:max-w-4xl max-h-[90vh] overflow-y-auto">
+                    <DialogHeader>
+                      <DialogTitle className="text-3xl font-display mb-4">{packageDetails.eko.title}</DialogTitle>
+                      <DialogDescription className="text-base leading-relaxed">
+                        {packageDetails.eko.fullDescription}
+                      </DialogDescription>
+                    </DialogHeader>
+                    
+                    <div className="py-6">
+                      <div className="grid md:grid-cols-3 gap-4">
+                        {['pro', 'business', 'enterprise'].map(tier => <Card key={tier} className={`border-2 ${tier === 'business' ? 'border-accent/50 relative' : 'hover:border-accent/50'} transition-colors`}>
+                            {tier === 'business' && <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-accent text-accent-foreground px-3 py-1 rounded-full text-xs font-semibold">POPULÄR</div>}
+                            <CardHeader>
+                              <CardTitle className="text-xl capitalize">{tier}</CardTitle>
+                              <div className="text-3xl font-bold">
+                                {packageDetails.eko.pricing?.[tier as 'pro' | 'business' | 'enterprise'].price}
+                                {tier !== 'enterprise' && <span className="text-sm font-normal"> kr/mån</span>}
+                              </div>
+                            </CardHeader>
+                            <CardContent>
+                              <ul className="space-y-2 mb-4 text-sm">
+                                {packageDetails.eko.pricing?.[tier as 'pro' | 'business' | 'enterprise'].features.map((f, i) => <li key={i} className="flex items-start gap-2">
+                                    <CheckCircle className="h-4 w-4 text-accent mt-0.5 flex-shrink-0" />
+                                    <span>{f}</span>
+                                  </li>)}
+                              </ul>
+                              <Button onClick={() => handleCheckout('eko', tier as 'pro' | 'business' | 'enterprise')} className={`w-full ${tier === 'business' ? 'bg-accent hover:bg-accent/90' : ''}`} variant={tier === 'enterprise' ? 'outline' : 'default'} disabled={isCheckingOut}>
                                 {tier === 'enterprise' ? 'Kontakta oss' : `Välj ${tier}`}
                               </Button>
                             </CardContent>

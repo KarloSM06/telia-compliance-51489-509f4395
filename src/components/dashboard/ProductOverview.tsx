@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Headphones, ChefHat, UserCheck, TrendingUp, MessageSquare } from "lucide-react";
+import { Headphones, ChefHat, UserCheck, TrendingUp, MessageSquare, Star } from "lucide-react";
 import { useUserProducts } from "@/hooks/useUserProducts";
 import { HiemsAdminBadge } from "./HiemsAdminBadge";
 
@@ -10,6 +10,7 @@ const productIcons: Record<string, any> = {
   talent: UserCheck,
   lead: TrendingUp,
   thor: MessageSquare,
+  eko: Star,
 };
 
 const productNames: Record<string, string> = {
@@ -18,6 +19,7 @@ const productNames: Record<string, string> = {
   talent: "AI Rekrytering",
   lead: "AI Prospektering",
   thor: "AI Compliance & Coaching",
+  eko: "AI Omdömen",
 };
 
 export function ProductOverview() {

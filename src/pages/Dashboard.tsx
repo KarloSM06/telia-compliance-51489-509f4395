@@ -7,6 +7,7 @@ import { KronoSection } from "@/components/dashboard/KronoSection";
 import { GastroSection } from "@/components/dashboard/GastroSection";
 import { TalentSection } from "@/components/dashboard/TalentSection";
 import { LeadSection } from "@/components/dashboard/LeadSection";
+import { EkoSection } from "@/components/dashboard/EkoSection";
 import { ActivityFeed } from "@/components/dashboard/ActivityFeed";
 import { QuickActions } from "@/components/dashboard/QuickActions";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -24,6 +25,7 @@ const Dashboard = () => {
   const hasGastroPackage = products.includes('gastro');
   const hasTalentPackage = products.includes('talent');
   const hasLeadPackage = products.includes('lead');
+  const hasEkoPackage = products.includes('eko');
   const complianceProduct = productDetails.find(p => p.product_id === 'thor');
   if (loading) {
     return <div className="flex items-center justify-center min-h-[400px]">

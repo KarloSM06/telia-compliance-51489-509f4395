@@ -1,4 +1,4 @@
-import { Phone, UtensilsCrossed, Users, Target, Award, Globe } from "lucide-react";
+import { Phone, UtensilsCrossed, Users, Target, Award, Globe, Star } from "lucide-react";
 import { ReactNode } from "react";
 
 export interface PackageTier {
@@ -321,6 +321,57 @@ export const availablePackages: PackageData[] = [
           "Allt i Business +",
           "Obegränsade användare",
           "Integration till CRM & samtalsplattformar"
+        ]
+      }
+    ]
+  },
+  {
+    id: "eko",
+    name: "AI Omdömen",
+    fullName: "Hiems Eko – AI Omdömeshantering",
+    description: "Samlar, analyserar & agerar på kundomdömen",
+    detailedDescription: "AI Omdömeshantering samlar in, analyserar och hjälper dig agera på kundrecensioner från alla plattformar. Förvandla feedback till förbättringar och stärk ditt varumärke.",
+    features: [
+      "Samlar omdömen från alla plattformar",
+      "AI-analys av sentiments & trender",
+      "Automatiska svar på recensioner",
+      "Rapporter & insikter"
+    ],
+    icon: <Star className="h-6 w-6 text-primary" />,
+    color: "bg-accent/10",
+    tiers: [
+      {
+        name: 'pro',
+        price: 1999,
+        features: [
+          "Samlar omdömen från Google, Facebook & TripAdvisor",
+          "AI-analys av sentiments & nyckelord",
+          "Automatiska svar på positiva recensioner",
+          "Veckorapport via e-post"
+        ],
+        stripePriceId: "price_eko_pro_placeholder"
+      },
+      {
+        name: 'business',
+        price: 3999,
+        features: [
+          "Allt i Pro +",
+          "Svar på alla recensioner (inklusive negativa)",
+          "Trendanalys & konkurrensjämförelse",
+          "Integration med CRM & notifieringar vid negativa omdömen",
+          "Anpassade AI-svar baserat på varumärke"
+        ],
+        stripePriceId: "price_eko_business_placeholder"
+      },
+      {
+        name: 'enterprise',
+        price: "Offert",
+        features: [
+          "Allt i Business +",
+          "Multi-location hantering",
+          "Prediktiv analys & varningar",
+          "White-label dashboard",
+          "API-integration för egna system"
         ]
       }
     ]
