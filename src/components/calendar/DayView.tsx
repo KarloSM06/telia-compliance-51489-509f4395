@@ -1,5 +1,6 @@
 import { CalendarEvent } from '@/hooks/useCalendarEvents';
 import { format, addDays, subDays } from 'date-fns';
+import { sv } from 'date-fns/locale';
 import { Button } from '@/components/ui/button';
 import { ChevronLeft, ChevronRight, Calendar as CalendarIcon } from 'lucide-react';
 import { TimeGrid } from './TimeGrid';
@@ -68,7 +69,7 @@ export const DayView = ({
             </Button>
             
             <div className="text-lg font-semibold min-w-[200px] text-center">
-              {format(date, 'EEEE, d MMMM yyyy', { locale: require('date-fns/locale/sv') })}
+              {format(date, 'EEEE, d MMMM yyyy', { locale: sv })}
             </div>
             
             <Button
