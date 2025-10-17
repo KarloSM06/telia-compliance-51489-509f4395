@@ -34,7 +34,9 @@ export const EventModal = ({ open, onClose, event, defaultDate, onSave, onDelete
     contact_person: currentEvent?.contact_person || '',
     contact_email: currentEvent?.contact_email || '',
     contact_phone: currentEvent?.contact_phone || '',
+    notes: (currentEvent as any)?.notes || '',
   });
+  const [reminders, setReminders] = useState<number[]>([]); // Minutes before event
   const [loading, setLoading] = useState(false);
 
   // Autofocus title field and update form when event or pending changes update
@@ -50,7 +52,23 @@ export const EventModal = ({ open, onClose, event, defaultDate, onSave, onDelete
         contact_person: currentEvent?.contact_person || '',
         contact_email: currentEvent?.contact_email || '',
         contact_phone: currentEvent?.contact_phone || '',
+        notes: (currentEvent as any)?.notes || '',
       });
+      
+      // Parse reminders from event
+      const eventReminders = (currentEvent as any)?.reminders;
+      if (eventReminders) {
+        try {
+          const parsedReminders = Array.isArray(eventReminders) 
+            ? eventReminders.map((r: any) => r.minutes_before || 0)
+            : [];
+          setReminders(parsedReminders);
+        } catch {
+          setReminders([]);
+        }
+      } else {
+        setReminders([]);
+      }
     }
   }, [open, currentEvent, defaultDate]);
 
@@ -91,11 +109,18 @@ export const EventModal = ({ open, onClose, event, defaultDate, onSave, onDelete
     
     setLoading(true);
     try {
+      // Format reminders
+      const formattedReminders = reminders.map(minutes => ({
+        minutes_before: minutes,
+        method: 'notification'
+      }));
+      
       await onSave({
         ...formData,
         source: 'internal',
         status: 'scheduled',
-      });
+        reminders: formattedReminders.length > 0 ? formattedReminders : null,
+      } as any);
       toast.success(event ? 'Händelse uppdaterad' : 'Händelse skapad');
       onClose();
     } catch (error) {
@@ -126,9 +151,32 @@ export const EventModal = ({ open, onClose, event, defaultDate, onSave, onDelete
       call: 'Samtal',
       demo: 'Demo',
       follow_up: 'Uppföljning',
+      personal: 'Personligt',
+      work: 'Arbete',
+      leisure: 'Fritid',
       other: 'Annat',
     };
     return labels[type] || type;
+  };
+
+  const addReminder = () => {
+    setReminders([...reminders, 15]); // Default 15 minutes
+  };
+
+  const removeReminder = (index: number) => {
+    setReminders(reminders.filter((_, i) => i !== index));
+  };
+
+  const updateReminder = (index: number, value: number) => {
+    const newReminders = [...reminders];
+    newReminders[index] = value;
+    setReminders(newReminders);
+  };
+
+  const getReminderLabel = (minutes: number) => {
+    if (minutes < 60) return `${minutes} minuter`;
+    if (minutes < 1440) return `${minutes / 60} timmar`;
+    return `${minutes / 1440} dagar`;
   };
 
   return (
@@ -204,19 +252,33 @@ export const EventModal = ({ open, onClose, event, defaultDate, onSave, onDelete
           </div>
 
           <div>
-            <Label htmlFor="event_type">Typ</Label>
+            <Label htmlFor="event_type">Kategori</Label>
             <Select value={formData.event_type} onValueChange={(value) => setFormData({ ...formData, event_type: value })}>
               <SelectTrigger>
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="meeting">Möte</SelectItem>
-                <SelectItem value="call">Samtal</SelectItem>
-                <SelectItem value="demo">Demo</SelectItem>
-                <SelectItem value="follow_up">Uppföljning</SelectItem>
-                <SelectItem value="other">Annat</SelectItem>
+                <SelectItem value="meeting">🤝 Möte</SelectItem>
+                <SelectItem value="call">📞 Samtal</SelectItem>
+                <SelectItem value="demo">💼 Demo</SelectItem>
+                <SelectItem value="follow_up">📋 Uppföljning</SelectItem>
+                <SelectItem value="work">💻 Arbete</SelectItem>
+                <SelectItem value="personal">👤 Personligt</SelectItem>
+                <SelectItem value="leisure">🎉 Fritid</SelectItem>
+                <SelectItem value="other">📌 Annat</SelectItem>
               </SelectContent>
             </Select>
+          </div>
+
+          <div>
+            <Label htmlFor="notes">Plats / Anteckningar</Label>
+            <Textarea
+              id="notes"
+              value={formData.notes}
+              onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
+              rows={2}
+              placeholder="T.ex. Konferensrum A, Zoom-länk, eller andra anteckningar"
+            />
           </div>
 
           <div className="grid grid-cols-3 gap-4">
@@ -226,6 +288,7 @@ export const EventModal = ({ open, onClose, event, defaultDate, onSave, onDelete
                 id="contact_person"
                 value={formData.contact_person}
                 onChange={(e) => setFormData({ ...formData, contact_person: e.target.value })}
+                placeholder="Namn"
               />
             </div>
 
@@ -236,6 +299,7 @@ export const EventModal = ({ open, onClose, event, defaultDate, onSave, onDelete
                 type="email"
                 value={formData.contact_email}
                 onChange={(e) => setFormData({ ...formData, contact_email: e.target.value })}
+                placeholder="exempel@mail.com"
               />
             </div>
 
@@ -246,8 +310,57 @@ export const EventModal = ({ open, onClose, event, defaultDate, onSave, onDelete
                 type="tel"
                 value={formData.contact_phone}
                 onChange={(e) => setFormData({ ...formData, contact_phone: e.target.value })}
+                placeholder="+46 70 123 45 67"
               />
             </div>
+          </div>
+
+          {/* Reminders */}
+          <div className="space-y-2">
+            <div className="flex items-center justify-between">
+              <Label>Påminnelser</Label>
+              <Button 
+                type="button" 
+                variant="outline" 
+                size="sm"
+                onClick={addReminder}
+              >
+                + Lägg till påminnelse
+              </Button>
+            </div>
+            {reminders.length > 0 && (
+              <div className="space-y-2">
+                {reminders.map((minutes, index) => (
+                  <div key={index} className="flex items-center gap-2">
+                    <Select 
+                      value={minutes.toString()} 
+                      onValueChange={(value) => updateReminder(index, parseInt(value))}
+                    >
+                      <SelectTrigger className="flex-1">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="5">5 minuter före</SelectItem>
+                        <SelectItem value="10">10 minuter före</SelectItem>
+                        <SelectItem value="15">15 minuter före</SelectItem>
+                        <SelectItem value="30">30 minuter före</SelectItem>
+                        <SelectItem value="60">1 timme före</SelectItem>
+                        <SelectItem value="120">2 timmar före</SelectItem>
+                        <SelectItem value="1440">1 dag före</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <Button 
+                      type="button" 
+                      variant="ghost" 
+                      size="sm"
+                      onClick={() => removeReminder(index)}
+                    >
+                      ✕
+                    </Button>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
 
           <div className="flex justify-between pt-4 border-t">

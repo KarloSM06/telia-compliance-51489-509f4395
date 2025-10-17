@@ -5,19 +5,22 @@ import { Badge } from "@/components/ui/badge";
 import { CalendarView } from "@/components/calendar/CalendarView";
 import { DayView } from "@/components/calendar/DayView";
 import { WeekView } from "@/components/calendar/WeekView";
+import { YearView } from "@/components/calendar/YearView";
 import { EventModal } from "@/components/calendar/EventModal";
 import { IntegrationSetupModal } from "@/components/calendar/IntegrationSetupModal";
 import { useCalendarEvents, CalendarEvent } from "@/hooks/useCalendarEvents";
 import { useBookingIntegrations } from "@/hooks/useBookingIntegrations";
-import { Plus, Settings, Calendar, CalendarDays, CalendarRange } from "lucide-react";
-import { addMinutes, isSameDay, parseISO, startOfWeek, endOfWeek, isWithinInterval } from "date-fns";
+import { Plus, Settings, Calendar, CalendarDays, CalendarRange, CalendarClock } from "lucide-react";
+import { addMinutes, isSameDay, parseISO, startOfWeek, endOfWeek, isWithinInterval, format } from "date-fns";
 import { sv } from "date-fns/locale";
+import { checkEventConflicts } from "@/lib/calendarUtils";
+import { toast } from "sonner";
 
 const CalendarPage = () => {
   const { events, loading, createEvent, updateEvent, deleteEvent } = useCalendarEvents();
   const { integrations, createIntegration, updateIntegration, deleteIntegration, triggerSync } = useBookingIntegrations();
   
-  const [currentView, setCurrentView] = useState<'month' | 'week' | 'day'>('month');
+  const [currentView, setCurrentView] = useState<'month' | 'week' | 'day' | 'year'>('month');
   const [selectedDay, setSelectedDay] = useState<Date>(new Date());
   const [showEventModal, setShowEventModal] = useState(false);
   const [showIntegrationModal, setShowIntegrationModal] = useState(false);
@@ -56,6 +59,30 @@ const CalendarPage = () => {
   };
 
   const handleEventSave = async (eventData: Partial<CalendarEvent>) => {
+    // Check for conflicts
+    if (eventData.start_time && eventData.end_time) {
+      const tempEvent = {
+        id: selectedEvent?.id || 'temp',
+        title: eventData.title || '',
+        start_time: eventData.start_time,
+        end_time: eventData.end_time,
+        event_type: eventData.event_type || 'meeting',
+        status: 'scheduled',
+        source: 'internal',
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      } as CalendarEvent;
+
+      const conflicts = checkEventConflicts(tempEvent, events.filter(e => e.id !== selectedEvent?.id));
+      
+      if (conflicts.length > 0) {
+        toast.warning(`⚠️ Denna händelse överlappar med ${conflicts.length} andra händelse(r)`, {
+          description: conflicts.map(e => `• ${e.title} (${format(parseISO(e.start_time), 'HH:mm')} - ${format(parseISO(e.end_time), 'HH:mm')})`).join('\n'),
+          duration: 5000,
+        });
+      }
+    }
+
     if (selectedEvent?.id) {
       await updateEvent(selectedEvent.id, eventData);
     } else {
@@ -103,6 +130,15 @@ const CalendarPage = () => {
               {/* View selector */}
               <div className="flex gap-1 border rounded-lg p-1 bg-muted/50">
                 <Button
+                  variant={currentView === 'year' ? 'default' : 'ghost'}
+                  size="sm"
+                  onClick={() => setCurrentView('year')}
+                  className="gap-2"
+                >
+                  <CalendarClock className="h-4 w-4" />
+                  År
+                </Button>
+                <Button
                   variant={currentView === 'month' ? 'default' : 'ghost'}
                   size="sm"
                   onClick={() => setCurrentView('month')}
@@ -143,6 +179,20 @@ const CalendarPage = () => {
           </div>
         </div>
       </div>
+
+      {/* Year view */}
+      {currentView === 'year' && (
+        <YearView
+          date={selectedDay}
+          events={events}
+          onEventClick={handleEventClick}
+          onDateChange={setSelectedDay}
+          onDayClick={(date) => {
+            setSelectedDay(date);
+            setCurrentView('day');
+          }}
+        />
+      )}
 
       {/* Month view */}
       {currentView === 'month' && (

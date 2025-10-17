@@ -34,6 +34,23 @@ const EventBlockComponent = ({
 
   const duration = differenceInMinutes(endTime, startTime);
 
+  // Enhanced color schemes for different event types
+  const getEventColors = (type: string) => {
+    const colors = {
+      meeting: 'bg-blue-100 dark:bg-blue-900/30 border-blue-400 dark:border-blue-600 text-blue-900 dark:text-blue-100',
+      call: 'bg-green-100 dark:bg-green-900/30 border-green-400 dark:border-green-600 text-green-900 dark:text-green-100',
+      demo: 'bg-purple-100 dark:bg-purple-900/30 border-purple-400 dark:border-purple-600 text-purple-900 dark:text-purple-100',
+      follow_up: 'bg-orange-100 dark:bg-orange-900/30 border-orange-400 dark:border-orange-600 text-orange-900 dark:text-orange-100',
+      work: 'bg-indigo-100 dark:bg-indigo-900/30 border-indigo-400 dark:border-indigo-600 text-indigo-900 dark:text-indigo-100',
+      personal: 'bg-pink-100 dark:bg-pink-900/30 border-pink-400 dark:border-pink-600 text-pink-900 dark:text-pink-100',
+      leisure: 'bg-cyan-100 dark:bg-cyan-900/30 border-cyan-400 dark:border-cyan-600 text-cyan-900 dark:text-cyan-100',
+      other: 'bg-gray-100 dark:bg-gray-800/50 border-gray-400 dark:border-gray-600 text-gray-900 dark:text-gray-100',
+    };
+    return colors[type as keyof typeof colors] || colors.other;
+  };
+
+  const enhancedColorClass = getEventColors(event.event_type);
+
   const handleDragStart = (e: React.DragEvent) => {
     e.dataTransfer.effectAllowed = 'move';
     e.dataTransfer.setData('eventId', event.id);
@@ -61,7 +78,7 @@ const EventBlockComponent = ({
       draggable={!isResizing}
       onDragStart={handleDragStart}
       onClick={handleClick}
-      className={`absolute rounded-lg border-l-4 p-2 shadow-sm cursor-pointer transition-all duration-200 group ${colorClass} ${
+      className={`absolute rounded-lg border-l-4 p-2 shadow-sm cursor-pointer transition-all duration-200 group ${enhancedColorClass} ${
         isResizing ? 'ring-2 ring-primary scale-[1.02] shadow-lg' : 'hover:shadow-lg hover:scale-[1.01]'
       }`}
       style={{
