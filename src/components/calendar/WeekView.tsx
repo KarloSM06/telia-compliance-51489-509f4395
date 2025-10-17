@@ -119,7 +119,7 @@ export const WeekView = ({
 
   // Calculate snap indicator position
   const snapIndicatorY = useMemo(() => {
-    if (dragState.previewPosition) {
+    if (dragState.previewPosition?.start && dragState.previewPosition?.end) {
       const { top } = getEventPosition(
         dragState.previewPosition.start.toISOString(),
         dragState.previewPosition.end.toISOString()
