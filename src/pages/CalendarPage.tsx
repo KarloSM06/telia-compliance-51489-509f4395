@@ -4,18 +4,20 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { CalendarView } from "@/components/calendar/CalendarView";
 import { DayView } from "@/components/calendar/DayView";
+import { WeekView } from "@/components/calendar/WeekView";
 import { EventModal } from "@/components/calendar/EventModal";
 import { IntegrationSetupModal } from "@/components/calendar/IntegrationSetupModal";
 import { useCalendarEvents, CalendarEvent } from "@/hooks/useCalendarEvents";
 import { useBookingIntegrations } from "@/hooks/useBookingIntegrations";
-import { Plus, Settings } from "lucide-react";
-import { addMinutes, isSameDay, parseISO } from "date-fns";
+import { Plus, Settings, Calendar, CalendarDays, CalendarRange } from "lucide-react";
+import { addMinutes, isSameDay, parseISO, startOfWeek, endOfWeek, isWithinInterval } from "date-fns";
+import { sv } from "date-fns/locale";
 
 const CalendarPage = () => {
   const { events, loading, createEvent, updateEvent, deleteEvent } = useCalendarEvents();
   const { integrations, createIntegration, updateIntegration, deleteIntegration, triggerSync } = useBookingIntegrations();
   
-  const [currentView, setCurrentView] = useState<'month' | 'day'>('month');
+  const [currentView, setCurrentView] = useState<'month' | 'week' | 'day'>('month');
   const [selectedDay, setSelectedDay] = useState<Date>(new Date());
   const [showEventModal, setShowEventModal] = useState(false);
   const [showIntegrationModal, setShowIntegrationModal] = useState(false);
@@ -34,6 +36,10 @@ const CalendarPage = () => {
 
   const handleBackToMonth = () => {
     setCurrentView('month');
+  };
+
+  const handleViewWeek = () => {
+    setCurrentView('week');
   };
 
   const handleQuickCreate = async (time: Date) => {
@@ -66,22 +72,65 @@ const CalendarPage = () => {
     setSelectedDate(null);
   };
 
-  const filteredEvents = currentView === 'day' 
-    ? events.filter(e => isSameDay(parseISO(e.start_time), selectedDay))
-    : events;
+  // Filter events based on current view
+  const filteredEvents = (() => {
+    if (currentView === 'day') {
+      return events.filter(e => isSameDay(parseISO(e.start_time), selectedDay));
+    }
+    if (currentView === 'week') {
+      const weekStart = startOfWeek(selectedDay, { locale: sv, weekStartsOn: 1 });
+      const weekEnd = endOfWeek(selectedDay, { locale: sv, weekStartsOn: 1 });
+      return events.filter(e => 
+        isWithinInterval(parseISO(e.start_time), { start: weekStart, end: weekEnd })
+      );
+    }
+    return events;
+  })();
 
   return (
     <div className="h-screen flex flex-col">
-      {currentView === 'month' && (
-        <div className="container mx-auto p-6 space-y-6">
+      {/* Global header with view selector - always visible */}
+      <div className="border-b bg-background">
+        <div className="container mx-auto p-4">
           <div className="flex justify-between items-center">
             <div>
-              <h1 className="text-3xl font-bold">Kalender & CRM</h1>
-              <p className="text-muted-foreground mt-1">
+              <h1 className="text-2xl font-bold">Kalender & CRM</h1>
+              <p className="text-sm text-muted-foreground">
                 Hantera dina möten och synka med befintliga bokningssystem
               </p>
             </div>
             <div className="flex gap-2">
+              {/* View selector */}
+              <div className="flex gap-1 border rounded-lg p-1 bg-muted/50">
+                <Button
+                  variant={currentView === 'month' ? 'default' : 'ghost'}
+                  size="sm"
+                  onClick={() => setCurrentView('month')}
+                  className="gap-2"
+                >
+                  <Calendar className="h-4 w-4" />
+                  Månad
+                </Button>
+                <Button
+                  variant={currentView === 'week' ? 'default' : 'ghost'}
+                  size="sm"
+                  onClick={handleViewWeek}
+                  className="gap-2"
+                >
+                  <CalendarRange className="h-4 w-4" />
+                  Vecka
+                </Button>
+                <Button
+                  variant={currentView === 'day' ? 'default' : 'ghost'}
+                  size="sm"
+                  onClick={() => handleDateClick(selectedDay)}
+                  className="gap-2"
+                >
+                  <CalendarDays className="h-4 w-4" />
+                  Dag
+                </Button>
+              </div>
+              
               <Button onClick={() => setShowIntegrationModal(true)} variant="outline">
                 <Settings className="h-4 w-4 mr-2" />
                 Integrationer
@@ -92,6 +141,12 @@ const CalendarPage = () => {
               </Button>
             </div>
           </div>
+        </div>
+      </div>
+
+      {/* Month view */}
+      {currentView === 'month' && (
+        <div className="container mx-auto p-6 space-y-6 flex-1 overflow-auto">
 
       {integrations.length > 0 && (
         <Card>
@@ -195,59 +250,7 @@ const CalendarPage = () => {
         onDateClick={handleDateClick}
       />
 
-      <EventModal
-        open={showEventModal}
-        onClose={handleCloseModal}
-        event={selectedEvent}
-        defaultDate={selectedDate || undefined}
-        onSave={handleEventSave}
-        onDelete={deleteEvent}
-      />
-
-      <IntegrationSetupModal
-        open={showIntegrationModal}
-        onClose={() => setShowIntegrationModal(false)}
-        onSave={createIntegration}
-        existingIntegrations={integrations}
-      />
-        </div>
-      )}
-
-      {currentView === 'day' && (
-        <DayView
-          date={selectedDay}
-          events={filteredEvents}
-          onEventClick={handleEventClick}
-          onEventUpdate={updateEvent}
-          onBackToMonth={handleBackToMonth}
-          onCreate={handleQuickCreate}
-          onDateChange={setSelectedDay}
-          onDelete={deleteEvent}
-          showEventModal={showEventModal}
-          selectedEvent={selectedEvent}
-          onCloseModal={handleCloseModal}
-          onEventSave={handleEventSave}
-        />
-      )}
-
-      {currentView === 'day' && (
-        <DayView
-          date={selectedDay}
-          events={filteredEvents}
-          onEventClick={handleEventClick}
-          onEventUpdate={updateEvent}
-          onBackToMonth={handleBackToMonth}
-          onCreate={handleQuickCreate}
-          onDateChange={setSelectedDay}
-          onDelete={deleteEvent}
-          showEventModal={showEventModal}
-          selectedEvent={selectedEvent}
-          onCloseModal={handleCloseModal}
-          onEventSave={handleEventSave}
-        />
-      )}
-
-      {currentView === 'month' && showEventModal && (
+      {showEventModal && (
         <EventModal
           open={showEventModal}
           onClose={handleCloseModal}
@@ -257,6 +260,52 @@ const CalendarPage = () => {
           onDelete={deleteEvent}
         />
       )}
+        </div>
+      )}
+
+      {/* Week view */}
+      {currentView === 'week' && (
+        <WeekView
+          date={selectedDay}
+          events={filteredEvents}
+          onEventClick={handleEventClick}
+          onEventUpdate={updateEvent}
+          onBackToMonth={handleBackToMonth}
+          onCreate={handleQuickCreate}
+          onDateChange={setSelectedDay}
+          onDelete={deleteEvent}
+          showEventModal={showEventModal}
+          selectedEvent={selectedEvent}
+          onCloseModal={handleCloseModal}
+          onEventSave={handleEventSave}
+        />
+      )}
+
+      {/* Day view */}
+      {currentView === 'day' && (
+        <DayView
+          date={selectedDay}
+          events={filteredEvents}
+          onEventClick={handleEventClick}
+          onEventUpdate={updateEvent}
+          onBackToMonth={handleBackToMonth}
+          onCreate={handleQuickCreate}
+          onDateChange={setSelectedDay}
+          onDelete={deleteEvent}
+          showEventModal={showEventModal}
+          selectedEvent={selectedEvent}
+          onCloseModal={handleCloseModal}
+          onEventSave={handleEventSave}
+        />
+      )}
+
+      {/* Integration setup modal */}
+      <IntegrationSetupModal
+        open={showIntegrationModal}
+        onClose={() => setShowIntegrationModal(false)}
+        onSave={createIntegration}
+        existingIntegrations={integrations}
+      />
     </div>
   );
 };
