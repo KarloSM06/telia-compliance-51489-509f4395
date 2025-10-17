@@ -30,7 +30,7 @@ export function LeadSearchForm({ open, onOpenChange, onSubmit, isSubmitting }: L
     location: [],
     company_size: "medium",
     keywords: [],
-    leads_target: 50,
+    leads_target: 100,
   });
   const [keywordInput, setKeywordInput] = useState("");
 
@@ -43,7 +43,7 @@ export function LeadSearchForm({ open, onOpenChange, onSubmit, isSubmitting }: L
       location: [],
       company_size: "medium",
       keywords: [],
-      leads_target: 50,
+      leads_target: 100,
     });
   };
 
@@ -185,9 +185,9 @@ export function LeadSearchForm({ open, onOpenChange, onSubmit, isSubmitting }: L
           <div className="space-y-2">
             <Label>Antal leads önskat: {formData.leads_target}</Label>
             <Slider
-              value={[formData.leads_target || 50]}
+              value={[formData.leads_target || 100]}
               onValueChange={([value]) => setFormData(prev => ({ ...prev, leads_target: value }))}
-              min={10}
+              min={100}
               max={500}
               step={10}
             />

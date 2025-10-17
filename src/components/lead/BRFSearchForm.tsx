@@ -21,7 +21,7 @@ export function BRFSearchForm({ onSubmit, isSubmitting }: BRFSearchFormProps) {
     construction_year_range: "",
     monthly_fee_range: "",
     keywords: [] as string[],
-    leads_target: 50,
+    leads_target: 100,
   });
 
   const [keywordInput, setKeywordInput] = useState("");
@@ -194,8 +194,8 @@ export function BRFSearchForm({ onSubmit, isSubmitting }: BRFSearchFormProps) {
         <Slider
           value={[formData.leads_target]}
           onValueChange={([value]) => setFormData({ ...formData, leads_target: value })}
-          min={10}
-          max={200}
+          min={100}
+          max={500}
           step={10}
         />
       </div>
