@@ -19,6 +19,11 @@ import Legal from "./pages/Legal";
 import NotFound from "./pages/NotFound";
 import Checkout from "./pages/Checkout";
 import DashboardAnalytics from "./pages/DashboardAnalytics";
+import KronoPage from "./pages/KronoPage";
+import GastroPage from "./pages/GastroPage";
+import TalentPage from "./pages/TalentPage";
+import LeadPage from "./pages/LeadPage";
+import ThorPage from "./pages/ThorPage";
 import { DashboardLayout } from "./components/dashboard/DashboardLayout";
 
 const queryClient = new QueryClient();
@@ -38,6 +43,11 @@ const App = () => (
             <Route path="/dashboard/packages" element={<DashboardLayout><DashboardPackages /></DashboardLayout>} />
             <Route path="/dashboard/custom" element={<DashboardLayout><CustomDashboard /></DashboardLayout>} />
             <Route path="/dashboard/settings" element={<DashboardLayout><Settings /></DashboardLayout>} />
+            <Route path="/dashboard/krono" element={<DashboardLayout><KronoPage /></DashboardLayout>} />
+            <Route path="/dashboard/gastro" element={<DashboardLayout><GastroPage /></DashboardLayout>} />
+            <Route path="/dashboard/talent" element={<DashboardLayout><TalentPage /></DashboardLayout>} />
+            <Route path="/dashboard/lead" element={<DashboardLayout><LeadPage /></DashboardLayout>} />
+            <Route path="/dashboard/thor" element={<DashboardLayout><ThorPage /></DashboardLayout>} />
             <Route path="/demo" element={<Demo />} />
             <Route path="/om-oss" element={<AboutUs />} />
             <Route path="/gdpr" element={<GDPRSettings />} />

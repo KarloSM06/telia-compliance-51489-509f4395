@@ -1,4 +1,4 @@
-import { Home, Package, LayoutDashboard, Settings, BarChart3, LogOut } from "lucide-react";
+import { Home, Package, LayoutDashboard, Settings, BarChart3, LogOut, Phone, UtensilsCrossed, Users, Target, Award } from "lucide-react";
 import { NavLink, useNavigate } from "react-router-dom";
 import {
   Sidebar,
@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/sidebar";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { useAuth } from "@/hooks/useAuth";
+import { useUserProducts } from "@/hooks/useUserProducts";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -34,9 +35,18 @@ const navigationItems = [
 
 export function AppSidebar() {
   const { user, signOut } = useAuth();
+  const { products } = useUserProducts();
   const { state } = useSidebar();
   const navigate = useNavigate();
   const isCollapsed = state === "collapsed";
+
+  const productNavigationItems = [
+    { title: "AI Receptionist", url: "/dashboard/krono", icon: Phone, productId: "krono" },
+    { title: "Restaurang & Café", url: "/dashboard/gastro", icon: UtensilsCrossed, productId: "gastro" },
+    { title: "AI Rekrytering", url: "/dashboard/talent", icon: Users, productId: "talent" },
+    { title: "AI Prospektering", url: "/dashboard/lead", icon: Target, productId: "lead" },
+    { title: "AI Compliance", url: "/dashboard/thor", icon: Award, productId: "thor" },
+  ].filter(item => products.includes(item.productId));
 
   const getInitials = (email: string) => {
     return email.charAt(0).toUpperCase();
@@ -119,6 +129,35 @@ export function AppSidebar() {
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
+
+        {productNavigationItems.length > 0 && (
+          <SidebarGroup>
+            <SidebarGroupLabel>Mina Produkter</SidebarGroupLabel>
+            <SidebarGroupContent>
+              <SidebarMenu>
+                {productNavigationItems.map((item) => (
+                  <SidebarMenuItem key={item.title}>
+                    <SidebarMenuButton asChild tooltip={item.title}>
+                      <NavLink
+                        to={item.url}
+                        className={({ isActive }) =>
+                          `flex items-center gap-3 transition-all ${
+                            isActive
+                              ? "bg-sidebar-accent text-sidebar-accent-foreground font-medium"
+                              : "hover:bg-sidebar-accent/50"
+                          }`
+                        }
+                      >
+                        <item.icon className="h-5 w-5" />
+                        <span>{item.title}</span>
+                      </NavLink>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                ))}
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        )}
       </SidebarContent>
 
       <SidebarFooter className="border-t border-sidebar-border p-4">
