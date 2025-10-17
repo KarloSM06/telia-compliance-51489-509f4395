@@ -47,7 +47,7 @@ export function LeadSection() {
               <Sparkles className="h-5 w-5 mr-2" />
               Ny sökning
             </Button>
-            <Button size="lg" variant="outline" className="border-white/20 text-white hover:bg-white/10">
+            <Button size="lg" variant="outline" className="border-white/20 hover:bg-white/10 text-slate-950">
               <BookOpen className="h-5 w-5 mr-2" />
               Visa guiden
             </Button>
