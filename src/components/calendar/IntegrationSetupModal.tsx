@@ -5,22 +5,29 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { AVAILABLE_PROVIDERS } from "@/hooks/useBookingIntegrations";
+import { Badge } from "@/components/ui/badge";
+import { AVAILABLE_PROVIDERS, BookingIntegration } from "@/hooks/useBookingIntegrations";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { Check } from "lucide-react";
 
 interface IntegrationSetupModalProps {
   open: boolean;
   onClose: () => void;
   onSave: (data: any) => Promise<any>;
+  existingIntegrations?: BookingIntegration[];
 }
 
-export const IntegrationSetupModal = ({ open, onClose, onSave }: IntegrationSetupModalProps) => {
+export const IntegrationSetupModal = ({ open, onClose, onSave, existingIntegrations = [] }: IntegrationSetupModalProps) => {
   const [selectedProvider, setSelectedProvider] = useState('');
   const [credentials, setCredentials] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(false);
 
   const provider = AVAILABLE_PROVIDERS.find(p => p.id === selectedProvider);
+  
+  const isIntegrated = (providerId: string) => {
+    return existingIntegrations.some(int => int.provider === providerId);
+  };
 
   const getCredentialFields = (providerId: string) => {
     const fields: Record<string, { label: string; type: string; placeholder?: string }[]> = {
@@ -154,20 +161,37 @@ export const IntegrationSetupModal = ({ open, onClose, onSave }: IntegrationSetu
 
         {!selectedProvider ? (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 py-4">
-            {AVAILABLE_PROVIDERS.map(p => (
-              <Card 
-                key={p.id}
-                className="cursor-pointer hover:border-primary transition-colors"
-                onClick={() => setSelectedProvider(p.id)}
-              >
-                <CardHeader>
-                  <CardTitle className="text-lg">{p.name}</CardTitle>
-                  <CardDescription>
-                    {p.type === 'full_api' ? 'Full API-integration' : 'Kalendersynkning'}
-                  </CardDescription>
-                </CardHeader>
-              </Card>
-            ))}
+            {AVAILABLE_PROVIDERS.map(p => {
+              const integrated = isIntegrated(p.id);
+              return (
+                <Card 
+                  key={p.id}
+                  className={`cursor-pointer transition-colors relative ${
+                    integrated 
+                      ? 'border-primary/50 bg-primary/5' 
+                      : 'hover:border-primary'
+                  }`}
+                  onClick={() => !integrated && setSelectedProvider(p.id)}
+                >
+                  <CardHeader>
+                    <div className="flex justify-between items-start">
+                      <CardTitle className="text-lg flex items-center gap-2">
+                        {p.name}
+                        {integrated && (
+                          <Badge variant="default" className="ml-2">
+                            <Check className="h-3 w-3 mr-1" />
+                            Integrerad
+                          </Badge>
+                        )}
+                      </CardTitle>
+                    </div>
+                    <CardDescription>
+                      {p.type === 'full_api' ? 'Full API-integration' : 'Kalendersynkning'}
+                    </CardDescription>
+                  </CardHeader>
+                </Card>
+              );
+            })}
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="space-y-6 py-4">

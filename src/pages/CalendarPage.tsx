@@ -210,6 +210,7 @@ const CalendarPage = () => {
         open={showIntegrationModal}
         onClose={() => setShowIntegrationModal(false)}
         onSave={createIntegration}
+        existingIntegrations={integrations}
       />
         </div>
       )}
@@ -242,6 +243,7 @@ const CalendarPage = () => {
           open={showIntegrationModal}
           onClose={() => setShowIntegrationModal(false)}
           onSave={createIntegration}
+          existingIntegrations={integrations}
         />
       )}
     </div>
