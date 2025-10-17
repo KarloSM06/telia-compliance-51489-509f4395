@@ -4,7 +4,7 @@ import { addMinutes, parseISO } from 'date-fns';
 import { snapToInterval, getTimeFromYPosition } from '@/lib/calendarUtils';
 
 export const useEventDrag = (
-  onEventUpdate: (id: string, updates: Partial<CalendarEvent>) => Promise<CalendarEvent | undefined>
+  onPendingChange: (eventId: string, updates: Partial<CalendarEvent>) => void
 ) => {
   const [draggedEvent, setDraggedEvent] = useState<CalendarEvent | null>(null);
   const [isDragging, setIsDragging] = useState(false);
@@ -14,7 +14,7 @@ export const useEventDrag = (
     setIsDragging(true);
   }, []);
 
-  const handleDrop = useCallback(async (e: React.DragEvent, containerRef: HTMLDivElement | null) => {
+  const handleDrop = useCallback((e: React.DragEvent, containerRef: HTMLDivElement | null) => {
     if (!draggedEvent || !containerRef) return;
 
     const rect = containerRef.getBoundingClientRect();
@@ -27,14 +27,15 @@ export const useEventDrag = (
     
     const newEndTime = addMinutes(snappedTime, duration);
 
-    await onEventUpdate(draggedEvent.id, {
+    // Add as pending change instead of saving immediately
+    onPendingChange(draggedEvent.id, {
       start_time: snappedTime.toISOString(),
       end_time: newEndTime.toISOString(),
     });
 
     setDraggedEvent(null);
     setIsDragging(false);
-  }, [draggedEvent, onEventUpdate]);
+  }, [draggedEvent, onPendingChange]);
 
   const handleDragEnd = useCallback(() => {
     setDraggedEvent(null);

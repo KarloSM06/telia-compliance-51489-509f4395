@@ -11,7 +11,7 @@ interface EventBlockProps {
   column: number;
   totalColumns: number;
   onEventClick: (event: CalendarEvent) => void;
-  onEventUpdate: (id: string, updates: Partial<CalendarEvent>) => Promise<CalendarEvent | undefined>;
+  onPendingChange: (eventId: string, updates: Partial<CalendarEvent>) => void;
   onDragStart: (event: CalendarEvent) => void;
 }
 
@@ -20,7 +20,7 @@ export const EventBlock = ({
   column,
   totalColumns,
   onEventClick,
-  onEventUpdate,
+  onPendingChange,
   onDragStart,
 }: EventBlockProps) => {
   const [tempStartTime, setTempStartTime] = useState<Date | null>(null);
@@ -78,20 +78,18 @@ export const EventBlock = ({
       document.removeEventListener('mousemove', handleMouseMove);
       document.removeEventListener('mouseup', handleMouseUp);
       
-      // Open modal with new times if they were changed
+      // Add as pending change instead of opening modal
       if (tempStartTime || tempEndTime) {
-        const updatedEvent = {
-          ...event,
+        onPendingChange(event.id, {
           start_time: (tempStartTime || originalStart).toISOString(),
           end_time: (tempEndTime || originalEnd).toISOString(),
-        };
-        onEventClick(updatedEvent);
+        });
       }
     };
 
     document.addEventListener('mousemove', handleMouseMove);
     document.addEventListener('mouseup', handleMouseUp);
-  }, [event, tempStartTime, tempEndTime, onEventClick]);
+  }, [event.id, tempStartTime, tempEndTime, onPendingChange]);
 
   const handleDragStart = (e: React.DragEvent) => {
     e.dataTransfer.effectAllowed = 'move';

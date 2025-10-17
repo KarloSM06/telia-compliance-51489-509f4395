@@ -2,14 +2,16 @@ import { CalendarEvent } from '@/hooks/useCalendarEvents';
 import { format, addDays, subDays } from 'date-fns';
 import { sv } from 'date-fns/locale';
 import { Button } from '@/components/ui/button';
-import { ChevronLeft, ChevronRight, Calendar as CalendarIcon } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Calendar as CalendarIcon, Save } from 'lucide-react';
 import { TimeGrid } from './TimeGrid';
 import { EventBlock } from './EventBlock';
 import { CurrentTimeIndicator } from './CurrentTimeIndicator';
 import { layoutOverlappingEvents } from '@/lib/calendarUtils';
 import { useEventDrag } from '@/hooks/useEventDrag';
+import { usePendingEventChanges } from '@/hooks/usePendingEventChanges';
 import { useRef } from 'react';
 import { addMinutes } from 'date-fns';
+import { toast } from 'sonner';
 
 interface DayViewProps {
   date: Date;
@@ -31,9 +33,34 @@ export const DayView = ({
   onDateChange,
 }: DayViewProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const { handleDragStart, handleDrop, handleDragEnd } = useEventDrag(onEventUpdate);
+  const { 
+    pendingChanges, 
+    addPendingChange, 
+    clearPendingChanges, 
+    getEventWithPendingChanges, 
+    hasPendingChanges 
+  } = usePendingEventChanges();
   
-  const layoutedEvents = layoutOverlappingEvents(events);
+  const { handleDragStart, handleDrop, handleDragEnd } = useEventDrag(addPendingChange);
+  
+  // Apply pending changes to events for display
+  const eventsWithPendingChanges = events.map(getEventWithPendingChanges);
+  const layoutedEvents = layoutOverlappingEvents(eventsWithPendingChanges);
+
+  const handleSaveChanges = async () => {
+    try {
+      // Save all pending changes
+      const savePromises = Array.from(pendingChanges.entries()).map(([eventId, updates]) => 
+        onEventUpdate(eventId, updates)
+      );
+      
+      await Promise.all(savePromises);
+      clearPendingChanges();
+      toast.success('Ändringar sparade');
+    } catch (error) {
+      toast.error('Kunde inte spara ändringar');
+    }
+  };
 
   const handleTimeSlotClick = async (time: Date) => {
     await onCreate(time);
@@ -90,13 +117,21 @@ export const DayView = ({
           </Button>
         </div>
 
-        <Button onClick={async () => {
-          const now = new Date();
-          const roundedTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours(), Math.floor(now.getMinutes() / 15) * 15);
-          await onCreate(roundedTime);
-        }}>
-          Ny händelse
-        </Button>
+        <div className="flex gap-2">
+          {hasPendingChanges && (
+            <Button onClick={handleSaveChanges} variant="default" className="gap-2">
+              <Save className="h-4 w-4" />
+              Spara ändringar
+            </Button>
+          )}
+          <Button onClick={async () => {
+            const now = new Date();
+            const roundedTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours(), Math.floor(now.getMinutes() / 15) * 15);
+            await onCreate(roundedTime);
+          }}>
+            Ny händelse
+          </Button>
+        </div>
       </div>
 
       {/* Day view grid */}
@@ -124,7 +159,7 @@ export const DayView = ({
                     column={event.column}
                     totalColumns={event.totalColumns}
                     onEventClick={onEventClick}
-                    onEventUpdate={onEventUpdate}
+                    onPendingChange={addPendingChange}
                     onDragStart={handleDragStart}
                   />
                 ))}
