@@ -20,7 +20,6 @@ export const TimeGrid = ({ onTimeSlotClick }: TimeGridProps) => {
   return (
     <div className="relative">
       {hours.map((hour) => {
-        const time = setHours(new Date(), hour);
         return (
           <div
             key={hour}
@@ -29,7 +28,7 @@ export const TimeGrid = ({ onTimeSlotClick }: TimeGridProps) => {
           >
             {/* Hour label */}
             <div className="absolute -left-14 -top-2 text-xs text-muted-foreground w-12 text-right">
-              {format(time, 'HH:mm')}
+              {hour.toString().padStart(2, '0')}:00
             </div>
             
             {/* 15-minute gridlines */}
