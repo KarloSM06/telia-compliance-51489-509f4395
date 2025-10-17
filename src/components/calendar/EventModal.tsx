@@ -38,6 +38,7 @@ export const EventModal = ({ open, onClose, event, defaultDate, onSave, onDelete
     contact_person: currentEvent?.contact_person || '',
     contact_email: currentEvent?.contact_email || '',
     contact_phone: currentEvent?.contact_phone || '',
+    address: (currentEvent as any)?.address || '',
     notes: (currentEvent as any)?.notes || '',
   });
   const [reminders, setReminders] = useState<number[]>([]); // Minutes before event
@@ -56,6 +57,7 @@ export const EventModal = ({ open, onClose, event, defaultDate, onSave, onDelete
         contact_person: currentEvent?.contact_person || '',
         contact_email: currentEvent?.contact_email || '',
         contact_phone: currentEvent?.contact_phone || '',
+        address: (currentEvent as any)?.address || '',
         notes: (currentEvent as any)?.notes || '',
       });
       
@@ -339,7 +341,17 @@ export const EventModal = ({ open, onClose, event, defaultDate, onSave, onDelete
           </div>
 
           <div>
-            <Label htmlFor="notes">Plats / Anteckningar</Label>
+            <Label htmlFor="address">Adress</Label>
+            <Input
+              id="address"
+              value={formData.address}
+              onChange={(e) => setFormData({ ...formData, address: e.target.value })}
+              placeholder="T.ex. Storgatan 1, Stockholm"
+            />
+          </div>
+
+          <div>
+            <Label htmlFor="notes">Anteckningar</Label>
             <Textarea
               id="notes"
               value={formData.notes}
