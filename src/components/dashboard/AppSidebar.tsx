@@ -1,4 +1,4 @@
-import { Home, Package, LayoutDashboard, Settings, BarChart3, LogOut, Phone, UtensilsCrossed, Users, Target, Award, Calendar, Star } from "lucide-react";
+import { Home, Package, LayoutDashboard, Settings, BarChart3, LogOut, Phone, UtensilsCrossed, Users, Target, Award, Calendar } from "lucide-react";
 import { NavLink, useNavigate } from "react-router-dom";
 import {
   Sidebar,
@@ -47,7 +47,6 @@ export function AppSidebar() {
     { title: "AI Rekrytering", url: "/dashboard/talent", icon: Users, productId: "talent" },
     { title: "AI Prospektering", url: "/dashboard/lead", icon: Target, productId: "lead" },
     { title: "AI Compliance", url: "/dashboard/thor", icon: Award, productId: "thor" },
-    { title: "AI Omdömen", url: "/dashboard/eko", icon: Star, productId: "eko" },
   ].filter(item => products.includes(item.productId));
 
   const getInitials = (email: string) => {

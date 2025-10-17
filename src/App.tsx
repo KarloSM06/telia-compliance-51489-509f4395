@@ -24,7 +24,6 @@ import GastroPage from "./pages/GastroPage";
 import TalentPage from "./pages/TalentPage";
 import LeadPage from "./pages/LeadPage";
 import ThorPage from "./pages/ThorPage";
-import EkoPage from "./pages/EkoPage";
 import CalendarPage from "./pages/CalendarPage";
 import { DashboardLayout } from "./components/dashboard/DashboardLayout";
 
@@ -50,7 +49,6 @@ const App = () => (
             <Route path="/dashboard/talent" element={<DashboardLayout><TalentPage /></DashboardLayout>} />
             <Route path="/dashboard/lead" element={<DashboardLayout><LeadPage /></DashboardLayout>} />
             <Route path="/dashboard/thor" element={<DashboardLayout><ThorPage /></DashboardLayout>} />
-            <Route path="/dashboard/eko" element={<DashboardLayout><EkoPage /></DashboardLayout>} />
             <Route path="/dashboard/calendar" element={<DashboardLayout><CalendarPage /></DashboardLayout>} />
             <Route path="/demo" element={<Demo />} />
             <Route path="/om-oss" element={<AboutUs />} />
