@@ -117,16 +117,23 @@ const EventBlockComponent = ({
           </div>
         )}
         
-        {/* Contact person - visible for events > 60px (1h) */}
-        {event.contact_person && height > 60 && (
+        {/* Address - visible for events > 45px */}
+        {(event as any).address && height > 45 && (
+          <div className="text-xs opacity-80 truncate">
+            📍 {(event as any).address}
+          </div>
+        )}
+        
+        {/* Contact person - visible for events > 70px */}
+        {event.contact_person && height > 70 && (
           <div className="flex items-center gap-1 text-xs truncate">
             <User className="h-3 w-3 flex-shrink-0" />
             <span className="truncate">{event.contact_person}</span>
           </div>
         )}
         
-        {/* Contact details - visible for events > 90px (1.5h) */}
-        {height > 90 && (
+        {/* Contact details - visible for events > 100px */}
+        {height > 100 && (
           <div className="space-y-0.5">
             {event.contact_email && (
               <div className="flex items-center gap-1 text-xs truncate opacity-80">
@@ -143,8 +150,8 @@ const EventBlockComponent = ({
           </div>
         )}
         
-        {/* Description - visible for events > 120px (2h) */}
-        {event.description && height > 120 && (
+        {/* Description - visible for events > 130px */}
+        {event.description && height > 130 && (
           <div className="text-xs opacity-70 line-clamp-2 pt-1 border-t border-current/10">
             {event.description}
           </div>
