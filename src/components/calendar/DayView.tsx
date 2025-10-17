@@ -2,15 +2,15 @@ import { CalendarEvent } from '@/hooks/useCalendarEvents';
 import { format, addDays, subDays } from 'date-fns';
 import { sv } from 'date-fns/locale';
 import { Button } from '@/components/ui/button';
-import { ChevronLeft, ChevronRight, Calendar as CalendarIcon, Save } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Calendar as CalendarIcon, Save, Undo } from 'lucide-react';
 import { TimeGrid } from './TimeGrid';
 import { EventBlock } from './EventBlock';
 import { CurrentTimeIndicator } from './CurrentTimeIndicator';
-import { layoutOverlappingEvents } from '@/lib/calendarUtils';
-import { useEventDrag } from '@/hooks/useEventDrag';
+import { EventDragPreview } from './EventDragPreview';
+import { layoutOverlappingEvents, getEventPosition } from '@/lib/calendarUtils';
+import { useOptimizedEventInteraction } from '@/hooks/useOptimizedEventInteraction';
 import { usePendingEventChanges } from '@/hooks/usePendingEventChanges';
-import { useRef } from 'react';
-import { addMinutes } from 'date-fns';
+import { useMemo, useEffect } from 'react';
 import { toast } from 'sonner';
 
 interface DayViewProps {
@@ -32,20 +32,49 @@ export const DayView = ({
   onCreate,
   onDateChange,
 }: DayViewProps) => {
-  const containerRef = useRef<HTMLDivElement>(null);
   const { 
     pendingChanges, 
     addPendingChange, 
     clearPendingChanges, 
     getEventWithPendingChanges, 
-    hasPendingChanges 
+    hasPendingChanges,
+    undo,
+    canUndo
   } = usePendingEventChanges();
   
-  const { handleDragStart, handleDrop, handleDragEnd } = useEventDrag(addPendingChange);
+  const {
+    dragState,
+    containerRef,
+    handleDragStart,
+    handleDragOver,
+    handleDrop,
+    handleResizeStart,
+    clearDragState,
+  } = useOptimizedEventInteraction(addPendingChange);
   
-  // Apply pending changes to events for display
-  const eventsWithPendingChanges = events.map(getEventWithPendingChanges);
-  const layoutedEvents = layoutOverlappingEvents(eventsWithPendingChanges);
+  // Apply pending changes to events for display with memoization
+  const eventsWithPendingChanges = useMemo(() => 
+    events.map(getEventWithPendingChanges),
+    [events, getEventWithPendingChanges]
+  );
+  
+  const layoutedEvents = useMemo(() => 
+    layoutOverlappingEvents(eventsWithPendingChanges),
+    [eventsWithPendingChanges]
+  );
+  
+  // Keyboard shortcuts
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === 'z') {
+        e.preventDefault();
+        undo();
+      }
+    };
+    
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [undo]);
 
   const handleSaveChanges = async () => {
     try {
@@ -66,15 +95,22 @@ export const DayView = ({
     await onCreate(time);
   };
 
-  const handleDragOver = (e: React.DragEvent) => {
-    e.preventDefault();
-    e.dataTransfer.dropEffect = 'move';
+  const handleUndoClick = () => {
+    undo();
+    toast.success('Ångrade ändring');
   };
 
-  const handleDropEvent = (e: React.DragEvent) => {
-    e.preventDefault();
-    handleDrop(e, containerRef.current);
-  };
+  // Calculate snap indicator position
+  const snapIndicatorY = useMemo(() => {
+    if (dragState.previewPosition) {
+      const { top } = getEventPosition(
+        dragState.previewPosition.start.toISOString(),
+        dragState.previewPosition.end.toISOString()
+      );
+      return top;
+    }
+    return undefined;
+  }, [dragState.previewPosition]);
 
   return (
     <div className="flex flex-col h-full">
@@ -118,10 +154,22 @@ export const DayView = ({
         </div>
 
         <div className="flex gap-2">
+          {canUndo && (
+            <Button 
+              onClick={handleUndoClick} 
+              variant="outline" 
+              size="sm"
+              className="gap-2"
+              title="Ångra (Ctrl+Z)"
+            >
+              <Undo className="h-4 w-4" />
+              Ångra
+            </Button>
+          )}
           {hasPendingChanges && (
             <Button onClick={handleSaveChanges} variant="default" className="gap-2">
               <Save className="h-4 w-4" />
-              Spara ändringar
+              Spara ändringar ({pendingChanges.size})
             </Button>
           )}
           <Button onClick={async () => {
@@ -141,8 +189,7 @@ export const DayView = ({
             ref={containerRef}
             className="relative"
             onDragOver={handleDragOver}
-            onDrop={handleDropEvent}
-            onDragEnd={handleDragEnd}
+            onDrop={handleDrop}
           >
             <TimeGrid onTimeSlotClick={handleTimeSlotClick} />
             
@@ -159,10 +206,21 @@ export const DayView = ({
                     column={event.column}
                     totalColumns={event.totalColumns}
                     onEventClick={onEventClick}
-                    onPendingChange={addPendingChange}
                     onDragStart={handleDragStart}
+                    onResizeStart={handleResizeStart}
+                    isResizing={dragState.activeEventId === event.id && dragState.operation !== 'drag'}
                   />
                 ))}
+                
+                {/* Ghost preview during drag */}
+                {dragState.operation === 'drag' && dragState.previewPosition && dragState.activeEventId && (
+                  <EventDragPreview
+                    start={dragState.previewPosition.start}
+                    end={dragState.previewPosition.end}
+                    title={events.find(e => e.id === dragState.activeEventId)?.title || ''}
+                    snapIndicatorY={snapIndicatorY}
+                  />
+                )}
               </div>
             </div>
           </div>

@@ -92,3 +92,71 @@ export const getEventTypeColor = (eventType: string) => {
   
   return colors[eventType] || colors.other;
 };
+
+// Calculate snap position with smart snapping
+export const calculateSnapPosition = (
+  time: Date,
+  intervalMinutes: number = 15,
+  nearbyEvents?: CalendarEvent[]
+): Date => {
+  const snappedTime = snapToInterval(time, intervalMinutes);
+  
+  // If no nearby events, return simple snap
+  if (!nearbyEvents || nearbyEvents.length === 0) {
+    return snappedTime;
+  }
+
+  // Check if we're close to any event boundaries (within 5 minutes)
+  const SNAP_THRESHOLD = 5 * 60 * 1000; // 5 minutes in ms
+  
+  for (const event of nearbyEvents) {
+    const eventStart = parseISO(event.start_time);
+    const eventEnd = parseISO(event.end_time);
+    
+    const diffToStart = Math.abs(time.getTime() - eventStart.getTime());
+    const diffToEnd = Math.abs(time.getTime() - eventEnd.getTime());
+    
+    if (diffToStart < SNAP_THRESHOLD) {
+      return eventStart;
+    }
+    if (diffToEnd < SNAP_THRESHOLD) {
+      return eventEnd;
+    }
+  }
+  
+  return snappedTime;
+};
+
+// Validate event times
+export const validateEventTimes = (start: Date, end: Date): boolean => {
+  const minDuration = 15; // minutes
+  const maxDuration = 24 * 60; // 24 hours
+  
+  const duration = differenceInMinutes(end, start);
+  return duration >= minDuration && duration <= maxDuration;
+};
+
+// Check for event conflicts
+export const checkEventConflicts = (
+  event: CalendarEvent,
+  allEvents: CalendarEvent[]
+): CalendarEvent[] => {
+  return allEvents.filter(e => 
+    e.id !== event.id && doesOverlap(event, e)
+  );
+};
+
+// Format event duration
+export const formatEventDuration = (start: Date, end: Date): string => {
+  const duration = differenceInMinutes(end, start);
+  const hours = Math.floor(duration / 60);
+  const minutes = duration % 60;
+  
+  if (hours === 0) {
+    return `${minutes}min`;
+  }
+  if (minutes === 0) {
+    return `${hours}h`;
+  }
+  return `${hours}h ${minutes}min`;
+};

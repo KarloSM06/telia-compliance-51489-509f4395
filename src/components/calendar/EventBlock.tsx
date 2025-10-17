@@ -1,9 +1,7 @@
 import { CalendarEvent } from '@/hooks/useCalendarEvents';
 import { getEventPosition, getEventTypeColor } from '@/lib/calendarUtils';
 import { format, parseISO, differenceInMinutes } from 'date-fns';
-import { useState, useRef, useCallback, useEffect } from 'react';
-import { addMinutes } from 'date-fns';
-import { snapToInterval } from '@/lib/calendarUtils';
+import { memo } from 'react';
 import { User, Mail, Phone } from 'lucide-react';
 
 interface EventBlockProps {
@@ -11,31 +9,22 @@ interface EventBlockProps {
   column: number;
   totalColumns: number;
   onEventClick: (event: CalendarEvent) => void;
-  onPendingChange: (eventId: string, updates: Partial<CalendarEvent>) => void;
   onDragStart: (event: CalendarEvent) => void;
+  onResizeStart: (e: React.MouseEvent | React.TouchEvent, event: CalendarEvent, handle: 'top' | 'bottom') => void;
+  isResizing?: boolean;
 }
 
-export const EventBlock = ({
+const EventBlockComponent = ({
   event,
   column,
   totalColumns,
   onEventClick,
-  onPendingChange,
   onDragStart,
+  onResizeStart,
+  isResizing = false,
 }: EventBlockProps) => {
-  const [tempStartTime, setTempStartTime] = useState<Date | null>(null);
-  const [tempEndTime, setTempEndTime] = useState<Date | null>(null);
-  const [isResizing, setIsResizing] = useState(false);
-  const resizeStartRef = useRef<{ startY: number; handle: 'top' | 'bottom' } | null>(null);
-
-  // Reset temp times when event times change (after save or cancel)
-  useEffect(() => {
-    setTempStartTime(null);
-    setTempEndTime(null);
-  }, [event.start_time, event.end_time]);
-
-  const startTime = tempStartTime || parseISO(event.start_time);
-  const endTime = tempEndTime || parseISO(event.end_time);
+  const startTime = parseISO(event.start_time);
+  const endTime = parseISO(event.end_time);
   
   const { top, height } = getEventPosition(startTime.toISOString(), endTime.toISOString());
   const colorClass = getEventTypeColor(event.event_type);
@@ -45,52 +34,6 @@ export const EventBlock = ({
 
   const duration = differenceInMinutes(endTime, startTime);
 
-  const handleResizeStart = useCallback((e: React.MouseEvent, handle: 'top' | 'bottom') => {
-    e.stopPropagation();
-    setIsResizing(true);
-    const originalStart = parseISO(event.start_time);
-    const originalEnd = parseISO(event.end_time);
-    resizeStartRef.current = { startY: e.clientY, handle };
-
-    const handleMouseMove = (moveEvent: MouseEvent) => {
-      if (!resizeStartRef.current) return;
-
-      const deltaY = moveEvent.clientY - resizeStartRef.current.startY;
-      const deltaMinutes = Math.round(deltaY); // 1px = 1 minute
-      const snappedDelta = Math.round(deltaMinutes / 15) * 15; // Snap to 15 min
-
-      if (resizeStartRef.current.handle === 'top') {
-        const newStartTime = addMinutes(originalStart, snappedDelta);
-        if (newStartTime < (tempEndTime || originalEnd)) {
-          setTempStartTime(newStartTime);
-        }
-      } else {
-        const newEndTime = addMinutes(originalEnd, snappedDelta);
-        if (newEndTime > (tempStartTime || originalStart)) {
-          setTempEndTime(newEndTime);
-        }
-      }
-    };
-
-    const handleMouseUp = () => {
-      setIsResizing(false);
-      resizeStartRef.current = null;
-      document.removeEventListener('mousemove', handleMouseMove);
-      document.removeEventListener('mouseup', handleMouseUp);
-      
-      // Add as pending change instead of opening modal
-      if (tempStartTime || tempEndTime) {
-        onPendingChange(event.id, {
-          start_time: (tempStartTime || originalStart).toISOString(),
-          end_time: (tempEndTime || originalEnd).toISOString(),
-        });
-      }
-    };
-
-    document.addEventListener('mousemove', handleMouseMove);
-    document.addEventListener('mouseup', handleMouseUp);
-  }, [event.id, tempStartTime, tempEndTime, onPendingChange]);
-
   const handleDragStart = (e: React.DragEvent) => {
     e.dataTransfer.effectAllowed = 'move';
     e.dataTransfer.setData('eventId', event.id);
@@ -99,11 +42,18 @@ export const EventBlock = ({
 
   const handleClick = () => {
     if (!isResizing) {
-      // Reset temp times when opening modal normally
-      setTempStartTime(null);
-      setTempEndTime(null);
       onEventClick(event);
     }
+  };
+
+  const handleTouchStart = (e: React.TouchEvent, handle: 'top' | 'bottom') => {
+    e.stopPropagation();
+    onResizeStart(e, event, handle);
+  };
+
+  const handleMouseDown = (e: React.MouseEvent, handle: 'top' | 'bottom') => {
+    e.stopPropagation();
+    onResizeStart(e, event, handle);
   };
 
   return (
@@ -111,21 +61,27 @@ export const EventBlock = ({
       draggable={!isResizing}
       onDragStart={handleDragStart}
       onClick={handleClick}
-      className={`absolute rounded-lg border-l-4 p-2 shadow-sm cursor-pointer hover:shadow-lg hover:scale-[1.02] transition-all group ${colorClass} ${isResizing ? 'ring-2 ring-primary' : ''}`}
+      className={`absolute rounded-lg border-l-4 p-2 shadow-sm cursor-pointer transition-all duration-200 group ${colorClass} ${
+        isResizing ? 'ring-2 ring-primary scale-[1.02] shadow-lg' : 'hover:shadow-lg hover:scale-[1.01]'
+      }`}
       style={{
         top: `${top}px`,
         height: `${Math.max(height, 30)}px`,
         width,
         left,
         zIndex: isResizing ? 30 : 10,
+        transform: 'translate3d(0, 0, 0)',
+        willChange: isResizing ? 'transform' : 'auto',
       }}
     >
-      {/* Top resize handle - more visible */}
+      {/* Top resize handle - larger touch target */}
       <div
-        className="absolute top-0 left-0 right-0 h-3 cursor-ns-resize opacity-50 group-hover:opacity-100 hover:bg-primary/30 rounded-t-lg transition-all flex items-center justify-center"
-        onMouseDown={(e) => handleResizeStart(e, 'top')}
+        className="absolute top-0 left-0 right-0 h-4 cursor-ns-resize opacity-0 group-hover:opacity-100 hover:bg-primary/20 rounded-t-lg transition-all flex items-center justify-center touch-manipulation"
+        onMouseDown={(e) => handleMouseDown(e, 'top')}
+        onTouchStart={(e) => handleTouchStart(e, 'top')}
+        style={{ minHeight: '16px' }}
       >
-        <div className="w-8 h-0.5 bg-foreground/40 rounded-full" />
+        <div className="w-10 h-1 bg-foreground/50 rounded-full" />
       </div>
 
       {/* Event content */}
@@ -176,13 +132,28 @@ export const EventBlock = ({
         )}
       </div>
 
-      {/* Bottom resize handle - more visible */}
+      {/* Bottom resize handle - larger touch target */}
       <div
-        className="absolute bottom-0 left-0 right-0 h-3 cursor-ns-resize opacity-50 group-hover:opacity-100 hover:bg-primary/30 rounded-b-lg transition-all flex items-center justify-center"
-        onMouseDown={(e) => handleResizeStart(e, 'bottom')}
+        className="absolute bottom-0 left-0 right-0 h-4 cursor-ns-resize opacity-0 group-hover:opacity-100 hover:bg-primary/20 rounded-b-lg transition-all flex items-center justify-center touch-manipulation"
+        onMouseDown={(e) => handleMouseDown(e, 'bottom')}
+        onTouchStart={(e) => handleTouchStart(e, 'bottom')}
+        style={{ minHeight: '16px' }}
       >
-        <div className="w-8 h-0.5 bg-foreground/40 rounded-full" />
+        <div className="w-10 h-1 bg-foreground/50 rounded-full" />
       </div>
     </div>
   );
 };
+
+// Memoize component for better performance
+export const EventBlock = memo(EventBlockComponent, (prevProps, nextProps) => {
+  return (
+    prevProps.event.id === nextProps.event.id &&
+    prevProps.event.start_time === nextProps.event.start_time &&
+    prevProps.event.end_time === nextProps.event.end_time &&
+    prevProps.event.title === nextProps.event.title &&
+    prevProps.column === nextProps.column &&
+    prevProps.totalColumns === nextProps.totalColumns &&
+    prevProps.isResizing === nextProps.isResizing
+  );
+});
