@@ -105,6 +105,64 @@ export const useAvailability = () => {
     }
   };
 
+  const bulkCreateSlots = async (slotsData: Omit<AvailabilitySlot, 'id' | 'created_at' | 'updated_at' | 'user_id'>[]) => {
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      
+      if (!user) {
+        throw new Error('Användare ej inloggad');
+      }
+
+      const slotsWithUserId = slotsData.map(slot => ({
+        ...slot,
+        user_id: user.id,
+      }));
+
+      const { error } = await supabase
+        .from('availability_slots')
+        .insert(slotsWithUserId);
+
+      if (error) throw error;
+      
+      toast.success('Veckoschemat har sparats');
+      await fetchSlots();
+    } catch (error: any) {
+      console.error('Error creating availability slots:', error);
+      toast.error('Kunde inte skapa tidsluckorna');
+      throw error;
+    }
+  };
+
+  const replaceWeeklySchedule = async (slotsData: Omit<AvailabilitySlot, 'id' | 'created_at' | 'updated_at' | 'user_id'>[]) => {
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      
+      if (!user) {
+        throw new Error('Användare ej inloggad');
+      }
+
+      // First delete all existing slots
+      const { error: deleteError } = await supabase
+        .from('availability_slots')
+        .delete()
+        .eq('user_id', user.id);
+
+      if (deleteError) throw deleteError;
+
+      // Then create new slots
+      if (slotsData.length > 0) {
+        await bulkCreateSlots(slotsData);
+      } else {
+        toast.success('Veckoschemat har rensats');
+        await fetchSlots();
+      }
+    } catch (error: any) {
+      console.error('Error replacing weekly schedule:', error);
+      toast.error('Kunde inte uppdatera schemat');
+      throw error;
+    }
+  };
+
   useEffect(() => {
     fetchSlots();
 
@@ -133,6 +191,8 @@ export const useAvailability = () => {
     createSlot,
     updateSlot,
     deleteSlot,
+    bulkCreateSlots,
+    replaceWeeklySchedule,
     refetch: fetchSlots,
   };
 };
