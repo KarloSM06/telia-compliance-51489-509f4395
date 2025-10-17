@@ -46,8 +46,16 @@ const Dashboard = () => {
         <ProductOverview />
       </div>
 
-      {/* Main Content - Tabs for different products */}
-      
+      {/* Main Content - Product Sections */}
+      <div className="space-y-8">
+        {hasCompliancePackage && <CallAnalysisSection />}
+        {hasKronoPackage && <KronoSection />}
+        {hasGastroPackage && <GastroSection />}
+        {hasTalentPackage && <TalentSection />}
+        {hasLeadPackage && <LeadSection />}
+        {hasEkoPackage && <EkoSection />}
+      </div>
     </div>;
 };
+
 export default Dashboard;
