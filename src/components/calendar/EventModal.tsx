@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { format, parseISO } from "date-fns";
+import { sv } from "date-fns/locale";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -141,8 +142,8 @@ export const EventModal = ({ open, onClose, event, defaultDate, onSave, onDelete
           </DialogTitle>
           {event && formData.start_time && (
             <DialogDescription>
-              {format(parseISO(formData.start_time), 'EEEE d MMM yyyy, HH:mm', { locale: require('date-fns/locale/sv') })}
-              {formData.end_time && ` - ${format(parseISO(formData.end_time), 'HH:mm')}`}
+              {format(parseISO(formData.start_time), 'EEEE d MMM yyyy, HH:mm', { locale: sv })}
+              {formData.end_time && ` - ${format(parseISO(formData.end_time), 'HH:mm', { locale: sv })}`}
             </DialogDescription>
           )}
         </DialogHeader>
