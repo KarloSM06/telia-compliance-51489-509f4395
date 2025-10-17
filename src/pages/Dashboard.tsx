@@ -5,6 +5,8 @@ import { CallAnalysisSection } from "@/components/dashboard/CallAnalysisSection"
 import { ProductOverview } from "@/components/dashboard/ProductOverview";
 import { KronoSection } from "@/components/dashboard/KronoSection";
 import { GastroSection } from "@/components/dashboard/GastroSection";
+import { TalentSection } from "@/components/dashboard/TalentSection";
+import { LeadSection } from "@/components/dashboard/LeadSection";
 import { ActivityFeed } from "@/components/dashboard/ActivityFeed";
 import { QuickActions } from "@/components/dashboard/QuickActions";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -16,6 +18,8 @@ const Dashboard = () => {
   const hasCompliancePackage = products.includes('thor');
   const hasKronoPackage = products.includes('krono');
   const hasGastroPackage = products.includes('gastro');
+  const hasTalentPackage = products.includes('talent');
+  const hasLeadPackage = products.includes('lead');
   const complianceProduct = productDetails.find(p => p.product_id === 'thor');
 
   if (loading) {
@@ -43,11 +47,13 @@ const Dashboard = () => {
 
       {/* Main Content - Tabs for different products */}
       <Tabs defaultValue="overview" className="space-y-6">
-        <TabsList className="grid w-full max-w-2xl grid-cols-4 animate-slide-in-right">
+        <TabsList className="grid w-full max-w-4xl grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 animate-slide-in-right">
           <TabsTrigger value="overview" className="hover-scale">Översikt</TabsTrigger>
-          {hasKronoPackage && <TabsTrigger value="krono" className="hover-scale">Krono</TabsTrigger>}
-          {hasGastroPackage && <TabsTrigger value="gastro" className="hover-scale">Gastro</TabsTrigger>}
-          {hasCompliancePackage && <TabsTrigger value="thor" className="hover-scale">Thor</TabsTrigger>}
+          {hasKronoPackage && <TabsTrigger value="krono" className="hover-scale">AI Receptionist</TabsTrigger>}
+          {hasGastroPackage && <TabsTrigger value="gastro" className="hover-scale">Restaurang & Café</TabsTrigger>}
+          {hasTalentPackage && <TabsTrigger value="talent" className="hover-scale">AI Rekrytering</TabsTrigger>}
+          {hasLeadPackage && <TabsTrigger value="lead" className="hover-scale">AI Prospektering</TabsTrigger>}
+          {hasCompliancePackage && <TabsTrigger value="thor" className="hover-scale">AI Compliance</TabsTrigger>}
         </TabsList>
 
         <TabsContent value="overview" className="space-y-6 animate-enter">
@@ -70,6 +76,18 @@ const Dashboard = () => {
         {hasGastroPackage && (
           <TabsContent value="gastro" className="animate-enter">
             <GastroSection />
+          </TabsContent>
+        )}
+
+        {hasTalentPackage && (
+          <TabsContent value="talent" className="animate-enter">
+            <TalentSection />
+          </TabsContent>
+        )}
+
+        {hasLeadPackage && (
+          <TabsContent value="lead" className="animate-enter">
+            <LeadSection />
           </TabsContent>
         )}
 
