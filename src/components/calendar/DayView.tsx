@@ -13,6 +13,7 @@ import { useOptimizedEventInteraction } from '@/hooks/useOptimizedEventInteracti
 import { usePendingEventChanges } from '@/hooks/usePendingEventChanges';
 import { useMemo, useEffect } from 'react';
 import { toast } from 'sonner';
+import { useAvailability } from '@/hooks/useAvailability';
 
 interface DayViewProps {
   date: Date;
@@ -43,6 +44,7 @@ export const DayView = ({
   onCloseModal,
   onEventSave,
 }: DayViewProps) => {
+  const { slots } = useAvailability();
   const { 
     pendingChanges, 
     addPendingChange, 
@@ -202,7 +204,11 @@ export const DayView = ({
             onDragOver={handleDragOver}
             onDrop={handleDrop}
           >
-            <TimeGrid onTimeSlotClick={handleTimeSlotClick} />
+            <TimeGrid 
+              onTimeSlotClick={handleTimeSlotClick}
+              availabilitySlots={slots}
+              currentDate={date}
+            />
             
             {/* Current time indicator */}
             <CurrentTimeIndicator displayDate={date} />

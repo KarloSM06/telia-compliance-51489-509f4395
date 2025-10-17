@@ -1,13 +1,27 @@
 import { format, setHours, setMinutes } from 'date-fns';
 import { useState } from 'react';
+import { AvailabilitySlot } from '@/hooks/useAvailability';
 
 interface TimeGridProps {
   onTimeSlotClick: (time: Date) => void;
+  availabilitySlots?: AvailabilitySlot[];
+  currentDate?: Date;
 }
 
-export const TimeGrid = ({ onTimeSlotClick }: TimeGridProps) => {
+export const TimeGrid = ({ onTimeSlotClick, availabilitySlots = [], currentDate = new Date() }: TimeGridProps) => {
   const hours = Array.from({ length: 24 }, (_, i) => i);
   const [hoveredSlot, setHoveredSlot] = useState<{ hour: number; quarter: number } | null>(null);
+
+  // Get availability slots for current day of week (0 = Monday, 6 = Sunday)
+  const dayOfWeek = currentDate.getDay() === 0 ? 6 : currentDate.getDay() - 1; // Convert to 0=Mon, 6=Sun
+  const daySlots = availabilitySlots.filter(slot => slot.day_of_week === dayOfWeek && slot.is_active);
+
+  const isAvailableAt = (hour: number, minutes: number) => {
+    const timeString = `${hour.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:00`;
+    return daySlots.some(slot => {
+      return timeString >= slot.start_time && timeString < slot.end_time;
+    });
+  };
 
   const handleClick = (e: React.MouseEvent<HTMLDivElement>, hour: number) => {
     const rect = e.currentTarget.getBoundingClientRect();
@@ -29,10 +43,13 @@ export const TimeGrid = ({ onTimeSlotClick }: TimeGridProps) => {
   return (
     <div className="relative" onMouseLeave={() => setHoveredSlot(null)}>
       {hours.map((hour) => {
+        const isHourAvailable = isAvailableAt(hour, 0);
         return (
           <div
             key={hour}
-            className="relative h-[60px] border-b border-border hover:bg-accent/30 transition-all cursor-pointer group"
+            className={`relative h-[60px] border-b border-border transition-all cursor-pointer group ${
+              isHourAvailable ? 'bg-emerald-500/10' : 'hover:bg-accent/30'
+            }`}
             onClick={(e) => handleClick(e, hour)}
             onMouseMove={(e) => handleMouseMove(e, hour)}
           >

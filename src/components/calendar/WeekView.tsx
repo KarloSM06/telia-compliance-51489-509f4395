@@ -13,6 +13,7 @@ import { useOptimizedEventInteraction } from '@/hooks/useOptimizedEventInteracti
 import { usePendingEventChanges } from '@/hooks/usePendingEventChanges';
 import { useMemo, useEffect } from 'react';
 import { toast } from 'sonner';
+import { useAvailability } from '@/hooks/useAvailability';
 
 interface WeekViewProps {
   date: Date;
@@ -43,6 +44,7 @@ export const WeekView = ({
   onCloseModal,
   onEventSave,
 }: WeekViewProps) => {
+  const { slots } = useAvailability();
   const { 
     pendingChanges, 
     addPendingChange, 
@@ -67,6 +69,13 @@ export const WeekView = ({
   const weekStart = startOfWeek(date, { locale: sv, weekStartsOn: 1 });
   const weekEnd = endOfWeek(date, { locale: sv, weekStartsOn: 1 });
   const daysInWeek = eachDayOfInterval({ start: weekStart, end: weekEnd });
+
+  // Check if time is available for a specific day
+  const isAvailableAt = (dayIndex: number, hour: number) => {
+    const daySlots = slots.filter(slot => slot.day_of_week === dayIndex && slot.is_active);
+    const timeString = `${hour.toString().padStart(2, '0')}:00:00`;
+    return daySlots.some(slot => timeString >= slot.start_time && timeString < slot.end_time);
+  };
   
   // Apply pending changes to events for display with memoization
   const eventsWithPendingChanges = useMemo(() => 
@@ -269,7 +278,9 @@ export const WeekView = ({
                   {Array.from({ length: 24 }, (_, hour) => (
                     <div
                       key={hour}
-                      className="relative h-[60px] border-b border-border hover:bg-accent/30 transition-all cursor-pointer group"
+                      className={`relative h-[60px] border-b border-border transition-all cursor-pointer group ${
+                        isAvailableAt(dayIndex, hour) ? 'bg-emerald-500/10' : 'hover:bg-accent/30'
+                      }`}
                       onClick={(e) => {
                         const rect = e.currentTarget.getBoundingClientRect();
                         const relativeY = e.clientY - rect.top;
