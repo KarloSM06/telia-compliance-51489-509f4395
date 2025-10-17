@@ -256,10 +256,12 @@ export const WeekView = ({
 
             {/* Days grid */}
             <div className="flex flex-1" ref={containerRef}>
-              {daysInWeek.map((day, index) => (
+              {daysInWeek.map((day, dayIndex) => (
                 <div
                   key={day.toISOString()}
                   className="flex-1 relative border-r"
+                  data-day-index={dayIndex}
+                  data-day-date={day.toISOString()}
                   onDragOver={handleDragOver}
                   onDrop={handleDrop}
                 >

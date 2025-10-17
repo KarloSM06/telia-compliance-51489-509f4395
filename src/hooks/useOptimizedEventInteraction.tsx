@@ -71,16 +71,36 @@ export const useOptimizedEventInteraction = (
       const dropTime = getTimeFromYPosition(e.clientY, rect.top);
       const snappedTime = snapToInterval(dropTime, 15);
       
+      // Find which day column we're over
+      const target = e.target as HTMLElement;
+      const dayContainer = target.closest('[data-day-date]') as HTMLElement;
+      
+      let targetDate = snappedTime;
+      if (dayContainer) {
+        const dayDateStr = dayContainer.getAttribute('data-day-date');
+        if (dayDateStr) {
+          const dayDate = parseISO(dayDateStr);
+          // Combine the day from the target column with the time from mouse position
+          targetDate = new Date(
+            dayDate.getFullYear(),
+            dayDate.getMonth(),
+            dayDate.getDate(),
+            snappedTime.getHours(),
+            snappedTime.getMinutes()
+          );
+        }
+      }
+      
       const duration = differenceInMinutes(
         dragState.originalEnd!,
         dragState.originalStart!
       );
       
-      const newEndTime = addMinutes(snappedTime, duration);
+      const newEndTime = addMinutes(targetDate, duration);
 
       setDragState(prev => ({
         ...prev,
-        previewPosition: { start: snappedTime, end: newEndTime },
+        previewPosition: { start: targetDate, end: newEndTime },
       }));
     });
   }, [dragState.activeEventId, dragState.operation, dragState.originalStart, dragState.originalEnd]);

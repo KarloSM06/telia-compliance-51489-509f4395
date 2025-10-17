@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { format, parseISO } from "date-fns";
+import { format, parseISO, parse } from "date-fns";
 import { sv } from "date-fns/locale";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -8,6 +8,10 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
+import { Calendar } from "@/components/ui/calendar";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { CalendarIcon } from "lucide-react";
+import { cn } from "@/lib/utils";
 import type { CalendarEvent } from "@/hooks/useCalendarEvents";
 import { toast } from "sonner";
 
@@ -228,27 +232,91 @@ export const EventModal = ({ open, onClose, event, defaultDate, onSave, onDelete
           </div>
 
           <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label>Datum *</Label>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="outline"
+                    className={cn(
+                      "w-full justify-start text-left font-normal",
+                      !formData.start_time && "text-muted-foreground"
+                    )}
+                  >
+                    <CalendarIcon className="mr-2 h-4 w-4" />
+                    {formData.start_time ? (
+                      format(parseISO(formData.start_time), "PPP", { locale: sv })
+                    ) : (
+                      <span>Välj datum</span>
+                    )}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0" align="start">
+                  <Calendar
+                    mode="single"
+                    selected={formData.start_time ? parseISO(formData.start_time) : undefined}
+                    onSelect={(date) => {
+                      if (date) {
+                        const currentTime = formData.start_time 
+                          ? format(parseISO(formData.start_time), 'HH:mm')
+                          : '09:00';
+                        const newDateTime = format(date, `yyyy-MM-dd'T'${currentTime}`);
+                        
+                        // Update end time to maintain duration
+                        if (formData.end_time && formData.start_time) {
+                          const startDate = parseISO(formData.start_time);
+                          const endDate = parseISO(formData.end_time);
+                          const duration = endDate.getTime() - startDate.getTime();
+                          const newEndDateTime = new Date(date.getTime() + duration);
+                          
+                          setFormData({ 
+                            ...formData, 
+                            start_time: newDateTime,
+                            end_time: format(newEndDateTime, "yyyy-MM-dd'T'HH:mm")
+                          });
+                        } else {
+                          setFormData({ ...formData, start_time: newDateTime });
+                        }
+                      }
+                    }}
+                    initialFocus
+                    className={cn("p-3 pointer-events-auto")}
+                  />
+                </PopoverContent>
+              </Popover>
+            </div>
+            
             <div>
               <Label htmlFor="start_time">Starttid *</Label>
               <Input
                 id="start_time"
-                type="datetime-local"
-                value={formData.start_time}
-                onChange={(e) => setFormData({ ...formData, start_time: e.target.value })}
+                type="time"
+                value={formData.start_time ? format(parseISO(formData.start_time), 'HH:mm') : ''}
+                onChange={(e) => {
+                  const date = formData.start_time 
+                    ? format(parseISO(formData.start_time), 'yyyy-MM-dd')
+                    : format(new Date(), 'yyyy-MM-dd');
+                  setFormData({ ...formData, start_time: `${date}T${e.target.value}` });
+                }}
                 required
               />
             </div>
+          </div>
 
-            <div>
-              <Label htmlFor="end_time">Sluttid *</Label>
-              <Input
-                id="end_time"
-                type="datetime-local"
-                value={formData.end_time}
-                onChange={(e) => setFormData({ ...formData, end_time: e.target.value })}
-                required
-              />
-            </div>
+          <div>
+            <Label htmlFor="end_time">Sluttid *</Label>
+            <Input
+              id="end_time"
+              type="time"
+              value={formData.end_time ? format(parseISO(formData.end_time), 'HH:mm') : ''}
+              onChange={(e) => {
+                const date = formData.start_time 
+                  ? format(parseISO(formData.start_time), 'yyyy-MM-dd')
+                  : format(new Date(), 'yyyy-MM-dd');
+                setFormData({ ...formData, end_time: `${date}T${e.target.value}` });
+              }}
+              required
+            />
           </div>
 
           <div>
