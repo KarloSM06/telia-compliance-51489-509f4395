@@ -97,13 +97,28 @@ export const WeeklyScheduleGrid = ({ existingSlots, onSave, loading }: WeeklySch
   };
 
   const handleRemoveSlot = (dayIndex: number, slotId: string) => {
-    setSchedule((prev) => ({
-      ...prev,
-      [dayIndex]: {
-        ...prev[dayIndex],
-        timeSlots: prev[dayIndex].timeSlots.filter((slot) => slot.id !== slotId),
-      },
-    }));
+    setSchedule((prev) => {
+      const updatedSlots = prev[dayIndex].timeSlots.filter((slot) => slot.id !== slotId);
+      
+      // If no slots left, disable the day
+      if (updatedSlots.length === 0) {
+        return {
+          ...prev,
+          [dayIndex]: {
+            enabled: false,
+            timeSlots: [],
+          },
+        };
+      }
+      
+      return {
+        ...prev,
+        [dayIndex]: {
+          ...prev[dayIndex],
+          timeSlots: updatedSlots,
+        },
+      };
+    });
     setHasChanges(true);
   };
 

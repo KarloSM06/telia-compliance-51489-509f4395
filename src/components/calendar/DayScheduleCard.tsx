@@ -41,35 +41,38 @@ export const DayScheduleCard = ({
         </div>
 
         {enabled && (
-          <div className="space-y-2">
+          <div className="space-y-3">
             {timeSlots.map((slot) => (
-              <div key={slot.id} className="flex gap-2 items-center">
-                <div className="flex-1 space-y-1">
-                  <Input
-                    type="time"
-                    value={slot.startTime}
-                    onChange={(e) => onUpdateSlot(slot.id, { startTime: e.target.value })}
-                    className="text-sm"
-                  />
-                </div>
-                <span className="text-muted-foreground">-</span>
-                <div className="flex-1 space-y-1">
-                  <Input
-                    type="time"
-                    value={slot.endTime}
-                    onChange={(e) => onUpdateSlot(slot.id, { endTime: e.target.value })}
-                    className="text-sm"
-                  />
-                </div>
-                {timeSlots.length > 1 && (
+              <div key={slot.id} className="space-y-2">
+                <div className="flex items-center gap-2">
+                  <div className="flex-1 min-w-0">
+                    <Label className="text-xs text-muted-foreground mb-1 block">Från</Label>
+                    <Input
+                      type="time"
+                      value={slot.startTime}
+                      onChange={(e) => onUpdateSlot(slot.id, { startTime: e.target.value })}
+                      className="text-sm w-full"
+                    />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <Label className="text-xs text-muted-foreground mb-1 block">Till</Label>
+                    <Input
+                      type="time"
+                      value={slot.endTime}
+                      onChange={(e) => onUpdateSlot(slot.id, { endTime: e.target.value })}
+                      className="text-sm w-full"
+                    />
+                  </div>
                   <Button
                     variant="ghost"
-                    size="sm"
+                    size="icon"
                     onClick={() => onRemoveSlot(slot.id)}
+                    className="mt-5 flex-shrink-0"
+                    title="Ta bort period"
                   >
                     <Trash2 className="h-4 w-4 text-destructive" />
                   </Button>
-                )}
+                </div>
               </div>
             ))}
 
@@ -77,7 +80,7 @@ export const DayScheduleCard = ({
               variant="outline"
               size="sm"
               onClick={onAddSlot}
-              className="w-full"
+              className="w-full mt-2"
             >
               <Plus className="h-4 w-4 mr-2" />
               Lägg till period
