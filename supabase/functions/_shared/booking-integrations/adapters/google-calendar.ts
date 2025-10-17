@@ -5,6 +5,7 @@ interface GoogleCalendarCredentials {
   'Client Secret': string;
   access_token?: string;
   refresh_token?: string;
+  token_expiry?: string;
 }
 
 export class GoogleCalendarAdapter implements BookingSystemAdapter {
@@ -17,7 +18,19 @@ export class GoogleCalendarAdapter implements BookingSystemAdapter {
   }
 
   async authenticate(): Promise<void> {
-    // If we already have an access token, verify it's valid
+    // Check if token is expired
+    if (this.credentials.token_expiry) {
+      const expiry = new Date(this.credentials.token_expiry);
+      const now = new Date();
+      
+      // If token expires in less than 5 minutes, refresh it
+      if (expiry.getTime() - now.getTime() < 5 * 60 * 1000) {
+        await this.refreshToken();
+        return;
+      }
+    }
+
+    // If we have an access token, verify it's valid
     if (this.accessToken) {
       try {
         const response = await fetch('https://www.googleapis.com/oauth2/v1/tokeninfo', {
@@ -31,13 +44,22 @@ export class GoogleCalendarAdapter implements BookingSystemAdapter {
           return; // Token is valid
         }
       } catch (error) {
-        console.log('Access token validation failed, will need to refresh');
+        console.log('Access token validation failed, attempting refresh');
       }
     }
 
-    // For now, throw an error if no valid access token
-    // In a real implementation, this would use OAuth2 flow with refresh tokens
-    throw new Error('Google Calendar requires OAuth2 authentication. Please configure access tokens through the OAuth2 flow.');
+    // Try to refresh if we have a refresh token
+    if (this.credentials.refresh_token) {
+      await this.refreshToken();
+    } else {
+      throw new Error('Google Calendar requires OAuth2 authentication. Please reconnect your Google Calendar.');
+    }
+  }
+
+  private async refreshToken(): Promise<void> {
+    // Note: In production, this should call the edge function to refresh the token
+    // For now, we'll just throw an error indicating reconnection is needed
+    throw new Error('Token refresh needed. Please reconnect your Google Calendar.');
   }
 
   async fetchEvents(startDate: Date, endDate: Date): Promise<CalendarEvent[]> {

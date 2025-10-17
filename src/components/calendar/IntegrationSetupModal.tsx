@@ -6,6 +6,8 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { AVAILABLE_PROVIDERS } from "@/hooks/useBookingIntegrations";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 interface IntegrationSetupModalProps {
   open: boolean;
@@ -16,6 +18,7 @@ interface IntegrationSetupModalProps {
 export const IntegrationSetupModal = ({ open, onClose, onSave }: IntegrationSetupModalProps) => {
   const [selectedProvider, setSelectedProvider] = useState('');
   const [credentials, setCredentials] = useState<Record<string, string>>({});
+  const [loading, setLoading] = useState(false);
 
   const provider = AVAILABLE_PROVIDERS.find(p => p.id === selectedProvider);
 
@@ -53,10 +56,80 @@ export const IntegrationSetupModal = ({ open, onClose, onSave }: IntegrationSetu
     ];
   };
 
+  const handleGoogleOAuth = async () => {
+    if (!provider) return;
+    
+    try {
+      setLoading(true);
+      
+      // First create the integration
+      const integration = await onSave({
+        provider: provider.id,
+        provider_display_name: provider.name,
+        integration_type: provider.type,
+        encrypted_credentials: credentials,
+      });
+
+      // Then initiate OAuth flow
+      const { data, error } = await supabase.functions.invoke('google-calendar-oauth/init', {
+        body: {
+          client_id: credentials['Client ID'],
+          integration_id: integration.id,
+        },
+      });
+
+      if (error) throw error;
+
+      // Open OAuth URL in popup
+      const popup = window.open(
+        data.authUrl,
+        'Google Calendar OAuth',
+        'width=600,height=700'
+      );
+
+      // Listen for OAuth callback
+      const handleMessage = (event: MessageEvent) => {
+        if (event.data.success) {
+          toast.success('Google Calendar ansluten!');
+          setSelectedProvider('');
+          setCredentials({});
+          onClose();
+          window.removeEventListener('message', handleMessage);
+        } else if (event.data.error) {
+          toast.error(`OAuth fel: ${event.data.error}`);
+        }
+        setLoading(false);
+      };
+
+      window.addEventListener('message', handleMessage);
+      
+      // Clean up if popup is closed
+      const checkPopup = setInterval(() => {
+        if (popup?.closed) {
+          clearInterval(checkPopup);
+          window.removeEventListener('message', handleMessage);
+          setLoading(false);
+        }
+      }, 1000);
+
+    } catch (error: any) {
+      console.error('OAuth error:', error);
+      toast.error(error.message || 'Kunde inte ansluta till Google Calendar');
+      setLoading(false);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!provider) return;
 
+    // Handle Google Calendar OAuth flow
+    if (selectedProvider === 'google_calendar') {
+      await handleGoogleOAuth();
+      return;
+    }
+
+    // Handle other providers normally
     await onSave({
       provider: provider.id,
       provider_display_name: provider.name,
@@ -140,8 +213,8 @@ export const IntegrationSetupModal = ({ open, onClose, onSave }: IntegrationSetu
                 <Button type="button" variant="outline" onClick={onClose}>
                   Avbryt
                 </Button>
-                <Button type="submit">
-                  Aktivera integration
+                <Button type="submit" disabled={loading}>
+                  {loading ? 'Ansluter...' : selectedProvider === 'google_calendar' ? 'Anslut med Google' : 'Aktivera integration'}
                 </Button>
               </div>
             </div>
