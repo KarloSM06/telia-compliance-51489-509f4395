@@ -7,18 +7,18 @@ export const snapToInterval = (date: Date, intervalMinutes: number = 15): Date =
   return setMinutes(date, snappedMinutes);
 };
 
-export const getTimeFromYPosition = (y: number, containerTop: number): Date => {
-  const PIXELS_PER_HOUR = 60;
+export const getTimeFromYPosition = (y: number, containerTop: number, viewStartHour: number = 0): Date => {
+  const PIXELS_PER_HOUR = 80;
   const relativeY = y - containerTop;
   const totalMinutes = (relativeY / PIXELS_PER_HOUR) * 60;
-  const hours = Math.floor(totalMinutes / 60);
+  const hours = Math.floor(totalMinutes / 60) + viewStartHour; // Add offset
   const minutes = totalMinutes % 60;
   
   const now = new Date();
-  return setMinutes(setHours(now, hours), minutes); // Start at 00:00
+  return setMinutes(setHours(now, hours), minutes);
 };
 
-export const getEventPosition = (startTime: string, endTime: string) => {
+export const getEventPosition = (startTime: string, endTime: string, viewStartHour: number = 0) => {
   const start = parseISO(startTime);
   const end = parseISO(endTime);
   
@@ -26,8 +26,9 @@ export const getEventPosition = (startTime: string, endTime: string) => {
   const startMinute = start.getMinutes();
   const duration = differenceInMinutes(end, start);
   
-  const PIXELS_PER_MINUTE = 1;
-  const top = (startHour * 60 + startMinute) * PIXELS_PER_MINUTE; // Start at 00:00
+  const PIXELS_PER_MINUTE = 80 / 60; // 80px per hour = 1.33px per minute
+  // Adjust for the view's start hour offset
+  const top = ((startHour - viewStartHour) * 60 + startMinute) * PIXELS_PER_MINUTE;
   const height = duration * PIXELS_PER_MINUTE;
   
   return { top, height };

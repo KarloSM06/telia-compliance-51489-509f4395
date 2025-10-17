@@ -65,6 +65,26 @@ export const DayView = ({
     clearDragState,
   } = useOptimizedEventInteraction(addPendingChange);
   
+  // Calculate visible hour range based on availability slots
+  const { startHour, endHour } = useMemo(() => {
+    const dayOfWeek = date.getDay() === 0 ? 6 : date.getDay() - 1;
+    const daySlots = slots.filter(slot => slot.day_of_week === dayOfWeek && slot.is_active);
+    
+    if (daySlots.length === 0) {
+      return { startHour: 0, endHour: 23 };
+    }
+
+    const times = daySlots.flatMap(slot => [
+      parseInt(slot.start_time.split(':')[0]),
+      parseInt(slot.end_time.split(':')[0])
+    ]);
+
+    const earliest = Math.max(0, Math.min(...times) - 1);
+    const latest = Math.min(23, Math.max(...times) + 1);
+
+    return { startHour: earliest, endHour: latest };
+  }, [slots, date]);
+  
   // Apply pending changes to events for display with memoization
   const eventsWithPendingChanges = useMemo(() => 
     events.map(getEventWithPendingChanges),
@@ -118,12 +138,13 @@ export const DayView = ({
     if (dragState.previewPosition?.start && dragState.previewPosition?.end) {
       const { top } = getEventPosition(
         dragState.previewPosition.start.toISOString(),
-        dragState.previewPosition.end.toISOString()
+        dragState.previewPosition.end.toISOString(),
+        startHour
       );
       return top;
     }
     return undefined;
-  }, [dragState.previewPosition]);
+  }, [dragState.previewPosition, startHour]);
 
   return (
     <div className="flex flex-col h-full">
@@ -226,6 +247,7 @@ export const DayView = ({
                     onDragStart={handleDragStart}
                     onResizeStart={handleResizeStart}
                     isResizing={dragState.activeEventId === event.id && dragState.operation !== 'drag'}
+                    viewStartHour={startHour}
                   />
                 ))}
                 

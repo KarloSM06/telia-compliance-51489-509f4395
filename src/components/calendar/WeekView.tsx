@@ -347,6 +347,7 @@ export const WeekView = ({
                           onDragStart={handleDragStart}
                           onResizeStart={handleResizeStart}
                           isResizing={dragState.activeEventId === event.id && dragState.operation !== 'drag'}
+                          viewStartHour={startHour}
                         />
                       ))}
                       

@@ -12,6 +12,7 @@ interface EventBlockProps {
   onDragStart: (event: CalendarEvent) => void;
   onResizeStart: (e: React.MouseEvent | React.TouchEvent, event: CalendarEvent, handle: 'top' | 'bottom') => void;
   isResizing?: boolean;
+  viewStartHour?: number;
 }
 
 const EventBlockComponent = ({
@@ -22,11 +23,12 @@ const EventBlockComponent = ({
   onDragStart,
   onResizeStart,
   isResizing = false,
+  viewStartHour = 0,
 }: EventBlockProps) => {
   const startTime = parseISO(event.start_time);
   const endTime = parseISO(event.end_time);
   
-  const { top, height } = getEventPosition(startTime.toISOString(), endTime.toISOString());
+  const { top, height } = getEventPosition(startTime.toISOString(), endTime.toISOString(), viewStartHour);
   const colorClass = getEventTypeColor(event.event_type);
 
   const width = totalColumns > 1 ? `${100 / totalColumns}%` : '100%';
@@ -171,6 +173,7 @@ export const EventBlock = memo(EventBlockComponent, (prevProps, nextProps) => {
     prevProps.event.title === nextProps.event.title &&
     prevProps.column === nextProps.column &&
     prevProps.totalColumns === nextProps.totalColumns &&
-    prevProps.isResizing === nextProps.isResizing
+    prevProps.isResizing === nextProps.isResizing &&
+    prevProps.viewStartHour === nextProps.viewStartHour
   );
 });
