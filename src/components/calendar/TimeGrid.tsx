@@ -5,7 +5,7 @@ interface TimeGridProps {
 }
 
 export const TimeGrid = ({ onTimeSlotClick }: TimeGridProps) => {
-  const hours = Array.from({ length: 16 }, (_, i) => i + 6); // 6 AM to 10 PM
+  const hours = Array.from({ length: 24 }, (_, i) => i); // 00:00 to 23:00
 
   const handleClick = (e: React.MouseEvent<HTMLDivElement>, hour: number) => {
     const rect = e.currentTarget.getBoundingClientRect();

@@ -15,7 +15,7 @@ export const getTimeFromYPosition = (y: number, containerTop: number): Date => {
   const minutes = totalMinutes % 60;
   
   const now = new Date();
-  return setMinutes(setHours(now, hours + 6), minutes); // Start at 6 AM
+  return setMinutes(setHours(now, hours), minutes); // Start at 00:00
 };
 
 export const getEventPosition = (startTime: string, endTime: string) => {
@@ -27,7 +27,7 @@ export const getEventPosition = (startTime: string, endTime: string) => {
   const duration = differenceInMinutes(end, start);
   
   const PIXELS_PER_MINUTE = 1;
-  const top = ((startHour - 6) * 60 + startMinute) * PIXELS_PER_MINUTE; // Offset by 6 AM
+  const top = (startHour * 60 + startMinute) * PIXELS_PER_MINUTE; // Start at 00:00
   const height = duration * PIXELS_PER_MINUTE;
   
   return { top, height };

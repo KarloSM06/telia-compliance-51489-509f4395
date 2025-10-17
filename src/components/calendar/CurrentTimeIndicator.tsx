@@ -1,7 +1,11 @@
 import { useEffect, useState } from 'react';
-import { format } from 'date-fns';
+import { format, isSameDay } from 'date-fns';
 
-export const CurrentTimeIndicator = () => {
+interface CurrentTimeIndicatorProps {
+  displayDate: Date;
+}
+
+export const CurrentTimeIndicator = ({ displayDate }: CurrentTimeIndicatorProps) => {
   const [currentTime, setCurrentTime] = useState(new Date());
 
   useEffect(() => {
@@ -12,13 +16,13 @@ export const CurrentTimeIndicator = () => {
     return () => clearInterval(interval);
   }, []);
 
+  // Only show if displaying today
+  if (!isSameDay(currentTime, displayDate)) return null;
+
   const hours = currentTime.getHours();
   const minutes = currentTime.getMinutes();
   const PIXELS_PER_MINUTE = 1;
-  const top = ((hours - 6) * 60 + minutes) * PIXELS_PER_MINUTE; // Offset by 6 AM
-
-  // Only show if within visible hours (6 AM - 10 PM)
-  if (hours < 6 || hours >= 22) return null;
+  const top = (hours * 60 + minutes) * PIXELS_PER_MINUTE; // Start at 00:00
 
   return (
     <div 
