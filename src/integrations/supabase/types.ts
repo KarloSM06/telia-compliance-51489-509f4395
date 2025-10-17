@@ -21,6 +21,9 @@ export type Database = {
           end_time: string
           id: string
           is_active: boolean
+          is_locked: boolean | null
+          is_template: boolean | null
+          specific_date: string | null
           start_time: string
           updated_at: string
           user_id: string
@@ -31,6 +34,9 @@ export type Database = {
           end_time: string
           id?: string
           is_active?: boolean
+          is_locked?: boolean | null
+          is_template?: boolean | null
+          specific_date?: string | null
           start_time: string
           updated_at?: string
           user_id: string
@@ -41,6 +47,9 @@ export type Database = {
           end_time?: string
           id?: string
           is_active?: boolean
+          is_locked?: boolean | null
+          is_template?: boolean | null
+          specific_date?: string | null
           start_time?: string
           updated_at?: string
           user_id?: string

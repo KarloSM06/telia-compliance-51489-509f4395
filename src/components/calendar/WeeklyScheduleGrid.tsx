@@ -11,6 +11,7 @@ interface TimeSlot {
   id: string;
   startTime: string;
   endTime: string;
+  isLocked?: boolean;
 }
 
 interface DaySchedule {
@@ -26,9 +27,17 @@ interface WeeklyScheduleGridProps {
   existingSlots: AvailabilitySlot[];
   onSave: (slots: Omit<AvailabilitySlot, 'id' | 'created_at' | 'updated_at' | 'user_id'>[]) => void;
   loading: boolean;
+  weekStartDate?: Date;
+  isTemplateMode?: boolean;
 }
 
-export const WeeklyScheduleGrid = ({ existingSlots, onSave, loading }: WeeklyScheduleGridProps) => {
+export const WeeklyScheduleGrid = ({ 
+  existingSlots, 
+  onSave, 
+  loading, 
+  weekStartDate,
+  isTemplateMode = true 
+}: WeeklyScheduleGridProps) => {
   const [schedule, setSchedule] = useState<WeeklySchedule>({});
   const [hasChanges, setHasChanges] = useState(false);
 
@@ -41,8 +50,18 @@ export const WeeklyScheduleGrid = ({ existingSlots, onSave, loading }: WeeklySch
       initialSchedule[i] = { enabled: false, timeSlots: [] };
     }
 
-    // Group existing slots by day
-    existingSlots.forEach((slot) => {
+    // Filter slots based on mode
+    const relevantSlots = existingSlots.filter(slot => {
+      if (isTemplateMode) {
+        return slot.is_template;
+      } else {
+        // For specific week mode, show template slots + specific overrides
+        return slot.is_template || slot.specific_date;
+      }
+    });
+
+    // Group relevant slots by day
+    relevantSlots.forEach((slot) => {
       const dayIndex = slot.day_of_week;
       if (!initialSchedule[dayIndex]) {
         initialSchedule[dayIndex] = { enabled: true, timeSlots: [] };
@@ -52,18 +71,32 @@ export const WeeklyScheduleGrid = ({ existingSlots, onSave, loading }: WeeklySch
         id: slot.id || `temp-${Date.now()}-${Math.random()}`,
         startTime: slot.start_time.substring(0, 5),
         endTime: slot.end_time.substring(0, 5),
+        isLocked: slot.is_locked || false,
       });
     });
 
     setSchedule(initialSchedule);
-  }, [existingSlots]);
+  }, [existingSlots, isTemplateMode]);
 
   const handleToggleDay = (dayIndex: number, enabled: boolean) => {
     setSchedule((prev) => ({
       ...prev,
       [dayIndex]: {
         enabled,
-        timeSlots: enabled ? [{ id: `temp-${Date.now()}`, startTime: '09:00', endTime: '17:00' }] : [],
+        timeSlots: enabled ? [{ id: `temp-${Date.now()}`, startTime: '09:00', endTime: '17:00', isLocked: false }] : [],
+      },
+    }));
+    setHasChanges(true);
+  };
+
+  const handleToggleLock = (dayIndex: number, slotId: string) => {
+    setSchedule((prev) => ({
+      ...prev,
+      [dayIndex]: {
+        ...prev[dayIndex],
+        timeSlots: prev[dayIndex].timeSlots.map((slot) =>
+          slot.id === slotId ? { ...slot, isLocked: !slot.isLocked } : slot
+        ),
       },
     }));
     setHasChanges(true);
@@ -89,7 +122,7 @@ export const WeeklyScheduleGrid = ({ existingSlots, onSave, loading }: WeeklySch
         ...prev[dayIndex],
         timeSlots: [
           ...prev[dayIndex].timeSlots,
-          { id: `temp-${Date.now()}`, startTime: '09:00', endTime: '17:00' },
+          { id: `temp-${Date.now()}`, startTime: '09:00', endTime: '17:00', isLocked: false },
         ],
       },
     }));
@@ -146,11 +179,22 @@ export const WeeklyScheduleGrid = ({ existingSlots, onSave, loading }: WeeklySch
     Object.entries(schedule).forEach(([dayIndex, daySchedule]) => {
       if (daySchedule.enabled) {
         daySchedule.timeSlots.forEach((slot) => {
+          const specificDate = !isTemplateMode && weekStartDate 
+            ? new Date(weekStartDate)
+            : null;
+          
+          if (specificDate) {
+            specificDate.setDate(specificDate.getDate() + parseInt(dayIndex));
+          }
+
           slots.push({
             day_of_week: parseInt(dayIndex),
             start_time: slot.startTime,
             end_time: slot.endTime,
             is_active: true,
+            is_template: isTemplateMode,
+            is_locked: slot.isLocked || false,
+            specific_date: specificDate ? specificDate.toISOString().split('T')[0] : null,
           });
         });
       }
@@ -217,6 +261,7 @@ export const WeeklyScheduleGrid = ({ existingSlots, onSave, loading }: WeeklySch
             onUpdateSlot={(slotId, updates) => handleUpdateSlot(index, slotId, updates)}
             onAddSlot={() => handleAddSlot(index)}
             onRemoveSlot={(slotId) => handleRemoveSlot(index, slotId)}
+            onToggleLock={(slotId) => handleToggleLock(index, slotId)}
           />
         ))}
       </div>

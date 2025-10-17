@@ -1,15 +1,15 @@
-import { useState } from 'react';
 import { Card } from '@/components/ui/card';
 import { Switch } from '@/components/ui/switch';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Plus, Trash2 } from 'lucide-react';
+import { Plus, Trash2, Lock, Unlock } from 'lucide-react';
 
 interface TimeSlot {
   id: string;
   startTime: string;
   endTime: string;
+  isLocked?: boolean;
 }
 
 interface DayScheduleCardProps {
@@ -21,6 +21,7 @@ interface DayScheduleCardProps {
   onUpdateSlot: (slotId: string, updates: Partial<TimeSlot>) => void;
   onAddSlot: () => void;
   onRemoveSlot: (slotId: string) => void;
+  onToggleLock: (slotId: string) => void;
 }
 
 export const DayScheduleCard = ({
@@ -31,6 +32,7 @@ export const DayScheduleCard = ({
   onUpdateSlot,
   onAddSlot,
   onRemoveSlot,
+  onToggleLock,
 }: DayScheduleCardProps) => {
   return (
     <Card className={`p-4 transition-colors ${enabled ? 'bg-card' : 'bg-muted/50'}`}>
@@ -52,6 +54,7 @@ export const DayScheduleCard = ({
                       value={slot.startTime}
                       onChange={(e) => onUpdateSlot(slot.id, { startTime: e.target.value })}
                       className="text-sm w-full"
+                      disabled={slot.isLocked}
                     />
                   </div>
                   <div className="flex-1 min-w-0">
@@ -61,14 +64,29 @@ export const DayScheduleCard = ({
                       value={slot.endTime}
                       onChange={(e) => onUpdateSlot(slot.id, { endTime: e.target.value })}
                       className="text-sm w-full"
+                      disabled={slot.isLocked}
                     />
                   </div>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => onToggleLock(slot.id)}
+                    className="mt-5 flex-shrink-0"
+                    title={slot.isLocked ? "Lås upp period" : "Lås period"}
+                  >
+                    {slot.isLocked ? (
+                      <Lock className="h-4 w-4 text-yellow-600" />
+                    ) : (
+                      <Unlock className="h-4 w-4" />
+                    )}
+                  </Button>
                   <Button
                     variant="ghost"
                     size="icon"
                     onClick={() => onRemoveSlot(slot.id)}
                     className="mt-5 flex-shrink-0"
                     title="Ta bort period"
+                    disabled={slot.isLocked}
                   >
                     <Trash2 className="h-4 w-4 text-destructive" />
                   </Button>
