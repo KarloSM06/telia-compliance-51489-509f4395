@@ -1,5 +1,5 @@
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 import { BookingAdapterFactory } from '../_shared/booking-integrations/adapter-factory.ts';
 
 const corsHeaders = {
@@ -13,15 +13,14 @@ serve(async (req) => {
   }
 
   try {
-    const supabaseClient = createClient(
+    const supabase = createClient(
       Deno.env.get('SUPABASE_URL') ?? '',
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
     );
 
     console.log('Starting booking systems sync...');
 
-    // Hämta alla aktiva integrationer som ska synkas
-    const { data: integrations, error: integrationsError } = await supabaseClient
+    const { data: integrations, error: integrationsError } = await supabase
       .from('booking_system_integrations')
       .select('*')
       .eq('is_enabled', true)
@@ -38,30 +37,29 @@ serve(async (req) => {
 
     for (const integration of integrations || []) {
       try {
-        console.log(`Syncing ${integration.provider} for user ${integration.user_id}`);
-        
-        // Skapa adapter för detta system
+        console.log(`Syncing ${integration.provider} for user ${integration.user_id}...`);
+
         const adapter = BookingAdapterFactory.createAdapter(
           integration.provider,
           integration.encrypted_credentials
         );
 
-        // Hämta bokningar från externt system
-        const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
-        const ninetyDaysAhead = new Date(Date.now() + 90 * 24 * 60 * 60 * 1000);
+        const startDate = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString();
+        const endDate = new Date(Date.now() + 90 * 24 * 60 * 60 * 1000).toISOString();
 
         const externalBookings = await adapter.fetchBookings({
-          startDate: thirtyDaysAgo.toISOString(),
-          endDate: ninetyDaysAhead.toISOString()
+          startDate,
+          endDate
         });
 
-        console.log(`Fetched ${externalBookings.length} bookings from ${integration.provider}`);
+        console.log(`Found ${externalBookings.length} bookings from ${integration.provider}`);
 
-        // Synka till calendar_events
         let syncedCount = 0;
+
         for (const booking of externalBookings) {
-          try {
-            const eventData = {
+          const { error: upsertError } = await supabase
+            .from('calendar_events')
+            .upsert({
               user_id: integration.user_id,
               organization_id: integration.organization_id,
               booking_system_integration_id: integration.id,
@@ -70,36 +68,27 @@ serve(async (req) => {
               description: booking.description,
               start_time: booking.startTime,
               end_time: booking.endTime,
-              status: booking.status === 'confirmed' ? 'completed' : booking.status === 'cancelled' ? 'cancelled' : 'scheduled',
+              status: booking.status === 'confirmed' ? 'completed' : 'scheduled',
               source: integration.provider,
               contact_person: booking.customer.name,
               contact_email: booking.customer.email,
               contact_phone: booking.customer.phone,
-              event_type: 'booking',
+              event_type: 'meeting',
               sync_status: 'synced',
               last_synced_at: new Date().toISOString()
-            };
+            }, {
+              onConflict: 'user_id,external_id,source'
+            });
 
-            const { error: upsertError } = await supabaseClient
-              .from('calendar_events')
-              .upsert(eventData, {
-                onConflict: 'user_id,external_id,source',
-                ignoreDuplicates: false
-              });
-
-            if (upsertError) {
-              console.error('Error upserting event:', upsertError);
-            } else {
-              syncedCount++;
-            }
-          } catch (bookingError) {
-            console.error(`Error syncing booking ${booking.id}:`, bookingError);
+          if (!upsertError) {
+            syncedCount++;
+          } else {
+            console.error('Error upserting event:', upsertError);
           }
         }
 
-        // Uppdatera sync status
         const nextSyncMinutes = integration.sync_settings?.sync_interval_minutes || 5;
-        const { error: updateError } = await supabaseClient
+        const { error: updateError } = await supabase
           .from('booking_system_integrations')
           .update({
             last_sync_at: new Date().toISOString(),
@@ -124,7 +113,7 @@ serve(async (req) => {
       } catch (error) {
         console.error(`Sync failed for ${integration.provider}:`, error);
 
-        await supabaseClient
+        await supabase
           .from('booking_system_integrations')
           .update({
             last_sync_status: 'error',
@@ -141,27 +130,22 @@ serve(async (req) => {
       }
     }
 
-    console.log('Sync completed:', results);
+    console.log('Sync complete:', results);
 
     return new Response(
-      JSON.stringify({ 
-        success: true, 
-        results,
-        totalIntegrations: integrations?.length || 0
-      }),
+      JSON.stringify({ success: true, results }),
       { 
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        status: 200 
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
       }
     );
 
   } catch (error) {
-    console.error('Error in sync-booking-systems function:', error);
+    console.error('Sync function error:', error);
     return new Response(
       JSON.stringify({ error: error.message }),
       { 
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        status: 500 
+        status: 500, 
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
       }
     );
   }

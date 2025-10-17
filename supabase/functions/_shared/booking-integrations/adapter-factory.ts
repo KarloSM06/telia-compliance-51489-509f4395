@@ -7,16 +7,8 @@ export class BookingAdapterFactory {
       case 'simplybook':
         return new SimplyBookAdapter(credentials);
       
-      // Fler adapters läggs till här senare
-      // case 'bokamera':
-      //   return new BokaMeraAdapter(credentials);
-      
       default:
         throw new Error(`Unsupported provider: ${provider}`);
     }
-  }
-  
-  static getSupportedProviders(): string[] {
-    return ['simplybook'];
   }
 }
