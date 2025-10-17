@@ -18,38 +18,41 @@ interface EventModalProps {
   defaultDate?: Date;
   onSave: (event: Partial<CalendarEvent>) => Promise<void>;
   onDelete?: (id: string) => Promise<void>;
+  pendingChanges?: Partial<CalendarEvent>;
 }
 
-export const EventModal = ({ open, onClose, event, defaultDate, onSave, onDelete }: EventModalProps) => {
+export const EventModal = ({ open, onClose, event, defaultDate, onSave, onDelete, pendingChanges }: EventModalProps) => {
+  // Merge event with pending changes for display
+  const currentEvent = event && pendingChanges ? { ...event, ...pendingChanges } : event;
   const titleInputRef = useRef<HTMLInputElement>(null);
   const [formData, setFormData] = useState({
-    title: event?.title || '',
-    description: event?.description || '',
-    start_time: event?.start_time || (defaultDate ? format(defaultDate, "yyyy-MM-dd'T'HH:mm") : ''),
-    end_time: event?.end_time || '',
-    event_type: event?.event_type || 'meeting',
-    contact_person: event?.contact_person || '',
-    contact_email: event?.contact_email || '',
-    contact_phone: event?.contact_phone || '',
+    title: currentEvent?.title || '',
+    description: currentEvent?.description || '',
+    start_time: currentEvent?.start_time || (defaultDate ? format(defaultDate, "yyyy-MM-dd'T'HH:mm") : ''),
+    end_time: currentEvent?.end_time || '',
+    event_type: currentEvent?.event_type || 'meeting',
+    contact_person: currentEvent?.contact_person || '',
+    contact_email: currentEvent?.contact_email || '',
+    contact_phone: currentEvent?.contact_phone || '',
   });
   const [loading, setLoading] = useState(false);
 
-  // Autofocus title field and update form when event changes
+  // Autofocus title field and update form when event or pending changes update
   useEffect(() => {
     if (open) {
       setTimeout(() => titleInputRef.current?.focus(), 100);
       setFormData({
-        title: event?.title || '',
-        description: event?.description || '',
-        start_time: event?.start_time || (defaultDate ? format(defaultDate, "yyyy-MM-dd'T'HH:mm") : ''),
-        end_time: event?.end_time || '',
-        event_type: event?.event_type || 'meeting',
-        contact_person: event?.contact_person || '',
-        contact_email: event?.contact_email || '',
-        contact_phone: event?.contact_phone || '',
+        title: currentEvent?.title || '',
+        description: currentEvent?.description || '',
+        start_time: currentEvent?.start_time || (defaultDate ? format(defaultDate, "yyyy-MM-dd'T'HH:mm") : ''),
+        end_time: currentEvent?.end_time || '',
+        event_type: currentEvent?.event_type || 'meeting',
+        contact_person: currentEvent?.contact_person || '',
+        contact_email: currentEvent?.contact_email || '',
+        contact_phone: currentEvent?.contact_phone || '',
       });
     }
-  }, [open, event, defaultDate]);
+  }, [open, currentEvent, defaultDate]);
 
   // Keyboard shortcuts
   useEffect(() => {
@@ -136,7 +139,12 @@ export const EventModal = ({ open, onClose, event, defaultDate, onSave, onDelete
             {event ? 'Redigera händelse' : 'Ny händelse'}
             {event && (
               <Badge variant="outline">
-                {getEventTypeLabel(event.event_type)}
+                {getEventTypeLabel(currentEvent?.event_type || event.event_type)}
+              </Badge>
+            )}
+            {pendingChanges && (
+              <Badge variant="secondary" className="ml-2">
+                Osparade ändringar
               </Badge>
             )}
           </DialogTitle>

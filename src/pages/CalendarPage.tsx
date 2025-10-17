@@ -222,10 +222,32 @@ const CalendarPage = () => {
           onBackToMonth={handleBackToMonth}
           onCreate={handleQuickCreate}
           onDateChange={setSelectedDay}
+          onDelete={deleteEvent}
+          showEventModal={showEventModal}
+          selectedEvent={selectedEvent}
+          onCloseModal={handleCloseModal}
+          onEventSave={handleEventSave}
         />
       )}
 
-      {showEventModal && (
+      {currentView === 'day' && (
+        <DayView
+          date={selectedDay}
+          events={filteredEvents}
+          onEventClick={handleEventClick}
+          onEventUpdate={updateEvent}
+          onBackToMonth={handleBackToMonth}
+          onCreate={handleQuickCreate}
+          onDateChange={setSelectedDay}
+          onDelete={deleteEvent}
+          showEventModal={showEventModal}
+          selectedEvent={selectedEvent}
+          onCloseModal={handleCloseModal}
+          onEventSave={handleEventSave}
+        />
+      )}
+
+      {currentView === 'month' && showEventModal && (
         <EventModal
           open={showEventModal}
           onClose={handleCloseModal}
@@ -233,15 +255,6 @@ const CalendarPage = () => {
           defaultDate={selectedDate || undefined}
           onSave={handleEventSave}
           onDelete={deleteEvent}
-        />
-      )}
-
-      {showIntegrationModal && (
-        <IntegrationSetupModal
-          open={showIntegrationModal}
-          onClose={() => setShowIntegrationModal(false)}
-          onSave={createIntegration}
-          existingIntegrations={integrations}
         />
       )}
     </div>

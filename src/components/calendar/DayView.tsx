@@ -7,6 +7,7 @@ import { TimeGrid } from './TimeGrid';
 import { EventBlock } from './EventBlock';
 import { CurrentTimeIndicator } from './CurrentTimeIndicator';
 import { EventDragPreview } from './EventDragPreview';
+import { EventModal } from './EventModal';
 import { layoutOverlappingEvents, getEventPosition } from '@/lib/calendarUtils';
 import { useOptimizedEventInteraction } from '@/hooks/useOptimizedEventInteraction';
 import { usePendingEventChanges } from '@/hooks/usePendingEventChanges';
@@ -21,6 +22,11 @@ interface DayViewProps {
   onBackToMonth: () => void;
   onCreate: (startTime: Date) => Promise<void>;
   onDateChange: (date: Date) => void;
+  onDelete: (id: string) => Promise<void>;
+  showEventModal: boolean;
+  selectedEvent: CalendarEvent | null;
+  onCloseModal: () => void;
+  onEventSave: (eventData: Partial<CalendarEvent>) => Promise<void>;
 }
 
 export const DayView = ({
@@ -31,6 +37,11 @@ export const DayView = ({
   onBackToMonth,
   onCreate,
   onDateChange,
+  onDelete,
+  showEventModal,
+  selectedEvent,
+  onCloseModal,
+  onEventSave,
 }: DayViewProps) => {
   const { 
     pendingChanges, 
@@ -226,6 +237,18 @@ export const DayView = ({
           </div>
         </div>
       </div>
+
+      {/* Event Modal with pending changes support */}
+      {showEventModal && (
+        <EventModal
+          open={showEventModal}
+          onClose={onCloseModal}
+          event={selectedEvent}
+          onSave={onEventSave}
+          onDelete={onDelete}
+          pendingChanges={selectedEvent ? pendingChanges.get(selectedEvent.id) : undefined}
+        />
+      )}
     </div>
   );
 };
