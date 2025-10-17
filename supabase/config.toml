@@ -1,5 +1,8 @@
 project_id = "shskknkivuewuqonjdjc"
 
+[functions.sync-booking-systems]
+verify_jwt = true
+
 [functions.process-call]
 verify_jwt = true
 

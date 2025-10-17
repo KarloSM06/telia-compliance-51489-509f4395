@@ -14,6 +14,187 @@ export type Database = {
   }
   public: {
     Tables: {
+      booking_sync_queue: {
+        Row: {
+          attempts: number | null
+          created_at: string | null
+          entity_id: string | null
+          entity_type: string
+          error_message: string | null
+          external_id: string | null
+          id: string
+          integration_id: string
+          max_attempts: number | null
+          operation: string
+          payload: Json | null
+          processed_at: string | null
+          scheduled_at: string | null
+          status: string | null
+        }
+        Insert: {
+          attempts?: number | null
+          created_at?: string | null
+          entity_id?: string | null
+          entity_type: string
+          error_message?: string | null
+          external_id?: string | null
+          id?: string
+          integration_id: string
+          max_attempts?: number | null
+          operation: string
+          payload?: Json | null
+          processed_at?: string | null
+          scheduled_at?: string | null
+          status?: string | null
+        }
+        Update: {
+          attempts?: number | null
+          created_at?: string | null
+          entity_id?: string | null
+          entity_type?: string
+          error_message?: string | null
+          external_id?: string | null
+          id?: string
+          integration_id?: string
+          max_attempts?: number | null
+          operation?: string
+          payload?: Json | null
+          processed_at?: string | null
+          scheduled_at?: string | null
+          status?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "booking_sync_queue_integration_id_fkey"
+            columns: ["integration_id"]
+            isOneToOne: false
+            referencedRelation: "booking_system_integrations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      booking_system_integrations: {
+        Row: {
+          created_at: string | null
+          encrypted_credentials: Json | null
+          failed_syncs: number | null
+          field_mappings: Json | null
+          id: string
+          integration_type: string
+          is_configured: boolean | null
+          is_enabled: boolean | null
+          last_sync_at: string | null
+          last_sync_error: string | null
+          last_sync_status: string | null
+          next_sync_at: string | null
+          organization_id: string | null
+          provider: string
+          provider_display_name: string
+          sync_settings: Json | null
+          total_synced_events: number | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          encrypted_credentials?: Json | null
+          failed_syncs?: number | null
+          field_mappings?: Json | null
+          id?: string
+          integration_type?: string
+          is_configured?: boolean | null
+          is_enabled?: boolean | null
+          last_sync_at?: string | null
+          last_sync_error?: string | null
+          last_sync_status?: string | null
+          next_sync_at?: string | null
+          organization_id?: string | null
+          provider: string
+          provider_display_name: string
+          sync_settings?: Json | null
+          total_synced_events?: number | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          encrypted_credentials?: Json | null
+          failed_syncs?: number | null
+          field_mappings?: Json | null
+          id?: string
+          integration_type?: string
+          is_configured?: boolean | null
+          is_enabled?: boolean | null
+          last_sync_at?: string | null
+          last_sync_error?: string | null
+          last_sync_status?: string | null
+          next_sync_at?: string | null
+          organization_id?: string | null
+          provider?: string
+          provider_display_name?: string
+          sync_settings?: Json | null
+          total_synced_events?: number | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "booking_system_integrations_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "booking_system_integrations_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      booking_webhooks: {
+        Row: {
+          created_at: string | null
+          event_types: Json | null
+          id: string
+          integration_id: string
+          is_active: boolean | null
+          last_received_at: string | null
+          webhook_secret: string | null
+          webhook_url: string
+        }
+        Insert: {
+          created_at?: string | null
+          event_types?: Json | null
+          id?: string
+          integration_id: string
+          is_active?: boolean | null
+          last_received_at?: string | null
+          webhook_secret?: string | null
+          webhook_url: string
+        }
+        Update: {
+          created_at?: string | null
+          event_types?: Json | null
+          id?: string
+          integration_id?: string
+          is_active?: boolean | null
+          last_received_at?: string | null
+          webhook_secret?: string | null
+          webhook_url?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "booking_webhooks_integration_id_fkey"
+            columns: ["integration_id"]
+            isOneToOne: false
+            referencedRelation: "booking_system_integrations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       bookings: {
         Row: {
           bokningstyp: string | null
@@ -55,6 +236,135 @@ export type Database = {
           user_id?: string | null
         }
         Relationships: []
+      }
+      calendar_events: {
+        Row: {
+          all_day: boolean | null
+          attendees: Json | null
+          booking_system_integration_id: string | null
+          contact_email: string | null
+          contact_person: string | null
+          contact_phone: string | null
+          created_at: string | null
+          created_by: string | null
+          description: string | null
+          end_time: string
+          event_type: string
+          external_id: string | null
+          id: string
+          last_synced_at: string | null
+          lead_id: string | null
+          next_steps: string | null
+          notes: string | null
+          organization_id: string | null
+          outcome: string | null
+          reminders: Json | null
+          source: string | null
+          start_time: string
+          status: string | null
+          sync_status: string | null
+          timezone: string | null
+          title: string
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          all_day?: boolean | null
+          attendees?: Json | null
+          booking_system_integration_id?: string | null
+          contact_email?: string | null
+          contact_person?: string | null
+          contact_phone?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          description?: string | null
+          end_time: string
+          event_type?: string
+          external_id?: string | null
+          id?: string
+          last_synced_at?: string | null
+          lead_id?: string | null
+          next_steps?: string | null
+          notes?: string | null
+          organization_id?: string | null
+          outcome?: string | null
+          reminders?: Json | null
+          source?: string | null
+          start_time: string
+          status?: string | null
+          sync_status?: string | null
+          timezone?: string | null
+          title: string
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          all_day?: boolean | null
+          attendees?: Json | null
+          booking_system_integration_id?: string | null
+          contact_email?: string | null
+          contact_person?: string | null
+          contact_phone?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          description?: string | null
+          end_time?: string
+          event_type?: string
+          external_id?: string | null
+          id?: string
+          last_synced_at?: string | null
+          lead_id?: string | null
+          next_steps?: string | null
+          notes?: string | null
+          organization_id?: string | null
+          outcome?: string | null
+          reminders?: Json | null
+          source?: string | null
+          start_time?: string
+          status?: string | null
+          sync_status?: string | null
+          timezone?: string | null
+          title?: string
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "calendar_events_booking_system_integration_id_fkey"
+            columns: ["booking_system_integration_id"]
+            isOneToOne: false
+            referencedRelation: "booking_system_integrations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "calendar_events_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "calendar_events_lead_id_fkey"
+            columns: ["lead_id"]
+            isOneToOne: false
+            referencedRelation: "leads"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "calendar_events_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "calendar_events_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       call_history: {
         Row: {
