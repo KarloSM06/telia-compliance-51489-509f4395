@@ -4,6 +4,7 @@ import { format, parseISO, differenceInMinutes } from 'date-fns';
 import { useState, useRef, useCallback } from 'react';
 import { addMinutes } from 'date-fns';
 import { snapToInterval } from '@/lib/calendarUtils';
+import { User, Mail, Phone } from 'lucide-react';
 
 interface EventBlockProps {
   event: CalendarEvent;
@@ -85,43 +86,78 @@ export const EventBlock = ({
       draggable={!isResizing}
       onDragStart={handleDragStart}
       onClick={() => onEventClick(event)}
-      className={`absolute rounded-lg border-l-4 p-2 shadow-sm cursor-move hover:shadow-md transition-all group ${colorClass}`}
+      className={`absolute rounded-lg border-l-4 p-2 shadow-sm cursor-pointer hover:shadow-lg hover:scale-[1.02] transition-all group ${colorClass}`}
       style={{
         top: `${top}px`,
-        height: `${Math.max(height, 30)}px`, // Minimum 30px height
+        height: `${Math.max(height, 30)}px`,
         width,
         left,
         zIndex: isResizing ? 30 : 10,
       }}
     >
-      {/* Top resize handle */}
-      {height > 40 && (
-        <div
-          className="absolute top-0 left-0 right-0 h-2 cursor-ns-resize opacity-0 group-hover:opacity-100 hover:bg-foreground/20 rounded-t-lg transition-opacity"
-          onMouseDown={(e) => handleResizeStart(e, 'top')}
-        />
-      )}
+      {/* Top resize handle - more visible */}
+      <div
+        className="absolute top-0 left-0 right-0 h-3 cursor-ns-resize opacity-50 group-hover:opacity-100 hover:bg-primary/30 rounded-t-lg transition-all flex items-center justify-center"
+        onMouseDown={(e) => handleResizeStart(e, 'top')}
+      >
+        <div className="w-8 h-0.5 bg-foreground/40 rounded-full" />
+      </div>
 
       {/* Event content */}
-      <div className="text-xs font-medium truncate">{event.title}</div>
-      {height > 40 && (
-        <>
-          <div className="text-xs text-muted-foreground">
+      <div className="mt-2 space-y-1 overflow-hidden">
+        {/* Title - always visible */}
+        <div className="text-sm font-semibold truncate leading-tight">
+          {event.title}
+        </div>
+        
+        {/* Time - visible for events > 30px */}
+        {height > 30 && (
+          <div className="text-xs text-muted-foreground font-medium">
             {format(startTime, 'HH:mm')} - {format(endTime, 'HH:mm')}
           </div>
-          {event.contact_person && height > 60 && (
-            <div className="text-xs truncate mt-1">👤 {event.contact_person}</div>
-          )}
-        </>
-      )}
+        )}
+        
+        {/* Contact person - visible for events > 60px (1h) */}
+        {event.contact_person && height > 60 && (
+          <div className="flex items-center gap-1 text-xs truncate">
+            <User className="h-3 w-3 flex-shrink-0" />
+            <span className="truncate">{event.contact_person}</span>
+          </div>
+        )}
+        
+        {/* Contact details - visible for events > 90px (1.5h) */}
+        {height > 90 && (
+          <div className="space-y-0.5">
+            {event.contact_email && (
+              <div className="flex items-center gap-1 text-xs truncate opacity-80">
+                <Mail className="h-3 w-3 flex-shrink-0" />
+                <span className="truncate">{event.contact_email}</span>
+              </div>
+            )}
+            {event.contact_phone && (
+              <div className="flex items-center gap-1 text-xs truncate opacity-80">
+                <Phone className="h-3 w-3 flex-shrink-0" />
+                <span className="truncate">{event.contact_phone}</span>
+              </div>
+            )}
+          </div>
+        )}
+        
+        {/* Description - visible for events > 120px (2h) */}
+        {event.description && height > 120 && (
+          <div className="text-xs opacity-70 line-clamp-2 pt-1 border-t border-current/10">
+            {event.description}
+          </div>
+        )}
+      </div>
 
-      {/* Bottom resize handle */}
-      {height > 40 && (
-        <div
-          className="absolute bottom-0 left-0 right-0 h-2 cursor-ns-resize opacity-0 group-hover:opacity-100 hover:bg-foreground/20 rounded-b-lg transition-opacity"
-          onMouseDown={(e) => handleResizeStart(e, 'bottom')}
-        />
-      )}
+      {/* Bottom resize handle - more visible */}
+      <div
+        className="absolute bottom-0 left-0 right-0 h-3 cursor-ns-resize opacity-50 group-hover:opacity-100 hover:bg-primary/30 rounded-b-lg transition-all flex items-center justify-center"
+        onMouseDown={(e) => handleResizeStart(e, 'bottom')}
+      >
+        <div className="w-8 h-0.5 bg-foreground/40 rounded-full" />
+      </div>
     </div>
   );
 };

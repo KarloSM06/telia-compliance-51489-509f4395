@@ -17,7 +17,7 @@ interface DayViewProps {
   onEventClick: (event: CalendarEvent) => void;
   onEventUpdate: (id: string, updates: Partial<CalendarEvent>) => Promise<CalendarEvent | undefined>;
   onBackToMonth: () => void;
-  onCreate: (startTime: Date) => void;
+  onCreate: (startTime: Date) => Promise<void>;
   onDateChange: (date: Date) => void;
 }
 
@@ -35,8 +35,8 @@ export const DayView = ({
   
   const layoutedEvents = layoutOverlappingEvents(events);
 
-  const handleTimeSlotClick = (time: Date) => {
-    onCreate(time);
+  const handleTimeSlotClick = async (time: Date) => {
+    await onCreate(time);
   };
 
   const handleDragOver = (e: React.DragEvent) => {
@@ -90,7 +90,11 @@ export const DayView = ({
           </Button>
         </div>
 
-        <Button onClick={() => onCreate(new Date())}>
+        <Button onClick={async () => {
+          const now = new Date();
+          const roundedTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours(), Math.floor(now.getMinutes() / 15) * 15);
+          await onCreate(roundedTime);
+        }}>
           Ny händelse
         </Button>
       </div>

@@ -1,12 +1,14 @@
-import { useState } from "react";
-import { format } from "date-fns";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { useState, useEffect, useRef } from "react";
+import { format, parseISO } from "date-fns";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Badge } from "@/components/ui/badge";
 import type { CalendarEvent } from "@/hooks/useCalendarEvents";
+import { toast } from "sonner";
 
 interface EventModalProps {
   open: boolean;
@@ -18,6 +20,7 @@ interface EventModalProps {
 }
 
 export const EventModal = ({ open, onClose, event, defaultDate, onSave, onDelete }: EventModalProps) => {
+  const titleInputRef = useRef<HTMLInputElement>(null);
   const [formData, setFormData] = useState({
     title: event?.title || '',
     description: event?.description || '',
@@ -28,38 +31,131 @@ export const EventModal = ({ open, onClose, event, defaultDate, onSave, onDelete
     contact_email: event?.contact_email || '',
     contact_phone: event?.contact_phone || '',
   });
+  const [loading, setLoading] = useState(false);
+
+  // Autofocus title field and update form when event changes
+  useEffect(() => {
+    if (open) {
+      setTimeout(() => titleInputRef.current?.focus(), 100);
+      setFormData({
+        title: event?.title || '',
+        description: event?.description || '',
+        start_time: event?.start_time || (defaultDate ? format(defaultDate, "yyyy-MM-dd'T'HH:mm") : ''),
+        end_time: event?.end_time || '',
+        event_type: event?.event_type || 'meeting',
+        contact_person: event?.contact_person || '',
+        contact_email: event?.contact_email || '',
+        contact_phone: event?.contact_phone || '',
+      });
+    }
+  }, [open, event, defaultDate]);
+
+  // Keyboard shortcuts
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (!open) return;
+      
+      // Ctrl/Cmd + Enter to save
+      if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+        e.preventDefault();
+        handleSubmit(e as any);
+      }
+      // Escape to close
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        onClose();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [open, formData]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    await onSave({
-      ...formData,
-      source: 'internal',
-      status: 'scheduled',
-    });
-    onClose();
+    
+    // Validate times
+    if (formData.start_time && formData.end_time) {
+      const start = new Date(formData.start_time);
+      const end = new Date(formData.end_time);
+      
+      if (end <= start) {
+        toast.error('Sluttiden måste vara efter starttiden');
+        return;
+      }
+    }
+    
+    setLoading(true);
+    try {
+      await onSave({
+        ...formData,
+        source: 'internal',
+        status: 'scheduled',
+      });
+      toast.success(event ? 'Händelse uppdaterad' : 'Händelse skapad');
+      onClose();
+    } catch (error) {
+      toast.error('Något gick fel. Försök igen.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleDelete = async () => {
     if (event?.id && onDelete) {
-      await onDelete(event.id);
-      onClose();
+      setLoading(true);
+      try {
+        await onDelete(event.id);
+        toast.success('Händelse borttagen');
+        onClose();
+      } catch (error) {
+        toast.error('Kunde inte ta bort händelsen');
+      } finally {
+        setLoading(false);
+      }
     }
+  };
+
+  const getEventTypeLabel = (type: string) => {
+    const labels: Record<string, string> = {
+      meeting: 'Möte',
+      call: 'Samtal',
+      demo: 'Demo',
+      follow_up: 'Uppföljning',
+      other: 'Annat',
+    };
+    return labels[type] || type;
   };
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent className="max-w-2xl">
         <DialogHeader>
-          <DialogTitle>{event ? 'Redigera händelse' : 'Ny händelse'}</DialogTitle>
+          <DialogTitle className="flex items-center gap-2">
+            {event ? 'Redigera händelse' : 'Ny händelse'}
+            {event && (
+              <Badge variant="outline">
+                {getEventTypeLabel(event.event_type)}
+              </Badge>
+            )}
+          </DialogTitle>
+          {event && formData.start_time && (
+            <DialogDescription>
+              {format(parseISO(formData.start_time), 'EEEE d MMM yyyy, HH:mm', { locale: require('date-fns/locale/sv') })}
+              {formData.end_time && ` - ${format(parseISO(formData.end_time), 'HH:mm')}`}
+            </DialogDescription>
+          )}
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <Label htmlFor="title">Titel *</Label>
             <Input
+              ref={titleInputRef}
               id="title"
               value={formData.title}
               onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+              placeholder="T.ex. Kundmöte med Anna"
               required
             />
           </div>
@@ -145,22 +241,35 @@ export const EventModal = ({ open, onClose, event, defaultDate, onSave, onDelete
             </div>
           </div>
 
-          <div className="flex justify-between pt-4">
+          <div className="flex justify-between pt-4 border-t">
             <div>
               {event && onDelete && (
-                <Button type="button" variant="destructive" onClick={handleDelete}>
+                <Button 
+                  type="button" 
+                  variant="destructive" 
+                  onClick={handleDelete}
+                  disabled={loading}
+                >
                   Ta bort
                 </Button>
               )}
             </div>
             <div className="flex gap-2">
-              <Button type="button" variant="outline" onClick={onClose}>
+              <Button 
+                type="button" 
+                variant="outline" 
+                onClick={onClose}
+                disabled={loading}
+              >
                 Avbryt
               </Button>
-              <Button type="submit">
-                {event ? 'Uppdatera' : 'Skapa'}
+              <Button type="submit" disabled={loading}>
+                {loading ? 'Sparar...' : (event ? 'Uppdatera' : 'Skapa')}
               </Button>
             </div>
+          </div>
+          <div className="text-xs text-muted-foreground text-center">
+            Tryck <kbd className="px-1.5 py-0.5 rounded bg-muted">Esc</kbd> för att avbryta, <kbd className="px-1.5 py-0.5 rounded bg-muted">Ctrl+Enter</kbd> för att spara
           </div>
         </form>
       </DialogContent>

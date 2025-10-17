@@ -37,18 +37,16 @@ const CalendarPage = () => {
   };
 
   const handleQuickCreate = async (time: Date) => {
+    // Create event directly with default values
     const endTime = addMinutes(time, 30);
-    setSelectedDate(time);
-    setSelectedEvent({
-      id: '',
-      title: '',
+    await createEvent({
+      title: 'Ny händelse',
       start_time: time.toISOString(),
       end_time: endTime.toISOString(),
       event_type: 'meeting',
       status: 'scheduled',
       source: 'internal',
-    } as CalendarEvent);
-    setShowEventModal(true);
+    });
   };
 
   const handleEventSave = async (eventData: Partial<CalendarEvent>) => {
