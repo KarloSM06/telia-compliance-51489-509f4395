@@ -62,7 +62,7 @@ export type Database = {
           callee: string | null
           caller: string | null
           created_at: string | null
-          duration: string | null
+          duration: number | null
           id: string
           outcome: string | null
           transcript: string | null
@@ -73,7 +73,7 @@ export type Database = {
           callee?: string | null
           caller?: string | null
           created_at?: string | null
-          duration?: string | null
+          duration?: number | null
           id?: string
           outcome?: string | null
           transcript?: string | null
@@ -84,7 +84,7 @@ export type Database = {
           callee?: string | null
           caller?: string | null
           created_at?: string | null
-          duration?: string | null
+          duration?: number | null
           id?: string
           outcome?: string | null
           transcript?: string | null
@@ -330,10 +330,10 @@ export type Database = {
       }
       Hiems_Kunddata: {
         Row: {
-          Antaletminuter: number | null
-          AntaletSMS: number | null
+          AntaletMinuter: string | null
+          AntaletSMS: string | null
           call_transfers: string | null
-          Chrono_Nummer: number | null
+          Chrono_Nummer: string | null
           concurrent_calls: string | null
           created_at: string | null
           email: string | null
@@ -345,10 +345,10 @@ export type Database = {
           username: string | null
         }
         Insert: {
-          Antaletminuter?: number | null
-          AntaletSMS?: number | null
+          AntaletMinuter?: string | null
+          AntaletSMS?: string | null
           call_transfers?: string | null
-          Chrono_Nummer?: number | null
+          Chrono_Nummer?: string | null
           concurrent_calls?: string | null
           created_at?: string | null
           email?: string | null
@@ -360,10 +360,10 @@ export type Database = {
           username?: string | null
         }
         Update: {
-          Antaletminuter?: number | null
-          AntaletSMS?: number | null
+          AntaletMinuter?: string | null
+          AntaletSMS?: string | null
           call_transfers?: string | null
-          Chrono_Nummer?: number | null
+          Chrono_Nummer?: string | null
           concurrent_calls?: string | null
           created_at?: string | null
           email?: string | null
@@ -375,6 +375,106 @@ export type Database = {
           username?: string | null
         }
         Relationships: []
+      }
+      lead_activities: {
+        Row: {
+          activity_type: string
+          created_at: string
+          description: string | null
+          id: string
+          lead_id: string
+          metadata: Json | null
+          user_id: string
+        }
+        Insert: {
+          activity_type: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          lead_id: string
+          metadata?: Json | null
+          user_id: string
+        }
+        Update: {
+          activity_type?: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          lead_id?: string
+          metadata?: Json | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "lead_activities_lead_id_fkey"
+            columns: ["lead_id"]
+            isOneToOne: false
+            referencedRelation: "leads"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      lead_searches: {
+        Row: {
+          company_size: string | null
+          created_at: string
+          id: string
+          industry: string[] | null
+          keywords: string[] | null
+          last_run_at: string | null
+          leads_generated: number | null
+          leads_target: number | null
+          location: string[] | null
+          organization_id: string | null
+          revenue_range: string | null
+          search_name: string
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          company_size?: string | null
+          created_at?: string
+          id?: string
+          industry?: string[] | null
+          keywords?: string[] | null
+          last_run_at?: string | null
+          leads_generated?: number | null
+          leads_target?: number | null
+          location?: string[] | null
+          organization_id?: string | null
+          revenue_range?: string | null
+          search_name: string
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          company_size?: string | null
+          created_at?: string
+          id?: string
+          industry?: string[] | null
+          keywords?: string[] | null
+          last_run_at?: string | null
+          leads_generated?: number | null
+          leads_target?: number | null
+          location?: string[] | null
+          organization_id?: string | null
+          revenue_range?: string | null
+          search_name?: string
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "lead_searches_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       leaddesk_agent_mapping: {
         Row: {
@@ -404,6 +504,99 @@ export type Database = {
             columns: ["user_id"]
             isOneToOne: false
             referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      leads: {
+        Row: {
+          ai_reasoning: string | null
+          ai_score: number | null
+          company_name: string
+          company_size: string | null
+          contact_person: string | null
+          contacted_at: string | null
+          converted_at: string | null
+          created_at: string
+          description: string | null
+          email: string | null
+          id: string
+          industry: string | null
+          location: string | null
+          notes: string | null
+          organization_id: string | null
+          phone: string | null
+          priority: string | null
+          search_id: string | null
+          source: string | null
+          status: string
+          updated_at: string
+          user_id: string
+          website: string | null
+        }
+        Insert: {
+          ai_reasoning?: string | null
+          ai_score?: number | null
+          company_name: string
+          company_size?: string | null
+          contact_person?: string | null
+          contacted_at?: string | null
+          converted_at?: string | null
+          created_at?: string
+          description?: string | null
+          email?: string | null
+          id?: string
+          industry?: string | null
+          location?: string | null
+          notes?: string | null
+          organization_id?: string | null
+          phone?: string | null
+          priority?: string | null
+          search_id?: string | null
+          source?: string | null
+          status?: string
+          updated_at?: string
+          user_id: string
+          website?: string | null
+        }
+        Update: {
+          ai_reasoning?: string | null
+          ai_score?: number | null
+          company_name?: string
+          company_size?: string | null
+          contact_person?: string | null
+          contacted_at?: string | null
+          converted_at?: string | null
+          created_at?: string
+          description?: string | null
+          email?: string | null
+          id?: string
+          industry?: string | null
+          location?: string | null
+          notes?: string | null
+          organization_id?: string | null
+          phone?: string | null
+          priority?: string | null
+          search_id?: string | null
+          source?: string | null
+          status?: string
+          updated_at?: string
+          user_id?: string
+          website?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "leads_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "leads_search_id_fkey"
+            columns: ["search_id"]
+            isOneToOne: false
+            referencedRelation: "lead_searches"
             referencedColumns: ["id"]
           },
         ]

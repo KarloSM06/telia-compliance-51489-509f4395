@@ -1,50 +1,74 @@
+import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Target, Phone, Mail, TrendingUp, Settings } from "lucide-react";
+import { Target, Plus, Settings } from "lucide-react";
+import { useLeadSearches } from "@/hooks/useLeadSearches";
+import { useLeads, Lead } from "@/hooks/useLeads";
+import { LeadSearchForm } from "@/components/lead/LeadSearchForm";
+import { LeadsTable } from "@/components/lead/LeadsTable";
+import { LeadDetailModal } from "@/components/lead/LeadDetailModal";
+import { LeadSearchList } from "@/components/lead/LeadSearchList";
 
 export function LeadSection() {
+  const { searches, loading: searchesLoading, createSearch, pauseSearch, resumeSearch, deleteSearch } = useLeadSearches();
+  const { leads, stats, loading: leadsLoading, updateLead } = useLeads();
+  const [showSearchForm, setShowSearchForm] = useState(false);
+  const [selectedLead, setSelectedLead] = useState<Lead | null>(null);
+  const [showLeadDetail, setShowLeadDetail] = useState(false);
+
   const statCards = [
     {
-      title: "Leads",
-      value: 0,
+      title: "Totalt Leads",
+      value: stats.totalLeads,
       icon: Target,
       color: "text-blue-600",
-      bgColor: "bg-blue-100",
+      bgColor: "bg-blue-100 dark:bg-blue-900/20",
+    },
+    {
+      title: "Nya",
+      value: stats.newLeads,
+      icon: Target,
+      color: "text-green-600",
+      bgColor: "bg-green-100 dark:bg-green-900/20",
     },
     {
       title: "Kontaktade",
-      value: 0,
-      icon: Phone,
-      color: "text-green-600",
-      bgColor: "bg-green-100",
-    },
-    {
-      title: "Email kampanjer",
-      value: 0,
-      icon: Mail,
+      value: stats.contacted,
+      icon: Target,
       color: "text-purple-600",
-      bgColor: "bg-purple-100",
+      bgColor: "bg-purple-100 dark:bg-purple-900/20",
     },
     {
       title: "Konverteringar",
-      value: 0,
-      icon: TrendingUp,
+      value: stats.conversions,
+      icon: Target,
       color: "text-orange-600",
-      bgColor: "bg-orange-100",
+      bgColor: "bg-orange-100 dark:bg-orange-900/20",
     },
   ];
+
+  const handleViewDetails = (lead: Lead) => {
+    setSelectedLead(lead);
+    setShowLeadDetail(true);
+  };
 
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-2xl font-bold">AI Prospektering (Lead)</h2>
-          <p className="text-muted-foreground">Hantera leads och försäljning med AI</p>
+          <p className="text-muted-foreground">Hitta och hantera leads med AI</p>
         </div>
-        <Button variant="outline" size="sm">
-          <Settings className="h-4 w-4 mr-2" />
-          Inställningar
-        </Button>
+        <div className="flex gap-2">
+          <Button onClick={() => setShowSearchForm(true)}>
+            <Plus className="h-4 w-4 mr-2" />
+            Ny lead-sökning
+          </Button>
+          <Button variant="outline" size="sm">
+            <Settings className="h-4 w-4 mr-2" />
+            Inställningar
+          </Button>
+        </div>
       </div>
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
@@ -65,19 +89,56 @@ export function LeadSection() {
         ))}
       </div>
 
+      {searches.length > 0 && (
+        <Card>
+          <CardHeader>
+            <CardTitle>Aktiva sökningar</CardTitle>
+            <CardDescription>Dina pågående lead-sökningar</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <LeadSearchList
+              searches={searches}
+              onPause={pauseSearch}
+              onResume={resumeSearch}
+              onDelete={deleteSearch}
+            />
+          </CardContent>
+        </Card>
+      )}
+
       <Card>
         <CardHeader>
-          <CardTitle>Senaste leads</CardTitle>
-          <CardDescription>Översikt av dina prospekteringsaktiviteter</CardDescription>
+          <CardTitle>Alla Leads</CardTitle>
+          <CardDescription>
+            {stats.totalLeads} totalt
+          </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="text-center py-8 text-muted-foreground">
-            <Target className="h-12 w-12 mx-auto mb-3 opacity-50" />
-            <p>Inga leads att visa än</p>
-            <p className="text-sm mt-2">Prospekteringsdata kommer att visas här när den blir tillgänglig</p>
-          </div>
+          {leadsLoading ? (
+            <div className="text-center py-8 text-muted-foreground">
+              Laddar leads...
+            </div>
+          ) : (
+            <LeadsTable leads={leads} onViewDetails={handleViewDetails} />
+          )}
         </CardContent>
       </Card>
+
+      <LeadSearchForm
+        open={showSearchForm}
+        onOpenChange={setShowSearchForm}
+        onSubmit={async (data) => {
+          await createSearch(data);
+          setShowSearchForm(false);
+        }}
+      />
+
+      <LeadDetailModal
+        lead={selectedLead}
+        open={showLeadDetail}
+        onOpenChange={setShowLeadDetail}
+        onUpdate={updateLead}
+      />
     </div>
   );
 }
