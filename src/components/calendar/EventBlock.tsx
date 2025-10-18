@@ -13,6 +13,7 @@ interface EventBlockProps {
   onResizeStart: (e: React.MouseEvent | React.TouchEvent, event: CalendarEvent, handle: 'top' | 'bottom') => void;
   isResizing?: boolean;
   viewStartHour?: number;
+  hasPendingChanges?: boolean;
 }
 
 const EventBlockComponent = ({
@@ -24,6 +25,7 @@ const EventBlockComponent = ({
   onResizeStart,
   isResizing = false,
   viewStartHour = 0,
+  hasPendingChanges = false,
 }: EventBlockProps) => {
   const startTime = parseISO(event.start_time);
   const endTime = parseISO(event.end_time);
@@ -80,9 +82,9 @@ const EventBlockComponent = ({
       draggable={!isResizing}
       onDragStart={handleDragStart}
       onClick={handleClick}
-      className={`absolute rounded-lg border-l-4 p-2 shadow-sm cursor-pointer transition-all duration-200 group ${enhancedColorClass} ${
+      className={`absolute rounded-lg border-l-4 p-2 shadow-sm cursor-pointer transition-all duration-50 group ${enhancedColorClass} ${
         isResizing ? 'ring-2 ring-primary scale-[1.02] shadow-lg' : 'hover:shadow-lg hover:scale-[1.01]'
-      }`}
+      } ${hasPendingChanges ? 'ring-2 ring-orange-500/50 animate-[pulse_1s_ease-in-out_1]' : ''}`}
       style={{
         top: `${top}px`,
         height: `${Math.max(height, 30)}px`,
@@ -92,15 +94,25 @@ const EventBlockComponent = ({
         transform: 'translate3d(0, 0, 0)',
         willChange: isResizing ? 'transform' : 'auto',
       }}
+      title={hasPendingChanges ? 'Ej sparad' : undefined}
     >
-      {/* Top resize handle - larger touch target */}
+      {/* Pending changes indicator */}
+      {hasPendingChanges && (
+        <div className="absolute -top-1 -right-1 w-3 h-3 bg-orange-500 rounded-full border-2 border-background z-10" />
+      )}
+
+      {/* Enhanced top resize handle - larger and more visible */}
       <div
-        className="absolute top-0 left-0 right-0 h-4 cursor-ns-resize opacity-0 group-hover:opacity-100 hover:bg-primary/20 rounded-t-lg transition-all flex items-center justify-center touch-manipulation"
+        className="absolute top-0 left-0 right-0 h-2 cursor-ns-resize opacity-0 group-hover:opacity-100 hover:bg-primary/30 rounded-t-lg transition-all duration-50 flex flex-col items-center justify-center touch-manipulation"
         onMouseDown={(e) => handleMouseDown(e, 'top')}
         onTouchStart={(e) => handleTouchStart(e, 'top')}
-        style={{ minHeight: '16px' }}
+        style={{ minHeight: '20px', marginTop: '-4px' }}
       >
-        <div className="w-10 h-1 bg-foreground/50 rounded-full" />
+        <div className="w-12 h-1 bg-foreground/60 rounded-full" />
+        <div className="w-8 h-0.5 border-t-2 border-dashed border-foreground/40 mt-0.5" />
+        <div className="absolute -top-6 left-1/2 -translate-x-1/2 text-xs font-bold text-primary bg-background px-2 py-0.5 rounded shadow-md opacity-0 group-hover:opacity-100 pointer-events-none whitespace-nowrap">
+          {format(startTime, 'HH:mm')}
+        </div>
       </div>
 
       {/* Event content */}
@@ -158,14 +170,18 @@ const EventBlockComponent = ({
         )}
       </div>
 
-      {/* Bottom resize handle - larger touch target */}
+      {/* Enhanced bottom resize handle - larger and more visible */}
       <div
-        className="absolute bottom-0 left-0 right-0 h-4 cursor-ns-resize opacity-0 group-hover:opacity-100 hover:bg-primary/20 rounded-b-lg transition-all flex items-center justify-center touch-manipulation"
+        className="absolute bottom-0 left-0 right-0 h-2 cursor-ns-resize opacity-0 group-hover:opacity-100 hover:bg-primary/30 rounded-b-lg transition-all duration-50 flex flex-col items-center justify-center touch-manipulation"
         onMouseDown={(e) => handleMouseDown(e, 'bottom')}
         onTouchStart={(e) => handleTouchStart(e, 'bottom')}
-        style={{ minHeight: '16px' }}
+        style={{ minHeight: '20px', marginBottom: '-4px' }}
       >
-        <div className="w-10 h-1 bg-foreground/50 rounded-full" />
+        <div className="w-8 h-0.5 border-t-2 border-dashed border-foreground/40 mb-0.5" />
+        <div className="w-12 h-1 bg-foreground/60 rounded-full" />
+        <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 text-xs font-bold text-primary bg-background px-2 py-0.5 rounded shadow-md opacity-0 group-hover:opacity-100 pointer-events-none whitespace-nowrap">
+          {format(endTime, 'HH:mm')}
+        </div>
       </div>
     </div>
   );
@@ -181,6 +197,7 @@ export const EventBlock = memo(EventBlockComponent, (prevProps, nextProps) => {
     prevProps.column === nextProps.column &&
     prevProps.totalColumns === nextProps.totalColumns &&
     prevProps.isResizing === nextProps.isResizing &&
-    prevProps.viewStartHour === nextProps.viewStartHour
+    prevProps.viewStartHour === nextProps.viewStartHour &&
+    prevProps.hasPendingChanges === nextProps.hasPendingChanges
   );
 });

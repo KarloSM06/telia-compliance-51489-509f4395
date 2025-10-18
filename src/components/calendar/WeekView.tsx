@@ -265,10 +265,27 @@ export const WeekView = ({
                   {/* Events for this day */}
                   <div className="absolute top-0 left-0 right-0 bottom-0 pointer-events-none">
                     <div className="relative h-full pointer-events-auto">
-                      {getEventsForDay(day).map(event => <EventBlock key={event.id} event={event} column={event.column} totalColumns={event.totalColumns} onEventClick={onEventClick} onDragStart={handleDragStart} onResizeStart={handleResizeStart} isResizing={dragState.activeEventId === event.id && dragState.operation !== 'drag'} viewStartHour={startHour} />)}
+                      {getEventsForDay(day).map(event => <EventBlock 
+                        key={event.id} 
+                        event={event} 
+                        column={event.column} 
+                        totalColumns={event.totalColumns} 
+                        onEventClick={onEventClick} 
+                        onDragStart={handleDragStart} 
+                        onResizeStart={handleResizeStart} 
+                        isResizing={dragState.activeEventId === event.id && dragState.operation !== 'drag'} 
+                        viewStartHour={startHour}
+                        hasPendingChanges={pendingChanges.has(event.id)}
+                      />)}
                       
                       {/* Ghost preview during drag */}
-                      {dragState.operation === 'drag' && dragState.previewPosition && dragState.activeEventId && isSameDay(dragState.previewPosition.start, day) && <EventDragPreview start={dragState.previewPosition.start} end={dragState.previewPosition.end} title={events.find(e => e.id === dragState.activeEventId)?.title || ''} snapIndicatorY={snapIndicatorY} />}
+                      {dragState.operation === 'drag' && dragState.previewPosition && dragState.activeEventId && isSameDay(dragState.previewPosition.start, day) && <EventDragPreview 
+                        start={dragState.previewPosition.start} 
+                        end={dragState.previewPosition.end} 
+                        title={events.find(e => e.id === dragState.activeEventId)?.title || ''} 
+                        snapIndicatorY={snapIndicatorY}
+                        mouseY={dragState.currentMouseY}
+                      />}
                     </div>
                   </div>
                 </div>)}

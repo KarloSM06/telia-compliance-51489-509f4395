@@ -12,6 +12,7 @@ export interface DragState {
   initialMouseY: number | null;
   originalStart: Date | null;
   originalEnd: Date | null;
+  currentMouseY?: number;
 }
 
 export const useOptimizedEventInteraction = (
@@ -24,6 +25,7 @@ export const useOptimizedEventInteraction = (
     initialMouseY: null,
     originalStart: null,
     originalEnd: null,
+    currentMouseY: undefined,
   });
 
   const animationFrameRef = useRef<number | null>(null);
@@ -101,6 +103,7 @@ export const useOptimizedEventInteraction = (
       setDragState(prev => ({
         ...prev,
         previewPosition: { start: targetDate, end: newEndTime },
+        currentMouseY: e.clientY - rect.top,
       }));
     });
   }, [dragState.activeEventId, dragState.operation, dragState.originalStart, dragState.originalEnd]);
@@ -125,6 +128,7 @@ export const useOptimizedEventInteraction = (
       initialMouseY: null,
       originalStart: null,
       originalEnd: null,
+      currentMouseY: undefined,
     });
   }, [dragState.activeEventId, dragState.previewPosition, onPendingChange]);
 
@@ -250,6 +254,7 @@ export const useOptimizedEventInteraction = (
       initialMouseY: null,
       originalStart: null,
       originalEnd: null,
+      currentMouseY: undefined,
     });
   }, []);
 

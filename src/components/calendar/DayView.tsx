@@ -177,7 +177,14 @@ export const DayView = ({
       <div className="flex-1 overflow-auto">
         <div className="relative pl-16 pr-4">
           <div ref={containerRef} className="relative" onDragOver={handleDragOver} onDrop={handleDrop}>
-            <TimeGrid onTimeSlotClick={handleTimeSlotClick} availabilitySlots={slots} currentDate={date} />
+            <TimeGrid 
+              onTimeSlotClick={handleTimeSlotClick} 
+              availabilitySlots={slots} 
+              currentDate={date}
+              isDragging={!!dragState.operation}
+              dragSnapHour={dragState.previewPosition ? dragState.previewPosition.start.getHours() : undefined}
+              dragSnapQuarter={dragState.previewPosition ? Math.floor(dragState.previewPosition.start.getMinutes() / 15) : undefined}
+            />
             
             {/* Current time indicator */}
             <CurrentTimeIndicator displayDate={date} />
@@ -185,10 +192,27 @@ export const DayView = ({
             {/* Events */}
             <div className="absolute top-0 left-0 right-0 bottom-0 pointer-events-none">
               <div className="relative h-full pointer-events-auto">
-                {layoutedEvents.map(event => <EventBlock key={event.id} event={event} column={event.column} totalColumns={event.totalColumns} onEventClick={onEventClick} onDragStart={handleDragStart} onResizeStart={handleResizeStart} isResizing={dragState.activeEventId === event.id && dragState.operation !== 'drag'} viewStartHour={startHour} />)}
+                {layoutedEvents.map(event => <EventBlock 
+                  key={event.id} 
+                  event={event} 
+                  column={event.column} 
+                  totalColumns={event.totalColumns} 
+                  onEventClick={onEventClick} 
+                  onDragStart={handleDragStart} 
+                  onResizeStart={handleResizeStart} 
+                  isResizing={dragState.activeEventId === event.id && dragState.operation !== 'drag'} 
+                  viewStartHour={startHour}
+                  hasPendingChanges={pendingChanges.has(event.id)}
+                />)}
                 
                 {/* Ghost preview during drag */}
-                {dragState.operation === 'drag' && dragState.previewPosition && dragState.activeEventId && <EventDragPreview start={dragState.previewPosition.start} end={dragState.previewPosition.end} title={events.find(e => e.id === dragState.activeEventId)?.title || ''} snapIndicatorY={snapIndicatorY} />}
+                {dragState.operation === 'drag' && dragState.previewPosition && dragState.activeEventId && <EventDragPreview 
+                  start={dragState.previewPosition.start} 
+                  end={dragState.previewPosition.end} 
+                  title={events.find(e => e.id === dragState.activeEventId)?.title || ''} 
+                  snapIndicatorY={snapIndicatorY}
+                  mouseY={dragState.currentMouseY}
+                />}
               </div>
             </div>
           </div>

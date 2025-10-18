@@ -6,9 +6,19 @@ interface TimeGridProps {
   onTimeSlotClick: (time: Date) => void;
   availabilitySlots?: AvailabilitySlot[];
   currentDate?: Date;
+  isDragging?: boolean;
+  dragSnapHour?: number;
+  dragSnapQuarter?: number;
 }
 
-export const TimeGrid = ({ onTimeSlotClick, availabilitySlots = [], currentDate = new Date() }: TimeGridProps) => {
+export const TimeGrid = ({ 
+  onTimeSlotClick, 
+  availabilitySlots = [], 
+  currentDate = new Date(),
+  isDragging = false,
+  dragSnapHour,
+  dragSnapQuarter,
+}: TimeGridProps) => {
   const [hoveredSlot, setHoveredSlot] = useState<{ hour: number; quarter: number } | null>(null);
 
   // Get availability slots for current day of week (0 = Monday, 6 = Sunday)
@@ -67,12 +77,14 @@ export const TimeGrid = ({ onTimeSlotClick, availabilitySlots = [], currentDate 
     <div className="relative" onMouseLeave={() => setHoveredSlot(null)}>
       {hours.map((hour) => {
         const isHourAvailable = isAvailableAt(hour, 0);
+        const isDragTarget = isDragging && dragSnapHour === hour;
+        
         return (
           <div
             key={hour}
-            className={`relative h-[80px] border-b border-border transition-all cursor-pointer group ${
+            className={`relative h-[80px] border-b transition-all duration-50 cursor-pointer group ${
               isHourAvailable ? 'bg-emerald-500/10' : 'hover:bg-accent/30'
-            }`}
+            } ${isDragging ? 'border-border' : 'border-border'}`}
             onClick={(e) => handleClick(e, hour)}
             onMouseMove={(e) => handleMouseMove(e, hour)}
           >
@@ -81,28 +93,47 @@ export const TimeGrid = ({ onTimeSlotClick, availabilitySlots = [], currentDate 
               {hour.toString().padStart(2, '0')}:00
             </div>
             
-            {/* 15-minute gridlines with hover effect */}
-            {[0, 1, 2, 3].map((quarter) => (
-              <div
-                key={quarter}
-                className={`absolute left-0 right-0 border-t transition-all ${
-                  quarter === 0 ? 'top-0 border-border' : ''
-                }${quarter === 1 ? 'top-[20px] border-dashed border-border/30' : ''}${
-                  quarter === 2 ? 'top-[40px] border-dashed border-border/30' : ''
-                }${quarter === 3 ? 'top-[60px] border-dashed border-border/30' : ''}${
-                  hoveredSlot?.hour === hour && hoveredSlot?.quarter === quarter
-                    ? ' bg-primary/10'
-                    : ''
-                }`}
-                style={{
-                  height: quarter === 0 ? '0' : '20px',
-                  top: quarter === 0 ? '0' : `${quarter * 20}px`,
-                }}
-              />
-            ))}
+            {/* 15-minute gridlines with enhanced visibility during drag */}
+            {[0, 1, 2, 3].map((quarter) => {
+              const isSnapTarget = isDragTarget && dragSnapQuarter === quarter;
+              const isHovered = hoveredSlot?.hour === hour && hoveredSlot?.quarter === quarter;
+              
+              return (
+                <div
+                  key={quarter}
+                  className={`absolute left-0 right-0 border-t transition-all duration-50 ${
+                    quarter === 0 ? 'top-0 border-border' : ''
+                  }${quarter === 1 ? 'top-[20px]' : ''}${
+                    quarter === 2 ? 'top-[40px]' : ''}${
+                    quarter === 3 ? 'top-[60px]' : ''}${
+                    isDragging && quarter > 0 ? ' border-dashed border-primary/40' : quarter > 0 ? ' border-dashed border-border/30' : ''
+                  }${isSnapTarget ? ' bg-primary/30' : isHovered ? ' bg-primary/10' : ''}`}
+                  style={{
+                    height: quarter === 0 ? '0' : '20px',
+                    top: quarter === 0 ? '0' : `${quarter * 20}px`,
+                    borderWidth: isDragging && quarter > 0 ? '1.5px' : '1px',
+                  }}
+                />
+              );
+            })}
             
-            {/* Hover time indicator */}
-            {hoveredSlot?.hour === hour && (
+            {/* Enhanced target box for drag snap */}
+            {isDragTarget && dragSnapQuarter !== undefined && (
+              <div
+                className="absolute left-0 right-0 h-[20px] bg-primary/20 border-2 border-primary rounded pointer-events-none z-20 transition-all duration-50"
+                style={{
+                  top: `${dragSnapQuarter * 20}px`,
+                  boxShadow: '0 0 15px hsl(var(--primary) / 0.4)',
+                }}
+              >
+                <div className="absolute left-2 -top-1 text-sm font-bold text-primary bg-background px-2 py-0.5 rounded shadow-md">
+                  {hour.toString().padStart(2, '0')}:{(dragSnapQuarter * 15).toString().padStart(2, '0')}
+                </div>
+              </div>
+            )}
+            
+            {/* Hover time indicator (only when not dragging) */}
+            {!isDragging && hoveredSlot?.hour === hour && (
               <div 
                 className="absolute left-2 text-xs font-medium text-primary pointer-events-none bg-background/90 px-2 py-0.5 rounded shadow-sm"
                 style={{ top: `${hoveredSlot.quarter * 20}px` }}
