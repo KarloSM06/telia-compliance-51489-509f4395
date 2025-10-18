@@ -1,45 +1,42 @@
 import { format, setHours, setMinutes } from 'date-fns';
 import { useState, useMemo } from 'react';
 import { AvailabilitySlot } from '@/hooks/useAvailability';
+import { Clock } from 'lucide-react';
 
 interface TimeGridProps {
   onTimeSlotClick: (time: Date) => void;
   availabilitySlots?: AvailabilitySlot[];
   currentDate?: Date;
-  isDragging?: boolean;
-  dragSnapHour?: number;
-  dragSnapQuarter?: number;
+  snapIndicatorY?: number | null;
+  snapTime?: Date | null;
 }
 
 export const TimeGrid = ({ 
   onTimeSlotClick, 
   availabilitySlots = [], 
   currentDate = new Date(),
-  isDragging = false,
-  dragSnapHour,
-  dragSnapQuarter,
+  snapIndicatorY = null,
+  snapTime = null,
 }: TimeGridProps) => {
   const [hoveredSlot, setHoveredSlot] = useState<{ hour: number; quarter: number } | null>(null);
 
   // Get availability slots for current day of week (0 = Monday, 6 = Sunday)
-  const dayOfWeek = currentDate.getDay() === 0 ? 6 : currentDate.getDay() - 1; // Convert to 0=Mon, 6=Sun
+  const dayOfWeek = currentDate.getDay() === 0 ? 6 : currentDate.getDay() - 1;
   const daySlots = availabilitySlots.filter(slot => slot.day_of_week === dayOfWeek && slot.is_active);
 
   // Calculate visible hour range based on availability slots
   const { startHour, endHour } = useMemo(() => {
     if (daySlots.length === 0) {
-      // No availability slots - show full day
       return { startHour: 0, endHour: 23 };
     }
 
-    // Find earliest start and latest end from availability slots
     const times = daySlots.flatMap(slot => [
       parseInt(slot.start_time.split(':')[0]),
       parseInt(slot.end_time.split(':')[0])
     ]);
 
-    const earliest = Math.max(0, Math.min(...times) - 1); // Add 1 hour buffer before
-    const latest = Math.min(23, Math.max(...times) + 1); // Add 1 hour buffer after
+    const earliest = Math.max(0, Math.min(...times) - 1);
+    const latest = Math.min(23, Math.max(...times) + 1);
 
     return { startHour: earliest, endHour: latest };
   }, [daySlots]);
@@ -59,7 +56,7 @@ export const TimeGrid = ({
   const handleClick = (e: React.MouseEvent<HTMLDivElement>, hour: number) => {
     const rect = e.currentTarget.getBoundingClientRect();
     const relativeY = e.clientY - rect.top;
-    const minutes = Math.floor((relativeY / 60) * 60);
+    const minutes = Math.floor((relativeY / 80) * 60);
     const snappedMinutes = Math.round(minutes / 15) * 15;
     
     const clickedTime = setMinutes(setHours(new Date(), hour), snappedMinutes);
@@ -69,22 +66,37 @@ export const TimeGrid = ({
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>, hour: number) => {
     const rect = e.currentTarget.getBoundingClientRect();
     const relativeY = e.clientY - rect.top;
-    const quarter = Math.floor((relativeY / 60) * 4); // 0-3 for 15min intervals
+    const quarter = Math.floor((relativeY / 80) * 4);
     setHoveredSlot({ hour, quarter: Math.min(quarter, 3) });
   };
 
+  const isSnapping = snapIndicatorY !== null && snapTime !== null;
+
   return (
     <div className="relative" onMouseLeave={() => setHoveredSlot(null)}>
+      {/* Global snap indicator */}
+      {isSnapping && snapTime && (
+        <div
+          className="absolute left-0 right-0 z-50 pointer-events-none transition-all duration-50"
+          style={{ top: `${snapIndicatorY}px` }}
+        >
+          <div className="h-1 bg-primary shadow-lg animate-pulse" />
+          <div className="absolute left-2 -top-3 bg-primary text-primary-foreground px-3 py-1 rounded-full text-base font-semibold shadow-lg flex items-center gap-1.5">
+            <Clock className="h-4 w-4" />
+            {format(snapTime, 'HH:mm')}
+          </div>
+        </div>
+      )}
+
       {hours.map((hour) => {
         const isHourAvailable = isAvailableAt(hour, 0);
-        const isDragTarget = isDragging && dragSnapHour === hour;
         
         return (
           <div
             key={hour}
             className={`relative h-[80px] border-b transition-all duration-50 cursor-pointer group ${
               isHourAvailable ? 'bg-emerald-500/10' : 'hover:bg-accent/30'
-            } ${isDragging ? 'border-border' : 'border-border'}`}
+            }`}
             onClick={(e) => handleClick(e, hour)}
             onMouseMove={(e) => handleMouseMove(e, hour)}
           >
@@ -93,54 +105,29 @@ export const TimeGrid = ({
               {hour.toString().padStart(2, '0')}:00
             </div>
             
-            {/* 15-minute gridlines with enhanced visibility during drag */}
+            {/* 15-minute gridlines */}
             {[0, 1, 2, 3].map((quarter) => {
-              const isSnapTarget = isDragTarget && dragSnapQuarter === quarter;
-              const isHovered = hoveredSlot?.hour === hour && hoveredSlot?.quarter === quarter;
+              const isHovered = hoveredSlot?.hour === hour && hoveredSlot?.quarter === quarter && !isSnapping;
               
               return (
                 <div
                   key={quarter}
-                  className={`absolute left-0 right-0 border-t transition-all duration-50 ${
-                    quarter === 0 ? 'top-0 border-border' : ''
-                  }${quarter === 1 ? 'top-[20px]' : ''}${
-                    quarter === 2 ? 'top-[40px]' : ''}${
-                    quarter === 3 ? 'top-[60px]' : ''}${
-                    isDragging && quarter > 0 ? ' border-dashed border-primary/40' : quarter > 0 ? ' border-dashed border-border/30' : ''
-                  }${isSnapTarget ? ' bg-primary/30' : isHovered ? ' bg-primary/10' : ''}`}
+                  className={`absolute left-0 right-0 transition-all duration-50 ${
+                    quarter === 0 ? 'top-0 border-t border-border' : ''
+                  }${isHovered ? ' bg-primary/10' : ''}${
+                    quarter > 0 ? ' border-t border-dashed border-border/30' : ''
+                  }${isSnapping && quarter > 0 ? ' border-primary/40' : ''}`}
                   style={{
-                    height: quarter === 0 ? '0' : '20px',
-                    top: quarter === 0 ? '0' : `${quarter * 20}px`,
-                    borderWidth: isDragging && quarter > 0 ? '1.5px' : '1px',
+                    height: '20px',
+                    top: `${quarter * 20}px`,
+                    borderWidth: isSnapping && quarter > 0 ? '1.5px' : '1px',
                   }}
                 />
               );
             })}
             
-            {/* Enhanced target box for drag snap - super visible */}
-            {isDragTarget && dragSnapQuarter !== undefined && (
-              <>
-                {/* Vertical guideline */}
-                <div
-                  className="absolute left-0 w-1 bg-primary/40 top-0 bottom-0 pointer-events-none z-10"
-                />
-                {/* Target box */}
-                <div
-                  className="absolute left-0 right-0 h-[24px] bg-primary/30 border-[3px] border-primary rounded pointer-events-none z-20 transition-all duration-100 animate-pulse"
-                  style={{
-                    top: `${dragSnapQuarter * 20 - 2}px`,
-                    boxShadow: '0 0 20px hsl(var(--primary) / 0.6)',
-                  }}
-                >
-                  <div className="absolute left-2 -top-1 text-sm font-bold text-primary-foreground bg-primary px-3 py-1 rounded-lg shadow-xl">
-                    {hour.toString().padStart(2, '0')}:{(dragSnapQuarter * 15).toString().padStart(2, '0')}
-                  </div>
-                </div>
-              </>
-            )}
-            
-            {/* Hover time indicator (only when not dragging) */}
-            {!isDragging && hoveredSlot?.hour === hour && (
+            {/* Hover time indicator (only when not snapping) */}
+            {!isSnapping && hoveredSlot?.hour === hour && (
               <div 
                 className="absolute left-2 text-xs font-medium text-primary pointer-events-none bg-background/90 px-2 py-0.5 rounded shadow-sm"
                 style={{ top: `${hoveredSlot.quarter * 20}px` }}

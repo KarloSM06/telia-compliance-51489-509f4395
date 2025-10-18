@@ -6,10 +6,10 @@ import { ChevronLeft, ChevronRight, Calendar as CalendarIcon, Save, Undo } from 
 import { TimeGrid } from './TimeGrid';
 import { EventBlock } from './EventBlock';
 import { CurrentTimeIndicator } from './CurrentTimeIndicator';
-import { EventDragPreview } from './EventDragPreview';
+import { InteractionOverlay } from './InteractionOverlay';
 import { EventModal } from './EventModal';
-import { layoutOverlappingEvents, getEventPosition } from '@/lib/calendarUtils';
-import { useOptimizedEventInteraction } from '@/hooks/useOptimizedEventInteraction';
+import { layoutOverlappingEvents } from '@/lib/calendarUtils';
+import { useUnifiedEventInteraction } from '@/hooks/useUnifiedEventInteraction';
 import { usePendingEventChanges } from '@/hooks/usePendingEventChanges';
 import { useMemo, useEffect } from 'react';
 import { toast } from 'sonner';
@@ -54,16 +54,6 @@ export const DayView = ({
     undo,
     canUndo
   } = usePendingEventChanges();
-  const {
-    dragState,
-    containerRef,
-    handleDragStart,
-    handleDragOver,
-    handleDrop,
-    handleResizeStart,
-    clearDragState
-  } = useOptimizedEventInteraction(addPendingChange);
-
   // Calculate visible hour range based on availability slots
   const {
     startHour,
@@ -87,8 +77,28 @@ export const DayView = ({
   }, [slots, date]);
 
   // Apply pending changes to events for display with memoization
-  const eventsWithPendingChanges = useMemo(() => events.map(getEventWithPendingChanges), [events, getEventWithPendingChanges]);
-  const layoutedEvents = useMemo(() => layoutOverlappingEvents(eventsWithPendingChanges), [eventsWithPendingChanges]);
+  const eventsWithPendingChanges = useMemo(() => {
+    return events.map(getEventWithPendingChanges);
+  }, [events, getEventWithPendingChanges]);
+
+  const layoutedEvents = useMemo(() => {
+    return layoutOverlappingEvents(eventsWithPendingChanges);
+  }, [eventsWithPendingChanges]);
+
+  const {
+    interactionState,
+    containerRef,
+    currentPointer,
+    handlePointerDown,
+    handlePointerMove,
+    handlePointerUp,
+  } = useUnifiedEventInteraction({
+    onEventUpdate: async (eventId, updates) => {
+      addPendingChange(eventId, updates);
+    },
+    nearbyEvents: eventsWithPendingChanges,
+    viewStartHour: startHour,
+  });
 
   // Keyboard shortcuts
   useEffect(() => {
@@ -120,16 +130,6 @@ export const DayView = ({
     toast.success('Ångrade ändring');
   };
 
-  // Calculate snap indicator position
-  const snapIndicatorY = useMemo(() => {
-    if (dragState.previewPosition?.start && dragState.previewPosition?.end) {
-      const {
-        top
-      } = getEventPosition(dragState.previewPosition.start.toISOString(), dragState.previewPosition.end.toISOString(), startHour);
-      return top;
-    }
-    return undefined;
-  }, [dragState.previewPosition, startHour]);
   return <div className="flex flex-col h-full">
       {/* Header */}
       <div className="flex items-center justify-between p-4 border-b">
@@ -176,14 +176,18 @@ export const DayView = ({
       {/* Day view grid */}
       <div className="flex-1 overflow-auto">
         <div className="relative pl-16 pr-4">
-          <div ref={containerRef} className="relative" onDragOver={handleDragOver} onDrop={handleDrop}>
+          <div 
+            ref={containerRef} 
+            className="relative" 
+            onPointerMove={handlePointerMove}
+            onPointerUp={handlePointerUp}
+          >
             <TimeGrid 
               onTimeSlotClick={handleTimeSlotClick} 
               availabilitySlots={slots} 
               currentDate={date}
-              isDragging={!!dragState.operation}
-              dragSnapHour={dragState.previewPosition ? dragState.previewPosition.start.getHours() : undefined}
-              dragSnapQuarter={dragState.previewPosition ? Math.floor(dragState.previewPosition.start.getMinutes() / 15) : undefined}
+              snapIndicatorY={interactionState.snapIndicatorY}
+              snapTime={interactionState.previewTimes?.start || null}
             />
             
             {/* Current time indicator */}
@@ -198,21 +202,20 @@ export const DayView = ({
                   column={event.column} 
                   totalColumns={event.totalColumns} 
                   onEventClick={onEventClick} 
-                  onDragStart={handleDragStart} 
-                  onResizeStart={handleResizeStart} 
-                  isResizing={dragState.activeEventId === event.id && dragState.operation !== 'drag'} 
+                  onPointerDown={handlePointerDown}
+                  isInteracting={interactionState.eventId === event.id && !!interactionState.type}
                   viewStartHour={startHour}
                   hasPendingChanges={pendingChanges.has(event.id)}
                 />)}
                 
-                {/* Ghost preview during drag */}
-                {dragState.operation === 'drag' && dragState.previewPosition && dragState.activeEventId && <EventDragPreview 
-                  start={dragState.previewPosition.start} 
-                  end={dragState.previewPosition.end} 
-                  title={events.find(e => e.id === dragState.activeEventId)?.title || ''} 
-                  snapIndicatorY={snapIndicatorY}
-                  mouseY={dragState.currentMouseY}
-                />}
+                {/* Interaction overlay */}
+                {interactionState.type && (
+                  <InteractionOverlay 
+                    interactionState={interactionState}
+                    viewStartHour={startHour}
+                    mouseY={currentPointer?.y}
+                  />
+                )}
               </div>
             </div>
           </div>

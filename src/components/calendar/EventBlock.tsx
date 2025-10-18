@@ -1,42 +1,43 @@
+import React, { useMemo } from 'react';
 import { CalendarEvent } from '@/hooks/useCalendarEvents';
-import { getEventPosition, getEventTypeColor } from '@/lib/calendarUtils';
-import { format, parseISO, differenceInMinutes } from 'date-fns';
-import { memo } from 'react';
-import { User, Mail, Phone } from 'lucide-react';
+import { getEventPosition, formatEventDuration } from '@/lib/calendarUtils';
+import { format, parseISO } from 'date-fns';
+import { MapPin, User, FileText, GripVertical, Mail, Phone } from 'lucide-react';
+import { InteractionType } from '@/hooks/useUnifiedEventInteraction';
 
 interface EventBlockProps {
   event: CalendarEvent;
   column: number;
   totalColumns: number;
   onEventClick: (event: CalendarEvent) => void;
-  onDragStart: (event: CalendarEvent) => void;
-  onResizeStart: (e: React.MouseEvent | React.TouchEvent, event: CalendarEvent, handle: 'top' | 'bottom') => void;
-  isResizing?: boolean;
+  onPointerDown?: (e: React.PointerEvent, event: CalendarEvent, type: InteractionType) => void;
   viewStartHour?: number;
   hasPendingChanges?: boolean;
+  isInteracting?: boolean;
 }
 
-const EventBlockComponent = ({
+const EventBlockComponent: React.FC<EventBlockProps> = ({
   event,
   column,
   totalColumns,
   onEventClick,
-  onDragStart,
-  onResizeStart,
-  isResizing = false,
+  onPointerDown,
   viewStartHour = 0,
   hasPendingChanges = false,
-}: EventBlockProps) => {
+  isInteracting = false,
+}) => {
   const startTime = parseISO(event.start_time);
   const endTime = parseISO(event.end_time);
   
-  const { top, height } = getEventPosition(startTime.toISOString(), endTime.toISOString(), viewStartHour);
-  const colorClass = getEventTypeColor(event.event_type);
+  const { top, height } = useMemo(
+    () => getEventPosition(event.start_time, event.end_time, viewStartHour),
+    [event.start_time, event.end_time, viewStartHour]
+  );
 
   const width = totalColumns > 1 ? `${100 / totalColumns}%` : '100%';
   const left = totalColumns > 1 ? `${(column * 100) / totalColumns}%` : '0%';
 
-  const duration = differenceInMinutes(endTime, startTime);
+  const duration = formatEventDuration(startTime, endTime);
 
   // Enhanced color schemes for different event types
   const getEventColors = (type: string) => {
@@ -55,77 +56,59 @@ const EventBlockComponent = ({
 
   const enhancedColorClass = getEventColors(event.event_type);
 
-  const handleDragStart = (e: React.DragEvent) => {
-    e.dataTransfer.effectAllowed = 'move';
-    e.dataTransfer.setData('eventId', event.id);
-    onDragStart(event);
-  };
-
-  const handleClick = () => {
-    if (!isResizing) {
+  const handleTitleClick = (e: React.MouseEvent) => {
+    if (!isInteracting) {
+      e.stopPropagation();
       onEventClick(event);
     }
   };
 
-  const handleTouchStart = (e: React.TouchEvent, handle: 'top' | 'bottom') => {
-    e.stopPropagation();
-    onResizeStart(e, event, handle);
-  };
-
-  const handleMouseDown = (e: React.MouseEvent, handle: 'top' | 'bottom') => {
-    e.stopPropagation();
-    onResizeStart(e, event, handle);
-  };
-
   return (
     <div
-      draggable={!isResizing}
-      onDragStart={handleDragStart}
-      className={`absolute rounded-lg border-l-4 p-2 shadow-sm cursor-move transition-all duration-50 group ${enhancedColorClass} ${
-        isResizing ? 'ring-2 ring-primary scale-[1.02] shadow-xl opacity-90' : 'hover:shadow-lg hover:scale-[1.01]'
-      } ${hasPendingChanges ? 'ring-2 ring-orange-500/50 animate-[pulse_1s_ease-in-out_1]' : ''}`}
+      className={`absolute rounded-lg border-l-4 p-2 shadow-sm select-none transition-all duration-50 group ${enhancedColorClass} ${
+        isInteracting ? 'opacity-50 scale-[1.02] shadow-xl' : 'hover:shadow-lg hover:scale-[1.01]'
+      } ${hasPendingChanges ? 'ring-2 ring-orange-500/50 animate-pulse' : ''}`}
       style={{
         top: `${top}px`,
         height: `${Math.max(height, 30)}px`,
         width,
         left,
-        zIndex: isResizing ? 30 : 10,
+        cursor: isInteracting ? 'grabbing' : 'grab',
         transform: 'translate3d(0, 0, 0)',
-        willChange: isResizing ? 'transform' : 'auto',
+        willChange: 'transform',
+        zIndex: isInteracting ? 30 : 10,
       }}
-      title={hasPendingChanges ? 'Ej sparad' : undefined}
+      onPointerDown={(e) => onPointerDown?.(e, event, 'drag')}
+      title={hasPendingChanges ? 'Osparade ändringar' : undefined}
     >
       {/* Pending changes indicator */}
       {hasPendingChanges && (
         <div className="absolute -top-1 -right-1 w-3 h-3 bg-orange-500 rounded-full border-2 border-background z-10" />
       )}
 
-      {/* Enhanced top resize handle - always visible and larger */}
+      {/* Top resize handle - 48px for easy interaction */}
       <div
-        className="absolute top-0 left-0 right-0 h-2 cursor-ns-resize bg-transparent hover:bg-primary/40 rounded-t-lg transition-all duration-100 flex flex-col items-center justify-center touch-manipulation"
-        onMouseDown={(e) => handleMouseDown(e, 'top')}
-        onTouchStart={(e) => handleTouchStart(e, 'top')}
-        style={{ minHeight: '32px', marginTop: '-8px' }}
+        className="absolute top-0 left-0 right-0 cursor-ns-resize hover:bg-primary/30 active:bg-primary/50 transition-all flex items-center justify-center group/handle touch-none"
+        onPointerDown={(e) => {
+          e.stopPropagation();
+          onPointerDown?.(e, event, 'resize-top');
+        }}
+        style={{ height: '48px', minHeight: '48px', marginTop: '-24px' }}
       >
-        <div className="absolute top-1 left-1/2 -translate-x-1/2 flex flex-col items-center gap-0.5 opacity-40 group-hover:opacity-100 transition-opacity">
-          <div className="text-xs leading-none">═══</div>
+        <div className="absolute inset-0 flex items-center justify-center opacity-70 group-hover/handle:opacity-100 transition-opacity">
+          <GripVertical className="h-4 w-4 text-foreground/60" />
         </div>
-        <div className={`absolute -top-7 left-1/2 -translate-x-1/2 text-xs font-bold text-primary-foreground bg-primary px-2 py-1 rounded shadow-lg pointer-events-none whitespace-nowrap transition-opacity ${isResizing ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}>
+        <div className="absolute top-1 left-2 bg-primary/90 text-primary-foreground px-2 py-0.5 rounded text-xs font-semibold opacity-0 group-hover/handle:opacity-100 transition-opacity">
           {format(startTime, 'HH:mm')}
         </div>
       </div>
 
       {/* Event content */}
-      <div className="mt-2 space-y-1 overflow-hidden">
+      <div className="mt-2 space-y-1 overflow-hidden pointer-events-none">
         {/* Title - always visible and clickable */}
         <div 
-          className="text-sm font-semibold truncate leading-tight cursor-pointer hover:underline"
-          onClick={(e) => {
-            e.stopPropagation();
-            if (!isResizing) {
-              onEventClick(event);
-            }
-          }}
+          className="text-sm font-semibold truncate leading-tight cursor-pointer hover:underline pointer-events-auto"
+          onClick={handleTitleClick}
         >
           {event.title}
         </div>
@@ -133,14 +116,15 @@ const EventBlockComponent = ({
         {/* Time - visible for events > 30px */}
         {height > 30 && (
           <div className="text-xs text-muted-foreground font-medium">
-            {format(startTime, 'HH:mm')} - {format(endTime, 'HH:mm')}
+            {format(startTime, 'HH:mm')} - {format(endTime, 'HH:mm')} ({duration})
           </div>
         )}
         
         {/* Address - visible for events > 45px */}
         {event.address && height > 45 && (
-          <div className="text-xs opacity-80 truncate">
-            📍 {event.address}
+          <div className="text-xs opacity-80 truncate flex items-center gap-1">
+            <MapPin className="h-3 w-3 flex-shrink-0" />
+            <span className="truncate">{event.address}</span>
           </div>
         )}
         
@@ -172,23 +156,26 @@ const EventBlockComponent = ({
         
         {/* Description - visible for events > 130px */}
         {event.description && height > 130 && (
-          <div className="text-xs opacity-70 line-clamp-2 pt-1 border-t border-current/10">
-            {event.description}
+          <div className="flex items-start gap-1 text-xs opacity-70 pt-1 border-t border-current/10">
+            <FileText className="h-3 w-3 flex-shrink-0 mt-0.5" />
+            <span className="line-clamp-2">{event.description}</span>
           </div>
         )}
       </div>
 
-      {/* Enhanced bottom resize handle - always visible and larger */}
+      {/* Bottom resize handle - 48px for easy interaction */}
       <div
-        className="absolute bottom-0 left-0 right-0 h-2 cursor-ns-resize bg-transparent hover:bg-primary/40 rounded-b-lg transition-all duration-100 flex flex-col items-center justify-center touch-manipulation"
-        onMouseDown={(e) => handleMouseDown(e, 'bottom')}
-        onTouchStart={(e) => handleTouchStart(e, 'bottom')}
-        style={{ minHeight: '32px', marginBottom: '-8px' }}
+        className="absolute bottom-0 left-0 right-0 cursor-ns-resize hover:bg-primary/30 active:bg-primary/50 transition-all flex items-center justify-center group/handle touch-none"
+        onPointerDown={(e) => {
+          e.stopPropagation();
+          onPointerDown?.(e, event, 'resize-bottom');
+        }}
+        style={{ height: '48px', minHeight: '48px', marginBottom: '-24px' }}
       >
-        <div className="absolute bottom-1 left-1/2 -translate-x-1/2 flex flex-col items-center gap-0.5 opacity-40 group-hover:opacity-100 transition-opacity">
-          <div className="text-xs leading-none">═══</div>
+        <div className="absolute inset-0 flex items-center justify-center opacity-70 group-hover/handle:opacity-100 transition-opacity">
+          <GripVertical className="h-4 w-4 text-foreground/60" />
         </div>
-        <div className={`absolute -bottom-7 left-1/2 -translate-x-1/2 text-xs font-bold text-primary-foreground bg-primary px-2 py-1 rounded shadow-lg pointer-events-none whitespace-nowrap transition-opacity ${isResizing ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}>
+        <div className="absolute bottom-1 left-2 bg-primary/90 text-primary-foreground px-2 py-0.5 rounded text-xs font-semibold opacity-0 group-hover/handle:opacity-100 transition-opacity">
           {format(endTime, 'HH:mm')}
         </div>
       </div>
@@ -196,17 +183,18 @@ const EventBlockComponent = ({
   );
 };
 
-// Memoize component for better performance
-export const EventBlock = memo(EventBlockComponent, (prevProps, nextProps) => {
-  return (
-    prevProps.event.id === nextProps.event.id &&
-    prevProps.event.start_time === nextProps.event.start_time &&
-    prevProps.event.end_time === nextProps.event.end_time &&
-    prevProps.event.title === nextProps.event.title &&
-    prevProps.column === nextProps.column &&
-    prevProps.totalColumns === nextProps.totalColumns &&
-    prevProps.isResizing === nextProps.isResizing &&
-    prevProps.viewStartHour === nextProps.viewStartHour &&
-    prevProps.hasPendingChanges === nextProps.hasPendingChanges
-  );
-});
+export const EventBlock = React.memo(
+  EventBlockComponent,
+  (prevProps, nextProps) => {
+    return (
+      prevProps.event.id === nextProps.event.id &&
+      prevProps.event.start_time === nextProps.event.start_time &&
+      prevProps.event.end_time === nextProps.event.end_time &&
+      prevProps.event.title === nextProps.event.title &&
+      prevProps.column === nextProps.column &&
+      prevProps.totalColumns === nextProps.totalColumns &&
+      prevProps.hasPendingChanges === nextProps.hasPendingChanges &&
+      prevProps.isInteracting === nextProps.isInteracting
+    );
+  }
+);
