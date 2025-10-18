@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { LogOut, Menu, X, Settings, LayoutDashboard } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { useNavigate } from "react-router-dom";
-import hiems_logo from "@/assets/hiems_logo.png";
+import hiems_logo from "@/assets/hiems_snowflake_logo.png";
 import { useState, useEffect } from "react";
 import {
   DropdownMenu,

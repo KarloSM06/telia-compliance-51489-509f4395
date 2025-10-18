@@ -6,9 +6,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Snowflake, ArrowLeft } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import hiems_logo from "@/assets/hiems_snowflake_logo.png";
 
 const Auth = () => {
   const [email, setEmail] = useState("");
@@ -112,10 +113,12 @@ const Auth = () => {
     <div className="min-h-screen bg-background flex items-center justify-center p-4">
       <div className="w-full max-w-md">
         <div className="mb-8 text-center">
-          <div className="flex items-center justify-center space-x-2 mb-4">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-primary">
-              <Snowflake className="h-6 w-6 text-white" />
-            </div>
+          <div className="flex items-center justify-center space-x-3 mb-4">
+            <img 
+              src={hiems_logo} 
+              alt="Hiems logo" 
+              className="h-12 w-12" 
+            />
             <span className="text-2xl font-bold text-foreground">Hiems</span>
           </div>
           <Button
