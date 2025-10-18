@@ -19,6 +19,7 @@ import { EnterpriseContactModal } from "@/components/EnterpriseContactModal";
 import { availablePackages } from "@/components/dashboard/PackagesData";
 import { AnimatedSection } from "@/components/AnimatedSection";
 import { QuickNavigation } from "@/components/QuickNavigation";
+import heroBackground from "@/assets/hero-background.jpg";
 interface Message {
   role: 'user' | 'assistant';
   content: string;
@@ -452,22 +453,30 @@ export const ProductSelection = () => {
     }
   };
   return <div className="relative overflow-hidden bg-gradient-hero">
-      {/* Animated background elements */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-20 left-10 w-72 h-72 bg-accent/10 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute bottom-20 right-10 w-96 h-96 bg-accent/5 rounded-full blur-3xl animate-pulse" style={{
-        animationDelay: '1s'
-      }}></div>
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-accent/5 rounded-full blur-3xl animate-pulse" style={{
-        animationDelay: '2s'
-      }}></div>
-      </div>
       
       {/* Quick Navigation */}
       <QuickNavigation />
       
       {/* Hero Section */}
       <section className="relative py-24 sm:py-32 lg:py-40">
+        {/* Hero Background Image with Overlay */}
+        <div className="absolute inset-0 overflow-hidden">
+          <img 
+            src={heroBackground} 
+            alt="Hiems tekniker installerar värmesystem" 
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-background/95 via-background/90 to-background"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-background/80 to-transparent"></div>
+        </div>
+        
+        {/* Animated background elements on top of image */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute top-20 left-10 w-72 h-72 bg-accent/5 rounded-full blur-3xl animate-pulse"></div>
+          <div className="absolute bottom-20 right-10 w-96 h-96 bg-accent/5 rounded-full blur-3xl animate-pulse" style={{
+          animationDelay: '1s'
+        }}></div>
+        </div>
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <AnimatedSection className="mx-auto max-w-4xl text-center">
             <div className="inline-flex items-center gap-2 rounded-full bg-accent/10 px-4 py-2 mb-8 backdrop-blur-sm border border-accent/20 hover:bg-accent/20 transition-all duration-300">
