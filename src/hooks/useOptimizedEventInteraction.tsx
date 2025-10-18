@@ -173,7 +173,10 @@ export const useOptimizedEventInteraction = (
 
       if (dragState.operation === 'resize-top') {
         const newStartTime = addMinutes(dragState.originalStart!, snappedDelta);
-        if (newStartTime < dragState.originalEnd!) {
+        const minDuration = 15; // Minimum 15 minutes
+        const newDuration = differenceInMinutes(dragState.originalEnd!, newStartTime);
+        
+        if (newDuration >= minDuration) {
           setDragState(prev => ({
             ...prev,
             previewPosition: { start: newStartTime, end: prev.originalEnd! },
@@ -181,7 +184,10 @@ export const useOptimizedEventInteraction = (
         }
       } else if (dragState.operation === 'resize-bottom') {
         const newEndTime = addMinutes(dragState.originalEnd!, snappedDelta);
-        if (newEndTime > dragState.originalStart!) {
+        const minDuration = 15; // Minimum 15 minutes
+        const newDuration = differenceInMinutes(newEndTime, dragState.originalStart!);
+        
+        if (newDuration >= minDuration) {
           setDragState(prev => ({
             ...prev,
             previewPosition: { start: prev.originalStart!, end: newEndTime },

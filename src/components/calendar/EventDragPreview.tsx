@@ -25,16 +25,17 @@ export const EventDragPreview = ({
 
   return (
     <>
-      {/* Enhanced snap indicator line - much more prominent */}
+      {/* Enhanced snap indicator line - super prominent */}
       {snapIndicatorY !== undefined && (
         <div
-          className="absolute left-0 right-0 h-[3px] bg-primary z-40 pointer-events-none transition-all duration-50"
+          className="absolute left-0 right-0 h-1 bg-primary/90 z-40 pointer-events-none transition-all duration-100 animate-pulse"
           style={{ 
             top: `${snapIndicatorY}px`,
-            boxShadow: '0 0 10px hsl(var(--primary) / 0.5)',
+            boxShadow: '0 0 20px hsl(var(--primary) / 0.8)',
           }}
         >
-          <div className="absolute right-2 -top-3 text-sm font-bold text-primary bg-background px-3 py-1 rounded-md shadow-lg border-2 border-primary">
+          <div className="absolute right-2 -top-4 text-base font-bold text-primary-foreground bg-primary px-4 py-1.5 rounded-lg shadow-xl border-2 border-primary flex items-center gap-2">
+            <Clock className="h-4 w-4" />
             {format(start, 'HH:mm')}
           </div>
         </div>

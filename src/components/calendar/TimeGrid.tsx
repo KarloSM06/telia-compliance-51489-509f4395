@@ -117,19 +117,26 @@ export const TimeGrid = ({
               );
             })}
             
-            {/* Enhanced target box for drag snap */}
+            {/* Enhanced target box for drag snap - super visible */}
             {isDragTarget && dragSnapQuarter !== undefined && (
-              <div
-                className="absolute left-0 right-0 h-[20px] bg-primary/20 border-2 border-primary rounded pointer-events-none z-20 transition-all duration-50"
-                style={{
-                  top: `${dragSnapQuarter * 20}px`,
-                  boxShadow: '0 0 15px hsl(var(--primary) / 0.4)',
-                }}
-              >
-                <div className="absolute left-2 -top-1 text-sm font-bold text-primary bg-background px-2 py-0.5 rounded shadow-md">
-                  {hour.toString().padStart(2, '0')}:{(dragSnapQuarter * 15).toString().padStart(2, '0')}
+              <>
+                {/* Vertical guideline */}
+                <div
+                  className="absolute left-0 w-1 bg-primary/40 top-0 bottom-0 pointer-events-none z-10"
+                />
+                {/* Target box */}
+                <div
+                  className="absolute left-0 right-0 h-[24px] bg-primary/30 border-[3px] border-primary rounded pointer-events-none z-20 transition-all duration-100 animate-pulse"
+                  style={{
+                    top: `${dragSnapQuarter * 20 - 2}px`,
+                    boxShadow: '0 0 20px hsl(var(--primary) / 0.6)',
+                  }}
+                >
+                  <div className="absolute left-2 -top-1 text-sm font-bold text-primary-foreground bg-primary px-3 py-1 rounded-lg shadow-xl">
+                    {hour.toString().padStart(2, '0')}:{(dragSnapQuarter * 15).toString().padStart(2, '0')}
+                  </div>
                 </div>
-              </div>
+              </>
             )}
             
             {/* Hover time indicator (only when not dragging) */}
