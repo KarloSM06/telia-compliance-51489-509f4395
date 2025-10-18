@@ -3,12 +3,13 @@ import { format, addDays, subDays, startOfWeek, endOfWeek, eachDayOfInterval, is
 import { sv } from 'date-fns/locale';
 import { Button } from '@/components/ui/button';
 import { ChevronLeft, ChevronRight, Calendar as CalendarIcon, Save, Undo } from 'lucide-react';
+import { TimeGrid } from './TimeGrid';
 import { EventBlock } from './EventBlock';
 import { CurrentTimeIndicator } from './CurrentTimeIndicator';
-import { InteractionOverlay } from './InteractionOverlay';
+import { EventDragPreview } from './EventDragPreview';
 import { EventModal } from './EventModal';
-import { layoutOverlappingEvents } from '@/lib/calendarUtils';
-import { useUnifiedEventInteraction } from '@/hooks/useUnifiedEventInteraction';
+import { layoutOverlappingEvents, getEventPosition } from '@/lib/calendarUtils';
+import { useOptimizedEventInteraction } from '@/hooks/useOptimizedEventInteraction';
 import { usePendingEventChanges } from '@/hooks/usePendingEventChanges';
 import { useMemo, useEffect } from 'react';
 import { toast } from 'sonner';
@@ -53,6 +54,16 @@ export const WeekView = ({
     undo,
     canUndo
   } = usePendingEventChanges();
+  const {
+    dragState,
+    containerRef,
+    handleDragStart,
+    handleDragOver,
+    handleDrop,
+    handleResizeStart,
+    clearDragState
+  } = useOptimizedEventInteraction(addPendingChange);
+
   // Get week boundaries
   const weekStart = startOfWeek(date, {
     locale: sv,
@@ -100,21 +111,6 @@ export const WeekView = ({
   // Apply pending changes to events for display with memoization
   const eventsWithPendingChanges = useMemo(() => events.map(getEventWithPendingChanges), [events, getEventWithPendingChanges]);
 
-  const {
-    interactionState,
-    containerRef,
-    currentPointer,
-    handlePointerDown,
-    handlePointerMove,
-    handlePointerUp,
-  } = useUnifiedEventInteraction({
-    onEventUpdate: async (eventId, updates) => {
-      addPendingChange(eventId, updates);
-    },
-    nearbyEvents: eventsWithPendingChanges,
-    viewStartHour: startHour,
-  });
-
   // Keyboard shortcuts
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -145,6 +141,16 @@ export const WeekView = ({
     toast.success('Ångrade ändring');
   };
 
+  // Calculate snap indicator position
+  const snapIndicatorY = useMemo(() => {
+    if (dragState.previewPosition?.start && dragState.previewPosition?.end) {
+      const {
+        top
+      } = getEventPosition(dragState.previewPosition.start.toISOString(), dragState.previewPosition.end.toISOString());
+      return top;
+    }
+    return undefined;
+  }, [dragState.previewPosition]);
 
   // Get events for a specific day with layout
   const getEventsForDay = (day: Date) => {
@@ -237,14 +243,7 @@ export const WeekView = ({
 
             {/* Days grid */}
             <div className="flex flex-1" ref={containerRef}>
-              {daysInWeek.map((day, dayIndex) => <div 
-                key={day.toISOString()} 
-                className="flex-1 relative border-r" 
-                data-day-index={dayIndex} 
-                data-day-date={day.toISOString()}
-                onPointerMove={handlePointerMove}
-                onPointerUp={handlePointerUp}
-              >
+              {daysInWeek.map((day, dayIndex) => <div key={day.toISOString()} className="flex-1 relative border-r" data-day-index={dayIndex} data-day-date={day.toISOString()} onDragOver={handleDragOver} onDrop={handleDrop}>
                   {/* Hourly grid lines */}
                   {visibleHours.map(hour => <div key={hour} className={`relative h-[80px] border-b border-border transition-all cursor-pointer group ${isAvailableAt(dayIndex, hour) ? 'bg-emerald-500/10' : 'hover:bg-accent/30'}`} onClick={e => {
                 const rect = e.currentTarget.getBoundingClientRect();
@@ -266,26 +265,10 @@ export const WeekView = ({
                   {/* Events for this day */}
                   <div className="absolute top-0 left-0 right-0 bottom-0 pointer-events-none">
                     <div className="relative h-full pointer-events-auto">
-                      {getEventsForDay(day).map(event => <EventBlock 
-                        key={event.id} 
-                        event={event} 
-                        column={event.column} 
-                        totalColumns={event.totalColumns} 
-                        onEventClick={onEventClick} 
-                        onPointerDown={handlePointerDown}
-                        isInteracting={interactionState.eventId === event.id && !!interactionState.type}
-                        viewStartHour={startHour}
-                        hasPendingChanges={pendingChanges.has(event.id)}
-                      />)}
+                      {getEventsForDay(day).map(event => <EventBlock key={event.id} event={event} column={event.column} totalColumns={event.totalColumns} onEventClick={onEventClick} onDragStart={handleDragStart} onResizeStart={handleResizeStart} isResizing={dragState.activeEventId === event.id && dragState.operation !== 'drag'} viewStartHour={startHour} />)}
                       
-                      {/* Interaction overlay */}
-                      {interactionState.type && interactionState.previewTimes && isSameDay(interactionState.previewTimes.start, day) && (
-                        <InteractionOverlay 
-                          interactionState={interactionState}
-                          viewStartHour={startHour}
-                          mouseY={currentPointer?.y}
-                        />
-                      )}
+                      {/* Ghost preview during drag */}
+                      {dragState.operation === 'drag' && dragState.previewPosition && dragState.activeEventId && isSameDay(dragState.previewPosition.start, day) && <EventDragPreview start={dragState.previewPosition.start} end={dragState.previewPosition.end} title={events.find(e => e.id === dragState.activeEventId)?.title || ''} snapIndicatorY={snapIndicatorY} />}
                     </div>
                   </div>
                 </div>)}

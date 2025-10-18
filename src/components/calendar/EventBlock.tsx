@@ -1,43 +1,40 @@
-import React, { useMemo } from 'react';
 import { CalendarEvent } from '@/hooks/useCalendarEvents';
-import { getEventPosition, formatEventDuration } from '@/lib/calendarUtils';
-import { format, parseISO } from 'date-fns';
-import { MapPin, User, FileText, GripVertical, Mail, Phone } from 'lucide-react';
-import { InteractionType } from '@/hooks/useUnifiedEventInteraction';
+import { getEventPosition, getEventTypeColor } from '@/lib/calendarUtils';
+import { format, parseISO, differenceInMinutes } from 'date-fns';
+import { memo } from 'react';
+import { User, Mail, Phone } from 'lucide-react';
 
 interface EventBlockProps {
   event: CalendarEvent;
   column: number;
   totalColumns: number;
   onEventClick: (event: CalendarEvent) => void;
-  onPointerDown?: (e: React.PointerEvent, event: CalendarEvent, type: InteractionType) => void;
+  onDragStart: (event: CalendarEvent) => void;
+  onResizeStart: (e: React.MouseEvent | React.TouchEvent, event: CalendarEvent, handle: 'top' | 'bottom') => void;
+  isResizing?: boolean;
   viewStartHour?: number;
-  hasPendingChanges?: boolean;
-  isInteracting?: boolean;
 }
 
-const EventBlockComponent: React.FC<EventBlockProps> = ({
+const EventBlockComponent = ({
   event,
   column,
   totalColumns,
   onEventClick,
-  onPointerDown,
+  onDragStart,
+  onResizeStart,
+  isResizing = false,
   viewStartHour = 0,
-  hasPendingChanges = false,
-  isInteracting = false,
-}) => {
+}: EventBlockProps) => {
   const startTime = parseISO(event.start_time);
   const endTime = parseISO(event.end_time);
   
-  const { top, height } = useMemo(
-    () => getEventPosition(event.start_time, event.end_time, viewStartHour),
-    [event.start_time, event.end_time, viewStartHour]
-  );
+  const { top, height } = getEventPosition(startTime.toISOString(), endTime.toISOString(), viewStartHour);
+  const colorClass = getEventTypeColor(event.event_type);
 
   const width = totalColumns > 1 ? `${100 / totalColumns}%` : '100%';
   const left = totalColumns > 1 ? `${(column * 100) / totalColumns}%` : '0%';
 
-  const duration = formatEventDuration(startTime, endTime);
+  const duration = differenceInMinutes(endTime, startTime);
 
   // Enhanced color schemes for different event types
   const getEventColors = (type: string) => {
@@ -56,75 +53,74 @@ const EventBlockComponent: React.FC<EventBlockProps> = ({
 
   const enhancedColorClass = getEventColors(event.event_type);
 
-  const handleTitleClick = (e: React.MouseEvent) => {
-    if (!isInteracting) {
-      e.stopPropagation();
+  const handleDragStart = (e: React.DragEvent) => {
+    e.dataTransfer.effectAllowed = 'move';
+    e.dataTransfer.setData('eventId', event.id);
+    onDragStart(event);
+  };
+
+  const handleClick = () => {
+    if (!isResizing) {
       onEventClick(event);
     }
   };
 
+  const handleTouchStart = (e: React.TouchEvent, handle: 'top' | 'bottom') => {
+    e.stopPropagation();
+    onResizeStart(e, event, handle);
+  };
+
+  const handleMouseDown = (e: React.MouseEvent, handle: 'top' | 'bottom') => {
+    e.stopPropagation();
+    onResizeStart(e, event, handle);
+  };
+
   return (
     <div
-      className={`absolute rounded-lg border-l-4 p-2 shadow-sm select-none transition-all duration-50 group ${enhancedColorClass} ${
-        isInteracting ? 'opacity-50 scale-[1.02] shadow-xl' : 'hover:shadow-lg hover:scale-[1.01]'
-      } ${hasPendingChanges ? 'ring-2 ring-orange-500/50 animate-pulse' : ''}`}
+      draggable={!isResizing}
+      onDragStart={handleDragStart}
+      onClick={handleClick}
+      className={`absolute rounded-lg border-l-4 p-2 shadow-sm cursor-pointer transition-all duration-200 group ${enhancedColorClass} ${
+        isResizing ? 'ring-2 ring-primary scale-[1.02] shadow-lg' : 'hover:shadow-lg hover:scale-[1.01]'
+      }`}
       style={{
         top: `${top}px`,
         height: `${Math.max(height, 30)}px`,
         width,
         left,
-        cursor: isInteracting ? 'grabbing' : 'grab',
+        zIndex: isResizing ? 30 : 10,
         transform: 'translate3d(0, 0, 0)',
-        willChange: 'transform',
-        zIndex: isInteracting ? 30 : 10,
+        willChange: isResizing ? 'transform' : 'auto',
       }}
-      onPointerDown={(e) => onPointerDown?.(e, event, 'drag')}
-      title={hasPendingChanges ? 'Osparade ändringar' : undefined}
     >
-      {/* Pending changes indicator */}
-      {hasPendingChanges && (
-        <div className="absolute -top-1 -right-1 w-3 h-3 bg-orange-500 rounded-full border-2 border-background z-10" />
-      )}
-
-      {/* Top resize handle - 48px for easy interaction */}
+      {/* Top resize handle - larger touch target */}
       <div
-        className="absolute top-0 left-0 right-0 cursor-ns-resize hover:bg-primary/30 active:bg-primary/50 transition-all flex items-center justify-center group/handle touch-none"
-        onPointerDown={(e) => {
-          e.stopPropagation();
-          onPointerDown?.(e, event, 'resize-top');
-        }}
-        style={{ height: '48px', minHeight: '48px', marginTop: '-24px' }}
+        className="absolute top-0 left-0 right-0 h-4 cursor-ns-resize opacity-0 group-hover:opacity-100 hover:bg-primary/20 rounded-t-lg transition-all flex items-center justify-center touch-manipulation"
+        onMouseDown={(e) => handleMouseDown(e, 'top')}
+        onTouchStart={(e) => handleTouchStart(e, 'top')}
+        style={{ minHeight: '16px' }}
       >
-        <div className="absolute inset-0 flex items-center justify-center opacity-70 group-hover/handle:opacity-100 transition-opacity">
-          <GripVertical className="h-4 w-4 text-foreground/60" />
-        </div>
-        <div className="absolute top-1 left-2 bg-primary/90 text-primary-foreground px-2 py-0.5 rounded text-xs font-semibold opacity-0 group-hover/handle:opacity-100 transition-opacity">
-          {format(startTime, 'HH:mm')}
-        </div>
+        <div className="w-10 h-1 bg-foreground/50 rounded-full" />
       </div>
 
       {/* Event content */}
-      <div className="mt-2 space-y-1 overflow-hidden pointer-events-none">
-        {/* Title - always visible and clickable */}
-        <div 
-          className="text-sm font-semibold truncate leading-tight cursor-pointer hover:underline pointer-events-auto"
-          onClick={handleTitleClick}
-        >
+      <div className="mt-2 space-y-1 overflow-hidden">
+        {/* Title - always visible */}
+        <div className="text-sm font-semibold truncate leading-tight">
           {event.title}
         </div>
         
         {/* Time - visible for events > 30px */}
         {height > 30 && (
           <div className="text-xs text-muted-foreground font-medium">
-            {format(startTime, 'HH:mm')} - {format(endTime, 'HH:mm')} ({duration})
+            {format(startTime, 'HH:mm')} - {format(endTime, 'HH:mm')}
           </div>
         )}
         
         {/* Address - visible for events > 45px */}
         {event.address && height > 45 && (
-          <div className="text-xs opacity-80 truncate flex items-center gap-1">
-            <MapPin className="h-3 w-3 flex-shrink-0" />
-            <span className="truncate">{event.address}</span>
+          <div className="text-xs opacity-80 truncate">
+            📍 {event.address}
           </div>
         )}
         
@@ -156,45 +152,35 @@ const EventBlockComponent: React.FC<EventBlockProps> = ({
         
         {/* Description - visible for events > 130px */}
         {event.description && height > 130 && (
-          <div className="flex items-start gap-1 text-xs opacity-70 pt-1 border-t border-current/10">
-            <FileText className="h-3 w-3 flex-shrink-0 mt-0.5" />
-            <span className="line-clamp-2">{event.description}</span>
+          <div className="text-xs opacity-70 line-clamp-2 pt-1 border-t border-current/10">
+            {event.description}
           </div>
         )}
       </div>
 
-      {/* Bottom resize handle - 48px for easy interaction */}
+      {/* Bottom resize handle - larger touch target */}
       <div
-        className="absolute bottom-0 left-0 right-0 cursor-ns-resize hover:bg-primary/30 active:bg-primary/50 transition-all flex items-center justify-center group/handle touch-none"
-        onPointerDown={(e) => {
-          e.stopPropagation();
-          onPointerDown?.(e, event, 'resize-bottom');
-        }}
-        style={{ height: '48px', minHeight: '48px', marginBottom: '-24px' }}
+        className="absolute bottom-0 left-0 right-0 h-4 cursor-ns-resize opacity-0 group-hover:opacity-100 hover:bg-primary/20 rounded-b-lg transition-all flex items-center justify-center touch-manipulation"
+        onMouseDown={(e) => handleMouseDown(e, 'bottom')}
+        onTouchStart={(e) => handleTouchStart(e, 'bottom')}
+        style={{ minHeight: '16px' }}
       >
-        <div className="absolute inset-0 flex items-center justify-center opacity-70 group-hover/handle:opacity-100 transition-opacity">
-          <GripVertical className="h-4 w-4 text-foreground/60" />
-        </div>
-        <div className="absolute bottom-1 left-2 bg-primary/90 text-primary-foreground px-2 py-0.5 rounded text-xs font-semibold opacity-0 group-hover/handle:opacity-100 transition-opacity">
-          {format(endTime, 'HH:mm')}
-        </div>
+        <div className="w-10 h-1 bg-foreground/50 rounded-full" />
       </div>
     </div>
   );
 };
 
-export const EventBlock = React.memo(
-  EventBlockComponent,
-  (prevProps, nextProps) => {
-    return (
-      prevProps.event.id === nextProps.event.id &&
-      prevProps.event.start_time === nextProps.event.start_time &&
-      prevProps.event.end_time === nextProps.event.end_time &&
-      prevProps.event.title === nextProps.event.title &&
-      prevProps.column === nextProps.column &&
-      prevProps.totalColumns === nextProps.totalColumns &&
-      prevProps.hasPendingChanges === nextProps.hasPendingChanges &&
-      prevProps.isInteracting === nextProps.isInteracting
-    );
-  }
-);
+// Memoize component for better performance
+export const EventBlock = memo(EventBlockComponent, (prevProps, nextProps) => {
+  return (
+    prevProps.event.id === nextProps.event.id &&
+    prevProps.event.start_time === nextProps.event.start_time &&
+    prevProps.event.end_time === nextProps.event.end_time &&
+    prevProps.event.title === nextProps.event.title &&
+    prevProps.column === nextProps.column &&
+    prevProps.totalColumns === nextProps.totalColumns &&
+    prevProps.isResizing === nextProps.isResizing &&
+    prevProps.viewStartHour === nextProps.viewStartHour
+  );
+});

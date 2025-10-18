@@ -6,10 +6,10 @@ import { ChevronLeft, ChevronRight, Calendar as CalendarIcon, Save, Undo } from 
 import { TimeGrid } from './TimeGrid';
 import { EventBlock } from './EventBlock';
 import { CurrentTimeIndicator } from './CurrentTimeIndicator';
-import { InteractionOverlay } from './InteractionOverlay';
+import { EventDragPreview } from './EventDragPreview';
 import { EventModal } from './EventModal';
-import { layoutOverlappingEvents } from '@/lib/calendarUtils';
-import { useUnifiedEventInteraction } from '@/hooks/useUnifiedEventInteraction';
+import { layoutOverlappingEvents, getEventPosition } from '@/lib/calendarUtils';
+import { useOptimizedEventInteraction } from '@/hooks/useOptimizedEventInteraction';
 import { usePendingEventChanges } from '@/hooks/usePendingEventChanges';
 import { useMemo, useEffect } from 'react';
 import { toast } from 'sonner';
@@ -54,6 +54,16 @@ export const DayView = ({
     undo,
     canUndo
   } = usePendingEventChanges();
+  const {
+    dragState,
+    containerRef,
+    handleDragStart,
+    handleDragOver,
+    handleDrop,
+    handleResizeStart,
+    clearDragState
+  } = useOptimizedEventInteraction(addPendingChange);
+
   // Calculate visible hour range based on availability slots
   const {
     startHour,
@@ -77,28 +87,8 @@ export const DayView = ({
   }, [slots, date]);
 
   // Apply pending changes to events for display with memoization
-  const eventsWithPendingChanges = useMemo(() => {
-    return events.map(getEventWithPendingChanges);
-  }, [events, getEventWithPendingChanges]);
-
-  const layoutedEvents = useMemo(() => {
-    return layoutOverlappingEvents(eventsWithPendingChanges);
-  }, [eventsWithPendingChanges]);
-
-  const {
-    interactionState,
-    containerRef,
-    currentPointer,
-    handlePointerDown,
-    handlePointerMove,
-    handlePointerUp,
-  } = useUnifiedEventInteraction({
-    onEventUpdate: async (eventId, updates) => {
-      addPendingChange(eventId, updates);
-    },
-    nearbyEvents: eventsWithPendingChanges,
-    viewStartHour: startHour,
-  });
+  const eventsWithPendingChanges = useMemo(() => events.map(getEventWithPendingChanges), [events, getEventWithPendingChanges]);
+  const layoutedEvents = useMemo(() => layoutOverlappingEvents(eventsWithPendingChanges), [eventsWithPendingChanges]);
 
   // Keyboard shortcuts
   useEffect(() => {
@@ -130,6 +120,16 @@ export const DayView = ({
     toast.success('Ångrade ändring');
   };
 
+  // Calculate snap indicator position
+  const snapIndicatorY = useMemo(() => {
+    if (dragState.previewPosition?.start && dragState.previewPosition?.end) {
+      const {
+        top
+      } = getEventPosition(dragState.previewPosition.start.toISOString(), dragState.previewPosition.end.toISOString(), startHour);
+      return top;
+    }
+    return undefined;
+  }, [dragState.previewPosition, startHour]);
   return <div className="flex flex-col h-full">
       {/* Header */}
       <div className="flex items-center justify-between p-4 border-b">
@@ -176,19 +176,8 @@ export const DayView = ({
       {/* Day view grid */}
       <div className="flex-1 overflow-auto">
         <div className="relative pl-16 pr-4">
-          <div 
-            ref={containerRef} 
-            className="relative" 
-            onPointerMove={handlePointerMove}
-            onPointerUp={handlePointerUp}
-          >
-            <TimeGrid 
-              onTimeSlotClick={handleTimeSlotClick} 
-              availabilitySlots={slots} 
-              currentDate={date}
-              snapIndicatorY={interactionState.snapIndicatorY}
-              snapTime={interactionState.previewTimes?.start || null}
-            />
+          <div ref={containerRef} className="relative" onDragOver={handleDragOver} onDrop={handleDrop}>
+            <TimeGrid onTimeSlotClick={handleTimeSlotClick} availabilitySlots={slots} currentDate={date} />
             
             {/* Current time indicator */}
             <CurrentTimeIndicator displayDate={date} />
@@ -196,26 +185,10 @@ export const DayView = ({
             {/* Events */}
             <div className="absolute top-0 left-0 right-0 bottom-0 pointer-events-none">
               <div className="relative h-full pointer-events-auto">
-                {layoutedEvents.map(event => <EventBlock 
-                  key={event.id} 
-                  event={event} 
-                  column={event.column} 
-                  totalColumns={event.totalColumns} 
-                  onEventClick={onEventClick} 
-                  onPointerDown={handlePointerDown}
-                  isInteracting={interactionState.eventId === event.id && !!interactionState.type}
-                  viewStartHour={startHour}
-                  hasPendingChanges={pendingChanges.has(event.id)}
-                />)}
+                {layoutedEvents.map(event => <EventBlock key={event.id} event={event} column={event.column} totalColumns={event.totalColumns} onEventClick={onEventClick} onDragStart={handleDragStart} onResizeStart={handleResizeStart} isResizing={dragState.activeEventId === event.id && dragState.operation !== 'drag'} viewStartHour={startHour} />)}
                 
-                {/* Interaction overlay */}
-                {interactionState.type && (
-                  <InteractionOverlay 
-                    interactionState={interactionState}
-                    viewStartHour={startHour}
-                    mouseY={currentPointer?.y}
-                  />
-                )}
+                {/* Ghost preview during drag */}
+                {dragState.operation === 'drag' && dragState.previewPosition && dragState.activeEventId && <EventDragPreview start={dragState.previewPosition.start} end={dragState.previewPosition.end} title={events.find(e => e.id === dragState.activeEventId)?.title || ''} snapIndicatorY={snapIndicatorY} />}
               </div>
             </div>
           </div>
