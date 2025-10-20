@@ -511,7 +511,7 @@ export const ProductSelection = () => {
       
 
       {/* Vad vi gör Section */}
-      <section className="relative py-24">
+      <section className="relative py-24 bg-gradient-to-b from-background to-primary/20 animate-fade-in">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <AnimatedSection className="mx-auto max-w-3xl text-center mb-16">
             <h2 className="text-4xl font-display font-bold text-white mb-4">Vad vi gör</h2>
@@ -542,7 +542,7 @@ export const ProductSelection = () => {
 
       {/* Products Section */}
       <section id="products" className="relative py-32 bg-primary/10" style={{ backgroundImage: 'url(/images/tools-background.jpg)', backgroundSize: 'cover', backgroundPosition: 'center' }}>
-        <div className="absolute inset-0 bg-gradient-to-b from-background via-primary/40 to-background"></div>
+        <div className="absolute inset-0 bg-gradient-to-b from-primary via-primary/40 to-primary"></div>
         <div className="mx-auto max-w-[1800px] px-6 lg:px-8 relative z-10">
           <div className="mx-auto max-w-4xl text-center mb-12 animate-fade-in bg-primary/30 backdrop-blur-sm rounded-2xl p-8 border border-primary/30">
             <h2 className="text-5xl font-display font-bold text-white mb-6 drop-shadow-lg">Är ni endast i behov av ett visst verktyg?</h2>
@@ -1018,7 +1018,7 @@ export const ProductSelection = () => {
       </section>
 
       {/* Varför Hiems Section */}
-      <section className="relative py-24 bg-primary/30">
+      <section className="relative py-24 bg-gradient-to-b from-primary/20 to-background animate-fade-in">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <AnimatedSection className="mx-auto max-w-3xl text-center mb-16">
             <h2 className="text-4xl font-display font-bold text-white mb-4">Varför Hiems?</h2>
