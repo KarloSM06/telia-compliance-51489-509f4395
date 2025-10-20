@@ -1179,11 +1179,13 @@ export const ProductSelection = () => {
                 <p className="text-base text-white/60">072-327 34 65</p>
               </AnimatedSection>
               <AnimatedSection delay={100} className="rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 p-8 text-center">
-                <img src={karloImage} alt="Karlo Mangione" className="w-32 h-32 rounded-full mx-auto mb-6 object-cover border-2 border-accent/30" />
-                <h3 className="text-xl font-bold text-white mb-2">Karlo Mangione</h3>
-                <p className="text-base text-white/70 mb-3">COO</p>
-                <p className="text-base text-white/60 mb-1">karlo.mangione@hiems.se</p>
-                <p className="text-base text-white/60">070-231 22 71</p>
+                <div className="w-32 h-32 rounded-full mx-auto mb-6 bg-gradient-primary flex items-center justify-center border-2 border-accent/30">
+                  <span className="text-4xl font-bold text-white">ME</span>
+                </div>
+                <h3 className="text-xl font-bold text-white mb-2">Malte Ekbäck</h3>
+                <p className="text-base text-white/70 mb-3">CFO</p>
+                <p className="text-base text-white/60 mb-1">malte@hiems.se</p>
+                <p className="text-base text-white/60">073-024 66 28</p>
               </AnimatedSection>
             </div>
           </div>
