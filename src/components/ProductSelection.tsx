@@ -542,12 +542,12 @@ export const ProductSelection = () => {
 
       {/* Products Section */}
       <section id="products" className="relative py-32 bg-primary/10" style={{ backgroundImage: 'url(/images/tools-background.jpg)', backgroundSize: 'cover', backgroundPosition: 'center' }}>
-        <div className="absolute inset-0 bg-primary/60"></div>
+        <div className="absolute inset-0 bg-gradient-to-b from-background/95 via-primary/85 to-background/95"></div>
         <div className="mx-auto max-w-[1800px] px-6 lg:px-8 relative z-10">
-          <div className="mx-auto max-w-4xl text-center mb-12 animate-fade-in">
-            <h2 className="text-5xl font-display font-bold text-white mb-6">Är ni endast i behov av ett visst verktyg?</h2>
+          <div className="mx-auto max-w-4xl text-center mb-12 animate-fade-in bg-background/40 backdrop-blur-sm rounded-2xl p-8 border border-white/10">
+            <h2 className="text-5xl font-display font-bold text-white mb-6 drop-shadow-lg">Är ni endast i behov av ett visst verktyg?</h2>
             <div className="w-24 h-1.5 bg-gradient-gold mx-auto rounded-full mb-8"></div>
-            <p className="text-lg text-white/80 mb-8">Kolla in våra färdiga paket. Vi har utvecklat dessa för att göra processen så snabb och smidig som möjligt.</p>
+            <p className="text-lg text-white mb-8 drop-shadow-md">Kolla in våra färdiga paket. Vi har utvecklat dessa för att göra processen så snabb och smidig som möjligt.</p>
             <Button 
               onClick={() => setShowPackages(!showPackages)} 
               size="lg" 
