@@ -1,10 +1,32 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
+
+// Zod schema for input validation
+const LeadSchema = z.object({
+  company_name: z.string().min(1).max(200),
+  contact_person: z.string().max(100).optional(),
+  email: z.string().email().max(255).optional().or(z.literal('')),
+  phone: z.string().max(20).optional(),
+  website: z.string().url().max(500).optional().or(z.literal('')),
+  industry: z.string().max(100).optional(),
+  location: z.string().max(100).optional(),
+  company_size: z.string().max(50).optional(),
+  description: z.string().max(500).optional(),
+  ai_score: z.number().int().min(0).max(100).optional(),
+  ai_reasoning: z.string().max(500).optional(),
+}).strict();
+
+const RequestSchema = z.object({
+  search_id: z.string().uuid(),
+  user_id: z.string().uuid(),
+  leads: z.array(LeadSchema).min(1).max(100)
+});
 
 interface Lead {
   company_name: string;
@@ -37,15 +59,24 @@ serve(async (req) => {
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
     );
 
-    const body: RequestBody = await req.json();
-    const { search_id, user_id, leads } = body;
-
-    if (!search_id || !user_id || !leads || !Array.isArray(leads)) {
+    const rawBody = await req.json();
+    
+    // Validate input with Zod
+    let validatedBody: RequestBody;
+    try {
+      validatedBody = RequestSchema.parse(rawBody);
+    } catch (error) {
+      console.error('Input validation failed:', error);
       return new Response(
-        JSON.stringify({ error: 'Invalid request body' }),
+        JSON.stringify({ 
+          error: 'Invalid input data', 
+          details: error instanceof z.ZodError ? error.errors : 'Validation failed' 
+        }),
         { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
+
+    const { search_id, user_id, leads } = validatedBody;
 
     // Verify search exists and belongs to user
     const { data: search, error: searchError } = await supabaseClient
