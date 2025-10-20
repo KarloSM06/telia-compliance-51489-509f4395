@@ -542,9 +542,9 @@ export const ProductSelection = () => {
 
       {/* Products Section */}
       <section id="products" className="relative py-32 bg-primary/10" style={{ backgroundImage: 'url(/images/tools-background.jpg)', backgroundSize: 'cover', backgroundPosition: 'center' }}>
-        <div className="absolute inset-0 bg-gradient-to-b from-primary/50 via-primary/40 to-primary/50"></div>
+        <div className="absolute inset-0 bg-gradient-to-b from-background via-primary/40 to-background"></div>
         <div className="mx-auto max-w-[1800px] px-6 lg:px-8 relative z-10">
-          <div className="mx-auto max-w-4xl text-center mb-12 animate-fade-in bg-background/40 backdrop-blur-sm rounded-2xl p-8 border border-white/10">
+          <div className="mx-auto max-w-4xl text-center mb-12 animate-fade-in bg-primary/30 backdrop-blur-sm rounded-2xl p-8 border border-primary/30">
             <h2 className="text-5xl font-display font-bold text-white mb-6 drop-shadow-lg">Är ni endast i behov av ett visst verktyg?</h2>
             <div className="w-24 h-1.5 bg-gradient-gold mx-auto rounded-full mb-8"></div>
             <p className="text-lg text-white mb-8 drop-shadow-md">Kolla in våra färdiga paket. Vi har utvecklat dessa för att göra processen så snabb och smidig som möjligt.</p>
@@ -560,7 +560,7 @@ export const ProductSelection = () => {
           </div>
 
           {showPackages && (
-            <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-6 max-w-[1800px] mx-auto animate-fade-in">
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-6 max-w-[1800px] mx-auto animate-fade-in animate-scale-in">
             {/* AI Receptionist - Krono */}
             <AnimatedSection delay={0}>
             <Card className="group relative overflow-hidden border-2 border-white/10 bg-gradient-card backdrop-blur-sm hover:border-accent/50 hover:scale-[1.02] transition-all duration-500 hover:shadow-glow h-full flex flex-col">
