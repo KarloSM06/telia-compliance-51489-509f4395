@@ -541,7 +541,7 @@ export const ProductSelection = () => {
       </section>
 
       {/* Products Section */}
-      <section id="products" className="relative py-32">
+      <section id="products" className="relative py-32 bg-primary/10">
         <div className="mx-auto max-w-[1800px] px-6 lg:px-8">
           <div className="mx-auto max-w-4xl text-center mb-12 animate-fade-in">
             <h2 className="text-5xl font-display font-bold text-white mb-6">Är ni endast i behov av ett visst verktyg?</h2>
@@ -1017,7 +1017,7 @@ export const ProductSelection = () => {
       </section>
 
       {/* Varför Hiems Section */}
-      <section className="relative py-24 bg-white/5">
+      <section className="relative py-24 bg-primary/30">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <AnimatedSection className="mx-auto max-w-3xl text-center mb-16">
             <h2 className="text-4xl font-display font-bold text-white mb-4">Varför Hiems?</h2>
