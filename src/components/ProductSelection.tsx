@@ -1074,19 +1074,19 @@ export const ProductSelection = () => {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
             {/* Left Contact Cards */}
             <div className="lg:col-span-3 space-y-6">
-              <AnimatedSection delay={0} className="rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 p-6 text-center">
-                <img src={antonImage} alt="Anton Sallnäs" className="w-24 h-24 rounded-full mx-auto mb-4 object-cover border-2 border-accent/30" />
-                <h3 className="text-lg font-bold text-white mb-1">Anton Sallnäs</h3>
-                <p className="text-sm text-white/70 mb-2">CEO</p>
-                <p className="text-sm text-white/60">anton@hiems.se</p>
-                <p className="text-sm text-white/60">070-657 15 32</p>
+              <AnimatedSection delay={0} className="rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 p-8 text-center">
+                <img src={antonImage} alt="Anton Sallnäs" className="w-32 h-32 rounded-full mx-auto mb-6 object-cover border-2 border-accent/30" />
+                <h3 className="text-xl font-bold text-white mb-2">Anton Sallnäs</h3>
+                <p className="text-base text-white/70 mb-3">CEO</p>
+                <p className="text-base text-white/60 mb-1">anton@hiems.se</p>
+                <p className="text-base text-white/60">070-657 15 32</p>
               </AnimatedSection>
-              <AnimatedSection delay={100} className="rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 p-6 text-center">
-                <img src={karloImage} alt="Karlo Mangione" className="w-24 h-24 rounded-full mx-auto mb-4 object-cover border-2 border-accent/30" />
-                <h3 className="text-lg font-bold text-white mb-1">Karlo Mangione</h3>
-                <p className="text-sm text-white/70 mb-2">COO</p>
-                <p className="text-sm text-white/60">karlo.mangione@hiems.se</p>
-                <p className="text-sm text-white/60">070-231 22 71</p>
+              <AnimatedSection delay={100} className="rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 p-8 text-center">
+                <img src={karloImage} alt="Karlo Mangione" className="w-32 h-32 rounded-full mx-auto mb-6 object-cover border-2 border-accent/30" />
+                <h3 className="text-xl font-bold text-white mb-2">Karlo Mangione</h3>
+                <p className="text-base text-white/70 mb-3">COO</p>
+                <p className="text-base text-white/60 mb-1">karlo.mangione@hiems.se</p>
+                <p className="text-base text-white/60">070-231 22 71</p>
               </AnimatedSection>
             </div>
 
@@ -1171,19 +1171,19 @@ export const ProductSelection = () => {
 
             {/* Right Contact Cards */}
             <div className="lg:col-span-3 space-y-6">
-              <AnimatedSection delay={0} className="rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 p-6 text-center">
-                <img src={emilImage} alt="Emil Westerberg" className="w-24 h-24 rounded-full mx-auto mb-4 object-cover border-2 border-accent/30" />
-                <h3 className="text-lg font-bold text-white mb-1">Emil Westerberg</h3>
-                <p className="text-sm text-white/70 mb-2">CLO</p>
-                <p className="text-sm text-white/60">emil@hiems.se</p>
-                <p className="text-sm text-white/60">072-327 34 65</p>
+              <AnimatedSection delay={0} className="rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 p-8 text-center">
+                <img src={emilImage} alt="Emil Westerberg" className="w-32 h-32 rounded-full mx-auto mb-6 object-cover border-2 border-accent/30" />
+                <h3 className="text-xl font-bold text-white mb-2">Emil Westerberg</h3>
+                <p className="text-base text-white/70 mb-3">CLO</p>
+                <p className="text-base text-white/60 mb-1">emil@hiems.se</p>
+                <p className="text-base text-white/60">072-327 34 65</p>
               </AnimatedSection>
-              <AnimatedSection delay={100} className="rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 p-6 text-center">
-                <img src={karloImage} alt="Karlo Mangione" className="w-24 h-24 rounded-full mx-auto mb-4 object-cover border-2 border-accent/30" />
-                <h3 className="text-lg font-bold text-white mb-1">Karlo Mangione</h3>
-                <p className="text-sm text-white/70 mb-2">COO</p>
-                <p className="text-sm text-white/60">karlo.mangione@hiems.se</p>
-                <p className="text-sm text-white/60">070-231 22 71</p>
+              <AnimatedSection delay={100} className="rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 p-8 text-center">
+                <img src={karloImage} alt="Karlo Mangione" className="w-32 h-32 rounded-full mx-auto mb-6 object-cover border-2 border-accent/30" />
+                <h3 className="text-xl font-bold text-white mb-2">Karlo Mangione</h3>
+                <p className="text-base text-white/70 mb-3">COO</p>
+                <p className="text-base text-white/60 mb-1">karlo.mangione@hiems.se</p>
+                <p className="text-base text-white/60">070-231 22 71</p>
               </AnimatedSection>
             </div>
           </div>
