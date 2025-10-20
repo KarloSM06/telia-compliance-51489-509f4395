@@ -20,6 +20,7 @@ import { availablePackages } from "@/components/dashboard/PackagesData";
 import { AnimatedSection } from "@/components/AnimatedSection";
 import { QuickNavigation } from "@/components/QuickNavigation";
 import heroBackground from "@/assets/hero-background.jpg";
+import karloImage from "@/assets/karlo-mangione.png";
 interface Message {
   role: 'user' | 'assistant';
   content: string;
@@ -1068,83 +1069,122 @@ export const ProductSelection = () => {
       {/* Testa själv Section */}
       <section id="krono-chat" className="relative py-24">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
-          <AnimatedSection className="mx-auto max-w-4xl">
-            <div className="relative rounded-3xl bg-gradient-primary overflow-hidden shadow-elegant">
-              <div className="absolute inset-0 bg-gradient-gold opacity-10"></div>
-              <div className="absolute top-0 right-0 w-64 h-64 bg-accent/20 rounded-full blur-3xl"></div>
-              
-              {/* Header */}
-              <div className="relative p-8 md:p-12 text-center border-b border-white/10">
-                <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 mb-6 backdrop-blur-sm border border-white/20">
-                  <Sparkles className="h-4 w-4 text-accent" />
-                  <span className="text-sm font-medium text-white">Hur hade AI hjälpt er verksamhet?</span>
-                </div>
-                <h2 className="text-4xl font-display font-bold text-white mb-4">Se hur AI hade kunnat effektivisera er verksamhet</h2>
-                <p className="text-lg text-white/90 leading-relaxed max-w-2xl mx-auto">
-                  Prata med vår AI-rådgivare Krono eller prova vårt demo för att se hur en AI-receptionist fungerar
-                </p>
-              </div>
-
-              {/* Chat Area */}
-              <div className="relative bg-white/5 backdrop-blur-sm">
-                <ScrollArea className="h-[400px] p-6" ref={scrollRef}>
-                  <div className="space-y-4">
-                    {messages.map((msg, idx) => <div key={idx} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-                        <div className={`max-w-[80%] rounded-2xl px-4 py-2.5 ${msg.role === 'user' ? 'bg-white text-primary' : 'bg-white/10 text-white backdrop-blur-sm border border-white/20'}`}>
-                          <p className="text-sm whitespace-pre-wrap">{msg.content}</p>
-                        </div>
-                      </div>)}
-                    {isLoading && <div className="flex justify-start">
-                        <div className="bg-white/10 rounded-2xl px-4 py-2.5 backdrop-blur-sm border border-white/20">
-                          <Loader2 className="h-4 w-4 animate-spin text-white" />
-                        </div>
-                      </div>}
-                  </div>
-                </ScrollArea>
-
-                {/* Input */}
-                <div className="p-6 border-t border-white/10">
-                  <div className="flex gap-3">
-                    <Input ref={inputRef} value={input} onChange={e => setInput(e.target.value)} onKeyDown={handleKeyPress} placeholder="Skriv ditt meddelande till Krono..." disabled={isLoading} className="flex-1 bg-white/10 border-white/20 text-white placeholder:text-white/50 focus:bg-white/15" />
-                    <Button onClick={handleSend} disabled={!input.trim() || isLoading} size="icon" className="bg-white text-primary hover:bg-white/90 h-10 w-10">
-                      <Send className="h-4 w-4" />
-                    </Button>
-                  </div>
-                  <div className="mt-4 text-center">
-                    <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-                      <DialogTrigger asChild>
-                        <Button variant="outline" size="lg" className="bg-white/5 border-white/20 text-white hover:bg-white/10 font-semibold group">
-                          Prova receptionistdemo
-                          <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
-                        </Button>
-                      </DialogTrigger>
-                      <DialogContent className="sm:max-w-md bg-background border-border">
-                        <DialogHeader>
-                          <DialogTitle className="flex items-center gap-2">
-                            <Phone className="h-5 w-5 text-accent" />
-                            Prova Receptionistdemo
-                          </DialogTitle>
-                          <DialogDescription>
-                            Skriv in telefonnummer för att bli uppringd av vår receptionist
-                          </DialogDescription>
-                        </DialogHeader>
-                        <div className="space-y-4 pt-4">
-                          <Input placeholder="070-123 45 67" value={phoneNumber} onChange={e => setPhoneNumber(e.target.value)} onKeyDown={e => {
-                          if (e.key === 'Enter') {
-                            handlePhoneSubmit();
-                          }
-                        }} className="text-base" />
-                          <Button onClick={handlePhoneSubmit} className="w-full bg-primary text-primary-foreground hover:bg-primary/90" size="lg">
-                            Ring mig
-                          </Button>
-                        </div>
-                      </DialogContent>
-                    </Dialog>
-                  </div>
-                </div>
-              </div>
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+            {/* Left Contact Cards */}
+            <div className="lg:col-span-3 space-y-6">
+              <AnimatedSection delay={0} className="rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 p-6 text-center">
+                <div className="w-24 h-24 rounded-full bg-white/10 mx-auto mb-4"></div>
+                <h3 className="text-lg font-bold text-white mb-1">Contact 1</h3>
+                <p className="text-sm text-white/70 mb-2">Title</p>
+                <p className="text-sm text-white/60">email@hiems.se</p>
+                <p className="text-sm text-white/60">070-xxx xx xx</p>
+              </AnimatedSection>
+              <AnimatedSection delay={100} className="rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 p-6 text-center">
+                <div className="w-24 h-24 rounded-full bg-white/10 mx-auto mb-4"></div>
+                <h3 className="text-lg font-bold text-white mb-1">Contact 2</h3>
+                <p className="text-sm text-white/70 mb-2">Title</p>
+                <p className="text-sm text-white/60">email@hiems.se</p>
+                <p className="text-sm text-white/60">070-xxx xx xx</p>
+              </AnimatedSection>
             </div>
-          </AnimatedSection>
+
+            {/* Krono Chat Center */}
+            <AnimatedSection className="lg:col-span-6">
+              <div className="relative rounded-3xl bg-gradient-primary overflow-hidden shadow-elegant">
+                <div className="absolute inset-0 bg-gradient-gold opacity-10"></div>
+                <div className="absolute top-0 right-0 w-64 h-64 bg-accent/20 rounded-full blur-3xl"></div>
+                
+                {/* Header */}
+                <div className="relative p-8 md:p-12 text-center border-b border-white/10">
+                  <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 mb-6 backdrop-blur-sm border border-white/20">
+                    <Sparkles className="h-4 w-4 text-accent" />
+                    <span className="text-sm font-medium text-white">Hur hade AI hjälpt er verksamhet?</span>
+                  </div>
+                  <h2 className="text-4xl font-display font-bold text-white mb-4">Se hur AI hade kunnat effektivisera er verksamhet</h2>
+                  <p className="text-lg text-white/90 leading-relaxed max-w-2xl mx-auto">
+                    Prata med vår AI-rådgivare Krono eller prova vårt demo för att se hur en AI-receptionist fungerar
+                  </p>
+                </div>
+
+                {/* Chat Area */}
+                <div className="relative bg-white/5 backdrop-blur-sm">
+                  <ScrollArea className="h-[400px] p-6" ref={scrollRef}>
+                    <div className="space-y-4">
+                      {messages.map((msg, idx) => <div key={idx} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+                          <div className={`max-w-[80%] rounded-2xl px-4 py-2.5 ${msg.role === 'user' ? 'bg-white text-primary' : 'bg-white/10 text-white backdrop-blur-sm border border-white/20'}`}>
+                            <p className="text-sm whitespace-pre-wrap">{msg.content}</p>
+                          </div>
+                        </div>)}
+                      {isLoading && <div className="flex justify-start">
+                          <div className="bg-white/10 rounded-2xl px-4 py-2.5 backdrop-blur-sm border border-white/20">
+                            <Loader2 className="h-4 w-4 animate-spin text-white" />
+                          </div>
+                        </div>}
+                    </div>
+                  </ScrollArea>
+
+                  {/* Input */}
+                  <div className="p-6 border-t border-white/10">
+                    <div className="flex gap-3">
+                      <Input ref={inputRef} value={input} onChange={e => setInput(e.target.value)} onKeyDown={handleKeyPress} placeholder="Skriv ditt meddelande till Krono..." disabled={isLoading} className="flex-1 bg-white/10 border-white/20 text-white placeholder:text-white/50 focus:bg-white/15" />
+                      <Button onClick={handleSend} disabled={!input.trim() || isLoading} size="icon" className="bg-white text-primary hover:bg-white/90 h-10 w-10">
+                        <Send className="h-4 w-4" />
+                      </Button>
+                    </div>
+                    <div className="mt-4 text-center">
+                      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+                        <DialogTrigger asChild>
+                          <Button variant="outline" size="lg" className="bg-white/5 border-white/20 text-white hover:bg-white/10 font-semibold group">
+                            Prova receptionistdemo
+                            <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                          </Button>
+                        </DialogTrigger>
+                        <DialogContent className="sm:max-w-md bg-background border-border">
+                          <DialogHeader>
+                            <DialogTitle className="flex items-center gap-2">
+                              <Phone className="h-5 w-5 text-accent" />
+                              Prova Receptionistdemo
+                            </DialogTitle>
+                            <DialogDescription>
+                              Skriv in telefonnummer för att bli uppringd av vår receptionist
+                            </DialogDescription>
+                          </DialogHeader>
+                          <div className="space-y-4 pt-4">
+                            <Input placeholder="070-123 45 67" value={phoneNumber} onChange={e => setPhoneNumber(e.target.value)} onKeyDown={e => {
+                            if (e.key === 'Enter') {
+                              handlePhoneSubmit();
+                            }
+                          }} className="text-base" />
+                            <Button onClick={handlePhoneSubmit} className="w-full bg-primary text-primary-foreground hover:bg-primary/90" size="lg">
+                              Ring mig
+                            </Button>
+                          </div>
+                        </DialogContent>
+                      </Dialog>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </AnimatedSection>
+
+            {/* Right Contact Cards */}
+            <div className="lg:col-span-3 space-y-6">
+              <AnimatedSection delay={0} className="rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 p-6 text-center">
+                <div className="w-24 h-24 rounded-full bg-white/10 mx-auto mb-4"></div>
+                <h3 className="text-lg font-bold text-white mb-1">Contact 3</h3>
+                <p className="text-sm text-white/70 mb-2">Title</p>
+                <p className="text-sm text-white/60">email@hiems.se</p>
+                <p className="text-sm text-white/60">070-xxx xx xx</p>
+              </AnimatedSection>
+              <AnimatedSection delay={100} className="rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 p-6 text-center">
+                <img src={karloImage} alt="Karlo Mangione" className="w-24 h-24 rounded-full mx-auto mb-4 object-cover border-2 border-accent/30" />
+                <h3 className="text-lg font-bold text-white mb-1">Karlo Mangione</h3>
+                <p className="text-sm text-white/70 mb-2">COO</p>
+                <p className="text-sm text-white/60">karlo.mangione@hiems.se</p>
+                <p className="text-sm text-white/60">070-231 22 71</p>
+              </AnimatedSection>
+            </div>
+          </div>
         </div>
       </section>
       
