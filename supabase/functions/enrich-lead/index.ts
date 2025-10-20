@@ -154,6 +154,43 @@ Svara ENDAST med valid JSON i detta exakta format:
       throw new Error('Failed to update lead');
     }
 
+    // Send webhook notification to n8n
+    const N8N_WEBHOOK_URL = 'https://hiems.app.n8n.cloud/webhook/f8c03e18-20fc-4a88-adff-49c6c44e5ee0';
+    try {
+      const webhookPayload = {
+        event: 'lead.enriched',
+        timestamp: new Date().toISOString(),
+        lead_id: updatedLead.id,
+        company_name: updatedLead.company_name,
+        status: updatedLead.status,
+        ai_score: updatedLead.ai_score,
+        ai_reasoning: updatedLead.ai_reasoning,
+        description: updatedLead.description,
+        recommended_product: enrichmentData.recommended_product,
+        industry: updatedLead.industry,
+        location: updatedLead.location,
+        user_id: updatedLead.user_id,
+        organization_id: updatedLead.organization_id,
+      };
+
+      const webhookResponse = await fetch(N8N_WEBHOOK_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(webhookPayload),
+      });
+
+      if (!webhookResponse.ok) {
+        console.error('Webhook notification failed:', webhookResponse.status, await webhookResponse.text());
+      } else {
+        console.log('Webhook notification sent successfully for lead:', lead_id);
+      }
+    } catch (webhookError) {
+      // Don't fail the enrichment if webhook fails
+      console.error('Error sending webhook notification:', webhookError);
+    }
+
     return new Response(
       JSON.stringify({ 
         success: true, 
