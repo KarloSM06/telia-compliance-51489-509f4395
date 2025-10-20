@@ -14,6 +14,108 @@ export type Database = {
   }
   public: {
     Tables: {
+      ai_consultations: {
+        Row: {
+          ai_goals: string[] | null
+          ai_goals_other: string | null
+          ai_priority: number | null
+          ai_users: string[] | null
+          ai_users_other: string | null
+          budget: string | null
+          business_description: string
+          company_name: string
+          contact_person: string
+          created_at: string | null
+          current_systems: string | null
+          data_quality: number | null
+          data_types: string[] | null
+          data_types_other: string | null
+          email: string
+          ethical_limitations: string | null
+          existing_ai: string | null
+          gdpr_compliant: string | null
+          historical_data: string | null
+          id: string
+          internal_resources: string[] | null
+          internal_resources_other: string | null
+          long_term_goals: string | null
+          manual_processes: string | null
+          open_to_experiments: string | null
+          phone: string
+          regulatory_requirements: string | null
+          sensitive_data: string | null
+          success_definition: string | null
+          timeframe: string | null
+          training_needed: string | null
+        }
+        Insert: {
+          ai_goals?: string[] | null
+          ai_goals_other?: string | null
+          ai_priority?: number | null
+          ai_users?: string[] | null
+          ai_users_other?: string | null
+          budget?: string | null
+          business_description: string
+          company_name: string
+          contact_person: string
+          created_at?: string | null
+          current_systems?: string | null
+          data_quality?: number | null
+          data_types?: string[] | null
+          data_types_other?: string | null
+          email: string
+          ethical_limitations?: string | null
+          existing_ai?: string | null
+          gdpr_compliant?: string | null
+          historical_data?: string | null
+          id?: string
+          internal_resources?: string[] | null
+          internal_resources_other?: string | null
+          long_term_goals?: string | null
+          manual_processes?: string | null
+          open_to_experiments?: string | null
+          phone: string
+          regulatory_requirements?: string | null
+          sensitive_data?: string | null
+          success_definition?: string | null
+          timeframe?: string | null
+          training_needed?: string | null
+        }
+        Update: {
+          ai_goals?: string[] | null
+          ai_goals_other?: string | null
+          ai_priority?: number | null
+          ai_users?: string[] | null
+          ai_users_other?: string | null
+          budget?: string | null
+          business_description?: string
+          company_name?: string
+          contact_person?: string
+          created_at?: string | null
+          current_systems?: string | null
+          data_quality?: number | null
+          data_types?: string[] | null
+          data_types_other?: string | null
+          email?: string
+          ethical_limitations?: string | null
+          existing_ai?: string | null
+          gdpr_compliant?: string | null
+          historical_data?: string | null
+          id?: string
+          internal_resources?: string[] | null
+          internal_resources_other?: string | null
+          long_term_goals?: string | null
+          manual_processes?: string | null
+          open_to_experiments?: string | null
+          phone?: string
+          regulatory_requirements?: string | null
+          sensitive_data?: string | null
+          success_definition?: string | null
+          timeframe?: string | null
+          training_needed?: string | null
+        }
+        Relationships: []
+      }
       availability_slots: {
         Row: {
           created_at: string
@@ -901,6 +1003,12 @@ export type Database = {
           id: string
           industry: string | null
           Instagram: string | null
+          kontakt_person: string | null
+          kontakt_person_facebook: string | null
+          kontakt_person_insta: string | null
+          kontakt_person_LinkedIN: string | null
+          kontakt_person_mail: string | null
+          kontakt_person_telefon: string | null
           lead_type: string | null
           LinkedIn: string | null
           location: string | null
@@ -918,7 +1026,6 @@ export type Database = {
           updated_at: string
           user_id: string
           website: string | null
-          Website: string | null
         }
         Insert: {
           Adress?: string | null
@@ -939,6 +1046,12 @@ export type Database = {
           id?: string
           industry?: string | null
           Instagram?: string | null
+          kontakt_person?: string | null
+          kontakt_person_facebook?: string | null
+          kontakt_person_insta?: string | null
+          kontakt_person_LinkedIN?: string | null
+          kontakt_person_mail?: string | null
+          kontakt_person_telefon?: string | null
           lead_type?: string | null
           LinkedIn?: string | null
           location?: string | null
@@ -956,7 +1069,6 @@ export type Database = {
           updated_at?: string
           user_id: string
           website?: string | null
-          Website?: string | null
         }
         Update: {
           Adress?: string | null
@@ -977,6 +1089,12 @@ export type Database = {
           id?: string
           industry?: string | null
           Instagram?: string | null
+          kontakt_person?: string | null
+          kontakt_person_facebook?: string | null
+          kontakt_person_insta?: string | null
+          kontakt_person_LinkedIN?: string | null
+          kontakt_person_mail?: string | null
+          kontakt_person_telefon?: string | null
           lead_type?: string | null
           LinkedIn?: string | null
           location?: string | null
@@ -994,7 +1112,6 @@ export type Database = {
           updated_at?: string
           user_id?: string
           website?: string | null
-          Website?: string | null
         }
         Relationships: [
           {
