@@ -541,8 +541,9 @@ export const ProductSelection = () => {
       </section>
 
       {/* Products Section */}
-      <section id="products" className="relative py-32 bg-primary/10">
-        <div className="mx-auto max-w-[1800px] px-6 lg:px-8">
+      <section id="products" className="relative py-32 bg-primary/10" style={{ backgroundImage: 'url(/images/tools-background.jpg)', backgroundSize: 'cover', backgroundPosition: 'center' }}>
+        <div className="absolute inset-0 bg-primary/60"></div>
+        <div className="mx-auto max-w-[1800px] px-6 lg:px-8 relative z-10">
           <div className="mx-auto max-w-4xl text-center mb-12 animate-fade-in">
             <h2 className="text-5xl font-display font-bold text-white mb-6">Är ni endast i behov av ett visst verktyg?</h2>
             <div className="w-24 h-1.5 bg-gradient-gold mx-auto rounded-full mb-8"></div>
