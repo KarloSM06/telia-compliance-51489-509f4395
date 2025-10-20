@@ -12,6 +12,24 @@ export const useEnrichLead = () => {
     setEnrichingLeadId(leadId);
 
     try {
+      // Send webhook immediately when enrichment is triggered
+      const webhookUrl = 'https://n8n.srv1053222.hstgr.cloud/webhook-test/007abc28-2188-4bd0-989c-b086b935e25e';
+      try {
+        await fetch(webhookUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            event: 'lead.enrichment_started',
+            timestamp: new Date().toISOString(),
+            lead_id: leadId,
+            triggered_by: 'manual',
+          }),
+        });
+        console.log('Webhook triggered for lead:', leadId);
+      } catch (webhookError) {
+        console.error('Webhook failed (continuing anyway):', webhookError);
+      }
+
       const { data, error } = await supabase.functions.invoke('enrich-lead', {
         body: { lead_id: leadId }
       });
@@ -83,6 +101,23 @@ export const useEnrichLead = () => {
     for (let i = 0; i < leadIds.length; i++) {
       const leadId = leadIds[i];
       setBulkProgress({ current: i + 1, total: leadIds.length });
+      
+      // Send webhook for each lead in bulk operation
+      const webhookUrl = 'https://n8n.srv1053222.hstgr.cloud/webhook-test/007abc28-2188-4bd0-989c-b086b935e25e';
+      try {
+        await fetch(webhookUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            event: 'lead.enrichment_started',
+            timestamp: new Date().toISOString(),
+            lead_id: leadId,
+            triggered_by: 'bulk',
+          }),
+        });
+      } catch (webhookError) {
+        console.error('Webhook failed for lead:', leadId, webhookError);
+      }
       
       try {
         const { data, error } = await supabase.functions.invoke('enrich-lead', {
