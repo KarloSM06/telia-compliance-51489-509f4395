@@ -184,6 +184,7 @@ export const ProductSelection = () => {
   };
   const [selectedMinutes, setSelectedMinutes] = useState(100);
   const [isCheckingOut, setIsCheckingOut] = useState(false);
+  const [showPackages, setShowPackages] = useState(false);
   const minuteOptions = [100, 250, 500, 1000];
   const minutePricing: Record<number, {
     pro: number;
@@ -542,13 +543,23 @@ export const ProductSelection = () => {
       {/* Products Section */}
       <section id="products" className="relative py-32">
         <div className="mx-auto max-w-[1800px] px-6 lg:px-8">
-          <div className="mx-auto max-w-4xl text-center mb-20 animate-fade-in">
-            <h2 className="text-5xl font-display font-bold text-white mb-6">Färdiga paket</h2>
+          <div className="mx-auto max-w-4xl text-center mb-12 animate-fade-in">
+            <h2 className="text-5xl font-display font-bold text-white mb-6">Är ni endast i behov av ett visst verktyg?</h2>
             <div className="w-24 h-1.5 bg-gradient-gold mx-auto rounded-full mb-8"></div>
-            <p className="text-lg text-white/80">Vi har utvecklat färdiga paket för att göra processen så snabb och smidig som möjligt. Dessa skräddarsys för att passa just er verksamhet</p>
+            <p className="text-lg text-white/80 mb-8">Kolla in våra färdiga paket. Vi har utvecklat dessa för att göra processen så snabb och smidig som möjligt.</p>
+            <Button 
+              onClick={() => setShowPackages(!showPackages)} 
+              size="lg" 
+              variant="outline" 
+              className="border-2 border-white/20 text-white bg-white/5 hover:bg-white/10 hover:scale-105 transition-all duration-300 font-semibold"
+            >
+              {showPackages ? 'Dölj paket' : 'Se mer'}
+              <ArrowRight className={`ml-2 h-5 w-5 transition-transform duration-300 ${showPackages ? 'rotate-90' : ''}`} />
+            </Button>
           </div>
 
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-6 max-w-[1800px] mx-auto">
+          {showPackages && (
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-6 max-w-[1800px] mx-auto animate-fade-in">
             {/* AI Receptionist - Krono */}
             <AnimatedSection delay={0}>
             <Card className="group relative overflow-hidden border-2 border-white/10 bg-gradient-card backdrop-blur-sm hover:border-accent/50 hover:scale-[1.02] transition-all duration-500 hover:shadow-glow h-full flex flex-col">
@@ -1001,6 +1012,7 @@ export const ProductSelection = () => {
             </Card>
             </AnimatedSection>
           </div>
+          )}
         </div>
       </section>
 
