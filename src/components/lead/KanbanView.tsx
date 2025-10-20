@@ -9,10 +9,11 @@ interface KanbanViewProps {
 
 export function KanbanView({ leads, onViewDetails }: KanbanViewProps) {
   const columns = [
-    { status: 'new', title: 'Nya', color: 'border-t-green-500' },
-    { status: 'contacted', title: 'Kontaktade', color: 'border-t-blue-500' },
+    { status: 'new', title: 'Nya', color: 'border-t-blue-500' },
+    { status: 'enriched', title: 'Berikade', color: 'border-t-emerald-500' },
+    { status: 'contacted', title: 'Kontaktade', color: 'border-t-yellow-500' },
     { status: 'qualified', title: 'Kvalificerade', color: 'border-t-purple-500' },
-    { status: 'converted', title: 'Konverterade', color: 'border-t-orange-500' },
+    { status: 'converted', title: 'Konverterade', color: 'border-t-green-500' },
     { status: 'lost', title: 'Förlorade', color: 'border-t-gray-500' },
   ];
 

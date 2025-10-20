@@ -883,6 +883,7 @@ export type Database = {
       }
       leads: {
         Row: {
+          Adress: string | null
           ai_reasoning: string | null
           ai_score: number | null
           apartment_count: number | null
@@ -896,24 +897,31 @@ export type Database = {
           description: string | null
           email: string | null
           employee_count: number | null
+          Facebook: string | null
           id: string
           industry: string | null
+          Instagram: string | null
           lead_type: string | null
+          LinkedIn: string | null
           location: string | null
           monthly_fee: number | null
           notes: string | null
           organization_id: string | null
           organization_type: string | null
           phone: string | null
+          Postal_Area: string | null
           priority: string | null
           search_id: string | null
           source: string | null
           status: string
+          Twitter: string | null
           updated_at: string
           user_id: string
           website: string | null
+          Website: string | null
         }
         Insert: {
+          Adress?: string | null
           ai_reasoning?: string | null
           ai_score?: number | null
           apartment_count?: number | null
@@ -927,24 +935,31 @@ export type Database = {
           description?: string | null
           email?: string | null
           employee_count?: number | null
+          Facebook?: string | null
           id?: string
           industry?: string | null
+          Instagram?: string | null
           lead_type?: string | null
+          LinkedIn?: string | null
           location?: string | null
           monthly_fee?: number | null
           notes?: string | null
           organization_id?: string | null
           organization_type?: string | null
           phone?: string | null
+          Postal_Area?: string | null
           priority?: string | null
           search_id?: string | null
           source?: string | null
           status?: string
+          Twitter?: string | null
           updated_at?: string
           user_id: string
           website?: string | null
+          Website?: string | null
         }
         Update: {
+          Adress?: string | null
           ai_reasoning?: string | null
           ai_score?: number | null
           apartment_count?: number | null
@@ -958,22 +973,28 @@ export type Database = {
           description?: string | null
           email?: string | null
           employee_count?: number | null
+          Facebook?: string | null
           id?: string
           industry?: string | null
+          Instagram?: string | null
           lead_type?: string | null
+          LinkedIn?: string | null
           location?: string | null
           monthly_fee?: number | null
           notes?: string | null
           organization_id?: string | null
           organization_type?: string | null
           phone?: string | null
+          Postal_Area?: string | null
           priority?: string | null
           search_id?: string | null
           source?: string | null
           status?: string
+          Twitter?: string | null
           updated_at?: string
           user_id?: string
           website?: string | null
+          Website?: string | null
         }
         Relationships: [
           {

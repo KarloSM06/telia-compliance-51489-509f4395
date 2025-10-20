@@ -19,7 +19,7 @@ export interface Lead {
   description: string | null;
   ai_score: number | null;
   ai_reasoning: string | null;
-  status: 'new' | 'contacted' | 'qualified' | 'converted' | 'rejected' | 'lost';
+  status: 'new' | 'contacted' | 'qualified' | 'converted' | 'rejected' | 'lost' | 'enriched';
   priority: 'low' | 'medium' | 'high';
   notes: string | null;
   source: 'n8n' | 'manual' | 'imported';
@@ -33,6 +33,8 @@ export interface Lead {
   construction_year?: number | null;
   monthly_fee?: number | null;
   employee_count?: number | null;
+  Adress?: string | null;
+  Postal_Area?: string | null;
 }
 
 export interface LeadActivity {
@@ -199,11 +201,18 @@ export const useLeads = () => {
     return true;
   };
 
+  const enrichedLeads = leads.filter(l => l.status === 'enriched' || (l.status !== 'new' && l.ai_score));
+  const avgAiScore = enrichedLeads.length > 0 
+    ? Math.round(enrichedLeads.reduce((sum, l) => sum + (l.ai_score || 0), 0) / enrichedLeads.length)
+    : 0;
+
   const stats = {
     totalLeads: leads.length,
     contacted: leads.filter(l => ['contacted', 'qualified', 'converted'].includes(l.status)).length,
     conversions: leads.filter(l => l.status === 'converted').length,
     newLeads: leads.filter(l => l.status === 'new').length,
+    enrichedLeads: enrichedLeads.length,
+    avgAiScore,
   };
 
   return {

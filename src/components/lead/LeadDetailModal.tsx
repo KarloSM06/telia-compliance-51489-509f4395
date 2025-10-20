@@ -14,11 +14,12 @@ interface LeadDetailModalProps {
   onUpdate: (id: string, updates: Partial<Lead>) => void;
 }
 
-const statusOptions: Lead['status'][] = ['new', 'contacted', 'qualified', 'converted', 'rejected'];
+const statusOptions: Lead['status'][] = ['new', 'enriched', 'contacted', 'qualified', 'converted', 'rejected'];
 const priorityOptions: Lead['priority'][] = ['low', 'medium', 'high'];
 
 const statusLabels = {
   new: "Ny",
+  enriched: "Berikad",
   contacted: "Kontaktad",
   qualified: "Kvalificerad",
   converted: "Konverterad",
@@ -66,11 +67,19 @@ export function LeadDetailModal({ lead, open, onOpenChange, onUpdate }: LeadDeta
               <p className="font-medium">{lead.industry || "-"}</p>
             </div>
             <div>
-              <Label className="text-muted-foreground">Plats</Label>
+              <Label className="text-muted-foreground">Adress</Label>
               <p className="flex items-center gap-1">
                 <MapPin className="h-4 w-4" />
-                {lead.location || "-"}
+                {lead.Adress || "-"}
               </p>
+            </div>
+            <div>
+              <Label className="text-muted-foreground">Postnummer</Label>
+              <p className="font-medium">{lead.Postal_Area || "-"}</p>
+            </div>
+            <div>
+              <Label className="text-muted-foreground">Plats</Label>
+              <p className="font-medium">{lead.location || "-"}</p>
             </div>
             <div>
               <Label className="text-muted-foreground">Företagsstorlek</Label>

@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Target, TrendingUp, Users, CheckCircle } from "lucide-react";
+import { Target, TrendingUp, Users, CheckCircle, Sparkles, Award } from "lucide-react";
 
 interface LeadStatsProps {
   stats: {
@@ -7,6 +7,8 @@ interface LeadStatsProps {
     newLeads: number;
     contacted: number;
     conversions: number;
+    enrichedLeads: number;
+    avgAiScore: number;
   };
 }
 
@@ -23,27 +25,41 @@ export function LeadStats({ stats }: LeadStatsProps) {
       title: "Nya",
       value: stats.newLeads,
       icon: Users,
-      gradient: "from-green-500 to-green-600",
+      gradient: "from-blue-400 to-blue-500",
       change: "+8%",
+    },
+    {
+      title: "Berikade",
+      value: stats.enrichedLeads,
+      icon: Sparkles,
+      gradient: "from-emerald-500 to-emerald-600",
+      change: "AI-berikade",
+    },
+    {
+      title: "Genomsnittlig AI Score",
+      value: stats.avgAiScore > 0 ? `${stats.avgAiScore}/100` : "-",
+      icon: Award,
+      gradient: "from-purple-500 to-purple-600",
+      change: stats.enrichedLeads > 0 ? `${stats.enrichedLeads} berikade` : "-",
     },
     {
       title: "Kontaktade",
       value: stats.contacted,
       icon: TrendingUp,
-      gradient: "from-purple-500 to-purple-600",
+      gradient: "from-yellow-500 to-yellow-600",
       change: "+15%",
     },
     {
       title: "Konverteringar",
       value: stats.conversions,
       icon: CheckCircle,
-      gradient: "from-orange-500 to-orange-600",
+      gradient: "from-green-500 to-green-600",
       change: "+20%",
     },
   ];
 
   return (
-    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
       {statCards.map((stat, index) => (
         <Card 
           key={stat.title} 

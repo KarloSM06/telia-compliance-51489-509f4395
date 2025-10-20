@@ -13,10 +13,11 @@ interface LeadCardProps {
 export function LeadCard({ lead, onViewDetails }: LeadCardProps) {
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'new': return 'bg-green-500/10 text-green-700 border-green-200';
-      case 'contacted': return 'bg-blue-500/10 text-blue-700 border-blue-200';
+      case 'new': return 'bg-blue-500/10 text-blue-700 border-blue-200';
+      case 'enriched': return 'bg-emerald-500/10 text-emerald-700 border-emerald-200';
+      case 'contacted': return 'bg-yellow-500/10 text-yellow-700 border-yellow-200';
       case 'qualified': return 'bg-purple-500/10 text-purple-700 border-purple-200';
-      case 'converted': return 'bg-orange-500/10 text-orange-700 border-orange-200';
+      case 'converted': return 'bg-green-500/10 text-green-700 border-green-200';
       default: return 'bg-gray-500/10 text-gray-700 border-gray-200';
     }
   };
@@ -71,6 +72,7 @@ export function LeadCard({ lead, onViewDetails }: LeadCardProps) {
         <div className="flex flex-wrap gap-2">
           <Badge className={getStatusColor(lead.status)}>
             {lead.status === 'new' && 'Ny'}
+            {lead.status === 'enriched' && '✨ Berikad'}
             {lead.status === 'contacted' && 'Kontaktad'}
             {lead.status === 'qualified' && 'Kvalificerad'}
             {lead.status === 'converted' && 'Konverterad'}
@@ -82,6 +84,15 @@ export function LeadCard({ lead, onViewDetails }: LeadCardProps) {
             {lead.priority === 'low' && 'Låg prioritet'}
           </Badge>
         </div>
+
+        {(lead.Adress || lead.Postal_Area) && (
+          <div className="flex items-center gap-2 text-sm">
+            <MapPin className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+            <span className="truncate">
+              {lead.Adress}{lead.Adress && lead.Postal_Area && ', '}{lead.Postal_Area}
+            </span>
+          </div>
+        )}
 
         {lead.industry && (
           <div className="flex items-center gap-2 text-sm">
