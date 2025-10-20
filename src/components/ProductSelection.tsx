@@ -461,11 +461,7 @@ export const ProductSelection = () => {
       <section className="relative py-24 sm:py-32 lg:py-40">
         {/* Hero Background Image with Overlay */}
         <div className="absolute inset-0 overflow-hidden">
-          <img 
-            src={heroBackground} 
-            alt="Hiems tekniker installerar värmesystem" 
-            className="w-full h-full object-cover"
-          />
+          <img src={heroBackground} alt="Hiems tekniker installerar värmesystem" className="w-full h-full object-cover" />
           <div className="absolute inset-0 bg-gradient-to-b from-primary/85 via-primary/75 to-primary/90"></div>
           <div className="absolute inset-0 bg-gradient-to-r from-primary/50 via-transparent to-primary/30"></div>
         </div>
@@ -549,7 +545,7 @@ export const ProductSelection = () => {
           <div className="mx-auto max-w-4xl text-center mb-20 animate-fade-in">
             <h2 className="text-5xl font-display font-bold text-white mb-6">Färdiga paket</h2>
             <div className="w-24 h-1.5 bg-gradient-gold mx-auto rounded-full mb-8"></div>
-            <p className="text-lg text-white/80">Vi har utvecklat färdiga paket för att göra processen så snabb och smidig som möjligt. Dessa skräddarsys för att passa just er verksamhet och levereras på högst två veckor – så ni snabbt kan börja effektivisera och växa er verksamhet. </p>
+            <p className="text-lg text-white/80">Vi har utvecklat färdiga paket för att göra processen så snabb och smidig som möjligt. Dessa skräddarsys för att passa just er verksamhet</p>
           </div>
 
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-6 max-w-[1800px] mx-auto">
