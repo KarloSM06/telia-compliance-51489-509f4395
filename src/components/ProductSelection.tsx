@@ -511,7 +511,7 @@ export const ProductSelection = () => {
       
 
       {/* Vad vi gör Section */}
-      <section className="relative py-24 bg-primary/20 animate-fade-in">
+      <section className="relative py-24 bg-gradient-to-b from-primary/10 via-primary/20 to-primary/10 animate-fade-in">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <AnimatedSection className="mx-auto max-w-3xl text-center mb-16">
             <h2 className="text-4xl font-display font-bold text-white mb-4">Vad vi gör</h2>
