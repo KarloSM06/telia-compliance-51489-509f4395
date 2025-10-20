@@ -5,6 +5,7 @@ import { toast } from "@/hooks/use-toast";
 export const useEnrichLead = () => {
   const [isEnriching, setIsEnriching] = useState(false);
   const [enrichingLeadId, setEnrichingLeadId] = useState<string | null>(null);
+  const [bulkProgress, setBulkProgress] = useState({ current: 0, total: 0 });
 
   const enrichLead = async (leadId: string): Promise<boolean> => {
     setIsEnriching(true);
@@ -66,9 +67,63 @@ export const useEnrichLead = () => {
     }
   };
 
+  const bulkEnrichLeads = async (leadIds: string[]): Promise<number> => {
+    if (leadIds.length === 0) return 0;
+
+    setIsEnriching(true);
+    setBulkProgress({ current: 0, total: leadIds.length });
+    
+    let successCount = 0;
+
+    toast({
+      title: "Berikar leads...",
+      description: `Bearbetar ${leadIds.length} leads med AI`,
+    });
+
+    for (let i = 0; i < leadIds.length; i++) {
+      const leadId = leadIds[i];
+      setBulkProgress({ current: i + 1, total: leadIds.length });
+      
+      try {
+        const { data, error } = await supabase.functions.invoke('enrich-lead', {
+          body: { lead_id: leadId }
+        });
+
+        if (!error && data?.success) {
+          successCount++;
+        }
+        
+        // Small delay to avoid overwhelming the API
+        await new Promise(resolve => setTimeout(resolve, 500));
+      } catch (error) {
+        console.error('Error enriching lead:', leadId, error);
+      }
+    }
+
+    setIsEnriching(false);
+    setBulkProgress({ current: 0, total: 0 });
+
+    if (successCount > 0) {
+      toast({
+        title: "Bulk-berikning klar! ✨",
+        description: `${successCount} av ${leadIds.length} leads berikade`,
+      });
+    } else {
+      toast({
+        title: "Inga leads berikade",
+        description: "Kontrollera att du har AI-krediter kvar",
+        variant: "destructive",
+      });
+    }
+
+    return successCount;
+  };
+
   return {
     enrichLead,
+    bulkEnrichLeads,
     isEnriching,
     enrichingLeadId,
+    bulkProgress,
   };
 };

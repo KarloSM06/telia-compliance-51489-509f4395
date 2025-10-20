@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useEnrichLead } from "@/hooks/useEnrichLead";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -12,6 +13,7 @@ import { LeadStats } from "@/components/lead/LeadStats";
 import { KanbanView } from "@/components/lead/KanbanView";
 import { LeadsTable } from "@/components/lead/LeadsTable";
 export function LeadSection() {
+  const { bulkEnrichLeads, isEnriching: isBulkEnriching, bulkProgress } = useEnrichLead();
   const {
     searches,
     loading: searchesLoading,
@@ -36,6 +38,13 @@ export function LeadSection() {
     setSelectedLead(lead);
     setShowLeadDetail(true);
   };
+
+  const handleBulkEnrich = async () => {
+    const newLeads = filteredLeads.filter(lead => lead.status === 'new');
+    const newLeadIds = newLeads.map(lead => lead.id);
+    await bulkEnrichLeads(newLeadIds);
+  };
+
   return <div className="space-y-6">
       {/* Hero Section */}
       <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-blue-600 via-purple-600 to-pink-600 p-8 text-white">
@@ -121,7 +130,13 @@ export function LeadSection() {
                 <Plus className="mr-2" />
                 Skapa första sökningen
               </Button>
-            </div> : view === 'kanban' ? <KanbanView leads={filteredLeads} onViewDetails={handleViewDetails} /> : <LeadsTable leads={filteredLeads} onViewDetails={handleViewDetails} />}
+            </div> : view === 'kanban' ? <KanbanView leads={filteredLeads} onViewDetails={handleViewDetails} /> : <LeadsTable 
+              leads={filteredLeads} 
+              onViewDetails={handleViewDetails}
+              onBulkEnrich={handleBulkEnrich}
+              isBulkEnriching={isBulkEnriching}
+              bulkProgress={bulkProgress}
+            />}
         </CardContent>
       </Card>
 

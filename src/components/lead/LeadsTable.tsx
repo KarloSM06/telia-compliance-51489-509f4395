@@ -10,6 +10,9 @@ import { useEnrichLead } from "@/hooks/useEnrichLead";
 interface LeadsTableProps {
   leads: Lead[];
   onViewDetails: (lead: Lead) => void;
+  onBulkEnrich?: () => void;
+  isBulkEnriching?: boolean;
+  bulkProgress?: { current: number; total: number };
 }
 
 const statusColors = {
@@ -30,8 +33,10 @@ const statusLabels = {
   rejected: "Avvisad",
 };
 
-export function LeadsTable({ leads, onViewDetails }: LeadsTableProps) {
+export function LeadsTable({ leads, onViewDetails, onBulkEnrich, isBulkEnriching, bulkProgress }: LeadsTableProps) {
   const { enrichLead, isEnriching, enrichingLeadId } = useEnrichLead();
+
+  const newLeadsCount = leads.filter(l => l.status === 'new').length;
 
   const handleEnrich = async (leadId: string, e: React.MouseEvent) => {
     e.stopPropagation();
@@ -48,7 +53,38 @@ export function LeadsTable({ leads, onViewDetails }: LeadsTableProps) {
   }
 
   return (
-    <div className="border rounded-lg">
+    <div className="space-y-4">
+      {newLeadsCount > 0 && onBulkEnrich && (
+        <div className="flex items-center justify-between p-4 border rounded-lg bg-muted/50">
+          <div>
+            <p className="font-medium">Berika alla nya leads med AI</p>
+            <p className="text-sm text-muted-foreground">
+              {newLeadsCount} nya leads är redo att berikas
+              {isBulkEnriching && bulkProgress && ` (${bulkProgress.current}/${bulkProgress.total})`}
+            </p>
+          </div>
+          <Button 
+            onClick={onBulkEnrich}
+            disabled={isBulkEnriching}
+            size="lg"
+            className="gap-2"
+          >
+            {isBulkEnriching ? (
+              <>
+                <Loader2 className="h-4 w-4 animate-spin" />
+                Berikar {bulkProgress?.current}/{bulkProgress?.total}
+              </>
+            ) : (
+              <>
+                <Sparkles className="h-4 w-4" />
+                Berika alla ({newLeadsCount})
+              </>
+            )}
+          </Button>
+        </div>
+      )}
+
+      <div className="border rounded-lg">
       <Table>
         <TableHeader>
           <TableRow>
@@ -153,6 +189,7 @@ export function LeadsTable({ leads, onViewDetails }: LeadsTableProps) {
           })}
         </TableBody>
       </Table>
+      </div>
     </div>
   );
 }
