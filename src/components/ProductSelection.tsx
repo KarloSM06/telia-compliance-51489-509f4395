@@ -21,6 +21,7 @@ import { AnimatedSection } from "@/components/AnimatedSection";
 import { QuickNavigation } from "@/components/QuickNavigation";
 import heroBackground from "@/assets/hero-background.jpg";
 import karloImage from "@/assets/karlo-mangione.png";
+import antonImage from "@/assets/anton-sallnas.png";
 interface Message {
   role: 'user' | 'assistant';
   content: string;
@@ -1073,11 +1074,11 @@ export const ProductSelection = () => {
             {/* Left Contact Cards */}
             <div className="lg:col-span-3 space-y-6">
               <AnimatedSection delay={0} className="rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 p-6 text-center">
-                <div className="w-24 h-24 rounded-full bg-white/10 mx-auto mb-4"></div>
-                <h3 className="text-lg font-bold text-white mb-1">Contact 1</h3>
-                <p className="text-sm text-white/70 mb-2">Title</p>
-                <p className="text-sm text-white/60">email@hiems.se</p>
-                <p className="text-sm text-white/60">070-xxx xx xx</p>
+                <img src={antonImage} alt="Anton Sallnäs" className="w-24 h-24 rounded-full mx-auto mb-4 object-cover border-2 border-accent/30" />
+                <h3 className="text-lg font-bold text-white mb-1">Anton Sallnäs</h3>
+                <p className="text-sm text-white/70 mb-2">CEO</p>
+                <p className="text-sm text-white/60">anton@hiems.se</p>
+                <p className="text-sm text-white/60">070-657 15 32</p>
               </AnimatedSection>
               <AnimatedSection delay={100} className="rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 p-6 text-center">
                 <div className="w-24 h-24 rounded-full bg-white/10 mx-auto mb-4"></div>
