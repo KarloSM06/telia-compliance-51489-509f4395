@@ -479,10 +479,7 @@ export const ProductSelection = () => {
         </div>
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <AnimatedSection className="mx-auto max-w-4xl text-center">
-            <div className="inline-flex items-center gap-2 rounded-full bg-accent/10 px-4 py-2 mb-8 backdrop-blur-sm border border-accent/20 hover:bg-accent/20 transition-all duration-300">
-              <Sparkles className="h-4 w-4 text-accent animate-pulse" />
-              <span className="text-sm font-medium text-white">AI-driven automation för företag</span>
-            </div>
+            
             
             <h1 className="text-5xl font-display font-bold tracking-tight text-white sm:text-6xl lg:text-7xl mb-8 leading-tight">
               Skräddarsydda AI-lösningar för{" "}
@@ -544,26 +541,24 @@ export const ProductSelection = () => {
       </section>
 
       {/* Products Section */}
-      <section id="products" className="relative py-32" style={{ backgroundImage: 'url(/images/tools-background.jpg)', backgroundSize: 'cover', backgroundPosition: 'center' }}>
+      <section id="products" className="relative py-32" style={{
+      backgroundImage: 'url(/images/tools-background.jpg)',
+      backgroundSize: 'cover',
+      backgroundPosition: 'center'
+    }}>
         <div className="absolute inset-0 bg-gradient-to-b from-primary/80 via-primary/40 to-primary/80"></div>
         <div className="mx-auto max-w-[1800px] px-6 lg:px-8 relative z-10">
           <div className="mx-auto max-w-4xl text-center mb-12 animate-fade-in bg-primary/30 backdrop-blur-sm rounded-2xl p-8 border border-primary/30">
             <h2 className="text-5xl font-display font-bold text-white mb-6 drop-shadow-lg">Är ni endast i behov av ett visst verktyg?</h2>
             <div className="w-24 h-1.5 bg-gradient-gold mx-auto rounded-full mb-8"></div>
             <p className="text-lg text-white mb-8 drop-shadow-md">Kolla in våra färdiga paket. Vi har utvecklat dessa för att göra processen så snabb och smidig som möjligt.</p>
-            <Button 
-              onClick={() => setShowPackages(!showPackages)} 
-              size="lg" 
-              variant="outline" 
-              className="border-2 border-white/20 text-white bg-white/5 hover:bg-white/10 hover:scale-105 transition-all duration-300 font-semibold"
-            >
+            <Button onClick={() => setShowPackages(!showPackages)} size="lg" variant="outline" className="border-2 border-white/20 text-white bg-white/5 hover:bg-white/10 hover:scale-105 transition-all duration-300 font-semibold">
               {showPackages ? 'Dölj paket' : 'Se mer'}
               <ArrowRight className={`ml-2 h-5 w-5 transition-transform duration-300 ${showPackages ? 'rotate-90' : ''}`} />
             </Button>
           </div>
 
-          {showPackages && (
-            <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-6 max-w-[1800px] mx-auto animate-fade-in animate-scale-in">
+          {showPackages && <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-6 max-w-[1800px] mx-auto animate-fade-in animate-scale-in">
             {/* AI Receptionist - Krono */}
             <AnimatedSection delay={0}>
             <Card className="group relative overflow-hidden border-2 border-white/10 bg-gradient-card backdrop-blur-sm hover:border-accent/50 hover:scale-[1.02] transition-all duration-500 hover:shadow-glow h-full flex flex-col">
@@ -1015,8 +1010,7 @@ export const ProductSelection = () => {
               </CardContent>
             </Card>
             </AnimatedSection>
-          </div>
-          )}
+          </div>}
         </div>
       </section>
 
