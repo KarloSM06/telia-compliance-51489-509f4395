@@ -35,6 +35,56 @@ const AboutUs = () => {
           </div>
         </section>
 
+        {/* Team Section */}
+        <section className="py-20 bg-white/5">
+          <div className="mx-auto max-w-7xl px-6 lg:px-8">
+            <div className="mx-auto max-w-3xl text-center mb-16">
+              <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">
+                Möt vårt team
+              </h2>
+              <p className="mt-4 text-lg text-white/80">
+                Vi är ett dedikerat team av experter som brinner för att hjälpa företag att lyckas med AI.
+              </p>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
+              <AnimatedSection delay={0} className="rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 p-10 text-center hover:border-accent/50 transition-all duration-300">
+                <img src={antonImage} alt="Anton Sallnäs" className="w-44 h-44 rounded-full mx-auto mb-6 object-cover border-2 border-accent/30" />
+                <h3 className="text-2xl font-bold text-white mb-3">Anton Sallnäs</h3>
+                <p className="text-lg text-white/70 mb-4">CEO</p>
+                <p className="text-lg text-white/60 mb-2">anton@hiems.se</p>
+                <p className="text-lg text-white/60">070-657 15 32</p>
+              </AnimatedSection>
+              
+              <AnimatedSection delay={100} className="rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 p-10 text-center hover:border-accent/50 transition-all duration-300">
+                <img src={karloImage} alt="Karlo Mangione" className="w-44 h-44 rounded-full mx-auto mb-6 object-cover border-2 border-accent/30" />
+                <h3 className="text-2xl font-bold text-white mb-3">Karlo Mangione</h3>
+                <p className="text-lg text-white/70 mb-4">COO</p>
+                <p className="text-lg text-white/60 mb-2">karlo.mangione@hiems.se</p>
+                <p className="text-lg text-white/60">070-231 22 71</p>
+              </AnimatedSection>
+              
+              <AnimatedSection delay={200} className="rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 p-10 text-center hover:border-accent/50 transition-all duration-300">
+                <img src={emilImage} alt="Emil Westerberg" className="w-44 h-44 rounded-full mx-auto mb-6 object-cover border-2 border-accent/30" />
+                <h3 className="text-2xl font-bold text-white mb-3">Emil Westerberg</h3>
+                <p className="text-lg text-white/70 mb-4">CLO</p>
+                <p className="text-lg text-white/60 mb-2">emil@hiems.se</p>
+                <p className="text-lg text-white/60">072-327 34 65</p>
+              </AnimatedSection>
+              
+              <AnimatedSection delay={300} className="rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 p-10 text-center hover:border-accent/50 transition-all duration-300">
+                <div className="w-44 h-44 rounded-full mx-auto mb-6 bg-gradient-primary flex items-center justify-center border-2 border-accent/30">
+                  <span className="text-5xl font-bold text-white">ME</span>
+                </div>
+                <h3 className="text-2xl font-bold text-white mb-3">Malte Ekbäck</h3>
+                <p className="text-lg text-white/70 mb-4">CFO</p>
+                <p className="text-lg text-white/60 mb-2">malte@hiems.se</p>
+                <p className="text-lg text-white/60">073-024 66 28</p>
+              </AnimatedSection>
+            </div>
+          </div>
+        </section>
+
         {/* Philosophy Section */}
         <section className="py-20 bg-white/5">
           <div className="mx-auto max-w-7xl px-6 lg:px-8">
@@ -189,55 +239,6 @@ const AboutUs = () => {
           </div>
         </section>
 
-        {/* Team Section */}
-        <section className="py-20 bg-white/5">
-          <div className="mx-auto max-w-7xl px-6 lg:px-8">
-            <div className="mx-auto max-w-3xl text-center mb-16">
-              <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">
-                Möt vårt team
-              </h2>
-              <p className="mt-4 text-lg text-white/80">
-                Vi är ett dedikerat team av experter som brinner för att hjälpa företag att lyckas med AI.
-              </p>
-            </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
-              <AnimatedSection delay={0} className="rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 p-10 text-center hover:border-accent/50 transition-all duration-300">
-                <img src={antonImage} alt="Anton Sallnäs" className="w-44 h-44 rounded-full mx-auto mb-6 object-cover border-2 border-accent/30" />
-                <h3 className="text-2xl font-bold text-white mb-3">Anton Sallnäs</h3>
-                <p className="text-lg text-white/70 mb-4">CEO</p>
-                <p className="text-lg text-white/60 mb-2">anton@hiems.se</p>
-                <p className="text-lg text-white/60">070-657 15 32</p>
-              </AnimatedSection>
-              
-              <AnimatedSection delay={100} className="rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 p-10 text-center hover:border-accent/50 transition-all duration-300">
-                <img src={karloImage} alt="Karlo Mangione" className="w-44 h-44 rounded-full mx-auto mb-6 object-cover border-2 border-accent/30" />
-                <h3 className="text-2xl font-bold text-white mb-3">Karlo Mangione</h3>
-                <p className="text-lg text-white/70 mb-4">COO</p>
-                <p className="text-lg text-white/60 mb-2">karlo.mangione@hiems.se</p>
-                <p className="text-lg text-white/60">070-231 22 71</p>
-              </AnimatedSection>
-              
-              <AnimatedSection delay={200} className="rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 p-10 text-center hover:border-accent/50 transition-all duration-300">
-                <img src={emilImage} alt="Emil Westerberg" className="w-44 h-44 rounded-full mx-auto mb-6 object-cover border-2 border-accent/30" />
-                <h3 className="text-2xl font-bold text-white mb-3">Emil Westerberg</h3>
-                <p className="text-lg text-white/70 mb-4">CLO</p>
-                <p className="text-lg text-white/60 mb-2">emil@hiems.se</p>
-                <p className="text-lg text-white/60">072-327 34 65</p>
-              </AnimatedSection>
-              
-              <AnimatedSection delay={300} className="rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 p-10 text-center hover:border-accent/50 transition-all duration-300">
-                <div className="w-44 h-44 rounded-full mx-auto mb-6 bg-gradient-primary flex items-center justify-center border-2 border-accent/30">
-                  <span className="text-5xl font-bold text-white">ME</span>
-                </div>
-                <h3 className="text-2xl font-bold text-white mb-3">Malte Ekbäck</h3>
-                <p className="text-lg text-white/70 mb-4">CFO</p>
-                <p className="text-lg text-white/60 mb-2">malte@hiems.se</p>
-                <p className="text-lg text-white/60">073-024 66 28</p>
-              </AnimatedSection>
-            </div>
-          </div>
-        </section>
       </main>
     </div>
   );
