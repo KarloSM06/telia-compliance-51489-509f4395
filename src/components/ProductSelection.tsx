@@ -1065,124 +1065,121 @@ export const ProductSelection = () => {
       {/* Testa själv Section */}
       <section id="krono-chat" className="relative py-24">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-            {/* Left Contact Cards */}
-            <div className="lg:col-span-3 space-y-6">
-              <AnimatedSection delay={0} className="rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 p-10 text-center">
-                <img src={antonImage} alt="Anton Sallnäs" className="w-44 h-44 rounded-full mx-auto mb-6 object-cover border-2 border-accent/30" />
-                <h3 className="text-2xl font-bold text-white mb-3">Anton Sallnäs</h3>
-                <p className="text-lg text-white/70 mb-4">CEO</p>
-                <p className="text-lg text-white/60 mb-2">anton@hiems.se</p>
-                <p className="text-lg text-white/60">070-657 15 32</p>
-              </AnimatedSection>
-              <AnimatedSection delay={100} className="rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 p-10 text-center">
-                <img src={karloImage} alt="Karlo Mangione" className="w-44 h-44 rounded-full mx-auto mb-6 object-cover border-2 border-accent/30" />
-                <h3 className="text-2xl font-bold text-white mb-3">Karlo Mangione</h3>
-                <p className="text-lg text-white/70 mb-4">COO</p>
-                <p className="text-lg text-white/60 mb-2">karlo.mangione@hiems.se</p>
-                <p className="text-lg text-white/60">070-231 22 71</p>
-              </AnimatedSection>
-            </div>
+          {/* Contact Profiles Row */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+            <AnimatedSection delay={0} className="rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 p-10 text-center">
+              <img src={antonImage} alt="Anton Sallnäs" className="w-44 h-44 rounded-full mx-auto mb-6 object-cover border-2 border-accent/30" />
+              <h3 className="text-2xl font-bold text-white mb-3">Anton Sallnäs</h3>
+              <p className="text-lg text-white/70 mb-4">CEO</p>
+              <p className="text-lg text-white/60 mb-2">anton@hiems.se</p>
+              <p className="text-lg text-white/60">070-657 15 32</p>
+            </AnimatedSection>
+            
+            <AnimatedSection delay={100} className="rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 p-10 text-center">
+              <img src={karloImage} alt="Karlo Mangione" className="w-44 h-44 rounded-full mx-auto mb-6 object-cover border-2 border-accent/30" />
+              <h3 className="text-2xl font-bold text-white mb-3">Karlo Mangione</h3>
+              <p className="text-lg text-white/70 mb-4">COO</p>
+              <p className="text-lg text-white/60 mb-2">karlo.mangione@hiems.se</p>
+              <p className="text-lg text-white/60">070-231 22 71</p>
+            </AnimatedSection>
+            
+            <AnimatedSection delay={200} className="rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 p-10 text-center">
+              <img src={emilImage} alt="Emil Westerberg" className="w-44 h-44 rounded-full mx-auto mb-6 object-cover border-2 border-accent/30" />
+              <h3 className="text-2xl font-bold text-white mb-3">Emil Westerberg</h3>
+              <p className="text-lg text-white/70 mb-4">CLO</p>
+              <p className="text-lg text-white/60 mb-2">emil@hiems.se</p>
+              <p className="text-lg text-white/60">072-327 34 65</p>
+            </AnimatedSection>
+            
+            <AnimatedSection delay={300} className="rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 p-10 text-center">
+              <div className="w-44 h-44 rounded-full mx-auto mb-6 bg-gradient-primary flex items-center justify-center border-2 border-accent/30">
+                <span className="text-5xl font-bold text-white">ME</span>
+              </div>
+              <h3 className="text-2xl font-bold text-white mb-3">Malte Ekbäck</h3>
+              <p className="text-lg text-white/70 mb-4">CFO</p>
+              <p className="text-lg text-white/60 mb-2">malte@hiems.se</p>
+              <p className="text-lg text-white/60">073-024 66 28</p>
+            </AnimatedSection>
+          </div>
 
-            {/* Krono Chat Center */}
-            <AnimatedSection className="lg:col-span-6">
-              <div className="relative rounded-3xl bg-gradient-primary overflow-hidden shadow-elegant">
-                <div className="absolute inset-0 bg-gradient-gold opacity-10"></div>
-                <div className="absolute top-0 right-0 w-64 h-64 bg-accent/20 rounded-full blur-3xl"></div>
-                
-                {/* Header */}
-                <div className="relative p-8 md:p-12 text-center border-b border-white/10">
-                  <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 mb-6 backdrop-blur-sm border border-white/20">
-                    <Sparkles className="h-4 w-4 text-accent" />
-                    <span className="text-sm font-medium text-white">Hur hade AI hjälpt er verksamhet?</span>
-                  </div>
-                  <h2 className="text-4xl font-display font-bold text-white mb-4">Se hur AI hade kunnat effektivisera er verksamhet</h2>
-                  <p className="text-lg text-white/90 leading-relaxed max-w-2xl mx-auto">
-                    Prata med vår AI-rådgivare Krono eller prova vårt demo för att se hur en AI-receptionist fungerar
-                  </p>
+          {/* Krono Chat Center */}
+          <AnimatedSection className="max-w-4xl mx-auto">
+            <div className="relative rounded-3xl bg-gradient-primary overflow-hidden shadow-elegant">
+              <div className="absolute inset-0 bg-gradient-gold opacity-10"></div>
+              <div className="absolute top-0 right-0 w-64 h-64 bg-accent/20 rounded-full blur-3xl"></div>
+              
+              {/* Header */}
+              <div className="relative p-8 md:p-12 text-center border-b border-white/10">
+                <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 mb-6 backdrop-blur-sm border border-white/20">
+                  <Sparkles className="h-4 w-4 text-accent" />
+                  <span className="text-sm font-medium text-white">Hur hade AI hjälpt er verksamhet?</span>
                 </div>
+                <h2 className="text-4xl font-display font-bold text-white mb-4">Se hur AI hade kunnat effektivisera er verksamhet</h2>
+                <p className="text-lg text-white/90 leading-relaxed max-w-2xl mx-auto">
+                  Prata med vår AI-rådgivare Krono eller prova vårt demo för att se hur en AI-receptionist fungerar
+                </p>
+              </div>
 
-                {/* Chat Area */}
-                <div className="relative bg-white/5 backdrop-blur-sm">
-                  <ScrollArea className="h-[400px] p-6" ref={scrollRef}>
-                    <div className="space-y-4">
-                      {messages.map((msg, idx) => <div key={idx} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-                          <div className={`max-w-[80%] rounded-2xl px-4 py-2.5 ${msg.role === 'user' ? 'bg-white text-primary' : 'bg-white/10 text-white backdrop-blur-sm border border-white/20'}`}>
-                            <p className="text-sm whitespace-pre-wrap">{msg.content}</p>
-                          </div>
-                        </div>)}
-                      {isLoading && <div className="flex justify-start">
-                          <div className="bg-white/10 rounded-2xl px-4 py-2.5 backdrop-blur-sm border border-white/20">
-                            <Loader2 className="h-4 w-4 animate-spin text-white" />
-                          </div>
-                        </div>}
-                    </div>
-                  </ScrollArea>
+              {/* Chat Area */}
+              <div className="relative bg-white/5 backdrop-blur-sm">
+                <ScrollArea className="h-[400px] p-6" ref={scrollRef}>
+                  <div className="space-y-4">
+                    {messages.map((msg, idx) => <div key={idx} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+                        <div className={`max-w-[80%] rounded-2xl px-4 py-2.5 ${msg.role === 'user' ? 'bg-white text-primary' : 'bg-white/10 text-white backdrop-blur-sm border border-white/20'}`}>
+                          <p className="text-sm whitespace-pre-wrap">{msg.content}</p>
+                        </div>
+                      </div>)}
+                    {isLoading && <div className="flex justify-start">
+                        <div className="bg-white/10 rounded-2xl px-4 py-2.5 backdrop-blur-sm border border-white/20">
+                          <Loader2 className="h-4 w-4 animate-spin text-white" />
+                        </div>
+                      </div>}
+                  </div>
+                </ScrollArea>
 
-                  {/* Input */}
-                  <div className="p-6 border-t border-white/10">
-                    <div className="flex gap-3">
-                      <Input ref={inputRef} value={input} onChange={e => setInput(e.target.value)} onKeyDown={handleKeyPress} placeholder="Skriv ditt meddelande till Krono..." disabled={isLoading} className="flex-1 bg-white/10 border-white/20 text-white placeholder:text-white/50 focus:bg-white/15" />
-                      <Button onClick={handleSend} disabled={!input.trim() || isLoading} size="icon" className="bg-white text-primary hover:bg-white/90 h-10 w-10">
-                        <Send className="h-4 w-4" />
-                      </Button>
-                    </div>
-                    <div className="mt-4 text-center">
-                      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-                        <DialogTrigger asChild>
-                          <Button variant="outline" size="lg" className="bg-white/5 border-white/20 text-white hover:bg-white/10 font-semibold group">
-                            Prova receptionistdemo
-                            <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                {/* Input */}
+                <div className="p-6 border-t border-white/10">
+                  <div className="flex gap-3">
+                    <Input ref={inputRef} value={input} onChange={e => setInput(e.target.value)} onKeyDown={handleKeyPress} placeholder="Skriv ditt meddelande till Krono..." disabled={isLoading} className="flex-1 bg-white/10 border-white/20 text-white placeholder:text-white/50 focus:bg-white/15" />
+                    <Button onClick={handleSend} disabled={!input.trim() || isLoading} size="icon" className="bg-white text-primary hover:bg-white/90 h-10 w-10">
+                      <Send className="h-4 w-4" />
+                    </Button>
+                  </div>
+                  <div className="mt-4 text-center">
+                    <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+                      <DialogTrigger asChild>
+                        <Button variant="outline" size="lg" className="bg-white/5 border-white/20 text-white hover:bg-white/10 font-semibold group">
+                          Prova receptionistdemo
+                          <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent className="sm:max-w-md bg-background border-border">
+                        <DialogHeader>
+                          <DialogTitle className="flex items-center gap-2">
+                            <Phone className="h-5 w-5 text-accent" />
+                            Prova Receptionistdemo
+                          </DialogTitle>
+                          <DialogDescription>
+                            Skriv in telefonnummer för att bli uppringd av vår receptionist
+                          </DialogDescription>
+                        </DialogHeader>
+                        <div className="space-y-4 pt-4">
+                          <Input placeholder="070-123 45 67" value={phoneNumber} onChange={e => setPhoneNumber(e.target.value)} onKeyDown={e => {
+                          if (e.key === 'Enter') {
+                            handlePhoneSubmit();
+                          }
+                        }} className="text-base" />
+                          <Button onClick={handlePhoneSubmit} className="w-full bg-primary text-primary-foreground hover:bg-primary/90" size="lg">
+                            Ring mig
                           </Button>
-                        </DialogTrigger>
-                        <DialogContent className="sm:max-w-md bg-background border-border">
-                          <DialogHeader>
-                            <DialogTitle className="flex items-center gap-2">
-                              <Phone className="h-5 w-5 text-accent" />
-                              Prova Receptionistdemo
-                            </DialogTitle>
-                            <DialogDescription>
-                              Skriv in telefonnummer för att bli uppringd av vår receptionist
-                            </DialogDescription>
-                          </DialogHeader>
-                          <div className="space-y-4 pt-4">
-                            <Input placeholder="070-123 45 67" value={phoneNumber} onChange={e => setPhoneNumber(e.target.value)} onKeyDown={e => {
-                            if (e.key === 'Enter') {
-                              handlePhoneSubmit();
-                            }
-                          }} className="text-base" />
-                            <Button onClick={handlePhoneSubmit} className="w-full bg-primary text-primary-foreground hover:bg-primary/90" size="lg">
-                              Ring mig
-                            </Button>
-                          </div>
-                        </DialogContent>
-                      </Dialog>
-                    </div>
+                        </div>
+                      </DialogContent>
+                    </Dialog>
                   </div>
                 </div>
               </div>
-            </AnimatedSection>
-
-            {/* Right Contact Cards */}
-            <div className="lg:col-span-3 space-y-6">
-              <AnimatedSection delay={0} className="rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 p-10 text-center">
-                <img src={emilImage} alt="Emil Westerberg" className="w-44 h-44 rounded-full mx-auto mb-6 object-cover border-2 border-accent/30" />
-                <h3 className="text-2xl font-bold text-white mb-3">Emil Westerberg</h3>
-                <p className="text-lg text-white/70 mb-4">CLO</p>
-                <p className="text-lg text-white/60 mb-2">emil@hiems.se</p>
-                <p className="text-lg text-white/60">072-327 34 65</p>
-              </AnimatedSection>
-              <AnimatedSection delay={100} className="rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 p-10 text-center">
-                <div className="w-44 h-44 rounded-full mx-auto mb-6 bg-gradient-primary flex items-center justify-center border-2 border-accent/30">
-                  <span className="text-5xl font-bold text-white">ME</span>
-                </div>
-                <h3 className="text-2xl font-bold text-white mb-3">Malte Ekbäck</h3>
-                <p className="text-lg text-white/70 mb-4">CFO</p>
-                <p className="text-lg text-white/60 mb-2">malte@hiems.se</p>
-                <p className="text-lg text-white/60">073-024 66 28</p>
-              </AnimatedSection>
             </div>
-          </div>
+          </AnimatedSection>
         </div>
       </section>
       
