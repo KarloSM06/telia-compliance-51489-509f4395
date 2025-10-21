@@ -3,7 +3,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { ArrowRight, CheckCircle, Zap, Target, Sparkles, ChefHat, Headphones, UserCheck, TrendingUp, MessageSquare, ShoppingCart, Award, Send, Loader2, Phone, BarChart3, Users, Clock, Star } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
@@ -549,22 +548,17 @@ export const ProductSelection = () => {
     }}>
         <div className="absolute inset-0 bg-gradient-to-b from-primary/80 via-primary/40 to-primary/80"></div>
         <div className="mx-auto max-w-[1800px] px-6 lg:px-8 relative z-10">
-          <Accordion type="single" collapsible className="mx-auto max-w-4xl mb-12">
-            <AccordionItem value="packages" className="border-none">
-              <div className="text-center bg-primary/30 backdrop-blur-sm rounded-2xl p-8 border border-primary/30">
-                <h2 className="text-5xl font-display font-bold text-white mb-6 drop-shadow-lg">Är ni endast i behov av ett visst verktyg?</h2>
-                <div className="w-24 h-1.5 bg-gradient-gold mx-auto rounded-full mb-8"></div>
-                <p className="text-lg text-white mb-8 drop-shadow-md">Kolla in våra färdiga paket. Vi har utvecklat dessa för att göra processen så snabb och smidig som möjligt.</p>
-                <AccordionTrigger className="w-full justify-center hover:no-underline">
-                  <span className="inline-flex items-center justify-center px-8 py-3 border-2 border-white/20 text-white bg-white/5 hover:bg-white/10 rounded-md transition-all duration-300 font-semibold text-lg">
-                    Se mer
-                    <ArrowRight className="ml-2 h-5 w-5" />
-                  </span>
-                </AccordionTrigger>
-              </div>
+          <div className="mx-auto max-w-4xl text-center mb-12 animate-fade-in bg-primary/30 backdrop-blur-sm rounded-2xl p-8 border border-primary/30">
+            <h2 className="text-5xl font-display font-bold text-white mb-6 drop-shadow-lg">Är ni endast i behov av ett visst verktyg?</h2>
+            <div className="w-24 h-1.5 bg-gradient-gold mx-auto rounded-full mb-8"></div>
+            <p className="text-lg text-white mb-8 drop-shadow-md">Kolla in våra färdiga paket. Vi har utvecklat dessa för att göra processen så snabb och smidig som möjligt.</p>
+            <Button onClick={() => setShowPackages(!showPackages)} size="lg" variant="outline" className="border-2 border-white/20 text-white bg-white/5 hover:bg-white/10 hover:scale-105 transition-all duration-300 font-semibold">
+              {showPackages ? 'Dölj paket' : 'Se mer'}
+              <ArrowRight className={`ml-2 h-5 w-5 transition-transform duration-300 ${showPackages ? 'rotate-90' : ''}`} />
+            </Button>
+          </div>
 
-              <AccordionContent className="pt-8">
-                <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-6 max-w-[1800px] mx-auto">
+          {showPackages && <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-6 max-w-[1800px] mx-auto animate-fade-in animate-scale-in">
             {/* AI Receptionist - Krono */}
             <AnimatedSection delay={0}>
             <Card className="group relative overflow-hidden border-2 border-white/10 bg-gradient-card backdrop-blur-sm hover:border-accent/50 hover:scale-[1.02] transition-all duration-500 hover:shadow-glow h-full flex flex-col">
@@ -1016,10 +1010,7 @@ export const ProductSelection = () => {
               </CardContent>
             </Card>
             </AnimatedSection>
-          </div>
-              </AccordionContent>
-            </AccordionItem>
-          </Accordion>
+          </div>}
         </div>
       </section>
 
