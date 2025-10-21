@@ -5,30 +5,55 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/hooks/useAuth";
 import { ChatBot } from "@/components/ChatBot";
-import Index from "./pages/Index";
-import ExampleReport from "./pages/ExampleReport";
-import Auth from "./pages/Auth";
-import Dashboard from "./pages/Dashboard";
-import DashboardPackages from "./pages/DashboardPackages";
-import CustomDashboard from "./pages/CustomDashboard";
-import Settings from "./pages/Settings";
-import Demo from "./pages/Demo";
-import AboutUs from "./pages/AboutUs";
-import GDPRSettings from "./pages/GDPRSettings";
-import Legal from "./pages/Legal";
-import NotFound from "./pages/NotFound";
-import Checkout from "./pages/Checkout";
-import DashboardAnalytics from "./pages/DashboardAnalytics";
-import KronoPage from "./pages/KronoPage";
-import GastroPage from "./pages/GastroPage";
-import TalentPage from "./pages/TalentPage";
-import LeadPage from "./pages/LeadPage";
-import ThorPage from "./pages/ThorPage";
-import EkoPage from "./pages/EkoPage";
-import CalendarPage from "./pages/CalendarPage";
-import { DashboardLayout } from "./components/dashboard/DashboardLayout";
+import { lazy, Suspense } from "react";
+import { Skeleton } from "@/components/ui/skeleton";
 
-const queryClient = new QueryClient();
+// Lazy load all routes for better performance
+const Index = lazy(() => import("./pages/Index"));
+const ExampleReport = lazy(() => import("./pages/ExampleReport"));
+const Auth = lazy(() => import("./pages/Auth"));
+const Dashboard = lazy(() => import("./pages/Dashboard"));
+const DashboardPackages = lazy(() => import("./pages/DashboardPackages"));
+const CustomDashboard = lazy(() => import("./pages/CustomDashboard"));
+const Settings = lazy(() => import("./pages/Settings"));
+const Demo = lazy(() => import("./pages/Demo"));
+const AboutUs = lazy(() => import("./pages/AboutUs"));
+const GDPRSettings = lazy(() => import("./pages/GDPRSettings"));
+const Legal = lazy(() => import("./pages/Legal"));
+const NotFound = lazy(() => import("./pages/NotFound"));
+const Checkout = lazy(() => import("./pages/Checkout"));
+const DashboardAnalytics = lazy(() => import("./pages/DashboardAnalytics"));
+const KronoPage = lazy(() => import("./pages/KronoPage"));
+const GastroPage = lazy(() => import("./pages/GastroPage"));
+const TalentPage = lazy(() => import("./pages/TalentPage"));
+const LeadPage = lazy(() => import("./pages/LeadPage"));
+const ThorPage = lazy(() => import("./pages/ThorPage"));
+const EkoPage = lazy(() => import("./pages/EkoPage"));
+const CalendarPage = lazy(() => import("./pages/CalendarPage"));
+const DashboardLayout = lazy(() => import("./components/dashboard/DashboardLayout").then(m => ({ default: m.DashboardLayout })));
+
+// Loading fallback component
+const PageLoader = () => (
+  <div className="min-h-screen flex items-center justify-center bg-background">
+    <div className="space-y-4 w-full max-w-2xl px-4">
+      <Skeleton className="h-12 w-3/4" />
+      <Skeleton className="h-8 w-1/2" />
+      <Skeleton className="h-64 w-full" />
+    </div>
+  </div>
+);
+
+// Optimized QueryClient configuration
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 5 * 60 * 1000, // 5 minutes
+      gcTime: 10 * 60 * 1000, // 10 minutes (replaces cacheTime)
+      refetchOnWindowFocus: false,
+      retry: 1,
+    },
+  },
+});
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
@@ -37,30 +62,32 @@ const App = () => (
         <Toaster />
         <Sonner />
         <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/auth" element={<Auth />} />
-            <Route path="/dashboard" element={<DashboardLayout><Dashboard /></DashboardLayout>} />
-            <Route path="/dashboard/analytics" element={<DashboardLayout><DashboardAnalytics /></DashboardLayout>} />
-            <Route path="/dashboard/packages" element={<DashboardLayout><DashboardPackages /></DashboardLayout>} />
-            <Route path="/dashboard/custom" element={<DashboardLayout><CustomDashboard /></DashboardLayout>} />
-            <Route path="/dashboard/settings" element={<DashboardLayout><Settings /></DashboardLayout>} />
-            <Route path="/dashboard/krono" element={<DashboardLayout><KronoPage /></DashboardLayout>} />
-            <Route path="/dashboard/gastro" element={<DashboardLayout><GastroPage /></DashboardLayout>} />
-            <Route path="/dashboard/talent" element={<DashboardLayout><TalentPage /></DashboardLayout>} />
-            <Route path="/dashboard/lead" element={<DashboardLayout><LeadPage /></DashboardLayout>} />
-            <Route path="/dashboard/thor" element={<DashboardLayout><ThorPage /></DashboardLayout>} />
-            <Route path="/dashboard/eko" element={<DashboardLayout><EkoPage /></DashboardLayout>} />
-            <Route path="/dashboard/calendar" element={<DashboardLayout><CalendarPage /></DashboardLayout>} />
-            <Route path="/demo" element={<Demo />} />
-            <Route path="/om-oss" element={<AboutUs />} />
-            <Route path="/gdpr" element={<GDPRSettings />} />
-            <Route path="/regelverk" element={<Legal />} />
-            <Route path="/exempelrapport" element={<ExampleReport />} />
-            <Route path="/checkout" element={<Checkout />} />
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
+          <Suspense fallback={<PageLoader />}>
+            <Routes>
+              <Route path="/" element={<Index />} />
+              <Route path="/auth" element={<Auth />} />
+              <Route path="/dashboard" element={<DashboardLayout><Dashboard /></DashboardLayout>} />
+              <Route path="/dashboard/analytics" element={<DashboardLayout><DashboardAnalytics /></DashboardLayout>} />
+              <Route path="/dashboard/packages" element={<DashboardLayout><DashboardPackages /></DashboardLayout>} />
+              <Route path="/dashboard/custom" element={<DashboardLayout><CustomDashboard /></DashboardLayout>} />
+              <Route path="/dashboard/settings" element={<DashboardLayout><Settings /></DashboardLayout>} />
+              <Route path="/dashboard/krono" element={<DashboardLayout><KronoPage /></DashboardLayout>} />
+              <Route path="/dashboard/gastro" element={<DashboardLayout><GastroPage /></DashboardLayout>} />
+              <Route path="/dashboard/talent" element={<DashboardLayout><TalentPage /></DashboardLayout>} />
+              <Route path="/dashboard/lead" element={<DashboardLayout><LeadPage /></DashboardLayout>} />
+              <Route path="/dashboard/thor" element={<DashboardLayout><ThorPage /></DashboardLayout>} />
+              <Route path="/dashboard/eko" element={<DashboardLayout><EkoPage /></DashboardLayout>} />
+              <Route path="/dashboard/calendar" element={<DashboardLayout><CalendarPage /></DashboardLayout>} />
+              <Route path="/demo" element={<Demo />} />
+              <Route path="/om-oss" element={<AboutUs />} />
+              <Route path="/gdpr" element={<GDPRSettings />} />
+              <Route path="/regelverk" element={<Legal />} />
+              <Route path="/exempelrapport" element={<ExampleReport />} />
+              <Route path="/checkout" element={<Checkout />} />
+              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </Suspense>
           <ChatBot />
         </BrowserRouter>
       </TooltipProvider>

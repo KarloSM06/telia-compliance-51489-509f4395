@@ -465,7 +465,12 @@ export const ProductSelection = () => {
       <section className="relative py-24 sm:py-32 lg:py-40">
         {/* Hero Background Image with Overlay */}
         <div className="absolute inset-0 overflow-hidden">
-          <img src={heroBackground} alt="Hiems tekniker installerar värmesystem" className="w-full h-full object-cover" />
+          <img 
+            src={heroBackground} 
+            alt="Hiems tekniker installerar värmesystem" 
+            className="w-full h-full object-cover"
+            fetchPriority="high"
+          />
           <div className="absolute inset-0 bg-gradient-to-b from-primary/85 via-primary/75 to-primary/90"></div>
           <div className="absolute inset-0 bg-gradient-to-r from-primary/50 via-transparent to-primary/30"></div>
         </div>
@@ -1068,7 +1073,12 @@ export const ProductSelection = () => {
           {/* Contact Profiles Row */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
             <AnimatedSection delay={0} className="rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 p-10 text-center">
-              <img src={antonImage} alt="Anton Sallnäs" className="w-44 h-44 rounded-full mx-auto mb-6 object-cover border-2 border-accent/30" />
+              <img 
+                src={antonImage} 
+                alt="Anton Sallnäs" 
+                className="w-44 h-44 rounded-full mx-auto mb-6 object-cover border-2 border-accent/30"
+                loading="lazy"
+              />
               <h3 className="text-2xl font-bold text-white mb-3">Anton Sallnäs</h3>
               <p className="text-lg text-white/70 mb-4">CEO</p>
               <p className="text-lg text-white/60 mb-2">anton@hiems.se</p>
@@ -1076,7 +1086,12 @@ export const ProductSelection = () => {
             </AnimatedSection>
             
             <AnimatedSection delay={100} className="rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 p-10 text-center">
-              <img src={karloImage} alt="Karlo Mangione" className="w-44 h-44 rounded-full mx-auto mb-6 object-cover border-2 border-accent/30" />
+              <img 
+                src={karloImage} 
+                alt="Karlo Mangione" 
+                className="w-44 h-44 rounded-full mx-auto mb-6 object-cover border-2 border-accent/30"
+                loading="lazy"
+              />
               <h3 className="text-2xl font-bold text-white mb-3">Karlo Mangione</h3>
               <p className="text-lg text-white/70 mb-4">COO</p>
               <p className="text-lg text-white/60 mb-2">karlo.mangione@hiems.se</p>
@@ -1084,7 +1099,12 @@ export const ProductSelection = () => {
             </AnimatedSection>
             
             <AnimatedSection delay={200} className="rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 p-10 text-center">
-              <img src={emilImage} alt="Emil Westerberg" className="w-44 h-44 rounded-full mx-auto mb-6 object-cover border-2 border-accent/30" />
+              <img 
+                src={emilImage} 
+                alt="Emil Westerberg" 
+                className="w-44 h-44 rounded-full mx-auto mb-6 object-cover border-2 border-accent/30"
+                loading="lazy"
+              />
               <h3 className="text-2xl font-bold text-white mb-3">Emil Westerberg</h3>
               <p className="text-lg text-white/70 mb-4">CLO</p>
               <p className="text-lg text-white/60 mb-2">emil@hiems.se</p>
