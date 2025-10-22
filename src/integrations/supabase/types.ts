@@ -1559,34 +1559,22 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      auto_delete_old_calls: {
-        Args: Record<PropertyKey, never>
-        Returns: undefined
-      }
+      auto_delete_old_calls: { Args: never; Returns: undefined }
       decrypt_text: {
         Args: { encrypted_data: string; key: string }
         Returns: string
       }
-      encrypt_text: {
-        Args: { data: string; key: string }
-        Returns: string
-      }
+      encrypt_text: { Args: { data: string; key: string }; Returns: string }
       has_org_role: {
         Args: { required_roles: string[]; user_uuid: string }
         Returns: boolean
       }
-      is_admin: {
-        Args: { user_id: string }
-        Returns: boolean
-      }
+      is_admin: { Args: { user_id: string }; Returns: boolean }
       user_can_access_dashboard: {
         Args: { dashboard_uuid: string; user_uuid: string }
         Returns: boolean
       }
-      user_organization_id: {
-        Args: { user_uuid: string }
-        Returns: string
-      }
+      user_organization_id: { Args: { user_uuid: string }; Returns: string }
     }
     Enums: {
       app_role: "admin" | "user"
