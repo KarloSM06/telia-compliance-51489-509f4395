@@ -260,7 +260,7 @@ export const WeekView = ({
                     </div>)}
                   
                   {/* Current time indicator - only for today */}
-                  {isSameDay(day, new Date()) && <CurrentTimeIndicator displayDate={day} />}
+                  {isSameDay(day, new Date()) && <CurrentTimeIndicator displayDate={day} viewStartHour={startHour} />}
 
                   {/* Events for this day */}
                   <div className="absolute top-0 left-0 right-0 bottom-0 pointer-events-none">

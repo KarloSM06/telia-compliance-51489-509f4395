@@ -180,7 +180,7 @@ export const DayView = ({
             <TimeGrid onTimeSlotClick={handleTimeSlotClick} availabilitySlots={slots} currentDate={date} />
             
             {/* Current time indicator */}
-            <CurrentTimeIndicator displayDate={date} />
+            <CurrentTimeIndicator displayDate={date} viewStartHour={startHour} />
 
             {/* Events */}
             <div className="absolute top-0 left-0 right-0 bottom-0 pointer-events-none">

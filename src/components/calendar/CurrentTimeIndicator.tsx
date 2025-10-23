@@ -4,9 +4,10 @@ import { getCurrentStockholmTime, formatInStockholm, toStockholmTime } from '@/l
 
 interface CurrentTimeIndicatorProps {
   displayDate: Date;
+  viewStartHour?: number;
 }
 
-export const CurrentTimeIndicator = ({ displayDate }: CurrentTimeIndicatorProps) => {
+export const CurrentTimeIndicator = ({ displayDate, viewStartHour = 0 }: CurrentTimeIndicatorProps) => {
   const [currentTime, setCurrentTime] = useState(getCurrentStockholmTime());
 
   useEffect(() => {
@@ -24,7 +25,7 @@ export const CurrentTimeIndicator = ({ displayDate }: CurrentTimeIndicatorProps)
   const hours = currentTime.getHours();
   const minutes = currentTime.getMinutes();
   const PIXELS_PER_MINUTE = 1;
-  const top = (hours * 60 + minutes) * PIXELS_PER_MINUTE; // Start at 00:00
+  const top = ((hours - viewStartHour) * 60 + minutes) * PIXELS_PER_MINUTE;
 
   return (
     <div 
