@@ -1,6 +1,9 @@
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 import { BookingAdapterFactory } from '../_shared/booking-integrations/adapter-factory.ts';
+import { toZonedTime, fromZonedTime } from "https://esm.sh/date-fns-tz@3.2.0";
+
+const STOCKHOLM_TZ = 'Europe/Stockholm';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -57,6 +60,12 @@ serve(async (req) => {
         let syncedCount = 0;
 
         for (const booking of externalBookings) {
+          // Convert external booking times to Stockholm timezone, then to UTC for storage
+          const startStockholm = toZonedTime(new Date(booking.startTime), STOCKHOLM_TZ);
+          const endStockholm = toZonedTime(new Date(booking.endTime), STOCKHOLM_TZ);
+          const startUTC = fromZonedTime(startStockholm, STOCKHOLM_TZ);
+          const endUTC = fromZonedTime(endStockholm, STOCKHOLM_TZ);
+          
           const { error: upsertError } = await supabase
             .from('calendar_events')
             .upsert({
@@ -66,14 +75,15 @@ serve(async (req) => {
               external_id: booking.externalId,
               title: booking.title,
               description: booking.description,
-              start_time: booking.startTime,
-              end_time: booking.endTime,
+              start_time: startUTC.toISOString(),
+              end_time: endUTC.toISOString(),
               status: booking.status === 'confirmed' ? 'completed' : 'scheduled',
               source: integration.provider,
               contact_person: booking.customer.name,
               contact_email: booking.customer.email,
               contact_phone: booking.customer.phone,
               event_type: 'meeting',
+              timezone: STOCKHOLM_TZ,
               sync_status: 'synced',
               last_synced_at: new Date().toISOString()
             }, {

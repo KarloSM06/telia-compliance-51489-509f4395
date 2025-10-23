@@ -1,5 +1,9 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.75.0";
+import { toZonedTime, fromZonedTime } from "https://esm.sh/date-fns-tz@3.2.0";
+import { getDay } from "https://esm.sh/date-fns@3.6.0";
+
+const STOCKHOLM_TZ = 'Europe/Stockholm';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -26,9 +30,10 @@ serve(async (req) => {
       );
     }
 
-    // Get day of week (0-6, Sunday-Saturday)
+    // Get day of week (0-6, Sunday-Saturday) in Stockholm timezone
     const requestDate = new Date(date);
-    const dayOfWeek = requestDate.getDay();
+    const stockholmDate = toZonedTime(requestDate, STOCKHOLM_TZ);
+    const dayOfWeek = getDay(stockholmDate);
 
     // Fetch user's availability slots for this day
     const { data: availabilitySlots, error: slotsError } = await supabase
@@ -54,18 +59,21 @@ serve(async (req) => {
       );
     }
 
-    // Fetch existing events for this day
-    const startOfDay = new Date(requestDate);
-    startOfDay.setHours(0, 0, 0, 0);
-    const endOfDay = new Date(requestDate);
-    endOfDay.setHours(23, 59, 59, 999);
+    // Fetch existing events for this day (in Stockholm timezone)
+    const stockholmStartOfDay = toZonedTime(requestDate, STOCKHOLM_TZ);
+    stockholmStartOfDay.setHours(0, 0, 0, 0);
+    const stockholmEndOfDay = toZonedTime(requestDate, STOCKHOLM_TZ);
+    stockholmEndOfDay.setHours(23, 59, 59, 999);
+    
+    const startOfDayUTC = fromZonedTime(stockholmStartOfDay, STOCKHOLM_TZ);
+    const endOfDayUTC = fromZonedTime(stockholmEndOfDay, STOCKHOLM_TZ);
 
     const { data: existingEvents, error: eventsError } = await supabase
       .from('calendar_events')
       .select('start_time, end_time')
       .eq('user_id', user_id)
-      .gte('start_time', startOfDay.toISOString())
-      .lte('start_time', endOfDay.toISOString());
+      .gte('start_time', startOfDayUTC.toISOString())
+      .lte('start_time', endOfDayUTC.toISOString());
 
     if (eventsError) {
       console.error('Error fetching events:', eventsError);

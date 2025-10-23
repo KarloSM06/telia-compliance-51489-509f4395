@@ -1,5 +1,6 @@
 import { CalendarEvent } from "@/hooks/useCalendarEvents";
 import { parseISO, addMinutes, setMinutes, setHours, isSameDay, differenceInMinutes } from "date-fns";
+import { toStockholmTime, getCurrentStockholmTime } from "./timezoneUtils";
 
 export const snapToInterval = (date: Date, intervalMinutes: number = 15): Date => {
   const minutes = date.getMinutes();
@@ -14,13 +15,15 @@ export const getTimeFromYPosition = (y: number, containerTop: number, viewStartH
   const hours = Math.floor(totalMinutes / 60) + viewStartHour; // Add offset
   const minutes = totalMinutes % 60;
   
-  const now = new Date();
-  return setMinutes(setHours(now, hours), minutes);
+  // Create date in Stockholm timezone
+  const stockholmNow = getCurrentStockholmTime();
+  return setMinutes(setHours(stockholmNow, hours), minutes);
 };
 
 export const getEventPosition = (startTime: string, endTime: string, viewStartHour: number = 0) => {
-  const start = parseISO(startTime);
-  const end = parseISO(endTime);
+  // Parse times as Stockholm time
+  const start = toStockholmTime(startTime);
+  const end = toStockholmTime(endTime);
   
   const startHour = start.getHours();
   const startMinute = start.getMinutes();
@@ -35,10 +38,11 @@ export const getEventPosition = (startTime: string, endTime: string, viewStartHo
 };
 
 export const doesOverlap = (event1: CalendarEvent, event2: CalendarEvent): boolean => {
-  const start1 = parseISO(event1.start_time);
-  const end1 = parseISO(event1.end_time);
-  const start2 = parseISO(event2.start_time);
-  const end2 = parseISO(event2.end_time);
+  // Convert to Stockholm time for overlap comparison
+  const start1 = toStockholmTime(event1.start_time);
+  const end1 = toStockholmTime(event1.end_time);
+  const start2 = toStockholmTime(event2.start_time);
+  const end2 = toStockholmTime(event2.end_time);
   
   return start1 < end2 && start2 < end1;
 };
@@ -111,8 +115,8 @@ export const calculateSnapPosition = (
   const SNAP_THRESHOLD = 5 * 60 * 1000; // 5 minutes in ms
   
   for (const event of nearbyEvents) {
-    const eventStart = parseISO(event.start_time);
-    const eventEnd = parseISO(event.end_time);
+    const eventStart = toStockholmTime(event.start_time);
+    const eventEnd = toStockholmTime(event.end_time);
     
     const diffToStart = Math.abs(time.getTime() - eventStart.getTime());
     const diffToEnd = Math.abs(time.getTime() - eventEnd.getTime());

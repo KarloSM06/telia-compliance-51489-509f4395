@@ -127,6 +127,7 @@ export type Database = {
           is_template: boolean | null
           specific_date: string | null
           start_time: string
+          timezone: string | null
           updated_at: string
           user_id: string
         }
@@ -140,6 +141,7 @@ export type Database = {
           is_template?: boolean | null
           specific_date?: string | null
           start_time: string
+          timezone?: string | null
           updated_at?: string
           user_id: string
         }
@@ -153,6 +155,7 @@ export type Database = {
           is_template?: boolean | null
           specific_date?: string | null
           start_time?: string
+          timezone?: string | null
           updated_at?: string
           user_id?: string
         }
@@ -787,6 +790,7 @@ export type Database = {
       }
       Hiems_Kunddata: {
         Row: {
+          "Ai-voice-Id": string | null
           AntaletMinuter: string | null
           AntaletSMS: string | null
           call_transfers: string | null
@@ -802,6 +806,7 @@ export type Database = {
           username: string | null
         }
         Insert: {
+          "Ai-voice-Id"?: string | null
           AntaletMinuter?: string | null
           AntaletSMS?: string | null
           call_transfers?: string | null
@@ -817,6 +822,7 @@ export type Database = {
           username?: string | null
         }
         Update: {
+          "Ai-voice-Id"?: string | null
           AntaletMinuter?: string | null
           AntaletSMS?: string | null
           call_transfers?: string | null

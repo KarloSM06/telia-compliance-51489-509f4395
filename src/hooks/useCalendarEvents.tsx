@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { toast } from "sonner";
+import { toStockholmTime, fromStockholmTime } from "@/lib/timezoneUtils";
 
 export interface CalendarEvent {
   id: string;
@@ -38,7 +39,15 @@ export const useCalendarEvents = () => {
         .order("start_time", { ascending: true });
 
       if (error) throw error;
-      setEvents(data || []);
+      
+      // Convert UTC times from database to Stockholm time for display
+      const eventsInStockholmTime = (data || []).map(event => ({
+        ...event,
+        start_time: toStockholmTime(event.start_time).toISOString(),
+        end_time: toStockholmTime(event.end_time).toISOString(),
+      }));
+      
+      setEvents(eventsInStockholmTime);
     } catch (error) {
       console.error("Error fetching events:", error);
       toast.error("Kunde inte hämta kalenderhändelser");
@@ -51,14 +60,23 @@ export const useCalendarEvents = () => {
     if (!user) return;
 
     try {
+      // Convert Stockholm time to UTC for storage
+      const startTimeUTC = event.start_time 
+        ? fromStockholmTime(new Date(event.start_time)).toISOString()
+        : new Date().toISOString();
+      const endTimeUTC = event.end_time
+        ? fromStockholmTime(new Date(event.end_time)).toISOString()
+        : new Date().toISOString();
+
       const eventData: any = {
         user_id: user.id,
         title: event.title || 'Ny händelse',
-        start_time: event.start_time,
-        end_time: event.end_time,
+        start_time: startTimeUTC,
+        end_time: endTimeUTC,
         event_type: event.event_type || 'meeting',
         status: event.status || 'scheduled',
         source: event.source || 'internal',
+        timezone: 'Europe/Stockholm',
         description: event.description,
         contact_person: event.contact_person,
         contact_email: event.contact_email,
@@ -75,9 +93,16 @@ export const useCalendarEvents = () => {
 
       if (error) throw error;
       
-      setEvents([...events, data]);
+      // Convert back to Stockholm time for local state
+      const eventInStockholmTime = {
+        ...data,
+        start_time: toStockholmTime(data.start_time).toISOString(),
+        end_time: toStockholmTime(data.end_time).toISOString(),
+      };
+      
+      setEvents([...events, eventInStockholmTime]);
       toast.success("Händelse skapad");
-      return data;
+      return eventInStockholmTime;
     } catch (error) {
       console.error("Error creating event:", error);
       toast.error("Kunde inte skapa händelse");
@@ -87,18 +112,34 @@ export const useCalendarEvents = () => {
 
   const updateEvent = async (id: string, updates: Partial<CalendarEvent>) => {
     try {
+      // Convert Stockholm time to UTC for any time fields being updated
+      const updatesWithUTC = { ...updates };
+      if (updates.start_time) {
+        updatesWithUTC.start_time = fromStockholmTime(new Date(updates.start_time)).toISOString();
+      }
+      if (updates.end_time) {
+        updatesWithUTC.end_time = fromStockholmTime(new Date(updates.end_time)).toISOString();
+      }
+
       const { data, error } = await supabase
         .from("calendar_events")
-        .update(updates)
+        .update(updatesWithUTC)
         .eq("id", id)
         .select()
         .single();
 
       if (error) throw error;
 
-      setEvents(events.map(e => e.id === id ? data : e));
+      // Convert back to Stockholm time for local state
+      const eventInStockholmTime = {
+        ...data,
+        start_time: toStockholmTime(data.start_time).toISOString(),
+        end_time: toStockholmTime(data.end_time).toISOString(),
+      };
+
+      setEvents(events.map(e => e.id === id ? eventInStockholmTime : e));
       toast.success("Händelse uppdaterad");
-      return data;
+      return eventInStockholmTime;
     } catch (error) {
       console.error("Error updating event:", error);
       toast.error("Kunde inte uppdatera händelse");
