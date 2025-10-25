@@ -171,10 +171,14 @@ export type Database = {
           external_id: string | null
           id: string
           integration_id: string
+          is_dead_letter: boolean | null
+          last_error: string | null
           max_attempts: number | null
+          next_retry_at: string | null
           operation: string
           payload: Json | null
           processed_at: string | null
+          retry_count: number | null
           scheduled_at: string | null
           status: string | null
         }
@@ -187,10 +191,14 @@ export type Database = {
           external_id?: string | null
           id?: string
           integration_id: string
+          is_dead_letter?: boolean | null
+          last_error?: string | null
           max_attempts?: number | null
+          next_retry_at?: string | null
           operation: string
           payload?: Json | null
           processed_at?: string | null
+          retry_count?: number | null
           scheduled_at?: string | null
           status?: string | null
         }
@@ -203,10 +211,14 @@ export type Database = {
           external_id?: string | null
           id?: string
           integration_id?: string
+          is_dead_letter?: boolean | null
+          last_error?: string | null
           max_attempts?: number | null
+          next_retry_at?: string | null
           operation?: string
           payload?: Json | null
           processed_at?: string | null
+          retry_count?: number | null
           scheduled_at?: string | null
           status?: string | null
         }
@@ -399,7 +411,9 @@ export type Database = {
           end_time: string
           event_type: string
           external_id: string | null
+          external_resource: Json | null
           id: string
+          idempotency_key: string | null
           last_synced_at: string | null
           lead_id: string | null
           next_steps: string | null
@@ -410,7 +424,9 @@ export type Database = {
           source: string | null
           start_time: string
           status: string | null
+          sync_state: string | null
           sync_status: string | null
+          sync_version: number | null
           timezone: string | null
           title: string
           updated_at: string | null
@@ -430,7 +446,9 @@ export type Database = {
           end_time: string
           event_type?: string
           external_id?: string | null
+          external_resource?: Json | null
           id?: string
+          idempotency_key?: string | null
           last_synced_at?: string | null
           lead_id?: string | null
           next_steps?: string | null
@@ -441,7 +459,9 @@ export type Database = {
           source?: string | null
           start_time: string
           status?: string | null
+          sync_state?: string | null
           sync_status?: string | null
+          sync_version?: number | null
           timezone?: string | null
           title: string
           updated_at?: string | null
@@ -461,7 +481,9 @@ export type Database = {
           end_time?: string
           event_type?: string
           external_id?: string | null
+          external_resource?: Json | null
           id?: string
+          idempotency_key?: string | null
           last_synced_at?: string | null
           lead_id?: string | null
           next_steps?: string | null
@@ -472,7 +494,9 @@ export type Database = {
           source?: string | null
           start_time?: string
           status?: string | null
+          sync_state?: string | null
           sync_status?: string | null
+          sync_version?: number | null
           timezone?: string | null
           title?: string
           updated_at?: string | null
@@ -1370,6 +1394,68 @@ export type Database = {
         }
         Relationships: []
       }
+      sync_logs: {
+        Row: {
+          action: string
+          attempt: number | null
+          calendar_event_id: string | null
+          completed_at: string | null
+          created_at: string | null
+          direction: string
+          error_message: string | null
+          external_id: string | null
+          id: string
+          idempotency_key: string | null
+          max_attempts: number | null
+          request_payload: Json | null
+          response_payload: Json | null
+          source: string
+          status: string
+        }
+        Insert: {
+          action: string
+          attempt?: number | null
+          calendar_event_id?: string | null
+          completed_at?: string | null
+          created_at?: string | null
+          direction: string
+          error_message?: string | null
+          external_id?: string | null
+          id?: string
+          idempotency_key?: string | null
+          max_attempts?: number | null
+          request_payload?: Json | null
+          response_payload?: Json | null
+          source: string
+          status: string
+        }
+        Update: {
+          action?: string
+          attempt?: number | null
+          calendar_event_id?: string | null
+          completed_at?: string | null
+          created_at?: string | null
+          direction?: string
+          error_message?: string | null
+          external_id?: string | null
+          id?: string
+          idempotency_key?: string | null
+          max_attempts?: number | null
+          request_payload?: Json | null
+          response_payload?: Json | null
+          source?: string
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "sync_logs_calendar_event_id_fkey"
+            columns: ["calendar_event_id"]
+            isOneToOne: false
+            referencedRelation: "calendar_events"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       team_members: {
         Row: {
           email: string
@@ -1514,6 +1600,44 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      webhook_secrets: {
+        Row: {
+          algorithm: string | null
+          created_at: string | null
+          header_name: string | null
+          id: string
+          integration_id: string | null
+          rotated_at: string | null
+          secret: string
+        }
+        Insert: {
+          algorithm?: string | null
+          created_at?: string | null
+          header_name?: string | null
+          id?: string
+          integration_id?: string | null
+          rotated_at?: string | null
+          secret: string
+        }
+        Update: {
+          algorithm?: string | null
+          created_at?: string | null
+          header_name?: string | null
+          id?: string
+          integration_id?: string | null
+          rotated_at?: string | null
+          secret?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "webhook_secrets_integration_id_fkey"
+            columns: ["integration_id"]
+            isOneToOne: true
+            referencedRelation: "booking_system_integrations"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       widget_templates: {
         Row: {
