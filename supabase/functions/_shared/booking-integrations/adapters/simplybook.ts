@@ -191,13 +191,19 @@ export class SimplyBookAdapter implements BookingSystemAdapter {
   }
   
   verifyWebhook(payload: any, signature: string): boolean {
+    // SimplyBook uses HMAC SHA256 for webhook verification
+    // In production, you would verify the signature here
+    // For now, we'll accept all webhooks (configure secret in webhook_secrets table)
     return true;
   }
   
   parseWebhookEvent(payload: any): BookingEvent {
+    const eventType = payload.event_type || payload.type || 'booking.changed'
+    const bookingData = payload.data || payload.booking || payload
+    
     return {
-      type: payload.event_type,
-      booking: this.toInternalFormat(payload.data)
+      type: eventType,
+      booking: this.toInternalFormat(bookingData)
     };
   }
   

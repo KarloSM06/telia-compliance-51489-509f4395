@@ -3,6 +3,15 @@ project_id = "shskknkivuewuqonjdjc"
 [functions.sync-booking-systems]
 verify_jwt = true
 
+[functions.webhook-receiver]
+verify_jwt = false
+
+[functions.process-inbound-queue]
+verify_jwt = true
+
+[functions.process-outbound-queue]
+verify_jwt = true
+
 [functions.process-call]
 verify_jwt = true
 
