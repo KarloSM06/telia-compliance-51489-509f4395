@@ -28,16 +28,16 @@ const EventBlockComponent = ({
 }: EventBlockProps) => {
   const { timezone } = useUserTimezone();
   
-  // Parse TEXT with offset: "2025-10-26T08:00:00+01:00"
-  const startDate = new Date(event.start_time);
-  const endDate = new Date(event.end_time);
-  
   // Calculate position in calendar grid
   const { top, height } = getEventPosition(event.start_time, event.end_time, viewStartHour, timezone);
   
-  // Format times for display in user's timezone
-  const startTime = format(startDate, 'HH:mm');
-  const endTime = format(endDate, 'HH:mm');
+  // Extract time directly from ISO string to show EXACT stored time
+  // "2025-10-26T06:00:00+01:00" -> display as "06:00"
+  const startMatch = event.start_time.match(/T(\d{2}):(\d{2})/);
+  const endMatch = event.end_time.match(/T(\d{2}):(\d{2})/);
+  
+  const startTime = startMatch ? `${startMatch[1]}:${startMatch[2]}` : format(new Date(event.start_time), 'HH:mm');
+  const endTime = endMatch ? `${endMatch[1]}:${endMatch[2]}` : format(new Date(event.end_time), 'HH:mm');
 
   const width = totalColumns > 1 ? `${100 / totalColumns}%` : '100%';
   const left = totalColumns > 1 ? `${(column * 100) / totalColumns}%` : '0%';

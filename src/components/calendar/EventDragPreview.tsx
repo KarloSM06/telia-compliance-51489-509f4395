@@ -18,11 +18,12 @@ export const EventDragPreview = ({
 }: EventDragPreviewProps) => {
   const { timezone } = useUserTimezone();
   
-  // Format times for display
+  // Format times for display - showing local time as-is
   const startTime = format(start, 'HH:mm');
   const endTime = format(end, 'HH:mm');
   
   // Calculate position based on current drag position
+  // Using the same grid as the rest of the calendar (80px per hour)
   const PIXELS_PER_HOUR = 80;
   const startMinutes = start.getHours() * 60 + start.getMinutes();
   const endMinutes = end.getHours() * 60 + end.getMinutes();

@@ -60,10 +60,13 @@ export const getTimeFromYPosition = (
  * Calculates the top position and height for an event in the calendar view
  * Handles TEXT with offset format: "2025-10-26T08:00:00+01:00"
  * 
- * @param startTime - Event start time as TEXT with timezone offset
+ * Displays the time EXACTLY as stored in the database, without timezone conversion.
+ * This prevents DST-related issues where times would shift by an hour.
+ * 
+ * @param startTime - Event start time as TEXT with timezone offset (e.g. "2025-10-26T06:00:00+01:00")
  * @param endTime - Event end time as TEXT with timezone offset
  * @param viewStartHour - First visible hour in the calendar (default 0)
- * @param timezone - User's timezone for display conversion
+ * @param timezone - User's timezone (not used for calculation, kept for API compatibility)
  * @returns Object with top position and height in pixels
  */
 export const getEventPosition = (
@@ -72,15 +75,36 @@ export const getEventPosition = (
   viewStartHour: number = 0,
   timezone: string
 ) => {
-  // Parse TEXT with offset to Date, then convert to display timezone
-  const startDate = new Date(startTime);
-  const endDate = new Date(endTime);
-  const start = toTimeZone(startDate, timezone);
-  const end = toTimeZone(endDate, timezone);
+  // Extract time directly from ISO string to show EXACT stored time
+  // "2025-10-26T06:00:00+01:00" -> show as 06:00, not converted
+  const startMatch = startTime.match(/T(\d{2}):(\d{2})/);
+  const endMatch = endTime.match(/T(\d{2}):(\d{2})/);
   
-  const dayStart = startOfDay(start);
-  const startMinutes = differenceInMinutes(start, dayStart);
-  const duration = differenceInMinutes(end, start);
+  if (!startMatch || !endMatch) {
+    // Fallback to Date parsing if regex fails
+    const startDate = new Date(startTime);
+    const endDate = new Date(endTime);
+    const start = toTimeZone(startDate, timezone);
+    const end = toTimeZone(endDate, timezone);
+    const dayStart = startOfDay(start);
+    const startMinutes = differenceInMinutes(start, dayStart);
+    const duration = differenceInMinutes(end, start);
+    const PIXELS_PER_HOUR = 80;
+    return {
+      top: ((startMinutes / 60) - viewStartHour) * PIXELS_PER_HOUR,
+      height: Math.max((duration / 60) * PIXELS_PER_HOUR, 30),
+    };
+  }
+  
+  // Parse hours and minutes from string
+  const startHour = parseInt(startMatch[1]);
+  const startMinute = parseInt(startMatch[2]);
+  const endHour = parseInt(endMatch[1]);
+  const endMinute = parseInt(endMatch[2]);
+  
+  const startMinutes = startHour * 60 + startMinute;
+  const endMinutes = endHour * 60 + endMinute;
+  const duration = endMinutes - startMinutes;
   
   // Calendar grid: 80px per hour
   const PIXELS_PER_HOUR = 80;
