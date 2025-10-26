@@ -1160,6 +1160,146 @@ export type Database = {
           },
         ]
       }
+      message_logs: {
+        Row: {
+          calendar_event_id: string | null
+          channel: string
+          clicked_at: string | null
+          cost: number | null
+          created_at: string
+          delivered_at: string | null
+          error_message: string | null
+          id: string
+          message_body: string
+          metadata: Json | null
+          opened_at: string | null
+          provider: string
+          provider_message_id: string | null
+          recipient: string
+          scheduled_message_id: string | null
+          sent_at: string
+          status: string
+          subject: string | null
+          user_id: string
+        }
+        Insert: {
+          calendar_event_id?: string | null
+          channel: string
+          clicked_at?: string | null
+          cost?: number | null
+          created_at?: string
+          delivered_at?: string | null
+          error_message?: string | null
+          id?: string
+          message_body: string
+          metadata?: Json | null
+          opened_at?: string | null
+          provider: string
+          provider_message_id?: string | null
+          recipient: string
+          scheduled_message_id?: string | null
+          sent_at?: string
+          status: string
+          subject?: string | null
+          user_id: string
+        }
+        Update: {
+          calendar_event_id?: string | null
+          channel?: string
+          clicked_at?: string | null
+          cost?: number | null
+          created_at?: string
+          delivered_at?: string | null
+          error_message?: string | null
+          id?: string
+          message_body?: string
+          metadata?: Json | null
+          opened_at?: string | null
+          provider?: string
+          provider_message_id?: string | null
+          recipient?: string
+          scheduled_message_id?: string | null
+          sent_at?: string
+          status?: string
+          subject?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "message_logs_calendar_event_id_fkey"
+            columns: ["calendar_event_id"]
+            isOneToOne: false
+            referencedRelation: "calendar_events"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "message_logs_scheduled_message_id_fkey"
+            columns: ["scheduled_message_id"]
+            isOneToOne: false
+            referencedRelation: "scheduled_messages"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      message_templates: {
+        Row: {
+          body_template: string
+          channel: string[]
+          created_at: string
+          id: string
+          is_active: boolean
+          language: string
+          name: string
+          organization_id: string | null
+          subject: string | null
+          template_type: string
+          tone: string
+          updated_at: string
+          user_id: string
+          variables: Json | null
+        }
+        Insert: {
+          body_template: string
+          channel?: string[]
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          language?: string
+          name: string
+          organization_id?: string | null
+          subject?: string | null
+          template_type: string
+          tone?: string
+          updated_at?: string
+          user_id: string
+          variables?: Json | null
+        }
+        Update: {
+          body_template?: string
+          channel?: string[]
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          language?: string
+          name?: string
+          organization_id?: string | null
+          subject?: string | null
+          template_type?: string
+          tone?: string
+          updated_at?: string
+          user_id?: string
+          variables?: Json | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "message_templates_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       messages: {
         Row: {
           Antal_segment: number | null
@@ -1250,6 +1390,62 @@ export type Database = {
         }
         Relationships: []
       }
+      owner_notifications: {
+        Row: {
+          calendar_event_id: string | null
+          channel: string[]
+          created_at: string
+          id: string
+          message: string
+          metadata: Json | null
+          notification_type: string
+          priority: string
+          read_at: string | null
+          sent_at: string | null
+          status: string
+          title: string
+          user_id: string
+        }
+        Insert: {
+          calendar_event_id?: string | null
+          channel?: string[]
+          created_at?: string
+          id?: string
+          message: string
+          metadata?: Json | null
+          notification_type: string
+          priority?: string
+          read_at?: string | null
+          sent_at?: string | null
+          status?: string
+          title: string
+          user_id: string
+        }
+        Update: {
+          calendar_event_id?: string | null
+          channel?: string[]
+          created_at?: string
+          id?: string
+          message?: string
+          metadata?: Json | null
+          notification_type?: string
+          priority?: string
+          read_at?: string | null
+          sent_at?: string | null
+          status?: string
+          title?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "owner_notifications_calendar_event_id_fkey"
+            columns: ["calendar_event_id"]
+            isOneToOne: false
+            referencedRelation: "calendar_events"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       phone_numbers: {
         Row: {
           created_at: string
@@ -1321,6 +1517,232 @@ export type Database = {
           timezone?: string
         }
         Relationships: []
+      }
+      reminder_settings: {
+        Row: {
+          booking_confirmation_channel: string[]
+          booking_confirmation_enabled: boolean
+          created_at: string
+          default_template_confirmation: string | null
+          default_template_reminder: string | null
+          default_template_review: string | null
+          id: string
+          organization_id: string | null
+          reminder_1_channel: string[]
+          reminder_1_enabled: boolean
+          reminder_1_hours_before: number
+          reminder_2_channel: string[]
+          reminder_2_enabled: boolean
+          reminder_2_hours_before: number
+          review_request_channel: string[]
+          review_request_enabled: boolean
+          review_request_hours_after: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          booking_confirmation_channel?: string[]
+          booking_confirmation_enabled?: boolean
+          created_at?: string
+          default_template_confirmation?: string | null
+          default_template_reminder?: string | null
+          default_template_review?: string | null
+          id?: string
+          organization_id?: string | null
+          reminder_1_channel?: string[]
+          reminder_1_enabled?: boolean
+          reminder_1_hours_before?: number
+          reminder_2_channel?: string[]
+          reminder_2_enabled?: boolean
+          reminder_2_hours_before?: number
+          review_request_channel?: string[]
+          review_request_enabled?: boolean
+          review_request_hours_after?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          booking_confirmation_channel?: string[]
+          booking_confirmation_enabled?: boolean
+          created_at?: string
+          default_template_confirmation?: string | null
+          default_template_reminder?: string | null
+          default_template_review?: string | null
+          id?: string
+          organization_id?: string | null
+          reminder_1_channel?: string[]
+          reminder_1_enabled?: boolean
+          reminder_1_hours_before?: number
+          reminder_2_channel?: string[]
+          reminder_2_enabled?: boolean
+          reminder_2_hours_before?: number
+          review_request_channel?: string[]
+          review_request_enabled?: boolean
+          review_request_hours_after?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reminder_settings_default_template_confirmation_fkey"
+            columns: ["default_template_confirmation"]
+            isOneToOne: false
+            referencedRelation: "message_templates"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "reminder_settings_default_template_reminder_fkey"
+            columns: ["default_template_reminder"]
+            isOneToOne: false
+            referencedRelation: "message_templates"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "reminder_settings_default_template_review_fkey"
+            columns: ["default_template_review"]
+            isOneToOne: false
+            referencedRelation: "message_templates"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "reminder_settings_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      reviews: {
+        Row: {
+          calendar_event_id: string
+          comment: string | null
+          created_at: string
+          customer_email: string | null
+          customer_name: string
+          id: string
+          rating: number | null
+          review_link: string | null
+          submitted_at: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          calendar_event_id: string
+          comment?: string | null
+          created_at?: string
+          customer_email?: string | null
+          customer_name: string
+          id?: string
+          rating?: number | null
+          review_link?: string | null
+          submitted_at?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          calendar_event_id?: string
+          comment?: string | null
+          created_at?: string
+          customer_email?: string | null
+          customer_name?: string
+          id?: string
+          rating?: number | null
+          review_link?: string | null
+          submitted_at?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reviews_calendar_event_id_fkey"
+            columns: ["calendar_event_id"]
+            isOneToOne: false
+            referencedRelation: "calendar_events"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      scheduled_messages: {
+        Row: {
+          calendar_event_id: string
+          channel: string
+          created_at: string
+          delivery_status: Json | null
+          generated_message: string
+          generated_subject: string | null
+          id: string
+          max_retries: number
+          message_type: string
+          recipient_email: string | null
+          recipient_name: string
+          recipient_phone: string | null
+          retry_count: number
+          scheduled_for: string
+          sent_at: string | null
+          status: string
+          template_id: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          calendar_event_id: string
+          channel: string
+          created_at?: string
+          delivery_status?: Json | null
+          generated_message: string
+          generated_subject?: string | null
+          id?: string
+          max_retries?: number
+          message_type: string
+          recipient_email?: string | null
+          recipient_name: string
+          recipient_phone?: string | null
+          retry_count?: number
+          scheduled_for: string
+          sent_at?: string | null
+          status?: string
+          template_id?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          calendar_event_id?: string
+          channel?: string
+          created_at?: string
+          delivery_status?: Json | null
+          generated_message?: string
+          generated_subject?: string | null
+          id?: string
+          max_retries?: number
+          message_type?: string
+          recipient_email?: string | null
+          recipient_name?: string
+          recipient_phone?: string | null
+          retry_count?: number
+          scheduled_for?: string
+          sent_at?: string | null
+          status?: string
+          template_id?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "scheduled_messages_calendar_event_id_fkey"
+            columns: ["calendar_event_id"]
+            isOneToOne: false
+            referencedRelation: "calendar_events"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "scheduled_messages_template_id_fkey"
+            columns: ["template_id"]
+            isOneToOne: false
+            referencedRelation: "message_templates"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       settings_audit_log: {
         Row: {

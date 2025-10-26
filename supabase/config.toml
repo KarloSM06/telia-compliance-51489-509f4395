@@ -1,5 +1,11 @@
 project_id = "shskknkivuewuqonjdjc"
 
+[functions.generate-message]
+verify_jwt = true
+
+[functions.schedule-reminders]
+verify_jwt = true
+
 [functions.sync-booking-systems]
 verify_jwt = true
 

@@ -118,9 +118,29 @@ export const useCalendarEvents = () => {
 
       if (error) throw error;
       
+      // Schedule reminders automatically
+      if (data && (event.contact_email || event.contact_phone)) {
+        try {
+          const { error: scheduleError } = await supabase.functions.invoke('schedule-reminders', {
+            body: { calendarEventId: data.id }
+          });
+          
+          if (scheduleError) {
+            console.error('Failed to schedule reminders:', scheduleError);
+            toast.error('Händelse skapad men påminnelser kunde inte schemaläggas');
+          } else {
+            toast.success('Händelse och påminnelser skapade');
+          }
+        } catch (scheduleError) {
+          console.error('Failed to schedule reminders:', scheduleError);
+          toast.success('Händelse skapad');
+        }
+      } else {
+        toast.success('Händelse skapad');
+      }
+      
       // Data now contains TEXT with offset
       setEvents([...events, data]);
-      toast.success("Händelse skapad");
       return data;
     } catch (error) {
       console.error("Error creating event:", error);
