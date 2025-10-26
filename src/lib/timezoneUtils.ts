@@ -65,11 +65,12 @@ export const parseStockholmTime = (dateStr: string): Date => {
  * @returns true if in CEST (summer time), false if in CET (winter time)
  */
 export const isInDaylightSavingTime = (date: Date | string): boolean => {
-  const stockholmDate = toStockholmTime(date);
-  const jan = new Date(stockholmDate.getFullYear(), 0, 1);
-  const jul = new Date(stockholmDate.getFullYear(), 6, 1);
-  const stdOffset = Math.max(jan.getTimezoneOffset(), jul.getTimezoneOffset());
-  return stockholmDate.getTimezoneOffset() < stdOffset;
+  const dateObj = typeof date === 'string' ? parseISO(date) : date;
+  
+  // Format in Stockholm timezone and check offset
+  const formatted = formatInTimeZone(dateObj, STOCKHOLM_TZ, 'XXX'); // Returns "+01:00" or "+02:00"
+  
+  return formatted === '+02:00'; // CEST (summer time)
 };
 
 /**
@@ -79,4 +80,46 @@ export const isInDaylightSavingTime = (date: Date | string): boolean => {
  */
 export const getStockholmOffset = (date: Date | string = new Date()): string => {
   return isInDaylightSavingTime(date) ? 'UTC+2 (CEST)' : 'UTC+1 (CET)';
+};
+
+/**
+ * Create a date in Stockholm timezone from date and time components
+ * Use this when user picks a date/time that should be interpreted as Stockholm time
+ * @param year - Year
+ * @param month - Month (0-11, JavaScript standard)
+ * @param day - Day of month
+ * @param hour - Hour (0-23)
+ * @param minute - Minute (0-59)
+ * @returns Date object in UTC that represents the specified Stockholm time
+ */
+export const createStockholmDateTime = (
+  year: number, 
+  month: number, 
+  day: number, 
+  hour: number = 0, 
+  minute: number = 0
+): Date => {
+  // Create ISO string in local format (will be interpreted as Stockholm time)
+  const isoString = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}T${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}:00`;
+  
+  // Parse as Stockholm time and convert to UTC
+  const parsed = parseISO(isoString);
+  return fromZonedTime(parsed, STOCKHOLM_TZ);
+};
+
+/**
+ * Get detailed timezone info for debugging
+ * @param date - Date to analyze
+ * @returns Object with timezone information
+ */
+export const getTimezoneInfo = (date: Date | string = new Date()) => {
+  const dateObj = typeof date === 'string' ? parseISO(date) : date;
+  const stockholmTime = toStockholmTime(dateObj);
+  
+  return {
+    input: dateObj.toISOString(),
+    stockholmTime: formatInStockholm(dateObj, 'yyyy-MM-dd HH:mm:ss XXX'),
+    isDST: isInDaylightSavingTime(dateObj),
+    offset: getStockholmOffset(dateObj),
+  };
 };

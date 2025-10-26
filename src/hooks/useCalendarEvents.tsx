@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { toast } from "sonner";
-import { toStockholmTime, fromStockholmTime } from "@/lib/timezoneUtils";
+import { toStockholmTime, fromStockholmTime, getTimezoneInfo, STOCKHOLM_TZ } from "@/lib/timezoneUtils";
 
 export interface CalendarEvent {
   id: string;
@@ -46,6 +46,22 @@ export const useCalendarEvents = () => {
         start_time: toStockholmTime(event.start_time).toISOString(),
         end_time: toStockholmTime(event.end_time).toISOString(),
       }));
+      
+      // Log timezone info for debugging (first event only)
+      if (eventsInStockholmTime.length > 0) {
+        const sampleEvent = eventsInStockholmTime[0];
+        console.log('📅 Calendar Events Timezone Info:', {
+          totalEvents: eventsInStockholmTime.length,
+          timezone: STOCKHOLM_TZ,
+          sampleEvent: {
+            id: sampleEvent.id,
+            title: sampleEvent.title,
+            start_utc: data![0].start_time,
+            start_stockholm: sampleEvent.start_time,
+            timezoneInfo: getTimezoneInfo(sampleEvent.start_time),
+          }
+        });
+      }
       
       setEvents(eventsInStockholmTime);
     } catch (error) {

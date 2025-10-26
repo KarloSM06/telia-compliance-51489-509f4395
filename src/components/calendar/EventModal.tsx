@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { format, parseISO, parse } from "date-fns";
 import { sv } from "date-fns/locale";
+import { createStockholmDateTime, formatInStockholm, getStockholmOffset, toStockholmTime } from "@/lib/timezoneUtils";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -203,9 +204,14 @@ export const EventModal = ({ open, onClose, event, defaultDate, onSave, onDelete
             )}
           </DialogTitle>
           {event && formData.start_time && (
-            <DialogDescription>
-              {format(parseISO(formData.start_time), 'EEEE d MMM yyyy, HH:mm', { locale: sv })}
-              {formData.end_time && ` - ${format(parseISO(formData.end_time), 'HH:mm', { locale: sv })}`}
+            <DialogDescription className="flex items-center gap-2">
+              <span>
+                {formatInStockholm(formData.start_time, 'EEEE d MMM yyyy, HH:mm')}
+                {formData.end_time && ` - ${formatInStockholm(formData.end_time, 'HH:mm')}`}
+              </span>
+              <Badge variant="secondary" className="text-xs">
+                {getStockholmOffset(formData.start_time)}
+              </Badge>
             </DialogDescription>
           )}
         </DialogHeader>
@@ -247,7 +253,7 @@ export const EventModal = ({ open, onClose, event, defaultDate, onSave, onDelete
                   >
                     <CalendarIcon className="mr-2 h-4 w-4" />
                     {formData.start_time ? (
-                      format(parseISO(formData.start_time), "PPP", { locale: sv })
+                      formatInStockholm(formData.start_time, "PPP")
                     ) : (
                       <span>Välj datum</span>
                     )}
@@ -256,28 +262,38 @@ export const EventModal = ({ open, onClose, event, defaultDate, onSave, onDelete
                 <PopoverContent className="w-auto p-0" align="start">
                   <Calendar
                     mode="single"
-                    selected={formData.start_time ? parseISO(formData.start_time) : undefined}
+                    selected={formData.start_time ? toStockholmTime(formData.start_time) : undefined}
                     onSelect={(date) => {
                       if (date) {
+                        // Extract current time or default to 09:00
                         const currentTime = formData.start_time 
-                          ? format(parseISO(formData.start_time), 'HH:mm')
+                          ? formatInStockholm(formData.start_time, 'HH:mm')
                           : '09:00';
-                        const newDateTime = format(date, `yyyy-MM-dd'T'${currentTime}`);
+                        const [hours, minutes] = currentTime.split(':').map(Number);
+                        
+                        // Create Stockholm DateTime
+                        const stockholmDateTime = createStockholmDateTime(
+                          date.getFullYear(),
+                          date.getMonth(),
+                          date.getDate(),
+                          hours,
+                          minutes
+                        );
                         
                         // Update end time to maintain duration
                         if (formData.end_time && formData.start_time) {
-                          const startDate = parseISO(formData.start_time);
-                          const endDate = parseISO(formData.end_time);
+                          const startDate = new Date(formData.start_time);
+                          const endDate = new Date(formData.end_time);
                           const duration = endDate.getTime() - startDate.getTime();
-                          const newEndDateTime = new Date(date.getTime() + duration);
+                          const newEndDateTime = new Date(stockholmDateTime.getTime() + duration);
                           
                           setFormData({ 
                             ...formData, 
-                            start_time: newDateTime,
-                            end_time: format(newEndDateTime, "yyyy-MM-dd'T'HH:mm")
+                            start_time: stockholmDateTime.toISOString(),
+                            end_time: newEndDateTime.toISOString()
                           });
                         } else {
-                          setFormData({ ...formData, start_time: newDateTime });
+                          setFormData({ ...formData, start_time: stockholmDateTime.toISOString() });
                         }
                       }
                     }}
@@ -293,12 +309,23 @@ export const EventModal = ({ open, onClose, event, defaultDate, onSave, onDelete
               <Input
                 id="start_time"
                 type="time"
-                value={formData.start_time ? format(parseISO(formData.start_time), 'HH:mm') : ''}
+                value={formData.start_time ? formatInStockholm(formData.start_time, 'HH:mm') : ''}
                 onChange={(e) => {
-                  const date = formData.start_time 
-                    ? format(parseISO(formData.start_time), 'yyyy-MM-dd')
-                    : format(new Date(), 'yyyy-MM-dd');
-                  setFormData({ ...formData, start_time: `${date}T${e.target.value}` });
+                  const [hours, minutes] = e.target.value.split(':').map(Number);
+                  const currentDate = formData.start_time 
+                    ? toStockholmTime(formData.start_time)
+                    : new Date();
+                  
+                  // Create Stockholm DateTime
+                  const stockholmDateTime = createStockholmDateTime(
+                    currentDate.getFullYear(),
+                    currentDate.getMonth(),
+                    currentDate.getDate(),
+                    hours,
+                    minutes
+                  );
+                  
+                  setFormData({ ...formData, start_time: stockholmDateTime.toISOString() });
                 }}
                 required
               />
@@ -310,12 +337,23 @@ export const EventModal = ({ open, onClose, event, defaultDate, onSave, onDelete
             <Input
               id="end_time"
               type="time"
-              value={formData.end_time ? format(parseISO(formData.end_time), 'HH:mm') : ''}
+              value={formData.end_time ? formatInStockholm(formData.end_time, 'HH:mm') : ''}
               onChange={(e) => {
-                const date = formData.start_time 
-                  ? format(parseISO(formData.start_time), 'yyyy-MM-dd')
-                  : format(new Date(), 'yyyy-MM-dd');
-                setFormData({ ...formData, end_time: `${date}T${e.target.value}` });
+                const [hours, minutes] = e.target.value.split(':').map(Number);
+                const currentDate = formData.start_time 
+                  ? toStockholmTime(formData.start_time)
+                  : new Date();
+                
+                // Create Stockholm DateTime
+                const stockholmDateTime = createStockholmDateTime(
+                  currentDate.getFullYear(),
+                  currentDate.getMonth(),
+                  currentDate.getDate(),
+                  hours,
+                  minutes
+                );
+                
+                setFormData({ ...formData, end_time: stockholmDateTime.toISOString() });
               }}
               required
             />

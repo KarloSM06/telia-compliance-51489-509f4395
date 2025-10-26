@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import type { CalendarEvent } from "@/hooks/useCalendarEvents";
+import { formatInStockholm, toStockholmTime } from "@/lib/timezoneUtils";
 
 interface CalendarViewProps {
   events: CalendarEvent[];
@@ -31,8 +32,9 @@ export const CalendarView = ({ events, onEventClick, onDateClick }: CalendarView
 
   const getEventsForDay = (date: Date) => {
     return events.filter(event => {
-      const eventDate = parseISO(event.start_time);
-      return isSameDay(eventDate, date);
+      // Convert event to Stockholm time for comparison
+      const eventStartStockholm = toStockholmTime(event.start_time);
+      return isSameDay(eventStartStockholm, date);
     });
   };
 
@@ -109,7 +111,7 @@ export const CalendarView = ({ events, onEventClick, onDateClick }: CalendarView
                       )}
                       title={event.title}
                     >
-                      {format(parseISO(event.start_time), 'HH:mm')} {event.title}
+                      {formatInStockholm(event.start_time, 'HH:mm')} {event.title}
                     </div>
                   ))}
                   {dayEvents.length > 3 && (

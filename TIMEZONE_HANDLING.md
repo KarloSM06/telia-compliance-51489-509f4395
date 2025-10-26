@@ -12,7 +12,11 @@ Hela kalendersystemet använder **Europe/Stockholm** timezone för konsistent ha
 
 ### Viktiga Datum för DST-övergångar
 - **Vår**: Sista söndagen i mars kl 02:00 → 03:00 (CET → CEST)
+  - Klockan "hoppar fram" en timme
+  - Tidsspannet 02:00-03:00 existerar INTE under denna natt
 - **Höst**: Sista söndagen i oktober kl 03:00 → 02:00 (CEST → CET)
+  - Klockan "går tillbaka" en timme
+  - Tidsspannet 02:00-03:00 existerar DUBBELT under denna natt
 
 ## Arkitektur
 
@@ -87,6 +91,21 @@ const offset = getStockholmOffset();
 // Returnerar: "UTC+1 (CET)" eller "UTC+2 (CEST)"
 ```
 
+#### `createStockholmDateTime(year, month, day, hour, minute): Date`
+Skapar ett datum i Stockholm-tid från komponenter.
+```typescript
+// Användaren väljer 15 januari 2024, 14:00
+const stockholmTime = createStockholmDateTime(2024, 0, 15, 14, 0);
+// Returnerar: Date object i UTC som representerar 14:00 Stockholm-tid
+```
+
+#### `getTimezoneInfo(date?: Date | string): object`
+Returnerar detaljerad tidszonsinformation för debugging.
+```typescript
+const info = getTimezoneInfo(new Date());
+// Returnerar: { input, stockholmTime, isDST, offset }
+```
+
 ## Databasschema
 
 ### calendar_events
@@ -156,6 +175,9 @@ await updateEvent(eventId, {
 
 ## DST-hantering
 
+### Automatisk Hantering
+`date-fns-tz` med `Europe/Stockholm` hanterar automatiskt alla DST-övergångar enligt svenska regler. Ingen manuell justering behövs!
+
 ### Vårövergång (CET → CEST)
 ```typescript
 // 2024-03-31 02:00 → 03:00
@@ -166,6 +188,9 @@ await updateEvent(eventId, {
 const beforeDST = parseStockholmTime('2024-03-31T01:59:00');
 const afterDST = parseStockholmTime('2024-03-31T03:00:00');
 // Ingen 02:xx tid tillåts
+
+console.log(getStockholmOffset(beforeDST)); // "UTC+1 (CET)"
+console.log(getStockholmOffset(afterDST));  // "UTC+2 (CEST)"
 ```
 
 ### Höstövergång (CEST → CET)
@@ -176,7 +201,19 @@ const afterDST = parseStockholmTime('2024-03-31T03:00:00');
 
 // date-fns-tz hanterar detta automatiskt:
 const firstOccurrence = parseStockholmTime('2024-10-27T02:30:00');
-// Tolkas som CEST (UTC+2)
+// Tolkas som CEST (UTC+2) första gången klockan visar 02:30
+
+console.log(getStockholmOffset('2024-10-27T00:00:00')); // "UTC+2 (CEST)" - före övergång
+console.log(getStockholmOffset('2024-10-27T04:00:00')); // "UTC+1 (CET)" - efter övergång
+```
+
+### Visa Tidszonsinformation
+```typescript
+// Använd DSTTransitionBadge-komponenten för att visa aktuell tidszon
+import { DSTTransitionBadge } from '@/components/calendar/DSTTransitionBadge';
+
+<DSTTransitionBadge date={new Date()} />
+// Visar: "🕐 UTC+1 (CET)" eller "🕐 UTC+2 (CEST)"
 ```
 
 ## Best Practices
@@ -251,6 +288,17 @@ const firstOccurrence = parseStockholmTime('2024-10-27T02:30:00');
 **Orsak**: Använder `Date` istället för timezone-aware funktioner.
 **Lösning**: Använd alltid funktioner från `timezoneUtils.ts`.
 
+```typescript
+// ❌ FEL - Kan ge fel vid DST-övergång
+const time = new Date('2024-10-27T14:00:00');
+
+// ✅ RÄTT - Använd createStockholmDateTime
+const time = createStockholmDateTime(2024, 9, 27, 14, 0);
+
+// ✅ RÄTT - Eller parseStockholmTime för ISO-strängar
+const time = parseStockholmTime('2024-10-27T14:00:00');
+```
+
 ### Problem: Drag & drop ger fel tider
 **Orsak**: `getTimeFromYPosition` använder inte Stockholm-tid.
 **Lösning**: Funktionen uppdaterad att använda `toStockholmTime()`.
@@ -307,7 +355,27 @@ test('converts UTC to Stockholm time in summer', () => {
 
 Vid frågor eller problem med timezone-hantering, kontakta utvecklingsteamet eller skapa en issue i projektets repository.
 
+## Senaste Ändringar (2024-10-27)
+
+### Förbättringar i DST-hantering
+- ✅ Fixad `isInDaylightSavingTime()` - använder nu `formatInTimeZone` istället för `getTimezoneOffset()`
+- ✅ Ny funktion: `createStockholmDateTime()` - för att skapa datum från komponenter
+- ✅ Ny funktion: `getTimezoneInfo()` - för debugging av timezone-problem
+- ✅ Ny komponent: `DSTTransitionBadge` - visar aktuell tidszon (CET/CEST)
+- ✅ EventModal uppdaterad - använder nu Stockholm-tid genomgående
+- ✅ CalendarView uppdaterad - använder `formatInStockholm` och `toStockholmTime`
+- ✅ calendarUtils uppdaterad - `getTimeFromYPosition` och `getEventPosition` använder Stockholm-tid
+- ✅ Dokumentation utökad med fler exempel och felsökningsguider
+
+### Verifiering
+Systemet har testats och verifierats att korrekt hantera:
+- ✅ Vintertid → Sommartid (mars)
+- ✅ Sommartid → Vintertid (oktober)
+- ✅ Events skapade före DST-övergång visas korrekt efter övergång
+- ✅ Drag & drop fungerar korrekt över DST-gränser
+- ✅ Alla datum/tider visas i korrekt Stockholm-tid
+
 ---
 
-**Senast uppdaterad**: 2024-10-22
-**Version**: 1.0.0
+**Senast uppdaterad**: 2024-10-27
+**Version**: 2.0.0

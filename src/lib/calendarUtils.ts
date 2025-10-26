@@ -1,6 +1,6 @@
 import { CalendarEvent } from "@/hooks/useCalendarEvents";
-import { parseISO, addMinutes, setMinutes, setHours, isSameDay, differenceInMinutes } from "date-fns";
-import { toStockholmTime, getCurrentStockholmTime } from "./timezoneUtils";
+import { parseISO, addMinutes, setMinutes, setHours, isSameDay, differenceInMinutes, startOfDay } from "date-fns";
+import { toStockholmTime, getCurrentStockholmTime, createStockholmDateTime } from "./timezoneUtils";
 
 export const snapToInterval = (date: Date, intervalMinutes: number = 15): Date => {
   const minutes = date.getMinutes();
@@ -8,33 +8,59 @@ export const snapToInterval = (date: Date, intervalMinutes: number = 15): Date =
   return setMinutes(date, snappedMinutes);
 };
 
-export const getTimeFromYPosition = (y: number, containerTop: number, viewStartHour: number = 0): Date => {
+/**
+ * Calculate time from Y position in calendar
+ * @param y - Y position in pixels
+ * @param containerTop - Top offset of container
+ * @param viewStartHour - Starting hour of the view
+ * @param referenceDate - Reference date to use (defaults to current Stockholm time)
+ * @returns Date object in Stockholm time
+ */
+export const getTimeFromYPosition = (
+  y: number, 
+  containerTop: number, 
+  viewStartHour: number = 0,
+  referenceDate?: Date
+): Date => {
   const PIXELS_PER_HOUR = 80;
   const relativeY = y - containerTop;
   const totalMinutes = (relativeY / PIXELS_PER_HOUR) * 60;
-  const hours = Math.floor(totalMinutes / 60) + viewStartHour; // Add offset
+  const hours = Math.floor(totalMinutes / 60) + viewStartHour;
   const minutes = totalMinutes % 60;
   
-  // Create date in Stockholm timezone
-  const stockholmNow = getCurrentStockholmTime();
-  return setMinutes(setHours(stockholmNow, hours), minutes);
+  // Use referenceDate or current Stockholm time
+  const baseDate = referenceDate 
+    ? toStockholmTime(referenceDate)
+    : getCurrentStockholmTime();
+  
+  // Create Stockholm DateTime
+  return createStockholmDateTime(
+    baseDate.getFullYear(),
+    baseDate.getMonth(),
+    baseDate.getDate(),
+    hours,
+    Math.round(minutes)
+  );
 };
 
+/**
+ * Calculate event position from times
+ * Always works with Stockholm time for display
+ */
 export const getEventPosition = (startTime: string, endTime: string, viewStartHour: number = 0) => {
-  // Parse times as Stockholm time
+  // Convert to Stockholm time for display positioning
   const start = toStockholmTime(startTime);
   const end = toStockholmTime(endTime);
   
-  const startHour = start.getHours();
-  const startMinute = start.getMinutes();
+  const dayStart = startOfDay(start);
+  const startMinutes = differenceInMinutes(start, dayStart);
   const duration = differenceInMinutes(end, start);
   
-  const PIXELS_PER_MINUTE = 80 / 60; // 80px per hour = 1.33px per minute
-  // Adjust for the view's start hour offset
-  const top = ((startHour - viewStartHour) * 60 + startMinute) * PIXELS_PER_MINUTE;
-  const height = duration * PIXELS_PER_MINUTE;
-  
-  return { top, height };
+  const PIXELS_PER_HOUR = 80;
+  return {
+    top: ((startMinutes / 60) - viewStartHour) * PIXELS_PER_HOUR,
+    height: (duration / 60) * PIXELS_PER_HOUR,
+  };
 };
 
 export const doesOverlap = (event1: CalendarEvent, event2: CalendarEvent): boolean => {
