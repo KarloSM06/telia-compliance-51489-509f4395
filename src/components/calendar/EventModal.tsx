@@ -1,8 +1,8 @@
 import { useState, useEffect, useRef } from "react";
 import { format, parseISO, parse } from "date-fns";
 import { sv } from "date-fns/locale";
-import { formatInTimeZone } from "date-fns-tz";
-import { createStockholmDateTime, formatInStockholm, getStockholmOffset, toStockholmTime } from "@/lib/timezoneUtils";
+import { useUserTimezone } from "@/hooks/useUserTimezone";
+import { createDateTimeInZone, formatInTimeZone_, getTimezoneOffset, toTimeZone, toISOStringWithOffset } from "@/lib/timezoneUtils";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -28,6 +28,8 @@ interface EventModalProps {
 }
 
 export const EventModal = ({ open, onClose, event, defaultDate, onSave, onDelete, pendingChanges }: EventModalProps) => {
+  const { timezone } = useUserTimezone();
+  
   // Merge event with pending changes for display
   const currentEvent = event && pendingChanges ? { ...event, ...pendingChanges } : event;
   const titleInputRef = useRef<HTMLInputElement>(null);
@@ -207,11 +209,11 @@ export const EventModal = ({ open, onClose, event, defaultDate, onSave, onDelete
           {event && formData.start_time && (
             <DialogDescription className="flex items-center gap-2">
               <span>
-                {formatInStockholm(formData.start_time, 'EEEE d MMM yyyy, HH:mm')}
-                {formData.end_time && ` - ${formatInStockholm(formData.end_time, 'HH:mm')}`}
+                {formatInTimeZone_(formData.start_time, 'EEEE d MMM yyyy, HH:mm', timezone)}
+                {formData.end_time && ` - ${formatInTimeZone_(formData.end_time, 'HH:mm', timezone)}`}
               </span>
               <Badge variant="secondary" className="text-xs">
-                {getStockholmOffset(formData.start_time)}
+                {getTimezoneOffset(formData.start_time, timezone)}
               </Badge>
             </DialogDescription>
           )}
@@ -254,7 +256,7 @@ export const EventModal = ({ open, onClose, event, defaultDate, onSave, onDelete
                   >
                     <CalendarIcon className="mr-2 h-4 w-4" />
                     {formData.start_time ? (
-                      formatInStockholm(formData.start_time, "PPP")
+                      formatInTimeZone_(formData.start_time, "PPP", timezone)
                     ) : (
                       <span>Välj datum</span>
                     )}
@@ -263,22 +265,23 @@ export const EventModal = ({ open, onClose, event, defaultDate, onSave, onDelete
                 <PopoverContent className="w-auto p-0" align="start">
                   <Calendar
                     mode="single"
-                    selected={formData.start_time ? toStockholmTime(formData.start_time) : undefined}
+                    selected={formData.start_time ? toTimeZone(formData.start_time, timezone) : undefined}
                     onSelect={(date) => {
                       if (date) {
                         // Extract current time or default to 09:00
                         const currentTime = formData.start_time 
-                          ? formatInStockholm(formData.start_time, 'HH:mm')
+                          ? formatInTimeZone_(formData.start_time, 'HH:mm', timezone)
                           : '09:00';
                         const [hours, minutes] = currentTime.split(':').map(Number);
                         
-                        // Create Stockholm DateTime
-                        const stockholmDateTime = createStockholmDateTime(
+                        // Create DateTime in user's timezone
+                        const localDateTime = createDateTimeInZone(
                           date.getFullYear(),
                           date.getMonth(),
                           date.getDate(),
                           hours,
-                          minutes
+                          minutes,
+                          timezone
                         );
                         
                         // Update end time to maintain duration
@@ -286,15 +289,15 @@ export const EventModal = ({ open, onClose, event, defaultDate, onSave, onDelete
                           const startDate = new Date(formData.start_time);
                           const endDate = new Date(formData.end_time);
                           const duration = endDate.getTime() - startDate.getTime();
-                          const newEndDateTime = new Date(stockholmDateTime.getTime() + duration);
+                          const newEndDateTime = new Date(localDateTime.getTime() + duration);
                           
                           setFormData({ 
                             ...formData, 
-                            start_time: formatInTimeZone(stockholmDateTime, 'Europe/Stockholm', "yyyy-MM-dd'T'HH:mm:ssXXX"),
-                            end_time: formatInTimeZone(newEndDateTime, 'Europe/Stockholm', "yyyy-MM-dd'T'HH:mm:ssXXX")
+                            start_time: toISOStringWithOffset(localDateTime, timezone),
+                            end_time: toISOStringWithOffset(newEndDateTime, timezone)
                           });
                         } else {
-                          setFormData({ ...formData, start_time: formatInTimeZone(stockholmDateTime, 'Europe/Stockholm', "yyyy-MM-dd'T'HH:mm:ssXXX") });
+                          setFormData({ ...formData, start_time: toISOStringWithOffset(localDateTime, timezone) });
                         }
                       }
                     }}
@@ -310,23 +313,24 @@ export const EventModal = ({ open, onClose, event, defaultDate, onSave, onDelete
               <Input
                 id="start_time"
                 type="time"
-                value={formData.start_time ? formatInStockholm(formData.start_time, 'HH:mm') : ''}
+                value={formData.start_time ? formatInTimeZone_(formData.start_time, 'HH:mm', timezone) : ''}
                 onChange={(e) => {
                   const [hours, minutes] = e.target.value.split(':').map(Number);
                   const currentDate = formData.start_time 
-                    ? toStockholmTime(formData.start_time)
+                    ? toTimeZone(formData.start_time, timezone)
                     : new Date();
                   
-                  // Create Stockholm DateTime
-                  const stockholmDateTime = createStockholmDateTime(
+                  // Create DateTime in user's timezone
+                  const localDateTime = createDateTimeInZone(
                     currentDate.getFullYear(),
                     currentDate.getMonth(),
                     currentDate.getDate(),
                     hours,
-                    minutes
+                    minutes,
+                    timezone
                   );
                   
-                  setFormData({ ...formData, start_time: formatInTimeZone(stockholmDateTime, 'Europe/Stockholm', "yyyy-MM-dd'T'HH:mm:ssXXX") });
+                  setFormData({ ...formData, start_time: toISOStringWithOffset(localDateTime, timezone) });
                 }}
                 required
               />
@@ -338,23 +342,24 @@ export const EventModal = ({ open, onClose, event, defaultDate, onSave, onDelete
             <Input
               id="end_time"
               type="time"
-              value={formData.end_time ? formatInStockholm(formData.end_time, 'HH:mm') : ''}
+              value={formData.end_time ? formatInTimeZone_(formData.end_time, 'HH:mm', timezone) : ''}
               onChange={(e) => {
                 const [hours, minutes] = e.target.value.split(':').map(Number);
                 const currentDate = formData.start_time 
-                  ? toStockholmTime(formData.start_time)
+                  ? toTimeZone(formData.start_time, timezone)
                   : new Date();
                 
-                // Create Stockholm DateTime
-                const stockholmDateTime = createStockholmDateTime(
+                // Create DateTime in user's timezone
+                const localDateTime = createDateTimeInZone(
                   currentDate.getFullYear(),
                   currentDate.getMonth(),
                   currentDate.getDate(),
                   hours,
-                  minutes
+                  minutes,
+                  timezone
                 );
                 
-                setFormData({ ...formData, end_time: formatInTimeZone(stockholmDateTime, 'Europe/Stockholm', "yyyy-MM-dd'T'HH:mm:ssXXX") });
+                setFormData({ ...formData, end_time: toISOStringWithOffset(localDateTime, timezone) });
               }}
               required
             />

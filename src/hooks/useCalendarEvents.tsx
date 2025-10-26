@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
+import { useUserTimezone } from "@/hooks/useUserTimezone";
 import { toast } from "sonner";
-import { toStockholmTime, fromStockholmTime, getTimezoneInfo, STOCKHOLM_TZ } from "@/lib/timezoneUtils";
+import { getTimezoneInfo } from "@/lib/timezoneUtils";
 
 export interface CalendarEvent {
   id: string;
@@ -24,6 +25,7 @@ export interface CalendarEvent {
 
 export const useCalendarEvents = () => {
   const { user } = useAuth();
+  const { timezone } = useUserTimezone();
   const [events, setEvents] = useState<CalendarEvent[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -49,12 +51,12 @@ export const useCalendarEvents = () => {
         const sampleEvent = data[0];
         console.log('📅 Calendar Events Loaded:', {
           totalEvents: data.length,
-          timezone: STOCKHOLM_TZ,
+          timezone,
           sampleEvent: {
             id: sampleEvent.id,
             title: sampleEvent.title,
             stored_utc: sampleEvent.start_time,
-            display_stockholm: getTimezoneInfo(sampleEvent.start_time),
+            display_local: getTimezoneInfo(sampleEvent.start_time, timezone),
           }
         });
       }
@@ -83,7 +85,7 @@ export const useCalendarEvents = () => {
         event_type: event.event_type || 'meeting',
         status: event.status || 'scheduled',
         source: event.source || 'internal',
-        timezone: 'Europe/Stockholm',
+        timezone: timezone,
         description: event.description,
         contact_person: event.contact_person,
         contact_email: event.contact_email,

@@ -6,7 +6,8 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import type { CalendarEvent } from "@/hooks/useCalendarEvents";
-import { formatInStockholm, toStockholmTime } from "@/lib/timezoneUtils";
+import { formatInTimeZone_, toTimeZone } from "@/lib/timezoneUtils";
+import { useUserTimezone } from "@/hooks/useUserTimezone";
 
 interface CalendarViewProps {
   events: CalendarEvent[];
@@ -16,6 +17,7 @@ interface CalendarViewProps {
 
 export const CalendarView = ({ events, onEventClick, onDateClick }: CalendarViewProps) => {
   const [currentDate, setCurrentDate] = useState(new Date());
+  const { timezone } = useUserTimezone();
 
   const monthStart = startOfMonth(currentDate);
   const monthEnd = endOfMonth(currentDate);
@@ -32,9 +34,9 @@ export const CalendarView = ({ events, onEventClick, onDateClick }: CalendarView
 
   const getEventsForDay = (date: Date) => {
     return events.filter(event => {
-      // Convert event to Stockholm time for comparison
-      const eventStartStockholm = toStockholmTime(event.start_time);
-      return isSameDay(eventStartStockholm, date);
+      // Convert event to user's timezone for comparison
+      const eventStartLocal = toTimeZone(event.start_time, timezone);
+      return isSameDay(eventStartLocal, date);
     });
   };
 
@@ -111,7 +113,7 @@ export const CalendarView = ({ events, onEventClick, onDateClick }: CalendarView
                       )}
                       title={event.title}
                     >
-                      {formatInStockholm(event.start_time, 'HH:mm')} {event.title}
+                      {formatInTimeZone_(event.start_time, 'HH:mm', timezone)} {event.title}
                     </div>
                   ))}
                   {dayEvents.length > 3 && (

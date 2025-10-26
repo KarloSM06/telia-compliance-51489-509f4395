@@ -1,6 +1,7 @@
 import { Clock } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { getStockholmOffset } from "@/lib/timezoneUtils";
+import { getTimezoneOffset } from "@/lib/timezoneUtils";
+import { useUserTimezone } from "@/hooks/useUserTimezone";
 
 interface DSTTransitionBadgeProps {
   date: Date | string;
@@ -8,11 +9,12 @@ interface DSTTransitionBadgeProps {
 }
 
 /**
- * Displays the current timezone offset (CET/CEST) for Stockholm
+ * Displays the current timezone offset for the user's selected timezone
  * Useful for showing users when DST transitions occur
  */
 export const DSTTransitionBadge = ({ date, className }: DSTTransitionBadgeProps) => {
-  const offset = getStockholmOffset(date);
+  const { timezone } = useUserTimezone();
+  const offset = getTimezoneOffset(date, timezone);
   
   return (
     <Badge variant="outline" className={`text-xs ${className}`}>

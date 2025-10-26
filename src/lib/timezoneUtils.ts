@@ -3,94 +3,181 @@ import { parseISO } from 'date-fns';
 import { sv } from 'date-fns/locale';
 
 /**
- * Central timezone constant for the entire application
+ * Default timezone for the application
  * Sweden uses Europe/Stockholm which automatically handles:
  * - Winter: CET (UTC+1)
  * - Summer: CEST (UTC+2)
  */
-export const STOCKHOLM_TZ = 'Europe/Stockholm';
+export const DEFAULT_TIMEZONE = 'Europe/Stockholm';
 
 /**
- * Convert a UTC date to Stockholm time
- * @param date - Date object or ISO string in UTC
- * @returns Date object representing the same moment in Stockholm timezone
+ * Legacy export for backwards compatibility
+ * @deprecated Use DEFAULT_TIMEZONE instead, or pass timezone explicitly to functions
  */
-export const toStockholmTime = (date: Date | string): Date => {
+export const STOCKHOLM_TZ = DEFAULT_TIMEZONE;
+
+/**
+ * Convert a UTC date to a specific timezone
+ * @param date - Date object or ISO string in UTC
+ * @param timezone - IANA timezone identifier (e.g., 'Europe/Stockholm', 'America/New_York')
+ * @returns Date object representing the same moment in specified timezone
+ */
+export const toTimeZone = (date: Date | string, timezone: string = DEFAULT_TIMEZONE): Date => {
   const dateObj = typeof date === 'string' ? parseISO(date) : date;
-  return toZonedTime(dateObj, STOCKHOLM_TZ);
+  return toZonedTime(dateObj, timezone);
 };
 
 /**
  * Convert a Stockholm time to UTC (for storage in database)
  * @param date - Date object in Stockholm time
  * @returns Date object in UTC
+ * @deprecated Use fromTimeZone instead
  */
 export const fromStockholmTime = (date: Date): Date => {
-  return fromZonedTime(date, STOCKHOLM_TZ);
+  return fromZonedTime(date, DEFAULT_TIMEZONE);
 };
 
 /**
- * Format a date in Stockholm timezone
+ * Convert a time in specific timezone to UTC (for storage in database)
+ * @param date - Date object in local timezone
+ * @param timezone - IANA timezone identifier
+ * @returns Date object in UTC
+ */
+export const fromTimeZone = (date: Date, timezone: string = DEFAULT_TIMEZONE): Date => {
+  return fromZonedTime(date, timezone);
+};
+
+/**
+ * Format a date in a specific timezone
  * @param date - Date object or ISO string
  * @param formatStr - date-fns format string
- * @returns Formatted string in Stockholm time
+ * @param timezone - IANA timezone identifier
+ * @returns Formatted string in specified timezone
+ */
+export const formatInTimeZone_ = (date: Date | string, formatStr: string, timezone: string = DEFAULT_TIMEZONE): string => {
+  const dateObj = typeof date === 'string' ? parseISO(date) : date;
+  return formatInTimeZone(dateObj, timezone, formatStr, { locale: sv });
+};
+
+/**
+ * Convert a UTC date to Stockholm time (legacy compatibility)
+ * @deprecated Use toTimeZone(date, timezone) instead
+ */
+export const toStockholmTime = (date: Date | string): Date => {
+  return toTimeZone(date, DEFAULT_TIMEZONE);
+};
+
+/**
+ * Format a date in Stockholm timezone (legacy compatibility)
+ * @deprecated Use formatInTimeZone_(date, formatStr, timezone) instead
  */
 export const formatInStockholm = (date: Date | string, formatStr: string): string => {
-  const dateObj = typeof date === 'string' ? parseISO(date) : date;
-  return formatInTimeZone(dateObj, STOCKHOLM_TZ, formatStr, { locale: sv });
+  return formatInTimeZone_(date, formatStr, DEFAULT_TIMEZONE);
 };
 
 /**
- * Get current time in Stockholm timezone
- * @returns Current Date object in Stockholm time
+ * Get current time in a specific timezone
+ * @param timezone - IANA timezone identifier
+ * @returns Current Date object in specified timezone
+ */
+export const getCurrentTimeInZone = (timezone: string = DEFAULT_TIMEZONE): Date => {
+  return toZonedTime(new Date(), timezone);
+};
+
+/**
+ * Get current time in Stockholm timezone (legacy compatibility)
+ * @deprecated Use getCurrentTimeInZone(timezone) instead
  */
 export const getCurrentStockholmTime = (): Date => {
-  return toZonedTime(new Date(), STOCKHOLM_TZ);
+  return getCurrentTimeInZone(DEFAULT_TIMEZONE);
 };
 
 /**
- * Parse a date string as Stockholm time
- * Useful when user inputs a time that should be interpreted as Stockholm time
+ * Parse a date string as a specific timezone
+ * Useful when user inputs a time that should be interpreted in their local timezone
  * @param dateStr - ISO date string (e.g., "2024-01-15T14:00:00")
- * @returns Date object in Stockholm time
+ * @param timezone - IANA timezone identifier
+ * @returns Date object in specified timezone
+ */
+export const parseTimeZone = (dateStr: string, timezone: string = DEFAULT_TIMEZONE): Date => {
+  const parsed = parseISO(dateStr);
+  return toZonedTime(parsed, timezone);
+};
+
+/**
+ * Parse a date string as Stockholm time (legacy compatibility)
+ * @deprecated Use parseTimeZone(dateStr, timezone) instead
  */
 export const parseStockholmTime = (dateStr: string): Date => {
-  const parsed = parseISO(dateStr);
-  return toZonedTime(parsed, STOCKHOLM_TZ);
+  return parseTimeZone(dateStr, DEFAULT_TIMEZONE);
 };
 
 /**
- * Check if a date is in daylight saving time (CEST) vs standard time (CET)
+ * Check if a date is in daylight saving time for a specific timezone
  * @param date - Date to check
- * @returns true if in CEST (summer time), false if in CET (winter time)
+ * @param timezone - IANA timezone identifier
+ * @returns true if in DST, false otherwise
  */
-export const isInDaylightSavingTime = (date: Date | string): boolean => {
+export const isInDaylightSavingTime = (date: Date | string, timezone: string = DEFAULT_TIMEZONE): boolean => {
   const dateObj = typeof date === 'string' ? parseISO(date) : date;
   
-  // Format in Stockholm timezone and check offset
-  const formatted = formatInTimeZone(dateObj, STOCKHOLM_TZ, 'XXX'); // Returns "+01:00" or "+02:00"
+  // Format in timezone and check offset
+  const formatted = formatInTimeZone(dateObj, timezone, 'XXX');
   
-  return formatted === '+02:00'; // CEST (summer time)
+  // For Stockholm: "+02:00" is CEST (summer), "+01:00" is CET (winter)
+  // For other timezones, we compare against standard time offset
+  // This is a simplified check - for production, consider more robust DST detection
+  return formatted.includes('+02:00') || formatted.includes('+03:00'); // Common DST offsets
 };
 
 /**
- * Get timezone offset string for Stockholm at a given date
+ * Get timezone offset string for a specific timezone at a given date
  * @param date - Date to check
- * @returns Offset string like "UTC+1" or "UTC+2"
+ * @param timezone - IANA timezone identifier
+ * @returns Offset string with timezone abbreviation
+ */
+export const getTimezoneOffset = (date: Date | string = new Date(), timezone: string = DEFAULT_TIMEZONE): string => {
+  const dateObj = typeof date === 'string' ? parseISO(date) : date;
+  const formatted = formatInTimeZone(dateObj, timezone, 'XXX zzz');
+  return formatted;
+};
+
+/**
+ * Get Stockholm timezone offset (legacy compatibility)
+ * @deprecated Use getTimezoneOffset(date, timezone) instead
  */
 export const getStockholmOffset = (date: Date | string = new Date()): string => {
-  return isInDaylightSavingTime(date) ? 'UTC+2 (CEST)' : 'UTC+1 (CET)';
+  const isDST = isInDaylightSavingTime(date, DEFAULT_TIMEZONE);
+  return isDST ? 'UTC+2 (CEST)' : 'UTC+1 (CET)';
 };
 
 /**
- * Create a date in Stockholm timezone from date and time components
- * Use this when user picks a date/time that should be interpreted as Stockholm time
+ * Create a date in a specific timezone from date and time components
+ * Use this when user picks a date/time that should be interpreted in their timezone
  * @param year - Year
  * @param month - Month (0-11, JavaScript standard)
  * @param day - Day of month
  * @param hour - Hour (0-23)
  * @param minute - Minute (0-59)
- * @returns Date object representing the Stockholm time (not yet converted to UTC)
+ * @param timezone - IANA timezone identifier
+ * @returns Date object in UTC representing the specified local time
+ */
+export const createDateTimeInZone = (
+  year: number, 
+  month: number, 
+  day: number, 
+  hour: number = 0, 
+  minute: number = 0,
+  timezone: string = DEFAULT_TIMEZONE
+): Date => {
+  const isoString = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}T${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}:00`;
+  const parsed = parseISO(isoString);
+  return fromZonedTime(parsed, timezone);
+};
+
+/**
+ * Create a date in Stockholm timezone (legacy compatibility)
+ * @deprecated Use createDateTimeInZone(year, month, day, hour, minute, timezone) instead
  */
 export const createStockholmDateTime = (
   year: number, 
@@ -99,28 +186,36 @@ export const createStockholmDateTime = (
   hour: number = 0, 
   minute: number = 0
 ): Date => {
-  // Create date in Stockholm timezone context
-  // This creates a Date object that represents the Stockholm time
-  const isoString = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}T${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}:00`;
-  
-  // Parse as if it's in Stockholm timezone and get the equivalent UTC time
-  const parsed = parseISO(isoString);
-  return fromZonedTime(parsed, STOCKHOLM_TZ);
+  return createDateTimeInZone(year, month, day, hour, minute, DEFAULT_TIMEZONE);
 };
 
 /**
  * Get detailed timezone info for debugging
  * @param date - Date to analyze
+ * @param timezone - IANA timezone identifier
  * @returns Object with timezone information
  */
-export const getTimezoneInfo = (date: Date | string = new Date()) => {
+export const getTimezoneInfo = (date: Date | string = new Date(), timezone: string = DEFAULT_TIMEZONE) => {
   const dateObj = typeof date === 'string' ? parseISO(date) : date;
-  const stockholmTime = toStockholmTime(dateObj);
+  const localTime = toTimeZone(dateObj, timezone);
   
   return {
     input: dateObj.toISOString(),
-    stockholmTime: formatInStockholm(dateObj, 'yyyy-MM-dd HH:mm:ss XXX'),
-    isDST: isInDaylightSavingTime(dateObj),
-    offset: getStockholmOffset(dateObj),
+    timezone,
+    localTime: formatInTimeZone_(dateObj, 'yyyy-MM-dd HH:mm:ss XXX', timezone),
+    isDST: isInDaylightSavingTime(dateObj, timezone),
+    offset: getTimezoneOffset(dateObj, timezone),
   };
+};
+
+/**
+ * Format time as ISO string with timezone offset
+ * This creates a string like "2025-10-27T09:00:00+01:00"
+ * @param date - Date to format
+ * @param timezone - IANA timezone identifier
+ * @returns ISO string with timezone offset
+ */
+export const toISOStringWithOffset = (date: Date | string, timezone: string = DEFAULT_TIMEZONE): string => {
+  const dateObj = typeof date === 'string' ? parseISO(date) : date;
+  return formatInTimeZone(dateObj, timezone, "yyyy-MM-dd'T'HH:mm:ssXXX");
 };

@@ -1282,6 +1282,7 @@ export type Database = {
           leaddesk_consent: boolean | null
           leaddesk_consent_date: string | null
           leaddesk_enabled: boolean | null
+          timezone: string
         }
         Insert: {
           created_at?: string
@@ -1293,6 +1294,7 @@ export type Database = {
           leaddesk_consent?: boolean | null
           leaddesk_consent_date?: string | null
           leaddesk_enabled?: boolean | null
+          timezone?: string
         }
         Update: {
           created_at?: string
@@ -1304,6 +1306,7 @@ export type Database = {
           leaddesk_consent?: boolean | null
           leaddesk_consent_date?: string | null
           leaddesk_enabled?: boolean | null
+          timezone?: string
         }
         Relationships: []
       }
