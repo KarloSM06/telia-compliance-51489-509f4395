@@ -90,7 +90,7 @@ export const getStockholmOffset = (date: Date | string = new Date()): string => 
  * @param day - Day of month
  * @param hour - Hour (0-23)
  * @param minute - Minute (0-59)
- * @returns Date object in UTC that represents the specified Stockholm time
+ * @returns Date object representing the Stockholm time (not yet converted to UTC)
  */
 export const createStockholmDateTime = (
   year: number, 
@@ -99,10 +99,11 @@ export const createStockholmDateTime = (
   hour: number = 0, 
   minute: number = 0
 ): Date => {
-  // Create ISO string in local format (will be interpreted as Stockholm time)
+  // Create date in Stockholm timezone context
+  // This creates a Date object that represents the Stockholm time
   const isoString = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}T${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}:00`;
   
-  // Parse as Stockholm time and convert to UTC
+  // Parse as if it's in Stockholm timezone and get the equivalent UTC time
   const parsed = parseISO(isoString);
   return fromZonedTime(parsed, STOCKHOLM_TZ);
 };

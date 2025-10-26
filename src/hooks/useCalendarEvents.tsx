@@ -40,30 +40,24 @@ export const useCalendarEvents = () => {
 
       if (error) throw error;
       
-      // Convert UTC times from database to Stockholm time for display
-      const eventsInStockholmTime = (data || []).map(event => ({
-        ...event,
-        start_time: toStockholmTime(event.start_time).toISOString(),
-        end_time: toStockholmTime(event.end_time).toISOString(),
-      }));
+      // Keep events in UTC format from database
+      // Conversion to Stockholm time happens at display time in components
+      setEvents(data || []);
       
       // Log timezone info for debugging (first event only)
-      if (eventsInStockholmTime.length > 0) {
-        const sampleEvent = eventsInStockholmTime[0];
-        console.log('📅 Calendar Events Timezone Info:', {
-          totalEvents: eventsInStockholmTime.length,
+      if (data && data.length > 0) {
+        const sampleEvent = data[0];
+        console.log('📅 Calendar Events Loaded:', {
+          totalEvents: data.length,
           timezone: STOCKHOLM_TZ,
           sampleEvent: {
             id: sampleEvent.id,
             title: sampleEvent.title,
-            start_utc: data![0].start_time,
-            start_stockholm: sampleEvent.start_time,
-            timezoneInfo: getTimezoneInfo(sampleEvent.start_time),
+            stored_utc: sampleEvent.start_time,
+            display_stockholm: getTimezoneInfo(sampleEvent.start_time),
           }
         });
       }
-      
-      setEvents(eventsInStockholmTime);
     } catch (error) {
       console.error("Error fetching events:", error);
       toast.error("Kunde inte hämta kalenderhändelser");
@@ -76,13 +70,10 @@ export const useCalendarEvents = () => {
     if (!user) return;
 
     try {
-      // Convert Stockholm time to UTC for storage
-      const startTimeUTC = event.start_time 
-        ? fromStockholmTime(new Date(event.start_time)).toISOString()
-        : new Date().toISOString();
-      const endTimeUTC = event.end_time
-        ? fromStockholmTime(new Date(event.end_time)).toISOString()
-        : new Date().toISOString();
+      // Times from EventModal are already in Stockholm timezone format
+      // No need to convert again - just use them directly
+      const startTimeUTC = event.start_time || new Date().toISOString();
+      const endTimeUTC = event.end_time || new Date().toISOString();
 
       const eventData: any = {
         user_id: user.id,
@@ -109,16 +100,10 @@ export const useCalendarEvents = () => {
 
       if (error) throw error;
       
-      // Convert back to Stockholm time for local state
-      const eventInStockholmTime = {
-        ...data,
-        start_time: toStockholmTime(data.start_time).toISOString(),
-        end_time: toStockholmTime(data.end_time).toISOString(),
-      };
-      
-      setEvents([...events, eventInStockholmTime]);
+      // Keep in UTC format - components handle display conversion
+      setEvents([...events, data]);
       toast.success("Händelse skapad");
-      return eventInStockholmTime;
+      return data;
     } catch (error) {
       console.error("Error creating event:", error);
       toast.error("Kunde inte skapa händelse");
@@ -128,34 +113,21 @@ export const useCalendarEvents = () => {
 
   const updateEvent = async (id: string, updates: Partial<CalendarEvent>) => {
     try {
-      // Convert Stockholm time to UTC for any time fields being updated
-      const updatesWithUTC = { ...updates };
-      if (updates.start_time) {
-        updatesWithUTC.start_time = fromStockholmTime(new Date(updates.start_time)).toISOString();
-      }
-      if (updates.end_time) {
-        updatesWithUTC.end_time = fromStockholmTime(new Date(updates.end_time)).toISOString();
-      }
-
+      // Times from components are already in correct format
+      // Just pass them through to database
       const { data, error } = await supabase
         .from("calendar_events")
-        .update(updatesWithUTC)
+        .update(updates)
         .eq("id", id)
         .select()
         .single();
 
       if (error) throw error;
 
-      // Convert back to Stockholm time for local state
-      const eventInStockholmTime = {
-        ...data,
-        start_time: toStockholmTime(data.start_time).toISOString(),
-        end_time: toStockholmTime(data.end_time).toISOString(),
-      };
-
-      setEvents(events.map(e => e.id === id ? eventInStockholmTime : e));
+      // Keep in UTC format - components handle display conversion
+      setEvents(events.map(e => e.id === id ? data : e));
       toast.success("Händelse uppdaterad");
-      return eventInStockholmTime;
+      return data;
     } catch (error) {
       console.error("Error updating event:", error);
       toast.error("Kunde inte uppdatera händelse");
