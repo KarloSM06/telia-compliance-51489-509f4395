@@ -83,13 +83,14 @@ export const useOptimizedEventInteraction = (
         const dayDateStr = dayContainer.getAttribute('data-day-date');
         if (dayDateStr) {
           const dayDate = parseISO(dayDateStr);
-          // Combine the day from the target column with the time from mouse position
-          targetDate = new Date(
+          // Create UTC instant for this local time
+          targetDate = createDateTimeInZone(
             dayDate.getFullYear(),
             dayDate.getMonth(),
             dayDate.getDate(),
             snappedTime.getHours(),
-            snappedTime.getMinutes()
+            snappedTime.getMinutes(),
+            timezone
           );
         }
       }
