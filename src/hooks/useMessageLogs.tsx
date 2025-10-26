@@ -1,6 +1,7 @@
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from './useAuth';
+import { useEffect } from 'react';
 
 export interface MessageLog {
   id: string;
@@ -34,6 +35,7 @@ export interface MessageLogFilters {
 
 export const useMessageLogs = (filters?: MessageLogFilters) => {
   const { user } = useAuth();
+  const queryClient = useQueryClient();
 
   const { data: logs = [], isLoading } = useQuery({
     queryKey: ['message-logs', user?.id, filters],
@@ -64,6 +66,32 @@ export const useMessageLogs = (filters?: MessageLogFilters) => {
     },
     enabled: !!user,
   });
+
+  // Realtime subscription för message logs
+  useEffect(() => {
+    if (!user) return;
+
+    const channel = supabase
+      .channel('message-logs-changes')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'message_logs',
+          filter: `user_id=eq.${user.id}`,
+        },
+        (payload) => {
+          console.log('📨 Realtime message update:', payload);
+          queryClient.invalidateQueries({ queryKey: ['message-logs', user.id] });
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [user, queryClient]);
 
   // Beräkna statistik
   const stats = {

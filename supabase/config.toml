@@ -59,3 +59,9 @@ verify_jwt = false
 
 [functions.test-sms-provider]
 verify_jwt = true
+
+[functions.twilio-webhook]
+verify_jwt = false
+
+[functions.telnyx-webhook]
+verify_jwt = false

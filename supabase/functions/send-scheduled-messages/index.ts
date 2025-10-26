@@ -31,7 +31,6 @@ Deno.serve(async (req) => {
 
     console.log('🚀 Starting send-scheduled-messages job...');
 
-    // Get messages that are due to be sent
     const now = new Date().toISOString();
     const { data: messages, error: fetchError } = await supabase
       .from('scheduled_messages')
@@ -61,14 +60,12 @@ Deno.serve(async (req) => {
     for (const message of messages as ScheduledMessage[]) {
       console.log(`Processing message ${message.id} (${message.message_type})`);
 
-      // Mark as processing
       await supabase
         .from('scheduled_messages')
         .update({ status: 'processing' })
         .eq('id', message.id);
 
       try {
-        // Send via each channel
         for (const channel of message.channel) {
           if (channel === 'sms' && message.recipient_phone) {
             await sendSMS(message, supabase);
@@ -77,7 +74,6 @@ Deno.serve(async (req) => {
           }
         }
 
-        // Mark as sent
         await supabase
           .from('scheduled_messages')
           .update({ 
@@ -86,7 +82,6 @@ Deno.serve(async (req) => {
           })
           .eq('id', message.id);
 
-        // Create owner notification
         await supabase.from('owner_notifications').insert({
           user_id: message.user_id,
           calendar_event_id: message.calendar_event_id,
@@ -108,7 +103,6 @@ Deno.serve(async (req) => {
       } catch (error) {
         console.error(`❌ Error sending message ${message.id}:`, error);
         
-        // Mark as failed
         await supabase
           .from('scheduled_messages')
           .update({ 
@@ -136,7 +130,168 @@ Deno.serve(async (req) => {
   }
 });
 
+async function getUserSMSSettings(userId: string, supabase: any) {
+  const { data, error } = await supabase
+    .from('sms_provider_settings')
+    .select('*')
+    .eq('user_id', userId)
+    .eq('is_active', true)
+    .single();
+
+  if (error || !data) {
+    console.log('⚠️ No user SMS settings found, will use system-wide Twilio');
+    return null;
+  }
+
+  return data;
+}
+
 async function sendSMS(message: ScheduledMessage, supabase: any) {
+  const userSettings = await getUserSMSSettings(message.user_id, supabase);
+  
+  if (userSettings) {
+    const credentials = JSON.parse(userSettings.encrypted_credentials);
+    
+    if (userSettings.provider === 'twilio') {
+      return await sendViaTwilio({
+        accountSid: credentials.accountSid,
+        authToken: credentials.authToken,
+        fromNumber: userSettings.from_phone_number,
+        toNumber: message.recipient_phone!,
+        body: message.message_body,
+        userId: message.user_id,
+        messageId: message.id,
+        calendarEventId: message.calendar_event_id,
+        settingsId: userSettings.id,
+        supabase,
+      });
+    } else if (userSettings.provider === 'telnyx') {
+      return await sendViaTelnyx({
+        apiKey: credentials.apiKey,
+        fromNumber: userSettings.from_phone_number,
+        toNumber: message.recipient_phone!,
+        body: message.message_body,
+        userId: message.user_id,
+        messageId: message.id,
+        calendarEventId: message.calendar_event_id,
+        settingsId: userSettings.id,
+        supabase,
+      });
+    }
+  }
+  
+  return await sendViaSystemTwilio(message, supabase);
+}
+
+async function sendViaTwilio(params: {
+  accountSid: string;
+  authToken: string;
+  fromNumber: string;
+  toNumber: string;
+  body: string;
+  userId: string;
+  messageId: string;
+  calendarEventId: string;
+  settingsId: string;
+  supabase: any;
+}) {
+  const url = `https://api.twilio.com/2010-04-01/Accounts/${params.accountSid}/Messages.json`;
+  const auth = btoa(`${params.accountSid}:${params.authToken}`);
+
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'Authorization': `Basic ${auth}`,
+    },
+    body: new URLSearchParams({
+      To: params.toNumber,
+      From: params.fromNumber,
+      Body: params.body,
+    }),
+  });
+
+  if (!response.ok) {
+    const error = await response.text();
+    throw new Error(`Twilio error: ${error}`);
+  }
+
+  const result = await response.json();
+
+  await params.supabase.from('message_logs').insert({
+    user_id: params.userId,
+    scheduled_message_id: params.messageId,
+    calendar_event_id: params.calendarEventId,
+    channel: 'sms',
+    recipient: params.toNumber,
+    message_body: params.body,
+    provider: 'twilio',
+    provider_type: 'user',
+    sms_provider_settings_id: params.settingsId,
+    provider_message_id: result.sid,
+    status: 'sent',
+    sent_at: new Date().toISOString(),
+    cost: 0.50,
+    metadata: { twilio_status: result.status },
+  });
+
+  console.log(`📱 SMS sent via user's Twilio: ${result.sid}`);
+  return result;
+}
+
+async function sendViaTelnyx(params: {
+  apiKey: string;
+  fromNumber: string;
+  toNumber: string;
+  body: string;
+  userId: string;
+  messageId: string;
+  calendarEventId: string;
+  settingsId: string;
+  supabase: any;
+}) {
+  const response = await fetch('https://api.telnyx.com/v2/messages', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${params.apiKey}`,
+    },
+    body: JSON.stringify({
+      from: params.fromNumber,
+      to: params.toNumber,
+      text: params.body,
+    }),
+  });
+
+  if (!response.ok) {
+    const error = await response.text();
+    throw new Error(`Telnyx error: ${error}`);
+  }
+
+  const result = await response.json();
+
+  await params.supabase.from('message_logs').insert({
+    user_id: params.userId,
+    scheduled_message_id: params.messageId,
+    calendar_event_id: params.calendarEventId,
+    channel: 'sms',
+    recipient: params.toNumber,
+    message_body: params.body,
+    provider: 'telnyx',
+    provider_type: 'user',
+    sms_provider_settings_id: params.settingsId,
+    provider_message_id: result.data.id,
+    status: 'sent',
+    sent_at: new Date().toISOString(),
+    cost: 0.50,
+    metadata: { telnyx_status: result.data.status },
+  });
+
+  console.log(`📱 SMS sent via user's Telnyx: ${result.data.id}`);
+  return result;
+}
+
+async function sendViaSystemTwilio(message: ScheduledMessage, supabase: any) {
   const twilioAccountSid = Deno.env.get('TWILIO_ACCOUNT_SID');
   const twilioAuthToken = Deno.env.get('TWILIO_AUTH_TOKEN');
   const twilioPhoneNumber = Deno.env.get('TWILIO_PHONE_NUMBER');
@@ -169,7 +324,6 @@ async function sendSMS(message: ScheduledMessage, supabase: any) {
 
   const result = await response.json();
 
-  // Log the message
   await supabase.from('message_logs').insert({
     user_id: message.user_id,
     scheduled_message_id: message.id,
@@ -178,13 +332,15 @@ async function sendSMS(message: ScheduledMessage, supabase: any) {
     recipient: message.recipient_phone,
     message_body: message.message_body,
     provider: 'twilio',
+    provider_type: 'system',
     provider_message_id: result.sid,
     status: 'sent',
     sent_at: new Date().toISOString(),
+    cost: 0.50,
     metadata: { twilio_status: result.status },
   });
 
-  console.log(`📱 SMS sent via Twilio: ${result.sid}`);
+  console.log(`📱 SMS sent via system Twilio: ${result.sid}`);
 }
 
 async function sendEmail(message: ScheduledMessage, supabase: any) {
@@ -216,7 +372,6 @@ async function sendEmail(message: ScheduledMessage, supabase: any) {
 
   const result = await response.json();
 
-  // Log the message
   await supabase.from('message_logs').insert({
     user_id: message.user_id,
     scheduled_message_id: message.id,

@@ -4,9 +4,9 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useSMSProviderSettings, SMSProvider, ProviderCredentials } from "@/hooks/useSMSProviderSettings";
-import { CheckCircle2, AlertCircle, Loader2, Trash2 } from "lucide-react";
+import { CheckCircle2, AlertCircle, Loader2, Trash2, Info } from "lucide-react";
 import { format } from "date-fns";
 import { sv } from "date-fns/locale";
 
@@ -75,6 +75,34 @@ export default function SMSProviderSettings() {
                 </div>
               )}
             </div>
+          </AlertDescription>
+        </Alert>
+      )}
+
+      {settings && (
+        <Alert>
+          <Info className="h-4 w-4" />
+          <AlertTitle>Webhook URL för realtidsuppdateringar</AlertTitle>
+          <AlertDescription className="space-y-2">
+            <p>
+              Konfigurera följande webhook URL i din {settings.provider === 'twilio' ? 'Twilio' : 'Telnyx'} dashboard
+              för att få realtidsuppdateringar om meddelandestatus:
+            </p>
+            <code className="block mt-2 p-2 bg-muted rounded text-xs break-all">
+              https://shskknkivuewuqonjdjc.supabase.co/functions/v1/{settings.provider}-webhook
+            </code>
+            {settings.provider === 'twilio' && (
+              <p className="text-xs text-muted-foreground mt-2">
+                I Twilio Console: Phone Numbers → Din nummer → Messaging Configuration → 
+                "A MESSAGE COMES IN" webhook
+              </p>
+            )}
+            {settings.provider === 'telnyx' && (
+              <p className="text-xs text-muted-foreground mt-2">
+                I Telnyx Portal: Messaging → Messaging Profiles → Din profil → 
+                Webhooks → Add webhook URL
+              </p>
+            )}
           </AlertDescription>
         </Alert>
       )}
