@@ -49,7 +49,7 @@ export const TimeGrid = ({ onTimeSlotClick, availabilitySlots = [], currentDate 
   const handleClick = (e: React.MouseEvent<HTMLDivElement>, hour: number) => {
     const rect = e.currentTarget.getBoundingClientRect();
     const relativeY = e.clientY - rect.top;
-    const minutes = Math.floor((relativeY / 48) * 60); // Uppdaterad för 48px höjd
+    const minutes = Math.floor((relativeY / 60) * 60);
     const snappedMinutes = Math.round(minutes / 15) * 15;
     
     const clickedTime = setMinutes(setHours(new Date(), hour), snappedMinutes);
@@ -59,7 +59,7 @@ export const TimeGrid = ({ onTimeSlotClick, availabilitySlots = [], currentDate 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>, hour: number) => {
     const rect = e.currentTarget.getBoundingClientRect();
     const relativeY = e.clientY - rect.top;
-    const quarter = Math.floor((relativeY / 48) * 4); // Uppdaterad för 48px höjd
+    const quarter = Math.floor((relativeY / 60) * 4); // 0-3 for 15min intervals
     setHoveredSlot({ hour, quarter: Math.min(quarter, 3) });
   };
 
@@ -70,42 +70,42 @@ export const TimeGrid = ({ onTimeSlotClick, availabilitySlots = [], currentDate 
         return (
           <div
             key={hour}
-            className={`relative h-[48px] border-b border-border transition-all cursor-pointer group ${
+            className={`relative h-[80px] border-b border-border transition-all cursor-pointer group ${
               isHourAvailable ? 'bg-emerald-500/10' : 'hover:bg-accent/30'
             }`}
             onClick={(e) => handleClick(e, hour)}
             onMouseMove={(e) => handleMouseMove(e, hour)}
           >
-            {/* Hour label - Kompakt */}
-            <div className="absolute -left-12 -top-2 text-[10px] text-muted-foreground w-10 text-right font-medium">
+            {/* Hour label */}
+            <div className="absolute -left-14 -top-2 text-xs text-muted-foreground w-12 text-right font-medium">
               {hour.toString().padStart(2, '0')}:00
             </div>
             
-            {/* 15-minute gridlines - Kompakt 48px höjd */}
+            {/* 15-minute gridlines with hover effect */}
             {[0, 1, 2, 3].map((quarter) => (
               <div
                 key={quarter}
                 className={`absolute left-0 right-0 border-t transition-all ${
                   quarter === 0 ? 'top-0 border-border' : ''
-                }${quarter === 1 ? 'top-[12px] border-dashed border-border/30' : ''}${
-                  quarter === 2 ? 'top-[24px] border-dashed border-border/30' : ''
-                }${quarter === 3 ? 'top-[36px] border-dashed border-border/30' : ''}${
+                }${quarter === 1 ? 'top-[20px] border-dashed border-border/30' : ''}${
+                  quarter === 2 ? 'top-[40px] border-dashed border-border/30' : ''
+                }${quarter === 3 ? 'top-[60px] border-dashed border-border/30' : ''}${
                   hoveredSlot?.hour === hour && hoveredSlot?.quarter === quarter
                     ? ' bg-primary/10'
                     : ''
                 }`}
                 style={{
-                  height: quarter === 0 ? '0' : '12px',
-                  top: quarter === 0 ? '0' : `${quarter * 12}px`,
+                  height: quarter === 0 ? '0' : '20px',
+                  top: quarter === 0 ? '0' : `${quarter * 20}px`,
                 }}
               />
             ))}
             
-            {/* Hover time indicator - Kompakt */}
+            {/* Hover time indicator */}
             {hoveredSlot?.hour === hour && (
               <div 
-                className="absolute left-1 text-[10px] font-medium text-primary pointer-events-none bg-background/90 px-1.5 py-0.5 rounded shadow-sm"
-                style={{ top: `${hoveredSlot.quarter * 12}px` }}
+                className="absolute left-2 text-xs font-medium text-primary pointer-events-none bg-background/90 px-2 py-0.5 rounded shadow-sm"
+                style={{ top: `${hoveredSlot.quarter * 20}px` }}
               >
                 {hour.toString().padStart(2, '0')}:{(hoveredSlot.quarter * 15).toString().padStart(2, '0')}
               </div>
