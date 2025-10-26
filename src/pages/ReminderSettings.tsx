@@ -40,7 +40,7 @@ export default function ReminderSettings() {
   }
 
   return (
-    <div className="p-8 space-y-6 max-w-4xl">
+    <div className="p-8 space-y-6 max-w-4xl mx-auto">
       <div>
         <h1 className="text-3xl font-bold mb-2">Påminnelseinställningar</h1>
         <p className="text-muted-foreground">
@@ -75,7 +75,7 @@ export default function ReminderSettings() {
             <div className="space-y-2 pl-4 border-l-2">
               <Label>Kanaler</Label>
               <div className="flex gap-4">
-                <div className="flex items-center space-x-2">
+                <Label htmlFor="conf-email" className="flex items-center space-x-2 cursor-pointer">
                   <Checkbox
                     id="conf-email"
                     checked={formData.booking_confirmation_channel.includes('email')}
@@ -87,12 +87,12 @@ export default function ReminderSettings() {
                       setFormData({ ...formData, booking_confirmation_channel: channels });
                     }}
                   />
-                  <Label htmlFor="conf-email" className="flex items-center gap-2">
+                  <span className="flex items-center gap-2">
                     <Mail className="h-4 w-4" />
                     E-post
-                  </Label>
-                </div>
-                <div className="flex items-center space-x-2">
+                  </span>
+                </Label>
+                <Label htmlFor="conf-sms" className="flex items-center space-x-2 cursor-pointer">
                   <Checkbox
                     id="conf-sms"
                     checked={formData.booking_confirmation_channel.includes('sms')}
@@ -104,11 +104,11 @@ export default function ReminderSettings() {
                       setFormData({ ...formData, booking_confirmation_channel: channels });
                     }}
                   />
-                  <Label htmlFor="conf-sms" className="flex items-center gap-2">
+                  <span className="flex items-center gap-2">
                     <MessageSquare className="h-4 w-4" />
                     SMS
-                  </Label>
-                </div>
+                  </span>
+                </Label>
               </div>
             </div>
           )}
@@ -160,7 +160,7 @@ export default function ReminderSettings() {
               <div className="space-y-2">
                 <Label>Kanaler</Label>
                 <div className="flex gap-4">
-                  <div className="flex items-center space-x-2">
+                  <Label htmlFor="r1-email" className="flex items-center space-x-2 cursor-pointer">
                     <Checkbox
                       id="r1-email"
                       checked={formData.reminder_1_channel.includes('email')}
@@ -172,12 +172,12 @@ export default function ReminderSettings() {
                         setFormData({ ...formData, reminder_1_channel: channels });
                       }}
                     />
-                    <Label htmlFor="r1-email" className="flex items-center gap-2">
+                    <span className="flex items-center gap-2">
                       <Mail className="h-4 w-4" />
                       E-post
-                    </Label>
-                  </div>
-                  <div className="flex items-center space-x-2">
+                    </span>
+                  </Label>
+                  <Label htmlFor="r1-sms" className="flex items-center space-x-2 cursor-pointer">
                     <Checkbox
                       id="r1-sms"
                       checked={formData.reminder_1_channel.includes('sms')}
@@ -189,11 +189,11 @@ export default function ReminderSettings() {
                         setFormData({ ...formData, reminder_1_channel: channels });
                       }}
                     />
-                    <Label htmlFor="r1-sms" className="flex items-center gap-2">
+                    <span className="flex items-center gap-2">
                       <MessageSquare className="h-4 w-4" />
                       SMS
-                    </Label>
-                  </div>
+                    </span>
+                  </Label>
                 </div>
               </div>
             </div>
@@ -246,7 +246,7 @@ export default function ReminderSettings() {
               <div className="space-y-2">
                 <Label>Kanaler</Label>
                 <div className="flex gap-4">
-                  <div className="flex items-center space-x-2">
+                  <Label htmlFor="r2-email" className="flex items-center space-x-2 cursor-pointer">
                     <Checkbox
                       id="r2-email"
                       checked={formData.reminder_2_channel.includes('email')}
@@ -258,12 +258,12 @@ export default function ReminderSettings() {
                         setFormData({ ...formData, reminder_2_channel: channels });
                       }}
                     />
-                    <Label htmlFor="r2-email" className="flex items-center gap-2">
+                    <span className="flex items-center gap-2">
                       <Mail className="h-4 w-4" />
                       E-post
-                    </Label>
-                  </div>
-                  <div className="flex items-center space-x-2">
+                    </span>
+                  </Label>
+                  <Label htmlFor="r2-sms" className="flex items-center space-x-2 cursor-pointer">
                     <Checkbox
                       id="r2-sms"
                       checked={formData.reminder_2_channel.includes('sms')}
@@ -275,11 +275,11 @@ export default function ReminderSettings() {
                         setFormData({ ...formData, reminder_2_channel: channels });
                       }}
                     />
-                    <Label htmlFor="r2-sms" className="flex items-center gap-2">
+                    <span className="flex items-center gap-2">
                       <MessageSquare className="h-4 w-4" />
                       SMS
-                    </Label>
-                  </div>
+                    </span>
+                  </Label>
                 </div>
               </div>
             </div>
@@ -332,7 +332,7 @@ export default function ReminderSettings() {
               <div className="space-y-2">
                 <Label>Kanaler</Label>
                 <div className="flex gap-4">
-                  <div className="flex items-center space-x-2">
+                  <Label htmlFor="review-email" className="flex items-center space-x-2 cursor-pointer">
                     <Checkbox
                       id="review-email"
                       checked={formData.review_request_channel.includes('email')}
@@ -344,12 +344,12 @@ export default function ReminderSettings() {
                         setFormData({ ...formData, review_request_channel: channels });
                       }}
                     />
-                    <Label htmlFor="review-email" className="flex items-center gap-2">
+                    <span className="flex items-center gap-2">
                       <Mail className="h-4 w-4" />
                       E-post
-                    </Label>
-                  </div>
-                  <div className="flex items-center space-x-2">
+                    </span>
+                  </Label>
+                  <Label htmlFor="review-sms" className="flex items-center space-x-2 cursor-pointer">
                     <Checkbox
                       id="review-sms"
                       checked={formData.review_request_channel.includes('sms')}
@@ -361,11 +361,11 @@ export default function ReminderSettings() {
                         setFormData({ ...formData, review_request_channel: channels });
                       }}
                     />
-                    <Label htmlFor="review-sms" className="flex items-center gap-2">
+                    <span className="flex items-center gap-2">
                       <MessageSquare className="h-4 w-4" />
                       SMS
-                    </Label>
-                  </div>
+                    </span>
+                  </Label>
                 </div>
               </div>
             </div>
