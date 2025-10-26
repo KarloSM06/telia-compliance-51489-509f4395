@@ -3,6 +3,7 @@ import { format, parseISO, parse } from "date-fns";
 import { sv } from "date-fns/locale";
 import { useUserTimezone } from "@/hooks/useUserTimezone";
 import { createDateTimeInZone, formatInTimeZone_, getTimezoneOffset, toTimeZone, toISOStringWithOffset } from "@/lib/timezoneUtils";
+import { normalizePhoneNumber } from "@/lib/phoneUtils";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -434,6 +435,13 @@ export const EventModal = ({ open, onClose, event, defaultDate, onSave, onDelete
                 type="tel"
                 value={formData.contact_phone}
                 onChange={(e) => setFormData({ ...formData, contact_phone: e.target.value })}
+                onBlur={(e) => {
+                  // Normalize phone number when user leaves the field
+                  if (e.target.value) {
+                    const normalized = normalizePhoneNumber(e.target.value);
+                    setFormData({ ...formData, contact_phone: normalized });
+                  }
+                }}
                 placeholder="+46 70 123 45 67"
               />
             </div>

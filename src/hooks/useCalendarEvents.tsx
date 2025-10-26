@@ -4,6 +4,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useUserTimezone } from "@/hooks/useUserTimezone";
 import { toast } from "sonner";
 import { toISOStringWithOffset } from "@/lib/timezoneUtils";
+import { normalizePhoneNumber } from "@/lib/phoneUtils";
 
 export interface CalendarEvent {
   id: string;
@@ -105,7 +106,7 @@ export const useCalendarEvents = () => {
         description: event.description,
         contact_person: event.contact_person,
         contact_email: event.contact_email,
-        contact_phone: event.contact_phone,
+        contact_phone: event.contact_phone ? normalizePhoneNumber(event.contact_phone) : undefined,
         address: event.address,
         lead_id: event.lead_id,
       };

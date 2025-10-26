@@ -10,7 +10,7 @@ interface ScheduledMessage {
   user_id: string;
   calendar_event_id: string;
   message_type: string;
-  channel: string[];
+  channel: 'sms' | 'email' | 'both';
   recipient_phone?: string;
   recipient_email?: string;
   message_body: string;
@@ -66,7 +66,12 @@ Deno.serve(async (req) => {
         .eq('id', message.id);
 
       try {
-        for (const channel of message.channel) {
+        // Handle channel as TEXT: 'sms', 'email', or 'both'
+        const channels = message.channel === 'both' 
+          ? ['sms', 'email'] 
+          : [message.channel];
+
+        for (const channel of channels) {
           if (channel === 'sms' && message.recipient_phone) {
             await sendSMS(message, supabase);
           } else if (channel === 'email' && message.recipient_email) {
@@ -82,12 +87,14 @@ Deno.serve(async (req) => {
           })
           .eq('id', message.id);
 
+        const channelDisplay = message.channel === 'both' ? 'sms, email' : message.channel;
+        
         await supabase.from('owner_notifications').insert({
           user_id: message.user_id,
           calendar_event_id: message.calendar_event_id,
           notification_type: 'message_sent',
           title: `${message.message_type} skickad`,
-          message: `Meddelande skickat via ${message.channel.join(', ')} till ${message.recipient_phone || message.recipient_email}`,
+          message: `Meddelande skickat via ${channelDisplay} till ${message.recipient_phone || message.recipient_email}`,
           priority: 'low',
           channel: ['email'],
           status: 'sent',

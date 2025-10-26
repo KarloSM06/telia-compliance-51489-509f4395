@@ -6,6 +6,28 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
+/**
+ * Normalizes a phone number to international format
+ * Assumes Swedish phone numbers if no country code is provided
+ */
+function normalizePhoneNumber(phone: string): string {
+  if (!phone) return phone;
+  
+  // Remove all spaces, dashes, and parentheses
+  let normalized = phone.replace(/[\s\-\(\)]/g, '');
+  
+  // If it starts with 0, assume it's Swedish and convert to +46
+  if (normalized.startsWith('0')) {
+    normalized = '+46' + normalized.substring(1);
+  }
+  // If it doesn't start with +, assume Swedish and add +46
+  else if (!normalized.startsWith('+')) {
+    normalized = '+46' + normalized;
+  }
+  
+  return normalized;
+}
+
 interface ScheduleRemindersRequest {
   calendarEventId: string;
 }
@@ -77,7 +99,7 @@ serve(async (req) => {
           channel,
           recipient_name: event.contact_person || 'Kund',
           recipient_email: event.contact_email,
-          recipient_phone: event.contact_phone,
+          recipient_phone: event.contact_phone ? normalizePhoneNumber(event.contact_phone) : null,
           scheduled_for: new Date().toISOString(),
           generated_subject: confirmationMessage.subject,
           generated_message: confirmationMessage.message,
@@ -108,7 +130,7 @@ serve(async (req) => {
             channel,
             recipient_name: event.contact_person || 'Kund',
             recipient_email: event.contact_email,
-            recipient_phone: event.contact_phone,
+            recipient_phone: event.contact_phone ? normalizePhoneNumber(event.contact_phone) : null,
             scheduled_for: reminder1Time.toISOString(),
             generated_subject: reminderMessage.subject,
             generated_message: reminderMessage.message,
@@ -140,7 +162,7 @@ serve(async (req) => {
             channel,
             recipient_name: event.contact_person || 'Kund',
             recipient_email: event.contact_email,
-            recipient_phone: event.contact_phone,
+            recipient_phone: event.contact_phone ? normalizePhoneNumber(event.contact_phone) : null,
             scheduled_for: reminder2Time.toISOString(),
             generated_subject: reminderMessage.subject,
             generated_message: reminderMessage.message,
@@ -171,7 +193,7 @@ serve(async (req) => {
           channel,
           recipient_name: event.contact_person || 'Kund',
           recipient_email: event.contact_email,
-          recipient_phone: event.contact_phone,
+          recipient_phone: event.contact_phone ? normalizePhoneNumber(event.contact_phone) : null,
           scheduled_for: reviewTime.toISOString(),
           generated_subject: reviewMessage.subject,
           generated_message: reviewMessage.message,
