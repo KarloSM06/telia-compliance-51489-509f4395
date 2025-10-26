@@ -1,7 +1,10 @@
 import { CalendarEvent } from "@/hooks/useCalendarEvents";
-import { parseISO, addMinutes, setMinutes, setHours, isSameDay, differenceInMinutes, startOfDay } from "date-fns";
-import { toStockholmTime, getCurrentStockholmTime, createStockholmDateTime } from "./timezoneUtils";
+import { differenceInMinutes, startOfDay, setMinutes, parseISO } from "date-fns";
+import { toTimeZone, createDateTimeInZone, getCurrentTimeInZone } from "./timezoneUtils";
 
+/**
+ * Snap time to nearest interval
+ */
 export const snapToInterval = (date: Date, intervalMinutes: number = 15): Date => {
   const minutes = date.getMinutes();
   const snappedMinutes = Math.round(minutes / intervalMinutes) * intervalMinutes;
@@ -9,18 +12,20 @@ export const snapToInterval = (date: Date, intervalMinutes: number = 15): Date =
 };
 
 /**
- * Calculate time from Y position in calendar
+ * Calculate time from Y position in calendar (timezone-aware)
  * @param y - Y position in pixels
  * @param containerTop - Top offset of container
  * @param viewStartHour - Starting hour of the view
- * @param referenceDate - Reference date to use (defaults to current Stockholm time)
- * @returns Date object in Stockholm time
+ * @param referenceDate - Reference date to use
+ * @param timezone - IANA timezone identifier
+ * @returns Date object as UTC instant representing the local time
  */
 export const getTimeFromYPosition = (
   y: number, 
   containerTop: number, 
   viewStartHour: number = 0,
-  referenceDate?: Date
+  referenceDate: Date | undefined,
+  timezone: string
 ): Date => {
   const PIXELS_PER_HOUR = 80;
   const relativeY = y - containerTop;
@@ -28,29 +33,38 @@ export const getTimeFromYPosition = (
   const hours = Math.floor(totalMinutes / 60) + viewStartHour;
   const minutes = totalMinutes % 60;
   
-  // Use referenceDate or current Stockholm time
+  // Use referenceDate or current time in timezone
   const baseDate = referenceDate 
-    ? toStockholmTime(referenceDate)
-    : getCurrentStockholmTime();
+    ? toTimeZone(referenceDate, timezone)
+    : getCurrentTimeInZone(timezone);
   
-  // Create Stockholm DateTime
-  return createStockholmDateTime(
+  // Create UTC instant for this local time
+  return createDateTimeInZone(
     baseDate.getFullYear(),
     baseDate.getMonth(),
     baseDate.getDate(),
     hours,
-    Math.round(minutes)
+    Math.round(minutes),
+    timezone
   );
 };
 
 /**
- * Calculate event position from times
- * Always works with Stockholm time for display
+ * Calculate event position from times (timezone-aware for display)
+ * @param startTime - Start time ISO string (UTC from database)
+ * @param endTime - End time ISO string (UTC from database)
+ * @param viewStartHour - Starting hour of the view
+ * @param timezone - IANA timezone identifier for display
  */
-export const getEventPosition = (startTime: string, endTime: string, viewStartHour: number = 0) => {
-  // Convert to Stockholm time for display positioning
-  const start = toStockholmTime(startTime);
-  const end = toStockholmTime(endTime);
+export const getEventPosition = (
+  startTime: string, 
+  endTime: string, 
+  viewStartHour: number = 0,
+  timezone: string
+) => {
+  // Convert to local time for display positioning
+  const start = toTimeZone(startTime, timezone);
+  const end = toTimeZone(endTime, timezone);
   
   const dayStart = startOfDay(start);
   const startMinutes = differenceInMinutes(start, dayStart);
@@ -63,12 +77,19 @@ export const getEventPosition = (startTime: string, endTime: string, viewStartHo
   };
 };
 
-export const doesOverlap = (event1: CalendarEvent, event2: CalendarEvent): boolean => {
-  // Convert to Stockholm time for overlap comparison
-  const start1 = toStockholmTime(event1.start_time);
-  const end1 = toStockholmTime(event1.end_time);
-  const start2 = toStockholmTime(event2.start_time);
-  const end2 = toStockholmTime(event2.end_time);
+/**
+ * Check if two events overlap (timezone-aware)
+ */
+export const doesOverlap = (
+  event1: CalendarEvent, 
+  event2: CalendarEvent,
+  timezone: string
+): boolean => {
+  // Convert to local time for comparison
+  const start1 = toTimeZone(event1.start_time, timezone);
+  const end1 = toTimeZone(event1.end_time, timezone);
+  const start2 = toTimeZone(event2.start_time, timezone);
+  const end2 = toTimeZone(event2.end_time, timezone);
   
   return start1 < end2 && start2 < end1;
 };
@@ -78,7 +99,14 @@ export interface LayoutEvent extends CalendarEvent {
   totalColumns: number;
 }
 
-export const layoutOverlappingEvents = (events: CalendarEvent[]): LayoutEvent[] => {
+/**
+ * Layout overlapping events in columns
+ * Sorting is done on UTC times, but overlap detection uses timezone
+ */
+export const layoutOverlappingEvents = (
+  events: CalendarEvent[],
+  timezone: string = 'Europe/Stockholm'
+): LayoutEvent[] => {
   if (events.length === 0) return [];
   
   const sorted = [...events].sort((a, b) => 
@@ -91,7 +119,7 @@ export const layoutOverlappingEvents = (events: CalendarEvent[]): LayoutEvent[] 
     let placed = false;
     for (let col of columns) {
       const lastInCol = col[col.length - 1];
-      if (!doesOverlap(event, lastInCol)) {
+      if (!doesOverlap(event, lastInCol, timezone)) {
         col.push(event);
         placed = true;
         break;
@@ -124,11 +152,14 @@ export const getEventTypeColor = (eventType: string) => {
   return colors[eventType] || colors.other;
 };
 
-// Calculate snap position with smart snapping
+/**
+ * Calculate snap position with smart snapping (timezone-aware)
+ */
 export const calculateSnapPosition = (
   time: Date,
   intervalMinutes: number = 15,
-  nearbyEvents?: CalendarEvent[]
+  nearbyEvents?: CalendarEvent[],
+  timezone: string = 'Europe/Stockholm'
 ): Date => {
   const snappedTime = snapToInterval(time, intervalMinutes);
   
@@ -141,8 +172,8 @@ export const calculateSnapPosition = (
   const SNAP_THRESHOLD = 5 * 60 * 1000; // 5 minutes in ms
   
   for (const event of nearbyEvents) {
-    const eventStart = toStockholmTime(event.start_time);
-    const eventEnd = toStockholmTime(event.end_time);
+    const eventStart = toTimeZone(event.start_time, timezone);
+    const eventEnd = toTimeZone(event.end_time, timezone);
     
     const diffToStart = Math.abs(time.getTime() - eventStart.getTime());
     const diffToEnd = Math.abs(time.getTime() - eventEnd.getTime());
@@ -158,7 +189,9 @@ export const calculateSnapPosition = (
   return snappedTime;
 };
 
-// Validate event times
+/**
+ * Validate event times
+ */
 export const validateEventTimes = (start: Date, end: Date): boolean => {
   const minDuration = 15; // minutes
   const maxDuration = 24 * 60; // 24 hours
@@ -167,17 +200,22 @@ export const validateEventTimes = (start: Date, end: Date): boolean => {
   return duration >= minDuration && duration <= maxDuration;
 };
 
-// Check for event conflicts
+/**
+ * Check for event conflicts (timezone-aware)
+ */
 export const checkEventConflicts = (
   event: CalendarEvent,
-  allEvents: CalendarEvent[]
+  allEvents: CalendarEvent[],
+  timezone: string = 'Europe/Stockholm'
 ): CalendarEvent[] => {
   return allEvents.filter(e => 
-    e.id !== event.id && doesOverlap(event, e)
+    e.id !== event.id && doesOverlap(event, e, timezone)
   );
 };
 
-// Format event duration
+/**
+ * Format event duration
+ */
 export const formatEventDuration = (start: Date, end: Date): string => {
   const duration = differenceInMinutes(end, start);
   const hours = Math.floor(duration / 60);

@@ -2,10 +2,12 @@ import { useState, useCallback } from 'react';
 import { CalendarEvent } from './useCalendarEvents';
 import { addMinutes, parseISO } from 'date-fns';
 import { snapToInterval, getTimeFromYPosition } from '@/lib/calendarUtils';
+import { useUserTimezone } from './useUserTimezone';
 
 export const useEventDrag = (
   onPendingChange: (eventId: string, updates: Partial<CalendarEvent>) => void
 ) => {
+  const { timezone } = useUserTimezone();
   const [draggedEvent, setDraggedEvent] = useState<CalendarEvent | null>(null);
   const [isDragging, setIsDragging] = useState(false);
 
@@ -18,7 +20,7 @@ export const useEventDrag = (
     if (!draggedEvent || !containerRef) return;
 
     const rect = containerRef.getBoundingClientRect();
-    const dropTime = getTimeFromYPosition(e.clientY, rect.top);
+    const dropTime = getTimeFromYPosition(e.clientY, rect.top, 0, new Date(draggedEvent.start_time), timezone);
     const snappedTime = snapToInterval(dropTime, 15);
     
     const startTime = parseISO(draggedEvent.start_time);
@@ -35,7 +37,7 @@ export const useEventDrag = (
 
     setDraggedEvent(null);
     setIsDragging(false);
-  }, [draggedEvent, onPendingChange]);
+  }, [draggedEvent, onPendingChange, timezone]);
 
   const handleDragEnd = useCallback(() => {
     setDraggedEvent(null);

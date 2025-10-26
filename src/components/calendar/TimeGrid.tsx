@@ -1,6 +1,7 @@
-import { format, setHours, setMinutes } from 'date-fns';
 import { useState, useMemo } from 'react';
 import { AvailabilitySlot } from '@/hooks/useAvailability';
+import { createDateTimeInZone } from '@/lib/timezoneUtils';
+import { useUserTimezone } from '@/hooks/useUserTimezone';
 
 interface TimeGridProps {
   onTimeSlotClick: (time: Date) => void;
@@ -9,6 +10,7 @@ interface TimeGridProps {
 }
 
 export const TimeGrid = ({ onTimeSlotClick, availabilitySlots = [], currentDate = new Date() }: TimeGridProps) => {
+  const { timezone } = useUserTimezone();
   const [hoveredSlot, setHoveredSlot] = useState<{ hour: number; quarter: number } | null>(null);
 
   // Get availability slots for current day of week (0 = Monday, 6 = Sunday)
@@ -52,7 +54,15 @@ export const TimeGrid = ({ onTimeSlotClick, availabilitySlots = [], currentDate 
     const minutes = Math.floor((relativeY / 60) * 60);
     const snappedMinutes = Math.round(minutes / 15) * 15;
     
-    const clickedTime = setMinutes(setHours(new Date(), hour), snappedMinutes);
+    // Create UTC instant for this local time
+    const clickedTime = createDateTimeInZone(
+      currentDate.getFullYear(),
+      currentDate.getMonth(),
+      currentDate.getDate(),
+      hour,
+      snappedMinutes,
+      timezone
+    );
     onTimeSlotClick(clickedTime);
   };
 

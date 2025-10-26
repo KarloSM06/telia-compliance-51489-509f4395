@@ -1,6 +1,7 @@
 import { CalendarEvent } from '@/hooks/useCalendarEvents';
 import { getEventPosition, getEventTypeColor } from '@/lib/calendarUtils';
-import { format, parseISO, differenceInMinutes } from 'date-fns';
+import { formatInTimeZone_ } from '@/lib/timezoneUtils';
+import { useUserTimezone } from '@/hooks/useUserTimezone';
 import { memo } from 'react';
 import { User, Mail, Phone } from 'lucide-react';
 
@@ -25,16 +26,12 @@ const EventBlockComponent = ({
   isResizing = false,
   viewStartHour = 0,
 }: EventBlockProps) => {
-  const startTime = parseISO(event.start_time);
-  const endTime = parseISO(event.end_time);
-  
-  const { top, height } = getEventPosition(startTime.toISOString(), endTime.toISOString(), viewStartHour);
+  const { timezone } = useUserTimezone();
+  const { top, height } = getEventPosition(event.start_time, event.end_time, viewStartHour, timezone);
   const colorClass = getEventTypeColor(event.event_type);
 
   const width = totalColumns > 1 ? `${100 / totalColumns}%` : '100%';
   const left = totalColumns > 1 ? `${(column * 100) / totalColumns}%` : '0%';
-
-  const duration = differenceInMinutes(endTime, startTime);
 
   // Enhanced color schemes for different event types
   const getEventColors = (type: string) => {
@@ -113,7 +110,7 @@ const EventBlockComponent = ({
         {/* Time - visible for events > 30px */}
         {height > 30 && (
           <div className="text-xs text-muted-foreground font-medium">
-            {format(startTime, 'HH:mm')} - {format(endTime, 'HH:mm')}
+            {formatInTimeZone_(event.start_time, 'HH:mm', timezone)} - {formatInTimeZone_(event.end_time, 'HH:mm', timezone)}
           </div>
         )}
         

@@ -2,6 +2,8 @@ import { useState, useCallback, useRef, useEffect } from 'react';
 import { CalendarEvent } from './useCalendarEvents';
 import { addMinutes, parseISO, differenceInMinutes } from 'date-fns';
 import { snapToInterval, getTimeFromYPosition } from '@/lib/calendarUtils';
+import { useUserTimezone } from './useUserTimezone';
+import { createDateTimeInZone } from '@/lib/timezoneUtils';
 
 export type OperationType = 'drag' | 'resize-top' | 'resize-bottom' | null;
 
@@ -17,6 +19,7 @@ export interface DragState {
 export const useOptimizedEventInteraction = (
   onPendingChange: (eventId: string, updates: Partial<CalendarEvent>) => void
 ) => {
+  const { timezone } = useUserTimezone();
   const [dragState, setDragState] = useState<DragState>({
     activeEventId: null,
     operation: null,
@@ -68,7 +71,7 @@ export const useOptimizedEventInteraction = (
 
     animationFrameRef.current = requestAnimationFrame(() => {
       const rect = containerRef.current!.getBoundingClientRect();
-      const dropTime = getTimeFromYPosition(e.clientY, rect.top);
+      const dropTime = getTimeFromYPosition(e.clientY, rect.top, 0, new Date(), timezone);
       const snappedTime = snapToInterval(dropTime, 15);
       
       // Find which day column we're over
@@ -103,7 +106,7 @@ export const useOptimizedEventInteraction = (
         previewPosition: { start: targetDate, end: newEndTime },
       }));
     });
-  }, [dragState.activeEventId, dragState.operation, dragState.originalStart, dragState.originalEnd]);
+  }, [dragState.activeEventId, dragState.operation, dragState.originalStart, dragState.originalEnd, timezone]);
 
   // Drop event
   const handleDrop = useCallback((e: React.DragEvent) => {

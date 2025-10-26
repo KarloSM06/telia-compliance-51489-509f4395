@@ -1,6 +1,7 @@
-import { format } from 'date-fns';
 import { Clock } from 'lucide-react';
 import { getEventPosition } from '@/lib/calendarUtils';
+import { formatInTimeZone_ } from '@/lib/timezoneUtils';
+import { useUserTimezone } from '@/hooks/useUserTimezone';
 
 interface EventDragPreviewProps {
   start: Date;
@@ -15,7 +16,8 @@ export const EventDragPreview = ({
   title,
   snapIndicatorY,
 }: EventDragPreviewProps) => {
-  const { top, height } = getEventPosition(start.toISOString(), end.toISOString());
+  const { timezone } = useUserTimezone();
+  const { top, height } = getEventPosition(start.toISOString(), end.toISOString(), 0, timezone);
 
   return (
     <>
@@ -26,7 +28,7 @@ export const EventDragPreview = ({
           style={{ top: `${snapIndicatorY}px` }}
         >
           <div className="absolute right-2 -top-2 text-xs text-primary font-semibold bg-background/90 px-2 py-0.5 rounded">
-            {format(start, 'HH:mm')}
+            {formatInTimeZone_(start, 'HH:mm', timezone)}
           </div>
         </div>
       )}
@@ -41,7 +43,7 @@ export const EventDragPreview = ({
       >
         <div className="flex items-center gap-2 text-sm font-semibold text-foreground">
           <Clock className="h-4 w-4" />
-          <span>{format(start, 'HH:mm')} - {format(end, 'HH:mm')}</span>
+          <span>{formatInTimeZone_(start, 'HH:mm', timezone)} - {formatInTimeZone_(end, 'HH:mm', timezone)}</span>
         </div>
         {height > 40 && (
           <div className="text-xs text-muted-foreground mt-1 truncate">

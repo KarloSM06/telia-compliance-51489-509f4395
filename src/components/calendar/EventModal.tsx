@@ -36,7 +36,7 @@ export const EventModal = ({ open, onClose, event, defaultDate, onSave, onDelete
   const [formData, setFormData] = useState({
     title: currentEvent?.title || '',
     description: currentEvent?.description || '',
-    start_time: currentEvent?.start_time || (defaultDate ? format(defaultDate, "yyyy-MM-dd'T'HH:mm") : ''),
+    start_time: currentEvent?.start_time || (defaultDate ? formatInTimeZone_(defaultDate, "yyyy-MM-dd'T'HH:mm", timezone) : ''),
     end_time: currentEvent?.end_time || '',
     event_type: currentEvent?.event_type || 'meeting',
     contact_person: currentEvent?.contact_person || '',
@@ -55,7 +55,7 @@ export const EventModal = ({ open, onClose, event, defaultDate, onSave, onDelete
       setFormData({
         title: currentEvent?.title || '',
         description: currentEvent?.description || '',
-        start_time: currentEvent?.start_time || (defaultDate ? format(defaultDate, "yyyy-MM-dd'T'HH:mm") : ''),
+        start_time: currentEvent?.start_time || (defaultDate ? formatInTimeZone_(defaultDate, "yyyy-MM-dd'T'HH:mm", timezone) : ''),
         end_time: currentEvent?.end_time || '',
         event_type: currentEvent?.event_type || 'meeting',
         contact_person: currentEvent?.contact_person || '',

@@ -14,6 +14,8 @@ import { usePendingEventChanges } from '@/hooks/usePendingEventChanges';
 import { useMemo, useEffect } from 'react';
 import { toast } from 'sonner';
 import { useAvailability } from '@/hooks/useAvailability';
+import { useUserTimezone } from '@/hooks/useUserTimezone';
+import { toTimeZone, getCurrentTimeInZone, createDateTimeInZone } from '@/lib/timezoneUtils';
 interface WeekViewProps {
   date: Date;
   events: CalendarEvent[];
@@ -42,6 +44,7 @@ export const WeekView = ({
   onCloseModal,
   onEventSave
 }: WeekViewProps) => {
+  const { timezone } = useUserTimezone();
   const {
     slots
   } = useAvailability();
@@ -133,7 +136,15 @@ export const WeekView = ({
     }
   };
   const handleTimeSlotClick = async (time: Date, dayDate: Date) => {
-    const dateTime = new Date(dayDate.getFullYear(), dayDate.getMonth(), dayDate.getDate(), time.getHours(), time.getMinutes());
+    // Create UTC instant for this local time
+    const dateTime = createDateTimeInZone(
+      dayDate.getFullYear(),
+      dayDate.getMonth(),
+      dayDate.getDate(),
+      time.getHours(),
+      time.getMinutes(),
+      timezone
+    );
     await onCreate(dateTime);
   };
   const handleUndoClick = () => {
@@ -146,16 +157,20 @@ export const WeekView = ({
     if (dragState.previewPosition?.start && dragState.previewPosition?.end) {
       const {
         top
-      } = getEventPosition(dragState.previewPosition.start.toISOString(), dragState.previewPosition.end.toISOString());
+      } = getEventPosition(dragState.previewPosition.start.toISOString(), dragState.previewPosition.end.toISOString(), 0, timezone);
       return top;
     }
     return undefined;
-  }, [dragState.previewPosition]);
+  }, [dragState.previewPosition, timezone]);
 
   // Get events for a specific day with layout
   const getEventsForDay = (day: Date) => {
-    const dayEvents = eventsWithPendingChanges.filter(e => isSameDay(parseISO(e.start_time), day));
-    return layoutOverlappingEvents(dayEvents);
+    const dayLocalDate = toTimeZone(day, timezone);
+    const dayEvents = eventsWithPendingChanges.filter(e => {
+      const eventStart = toTimeZone(e.start_time, timezone);
+      return isSameDay(eventStart, dayLocalDate);
+    });
+    return layoutOverlappingEvents(dayEvents, timezone);
   };
   return <div className="flex flex-col h-full">
       {/* Header */}
@@ -216,18 +231,24 @@ export const WeekView = ({
             <div className="w-16 flex-shrink-0 border-r"></div>
             
             {/* Day headers */}
-            {daysInWeek.map(day => <div key={day.toISOString()} className={`flex-1 p-2 text-center border-r ${isSameDay(day, new Date()) ? 'bg-primary/10' : ''}`}>
+            {daysInWeek.map(day => {
+              const dayInTz = toTimeZone(day, timezone);
+              const todayInTz = getCurrentTimeInZone(timezone);
+              const isToday = isSameDay(dayInTz, todayInTz);
+              
+              return <div key={day.toISOString()} className={`flex-1 p-2 text-center border-r ${isToday ? 'bg-primary/10' : ''}`}>
                 <div className="text-xs text-muted-foreground">
                   {format(day, 'EEE', {
                 locale: sv
               })}
                 </div>
-                <div className={`text-lg font-semibold ${isSameDay(day, new Date()) ? 'text-primary' : ''}`}>
+                <div className={`text-lg font-semibold ${isToday ? 'text-primary' : ''}`}>
                   {format(day, 'd', {
                 locale: sv
               })}
                 </div>
-              </div>)}
+              </div>;
+            })}
           </div>
 
           {/* Time grid and events */}
@@ -259,8 +280,12 @@ export const WeekView = ({
                 }} />)}
                     </div>)}
                   
-                  {/* Current time indicator - only for today */}
-                  {isSameDay(day, new Date()) && <CurrentTimeIndicator displayDate={day} viewStartHour={startHour} />}
+                   {/* Current time indicator - only for today */}
+                  {(() => {
+                    const dayInTz = toTimeZone(day, timezone);
+                    const todayInTz = getCurrentTimeInZone(timezone);
+                    return isSameDay(dayInTz, todayInTz) ? <CurrentTimeIndicator displayDate={day} viewStartHour={startHour} /> : null;
+                  })()}
 
                   {/* Events for this day */}
                   <div className="absolute top-0 left-0 right-0 bottom-0 pointer-events-none">

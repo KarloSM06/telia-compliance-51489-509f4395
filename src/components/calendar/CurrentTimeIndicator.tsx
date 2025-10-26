@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { isSameDay } from 'date-fns';
-import { getCurrentStockholmTime, formatInStockholm, toStockholmTime } from '@/lib/timezoneUtils';
+import { getCurrentTimeInZone, formatInTimeZone_, toTimeZone } from '@/lib/timezoneUtils';
+import { useUserTimezone } from '@/hooks/useUserTimezone';
 
 interface CurrentTimeIndicatorProps {
   displayDate: Date;
@@ -8,19 +9,20 @@ interface CurrentTimeIndicatorProps {
 }
 
 export const CurrentTimeIndicator = ({ displayDate, viewStartHour = 0 }: CurrentTimeIndicatorProps) => {
-  const [currentTime, setCurrentTime] = useState(getCurrentStockholmTime());
+  const { timezone } = useUserTimezone();
+  const [currentTime, setCurrentTime] = useState(getCurrentTimeInZone(timezone));
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentTime(getCurrentStockholmTime());
+      setCurrentTime(getCurrentTimeInZone(timezone));
     }, 60000); // Update every minute
 
     return () => clearInterval(interval);
-  }, []);
+  }, [timezone]);
 
-  // Only show if displaying today (compare in Stockholm time)
-  const stockholmDisplayDate = toStockholmTime(displayDate);
-  if (!isSameDay(currentTime, stockholmDisplayDate)) return null;
+  // Only show if displaying today (compare in user's timezone)
+  const displayDateInTz = toTimeZone(displayDate, timezone);
+  if (!isSameDay(currentTime, displayDateInTz)) return null;
 
   const hours = currentTime.getHours();
   const minutes = currentTime.getMinutes();
@@ -34,7 +36,7 @@ export const CurrentTimeIndicator = ({ displayDate, viewStartHour = 0 }: Current
     >
       <div className="flex items-center">
         <div className="bg-red-500 text-white text-xs px-2 py-0.5 rounded-full">
-          {formatInStockholm(currentTime, 'HH:mm')}
+          {formatInTimeZone_(currentTime, 'HH:mm', timezone)}
         </div>
         <div className="flex-1 border-t-2 border-red-500"></div>
       </div>

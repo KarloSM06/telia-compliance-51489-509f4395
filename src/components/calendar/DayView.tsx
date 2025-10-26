@@ -1,6 +1,5 @@
 import { CalendarEvent } from '@/hooks/useCalendarEvents';
-import { format, addDays, subDays } from 'date-fns';
-import { sv } from 'date-fns/locale';
+import { addDays, subDays } from 'date-fns';
 import { Button } from '@/components/ui/button';
 import { ChevronLeft, ChevronRight, Calendar as CalendarIcon, Save, Undo } from 'lucide-react';
 import { TimeGrid } from './TimeGrid';
@@ -14,6 +13,8 @@ import { usePendingEventChanges } from '@/hooks/usePendingEventChanges';
 import { useMemo, useEffect } from 'react';
 import { toast } from 'sonner';
 import { useAvailability } from '@/hooks/useAvailability';
+import { useUserTimezone } from '@/hooks/useUserTimezone';
+import { formatInTimeZone_ } from '@/lib/timezoneUtils';
 interface DayViewProps {
   date: Date;
   events: CalendarEvent[];
@@ -42,6 +43,7 @@ export const DayView = ({
   onCloseModal,
   onEventSave
 }: DayViewProps) => {
+  const { timezone } = useUserTimezone();
   const {
     slots
   } = useAvailability();
@@ -88,7 +90,7 @@ export const DayView = ({
 
   // Apply pending changes to events for display with memoization
   const eventsWithPendingChanges = useMemo(() => events.map(getEventWithPendingChanges), [events, getEventWithPendingChanges]);
-  const layoutedEvents = useMemo(() => layoutOverlappingEvents(eventsWithPendingChanges), [eventsWithPendingChanges]);
+  const layoutedEvents = useMemo(() => layoutOverlappingEvents(eventsWithPendingChanges, timezone), [eventsWithPendingChanges, timezone]);
 
   // Keyboard shortcuts
   useEffect(() => {
@@ -125,11 +127,11 @@ export const DayView = ({
     if (dragState.previewPosition?.start && dragState.previewPosition?.end) {
       const {
         top
-      } = getEventPosition(dragState.previewPosition.start.toISOString(), dragState.previewPosition.end.toISOString(), startHour);
+      } = getEventPosition(dragState.previewPosition.start.toISOString(), dragState.previewPosition.end.toISOString(), startHour, timezone);
       return top;
     }
     return undefined;
-  }, [dragState.previewPosition, startHour]);
+  }, [dragState.previewPosition, startHour, timezone]);
   return <div className="flex flex-col h-full">
       {/* Header */}
       <div className="flex items-center justify-between p-4 border-b">
@@ -145,9 +147,7 @@ export const DayView = ({
             </Button>
             
             <div className="text-lg font-semibold min-w-[200px] text-center">
-              {format(date, 'EEEE, d MMMM yyyy', {
-              locale: sv
-            })}
+              {formatInTimeZone_(date, 'EEEE, d MMMM yyyy', timezone)}
             </div>
             
             <Button variant="outline" size="icon" onClick={() => onDateChange(addDays(date, 1))}>
