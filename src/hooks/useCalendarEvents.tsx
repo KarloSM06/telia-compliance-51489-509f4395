@@ -3,13 +3,21 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { useUserTimezone } from "@/hooks/useUserTimezone";
 import { toast } from "sonner";
-import { getTimezoneInfo } from "@/lib/timezoneUtils";
+import { getTimezoneInfo, convertEventsToLocalTime, toISOStringWithOffset } from "@/lib/timezoneUtils";
 
 export interface CalendarEvent {
   id: string;
   title: string;
   description?: string;
+  /** 
+   * Start time in UTC (from database)
+   * When sending to external systems or AI models, use getEventsForExport()
+   */
   start_time: string;
+  /** 
+   * End time in UTC (from database)
+   * When sending to external systems or AI models, use getEventsForExport()
+   */
   end_time: string;
   event_type: string;
   status: string;
@@ -56,7 +64,8 @@ export const useCalendarEvents = () => {
             id: sampleEvent.id,
             title: sampleEvent.title,
             stored_utc: sampleEvent.start_time,
-            display_local: getTimezoneInfo(sampleEvent.start_time, timezone),
+            export_local: toISOStringWithOffset(sampleEvent.start_time, timezone),
+            display_info: getTimezoneInfo(sampleEvent.start_time, timezone),
           }
         });
       }
@@ -155,6 +164,15 @@ export const useCalendarEvents = () => {
     }
   };
 
+  /**
+   * Get events formatted for external systems (AI models, webhooks, etc.)
+   * Returns events with times in user's local timezone with offset
+   * Example: "2025-10-26T16:10:00+01:00" instead of "2025-10-26T15:10:00+00:00"
+   */
+  const getEventsForExport = (): CalendarEvent[] => {
+    return convertEventsToLocalTime(events, timezone);
+  };
+
   useEffect(() => {
     fetchEvents();
 
@@ -180,11 +198,13 @@ export const useCalendarEvents = () => {
   }, [user]);
 
   return {
-    events,
+    events, // Raw UTC events for internal use
     loading,
     createEvent,
     updateEvent,
     deleteEvent,
     refetch: fetchEvents,
+    getEventsForExport, // Export-ready events with local timezone offset
+    timezone, // User's timezone setting
   };
 };

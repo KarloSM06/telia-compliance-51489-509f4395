@@ -219,3 +219,37 @@ export const toISOStringWithOffset = (date: Date | string, timezone: string = DE
   const dateObj = typeof date === 'string' ? parseISO(date) : date;
   return formatInTimeZone(dateObj, timezone, "yyyy-MM-dd'T'HH:mm:ssXXX");
 };
+
+/**
+ * Convert calendar event times from UTC to local timezone with offset
+ * Use this when exporting events to external systems or AI models
+ * @param event - Event object with start_time and end_time in UTC
+ * @param timezone - IANA timezone identifier
+ * @returns Event with times converted to local timezone with offset
+ */
+export const convertEventToLocalTime = (
+  event: { start_time: string; end_time: string },
+  timezone: string = DEFAULT_TIMEZONE
+): { start_time: string; end_time: string } => {
+  return {
+    start_time: toISOStringWithOffset(event.start_time, timezone),
+    end_time: toISOStringWithOffset(event.end_time, timezone),
+  };
+};
+
+/**
+ * Convert multiple events to local timezone
+ * Use this when exporting multiple events to external systems or AI models
+ * @param events - Array of events with start_time and end_time in UTC
+ * @param timezone - IANA timezone identifier
+ * @returns Array of events with times converted to local timezone with offset
+ */
+export const convertEventsToLocalTime = <T extends { start_time: string; end_time: string }>(
+  events: T[],
+  timezone: string = DEFAULT_TIMEZONE
+): T[] => {
+  return events.map(event => ({
+    ...event,
+    ...convertEventToLocalTime(event, timezone)
+  }));
+};
