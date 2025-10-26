@@ -36,22 +36,18 @@ const EventBlockComponent = ({
 
   const duration = differenceInMinutes(endTime, startTime);
 
-  // Enhanced color schemes for different event types
-  const getEventColors = (type: string) => {
-    const colors = {
-      meeting: 'bg-blue-100 dark:bg-blue-900/30 border-blue-400 dark:border-blue-600 text-blue-900 dark:text-blue-100',
-      call: 'bg-green-100 dark:bg-green-900/30 border-green-400 dark:border-green-600 text-green-900 dark:text-green-100',
-      demo: 'bg-purple-100 dark:bg-purple-900/30 border-purple-400 dark:border-purple-600 text-purple-900 dark:text-purple-100',
-      follow_up: 'bg-orange-100 dark:bg-orange-900/30 border-orange-400 dark:border-orange-600 text-orange-900 dark:text-orange-100',
-      work: 'bg-indigo-100 dark:bg-indigo-900/30 border-indigo-400 dark:border-indigo-600 text-indigo-900 dark:text-indigo-100',
-      personal: 'bg-pink-100 dark:bg-pink-900/30 border-pink-400 dark:border-pink-600 text-pink-900 dark:text-pink-100',
-      leisure: 'bg-cyan-100 dark:bg-cyan-900/30 border-cyan-400 dark:border-cyan-600 text-cyan-900 dark:text-cyan-100',
-      other: 'bg-gray-100 dark:bg-gray-800/50 border-gray-400 dark:border-gray-600 text-gray-900 dark:text-gray-100',
+  // Get event colors based on source and type using semantic tokens
+  const getEventColors = (eventSource?: string) => {
+    const sourceColors = {
+      internal: 'bg-event-internal-bg border-event-internal-border text-event-internal-text',
+      simplybook: 'bg-event-simplybook-bg border-event-simplybook-border text-event-simplybook-text',
+      google_calendar: 'bg-event-google-bg border-event-google-border text-event-google-text',
+      bookeo: 'bg-event-bookeo-bg border-event-bookeo-border text-event-bookeo-text',
     };
-    return colors[type as keyof typeof colors] || colors.other;
+    return sourceColors[eventSource as keyof typeof sourceColors] || sourceColors.internal;
   };
 
-  const enhancedColorClass = getEventColors(event.event_type);
+  const enhancedColorClass = getEventColors(event.source);
 
   const handleDragStart = (e: React.DragEvent) => {
     e.dataTransfer.effectAllowed = 'move';
