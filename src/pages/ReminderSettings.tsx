@@ -12,7 +12,21 @@ import { Mail, MessageSquare, Bell } from "lucide-react";
 export default function ReminderSettings() {
   const { settings, updateSettings, isLoading } = useReminderSettings();
   
-  const [formData, setFormData] = useState<typeof settings>(settings);
+  type FormDataType = {
+    booking_confirmation_enabled: boolean;
+    booking_confirmation_channel: string[];
+    reminder_1_enabled: boolean;
+    reminder_1_hours_before: number;
+    reminder_1_channel: string[];
+    reminder_2_enabled: boolean;
+    reminder_2_hours_before: number;
+    reminder_2_channel: string[];
+    review_request_enabled: boolean;
+    review_request_hours_after: number;
+    review_request_channel: string[];
+  };
+  
+  const [formData, setFormData] = useState<FormDataType>(settings);
 
   useEffect(() => {
     setFormData(settings);
