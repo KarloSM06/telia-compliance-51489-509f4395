@@ -13,8 +13,10 @@ export const TimeGrid = ({ onTimeSlotClick, availabilitySlots = [], currentDate 
   const { timezone } = useUserTimezone();
   const [hoveredSlot, setHoveredSlot] = useState<{ hour: number; quarter: number } | null>(null);
 
-  // Get availability slots for current day of week (0 = Monday, 6 = Sunday)
-  const dayOfWeek = currentDate.getDay() === 0 ? 6 : currentDate.getDay() - 1; // Convert to 0=Mon, 6=Sun
+  // Get availability slots for current day of week
+  // Swedish/ISO week standard: 0=Monday, 6=Sunday
+  // Note: JavaScript Date.getDay() uses 0=Sunday, so conversion is needed
+  const dayOfWeek = currentDate.getDay() === 0 ? 6 : currentDate.getDay() - 1; // Convert JS day (0=Sun) to our standard (0=Mon)
   const daySlots = availabilitySlots.filter(slot => slot.day_of_week === dayOfWeek && slot.is_active);
 
   // Calculate visible hour range based on availability slots

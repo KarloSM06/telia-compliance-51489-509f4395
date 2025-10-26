@@ -39,8 +39,10 @@ export const YearView = ({ date, events, onEventClick, onDateChange, onDayClick 
     const days = eachDayOfInterval({ start: monthStart, end: monthEnd });
     
     // Pad with days from previous/next month to fill grid
+    // Swedish/ISO week standard: Monday is first day of week
+    // Note: JavaScript Date.getDay() uses 0=Sunday, so conversion is needed
     const firstDayOfWeek = monthStart.getDay();
-    const startPadding = firstDayOfWeek === 0 ? 6 : firstDayOfWeek - 1;
+    const startPadding = firstDayOfWeek === 0 ? 6 : firstDayOfWeek - 1; // Convert JS day to Monday-first
     
     const paddedDays = Array(startPadding).fill(null).concat(days);
     const weeks = [];

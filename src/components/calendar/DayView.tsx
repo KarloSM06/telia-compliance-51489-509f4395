@@ -69,11 +69,13 @@ export const DayView = ({
   } = useOptimizedEventInteraction(addPendingChange);
 
   // Calculate visible hour range based on availability slots
+  // Swedish/ISO week standard: 0=Monday, 6=Sunday
+  // Note: JavaScript Date.getDay() uses 0=Sunday, so conversion is needed
   const {
     startHour,
     endHour
   } = useMemo(() => {
-    const dayOfWeek = date.getDay() === 0 ? 6 : date.getDay() - 1;
+    const dayOfWeek = date.getDay() === 0 ? 6 : date.getDay() - 1; // Convert JS day (0=Sun) to our standard (0=Mon)
     const daySlots = slots.filter(slot => slot.day_of_week === dayOfWeek && slot.is_active);
     if (daySlots.length === 0) {
       return {

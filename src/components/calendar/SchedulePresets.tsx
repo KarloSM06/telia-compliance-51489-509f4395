@@ -12,22 +12,23 @@ export interface PresetSchedule {
   endTime: string;
 }
 
+// Swedish/ISO week standard: 0=Monday, 1=Tuesday, ..., 6=Sunday
 const PRESETS: PresetSchedule[] = [
   {
     name: 'Vardagar 9-17',
-    days: [1, 2, 3, 4, 5], // Måndag-Fredag
+    days: [0, 1, 2, 3, 4], // Måndag-Fredag (0=Monday, 4=Friday)
     startTime: '09:00',
     endTime: '17:00',
   },
   {
     name: 'Heltid flex',
-    days: [1, 2, 3, 4, 5],
+    days: [0, 1, 2, 3, 4], // Måndag-Fredag (0=Monday, 4=Friday)
     startTime: '08:00',
     endTime: '18:00',
   },
   {
     name: 'Deltid (halvdag)',
-    days: [1, 2, 3, 4, 5],
+    days: [0, 1, 2, 3, 4], // Måndag-Fredag (0=Monday, 4=Friday)
     startTime: '09:00',
     endTime: '13:00',
   },

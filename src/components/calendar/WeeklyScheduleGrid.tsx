@@ -5,6 +5,8 @@ import { SchedulePresets, PresetSchedule } from './SchedulePresets';
 import { Save, RotateCcw } from 'lucide-react';
 import { AvailabilitySlot } from '@/hooks/useAvailability';
 
+// Swedish/ISO week standard: 0=Monday, 1=Tuesday, ..., 6=Sunday
+// This matches the day_of_week column in availability_slots table
 const DAYS = ['Måndag', 'Tisdag', 'Onsdag', 'Torsdag', 'Fredag', 'Lördag', 'Söndag'];
 
 interface TimeSlot {
