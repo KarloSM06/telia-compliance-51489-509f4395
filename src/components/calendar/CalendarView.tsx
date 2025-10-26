@@ -34,8 +34,9 @@ export const CalendarView = ({ events, onEventClick, onDateClick }: CalendarView
 
   const getEventsForDay = (date: Date) => {
     return events.filter(event => {
-      // Convert event to user's timezone for comparison
-      const eventStartLocal = toTimeZone(event.start_time, timezone);
+      // Parse TEXT with offset to Date, then convert to timezone
+      const eventStartDate = new Date(event.start_time);
+      const eventStartLocal = toTimeZone(eventStartDate, timezone);
       return isSameDay(eventStartLocal, date);
     });
   };

@@ -167,7 +167,9 @@ export const WeekView = ({
   const getEventsForDay = (day: Date) => {
     const dayLocalDate = toTimeZone(day, timezone);
     const dayEvents = eventsWithPendingChanges.filter(e => {
-      const eventStart = toTimeZone(e.start_time, timezone);
+      // Parse TEXT with offset: "2025-10-26T08:00:00+01:00"
+      const eventStartDate = new Date(e.start_time);
+      const eventStart = toTimeZone(eventStartDate, timezone);
       return isSameDay(eventStart, dayLocalDate);
     });
     return layoutOverlappingEvents(dayEvents, timezone);

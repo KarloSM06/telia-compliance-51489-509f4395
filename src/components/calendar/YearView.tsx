@@ -19,14 +19,16 @@ export const YearView = ({ date, events, onEventClick, onDateChange, onDayClick 
   const months = eachMonthOfInterval({ start: yearStart, end: yearEnd });
 
   const getEventsForDay = (day: Date) => {
-    return events.filter(event => isSameDay(parseISO(event.start_time), day));
+    // Parse TEXT with offset: "2025-10-26T08:00:00+01:00"
+    return events.filter(event => isSameDay(new Date(event.start_time), day));
   };
 
   const getEventsForMonth = (month: Date) => {
     const monthStart = startOfMonth(month);
     const monthEnd = endOfMonth(month);
     return events.filter(event => {
-      const eventDate = parseISO(event.start_time);
+      // Parse TEXT with offset: "2025-10-26T08:00:00+01:00"
+      const eventDate = new Date(event.start_time);
       return eventDate >= monthStart && eventDate <= monthEnd;
     });
   };

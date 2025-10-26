@@ -51,8 +51,8 @@ export const getTimeFromYPosition = (
 
 /**
  * Calculate event position from times (timezone-aware for display)
- * @param startTime - Start time ISO string (UTC from database)
- * @param endTime - End time ISO string (UTC from database)
+ * @param startTime - Start time as TEXT with offset: "2025-10-26T08:00:00+01:00"
+ * @param endTime - End time as TEXT with offset: "2025-10-26T09:00:00+01:00"
  * @param viewStartHour - Starting hour of the view
  * @param timezone - IANA timezone identifier for display
  */
@@ -62,9 +62,11 @@ export const getEventPosition = (
   viewStartHour: number = 0,
   timezone: string
 ) => {
-  // Convert to local time for display positioning
-  const start = toTimeZone(startTime, timezone);
-  const end = toTimeZone(endTime, timezone);
+  // Parse TEXT with offset to Date, then convert to display timezone
+  const startDate = new Date(startTime);
+  const endDate = new Date(endTime);
+  const start = toTimeZone(startDate, timezone);
+  const end = toTimeZone(endDate, timezone);
   
   const dayStart = startOfDay(start);
   const startMinutes = differenceInMinutes(start, dayStart);
@@ -79,19 +81,21 @@ export const getEventPosition = (
 
 /**
  * Check if two events overlap (timezone-aware)
+ * Times are TEXT with offset: "2025-10-26T08:00:00+01:00"
  */
 export const doesOverlap = (
   event1: CalendarEvent, 
   event2: CalendarEvent,
   timezone: string
 ): boolean => {
-  // Convert to local time for comparison
-  const start1 = toTimeZone(event1.start_time, timezone);
-  const end1 = toTimeZone(event1.end_time, timezone);
-  const start2 = toTimeZone(event2.start_time, timezone);
-  const end2 = toTimeZone(event2.end_time, timezone);
+  // Parse TEXT to Date (JavaScript handles offset automatically)
+  const start1 = new Date(event1.start_time);
+  const end1 = new Date(event1.end_time);
+  const start2 = new Date(event2.start_time);
+  const end2 = new Date(event2.end_time);
   
-  return start1 < end2 && start2 < end1;
+  // Compare as UTC timestamps
+  return start1.getTime() < end2.getTime() && start2.getTime() < end1.getTime();
 };
 
 export interface LayoutEvent extends CalendarEvent {

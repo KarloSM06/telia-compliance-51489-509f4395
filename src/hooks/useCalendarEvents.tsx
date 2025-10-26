@@ -3,20 +3,23 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { useUserTimezone } from "@/hooks/useUserTimezone";
 import { toast } from "sonner";
-import { getTimezoneInfo, convertEventsToLocalTime, toISOStringWithOffset } from "@/lib/timezoneUtils";
+import { toISOStringWithOffset } from "@/lib/timezoneUtils";
 
 export interface CalendarEvent {
   id: string;
   title: string;
   description?: string;
   /** 
-   * Start time in UTC (from database)
-   * When sending to external systems or AI models, use getEventsForExport()
+   * Start time as TEXT with timezone offset (from database)
+   * Format: "2025-10-26T08:00:00+01:00" (winter) or "2025-06-15T14:00:00+02:00" (summer)
+   * Can be parsed directly: new Date(start_time)
+   * For n8n/AI systems: Read directly from database
    */
   start_time: string;
   /** 
-   * End time in UTC (from database)
-   * When sending to external systems or AI models, use getEventsForExport()
+   * End time as TEXT with timezone offset (from database)
+   * Format: "2025-10-26T09:00:00+01:00"
+   * Can be parsed directly: new Date(end_time)
    */
   end_time: string;
   event_type: string;
@@ -50,8 +53,8 @@ export const useCalendarEvents = () => {
 
       if (error) throw error;
       
-      // Keep events in UTC format from database
-      // Conversion to Stockholm time happens at display time in components
+      // Events now stored as TEXT with timezone offset
+      // Format: "2025-10-26T08:00:00+01:00"
       setEvents(data || []);
       
       // Log timezone info for debugging (first event only)
@@ -63,9 +66,7 @@ export const useCalendarEvents = () => {
           sampleEvent: {
             id: sampleEvent.id,
             title: sampleEvent.title,
-            stored_utc: sampleEvent.start_time,
-            export_local: toISOStringWithOffset(sampleEvent.start_time, timezone),
-            display_info: getTimezoneInfo(sampleEvent.start_time, timezone),
+            stored_text: sampleEvent.start_time, // TEXT: "2025-10-26T08:00:00+01:00"
           }
         });
       }
@@ -81,16 +82,22 @@ export const useCalendarEvents = () => {
     if (!user) return;
 
     try {
-      // Times from EventModal are already in Stockholm timezone format
-      // No need to convert again - just use them directly
-      const startTimeUTC = event.start_time || new Date().toISOString();
-      const endTimeUTC = event.end_time || new Date().toISOString();
+      // Times from EventModal contain timezone offset (TEXT format)
+      // e.g., "2025-10-26T08:00:00+01:00"
+      // Save directly to TEXT column - no conversion needed
+      const startTimeWithOffset = event.start_time || toISOStringWithOffset(new Date(), timezone);
+      const endTimeWithOffset = event.end_time || toISOStringWithOffset(new Date(), timezone);
+
+      // Validate that offset exists
+      if (!startTimeWithOffset.match(/[+-]\d{2}:\d{2}$/)) {
+        throw new Error('start_time must contain timezone offset');
+      }
 
       const eventData: any = {
         user_id: user.id,
         title: event.title || 'Ny händelse',
-        start_time: startTimeUTC,
-        end_time: endTimeUTC,
+        start_time: startTimeWithOffset,
+        end_time: endTimeWithOffset,
         event_type: event.event_type || 'meeting',
         status: event.status || 'scheduled',
         source: event.source || 'internal',
@@ -111,7 +118,7 @@ export const useCalendarEvents = () => {
 
       if (error) throw error;
       
-      // Keep in UTC format - components handle display conversion
+      // Data now contains TEXT with offset
       setEvents([...events, data]);
       toast.success("Händelse skapad");
       return data;
@@ -124,8 +131,8 @@ export const useCalendarEvents = () => {
 
   const updateEvent = async (id: string, updates: Partial<CalendarEvent>) => {
     try {
-      // Times from components are already in correct format
-      // Just pass them through to database
+      // Times from components contain timezone offset (TEXT format)
+      // Save directly to TEXT column
       const { data, error } = await supabase
         .from("calendar_events")
         .update(updates)
@@ -135,7 +142,7 @@ export const useCalendarEvents = () => {
 
       if (error) throw error;
 
-      // Keep in UTC format - components handle display conversion
+      // Data now contains TEXT with offset
       setEvents(events.map(e => e.id === id ? data : e));
       toast.success("Händelse uppdaterad");
       return data;
@@ -165,12 +172,13 @@ export const useCalendarEvents = () => {
   };
 
   /**
-   * Get events formatted for external systems (AI models, webhooks, etc.)
-   * Returns events with times in user's local timezone with offset
-   * Example: "2025-10-26T16:10:00+01:00" instead of "2025-10-26T15:10:00+00:00"
+   * Get events for external systems (AI models, webhooks, etc.)
+   * Events are already in TEXT format with timezone offset
+   * Example: "2025-10-26T08:00:00+01:00"
+   * No conversion needed - return directly
    */
   const getEventsForExport = (): CalendarEvent[] => {
-    return convertEventsToLocalTime(events, timezone);
+    return events; // Already in correct TEXT format with offset
   };
 
   useEffect(() => {
@@ -198,7 +206,7 @@ export const useCalendarEvents = () => {
   }, [user]);
 
   return {
-    events, // Raw UTC events for internal use
+    events, // TEXT format with offset: "2025-10-26T08:00:00+01:00"
     loading,
     createEvent,
     updateEvent,

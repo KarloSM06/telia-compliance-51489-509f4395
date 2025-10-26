@@ -3,7 +3,7 @@ import { CalendarEvent } from './useCalendarEvents';
 import { addMinutes, parseISO, differenceInMinutes } from 'date-fns';
 import { snapToInterval, getTimeFromYPosition } from '@/lib/calendarUtils';
 import { useUserTimezone } from './useUserTimezone';
-import { createDateTimeInZone } from '@/lib/timezoneUtils';
+import { createDateTimeInZone, toISOStringWithOffset } from '@/lib/timezoneUtils';
 
 export type OperationType = 'drag' | 'resize-top' | 'resize-bottom' | null;
 
@@ -43,8 +43,9 @@ export const useOptimizedEventInteraction = (
 
   // Start dragging an event
   const handleDragStart = useCallback((event: CalendarEvent) => {
-    const start = parseISO(event.start_time);
-    const end = parseISO(event.end_time);
+    // Parse TEXT with offset: "2025-10-26T08:00:00+01:00"
+    const start = new Date(event.start_time);
+    const end = new Date(event.end_time);
     
     setDragState({
       activeEventId: event.id,
@@ -117,9 +118,10 @@ export const useOptimizedEventInteraction = (
       return;
     }
 
+    // Save with timezone offset (TEXT format)
     onPendingChange(dragState.activeEventId, {
-      start_time: dragState.previewPosition.start.toISOString(),
-      end_time: dragState.previewPosition.end.toISOString(),
+      start_time: toISOStringWithOffset(dragState.previewPosition.start, timezone),
+      end_time: toISOStringWithOffset(dragState.previewPosition.end, timezone),
     });
 
     setDragState({
@@ -141,8 +143,9 @@ export const useOptimizedEventInteraction = (
     e.stopPropagation();
     
     const clientY = 'touches' in e ? e.touches[0].clientY : e.clientY;
-    const start = parseISO(event.start_time);
-    const end = parseISO(event.end_time);
+    // Parse TEXT with offset: "2025-10-26T08:00:00+01:00"
+    const start = new Date(event.start_time);
+    const end = new Date(event.end_time);
 
     setDragState({
       activeEventId: event.id,
@@ -205,9 +208,10 @@ export const useOptimizedEventInteraction = (
       return;
     }
 
+    // Save with timezone offset (TEXT format)
     onPendingChange(dragState.activeEventId, {
-      start_time: dragState.previewPosition.start.toISOString(),
-      end_time: dragState.previewPosition.end.toISOString(),
+      start_time: toISOStringWithOffset(dragState.previewPosition.start, timezone),
+      end_time: toISOStringWithOffset(dragState.previewPosition.end, timezone),
     });
 
     setDragState({
