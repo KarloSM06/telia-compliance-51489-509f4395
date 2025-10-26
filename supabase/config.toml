@@ -56,3 +56,6 @@ verify_jwt = true
 
 [functions.stripe-payment-webhook]
 verify_jwt = false
+
+[functions.test-sms-provider]
+verify_jwt = true

@@ -1,4 +1,4 @@
-import { Home, Package, LayoutDashboard, Settings, BarChart3, LogOut, Phone, UtensilsCrossed, Users, Target, Award, Star, Calendar, Bell, FileText } from "lucide-react";
+import { Home, Package, LayoutDashboard, Settings, BarChart3, LogOut, Phone, UtensilsCrossed, Users, Target, Award, Star, Calendar, Bell, FileText, MessageSquare, BarChart } from "lucide-react";
 import { NavLink, useNavigate } from "react-router-dom";
 import {
   Sidebar,
@@ -31,6 +31,8 @@ const navigationItems = [
   { title: "Kalender", url: "/dashboard/calendar", icon: Calendar },
   { title: "Påminnelser", url: "/dashboard/reminders", icon: Bell },
   { title: "Mallar", url: "/dashboard/templates", icon: FileText },
+  { title: "SMS-inställningar", url: "/dashboard/sms-settings", icon: MessageSquare },
+  { title: "Meddelandeöversikt", url: "/dashboard/message-insights", icon: BarChart },
   { title: "Produkter / Paket", url: "/dashboard/packages", icon: Package },
   { title: "Custom Dashboard", url: "/dashboard/custom", icon: LayoutDashboard },
   { title: "Inställningar", url: "/dashboard/settings", icon: Settings },

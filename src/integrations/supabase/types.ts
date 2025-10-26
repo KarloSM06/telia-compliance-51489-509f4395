@@ -1175,9 +1175,11 @@ export type Database = {
           opened_at: string | null
           provider: string
           provider_message_id: string | null
+          provider_type: string | null
           recipient: string
           scheduled_message_id: string | null
           sent_at: string
+          sms_provider_settings_id: string | null
           status: string
           subject: string | null
           user_id: string
@@ -1196,9 +1198,11 @@ export type Database = {
           opened_at?: string | null
           provider: string
           provider_message_id?: string | null
+          provider_type?: string | null
           recipient: string
           scheduled_message_id?: string | null
           sent_at?: string
+          sms_provider_settings_id?: string | null
           status: string
           subject?: string | null
           user_id: string
@@ -1217,9 +1221,11 @@ export type Database = {
           opened_at?: string | null
           provider?: string
           provider_message_id?: string | null
+          provider_type?: string | null
           recipient?: string
           scheduled_message_id?: string | null
           sent_at?: string
+          sms_provider_settings_id?: string | null
           status?: string
           subject?: string | null
           user_id?: string
@@ -1237,6 +1243,13 @@ export type Database = {
             columns: ["scheduled_message_id"]
             isOneToOne: false
             referencedRelation: "scheduled_messages"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "message_logs_sms_provider_settings_id_fkey"
+            columns: ["sms_provider_settings_id"]
+            isOneToOne: false
+            referencedRelation: "sms_provider_settings"
             referencedColumns: ["id"]
           },
         ]
@@ -1774,6 +1787,45 @@ export type Database = {
           target_id?: string | null
           target_type?: string | null
           user_id?: string | null
+        }
+        Relationships: []
+      }
+      sms_provider_settings: {
+        Row: {
+          created_at: string | null
+          encrypted_credentials: string
+          from_phone_number: string
+          id: string
+          is_active: boolean | null
+          is_verified: boolean | null
+          provider: string
+          test_message_sent_at: string | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          encrypted_credentials: string
+          from_phone_number: string
+          id?: string
+          is_active?: boolean | null
+          is_verified?: boolean | null
+          provider: string
+          test_message_sent_at?: string | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          encrypted_credentials?: string
+          from_phone_number?: string
+          id?: string
+          is_active?: boolean | null
+          is_verified?: boolean | null
+          provider?: string
+          test_message_sent_at?: string | null
+          updated_at?: string | null
+          user_id?: string
         }
         Relationships: []
       }
