@@ -56,6 +56,16 @@ export const getTimeFromYPosition = (
  * @param viewStartHour - Starting hour of the view
  * @param timezone - IANA timezone identifier for display
  */
+/**
+ * Calculates the top position and height for an event in the calendar view
+ * Handles TEXT with offset format: "2025-10-26T08:00:00+01:00"
+ * 
+ * @param startTime - Event start time as TEXT with timezone offset
+ * @param endTime - Event end time as TEXT with timezone offset
+ * @param viewStartHour - First visible hour in the calendar (default 0)
+ * @param timezone - User's timezone for display conversion
+ * @returns Object with top position and height in pixels
+ */
 export const getEventPosition = (
   startTime: string, 
   endTime: string, 
@@ -72,10 +82,11 @@ export const getEventPosition = (
   const startMinutes = differenceInMinutes(start, dayStart);
   const duration = differenceInMinutes(end, start);
   
+  // Calendar grid: 80px per hour
   const PIXELS_PER_HOUR = 80;
   return {
     top: ((startMinutes / 60) - viewStartHour) * PIXELS_PER_HOUR,
-    height: (duration / 60) * PIXELS_PER_HOUR,
+    height: Math.max((duration / 60) * PIXELS_PER_HOUR, 30), // Minimum 30px
   };
 };
 

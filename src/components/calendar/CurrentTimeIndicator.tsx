@@ -26,19 +26,22 @@ export const CurrentTimeIndicator = ({ displayDate, viewStartHour = 0 }: Current
 
   const hours = currentTime.getHours();
   const minutes = currentTime.getMinutes();
-  const PIXELS_PER_MINUTE = 1;
+  
+  // Calendar grid: 80px per hour = 1.333px per minute
+  const PIXELS_PER_HOUR = 80;
+  const PIXELS_PER_MINUTE = PIXELS_PER_HOUR / 60;
   const top = ((hours - viewStartHour) * 60 + minutes) * PIXELS_PER_MINUTE;
 
   return (
     <div 
-      className="absolute left-0 right-0 z-20 pointer-events-none"
+      className="absolute left-0 right-0 z-20 pointer-events-none transition-all duration-300"
       style={{ top: `${top}px` }}
     >
       <div className="flex items-center">
-        <div className="bg-red-500 text-white text-xs px-2 py-0.5 rounded-full">
+        <div className="bg-red-500 text-white text-xs px-2 py-1 rounded-full font-semibold shadow-lg">
           {formatInTimeZone_(currentTime, 'HH:mm', timezone)}
         </div>
-        <div className="flex-1 border-t-2 border-red-500"></div>
+        <div className="flex-1 border-t-2 border-red-500 shadow-sm"></div>
       </div>
     </div>
   );

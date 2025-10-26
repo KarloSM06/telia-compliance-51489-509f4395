@@ -51,7 +51,10 @@ export const TimeGrid = ({ onTimeSlotClick, availabilitySlots = [], currentDate 
   const handleClick = (e: React.MouseEvent<HTMLDivElement>, hour: number) => {
     const rect = e.currentTarget.getBoundingClientRect();
     const relativeY = e.clientY - rect.top;
-    const minutes = Math.floor((relativeY / 60) * 60);
+    
+    // Calculate minutes within the hour - grid cell is 80px high
+    const CELL_HEIGHT = 80;
+    const minutes = Math.floor((relativeY / CELL_HEIGHT) * 60);
     const snappedMinutes = Math.round(minutes / 15) * 15;
     
     // Create UTC instant for this local time
@@ -69,7 +72,8 @@ export const TimeGrid = ({ onTimeSlotClick, availabilitySlots = [], currentDate 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>, hour: number) => {
     const rect = e.currentTarget.getBoundingClientRect();
     const relativeY = e.clientY - rect.top;
-    const quarter = Math.floor((relativeY / 60) * 4); // 0-3 for 15min intervals
+    const CELL_HEIGHT = 80;
+    const quarter = Math.floor((relativeY / CELL_HEIGHT) * 4); // 0-3 for 15min intervals
     setHoveredSlot({ hour, quarter: Math.min(quarter, 3) });
   };
 

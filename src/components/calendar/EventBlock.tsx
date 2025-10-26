@@ -1,9 +1,9 @@
 import { CalendarEvent } from '@/hooks/useCalendarEvents';
-import { getEventPosition, getEventTypeColor } from '@/lib/calendarUtils';
-import { formatInTimeZone_ } from '@/lib/timezoneUtils';
+import { getEventPosition } from '@/lib/calendarUtils';
 import { useUserTimezone } from '@/hooks/useUserTimezone';
 import { memo } from 'react';
-import { User, Mail, Phone } from 'lucide-react';
+import { User, Mail, Phone, Clock } from 'lucide-react';
+import { format } from 'date-fns';
 
 interface EventBlockProps {
   event: CalendarEvent;
@@ -27,8 +27,17 @@ const EventBlockComponent = ({
   viewStartHour = 0,
 }: EventBlockProps) => {
   const { timezone } = useUserTimezone();
+  
+  // Parse TEXT with offset: "2025-10-26T08:00:00+01:00"
+  const startDate = new Date(event.start_time);
+  const endDate = new Date(event.end_time);
+  
+  // Calculate position in calendar grid
   const { top, height } = getEventPosition(event.start_time, event.end_time, viewStartHour, timezone);
-  const colorClass = getEventTypeColor(event.event_type);
+  
+  // Format times for display in user's timezone
+  const startTime = format(startDate, 'HH:mm');
+  const endTime = format(endDate, 'HH:mm');
 
   const width = totalColumns > 1 ? `${100 / totalColumns}%` : '100%';
   const left = totalColumns > 1 ? `${(column * 100) / totalColumns}%` : '0%';
@@ -101,37 +110,41 @@ const EventBlockComponent = ({
       </div>
 
       {/* Event content */}
-      <div className="mt-2 space-y-1 overflow-hidden">
-        {/* Title - always visible */}
-        <div className="text-sm font-semibold truncate leading-tight">
-          {event.title}
+      <div className="mt-2 space-y-1.5 overflow-hidden">
+        {/* Title and Time - always visible */}
+        <div className="space-y-1">
+          <div className="text-sm font-semibold truncate leading-tight">
+            {event.title}
+          </div>
+          <div className="flex items-center gap-1 text-xs font-medium opacity-90">
+            <Clock className="h-3 w-3 flex-shrink-0" />
+            <span>{startTime} - {endTime}</span>
+          </div>
         </div>
         
-        {/* Time - visible for events > 30px */}
-        {height > 30 && (
-          <div className="text-xs text-muted-foreground font-medium">
-            {formatInTimeZone_(event.start_time, 'HH:mm', timezone)} - {formatInTimeZone_(event.end_time, 'HH:mm', timezone)}
-          </div>
-        )}
-        
-        {/* Address - visible for events > 45px */}
-        {event.address && height > 45 && (
-          <div className="text-xs opacity-80 truncate">
-            📍 {event.address}
-          </div>
-        )}
-        
-        {/* Contact person - visible for events > 70px */}
-        {event.contact_person && height > 70 && (
-          <div className="flex items-center gap-1 text-xs truncate">
-            <User className="h-3 w-3 flex-shrink-0" />
-            <span className="truncate">{event.contact_person}</span>
+        {/* Additional details for larger events */}
+        {height > 60 && (
+          <div className="space-y-1 pt-1 border-t border-current/10">
+            {/* Address */}
+            {event.address && (
+              <div className="text-xs opacity-80 truncate">
+                📍 {event.address}
+              </div>
+            )}
+            
+            {/* Contact person */}
+            {event.contact_person && (
+              <div className="flex items-center gap-1 text-xs truncate">
+                <User className="h-3 w-3 flex-shrink-0" />
+                <span className="truncate">{event.contact_person}</span>
+              </div>
+            )}
           </div>
         )}
         
         {/* Contact details - visible for events > 100px */}
         {height > 100 && (
-          <div className="space-y-0.5">
+          <div className="space-y-1 pt-1 border-t border-current/10">
             {event.contact_email && (
               <div className="flex items-center gap-1 text-xs truncate opacity-80">
                 <Mail className="h-3 w-3 flex-shrink-0" />
@@ -147,9 +160,9 @@ const EventBlockComponent = ({
           </div>
         )}
         
-        {/* Description - visible for events > 130px */}
-        {event.description && height > 130 && (
-          <div className="text-xs opacity-70 line-clamp-2 pt-1 border-t border-current/10">
+        {/* Description - visible for events > 140px */}
+        {event.description && height > 140 && (
+          <div className="text-xs opacity-70 line-clamp-3 pt-1 border-t border-current/10">
             {event.description}
           </div>
         )}
