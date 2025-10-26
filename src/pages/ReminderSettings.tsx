@@ -12,7 +12,7 @@ import { Mail, MessageSquare, Bell } from "lucide-react";
 export default function ReminderSettings() {
   const { settings, updateSettings, isLoading } = useReminderSettings();
   
-  const [formData, setFormData] = useState(settings);
+  const [formData, setFormData] = useState<typeof settings>(settings);
 
   useEffect(() => {
     setFormData(settings);
@@ -57,8 +57,8 @@ export default function ReminderSettings() {
               <Switch
                 id="booking-confirmation"
                 checked={formData.booking_confirmation_enabled}
-                onCheckedChange={(checked) => 
-                  setFormData({ ...formData, booking_confirmation_enabled: !!checked })
+                onCheckedChange={(checked: boolean) => 
+                  setFormData({ ...formData, booking_confirmation_enabled: checked })
                 }
               />
             </div>
@@ -124,8 +124,8 @@ export default function ReminderSettings() {
               <Switch
                 id="reminder-1"
                 checked={formData.reminder_1_enabled}
-                onCheckedChange={(checked) => 
-                  setFormData({ ...formData, reminder_1_enabled: !!checked })
+                onCheckedChange={(checked: boolean) => 
+                  setFormData({ ...formData, reminder_1_enabled: checked })
                 }
               />
             </div>
@@ -210,8 +210,8 @@ export default function ReminderSettings() {
               <Switch
                 id="reminder-2"
                 checked={formData.reminder_2_enabled}
-                onCheckedChange={(checked) => 
-                  setFormData({ ...formData, reminder_2_enabled: !!checked })
+                onCheckedChange={(checked: boolean) => 
+                  setFormData({ ...formData, reminder_2_enabled: checked })
                 }
               />
             </div>
@@ -296,8 +296,8 @@ export default function ReminderSettings() {
               <Switch
                 id="review-request"
                 checked={formData.review_request_enabled}
-                onCheckedChange={(checked) => 
-                  setFormData({ ...formData, review_request_enabled: !!checked })
+                onCheckedChange={(checked: boolean) => 
+                  setFormData({ ...formData, review_request_enabled: checked })
                 }
               />
             </div>
