@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { format, parseISO, parse } from "date-fns";
 import { sv } from "date-fns/locale";
+import { formatInTimeZone } from "date-fns-tz";
 import { createStockholmDateTime, formatInStockholm, getStockholmOffset, toStockholmTime } from "@/lib/timezoneUtils";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -289,11 +290,11 @@ export const EventModal = ({ open, onClose, event, defaultDate, onSave, onDelete
                           
                           setFormData({ 
                             ...formData, 
-                            start_time: stockholmDateTime.toISOString(),
-                            end_time: newEndDateTime.toISOString()
+                            start_time: formatInTimeZone(stockholmDateTime, 'Europe/Stockholm', "yyyy-MM-dd'T'HH:mm:ssXXX"),
+                            end_time: formatInTimeZone(newEndDateTime, 'Europe/Stockholm', "yyyy-MM-dd'T'HH:mm:ssXXX")
                           });
                         } else {
-                          setFormData({ ...formData, start_time: stockholmDateTime.toISOString() });
+                          setFormData({ ...formData, start_time: formatInTimeZone(stockholmDateTime, 'Europe/Stockholm', "yyyy-MM-dd'T'HH:mm:ssXXX") });
                         }
                       }
                     }}
@@ -325,7 +326,7 @@ export const EventModal = ({ open, onClose, event, defaultDate, onSave, onDelete
                     minutes
                   );
                   
-                  setFormData({ ...formData, start_time: stockholmDateTime.toISOString() });
+                  setFormData({ ...formData, start_time: formatInTimeZone(stockholmDateTime, 'Europe/Stockholm', "yyyy-MM-dd'T'HH:mm:ssXXX") });
                 }}
                 required
               />
@@ -353,7 +354,7 @@ export const EventModal = ({ open, onClose, event, defaultDate, onSave, onDelete
                   minutes
                 );
                 
-                setFormData({ ...formData, end_time: stockholmDateTime.toISOString() });
+                setFormData({ ...formData, end_time: formatInTimeZone(stockholmDateTime, 'Europe/Stockholm', "yyyy-MM-dd'T'HH:mm:ssXXX") });
               }}
               required
             />
