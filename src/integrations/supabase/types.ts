@@ -1273,6 +1273,7 @@ export type Database = {
       }
       profiles: {
         Row: {
+          availability_enabled: boolean | null
           created_at: string
           data_retention_days: number
           email: string | null
@@ -1282,9 +1283,13 @@ export type Database = {
           leaddesk_consent: boolean | null
           leaddesk_consent_date: string | null
           leaddesk_enabled: boolean | null
+          lunch_break_enabled: boolean | null
+          lunch_break_end: string | null
+          lunch_break_start: string | null
           timezone: string
         }
         Insert: {
+          availability_enabled?: boolean | null
           created_at?: string
           data_retention_days?: number
           email?: string | null
@@ -1294,9 +1299,13 @@ export type Database = {
           leaddesk_consent?: boolean | null
           leaddesk_consent_date?: string | null
           leaddesk_enabled?: boolean | null
+          lunch_break_enabled?: boolean | null
+          lunch_break_end?: string | null
+          lunch_break_start?: string | null
           timezone?: string
         }
         Update: {
+          availability_enabled?: boolean | null
           created_at?: string
           data_retention_days?: number
           email?: string | null
@@ -1306,6 +1315,9 @@ export type Database = {
           leaddesk_consent?: boolean | null
           leaddesk_consent_date?: string | null
           leaddesk_enabled?: boolean | null
+          lunch_break_enabled?: boolean | null
+          lunch_break_end?: string | null
+          lunch_break_start?: string | null
           timezone?: string
         }
         Relationships: []

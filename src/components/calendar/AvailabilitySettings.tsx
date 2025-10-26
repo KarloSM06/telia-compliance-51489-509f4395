@@ -4,14 +4,17 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
 import { useAvailability } from '@/hooks/useAvailability';
+import { useProfileSettings } from '@/hooks/useProfileSettings';
 import { WeeklyScheduleGrid } from './WeeklyScheduleGrid';
-import { Clock, Info, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Clock, Info, ChevronLeft, ChevronRight, Coffee } from 'lucide-react';
 import { format, addWeeks, startOfWeek } from 'date-fns';
 import { sv } from 'date-fns/locale';
 
 export const AvailabilitySettings = () => {
   const { slots, loading, replaceWeeklySchedule, fetchSlots } = useAvailability();
+  const { settings, updateSettings } = useProfileSettings();
   const [useTemplateMode, setUseTemplateMode] = useState(true);
   const [currentWeekStart, setCurrentWeekStart] = useState(() => 
     startOfWeek(new Date(), { weekStartsOn: 1 })
@@ -68,6 +71,71 @@ export const AvailabilitySettings = () => {
             Alla händelser du lägger till i kalendern blockerar automatiskt den tiden från bokning.
           </AlertDescription>
         </Alert>
+
+        {/* Tillgänglighet aktivering */}
+        <div className="flex items-center justify-between p-4 bg-blue-50 dark:bg-blue-950/30 rounded-lg border border-blue-200 dark:border-blue-800">
+          <div className="flex items-center gap-3">
+            <Switch
+              id="availability-enabled"
+              checked={settings.availability_enabled}
+              onCheckedChange={(checked) => updateSettings({ availability_enabled: checked })}
+            />
+            <Label htmlFor="availability-enabled" className="cursor-pointer">
+              <div className="font-medium">Aktivera tillgänglighetssystem</div>
+              <div className="text-xs text-muted-foreground">
+                När aktiverat kan endast tider inom dina öppettider bokas
+              </div>
+            </Label>
+          </div>
+        </div>
+
+        {/* Lunchrast inställningar */}
+        <Card className="border-orange-200 dark:border-orange-800 bg-orange-50/50 dark:bg-orange-950/30">
+          <CardHeader>
+            <CardTitle className="text-base flex items-center gap-2">
+              <Coffee className="h-4 w-4" />
+              Automatisk Lunchrast
+            </CardTitle>
+            <CardDescription>
+              Blockera automatiskt lunchrast från bokningar varje dag (frivilligt)
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="flex items-center justify-between">
+              <Label htmlFor="lunch-enabled" className="flex items-center gap-2">
+                Aktivera automatisk lunchrast
+              </Label>
+              <Switch
+                id="lunch-enabled"
+                checked={settings.lunch_break_enabled}
+                onCheckedChange={(checked) => updateSettings({ lunch_break_enabled: checked })}
+              />
+            </div>
+
+            {settings.lunch_break_enabled && (
+              <div className="grid grid-cols-2 gap-4 pl-6">
+                <div>
+                  <Label htmlFor="lunch-start">Lunchstart</Label>
+                  <Input
+                    id="lunch-start"
+                    type="time"
+                    value={settings.lunch_break_start}
+                    onChange={(e) => updateSettings({ lunch_break_start: e.target.value })}
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="lunch-end">Lunchslut</Label>
+                  <Input
+                    id="lunch-end"
+                    type="time"
+                    value={settings.lunch_break_end}
+                    onChange={(e) => updateSettings({ lunch_break_end: e.target.value })}
+                  />
+                </div>
+              </div>
+            )}
+          </CardContent>
+        </Card>
 
         <div className="flex items-center justify-between p-4 bg-muted rounded-lg">
           <div className="flex items-center gap-3">

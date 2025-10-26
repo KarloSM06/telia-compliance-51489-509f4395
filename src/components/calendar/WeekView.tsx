@@ -15,6 +15,7 @@ import { useMemo, useEffect } from 'react';
 import { toast } from 'sonner';
 import { useAvailability } from '@/hooks/useAvailability';
 import { useUserTimezone } from '@/hooks/useUserTimezone';
+import { useProfileSettings } from '@/hooks/useProfileSettings';
 import { toTimeZone, getCurrentTimeInZone, createDateTimeInZone, toISOStringWithOffset } from '@/lib/timezoneUtils';
 interface WeekViewProps {
   date: Date;
@@ -45,6 +46,7 @@ export const WeekView = ({
   onEventSave
 }: WeekViewProps) => {
   const { timezone } = useUserTimezone();
+  const { settings } = useProfileSettings();
   const {
     slots
   } = useAvailability();
@@ -287,6 +289,31 @@ export const WeekView = ({
                     const dayInTz = toTimeZone(day, timezone);
                     const todayInTz = getCurrentTimeInZone(timezone);
                     return isSameDay(dayInTz, todayInTz) ? <CurrentTimeIndicator displayDate={day} viewStartHour={startHour} /> : null;
+                  })()}
+
+                  {/* Lunch break overlay */}
+                  {settings.lunch_break_enabled && (() => {
+                    const lunchStart = settings.lunch_break_start.split(':');
+                    const lunchEnd = settings.lunch_break_end.split(':');
+                    const startHourNum = parseInt(lunchStart[0]);
+                    const startMinNum = parseInt(lunchStart[1]);
+                    const endHourNum = parseInt(lunchEnd[0]);
+                    const endMinNum = parseInt(lunchEnd[1]);
+                    
+                    const PIXELS_PER_HOUR = 80;
+                    const top = ((startHourNum * 60 + startMinNum) / 60 - startHour) * PIXELS_PER_HOUR;
+                    const height = ((endHourNum * 60 + endMinNum) - (startHourNum * 60 + startMinNum)) / 60 * PIXELS_PER_HOUR;
+                    
+                    return (
+                      <div
+                        className="absolute left-0 right-0 bg-orange-100/50 dark:bg-orange-900/20 border-y border-orange-200 dark:border-orange-800 pointer-events-none z-0"
+                        style={{ top: `${top}px`, height: `${height}px` }}
+                      >
+                        <div className="flex items-center justify-center h-full text-xs text-orange-600 dark:text-orange-400 font-medium">
+                          🍽️ Lunchrast
+                        </div>
+                      </div>
+                    );
                   })()}
 
                   {/* Events for this day */}

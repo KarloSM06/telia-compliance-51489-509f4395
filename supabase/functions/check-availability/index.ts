@@ -48,6 +48,29 @@ serve(async (req) => {
       throw slotsError;
     }
 
+    // Fetch user's profile settings for lunch break and availability enabled
+    const { data: profile, error: profileError } = await supabase
+      .from('profiles')
+      .select('availability_enabled, lunch_break_enabled, lunch_break_start, lunch_break_end')
+      .eq('id', user_id)
+      .single();
+
+    if (profileError) {
+      console.error('Error fetching profile:', profileError);
+    }
+
+    // Check if availability system is disabled
+    if (profile && !profile.availability_enabled) {
+      return new Response(
+        JSON.stringify({ 
+          available: true,
+          message: 'Availability system is disabled - all times available',
+          available_slots: []
+        }),
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
     if (!availabilitySlots || availabilitySlots.length === 0) {
       return new Response(
         JSON.stringify({ 
@@ -58,6 +81,20 @@ serve(async (req) => {
         { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
+
+    // Function to check if time overlaps with lunch break
+    const isInLunchBreak = (startTime: string, endTime: string): boolean => {
+      if (!profile?.lunch_break_enabled) return false;
+      
+      const lunchStart = `${date}T${profile.lunch_break_start}`;
+      const lunchEnd = `${date}T${profile.lunch_break_end}`;
+      
+      return (
+        (startTime >= lunchStart && startTime < lunchEnd) ||
+        (endTime > lunchStart && endTime <= lunchEnd) ||
+        (startTime <= lunchStart && endTime >= lunchEnd)
+      );
+    };
 
     // Fetch existing events for this day (in Stockholm timezone)
     const stockholmStartOfDay = toZonedTime(requestDate, STOCKHOLM_TZ);
@@ -84,6 +121,17 @@ serve(async (req) => {
     if (start_time && end_time) {
       const requestStart = `${date}T${start_time}`;
       const requestEnd = `${date}T${end_time}`;
+
+      // Check lunch break first
+      if (isInLunchBreak(requestStart, requestEnd)) {
+        return new Response(
+          JSON.stringify({ 
+            available: false, 
+            message: 'Requested time overlaps with lunch break' 
+          }),
+          { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      }
 
       // Check if time falls within any availability slot
       const isInAvailabilitySlot = availabilitySlots.some(slot => {
@@ -128,6 +176,9 @@ serve(async (req) => {
       const slotStart = `${date}T${slot.start_time}`;
       const slotEnd = `${date}T${slot.end_time}`;
 
+      // Check if slot overlaps with lunch break
+      const lunchOverlap = profile?.lunch_break_enabled && isInLunchBreak(slotStart, slotEnd);
+
       const conflicts = existingEvents?.filter(event => {
         return (
           (event.start_time >= slotStart && event.start_time < slotEnd) ||
@@ -138,7 +189,8 @@ serve(async (req) => {
       return {
         start_time: slot.start_time,
         end_time: slot.end_time,
-        has_conflicts: conflicts.length > 0,
+        has_conflicts: conflicts.length > 0 || lunchOverlap,
+        is_lunch_break: lunchOverlap,
         conflicts: conflicts.map(c => ({
           start: c.start_time,
           end: c.end_time

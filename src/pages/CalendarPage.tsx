@@ -130,7 +130,7 @@ const CalendarPage = () => {
                 Hantera dina möten och synka med befintliga bokningssystem
               </p>
             </div>
-            <div className="flex gap-2">
+            <div className="flex gap-2 items-center">
               {/* View selector */}
               <div className="flex gap-1 border rounded-lg p-1 bg-muted/50">
                 <Button
@@ -171,10 +171,33 @@ const CalendarPage = () => {
                 </Button>
               </div>
               
-              <Button onClick={() => setShowIntegrationModal(true)} variant="outline">
-                <Settings className="h-4 w-4 mr-2" />
+              <Button onClick={() => setShowIntegrationModal(true)} variant="outline" className="gap-2">
+                <Settings className="h-4 w-4" />
                 Integrationer
+                {integrations.length > 0 && (
+                  <Badge variant="secondary" className="ml-1">{integrations.length}</Badge>
+                )}
               </Button>
+
+              {/* Integration badges */}
+              {integrations.slice(0, 3).map(int => (
+                <Badge 
+                  key={int.id}
+                  variant={int.is_enabled && int.last_sync_status === 'success' ? 'default' : 'secondary'}
+                  className="cursor-pointer hover:opacity-80 transition-opacity"
+                  onClick={() => setShowIntegrationModal(true)}
+                >
+                  {int.provider_display_name}
+                  {!int.is_enabled && <span className="ml-1">⏸</span>}
+                  {int.last_sync_status === 'error' && <span className="ml-1">⚠️</span>}
+                </Badge>
+              ))}
+              {integrations.length > 3 && (
+                <Badge variant="outline" className="cursor-pointer" onClick={() => setShowIntegrationModal(true)}>
+                  +{integrations.length - 3}
+                </Badge>
+              )}
+
               <Button onClick={() => {
                 setSelectedEvent(null);
                 setSelectedDate(new Date());
@@ -212,103 +235,7 @@ const CalendarPage = () => {
             </TabsList>
             
             <TabsContent value="calendar" className="space-y-6">
-              {integrations.length > 0 && (
-        <Card>
-          <CardHeader>
-            <CardTitle>Aktiva integrationer</CardTitle>
-            <CardDescription>
-              Dina anslutna bokningssystem och kalendersynkroniseringar
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {integrations.map(integration => (
-                <Card key={integration.id} className="relative">
-                  <CardHeader className="pb-3">
-                    <div className="flex justify-between items-start">
-                      <CardTitle className="text-base">
-                        {integration.provider_display_name}
-                      </CardTitle>
-                      <Badge variant={integration.is_enabled ? "default" : "secondary"}>
-                        {integration.is_enabled ? "Aktiv" : "Inaktiv"}
-                      </Badge>
-                    </div>
-                    <CardDescription className="text-xs">
-                      {integration.integration_type === 'full_api' ? 'Full API' : 'Kalendersynk'}
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent className="space-y-2">
-                    <div className="text-sm space-y-1">
-                      <div className="flex justify-between">
-                        <span className="text-muted-foreground">Synkade events:</span>
-                        <span className="font-medium">{integration.total_synced_events}</span>
-                      </div>
-                      {integration.last_sync_at && (
-                        <div className="flex justify-between">
-                          <span className="text-muted-foreground">Senaste synk:</span>
-                          <span className="text-xs">
-                            {new Date(integration.last_sync_at).toLocaleString('sv-SE')}
-                          </span>
-                        </div>
-                      )}
-                      {integration.last_sync_status && (
-                        <div className="flex justify-between">
-                          <span className="text-muted-foreground">Status:</span>
-                          <Badge variant={integration.last_sync_status === 'success' ? 'default' : 'destructive'} className="text-xs">
-                            {integration.last_sync_status}
-                          </Badge>
-                        </div>
-                      )}
-                    </div>
-                    <div className="flex gap-2 pt-2">
-                      <Button 
-                        size="sm" 
-                        variant="outline" 
-                        className="flex-1"
-                        onClick={() => triggerSync(integration.id)}
-                      >
-                        Synka nu
-                      </Button>
-                      <Button 
-                        size="sm" 
-                        variant="outline"
-                        onClick={() => updateIntegration(integration.id, { is_enabled: !integration.is_enabled })}
-                      >
-                        {integration.is_enabled ? 'Pausa' : 'Aktivera'}
-                      </Button>
-                      <Button 
-                        size="sm" 
-                        variant="destructive"
-                        onClick={() => deleteIntegration(integration.id)}
-                      >
-                        Ta bort
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-      )}
-
-      {integrations.length === 0 && (
-        <Card className="border-dashed">
-          <CardContent className="flex flex-col items-center justify-center py-12">
-            <Settings className="h-12 w-12 text-muted-foreground mb-4" />
-            <h3 className="text-lg font-semibold mb-2">Inga integrationer ännu</h3>
-            <p className="text-muted-foreground text-center mb-4 max-w-md">
-              Anslut ditt befintliga bokningssystem eller CRM för att automatiskt synka dina möten och händelser
-            </p>
-            <Button onClick={() => setShowIntegrationModal(true)}>
-              <Plus className="h-4 w-4 mr-2" />
-              Lägg till integration
-            </Button>
-          </CardContent>
-        </Card>
-      )}
-
-              <CalendarView 
+              <CalendarView
                 events={events}
                 onEventClick={handleEventClick}
                 onDateClick={handleDateClick}
