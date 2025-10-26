@@ -122,7 +122,7 @@ const CalendarPage = () => {
     <div className="h-screen flex flex-col">
       {/* Global header with view selector - always visible */}
       <div className="border-b bg-background">
-        <div className="container mx-auto p-4">
+        <div className="px-6 py-4">
           <div className="flex justify-between items-center">
             <div>
               <h1 className="text-2xl font-bold">Kalender & CRM</h1>
@@ -227,7 +227,7 @@ const CalendarPage = () => {
 
       {/* Month view */}
       {currentView === 'month' && (
-        <div className="container mx-auto p-6 space-y-6 flex-1 overflow-auto">
+        <div className="px-6 py-4 space-y-6 flex-1 overflow-auto">
           <Tabs defaultValue="calendar" className="w-full">
             <TabsList>
               <TabsTrigger value="calendar">Kalender</TabsTrigger>
