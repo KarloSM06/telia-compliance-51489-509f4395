@@ -31,7 +31,6 @@ const ThorPage = lazy(() => import("./pages/ThorPage"));
 const EkoPage = lazy(() => import("./pages/EkoPage"));
 const CalendarPage = lazy(() => import("./pages/CalendarPage"));
 const ReminderSettings = lazy(() => import("./pages/ReminderSettings"));
-const MessageTemplates = lazy(() => import("./pages/MessageTemplates"));
 const DashboardLayout = lazy(() => import("./components/dashboard/DashboardLayout").then(m => ({ default: m.DashboardLayout })));
 
 // Loading fallback component
@@ -81,7 +80,6 @@ const App = () => (
               <Route path="/dashboard/eko" element={<DashboardLayout><EkoPage /></DashboardLayout>} />
               <Route path="/dashboard/calendar" element={<DashboardLayout><CalendarPage /></DashboardLayout>} />
               <Route path="/dashboard/reminders" element={<DashboardLayout><ReminderSettings /></DashboardLayout>} />
-              <Route path="/dashboard/templates" element={<DashboardLayout><MessageTemplates /></DashboardLayout>} />
               <Route path="/demo" element={<Demo />} />
               <Route path="/om-oss" element={<AboutUs />} />
               <Route path="/gdpr" element={<GDPRSettings />} />

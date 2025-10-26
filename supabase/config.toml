@@ -6,9 +6,6 @@ verify_jwt = true
 [functions.schedule-reminders]
 verify_jwt = true
 
-[functions.send-scheduled-messages]
-verify_jwt = false
-
 [functions.sync-booking-systems]
 verify_jwt = true
 

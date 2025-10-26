@@ -4,8 +4,8 @@ import { useAuth } from './useAuth';
 import { toast } from 'sonner';
 
 export interface ReminderSettings {
-  id?: string;
-  user_id?: string;
+  id: string;
+  user_id: string;
   organization_id?: string;
   booking_confirmation_enabled: boolean;
   booking_confirmation_channel: string[];
@@ -21,8 +21,8 @@ export interface ReminderSettings {
   default_template_confirmation?: string;
   default_template_reminder?: string;
   default_template_review?: string;
-  created_at?: string;
-  updated_at?: string;
+  created_at: string;
+  updated_at: string;
 }
 
 export const useReminderSettings = () => {

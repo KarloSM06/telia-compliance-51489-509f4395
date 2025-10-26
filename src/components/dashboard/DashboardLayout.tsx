@@ -3,7 +3,6 @@ import { AppSidebar } from "./AppSidebar";
 import { useAuth } from "@/hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
-import { OwnerNotificationBell } from "@/components/OwnerNotificationBell";
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -42,7 +41,6 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
           <header className="sticky top-0 z-10 flex h-16 items-center gap-4 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 px-6">
             <SidebarTrigger className="-ml-1" />
             <div className="flex-1" />
-            <OwnerNotificationBell />
           </header>
           <main className="flex-1 p-6 md:p-8">
             {children}
