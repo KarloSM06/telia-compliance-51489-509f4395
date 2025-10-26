@@ -232,77 +232,76 @@ const CalendarPage = () => {
 
   return (
     <div className="h-screen flex flex-col">
-      {/* Global header with view selector - always visible */}
+      {/* Global header - Kompakt */}
       <div className="border-b bg-background sticky top-0 z-50">
-        <div className="container mx-auto px-4 py-3">
+        <div className="container mx-auto px-3 py-2">
           <div className="flex justify-between items-center">
             <div>
-              <h1 className="text-2xl font-bold">Kalender & Bokningar</h1>
-              <p className="text-sm text-muted-foreground">
+              <h1 className="text-xl font-bold">Kalender & Bokningar</h1>
+              <p className="text-xs text-muted-foreground hidden lg:block">
                 Synka och hantera möten från alla dina system
               </p>
             </div>
-            <div className="flex gap-2">
-              {/* Today button */}
-              <Button onClick={() => setSelectedDay(new Date())} variant="outline" size="sm">
+            <div className="flex gap-1.5">
+              <Button onClick={() => setSelectedDay(new Date())} variant="outline" size="sm" className="h-8">
                 Idag
               </Button>
 
-              {/* View selector */}
-              <div className="flex gap-1 border rounded-lg p-1 bg-muted/50">
+              {/* View selector - Kompakt */}
+              <div className="flex gap-0.5 border rounded-lg p-0.5 bg-muted/50">
                 <Button
                   variant={currentView === 'year' ? 'default' : 'ghost'}
                   size="sm"
                   onClick={() => setCurrentView('year')}
-                  className="gap-1.5"
+                  className="gap-1 h-7 px-2"
                 >
-                  <CalendarClock className="h-4 w-4" />
-                  År
+                  <CalendarClock className="h-3.5 w-3.5" />
+                  <span className="hidden lg:inline">År</span>
                 </Button>
                 <Button
                   variant={currentView === 'month' ? 'default' : 'ghost'}
                   size="sm"
                   onClick={() => setCurrentView('month')}
-                  className="gap-1.5"
+                  className="gap-1 h-7 px-2"
                 >
-                  <Calendar className="h-4 w-4" />
-                  Månad
+                  <Calendar className="h-3.5 w-3.5" />
+                  <span className="hidden lg:inline">Månad</span>
                 </Button>
                 <Button
                   variant={currentView === 'week' ? 'default' : 'ghost'}
                   size="sm"
                   onClick={handleViewWeek}
-                  className="gap-1.5"
+                  className="gap-1 h-7 px-2"
                 >
-                  <CalendarRange className="h-4 w-4" />
-                  Vecka
+                  <CalendarRange className="h-3.5 w-3.5" />
+                  <span className="hidden lg:inline">Vecka</span>
                 </Button>
                 <Button
                   variant={currentView === 'day' ? 'default' : 'ghost'}
                   size="sm"
                   onClick={() => handleDateClick(selectedDay)}
-                  className="gap-1.5"
+                  className="gap-1 h-7 px-2"
                 >
-                  <CalendarDays className="h-4 w-4" />
-                  Dag
+                  <CalendarDays className="h-3.5 w-3.5" />
+                  <span className="hidden lg:inline">Dag</span>
                 </Button>
               </div>
               
-              <Button onClick={() => setShowKeyboardShortcuts(true)} variant="outline" size="sm">
-                <Keyboard className="h-4 w-4" />
+              <Button onClick={() => setShowKeyboardShortcuts(true)} variant="outline" size="sm" className="h-8 px-2">
+                <Keyboard className="h-3.5 w-3.5" />
               </Button>
               
-              <Button onClick={() => setShowIntegrationModal(true)} variant="outline" size="sm">
-                <Settings className="h-4 w-4 mr-2" />
-                Integrationer
+              <Button onClick={() => setShowIntegrationModal(true)} variant="outline" size="sm" className="h-8 px-2">
+                <Settings className="h-3.5 w-3.5 lg:mr-1.5" />
+                <span className="hidden lg:inline">Integrationer</span>
               </Button>
               <Button onClick={() => {
                 setSelectedEvent(null);
                 setSelectedDate(new Date());
                 setShowEventModal(true);
-              }} size="sm">
-                <Plus className="h-4 w-4 mr-2" />
-                Ny händelse
+              }} size="sm" className="h-8 px-2">
+                <Plus className="h-3.5 w-3.5 lg:mr-1.5" />
+                <span className="hidden lg:inline">Ny händelse</span>
               </Button>
             </div>
           </div>
@@ -323,48 +322,47 @@ const CalendarPage = () => {
         />
       )}
 
-      {/* Month view with 3-column layout */}
+      {/* Month view - Optimerad 3-kolumn layout */}
       {currentView === 'month' && (
         <div className="flex-1 overflow-hidden">
           <Tabs defaultValue="calendar" className="h-full flex flex-col">
-            <div className="border-b px-4">
-              <TabsList>
-                <TabsTrigger value="calendar">Kalender</TabsTrigger>
-                <TabsTrigger value="integrations">Integrationer & Synk</TabsTrigger>
-                <TabsTrigger value="availability">Tillgänglighet</TabsTrigger>
+            <div className="border-b px-2">
+              <TabsList className="h-9">
+                <TabsTrigger value="calendar" className="text-xs">Kalender</TabsTrigger>
+                <TabsTrigger value="integrations" className="text-xs">Integrationer & Synk</TabsTrigger>
+                <TabsTrigger value="availability" className="text-xs">Tillgänglighet</TabsTrigger>
               </TabsList>
             </div>
             
             <TabsContent value="calendar" className="flex-1 overflow-hidden m-0 p-0">
               <div className="h-full flex">
-                {/* Left sidebar - Mini Calendar (15%) */}
-                <div className="w-[15%] border-r bg-muted/30 p-4 overflow-y-auto">
+                {/* Left sidebar - 12% - Dölj på mobil */}
+                <div className="hidden lg:flex lg:w-[12%] border-r bg-muted/30 p-2 overflow-y-auto flex-col gap-2">
                   <MiniCalendar
                     selectedDate={selectedDay}
                     onDateSelect={setSelectedDay}
                     events={events}
                   />
                   
-                  {/* Quick stats */}
-                  <div className="mt-6 space-y-2">
-                    <h3 className="text-xs font-semibold text-muted-foreground uppercase">Översikt</h3>
-                    <div className="space-y-1.5">
-                      <div className="flex justify-between text-sm">
+                  {/* Quick stats - Kompakt */}
+                  <div className="space-y-1.5">
+                    <h3 className="text-[10px] font-semibold text-muted-foreground uppercase">Översikt</h3>
+                    <div className="space-y-1">
+                      <div className="flex justify-between text-[11px]">
                         <span className="text-muted-foreground">Händelser</span>
-                        <Badge variant="secondary">{events.length}</Badge>
+                        <Badge variant="secondary" className="h-4 text-[9px] px-1">{events.length}</Badge>
                       </div>
-                      <div className="flex justify-between text-sm">
+                      <div className="flex justify-between text-[11px]">
                         <span className="text-muted-foreground">Integrationer</span>
-                        <Badge variant="secondary">{integrations.length}</Badge>
+                        <Badge variant="secondary" className="h-4 text-[9px] px-1">{integrations.length}</Badge>
                       </div>
                     </div>
                   </div>
                 </div>
 
-                {/* Main calendar area (55%) */}
-                <div className="flex-1 overflow-y-auto">
-                  <div className="p-4 space-y-4">
-                    {/* Filter bar */}
+                {/* Main calendar area - 66% (88% på tablet, 100% på mobil) */}
+                <div className="flex-1 lg:w-[66%] overflow-y-auto">
+                  <div className="p-2 space-y-2">
                     <EventFilterBar
                       filters={filters}
                       onFiltersChange={setFilters}
@@ -380,32 +378,32 @@ const CalendarPage = () => {
                   </div>
                 </div>
 
-                {/* Right sidebar - Integrations & Sync Status (30%) */}
-                <div className="w-[30%] border-l bg-muted/20 overflow-y-auto">
-                  <div className="p-4 space-y-4">
+                {/* Right sidebar - 22% - Dölj på tablet och mobil */}
+                <div className="hidden xl:flex xl:w-[22%] border-l bg-muted/20 overflow-y-auto">
+                  <div className="p-2 space-y-2">
                     <div className="flex justify-between items-center">
-                      <h3 className="font-semibold">Integrationer</h3>
-                      <Button size="sm" variant="outline" onClick={() => setShowIntegrationModal(true)}>
-                        <Plus className="h-3.5 w-3.5 mr-1.5" />
-                        Ny
+                      <h3 className="text-sm font-semibold">Integrationer</h3>
+                      <Button size="sm" variant="outline" onClick={() => setShowIntegrationModal(true)} className="h-7 px-2">
+                        <Plus className="h-3 w-3 mr-1" />
+                        <span className="text-xs">Ny</span>
                       </Button>
                     </div>
 
                     {integrations.length === 0 ? (
                       <Card className="border-dashed">
-                        <CardContent className="flex flex-col items-center justify-center py-8">
-                          <Settings className="h-8 w-8 text-muted-foreground mb-2" />
-                          <p className="text-sm text-muted-foreground text-center mb-3">
+                        <CardContent className="flex flex-col items-center justify-center py-4">
+                          <Settings className="h-6 w-6 text-muted-foreground mb-1.5" />
+                          <p className="text-xs text-muted-foreground text-center mb-2">
                             Inga integrationer ännu
                           </p>
-                          <Button size="sm" onClick={() => setShowIntegrationModal(true)}>
-                            <Plus className="h-3.5 w-3.5 mr-1.5" />
+                          <Button size="sm" onClick={() => setShowIntegrationModal(true)} className="h-7">
+                            <Plus className="h-3 w-3 mr-1" />
                             Lägg till
                           </Button>
                         </CardContent>
                       </Card>
                     ) : (
-                      <div className="space-y-3">
+                      <div className="space-y-2">
                         {integrations.map(integration => (
                           <IntegrationCard
                             key={integration.id}
@@ -429,7 +427,7 @@ const CalendarPage = () => {
                       </div>
                     )}
 
-                    <div className="pt-4 border-t">
+                    <div className="pt-2 border-t">
                       <SyncMetrics />
                     </div>
                   </div>

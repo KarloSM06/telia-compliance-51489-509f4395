@@ -51,20 +51,20 @@ export const IntegrationCard = ({
 
   return (
     <Card className="hover:shadow-md transition-shadow">
-      <CardHeader className="pb-3">
-        <div className="flex items-start justify-between">
-          <div className="flex-1">
-            <div className="flex items-center gap-2 mb-1">
-              <CardTitle className="text-base">{providerName}</CardTitle>
+      <CardHeader className="pb-2 pt-3 px-3">
+        <div className="flex items-start justify-between gap-2">
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center gap-1.5 mb-0.5">
+              <CardTitle className="text-sm truncate">{providerName}</CardTitle>
               {integration.is_active ? (
-                <Badge variant="default" className="h-5 text-xs bg-success">Aktiv</Badge>
+                <Badge variant="default" className="h-4 text-[9px] px-1.5 bg-success">Aktiv</Badge>
               ) : (
-                <Badge variant="secondary" className="h-5 text-xs">Pausad</Badge>
+                <Badge variant="secondary" className="h-4 text-[9px] px-1.5">Pausad</Badge>
               )}
             </div>
-            <CardDescription className="text-xs">
+            <CardDescription className="text-[10px] truncate">
               {integration.last_sync
-                ? `Senast synkad: ${format(new Date(integration.last_sync), 'PPp', { locale: sv })}`
+                ? `Senast: ${format(new Date(integration.last_sync), 'PPp', { locale: sv })}`
                 : 'Inte synkad ännu'}
             </CardDescription>
           </div>
@@ -72,66 +72,69 @@ export const IntegrationCard = ({
             successRate={successRate}
             pendingCount={pendingCount}
             failedCount={failedCount}
-            className="ml-2"
+            className="flex-shrink-0"
           />
         </div>
       </CardHeader>
 
-      <CardContent className="pt-0">
-        {/* Stats */}
+      <CardContent className="pt-0 px-3 pb-3">
+        {/* Kompakt Inline Stats */}
         {integration.sync_stats && integration.sync_stats.total > 0 && (
-          <div className="grid grid-cols-3 gap-2 mb-3 text-center">
-            <div className="p-2 bg-muted rounded">
-              <div className="text-lg font-semibold">{integration.sync_stats.total}</div>
-              <div className="text-xs text-muted-foreground">Totalt</div>
+          <div className="flex items-center justify-between text-[10px] mb-2 px-1">
+            <div className="text-center">
+              <div className="font-semibold">{integration.sync_stats.total}</div>
+              <div className="text-muted-foreground">Tot</div>
             </div>
-            <div className="p-2 bg-success/10 rounded">
-              <div className="text-lg font-semibold text-success">{integration.sync_stats.success}</div>
-              <div className="text-xs text-muted-foreground">Lyckade</div>
+            <div className="text-center">
+              <div className="font-semibold text-success">{integration.sync_stats.success}</div>
+              <div className="text-muted-foreground">OK</div>
             </div>
-            <div className="p-2 bg-destructive/10 rounded">
-              <div className="text-lg font-semibold text-destructive">{integration.sync_stats.failed}</div>
-              <div className="text-xs text-muted-foreground">Misslyckade</div>
+            <div className="text-center">
+              <div className="font-semibold text-destructive">{integration.sync_stats.failed}</div>
+              <div className="text-muted-foreground">Fel</div>
             </div>
           </div>
         )}
 
-        {/* Actions */}
-        <div className="flex gap-2">
+        {/* Kompakta Actions */}
+        <div className="flex gap-1">
           <Button
             variant="outline"
             size="sm"
-            className="flex-1"
+            className="flex-1 h-7 text-[10px] px-2"
             onClick={() => onSync(integration.id)}
             disabled={!integration.is_active}
           >
-            <RefreshCw className="h-3.5 w-3.5 mr-1.5" />
+            <RefreshCw className="h-3 w-3 mr-1" />
             Synka
           </Button>
           <Button
             variant="outline"
             size="sm"
+            className="h-7 px-2"
             onClick={() => onToggleActive(integration.id, !integration.is_active)}
           >
             {integration.is_active ? (
-              <Pause className="h-3.5 w-3.5" />
+              <Pause className="h-3 w-3" />
             ) : (
-              <Play className="h-3.5 w-3.5" />
+              <Play className="h-3 w-3" />
             )}
           </Button>
           <Button
             variant="outline"
             size="sm"
+            className="h-7 px-2"
             onClick={() => onSettings(integration.id)}
           >
-            <Settings className="h-3.5 w-3.5" />
+            <Settings className="h-3 w-3" />
           </Button>
           <Button
             variant="ghost"
             size="sm"
+            className="h-7 px-2"
             onClick={() => onViewLogs(integration.id)}
           >
-            <ExternalLink className="h-3.5 w-3.5" />
+            <ExternalLink className="h-3 w-3" />
           </Button>
         </div>
       </CardContent>

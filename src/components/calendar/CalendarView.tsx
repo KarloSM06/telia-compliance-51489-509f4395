@@ -47,28 +47,30 @@ export const CalendarView = ({ events, onEventClick, onDateClick }: CalendarView
   const weekDays = ['Mån', 'Tis', 'Ons', 'Tor', 'Fre', 'Lör', 'Sön'];
 
   return (
-    <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold">
+    <div className="space-y-2">
+      {/* Kompakt Navigation */}
+      <div className="flex items-center justify-between px-1">
+        <h2 className="text-lg font-bold">
           {format(currentDate, 'MMMM yyyy', { locale: sv })}
         </h2>
-        <div className="flex gap-2">
-          <Button variant="outline" size="icon" onClick={previousMonth}>
-            <ChevronLeft className="h-4 w-4" />
+        <div className="flex gap-1">
+          <Button variant="outline" size="sm" onClick={previousMonth}>
+            <ChevronLeft className="h-3 w-3" />
           </Button>
-          <Button variant="outline" onClick={() => setCurrentDate(new Date())}>
+          <Button variant="outline" size="sm" onClick={() => setCurrentDate(new Date())}>
             Idag
           </Button>
-          <Button variant="outline" size="icon" onClick={nextMonth}>
-            <ChevronRight className="h-4 w-4" />
+          <Button variant="outline" size="sm" onClick={nextMonth}>
+            <ChevronRight className="h-3 w-3" />
           </Button>
         </div>
       </div>
 
-      <Card className="p-4">
-        <div className="grid grid-cols-7 gap-2">
+      {/* Kompakt Månadsvy - Ingen Card wrapper */}
+      <div className="border rounded-lg">
+        <div className="grid grid-cols-7 gap-px bg-border">
           {weekDays.map(day => (
-            <div key={day} className="text-center font-semibold text-sm text-muted-foreground p-2">
+            <div key={day} className="text-center font-semibold text-[10px] text-muted-foreground p-1.5 bg-card">
               {day}
             </div>
           ))}
@@ -83,20 +85,20 @@ export const CalendarView = ({ events, onEventClick, onDateClick }: CalendarView
                 key={index}
                 onClick={() => onDateClick(day)}
                 className={cn(
-                  "min-h-24 p-2 border rounded-lg cursor-pointer transition-colors hover:bg-accent",
+                  "min-h-16 p-1 bg-card cursor-pointer transition-colors hover:bg-accent",
                   !isCurrentMonth && "bg-muted/50 text-muted-foreground",
-                  isToday && "border-primary border-2"
+                  isToday && "ring-2 ring-primary ring-inset"
                 )}
               >
                 <div className={cn(
-                  "text-sm font-medium mb-1",
+                  "text-[11px] font-medium mb-0.5",
                   isToday && "text-primary font-bold"
                 )}>
                   {format(day, 'd')}
                 </div>
                 
-                <div className="space-y-1">
-                  {dayEvents.slice(0, 3).map(event => (
+                <div className="space-y-0.5">
+                  {dayEvents.slice(0, 2).map(event => (
                     <div
                       key={event.id}
                       onClick={(e) => {
@@ -104,17 +106,20 @@ export const CalendarView = ({ events, onEventClick, onDateClick }: CalendarView
                         onEventClick(event);
                       }}
                       className={cn(
-                        "text-xs p-1 rounded truncate cursor-pointer",
-                        event.source === 'internal' ? "bg-primary/20 text-primary" : "bg-accent text-accent-foreground"
+                        "text-[9px] px-1 py-0.5 rounded truncate cursor-pointer",
+                        event.source === 'internal' && "bg-event-internal/20 text-event-internal",
+                        event.source === 'simplybook' && "bg-event-simplybook/20 text-event-simplybook",
+                        event.source === 'google_calendar' && "bg-event-google/20 text-event-google",
+                        event.source === 'bookeo' && "bg-event-bookeo/20 text-event-bookeo"
                       )}
                       title={event.title}
                     >
                       {format(parseISO(event.start_time), 'HH:mm')} {event.title}
                     </div>
                   ))}
-                  {dayEvents.length > 3 && (
-                    <div className="text-xs text-muted-foreground">
-                      +{dayEvents.length - 3} fler
+                  {dayEvents.length > 2 && (
+                    <div className="text-[9px] text-muted-foreground px-1">
+                      +{dayEvents.length - 2}
                     </div>
                   )}
                 </div>
@@ -122,7 +127,7 @@ export const CalendarView = ({ events, onEventClick, onDateClick }: CalendarView
             );
           })}
         </div>
-      </Card>
+      </div>
     </div>
   );
 };

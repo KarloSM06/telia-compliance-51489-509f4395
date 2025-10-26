@@ -101,27 +101,27 @@ export const EventFilterBar = ({
     filters.sources.length + filters.eventTypes.length + filters.syncStates.length;
 
   return (
-    <div className="space-y-2">
-      <div className="flex gap-2">
-        {/* Search */}
+    <div className="space-y-1.5">
+      <div className="flex gap-1.5">
+        {/* Kompakt Search */}
         <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <Search className="absolute left-2 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
           <Input
             placeholder="Sök händelser..."
             value={searchInput}
             onChange={(e) => handleSearchChange(e.target.value)}
-            className="pl-9"
+            className="pl-7 h-8 text-xs"
           />
         </div>
 
-        {/* Source Filter */}
+        {/* Kompakta Filter Dropdowns */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" size="default">
-              <Filter className="h-4 w-4 mr-2" />
-              Källa
+            <Button variant="outline" size="sm" className="h-8 px-2">
+              <Filter className="h-3 w-3 lg:mr-1.5" />
+              <span className="hidden lg:inline text-xs">Källa</span>
               {filters.sources.length > 0 && (
-                <Badge variant="secondary" className="ml-2 h-5 w-5 p-0 flex items-center justify-center">
+                <Badge variant="secondary" className="ml-1.5 h-4 w-4 p-0 flex items-center justify-center text-[9px]">
                   {filters.sources.length}
                 </Badge>
               )}
@@ -142,14 +142,13 @@ export const EventFilterBar = ({
           </DropdownMenuContent>
         </DropdownMenu>
 
-        {/* Event Type Filter */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" size="default">
-              <Filter className="h-4 w-4 mr-2" />
-              Typ
+            <Button variant="outline" size="sm" className="h-8 px-2">
+              <Filter className="h-3 w-3 lg:mr-1.5" />
+              <span className="hidden lg:inline text-xs">Typ</span>
               {filters.eventTypes.length > 0 && (
-                <Badge variant="secondary" className="ml-2 h-5 w-5 p-0 flex items-center justify-center">
+                <Badge variant="secondary" className="ml-1.5 h-4 w-4 p-0 flex items-center justify-center text-[9px]">
                   {filters.eventTypes.length}
                 </Badge>
               )}
@@ -170,14 +169,13 @@ export const EventFilterBar = ({
           </DropdownMenuContent>
         </DropdownMenu>
 
-        {/* Sync State Filter */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" size="default">
-              <Filter className="h-4 w-4 mr-2" />
-              Status
+            <Button variant="outline" size="sm" className="h-8 px-2">
+              <Filter className="h-3 w-3 lg:mr-1.5" />
+              <span className="hidden lg:inline text-xs">Status</span>
               {filters.syncStates.length > 0 && (
-                <Badge variant="secondary" className="ml-2 h-5 w-5 p-0 flex items-center justify-center">
+                <Badge variant="secondary" className="ml-1.5 h-4 w-4 p-0 flex items-center justify-center text-[9px]">
                   {filters.syncStates.length}
                 </Badge>
               )}
@@ -198,40 +196,39 @@ export const EventFilterBar = ({
           </DropdownMenuContent>
         </DropdownMenu>
 
-        {/* Clear Filters */}
         {activeFiltersCount > 0 && (
-          <Button variant="ghost" size="icon" onClick={clearFilters}>
-            <X className="h-4 w-4" />
+          <Button variant="ghost" size="sm" onClick={clearFilters} className="h-8 px-2">
+            <X className="h-3.5 w-3.5" />
           </Button>
         )}
       </div>
 
-      {/* Active Filter Badges */}
+      {/* Kompakta Active Filter Badges */}
       {activeFiltersCount > 0 && (
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap gap-1">
           {filters.sources.map((source) => (
-            <Badge key={source} variant="secondary" className="gap-1">
+            <Badge key={source} variant="secondary" className="gap-0.5 h-5 text-[9px] px-1.5">
               {sourceLabels[source] || source}
               <X
-                className="h-3 w-3 cursor-pointer"
+                className="h-2.5 w-2.5 cursor-pointer"
                 onClick={() => toggleSource(source)}
               />
             </Badge>
           ))}
           {filters.eventTypes.map((type) => (
-            <Badge key={type} variant="secondary" className="gap-1">
+            <Badge key={type} variant="secondary" className="gap-0.5 h-5 text-[9px] px-1.5">
               {typeLabels[type] || type}
               <X
-                className="h-3 w-3 cursor-pointer"
+                className="h-2.5 w-2.5 cursor-pointer"
                 onClick={() => toggleEventType(type)}
               />
             </Badge>
           ))}
           {filters.syncStates.map((state) => (
-            <Badge key={state} variant="secondary" className="gap-1">
+            <Badge key={state} variant="secondary" className="gap-0.5 h-5 text-[9px] px-1.5">
               {syncStateOptions.find(o => o.value === state)?.label || state}
               <X
-                className="h-3 w-3 cursor-pointer"
+                className="h-2.5 w-2.5 cursor-pointer"
                 onClick={() => toggleSyncState(state)}
               />
             </Badge>

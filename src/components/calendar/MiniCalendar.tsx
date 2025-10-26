@@ -20,12 +20,12 @@ const MiniCalendarComponent = ({ selectedDate, onDateSelect, events }: MiniCalen
   };
 
   return (
-    <Card className="p-3">
+    <Card className="p-2">
       <Calendar
         mode="single"
         selected={selectedDate}
         onSelect={(date) => date && onDateSelect(date)}
-        className="rounded-md"
+        className="rounded-md text-[11px] [&_button]:h-7 [&_button]:w-7 [&_th]:text-[10px]"
         modifiers={{
           hasEvents: (date) => hasEvents(date)
         }}
@@ -34,8 +34,8 @@ const MiniCalendarComponent = ({ selectedDate, onDateSelect, events }: MiniCalen
             fontWeight: 'bold',
             textDecoration: 'underline',
             textDecorationColor: 'hsl(var(--primary))',
-            textDecorationThickness: '2px',
-            textUnderlineOffset: '4px'
+            textDecorationThickness: '1.5px',
+            textUnderlineOffset: '2px'
           }
         }}
       />
