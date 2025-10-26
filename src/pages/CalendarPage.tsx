@@ -13,12 +13,14 @@ import { AvailabilitySettings } from "@/components/calendar/AvailabilitySettings
 import { useCalendarEvents, CalendarEvent } from "@/hooks/useCalendarEvents";
 import { useBookingIntegrations } from "@/hooks/useBookingIntegrations";
 import { Plus, Settings, Calendar, CalendarDays, CalendarRange, CalendarClock } from "lucide-react";
-import { addMinutes, isSameDay, parseISO, startOfWeek, endOfWeek, isWithinInterval, format } from "date-fns";
+import { addMinutes, isSameDay, startOfWeek, endOfWeek, isWithinInterval, format } from "date-fns";
 import { sv } from "date-fns/locale";
 import { checkEventConflicts } from "@/lib/calendarUtils";
 import { toast } from "sonner";
+import { useUserTimezone } from "@/hooks/useUserTimezone";
 
 const CalendarPage = () => {
+  const { timezone } = useUserTimezone();
   const { events, loading, createEvent, updateEvent, deleteEvent } = useCalendarEvents();
   const { integrations, createIntegration, updateIntegration, deleteIntegration, triggerSync } = useBookingIntegrations();
   
@@ -75,11 +77,11 @@ const CalendarPage = () => {
         updated_at: new Date().toISOString(),
       } as CalendarEvent;
 
-      const conflicts = checkEventConflicts(tempEvent, events.filter(e => e.id !== selectedEvent?.id));
+      const conflicts = checkEventConflicts(tempEvent, events.filter(e => e.id !== selectedEvent?.id), timezone);
       
       if (conflicts.length > 0) {
         toast.warning(`⚠️ Denna händelse överlappar med ${conflicts.length} andra händelse(r)`, {
-          description: conflicts.map(e => `• ${e.title} (${format(parseISO(e.start_time), 'HH:mm')} - ${format(parseISO(e.end_time), 'HH:mm')})`).join('\n'),
+          description: conflicts.map(e => `• ${e.title} (${format(new Date(e.start_time), 'HH:mm')} - ${format(new Date(e.end_time), 'HH:mm')})`).join('\n'),
           duration: 5000,
         });
       }
@@ -104,13 +106,13 @@ const CalendarPage = () => {
   // Filter events based on current view
   const filteredEvents = (() => {
     if (currentView === 'day') {
-      return events.filter(e => isSameDay(parseISO(e.start_time), selectedDay));
+      return events.filter(e => isSameDay(new Date(e.start_time), selectedDay));
     }
     if (currentView === 'week') {
       const weekStart = startOfWeek(selectedDay, { locale: sv, weekStartsOn: 1 });
       const weekEnd = endOfWeek(selectedDay, { locale: sv, weekStartsOn: 1 });
       return events.filter(e => 
-        isWithinInterval(parseISO(e.start_time), { start: weekStart, end: weekEnd })
+        isWithinInterval(new Date(e.start_time), { start: weekStart, end: weekEnd })
       );
     }
     return events;

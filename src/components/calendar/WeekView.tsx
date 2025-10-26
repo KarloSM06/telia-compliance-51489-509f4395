@@ -15,7 +15,7 @@ import { useMemo, useEffect } from 'react';
 import { toast } from 'sonner';
 import { useAvailability } from '@/hooks/useAvailability';
 import { useUserTimezone } from '@/hooks/useUserTimezone';
-import { toTimeZone, getCurrentTimeInZone, createDateTimeInZone } from '@/lib/timezoneUtils';
+import { toTimeZone, getCurrentTimeInZone, createDateTimeInZone, toISOStringWithOffset } from '@/lib/timezoneUtils';
 interface WeekViewProps {
   date: Date;
   events: CalendarEvent[];
@@ -157,7 +157,7 @@ export const WeekView = ({
     if (dragState.previewPosition?.start && dragState.previewPosition?.end) {
       const {
         top
-      } = getEventPosition(dragState.previewPosition.start.toISOString(), dragState.previewPosition.end.toISOString(), 0, timezone);
+      } = getEventPosition(toISOStringWithOffset(dragState.previewPosition.start, timezone), toISOStringWithOffset(dragState.previewPosition.end, timezone), 0, timezone);
       return top;
     }
     return undefined;

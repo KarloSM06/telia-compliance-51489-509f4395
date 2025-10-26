@@ -14,7 +14,7 @@ import { useMemo, useEffect } from 'react';
 import { toast } from 'sonner';
 import { useAvailability } from '@/hooks/useAvailability';
 import { useUserTimezone } from '@/hooks/useUserTimezone';
-import { formatInTimeZone_ } from '@/lib/timezoneUtils';
+import { formatInTimeZone_, toISOStringWithOffset } from '@/lib/timezoneUtils';
 interface DayViewProps {
   date: Date;
   events: CalendarEvent[];
@@ -127,7 +127,7 @@ export const DayView = ({
     if (dragState.previewPosition?.start && dragState.previewPosition?.end) {
       const {
         top
-      } = getEventPosition(dragState.previewPosition.start.toISOString(), dragState.previewPosition.end.toISOString(), startHour, timezone);
+      } = getEventPosition(toISOStringWithOffset(dragState.previewPosition.start, timezone), toISOStringWithOffset(dragState.previewPosition.end, timezone), startHour, timezone);
       return top;
     }
     return undefined;
