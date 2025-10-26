@@ -81,6 +81,48 @@ All colors MUST be HSL.
     --sidebar-border: 220 13% 91%;
 
     --sidebar-ring: 217.2 91.2% 59.8%;
+
+    /* Event type colors - semantic tokens for calendar events */
+    --event-internal: 217 91% 60%;
+    --event-internal-bg: 217 91% 95%;
+    --event-internal-border: 217 91% 60%;
+    
+    --event-meeting: 221 83% 53%;
+    --event-meeting-bg: 221 83% 95%;
+    --event-meeting-border: 221 83% 53%;
+    
+    --event-call: 142 76% 36%;
+    --event-call-bg: 142 76% 95%;
+    --event-call-border: 142 76% 36%;
+    
+    --event-booking: 262 83% 58%;
+    --event-booking-bg: 262 83% 95%;
+    --event-booking-border: 262 83% 58%;
+    
+    --event-reminder: 24 90% 53%;
+    --event-reminder-bg: 24 90% 95%;
+    --event-reminder-border: 24 90% 53%;
+    
+    --event-simplybook: 271 91% 65%;
+    --event-simplybook-bg: 271 91% 95%;
+    --event-simplybook-border: 271 91% 65%;
+    
+    --event-google: 142 76% 36%;
+    --event-google-bg: 142 76% 95%;
+    --event-google-border: 142 76% 36%;
+    
+    --event-bookeo: 25 95% 53%;
+    --event-bookeo-bg: 25 95% 95%;
+    --event-bookeo-border: 25 95% 53%;
+    
+    --event-conflict: 0 84% 60%;
+    --event-conflict-bg: 0 84% 95%;
+    
+    /* Sync status colors */
+    --sync-pending: 38 92% 50%;
+    --sync-synced: 142 76% 36%;
+    --sync-conflict: 0 84% 60%;
+    --sync-failed: 0 84% 60%;
   }
 
   .dark {
@@ -98,6 +140,48 @@ All colors MUST be HSL.
 
     --secondary: 217.2 32.6% 17.5%;
     --secondary-foreground: 210 40% 98%;
+    
+    /* Event colors for dark mode */
+    --event-internal: 217 91% 60%;
+    --event-internal-bg: 217 91% 15%;
+    --event-internal-border: 217 91% 50%;
+    
+    --event-meeting: 221 83% 63%;
+    --event-meeting-bg: 221 83% 15%;
+    --event-meeting-border: 221 83% 53%;
+    
+    --event-call: 142 76% 46%;
+    --event-call-bg: 142 76% 15%;
+    --event-call-border: 142 76% 36%;
+    
+    --event-booking: 262 83% 68%;
+    --event-booking-bg: 262 83% 15%;
+    --event-booking-border: 262 83% 58%;
+    
+    --event-reminder: 24 90% 63%;
+    --event-reminder-bg: 24 90% 15%;
+    --event-reminder-border: 24 90% 53%;
+    
+    --event-simplybook: 271 91% 75%;
+    --event-simplybook-bg: 271 91% 15%;
+    --event-simplybook-border: 271 91% 65%;
+    
+    --event-google: 142 76% 46%;
+    --event-google-bg: 142 76% 15%;
+    --event-google-border: 142 76% 36%;
+    
+    --event-bookeo: 25 95% 63%;
+    --event-bookeo-bg: 25 95% 15%;
+    --event-bookeo-border: 25 95% 53%;
+    
+    --event-conflict: 0 84% 70%;
+    --event-conflict-bg: 0 84% 15%;
+    
+    /* Sync status colors for dark mode */
+    --sync-pending: 38 92% 60%;
+    --sync-synced: 142 76% 46%;
+    --sync-conflict: 0 84% 70%;
+    --sync-failed: 0 84% 70%;
 
     --muted: 217.2 32.6% 17.5%;
     --muted-foreground: 215 20.2% 65.1%;
