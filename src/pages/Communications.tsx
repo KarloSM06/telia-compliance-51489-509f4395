@@ -15,17 +15,12 @@ export default function Communications() {
     <div className="min-h-screen bg-gradient-to-b from-background to-muted/20">
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-8">
         {/* Premium Hero Section with Integrated Navigation */}
-        <div className="relative bg-gradient-hero text-primary-foreground overflow-hidden rounded-2xl p-8 mb-8">
-          <div className="absolute inset-0 bg-[url('/images/tools-background.jpg')] opacity-5 bg-cover bg-center" />
+        <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-blue-600 via-purple-600 to-pink-600 p-8 text-white mb-8">
           <div className="relative z-10">
-            <div className="max-w-3xl mb-12">
-              <h1 className="text-4xl lg:text-5xl font-display font-bold mb-4 animate-fade-in">
-                Kommunikation
-              </h1>
-              <p className="text-lg text-primary-foreground/80 animate-fade-in">
-                Hantera mallar, påminnelser, notifikationer och SMS-inställningar från ett centralt nav
-              </p>
-            </div>
+            <h1 className="text-4xl font-bold mb-2">Kommunikation</h1>
+            <p className="text-lg opacity-90 mb-6">
+              Hantera mallar, påminnelser, notifikationer och SMS-inställningar från ett centralt nav
+            </p>
 
             {/* Desktop Navigation - Integrated into Hero */}
             <div className="hidden lg:flex justify-center">
@@ -109,6 +104,7 @@ export default function Communications() {
               </Select>
             </div>
           </div>
+          <div className="absolute inset-0 bg-grid-white/[0.05] bg-[length:20px_20px]" />
         </div>
 
         <div className="container mx-auto px-6 max-w-full">
