@@ -20,6 +20,7 @@ import { availablePackages } from "@/components/dashboard/PackagesData";
 import { AnimatedSection } from "@/components/AnimatedSection";
 import { QuickNavigation } from "@/components/QuickNavigation";
 import heroBackground from "@/assets/hero-background.jpg";
+import toolsBackground from "/public/images/tools-background.jpg";
 import karloImage from "@/assets/karlo-mangione.png";
 import antonImage from "@/assets/anton-sallnas.png";
 import emilImage from "@/assets/emil-westerberg.png";
@@ -456,7 +457,7 @@ export const ProductSelection = () => {
       });
     }
   };
-  return <div className="relative overflow-hidden bg-gradient-hero">
+  return <div className="relative overflow-hidden bg-background">
       
       {/* Quick Navigation */}
       <QuickNavigation />
@@ -487,10 +488,7 @@ export const ProductSelection = () => {
             
             
             <h1 className="text-5xl font-display font-bold tracking-tight text-white sm:text-6xl lg:text-7xl mb-8 leading-tight">
-              Skräddarsydda AI-lösningar för{" "}
-              <span className="bg-gradient-gold bg-clip-text text-transparent animate-shimmer bg-[length:200%_100%]">
-                framtidens företag
-              </span>
+              Vi bygger intelligenta system som arbetar åt dig
             </h1>
             
             <p className="text-lg sm:text-xl leading-relaxed mb-12 font-light text-white/90 max-w-3xl mx-auto">
@@ -500,111 +498,205 @@ export const ProductSelection = () => {
             
             <div className="mt-12 flex flex-col sm:flex-row items-center justify-center gap-4">
               <Button size="lg" className="bg-gradient-gold text-primary hover:shadow-glow hover:scale-105 transition-all duration-300 font-semibold text-lg px-10 py-7" onClick={() => setIsConsultationModalOpen(true)}>
-                Boka konsultation
+                Boka behovsanalys
               </Button>
-              <Button size="lg" variant="outline" className="border-2 border-white text-white bg-white/10 hover:bg-white hover:text-primary hover:scale-105 transition-all duration-300 font-semibold text-lg px-10 py-7 backdrop-blur-sm" onClick={() => document.getElementById('krono-chat')?.scrollIntoView({
-              behavior: 'smooth'
-            })}>
-                Prata med Krono
+              <Button size="lg" variant="outline" className="border-2 border-white text-white bg-white/10 hover:bg-white hover:text-primary hover:scale-105 transition-all duration-300 font-semibold text-lg px-10 py-7 backdrop-blur-sm" onClick={() => document.getElementById('about-ai')?.scrollIntoView({ behavior: 'smooth' })}>
+                Vad är AI?
               </Button>
             </div>
           </AnimatedSection>
         </div>
       </section>
 
-      {/* Stats Section */}
-      
-
       {/* Vad vi gör Section */}
-      <section className="relative py-24 bg-gradient-to-b from-primary/10 via-primary/20 to-primary/10 animate-fade-in">
+      <section className="relative py-24 bg-background">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <AnimatedSection className="mx-auto max-w-3xl text-center mb-16">
-            <h2 className="text-4xl font-display font-bold text-white mb-4">Vad vi gör</h2>
+            <h2 className="text-4xl font-display font-bold text-foreground mb-6">Vi utvecklar skräddarsydda AI-system – från idé till drift</h2>
             <div className="w-20 h-1 bg-gradient-gold mx-auto rounded-full"></div>
           </AnimatedSection>
+          
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-            <AnimatedSection delay={0} className="group relative rounded-2xl bg-white/5 p-8 backdrop-blur-sm border border-white/10 hover:border-accent/50 transition-all duration-300 hover:shadow-glow">
-              <div className="absolute inset-0 bg-gradient-gold opacity-0 group-hover:opacity-5 rounded-2xl transition-opacity"></div>
-              <CheckCircle className="h-12 w-12 text-accent mb-6 group-hover:scale-110 group-hover:rotate-12 transition-all duration-300" />
-              <h3 className="text-xl font-display font-bold text-white mb-3">Analys av era behov och mål</h3>
-              <p className="text-white/70 leading-relaxed">Vi analyserar er verksamhet för att förstå era mål, processer och tillväxtpotential. Genom datadriven insikt identifierar vi hur AI kan effektivisera arbetet och öka intäkterna.</p>
+            <AnimatedSection delay={0} className="group relative bg-card p-8 border border-border hover:border-accent/50 transition-all duration-300 hover:shadow-elegant">
+              <div className="absolute inset-0 bg-gradient-gold opacity-0 group-hover:opacity-5 transition-opacity"></div>
+              <div className="relative">
+                <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-accent/10 mb-6">
+                  <span className="text-2xl font-bold text-accent">1</span>
+                </div>
+                <h3 className="text-xl font-display font-bold mb-3">Behovsanalys</h3>
+                <p className="text-muted-foreground leading-relaxed mb-4">
+                  Vi börjar med att förstå hur ni arbetar i dag
+                </p>
+                <p className="text-muted-foreground leading-relaxed">
+                  Identifierar var AI och automatisering kan spara tid
+                </p>
+              </div>
             </AnimatedSection>
-            <AnimatedSection delay={100} className="group relative rounded-2xl bg-white/5 p-8 backdrop-blur-sm border border-white/10 hover:border-accent/50 transition-all duration-300 hover:shadow-glow">
-              <div className="absolute inset-0 bg-gradient-gold opacity-0 group-hover:opacity-5 rounded-2xl transition-opacity"></div>
-              <Zap className="h-12 w-12 text-accent mb-6 group-hover:scale-110 group-hover:rotate-12 transition-all duration-300" />
-              <h3 className="text-xl font-display font-bold text-white mb-3">Skräddarsydda verktyg</h3>
-              <p className="text-white/70 leading-relaxed">Utifrån analysen utvecklar vi skräddarsydda AI-verktyg anpassade till era behov. De integreras sömlöst i befintliga system och optimerar era flöden – för både effektivitet och lönsamhet.</p>
+
+            <AnimatedSection delay={100} className="group relative bg-card p-8 border border-border hover:border-accent/50 transition-all duration-300 hover:shadow-elegant">
+              <div className="absolute inset-0 bg-gradient-gold opacity-0 group-hover:opacity-5 transition-opacity"></div>
+              <div className="relative">
+                <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-accent/10 mb-6">
+                  <span className="text-2xl font-bold text-accent">2</span>
+                </div>
+                <h3 className="text-xl font-display font-bold mb-3">Utveckling & integration</h3>
+                <p className="text-muted-foreground leading-relaxed mb-4">
+                  Vi designar och bygger lösningen i verktyg som n8n, Supabase och OpenAI
+                </p>
+                <p className="text-muted-foreground leading-relaxed">
+                  Integrerar med era befintliga system – allt fungerar direkt
+                </p>
+              </div>
             </AnimatedSection>
-            <AnimatedSection delay={200} className="group relative rounded-2xl bg-white/5 p-8 backdrop-blur-sm border border-white/10 hover:border-accent/50 transition-all duration-300 hover:shadow-glow">
-              <div className="absolute inset-0 bg-gradient-gold opacity-0 group-hover:opacity-5 rounded-2xl transition-opacity"></div>
-              <Target className="h-12 w-12 text-accent mb-6 group-hover:scale-110 group-hover:rotate-12 transition-all duration-300" />
-              <h3 className="text-xl font-display font-bold text-white mb-3">Lösningar i praktiken</h3>
-              <p className="text-white/70 leading-relaxed">När lösningarna tas i bruk märks effekten direkt: snabbare processer, smartare beslut och ökade intäkter. Vi följer upp och vidareutvecklar så att era AI-verktyg fortsätter skapa värde över tid.</p>
+
+            <AnimatedSection delay={200} className="group relative bg-card p-8 border border-border hover:border-accent/50 transition-all duration-300 hover:shadow-elegant">
+              <div className="absolute inset-0 bg-gradient-gold opacity-0 group-hover:opacity-5 transition-opacity"></div>
+              <div className="relative">
+                <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-accent/10 mb-6">
+                  <span className="text-2xl font-bold text-accent">3</span>
+                </div>
+                <h3 className="text-xl font-display font-bold mb-3">Drift & optimering</h3>
+                <p className="text-muted-foreground leading-relaxed">
+                  Vi följer upp, mäter resultat och förbättrar flöden över tid
+                </p>
+              </div>
             </AnimatedSection>
           </div>
+        </div>
+      </section>
+
+      {/* Våra lösningar i praktiken Section */}
+      <section id="products" className="relative py-24 bg-muted/30">
+        <div className="absolute inset-0 overflow-hidden">
+          <img 
+            src={toolsBackground}
+            alt="Tekniska verktyg och system"
+            className="w-full h-full object-cover opacity-10"
+          />
+        </div>
+        
+        <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
+          <AnimatedSection className="mx-auto max-w-3xl text-center mb-16">
+            <h2 className="text-4xl font-display font-bold text-foreground mb-6">Exempel på vad vi bygger</h2>
+            <div className="w-20 h-1 bg-gradient-gold mx-auto rounded-full mb-8"></div>
+          </AnimatedSection>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-5xl mx-auto mb-12">
+            <AnimatedSection delay={0} className="bg-card p-6 border border-border hover:border-accent/50 transition-all duration-300 hover:shadow-elegant">
+              <div className="flex items-start gap-4">
+                <div className="flex-shrink-0">
+                  <div className="w-12 h-12 rounded-xl bg-accent/10 flex items-center justify-center">
+                    <Headphones className="h-6 w-6 text-accent" />
+                  </div>
+                </div>
+                <div>
+                  <h3 className="text-lg font-bold mb-2">AI-receptionister</h3>
+                  <p className="text-muted-foreground text-sm leading-relaxed">
+                    Hanterar bokningar, kalendrar och offertförslag automatiskt
+                  </p>
+                </div>
+              </div>
+            </AnimatedSection>
+
+            <AnimatedSection delay={100} className="bg-card p-6 border border-border hover:border-accent/50 transition-all duration-300 hover:shadow-elegant">
+              <div className="flex items-start gap-4">
+                <div className="flex-shrink-0">
+                  <div className="w-12 h-12 rounded-xl bg-accent/10 flex items-center justify-center">
+                    <MessageSquare className="h-6 w-6 text-accent" />
+                  </div>
+                </div>
+                <div>
+                  <h3 className="text-lg font-bold mb-2">AI-chatbots</h3>
+                  <p className="text-muted-foreground text-sm leading-relaxed">
+                    Guidar kunder, svarar på frågor och skapar leads
+                  </p>
+                </div>
+              </div>
+            </AnimatedSection>
+
+            <AnimatedSection delay={200} className="bg-card p-6 border border-border hover:border-accent/50 transition-all duration-300 hover:shadow-elegant">
+              <div className="flex items-start gap-4">
+                <div className="flex-shrink-0">
+                  <div className="w-12 h-12 rounded-xl bg-accent/10 flex items-center justify-center">
+                    <Zap className="h-6 w-6 text-accent" />
+                  </div>
+                </div>
+                <div>
+                  <h3 className="text-lg font-bold mb-2">Automatiserade flöden (n8n)</h3>
+                  <p className="text-muted-foreground text-sm leading-relaxed">
+                    Kopplar ihop system, minskar manuellt arbete
+                  </p>
+                </div>
+              </div>
+            </AnimatedSection>
+
+            <AnimatedSection delay={300} className="bg-card p-6 border border-border hover:border-accent/50 transition-all duration-300 hover:shadow-elegant">
+              <div className="flex items-start gap-4">
+                <div className="flex-shrink-0">
+                  <div className="w-12 h-12 rounded-xl bg-accent/10 flex items-center justify-center">
+                    <BarChart3 className="h-6 w-6 text-accent" />
+                  </div>
+                </div>
+                <div>
+                  <h3 className="text-lg font-bold mb-2">Databaser (Supabase)</h3>
+                  <p className="text-muted-foreground text-sm leading-relaxed">
+                    Säkra lagringslösningar som gör AI:n smartare
+                  </p>
+                </div>
+              </div>
+            </AnimatedSection>
+          </div>
+
+          <AnimatedSection delay={400} className="text-center">
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+              Alla våra system är unika – anpassade efter hur just ditt företag arbetar.
+            </p>
+          </AnimatedSection>
+        </div>
+      </section>
+
+      {/* Hur vi använder AI och automatisering Section */}
+      <section id="about-ai" className="relative py-24 bg-background">
+        <div className="mx-auto max-w-7xl px-6 lg:px-8">
+          <AnimatedSection className="mx-auto max-w-4xl text-center">
+            <h2 className="text-4xl font-display font-bold text-foreground mb-6">Så fungerar tekniken bakom</h2>
+            <div className="w-20 h-1 bg-gradient-gold mx-auto rounded-full mb-8"></div>
+            
+            <p className="text-lg text-muted-foreground leading-relaxed mb-8">
+              Vi använder OpenAI för språkförståelse, n8n för att koppla ihop system och Supabase för datalagring.
+              Tillsammans blir det helhetslösningar där AI kan läsa, förstå och agera – utan att någon behöver klicka runt manuellt.
+            </p>
+
+            <Button 
+              size="lg" 
+              variant="outline" 
+              className="border-2 border-primary text-primary hover:bg-primary hover:text-primary-foreground transition-all duration-300 font-semibold"
+              onClick={() => document.getElementById('krono-chat')?.scrollIntoView({ behavior: 'smooth' })}
+            >
+              Läs mer om hur AI fungerar
+              <ArrowRight className="ml-2 h-5 w-5" />
+            </Button>
+          </AnimatedSection>
         </div>
       </section>
 
       {/* Om oss Section */}
-      <section id="about" className="relative py-32 bg-primary/20">
+      <section id="about" className="relative py-32 bg-muted/50">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <AnimatedSection className="mx-auto max-w-3xl text-center mb-16">
-            <div className="inline-flex items-center gap-2 rounded-full bg-accent/10 px-4 py-2 mb-6 backdrop-blur-sm border border-accent/20">
-              <Sparkles className="h-4 w-4 text-accent" />
-              <span className="text-sm font-medium text-white">Om oss – Hiems</span>
-            </div>
-            <h2 className="text-5xl font-display font-bold mb-6 text-white">Vi är unga, drivna och brinner för AI</h2>
+            <h2 className="text-5xl font-display font-bold mb-6 text-foreground">Ett ungt team som bygger framtidens system</h2>
             <div className="w-24 h-1.5 bg-gradient-gold mx-auto rounded-full mb-8"></div>
-            <p className="text-lg text-white/90 leading-relaxed">
-              Hiems grundades av ett team som ser möjligheterna med AI och vill göra tekniken tillgänglig för alla företag, inte bara stora aktörer. Vi kombinerar ung drivkraft, nyfikenhet och teknisk expertis med förståelse för bygg- och VVS-verksamheter. Vårt mål är enkelt: skapa lösningar som sparar tid, minskar dubbelarbete och gör vardagen enklare.
+            <p className="text-lg text-muted-foreground leading-relaxed">
+              Vi startade Hiems för att göra AI tillgängligt, begripligt och användbart för alla företag.
+              Vår styrka ligger i att vi både förstår tekniken och kan bygga den i praktiken.
+              Vi jobbar nära varje kund och levererar lösningar som gör skillnad direkt i vardagen.
             </p>
           </AnimatedSection>
 
-          {/* Values */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto mb-20">
-            <AnimatedSection delay={0} className="group text-center">
-              <div className="relative rounded-none bg-card p-8 border border-border hover:border-accent/50 transition-all duration-300 h-full hover:shadow-elegant">
-                <div className="absolute inset-0 bg-gradient-gold opacity-0 group-hover:opacity-5 rounded-none transition-opacity"></div>
-                <div className="relative">
-                  <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-accent/10 mb-6 group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
-                    <Zap className="h-8 w-8 text-accent" />
-                  </div>
-                  <h3 className="text-xl font-display font-bold mb-3">Tillgänglig AI för alla</h3>
-                  <p className="text-muted-foreground leading-relaxed">Vi tror på tillgänglig AI som alla kan använda, oavsett företagsstorlek eller teknisk expertis.</p>
-                </div>
-              </div>
-            </AnimatedSection>
-
-            <AnimatedSection delay={100} className="group text-center">
-              <div className="relative rounded-none bg-card p-8 border border-border hover:border-accent/50 transition-all duration-300 h-full hover:shadow-elegant">
-                <div className="absolute inset-0 bg-gradient-gold opacity-0 group-hover:opacity-5 rounded-none transition-opacity"></div>
-                <div className="relative">
-                  <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-accent/10 mb-6 group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
-                    <Wrench className="h-8 w-8 text-accent" />
-                  </div>
-                  <h3 className="text-xl font-display font-bold mb-3">Hands-on & kreativa</h3>
-                  <p className="text-muted-foreground leading-relaxed">Vi är hands-on och kreativa, och bygger lösningar som faktiskt fungerar i verkligheten.</p>
-                </div>
-              </div>
-            </AnimatedSection>
-
-            <AnimatedSection delay={200} className="group text-center">
-              <div className="relative rounded-none bg-card p-8 border border-border hover:border-accent/50 transition-all duration-300 h-full hover:shadow-elegant">
-                <div className="absolute inset-0 bg-gradient-gold opacity-0 group-hover:opacity-5 rounded-none transition-opacity"></div>
-                <div className="relative">
-                  <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-accent/10 mb-6 group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
-                    <Users className="h-8 w-8 text-accent" />
-                  </div>
-                  <h3 className="text-xl font-display font-bold mb-3">Personliga relationer</h3>
-                  <p className="text-muted-foreground leading-relaxed">Vi värdesätter personliga relationer med våra kunder och ser er framgång som vår framgång.</p>
-                </div>
-              </div>
-            </AnimatedSection>
-          </div>
 
           {/* Team Section */}
           <AnimatedSection className="mb-12">
-            <h3 className="text-3xl font-display font-bold text-center mb-12">Möt teamet</h3>
+            <h3 className="text-3xl font-display font-bold text-center mb-12 text-foreground">Möt teamet</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               <AnimatedSection delay={0} className="rounded-none bg-card backdrop-blur-sm border border-border p-8 text-center hover:border-accent/50 transition-all duration-300 hover:shadow-elegant">
                 <img 
@@ -663,7 +755,84 @@ export const ProductSelection = () => {
 
           {/* CTA */}
           <AnimatedSection delay={400} className="text-center mt-16">
-            <Button onClick={() => setIsConsultationModalOpen(true)} size="lg" className="bg-gradient-gold text-accent-foreground hover:opacity-90 shadow-button font-semibold text-lg px-8 py-6 h-auto">
+            <Button onClick={() => setIsConsultationModalOpen(true)} size="lg" className="bg-gradient-gold text-primary hover:opacity-90 shadow-button font-semibold text-lg px-8 py-6 h-auto">
+              Träffa teamet
+              <ArrowRight className="ml-2 h-5 w-5" />
+            </Button>
+          </AnimatedSection>
+        </div>
+      </section>
+
+      {/* Vår metod Section */}
+      <section className="relative py-24 bg-background">
+        <div className="mx-auto max-w-7xl px-6 lg:px-8">
+          <AnimatedSection className="mx-auto max-w-3xl text-center mb-16">
+            <h2 className="text-4xl font-display font-bold text-foreground mb-6">Från behov till fungerande system</h2>
+            <div className="w-20 h-1 bg-gradient-gold mx-auto rounded-full mb-8"></div>
+            <p className="text-lg text-muted-foreground">En enkel process – från idé till resultat.</p>
+          </AnimatedSection>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+            <AnimatedSection delay={0} className="relative">
+              <div className="bg-card p-8 border border-border hover:border-accent/50 transition-all duration-300 hover:shadow-elegant h-full">
+                <div className="flex items-center gap-4 mb-4">
+                  <div className="flex-shrink-0 w-12 h-12 rounded-full bg-accent/10 flex items-center justify-center">
+                    <span className="text-xl font-bold text-accent">1</span>
+                  </div>
+                  <h3 className="text-xl font-display font-bold">Analys</h3>
+                </div>
+                <p className="text-muted-foreground leading-relaxed">
+                  Vi kartlägger er verksamhet
+                </p>
+              </div>
+            </AnimatedSection>
+
+            <AnimatedSection delay={100} className="relative">
+              <div className="bg-card p-8 border border-border hover:border-accent/50 transition-all duration-300 hover:shadow-elegant h-full">
+                <div className="flex items-center gap-4 mb-4">
+                  <div className="flex-shrink-0 w-12 h-12 rounded-full bg-accent/10 flex items-center justify-center">
+                    <span className="text-xl font-bold text-accent">2</span>
+                  </div>
+                  <h3 className="text-xl font-display font-bold">Utveckling</h3>
+                </div>
+                <p className="text-muted-foreground leading-relaxed">
+                  Vi bygger lösningen
+                </p>
+              </div>
+            </AnimatedSection>
+
+            <AnimatedSection delay={200} className="relative">
+              <div className="bg-card p-8 border border-border hover:border-accent/50 transition-all duration-300 hover:shadow-elegant h-full">
+                <div className="flex items-center gap-4 mb-4">
+                  <div className="flex-shrink-0 w-12 h-12 rounded-full bg-accent/10 flex items-center justify-center">
+                    <span className="text-xl font-bold text-accent">3</span>
+                  </div>
+                  <h3 className="text-xl font-display font-bold">Drift & support</h3>
+                </div>
+                <p className="text-muted-foreground leading-relaxed">
+                  Vi säkerställer att allt fungerar
+                </p>
+              </div>
+            </AnimatedSection>
+          </div>
+        </div>
+      </section>
+
+      {/* Kontakt Section */}
+      <section id="contact" className="relative py-32 bg-gradient-to-b from-primary/10 via-primary/20 to-primary/10">
+        <div className="mx-auto max-w-7xl px-6 lg:px-8">
+          <AnimatedSection className="mx-auto max-w-3xl text-center">
+            <h2 className="text-5xl font-display font-bold text-foreground mb-6">Boka din gratis behovsanalys</h2>
+            <div className="w-24 h-1.5 bg-gradient-gold mx-auto rounded-full mb-8"></div>
+            <p className="text-lg text-muted-foreground leading-relaxed mb-12">
+              Vi visar hur AI och automation kan effektivisera just er verksamhet – utan förpliktelser.
+            </p>
+            
+            <Button 
+              onClick={() => setIsConsultationModalOpen(true)} 
+              size="lg" 
+              className="bg-gradient-gold text-primary hover:shadow-glow hover:scale-105 transition-all duration-300 font-semibold text-lg px-12 py-8 h-auto"
+            >
               Boka behovsanalys
               <ArrowRight className="ml-2 h-5 w-5" />
             </Button>
@@ -671,14 +840,83 @@ export const ProductSelection = () => {
         </div>
       </section>
 
-      {/* Varför Hiems Section */}
-      <section className="relative py-24 bg-primary/20 animate-fade-in">
+      {/* Testa själv Section */}
+      <section id="krono-chat" className="relative py-24 bg-muted/30">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
-          <AnimatedSection className="mx-auto max-w-3xl text-center mb-16">
-            <h2 className="text-4xl font-display font-bold text-white mb-4">Varför Hiems?</h2>
-            <div className="w-20 h-1 bg-gradient-gold mx-auto rounded-full"></div>
+          {/* Krono Chat Center */}
+          <AnimatedSection className="max-w-4xl mx-auto">
+            <div className="relative rounded-3xl bg-gradient-primary overflow-hidden shadow-elegant border border-border">
+              <div className="absolute inset-0 bg-gradient-gold opacity-10"></div>
+              <div className="absolute top-0 right-0 w-64 h-64 bg-accent/20 rounded-full blur-3xl"></div>
+              
+              {/* Header */}
+              <div className="relative p-8 md:p-12 text-center border-b border-white/10">
+                <h2 className="text-4xl font-display font-bold text-white mb-4">Testa Krono AI-rådgivaren</h2>
+                <p className="text-lg text-white/90 leading-relaxed max-w-2xl mx-auto">
+                  Prata med vår AI-rådgivare Krono eller prova vårt demo för att se hur en AI-receptionist fungerar
+                </p>
+              </div>
+
+              {/* Chat Area */}
+              <div className="relative bg-white/5 backdrop-blur-sm">
+                <ScrollArea className="h-[400px] p-6" ref={scrollRef}>
+                  <div className="space-y-4">
+                    {messages.map((msg, idx) => <div key={idx} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+                        <div className={`max-w-[80%] rounded-2xl px-4 py-2.5 ${msg.role === 'user' ? 'bg-white text-primary' : 'bg-white/10 text-white backdrop-blur-sm border border-white/20'}`}>
+                          <p className="text-sm whitespace-pre-wrap">{msg.content}</p>
+                        </div>
+                      </div>)}
+                    {isLoading && <div className="flex justify-start">
+                        <div className="bg-white/10 rounded-2xl px-4 py-2.5 backdrop-blur-sm border border-white/20">
+                          <Loader2 className="h-4 w-4 animate-spin text-white" />
+                        </div>
+                      </div>}
+                  </div>
+                </ScrollArea>
+
+                {/* Input */}
+                <div className="p-6 border-t border-white/10">
+                  <div className="flex gap-3">
+                    <Input ref={inputRef} value={input} onChange={e => setInput(e.target.value)} onKeyDown={handleKeyPress} placeholder="Skriv ditt meddelande till Krono..." disabled={isLoading} className="flex-1 bg-white/10 border-white/20 text-white placeholder:text-white/50 focus:bg-white/15" />
+                    <Button onClick={handleSend} disabled={!input.trim() || isLoading} size="icon" className="bg-white text-primary hover:bg-white/90 h-10 w-10">
+                      <Send className="h-4 w-4" />
+                    </Button>
+                  </div>
+                  <div className="mt-4 text-center">
+                    <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+                      <DialogTrigger asChild>
+                        <Button variant="outline" size="lg" className="bg-white/5 border-white/20 text-white hover:bg-white/10 font-semibold group">
+                          Prova receptionistdemo
+                          <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent className="sm:max-w-md bg-background border-border">
+                        <DialogHeader>
+                          <DialogTitle className="flex items-center gap-2">
+                            <Phone className="h-5 w-5 text-accent" />
+                            Prova Receptionistdemo
+                          </DialogTitle>
+                          <DialogDescription>
+                            Skriv in telefonnummer för att bli uppringd av vår receptionist
+                          </DialogDescription>
+                        </DialogHeader>
+                        <div className="space-y-4 pt-4">
+                          <Input placeholder="070-123 45 67" value={phoneNumber} onChange={e => setPhoneNumber(e.target.value)} onKeyDown={e => {
+                          if (e.key === 'Enter') {
+                            handlePhoneSubmit();
+                          }
+                        }} className="text-base" />
+                          <Button onClick={handlePhoneSubmit} className="w-full bg-primary text-primary-foreground hover:bg-primary/90" size="lg">
+                            Ring mig
+                          </Button>
+                        </div>
+                      </DialogContent>
+                    </Dialog>
+                  </div>
+                </div>
+              </div>
+            </div>
           </AnimatedSection>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
             <AnimatedSection delay={0} className="group text-center">
               <div className="relative rounded-2xl bg-white/5 p-10 backdrop-blur-sm border border-white/10 hover:border-accent/50 transition-all duration-300 h-full">
                 <div className="absolute inset-0 bg-gradient-gold opacity-0 group-hover:opacity-5 rounded-2xl transition-opacity"></div>
@@ -720,21 +958,17 @@ export const ProductSelection = () => {
       </section>
 
       {/* Testa själv Section */}
-      <section id="krono-chat" className="relative py-24">
+      <section id="krono-chat" className="relative py-24 bg-muted/30">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           {/* Krono Chat Center */}
           <AnimatedSection className="max-w-4xl mx-auto">
-            <div className="relative rounded-3xl bg-gradient-primary overflow-hidden shadow-elegant">
+            <div className="relative rounded-3xl bg-gradient-primary overflow-hidden shadow-elegant border border-border">
               <div className="absolute inset-0 bg-gradient-gold opacity-10"></div>
               <div className="absolute top-0 right-0 w-64 h-64 bg-accent/20 rounded-full blur-3xl"></div>
               
               {/* Header */}
               <div className="relative p-8 md:p-12 text-center border-b border-white/10">
-                <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 mb-6 backdrop-blur-sm border border-white/20">
-                  <Sparkles className="h-4 w-4 text-accent" />
-                  <span className="text-sm font-medium text-white">Hur hade AI hjälpt er verksamhet?</span>
-                </div>
-                <h2 className="text-4xl font-display font-bold text-white mb-4">Se hur AI hade kunnat effektivisera er verksamhet</h2>
+                <h2 className="text-4xl font-display font-bold text-white mb-4">Testa Krono AI-rådgivaren</h2>
                 <p className="text-lg text-white/90 leading-relaxed max-w-2xl mx-auto">
                   Prata med vår AI-rådgivare Krono eller prova vårt demo för att se hur en AI-receptionist fungerar
                 </p>
