@@ -33,6 +33,7 @@ export interface CalendarEvent {
   lead_id?: string;
   external_id?: string;
   booking_system_integration_id?: string;
+  reminders?: any;
 }
 
 export const useCalendarEvents = () => {
@@ -109,13 +110,22 @@ export const useCalendarEvents = () => {
         contact_phone: event.contact_phone ? normalizePhoneNumber(event.contact_phone) : undefined,
         address: event.address,
         lead_id: event.lead_id,
+        reminders: event.reminders || null,
       };
+
+      console.log('Creating event with data:', {
+        title: eventData.title,
+        start_time: startTimeWithOffset,
+        end_time: endTimeWithOffset,
+        reminders: eventData.reminders,
+        has_offset: startTimeWithOffset.match(/[+-]\d{2}:\d{2}$/)
+      });
 
       const { data, error } = await supabase
         .from("calendar_events")
         .insert([eventData])
         .select()
-        .single();
+        .maybeSingle();
 
       if (error) throw error;
       
@@ -143,9 +153,10 @@ export const useCalendarEvents = () => {
       // Data now contains TEXT with offset
       setEvents([...events, data]);
       return data;
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error creating event:", error);
-      toast.error("Kunde inte skapa händelse");
+      console.error("Event data attempted:", event);
+      toast.error("Kunde inte skapa händelse: " + (error?.message || "Okänt fel"));
       throw error;
     }
   };
