@@ -650,6 +650,39 @@ export type Database = {
           },
         ]
       }
+      customer_preferences: {
+        Row: {
+          created_at: string | null
+          email: string | null
+          id: string
+          opt_out_email: boolean | null
+          opt_out_sms: boolean | null
+          phone: string | null
+          unsubscribe_token: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          email?: string | null
+          id?: string
+          opt_out_email?: boolean | null
+          opt_out_sms?: boolean | null
+          phone?: string | null
+          unsubscribe_token?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          email?: string | null
+          id?: string
+          opt_out_email?: boolean | null
+          opt_out_sms?: boolean | null
+          phone?: string | null
+          unsubscribe_token?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       dashboard_shares: {
         Row: {
           created_at: string
@@ -1485,6 +1518,7 @@ export type Database = {
           availability_enabled: boolean | null
           created_at: string
           data_retention_days: number
+          default_tone: string | null
           email: string | null
           gdpr_consent: boolean | null
           gdpr_consent_date: string | null
@@ -1495,12 +1529,14 @@ export type Database = {
           lunch_break_enabled: boolean | null
           lunch_break_end: string | null
           lunch_break_start: string | null
+          preferred_language: string | null
           timezone: string
         }
         Insert: {
           availability_enabled?: boolean | null
           created_at?: string
           data_retention_days?: number
+          default_tone?: string | null
           email?: string | null
           gdpr_consent?: boolean | null
           gdpr_consent_date?: string | null
@@ -1511,12 +1547,14 @@ export type Database = {
           lunch_break_enabled?: boolean | null
           lunch_break_end?: string | null
           lunch_break_start?: string | null
+          preferred_language?: string | null
           timezone?: string
         }
         Update: {
           availability_enabled?: boolean | null
           created_at?: string
           data_retention_days?: number
+          default_tone?: string | null
           email?: string | null
           gdpr_consent?: boolean | null
           gdpr_consent_date?: string | null
@@ -1527,6 +1565,7 @@ export type Database = {
           lunch_break_enabled?: boolean | null
           lunch_break_end?: string | null
           lunch_break_start?: string | null
+          preferred_language?: string | null
           timezone?: string
         }
         Relationships: []
