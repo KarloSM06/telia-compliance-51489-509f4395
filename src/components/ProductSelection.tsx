@@ -44,7 +44,12 @@ export const ProductSelection = () => {
   };
 
   return (
-    <div className="relative overflow-hidden">
+    <div className="relative overflow-hidden bg-gradient-hero min-h-screen">
+      {/* Animated background elements */}
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute top-20 left-10 w-72 h-72 bg-accent/10 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute bottom-20 right-10 w-96 h-96 bg-accent/5 rounded-full blur-3xl animate-pulse delay-1000"></div>
+      </div>
       
       {/* Hero Section */}
       <section id="hero" className="relative py-32 lg:py-48">
@@ -94,13 +99,13 @@ export const ProductSelection = () => {
       </section>
 
       {/* Våra AI-paket / Lösningar */}
-      <section id="paket" className="relative py-24 bg-background">
+      <section id="paket" className="relative py-24 bg-white/5">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <AnimatedSection className="text-center mb-16">
-            <h2 className="text-4xl sm:text-5xl font-bold mb-4">
+            <h2 className="text-4xl sm:text-5xl font-bold mb-4 text-white">
               Välj paket för ditt företag / din bransch
             </h2>
-            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+            <p className="text-xl text-white/80 max-w-3xl mx-auto">
               Vi erbjuder sex skräddarsydda AI-paket som kan anpassas efter era specifika behov
             </p>
           </AnimatedSection>
@@ -119,13 +124,13 @@ export const ProductSelection = () => {
       </section>
 
       {/* Branschspecifika lösningar */}
-      <section id="branscher" className="relative py-24 bg-primary/10">
+      <section id="branscher" className="relative py-24">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <AnimatedSection className="text-center mb-16">
-            <h2 className="text-4xl sm:text-5xl font-bold mb-4">
+            <h2 className="text-4xl sm:text-5xl font-bold mb-4 text-white">
               Oavsett bransch kan Hiems bygga AI-lösningar som passar just er verksamhet
             </h2>
-            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+            <p className="text-xl text-white/80 max-w-3xl mx-auto">
               Vi har erfarenhet från många olika branscher och kan anpassa våra lösningar efter era unika behov
             </p>
           </AnimatedSection>
@@ -154,13 +159,13 @@ export const ProductSelection = () => {
       </section>
 
       {/* Kundflöde & värde */}
-      <section id="kundflode" className="relative py-24 bg-background">
+      <section id="kundflode" className="relative py-24 bg-white/5">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <AnimatedSection className="text-center mb-16">
-            <h2 className="text-4xl sm:text-5xl font-bold mb-4">
+            <h2 className="text-4xl sm:text-5xl font-bold mb-4 text-white">
               Så skapar vi värde med AI
             </h2>
-            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+            <p className="text-xl text-white/80 max-w-3xl mx-auto">
               Från första kundkontakten till långsiktig tillväxt – se hur vårt AI-ekosystem transformerar er verksamhet
             </p>
           </AnimatedSection>
@@ -183,13 +188,13 @@ export const ProductSelection = () => {
       </section>
 
       {/* Onboarding-process */}
-      <section id="onboarding" className="relative py-24 bg-primary/10">
+      <section id="onboarding" className="relative py-24">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <AnimatedSection className="text-center mb-16">
-            <h2 className="text-4xl sm:text-5xl font-bold mb-4">
+            <h2 className="text-4xl sm:text-5xl font-bold mb-4 text-white">
               Så implementerar vi AI hos dig
             </h2>
-            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+            <p className="text-xl text-white/80 max-w-3xl mx-auto">
               En tydlig process från dag 1 till driftstart – så att ni vet exakt vad som händer
             </p>
           </AnimatedSection>
@@ -209,13 +214,13 @@ export const ProductSelection = () => {
       </section>
 
       {/* Case / Kundreferenser */}
-      <section id="case" className="relative py-24 bg-background">
+      <section id="case" className="relative py-24 bg-white/5">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <AnimatedSection className="text-center mb-16">
-            <h2 className="text-4xl sm:text-5xl font-bold mb-4">
+            <h2 className="text-4xl sm:text-5xl font-bold mb-4 text-white">
               Verkliga resultat från våra kunder
             </h2>
-            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+            <p className="text-xl text-white/80 max-w-3xl mx-auto">
               Se hur andra företag har transformerat sin verksamhet med Hiems AI-lösningar
             </p>
           </AnimatedSection>
@@ -234,13 +239,13 @@ export const ProductSelection = () => {
       </section>
 
       {/* Blogg / Insikter */}
-      <section id="blogg" className="relative py-16 bg-primary/10">
+      <section id="blogg" className="relative py-16">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <AnimatedSection className="text-center">
-            <h3 className="text-3xl font-bold mb-4">
+            <h3 className="text-3xl font-bold mb-4 text-white">
               Läs våra insikter om AI, automation och ROI
             </h3>
-            <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
+            <p className="text-lg text-white/80 mb-8 max-w-2xl mx-auto">
               Håll dig uppdaterad med de senaste trenderna och lär dig hur AI kan transformera din verksamhet
             </p>
             
@@ -249,13 +254,13 @@ export const ProductSelection = () => {
                 <Input 
                   type="email" 
                   placeholder="Din e-postadress"
-                  className="flex-1"
+                  className="flex-1 bg-white/10 border-white/20 text-white placeholder:text-white/60"
                 />
                 <Button className="bg-gradient-gold text-primary hover:shadow-glow transition-all duration-300">
                   Prenumerera
                 </Button>
               </div>
-              <p className="text-xs text-muted-foreground mt-2">
+              <p className="text-xs text-white/70 mt-2">
                 Få våra nyhetsbrev helt gratis – ingen spam, bara värdefulla insikter
               </p>
             </div>
@@ -264,42 +269,42 @@ export const ProductSelection = () => {
       </section>
 
       {/* Kontakt / CTA */}
-      <section id="kontakt" className="relative py-24 bg-background">
+      <section id="kontakt" className="relative py-24 bg-white/5">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <AnimatedSection className="text-center mb-16">
-            <h2 className="text-4xl sm:text-5xl font-bold mb-4">
+            <h2 className="text-4xl sm:text-5xl font-bold mb-4 text-white">
               Boka din gratis behovsanalys
             </h2>
-            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+            <p className="text-xl text-white/80 max-w-3xl mx-auto">
               Vi visar hur AI och automation kan effektivisera just er verksamhet – utan förpliktelser
             </p>
           </AnimatedSection>
           
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 max-w-6xl mx-auto">
             {/* Vänster: Kontaktformulär */}
-            <Card className="p-8">
-              <h3 className="text-2xl font-bold mb-6">Kontakta oss</h3>
+            <Card className="p-8 bg-white/5 backdrop-blur-sm border-white/10">
+              <h3 className="text-2xl font-bold mb-6 text-white">Kontakta oss</h3>
               <form className="space-y-4">
                 <div>
-                  <Label>Namn *</Label>
-                  <Input type="text" required placeholder="Ditt namn" />
+                  <Label className="text-white">Namn *</Label>
+                  <Input type="text" required placeholder="Ditt namn" className="bg-white/10 border-white/20 text-white placeholder:text-white/60" />
                 </div>
                 <div>
-                  <Label>Företag *</Label>
-                  <Input type="text" required placeholder="Ditt företag" />
+                  <Label className="text-white">Företag *</Label>
+                  <Input type="text" required placeholder="Ditt företag" className="bg-white/10 border-white/20 text-white placeholder:text-white/60" />
                 </div>
                 <div>
-                  <Label>Telefon *</Label>
-                  <Input type="tel" required placeholder="070-123 45 67" />
+                  <Label className="text-white">Telefon *</Label>
+                  <Input type="tel" required placeholder="070-123 45 67" className="bg-white/10 border-white/20 text-white placeholder:text-white/60" />
                 </div>
                 <div>
-                  <Label>E-post *</Label>
-                  <Input type="email" required placeholder="din@email.se" />
+                  <Label className="text-white">E-post *</Label>
+                  <Input type="email" required placeholder="din@email.se" className="bg-white/10 border-white/20 text-white placeholder:text-white/60" />
                 </div>
                 <div>
-                  <Label>Bransch</Label>
+                  <Label className="text-white">Bransch</Label>
                   <Select>
-                    <SelectTrigger>
+                    <SelectTrigger className="bg-white/10 border-white/20 text-white">
                       <SelectValue placeholder="Välj bransch" />
                     </SelectTrigger>
                     <SelectContent>
@@ -324,9 +329,9 @@ export const ProductSelection = () => {
               </form>
               
               {/* Kontaktuppgifter */}
-              <div className="mt-8 pt-8 border-t">
-                <h4 className="font-semibold mb-4">Kontaktuppgifter</h4>
-                <div className="space-y-2 text-sm text-muted-foreground">
+              <div className="mt-8 pt-8 border-t border-white/10">
+                <h4 className="font-semibold mb-4 text-white">Kontaktuppgifter</h4>
+                <div className="space-y-2 text-sm text-white/70">
                   <p>📞 070-657 15 32</p>
                   <p>📧 contact@hiems.se</p>
                 </div>
@@ -334,10 +339,10 @@ export const ProductSelection = () => {
             </Card>
             
             {/* Höger: Placeholder för bokningskalender */}
-            <Card className="p-8">
-              <h3 className="text-2xl font-bold mb-6">Boka direkt</h3>
-              <div className="aspect-video bg-muted rounded-lg flex items-center justify-center">
-                <p className="text-muted-foreground text-center px-4">
+            <Card className="p-8 bg-white/5 backdrop-blur-sm border-white/10">
+              <h3 className="text-2xl font-bold mb-6 text-white">Boka direkt</h3>
+              <div className="aspect-video bg-white/5 rounded-lg flex items-center justify-center">
+                <p className="text-white/70 text-center px-4">
                   Calendly-integration kommer här
                 </p>
               </div>
@@ -347,7 +352,7 @@ export const ProductSelection = () => {
       </section>
 
       {/* Om oss Section */}
-      <section id="about" className="relative py-32 bg-primary/20">
+      <section id="about" className="relative py-32">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <AnimatedSection className="mx-auto max-w-3xl text-center mb-16">
             <div className="inline-flex items-center gap-2 rounded-full bg-accent/10 px-4 py-2 mb-6 backdrop-blur-sm border border-accent/20">
@@ -364,40 +369,40 @@ export const ProductSelection = () => {
           {/* Values */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto mb-20">
             <AnimatedSection delay={0} className="group text-center">
-              <div className="relative rounded-none bg-card p-8 border border-border hover:border-accent/50 transition-all duration-300 h-full hover:shadow-elegant">
-                <div className="absolute inset-0 bg-gradient-gold opacity-0 group-hover:opacity-5 rounded-none transition-opacity"></div>
+              <div className="relative rounded-lg bg-white/5 p-8 backdrop-blur-sm border border-white/10 hover:border-accent/50 transition-all duration-300 h-full">
+                <div className="absolute inset-0 bg-gradient-gold opacity-0 group-hover:opacity-5 rounded-lg transition-opacity"></div>
                 <div className="relative">
                   <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-accent/10 mb-6 group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
                     <Zap className="h-8 w-8 text-accent" />
                   </div>
-                  <h3 className="text-xl font-display font-bold mb-3">Tillgänglig AI för alla</h3>
-                  <p className="text-muted-foreground leading-relaxed">Vi tror på tillgänglig AI som alla kan använda, oavsett företagsstorlek eller teknisk expertis.</p>
+                  <h3 className="text-xl font-display font-bold mb-3 text-white">Tillgänglig AI för alla</h3>
+                  <p className="text-white/70 leading-relaxed">Vi tror på tillgänglig AI som alla kan använda, oavsett företagsstorlek eller teknisk expertis.</p>
                 </div>
               </div>
             </AnimatedSection>
 
             <AnimatedSection delay={100} className="group text-center">
-              <div className="relative rounded-none bg-card p-8 border border-border hover:border-accent/50 transition-all duration-300 h-full hover:shadow-elegant">
-                <div className="absolute inset-0 bg-gradient-gold opacity-0 group-hover:opacity-5 rounded-none transition-opacity"></div>
+              <div className="relative rounded-lg bg-white/5 p-8 backdrop-blur-sm border border-white/10 hover:border-accent/50 transition-all duration-300 h-full">
+                <div className="absolute inset-0 bg-gradient-gold opacity-0 group-hover:opacity-5 rounded-lg transition-opacity"></div>
                 <div className="relative">
                   <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-accent/10 mb-6 group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
                     <Wrench className="h-8 w-8 text-accent" />
                   </div>
-                  <h3 className="text-xl font-display font-bold mb-3">Hands-on & kreativa</h3>
-                  <p className="text-muted-foreground leading-relaxed">Vi är hands-on och kreativa, och bygger lösningar som faktiskt fungerar i verkligheten.</p>
+                  <h3 className="text-xl font-display font-bold mb-3 text-white">Hands-on & kreativa</h3>
+                  <p className="text-white/70 leading-relaxed">Vi är hands-on och kreativa, och bygger lösningar som faktiskt fungerar i verkligheten.</p>
                 </div>
               </div>
             </AnimatedSection>
 
             <AnimatedSection delay={200} className="group text-center">
-              <div className="relative rounded-none bg-card p-8 border border-border hover:border-accent/50 transition-all duration-300 h-full hover:shadow-elegant">
-                <div className="absolute inset-0 bg-gradient-gold opacity-0 group-hover:opacity-5 rounded-none transition-opacity"></div>
+              <div className="relative rounded-lg bg-white/5 p-8 backdrop-blur-sm border border-white/10 hover:border-accent/50 transition-all duration-300 h-full">
+                <div className="absolute inset-0 bg-gradient-gold opacity-0 group-hover:opacity-5 rounded-lg transition-opacity"></div>
                 <div className="relative">
                   <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-accent/10 mb-6 group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
                     <Users className="h-8 w-8 text-accent" />
                   </div>
-                  <h3 className="text-xl font-display font-bold mb-3">Personliga relationer</h3>
-                  <p className="text-muted-foreground leading-relaxed">Vi värdesätter personliga relationer med våra kunder och ser er framgång som vår framgång.</p>
+                  <h3 className="text-xl font-display font-bold mb-3 text-white">Personliga relationer</h3>
+                  <p className="text-white/70 leading-relaxed">Vi värdesätter personliga relationer med våra kunder och ser er framgång som vår framgång.</p>
                 </div>
               </div>
             </AnimatedSection>
@@ -405,59 +410,59 @@ export const ProductSelection = () => {
 
           {/* Team Section */}
           <AnimatedSection className="mb-12">
-            <h3 className="text-3xl font-display font-bold text-center mb-12">Möt teamet</h3>
+            <h3 className="text-3xl font-display font-bold text-center mb-12 text-white">Möt teamet</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              <AnimatedSection delay={0} className="rounded-none bg-card backdrop-blur-sm border border-border p-8 text-center hover:border-accent/50 transition-all duration-300 hover:shadow-elegant">
+              <AnimatedSection delay={0} className="rounded-lg bg-white/5 backdrop-blur-sm border border-white/10 p-8 text-center hover:border-accent/50 transition-all duration-300">
                 <img 
                   src={antonImage} 
                   alt="Anton Sallnäs" 
                   className="w-64 h-64 rounded-full mx-auto mb-6 object-cover border-2 border-accent/30"
                   loading="lazy"
                 />
-                <h4 className="text-xl font-bold mb-2">Anton Sallnäs</h4>
-                <p className="text-lg text-muted-foreground mb-4">CEO</p>
-                <p className="text-sm text-muted-foreground mb-1">anton@hiems.se</p>
-                <p className="text-sm text-muted-foreground">070-657 15 32</p>
-                <p className="text-xs text-muted-foreground/70 italic mt-4">"Jag brinner för att göra AI begripligt"</p>
+                <h4 className="text-xl font-bold mb-2 text-white">Anton Sallnäs</h4>
+                <p className="text-lg text-white/70 mb-4">CEO</p>
+                <p className="text-sm text-white/60 mb-1">anton@hiems.se</p>
+                <p className="text-sm text-white/60">070-657 15 32</p>
+                <p className="text-xs text-white/50 italic mt-4">"Jag brinner för att göra AI begripligt"</p>
               </AnimatedSection>
               
-              <AnimatedSection delay={100} className="rounded-none bg-card backdrop-blur-sm border border-border p-8 text-center hover:border-accent/50 transition-all duration-300 hover:shadow-elegant">
+              <AnimatedSection delay={100} className="rounded-lg bg-white/5 backdrop-blur-sm border border-white/10 p-8 text-center hover:border-accent/50 transition-all duration-300">
                 <img 
                   src={karloImage} 
                   alt="Karlo Mangione" 
                   className="w-64 h-64 rounded-full mx-auto mb-6 object-cover border-2 border-accent/30"
                   loading="lazy"
                 />
-                <h4 className="text-xl font-bold mb-2">Karlo Mangione</h4>
-                <p className="text-lg text-muted-foreground mb-4">COO</p>
-                <p className="text-sm text-muted-foreground mb-1">karlo.mangione@hiems.se</p>
-                <p className="text-sm text-muted-foreground">070-231 22 71</p>
-                <p className="text-xs text-muted-foreground/70 italic mt-4">"AI ska vara enkelt att använda"</p>
+                <h4 className="text-xl font-bold mb-2 text-white">Karlo Mangione</h4>
+                <p className="text-lg text-white/70 mb-4">COO</p>
+                <p className="text-sm text-white/60 mb-1">karlo.mangione@hiems.se</p>
+                <p className="text-sm text-white/60">070-231 22 71</p>
+                <p className="text-xs text-white/50 italic mt-4">"AI ska vara enkelt att använda"</p>
               </AnimatedSection>
               
-              <AnimatedSection delay={200} className="rounded-none bg-card backdrop-blur-sm border border-border p-8 text-center hover:border-accent/50 transition-all duration-300 hover:shadow-elegant">
+              <AnimatedSection delay={200} className="rounded-lg bg-white/5 backdrop-blur-sm border border-white/10 p-8 text-center hover:border-accent/50 transition-all duration-300">
                 <img 
                   src={emilImage} 
                   alt="Emil Westerberg" 
                   className="w-64 h-64 rounded-full mx-auto mb-6 object-cover border-2 border-accent/30"
                   loading="lazy"
                 />
-                <h4 className="text-xl font-bold mb-2">Emil Westerberg</h4>
-                <p className="text-lg text-muted-foreground mb-4">CLO</p>
-                <p className="text-sm text-muted-foreground mb-1">emil@hiems.se</p>
-                <p className="text-sm text-muted-foreground">072-327 34 65</p>
-                <p className="text-xs text-muted-foreground/70 italic mt-4">"Teknologi som skapar verkligt värde"</p>
+                <h4 className="text-xl font-bold mb-2 text-white">Emil Westerberg</h4>
+                <p className="text-lg text-white/70 mb-4">CLO</p>
+                <p className="text-sm text-white/60 mb-1">emil@hiems.se</p>
+                <p className="text-sm text-white/60">072-327 34 65</p>
+                <p className="text-xs text-white/50 italic mt-4">"Teknologi som skapar verkligt värde"</p>
               </AnimatedSection>
               
-              <AnimatedSection delay={300} className="rounded-none bg-card backdrop-blur-sm border border-border p-8 text-center hover:border-accent/50 transition-all duration-300 hover:shadow-elegant">
+              <AnimatedSection delay={300} className="rounded-lg bg-white/5 backdrop-blur-sm border border-white/10 p-8 text-center hover:border-accent/50 transition-all duration-300">
                 <div className="w-64 h-64 rounded-full mx-auto mb-6 bg-gradient-primary flex items-center justify-center border-2 border-accent/30">
                   <span className="text-6xl font-bold text-white">ME</span>
                 </div>
-                <h4 className="text-xl font-bold mb-2">Malte Ekbäck</h4>
-                <p className="text-lg text-muted-foreground mb-4">CFO</p>
-                <p className="text-sm text-muted-foreground mb-1">malte@hiems.se</p>
-                <p className="text-sm text-muted-foreground">073-024 66 28</p>
-                <p className="text-xs text-muted-foreground/70 italic mt-4">"Smart tillväxt med AI"</p>
+                <h4 className="text-xl font-bold mb-2 text-white">Malte Ekbäck</h4>
+                <p className="text-lg text-white/70 mb-4">CFO</p>
+                <p className="text-sm text-white/60 mb-1">malte@hiems.se</p>
+                <p className="text-sm text-white/60">073-024 66 28</p>
+                <p className="text-xs text-white/50 italic mt-4">"Smart tillväxt med AI"</p>
               </AnimatedSection>
             </div>
           </AnimatedSection>
@@ -477,7 +482,7 @@ export const ProductSelection = () => {
       </section>
 
       {/* Varför Hiems Section */}
-      <section className="relative py-24 bg-primary/20 animate-fade-in">
+      <section className="relative py-24 bg-white/5 animate-fade-in">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <AnimatedSection className="mx-auto max-w-3xl text-center mb-16">
             <h2 className="text-4xl font-display font-bold text-white mb-4">Varför Hiems?</h2>
