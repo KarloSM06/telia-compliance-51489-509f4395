@@ -15,9 +15,9 @@ export default function Communications() {
     <div className="min-h-screen bg-gradient-to-b from-background to-muted/20">
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-8">
         {/* Premium Hero Section with Integrated Navigation */}
-        <div className="relative bg-gradient-hero text-primary-foreground overflow-hidden rounded-lg mb-8">
+        <div className="relative bg-gradient-hero text-primary-foreground overflow-hidden rounded-2xl p-8 mb-8">
           <div className="absolute inset-0 bg-[url('/images/tools-background.jpg')] opacity-5 bg-cover bg-center" />
-          <div className="relative container mx-auto px-6 py-16 pb-8">
+          <div className="relative z-10">
             <div className="max-w-3xl mb-12">
               <h1 className="text-4xl lg:text-5xl font-display font-bold mb-4 animate-fade-in">
                 Kommunikation
