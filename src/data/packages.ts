@@ -1,6 +1,7 @@
 import { TrendingUp, Sparkles, Wrench, ShoppingCart, BarChart3, Award, type LucideIcon } from "lucide-react";
 import marketingAutomationImage from "@/assets/marketing-automation-ai.png";
 import serviceOperationsImage from "@/assets/service-operations.png";
+import ecommerceRetailImage from "@/assets/ecommerce-retail.png";
 
 export interface Package {
   id: string;
@@ -99,6 +100,7 @@ export const aiPackages: Package[] = [
     icon: ShoppingCart,
     tagline: 'Öka din e-handelsförsäljning',
     targetAudience: 'Onlinebutiker och retail',
+    image: ecommerceRetailImage,
     components: [
       'AI-rekommendationer (cross-sell, upsell)',
       'Automatiserad orderhantering',
