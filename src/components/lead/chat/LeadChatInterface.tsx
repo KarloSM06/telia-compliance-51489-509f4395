@@ -7,7 +7,7 @@ import { Send, Bot, User, Menu } from "lucide-react";
 import { useLeadChat } from "@/hooks/useLeadChat";
 import { cn } from "@/lib/utils";
 import linkedinLogo from "@/assets/linkedin-icon.webp";
-import anthropicLogo from "@/assets/anthropic-ai-logo.png";
+import anthropicLogo from "@/assets/anthropic-ai-logo-new.png";
 import { ConversationList } from "./ConversationList";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
