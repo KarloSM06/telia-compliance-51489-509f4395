@@ -111,7 +111,7 @@ export const ProductSelection = () => {
             </p>
           </AnimatedSection>
           
-        <div className="max-w-[1600px] mx-auto space-y-32 mb-12">
+        <div className="max-w-[2000px] mx-auto space-y-16 mb-12">
           {aiPackages.map((pkg, index) => (
             <AnimatedSection 
               key={pkg.id} 
