@@ -32,62 +32,59 @@ export const PackageCard = ({
           </p>
         </div>
         
-        <div className="w-full grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8 p-8">
-          <div className="lg:col-span-1 space-y-3">
-            <div className="flex items-center gap-2 mb-4">
-              <div className="h-px flex-1 bg-gradient-to-r from-transparent via-primary/20 to-transparent" />
-              <h4 className="text-sm font-bold uppercase tracking-wider text-primary/80">Om paketet</h4>
-              <div className="h-px flex-1 bg-gradient-to-r from-transparent via-primary/20 to-transparent" />
+        <div className="w-full grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-10 p-8">
+          <div className="lg:col-span-1 space-y-4 bg-primary/5 rounded-xl p-6 border-l-4 border-primary">
+            <div className="mb-6">
+              <h4 className="text-base font-bold uppercase tracking-wider text-primary mb-2">Om paketet</h4>
+              <div className="h-1 w-16 bg-primary rounded-full" />
             </div>
-            <div className="space-y-2.5">
-              {pkg.description && <div className="flex items-start gap-2.5 p-2 rounded-lg hover:bg-primary/5 transition-colors group">
-                  <div className="mt-0.5 p-0.5 rounded-full bg-primary/10 group-hover:bg-primary/20 transition-colors">
-                    <CheckCircle className="h-3.5 w-3.5 text-primary" />
+            <div className="space-y-3">
+              {pkg.description && <div className="flex items-start gap-3 p-3 rounded-lg bg-card/50 hover:bg-card transition-colors group">
+                  <div className="mt-1 p-1 rounded-full bg-primary/20 group-hover:bg-primary/30 transition-colors flex-shrink-0">
+                    <CheckCircle className="h-4 w-4 text-primary" />
                   </div>
-                  <span className="text-xs lg:text-sm leading-snug text-foreground/80 group-hover:text-foreground transition-colors">
+                  <span className="text-sm leading-relaxed text-foreground group-hover:text-foreground transition-colors">
                     {pkg.description}
                   </span>
                 </div>}
             </div>
           </div>
           
-          <div className="lg:col-span-1 space-y-3">
-            <div className="flex items-center gap-2 mb-4">
-              <div className="h-px flex-1 bg-gradient-to-r from-transparent via-primary/20 to-transparent" />
-              <h4 className="text-sm font-bold uppercase tracking-wider text-primary/80">Funktioner</h4>
-              <div className="h-px flex-1 bg-gradient-to-r from-transparent via-primary/20 to-transparent" />
+          <div className="lg:col-span-1 space-y-4 bg-primary/5 rounded-xl p-6 border-l-4 border-primary">
+            <div className="mb-6">
+              <h4 className="text-base font-bold uppercase tracking-wider text-primary mb-2">Funktioner</h4>
+              <div className="h-1 w-16 bg-primary rounded-full" />
             </div>
-            <div className="space-y-2.5">
-              {pkg.components.map((component, index) => <div key={index} className="flex items-start gap-2.5 p-2 rounded-lg hover:bg-primary/5 transition-colors group">
-                  <div className="mt-0.5 p-0.5 rounded-full bg-primary/10 group-hover:bg-primary/20 transition-colors">
-                    <CheckCircle className="h-3.5 w-3.5 text-primary" />
+            <div className="space-y-3">
+              {pkg.components.map((component, index) => <div key={index} className="flex items-start gap-3 p-3 rounded-lg bg-card/50 hover:bg-card transition-colors group">
+                  <div className="mt-1 p-1 rounded-full bg-primary/20 group-hover:bg-primary/30 transition-colors flex-shrink-0">
+                    <CheckCircle className="h-4 w-4 text-primary" />
                   </div>
-                  <span className="text-xs lg:text-sm leading-snug text-foreground/80 group-hover:text-foreground transition-colors">
+                  <span className="text-sm leading-relaxed text-foreground group-hover:text-foreground transition-colors">
                     {component}
                   </span>
                 </div>)}
             </div>
           </div>
           
-          <div className="lg:col-span-1 flex flex-col justify-between space-y-4">
-            <div className="space-y-3">
-              <div className="flex items-center gap-2 mb-4">
-                <div className="h-px flex-1 bg-gradient-to-r from-transparent via-accent/20 to-transparent" />
-                <h4 className="text-sm font-bold uppercase tracking-wider text-accent/80">Fördelar</h4>
-                <div className="h-px flex-1 bg-gradient-to-r from-transparent via-accent/20 to-transparent" />
+          <div className="lg:col-span-1 flex flex-col justify-between space-y-4 bg-accent/5 rounded-xl p-6 border-l-4 border-accent">
+            <div className="space-y-4">
+              <div className="mb-6">
+                <h4 className="text-base font-bold uppercase tracking-wider text-accent mb-2">Fördelar</h4>
+                <div className="h-1 w-16 bg-accent rounded-full" />
               </div>
-              <div className="space-y-2.5">
-                {pkg.valueBullets.map((bullet, index) => <div key={index} className="flex items-start gap-2.5 p-2 rounded-lg hover:bg-accent/5 transition-colors group">
-                    <div className="mt-0.5 p-0.5 rounded-full bg-accent/10 group-hover:bg-accent/20 transition-colors">
-                      <CheckCircle className="h-3.5 w-3.5 text-accent" />
+              <div className="space-y-3">
+                {pkg.valueBullets.map((bullet, index) => <div key={index} className="flex items-start gap-3 p-3 rounded-lg bg-card/50 hover:bg-card transition-colors group">
+                    <div className="mt-1 p-1 rounded-full bg-accent/20 group-hover:bg-accent/30 transition-colors flex-shrink-0">
+                      <CheckCircle className="h-4 w-4 text-accent" />
                     </div>
-                    <span className="text-xs lg:text-sm font-medium leading-snug text-foreground/80 group-hover:text-foreground transition-colors">
+                    <span className="text-sm font-medium leading-relaxed text-foreground group-hover:text-foreground transition-colors">
                       {bullet}
                     </span>
                   </div>)}
               </div>
             </div>
-            <Button size="lg" className="w-full shadow-lg hover:shadow-xl hover:scale-[1.02] transition-all duration-300 bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-semibold" onClick={onBookDemo}>
+            <Button size="lg" className="w-full shadow-lg hover:shadow-xl hover:scale-[1.02] transition-all duration-300 bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-semibold mt-4" onClick={onBookDemo}>
               Boka kostnadsfri demo
             </Button>
           </div>
