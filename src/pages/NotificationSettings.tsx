@@ -8,6 +8,7 @@ import { useNotificationSettings } from "@/hooks/useNotificationSettings";
 import { toast } from "sonner";
 import { Bell, Mail, MessageSquare, Phone } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
+import { NotificationRecipientForm } from "@/components/NotificationRecipientForm";
 
 export default function NotificationSettings() {
   const { settings, isLoading, updateSettings, sendTestNotification } = useNotificationSettings();
@@ -279,6 +280,9 @@ export default function NotificationSettings() {
             </p>
           </CardContent>
         </Card>
+
+        {/* Additional Recipients */}
+        <NotificationRecipientForm />
 
         {/* Actions */}
         <div className="flex gap-4">

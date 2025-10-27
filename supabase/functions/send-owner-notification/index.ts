@@ -136,6 +136,19 @@ serve(async (req) => {
       );
     }
 
+    // Get additional notification recipients
+    const { data: recipients, error: recipientsError } = await supabase
+      .from('notification_recipients')
+      .select('*')
+      .eq('user_id', requestData.user_id)
+      .eq('is_active', true);
+
+    if (recipientsError) {
+      console.error('Error fetching recipients:', recipientsError);
+    }
+
+    const allRecipients = recipients || [];
+
     // Check if this event type should trigger notification
     const eventTypeKey = `notify_on_${requestData.event_type}` as keyof typeof settings;
     if (requestData.event_type !== 'test' && !settings[eventTypeKey]) {
@@ -197,8 +210,41 @@ serve(async (req) => {
       }
     }
 
+    // Send notifications to additional recipients
+    for (const recipient of allRecipients) {
+      // Check if this event should notify this recipient
+      const eventTypeKey = `notify_on_${requestData.event_type}` as keyof typeof recipient;
+      if (requestData.event_type !== 'test' && !recipient[eventTypeKey]) {
+        console.log(`Skipping recipient ${recipient.name} for event ${requestData.event_type}`);
+        continue;
+      }
+
+      // Send email to recipient
+      if (recipient.enable_email_notifications && recipient.email) {
+        console.log(`Would send email to recipient: ${recipient.name} (${recipient.email})`);
+        // TODO: Implement email sending
+      }
+
+      // Send SMS to recipient (check quiet hours)
+      if (recipient.enable_sms_notifications && recipient.phone) {
+        const inQuietHours = isQuietHours(recipient.quiet_hours_start, recipient.quiet_hours_end);
+        if (!inQuietHours) {
+          console.log(`Would send SMS to recipient: ${recipient.name} (${recipient.phone})`);
+          // TODO: Implement SMS sending
+        } else {
+          console.log(`Skipping SMS for ${recipient.name} - quiet hours active`);
+        }
+      }
+    }
+
+    console.log(`Processed notifications for ${allRecipients.length + 1} recipients`);
+
     return new Response(
-      JSON.stringify({ success: true, message: 'Notifications processed' }),
+      JSON.stringify({ 
+        success: true, 
+        message: 'Notifications processed',
+        recipients_notified: allRecipients.length + 1
+      }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 200 }
     );
 

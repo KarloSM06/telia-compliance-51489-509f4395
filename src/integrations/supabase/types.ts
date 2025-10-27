@@ -1382,6 +1382,77 @@ export type Database = {
         }
         Relationships: []
       }
+      notification_recipients: {
+        Row: {
+          created_at: string | null
+          email: string | null
+          enable_email_notifications: boolean | null
+          enable_sms_notifications: boolean | null
+          id: string
+          is_active: boolean | null
+          name: string
+          notify_on_booking_cancelled: boolean | null
+          notify_on_booking_updated: boolean | null
+          notify_on_message_failed: boolean | null
+          notify_on_new_booking: boolean | null
+          notify_on_new_review: boolean | null
+          organization_id: string | null
+          phone: string | null
+          quiet_hours_end: string | null
+          quiet_hours_start: string | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          email?: string | null
+          enable_email_notifications?: boolean | null
+          enable_sms_notifications?: boolean | null
+          id?: string
+          is_active?: boolean | null
+          name: string
+          notify_on_booking_cancelled?: boolean | null
+          notify_on_booking_updated?: boolean | null
+          notify_on_message_failed?: boolean | null
+          notify_on_new_booking?: boolean | null
+          notify_on_new_review?: boolean | null
+          organization_id?: string | null
+          phone?: string | null
+          quiet_hours_end?: string | null
+          quiet_hours_start?: string | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          email?: string | null
+          enable_email_notifications?: boolean | null
+          enable_sms_notifications?: boolean | null
+          id?: string
+          is_active?: boolean | null
+          name?: string
+          notify_on_booking_cancelled?: boolean | null
+          notify_on_booking_updated?: boolean | null
+          notify_on_message_failed?: boolean | null
+          notify_on_new_booking?: boolean | null
+          notify_on_new_review?: boolean | null
+          organization_id?: string | null
+          phone?: string | null
+          quiet_hours_end?: string | null
+          quiet_hours_start?: string | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "notification_recipients_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       offers: {
         Row: {
           created_at: string
