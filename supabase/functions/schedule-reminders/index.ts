@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { formatInTimeZone, sv } from "../_shared/timezoneUtils.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -268,17 +269,18 @@ serve(async (req) => {
 });
 
 async function generateMessage(supabaseClient: any, event: any, messageType: string, templateId?: string) {
-  const eventDate = new Date(event.start_time);
-  const formattedDate = eventDate.toLocaleDateString('sv-SE', { 
-    weekday: 'long', 
-    year: 'numeric', 
-    month: 'long', 
-    day: 'numeric' 
-  });
-  const formattedTime = eventDate.toLocaleTimeString('sv-SE', { 
-    hour: '2-digit', 
-    minute: '2-digit' 
-  });
+  const timezone = 'Europe/Stockholm';
+  const formattedDate = formatInTimeZone(
+    event.start_time,
+    'EEEE d MMMM yyyy',
+    timezone,
+    { locale: sv }
+  );
+  const formattedTime = formatInTimeZone(
+    event.start_time,
+    'HH:mm',
+    timezone
+  );
 
   let template;
   if (templateId) {
