@@ -32,62 +32,75 @@ export const PackageCard = ({
           </p>
         </div>
         
-        <div className="w-full grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8 px-8 pb-8 pt-4">
-          <div className="lg:col-span-1 space-y-3">
-            <div className="flex items-center gap-2 mb-4">
-              <div className="h-px flex-1 bg-gradient-to-r from-transparent via-primary/20 to-transparent" />
-              <h4 className="text-sm font-bold uppercase tracking-wider text-primary/80">Om paketet</h4>
-              <div className="h-px flex-1 bg-gradient-to-r from-transparent via-primary/20 to-transparent" />
-            </div>
-            <div className="space-y-3">
-              {pkg.description && <div className="flex items-start gap-3 p-3 rounded-lg hover:bg-primary/5 transition-colors group">
-                  <div className="mt-1 p-1 rounded-full bg-primary/10 group-hover:bg-primary/20 transition-colors flex-shrink-0">
-                    <CheckCircle className="h-5 w-5 text-primary" />
-                  </div>
-                  <span className="text-sm lg:text-base leading-relaxed text-foreground font-medium">
-                    {pkg.description}
-                  </span>
-                </div>}
-            </div>
-          </div>
-          
-          <div className="lg:col-span-1 space-y-3">
-            <div className="flex items-center gap-2 mb-4">
-              <div className="h-px flex-1 bg-gradient-to-r from-transparent via-primary/20 to-transparent" />
-              <h4 className="text-sm font-bold uppercase tracking-wider text-primary/80">Funktioner</h4>
-              <div className="h-px flex-1 bg-gradient-to-r from-transparent via-primary/20 to-transparent" />
-            </div>
-            <div className="space-y-3">
-              {pkg.components.map((component, index) => <div key={index} className="flex items-start gap-3 p-3 rounded-lg hover:bg-primary/5 transition-colors group">
-                  <div className="mt-1 p-1 rounded-full bg-primary/10 group-hover:bg-primary/20 transition-colors flex-shrink-0">
-                    <CheckCircle className="h-5 w-5 text-primary" />
-                  </div>
-                  <span className="text-sm lg:text-base leading-relaxed text-foreground font-medium">
-                    {component}
-                  </span>
-                </div>)}
-            </div>
-          </div>
-          
-          <div className="lg:col-span-1 flex flex-col justify-between space-y-4">
-            <div className="space-y-3">
-              <div className="flex items-center gap-2 mb-4">
-                <div className="h-px flex-1 bg-gradient-to-r from-transparent via-accent/20 to-transparent" />
-                <h4 className="text-sm font-bold uppercase tracking-wider text-accent/80">Fördelar</h4>
-                <div className="h-px flex-1 bg-gradient-to-r from-transparent via-accent/20 to-transparent" />
-              </div>
-              <div className="space-y-3">
-                {pkg.valueBullets.map((bullet, index) => <div key={index} className="flex items-start gap-3 p-3 rounded-lg hover:bg-accent/5 transition-colors group">
-                    <div className="mt-1 p-1 rounded-full bg-accent/10 group-hover:bg-accent/20 transition-colors flex-shrink-0">
-                      <CheckCircle className="h-5 w-5 text-accent" />
+        <div className="w-full grid grid-cols-1 lg:grid-cols-3 gap-8 px-8 pb-8 pt-4">
+          {/* Om paketet */}
+          <div className="bg-card/50 border-2 border-primary/20 rounded-xl p-6 space-y-4">
+            <h4 className="text-lg font-bold text-primary border-b-2 border-primary/30 pb-3">
+              Om paketet
+            </h4>
+            <div className="space-y-4">
+              {pkg.description && (
+                <div className="flex items-start gap-4">
+                  <div className="mt-1 flex-shrink-0">
+                    <div className="h-6 w-6 rounded-full bg-primary/20 flex items-center justify-center">
+                      <CheckCircle className="h-4 w-4 text-primary" strokeWidth={3} />
                     </div>
-                    <span className="text-sm lg:text-base font-semibold leading-relaxed text-foreground">
+                  </div>
+                  <p className="text-base leading-relaxed text-foreground font-semibold">
+                    {pkg.description}
+                  </p>
+                </div>
+              )}
+            </div>
+          </div>
+          
+          {/* Funktioner */}
+          <div className="bg-card/50 border-2 border-primary/20 rounded-xl p-6 space-y-4">
+            <h4 className="text-lg font-bold text-primary border-b-2 border-primary/30 pb-3">
+              Funktioner
+            </h4>
+            <div className="space-y-4">
+              {pkg.components.map((component, index) => (
+                <div key={index} className="flex items-start gap-4">
+                  <div className="mt-1 flex-shrink-0">
+                    <div className="h-6 w-6 rounded-full bg-primary/20 flex items-center justify-center">
+                      <CheckCircle className="h-4 w-4 text-primary" strokeWidth={3} />
+                    </div>
+                  </div>
+                  <p className="text-base leading-relaxed text-foreground font-semibold">
+                    {component}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+          
+          {/* Fördelar */}
+          <div className="bg-card/50 border-2 border-accent/20 rounded-xl p-6 space-y-4 flex flex-col">
+            <div className="flex-1">
+              <h4 className="text-lg font-bold text-accent border-b-2 border-accent/30 pb-3 mb-4">
+                Fördelar
+              </h4>
+              <div className="space-y-4">
+                {pkg.valueBullets.map((bullet, index) => (
+                  <div key={index} className="flex items-start gap-4">
+                    <div className="mt-1 flex-shrink-0">
+                      <div className="h-6 w-6 rounded-full bg-accent/20 flex items-center justify-center">
+                        <CheckCircle className="h-4 w-4 text-accent" strokeWidth={3} />
+                      </div>
+                    </div>
+                    <p className="text-base leading-relaxed text-foreground font-bold">
                       {bullet}
-                    </span>
-                  </div>)}
+                    </p>
+                  </div>
+                ))}
               </div>
             </div>
-            <Button size="lg" className="w-full shadow-lg hover:shadow-xl hover:scale-[1.02] transition-all duration-300 bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-semibold" onClick={onBookDemo}>
+            <Button 
+              size="lg" 
+              className="w-full mt-6 shadow-lg hover:shadow-xl hover:scale-[1.02] transition-all duration-300 bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold text-base" 
+              onClick={onBookDemo}
+            >
               Boka kostnadsfri demo
             </Button>
           </div>
