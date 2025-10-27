@@ -3,11 +3,12 @@ import { Lead } from "@/hooks/useLeads";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Eye, Mail, Phone, Sparkles, Loader2, Building2 } from "lucide-react";
+import { Eye, Sparkles, Loader2, Building2, MapPin, Briefcase } from "lucide-react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import linkedinIcon from "@/assets/linkedin-icon.webp";
 import { format } from "date-fns";
 import { useEnrichLead } from "@/hooks/useEnrichLead";
+import { ContactLinkGroup } from "./ContactLinkGroup";
+import { QuickContactButtons } from "./QuickContactButtons";
 
 interface LeadsTableProps {
   leads: Lead[];
@@ -93,15 +94,11 @@ export function LeadsTable({ leads, onViewDetails, onBulkEnrich, isBulkEnriching
           <TableRow>
             {viewMode === 'contacts' ? (
               <>
-                <TableHead>Person</TableHead>
-                <TableHead>Jobbtitel</TableHead>
-                <TableHead>Företag</TableHead>
-                <TableHead>Plats</TableHead>
-                <TableHead>Kontakt</TableHead>
-                <TableHead>AI Score</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Skapad</TableHead>
-                <TableHead className="text-right">Åtgärder</TableHead>
+                <TableHead className="w-[280px]">Person</TableHead>
+                <TableHead className="w-[220px]">Roll & Företag</TableHead>
+                <TableHead className="w-[200px]">Kontaktinformation</TableHead>
+                <TableHead className="w-[200px]">Länkar</TableHead>
+                <TableHead className="w-[140px]">Status & Actions</TableHead>
               </>
             ) : (
               <>
@@ -126,15 +123,16 @@ export function LeadsTable({ leads, onViewDetails, onBulkEnrich, isBulkEnriching
             return (
               <TableRow 
                 key={lead.id} 
-                className={`cursor-pointer hover:bg-muted/50 ${isEnrichingThis ? 'bg-emerald-50 dark:bg-emerald-950/20 border-l-4 border-l-emerald-500' : ''}`}
+                className={`cursor-pointer hover:bg-muted/50 transition-colors ${isEnrichingThis ? 'bg-emerald-50 dark:bg-emerald-950/20 border-l-4 border-l-emerald-500' : ''}`}
+                onClick={() => onViewDetails(lead)}
               >
                 {viewMode === 'contacts' ? (
                   <>
-                    {/* Person-focused view */}
-                    <TableCell>
+                    {/* Person Column - Enhanced */}
+                    <TableCell className="py-4">
                       <div className="flex items-center gap-3">
-                        <Avatar className="h-10 w-10">
-                          <AvatarFallback className="bg-gradient-to-br from-purple-500 to-pink-500 text-white font-semibold">
+                        <Avatar className="h-12 w-12 flex-shrink-0">
+                          <AvatarFallback className="bg-gradient-to-br from-purple-500 to-pink-500 text-white font-bold text-base">
                             {(lead.full_name || lead.first_name || lead.contact_person || 'U')
                               .split(' ')
                               .map(n => n[0])
@@ -143,69 +141,90 @@ export function LeadsTable({ leads, onViewDetails, onBulkEnrich, isBulkEnriching
                               .toUpperCase()}
                           </AvatarFallback>
                         </Avatar>
-                        <div>
-                          <div className="font-semibold">
+                        <div className="min-w-0 flex-1">
+                          <div className="font-semibold text-base truncate">
                             {lead.full_name || lead.contact_person || 
                              (lead.first_name && lead.last_name ? `${lead.first_name} ${lead.last_name}` : 
                               lead.first_name || "-")}
                           </div>
-                          {lead.linkedin && (
-                            <a 
-                              href={lead.linkedin.startsWith('http') ? lead.linkedin : `https://${lead.linkedin}`}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="text-xs flex items-center gap-1 hover:opacity-80 transition-opacity"
-                              onClick={(e) => e.stopPropagation()}
+                          {lead.ai_score && (
+                            <Badge 
+                              variant={lead.ai_score >= 80 ? "default" : "secondary"}
+                              className="mt-1"
                             >
-                              <img src={linkedinIcon} alt="LinkedIn" className="h-3.5 w-3.5" />
-                              <span className="text-[#0077b5] font-medium">LinkedIn</span>
-                            </a>
-                          )}
-                          {lead.company_linkedin && (
-                            <a 
-                              href={lead.company_linkedin.startsWith('http') ? lead.company_linkedin : `https://${lead.company_linkedin}`}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="text-xs flex items-center gap-1 hover:opacity-80 transition-opacity"
-                              onClick={(e) => e.stopPropagation()}
-                            >
-                              <img src={linkedinIcon} alt="LinkedIn" className="h-3.5 w-3.5" />
-                              <span className="text-[#0077b5] font-medium">Företag</span>
-                            </a>
+                              <Sparkles className="h-3 w-3 mr-1" />
+                              {lead.ai_score}
+                            </Badge>
                           )}
                         </div>
                       </div>
                     </TableCell>
-                    <TableCell>
-                      <div className="text-sm">
-                        <div className="font-medium">{lead.job_title || "-"}</div>
-                        {lead.job_seniority_level && (
-                          <div className="text-xs text-muted-foreground capitalize">
-                            {lead.job_seniority_level}
+
+                    {/* Roll & Företag Column - New */}
+                    <TableCell className="py-4">
+                      <div className="space-y-2">
+                        <div>
+                          <div className="font-medium text-sm flex items-center gap-1.5">
+                            <Briefcase className="h-3.5 w-3.5 text-muted-foreground flex-shrink-0" />
+                            <span className="truncate">{lead.job_title || "-"}</span>
+                          </div>
+                          {lead.job_seniority_level && (
+                            <div className="text-xs text-muted-foreground capitalize ml-5">
+                              {lead.job_seniority_level}
+                            </div>
+                          )}
+                        </div>
+                        <div className="flex items-center gap-1.5 text-sm">
+                          <Building2 className="h-3.5 w-3.5 text-muted-foreground flex-shrink-0" />
+                          <span className="truncate text-muted-foreground">{lead.company_name}</span>
+                        </div>
+                        {(lead.city || lead.location || lead.region_name) && (
+                          <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                            <MapPin className="h-3 w-3 flex-shrink-0" />
+                            <span className="truncate">
+                              {lead.city || lead.location || lead.region_name}
+                            </span>
                           </div>
                         )}
                       </div>
                     </TableCell>
-                    <TableCell className="text-sm text-muted-foreground">
-                      {lead.company_name}
+
+                    {/* Kontaktinformation Column - Enhanced */}
+                    <TableCell className="py-4">
+                      <QuickContactButtons 
+                        email={lead.email} 
+                        phone={lead.phone} 
+                        size="sm"
+                      />
                     </TableCell>
-                    <TableCell className="text-sm text-muted-foreground">
-                      {lead.city || lead.location || lead.region_name || "-"}
+
+                    {/* Länkar Column - New */}
+                    <TableCell className="py-4">
+                      <ContactLinkGroup
+                        linkedin={lead.linkedin}
+                        company_linkedin={lead.company_linkedin}
+                        website={lead.website}
+                      />
                     </TableCell>
-                    <TableCell>
-                      <div className="text-sm space-y-1">
-                        {lead.email && (
-                          <div className="flex items-center gap-1 text-muted-foreground">
-                            <Mail className="h-3 w-3" />
-                            <span className="truncate max-w-[150px]">{lead.email}</span>
-                          </div>
-                        )}
-                        {lead.phone && (
-                          <div className="flex items-center gap-1 text-muted-foreground">
-                            <Phone className="h-3 w-3" />
-                            {lead.phone}
-                          </div>
-                        )}
+
+                    {/* Status & Actions Column - Consolidated */}
+                    <TableCell className="py-4">
+                      <div className="space-y-2">
+                        <Badge className={statusColors[lead.status]}>
+                          {statusLabels[lead.status]}
+                        </Badge>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="w-full justify-start gap-2"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            onViewDetails(lead);
+                          }}
+                        >
+                          <Eye className="h-4 w-4" />
+                          <span className="text-xs">Detaljer</span>
+                        </Button>
                       </div>
                     </TableCell>
                   </>
@@ -227,44 +246,11 @@ export function LeadsTable({ leads, onViewDetails, onBulkEnrich, isBulkEnriching
                       {lead.city || lead.location || lead.region_name || "-"}
                     </TableCell>
                     <TableCell>
-                      <div className="text-sm space-y-1">
-                        {lead.email && (
-                          <div className="flex items-center gap-1 text-muted-foreground">
-                            <Mail className="h-3 w-3" />
-                            {lead.email}
-                          </div>
-                        )}
-                        {lead.phone && (
-                          <div className="flex items-center gap-1 text-muted-foreground">
-                            <Phone className="h-3 w-3" />
-                            {lead.phone}
-                          </div>
-                        )}
-                        {lead.linkedin && (
-                          <a 
-                            href={lead.linkedin.startsWith('http') ? lead.linkedin : `https://${lead.linkedin}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-xs flex items-center gap-1 hover:opacity-80 transition-opacity"
-                            onClick={(e) => e.stopPropagation()}
-                          >
-                            <img src={linkedinIcon} alt="LinkedIn" className="h-3.5 w-3.5" />
-                            <span className="text-[#0077b5] font-medium">LinkedIn</span>
-                          </a>
-                        )}
-                        {lead.company_linkedin && (
-                          <a 
-                            href={lead.company_linkedin.startsWith('http') ? lead.company_linkedin : `https://${lead.company_linkedin}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-xs flex items-center gap-1 hover:opacity-80 transition-opacity"
-                            onClick={(e) => e.stopPropagation()}
-                          >
-                            <img src={linkedinIcon} alt="LinkedIn" className="h-3.5 w-3.5" />
-                            <span className="text-[#0077b5] font-medium">Företag</span>
-                          </a>
-                        )}
-                      </div>
+                      <ContactLinkGroup
+                        linkedin={lead.linkedin}
+                        company_linkedin={lead.company_linkedin}
+                        website={lead.website}
+                      />
                     </TableCell>
                   </>
                 )}
