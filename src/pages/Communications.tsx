@@ -27,7 +27,7 @@ export default function Communications() {
               <TabsList className="flex flex-wrap justify-center gap-4 bg-transparent border-0 p-0">
                 <TabsTrigger 
                   value="templates" 
-                  className="group relative gap-3 px-8 py-4 bg-white/10 backdrop-blur-md border-2 border-white/30 rounded-2xl shadow-lg hover:shadow-2xl hover:bg-white/20 hover:-translate-y-1 hover:scale-105 data-[state=active]:bg-white data-[state=active]:text-purple-600 data-[state=active]:border-white data-[state=active]:shadow-2xl data-[state=active]:scale-110 transition-all duration-300"
+                  className="group relative gap-3 px-8 py-4 bg-white/20 text-white/90 backdrop-blur-md border-2 border-white/50 rounded-2xl shadow-lg hover:shadow-2xl hover:bg-white/30 hover:text-white hover:-translate-y-1 hover:scale-105 data-[state=active]:bg-white data-[state=active]:text-purple-600 data-[state=active]:border-white data-[state=active]:shadow-2xl data-[state=active]:scale-110 transition-all duration-300"
                 >
                   <FileText className="h-6 w-6 group-data-[state=active]:animate-pulse" />
                   <span className="font-semibold">Mallar</span>
@@ -35,7 +35,7 @@ export default function Communications() {
                 
                 <TabsTrigger 
                   value="reminders" 
-                  className="group relative gap-3 px-8 py-4 bg-white/10 backdrop-blur-md border-2 border-white/30 rounded-full shadow-lg hover:shadow-2xl hover:bg-white/20 hover:-translate-y-1 hover:scale-105 data-[state=active]:bg-white data-[state=active]:text-purple-600 data-[state=active]:border-white data-[state=active]:shadow-2xl data-[state=active]:scale-110 transition-all duration-300"
+                  className="group relative gap-3 px-8 py-4 bg-white/20 text-white/90 backdrop-blur-md border-2 border-white/50 rounded-full shadow-lg hover:shadow-2xl hover:bg-white/30 hover:text-white hover:-translate-y-1 hover:scale-105 data-[state=active]:bg-white data-[state=active]:text-purple-600 data-[state=active]:border-white data-[state=active]:shadow-2xl data-[state=active]:scale-110 transition-all duration-300"
                 >
                   <Bell className="h-6 w-6 group-data-[state=active]:animate-pulse" />
                   <span className="font-semibold">Påminnelser</span>
@@ -43,7 +43,7 @@ export default function Communications() {
                 
                 <TabsTrigger 
                   value="notifications" 
-                  className="group relative gap-3 px-8 py-4 bg-white/10 backdrop-blur-md border-2 border-white/30 rounded-3xl shadow-lg hover:shadow-2xl hover:bg-white/20 hover:-translate-y-1 hover:scale-105 data-[state=active]:bg-white data-[state=active]:text-purple-600 data-[state=active]:border-white data-[state=active]:shadow-2xl data-[state=active]:scale-110 transition-all duration-300"
+                  className="group relative gap-3 px-8 py-4 bg-white/20 text-white/90 backdrop-blur-md border-2 border-white/50 rounded-3xl shadow-lg hover:shadow-2xl hover:bg-white/30 hover:text-white hover:-translate-y-1 hover:scale-105 data-[state=active]:bg-white data-[state=active]:text-purple-600 data-[state=active]:border-white data-[state=active]:shadow-2xl data-[state=active]:scale-110 transition-all duration-300"
                 >
                   <BellRing className="h-6 w-6 group-data-[state=active]:animate-pulse" />
                   <span className="font-semibold">Ägarnotiser</span>
@@ -51,7 +51,7 @@ export default function Communications() {
                 
                 <TabsTrigger 
                   value="sms-provider" 
-                  className="group relative gap-3 px-8 py-4 bg-white/10 backdrop-blur-md border-2 border-white/30 rounded-2xl shadow-lg hover:shadow-2xl hover:bg-white/20 hover:-translate-y-1 hover:scale-105 data-[state=active]:bg-white data-[state=active]:text-purple-600 data-[state=active]:border-white data-[state=active]:shadow-2xl data-[state=active]:scale-110 transition-all duration-300"
+                  className="group relative gap-3 px-8 py-4 bg-white/20 text-white/90 backdrop-blur-md border-2 border-white/50 rounded-2xl shadow-lg hover:shadow-2xl hover:bg-white/30 hover:text-white hover:-translate-y-1 hover:scale-105 data-[state=active]:bg-white data-[state=active]:text-purple-600 data-[state=active]:border-white data-[state=active]:shadow-2xl data-[state=active]:scale-110 transition-all duration-300"
                 >
                   <MessageSquare className="h-6 w-6 group-data-[state=active]:animate-pulse" />
                   <span className="font-semibold">SMS-leverantör</span>
@@ -59,7 +59,7 @@ export default function Communications() {
                 
                 <TabsTrigger 
                   value="insights" 
-                  className="group relative gap-3 px-8 py-4 bg-white/10 backdrop-blur-md border-2 border-white/30 rounded-full shadow-lg hover:shadow-2xl hover:bg-white/20 hover:-translate-y-1 hover:scale-105 data-[state=active]:bg-white data-[state=active]:text-purple-600 data-[state=active]:border-white data-[state=active]:shadow-2xl data-[state=active]:scale-110 transition-all duration-300"
+                  className="group relative gap-3 px-8 py-4 bg-white/20 text-white/90 backdrop-blur-md border-2 border-white/50 rounded-full shadow-lg hover:shadow-2xl hover:bg-white/30 hover:text-white hover:-translate-y-1 hover:scale-105 data-[state=active]:bg-white data-[state=active]:text-purple-600 data-[state=active]:border-white data-[state=active]:shadow-2xl data-[state=active]:scale-110 transition-all duration-300"
                 >
                   <BarChart className="h-6 w-6 group-data-[state=active]:animate-pulse" />
                   <span className="font-semibold">Insikter</span>
