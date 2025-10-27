@@ -9,7 +9,7 @@ import { format } from "date-fns";
 import { useEnrichLead } from "@/hooks/useEnrichLead";
 import { ContactLinkGroup } from "./ContactLinkGroup";
 import { QuickContactButtons } from "./QuickContactButtons";
-import { translateSeniorityLevel } from "@/lib/utils";
+import { translateSeniorityLevel, formatJobTitle } from "@/lib/utils";
 
 interface LeadsTableProps {
   leads: Lead[];
@@ -167,7 +167,7 @@ export function LeadsTable({ leads, onViewDetails, onBulkEnrich, isBulkEnriching
                         <div>
                           <div className="font-medium text-sm flex items-center gap-1.5">
                             <Briefcase className="h-3.5 w-3.5 text-muted-foreground flex-shrink-0" />
-                            <span className="truncate">{lead.job_title || "-"}</span>
+                            <span className="truncate">{formatJobTitle(lead.job_title)}</span>
                           </div>
                           {lead.job_seniority_level && (
                             <div className="text-xs text-muted-foreground ml-5">
@@ -241,7 +241,7 @@ export function LeadsTable({ leads, onViewDetails, onBulkEnrich, isBulkEnriching
                       </div>
                     </TableCell>
                     <TableCell className="text-sm text-muted-foreground">
-                      {lead.job_title || "-"}
+                      {formatJobTitle(lead.job_title)}
                     </TableCell>
                     <TableCell className="text-sm text-muted-foreground">
                       {lead.city || lead.location || lead.region_name || "-"}

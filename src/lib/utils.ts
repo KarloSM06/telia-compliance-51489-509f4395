@@ -26,3 +26,13 @@ export function translateSeniorityLevel(level: string | string[] | undefined): s
   
   return translations[normalized] || levelStr;
 }
+
+export function formatJobTitle(title: string | string[] | undefined): string {
+  if (!title) return "-";
+  
+  // Handle array (take first value if array)
+  const titleStr = Array.isArray(title) ? title[0] : title;
+  
+  // Return cleaned title
+  return titleStr.trim();
+}

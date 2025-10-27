@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Lead } from "@/hooks/useLeads";
 import { Mail, Phone, Globe, Building2, MapPin, Save } from "lucide-react";
 import linkedinIcon from "@/assets/linkedin-icon.webp";
-import { translateSeniorityLevel } from "@/lib/utils";
+import { translateSeniorityLevel, formatJobTitle } from "@/lib/utils";
 
 interface LeadDetailModalProps {
   lead: Lead | null;
@@ -70,7 +70,7 @@ export function LeadDetailModal({ lead, open, onOpenChange, onUpdate }: LeadDeta
             </div>
             <div>
               <Label className="text-muted-foreground">Jobbtitel</Label>
-              <p className="font-medium">{lead.job_title || "-"}</p>
+              <p className="font-medium">{formatJobTitle(lead.job_title)}</p>
             </div>
             {lead.job_seniority_level && (
               <div>

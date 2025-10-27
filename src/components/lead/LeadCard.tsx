@@ -6,7 +6,7 @@ import { Building2, MapPin, User, Sparkles, Home, Briefcase } from "lucide-react
 import { Lead } from "@/hooks/useLeads";
 import { ContactLinkGroup } from "./ContactLinkGroup";
 import { QuickContactButtons } from "./QuickContactButtons";
-import { translateSeniorityLevel } from "@/lib/utils";
+import { translateSeniorityLevel, formatJobTitle } from "@/lib/utils";
 
 interface LeadCardProps {
   lead: Lead;
@@ -63,7 +63,7 @@ export function LeadCard({ lead, onViewDetails, viewMode = 'organizations' }: Le
                 {lead.job_title && (
                   <div className="flex items-center gap-1.5 text-sm font-medium text-muted-foreground">
                     <Briefcase className="h-3.5 w-3.5" />
-                    <span className="truncate">{lead.job_title}</span>
+                    <span className="truncate">{formatJobTitle(lead.job_title)}</span>
                   </div>
                 )}
                 {lead.job_seniority_level && (
