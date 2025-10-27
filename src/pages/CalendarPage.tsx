@@ -119,105 +119,94 @@ const CalendarPage = () => {
   })();
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background to-muted/20">
-      {/* Premium Hero Section */}
-      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-blue-600 via-purple-600 to-pink-600 p-8 text-white mb-8 mx-6 mt-6">
-        <div className="relative z-10">
-          <h1 className="text-4xl font-bold mb-2">Kalender & CRM</h1>
-          <p className="text-lg opacity-90 mb-6">
-            Hantera dina möten och synka med befintliga bokningssystem
-          </p>
-        </div>
-        <div className="absolute inset-0 bg-grid-white/[0.05] bg-[length:20px_20px]" />
-      </div>
+    <div className="h-screen flex flex-col">
+      {/* Global header with view selector - always visible */}
+      <div className="border-b bg-background">
+        <div className="px-6 py-4">
+          <div className="flex justify-between items-center">
+            <div>
+              <h1 className="text-2xl font-bold">Kalender & CRM</h1>
+              <p className="text-sm text-muted-foreground">
+                Hantera dina möten och synka med befintliga bokningssystem
+              </p>
+            </div>
+            <div className="flex gap-2 items-center">
+              {/* View selector */}
+              <div className="flex gap-1 border rounded-lg p-1 bg-muted/50">
+                <Button
+                  variant={currentView === 'year' ? 'default' : 'ghost'}
+                  size="sm"
+                  onClick={() => setCurrentView('year')}
+                  className="gap-2"
+                >
+                  <CalendarClock className="h-4 w-4" />
+                  År
+                </Button>
+                <Button
+                  variant={currentView === 'month' ? 'default' : 'ghost'}
+                  size="sm"
+                  onClick={() => setCurrentView('month')}
+                  className="gap-2"
+                >
+                  <Calendar className="h-4 w-4" />
+                  Månad
+                </Button>
+                <Button
+                  variant={currentView === 'week' ? 'default' : 'ghost'}
+                  size="sm"
+                  onClick={handleViewWeek}
+                  className="gap-2"
+                >
+                  <CalendarRange className="h-4 w-4" />
+                  Vecka
+                </Button>
+                <Button
+                  variant={currentView === 'day' ? 'default' : 'ghost'}
+                  size="sm"
+                  onClick={() => handleDateClick(selectedDay)}
+                  className="gap-2"
+                >
+                  <CalendarDays className="h-4 w-4" />
+                  Dag
+                </Button>
+              </div>
+              
+              <Button onClick={() => setShowIntegrationModal(true)} variant="outline" className="gap-2">
+                <Settings className="h-4 w-4" />
+                Integrationer
+                {integrations.length > 0 && (
+                  <Badge variant="secondary" className="ml-1">{integrations.length}</Badge>
+                )}
+              </Button>
 
-      {/* Navigation with Minimalist Pill Design */}
-      <div className="px-6 mb-8">
-        <div className="flex flex-wrap justify-between items-center gap-4">
-          {/* View selector - Pill Design */}
-          <div className="flex flex-wrap gap-3">
-            <Button
-              variant={currentView === 'year' ? 'default' : 'outline'}
-              size="sm"
-              onClick={() => setCurrentView('year')}
-              className="gap-2 px-6 py-3 rounded-full border shadow-sm hover:shadow-md transition-all duration-200"
-            >
-              <CalendarClock className="h-5 w-5" />
-              <span className="font-medium">År</span>
-            </Button>
-            <Button
-              variant={currentView === 'month' ? 'default' : 'outline'}
-              size="sm"
-              onClick={() => setCurrentView('month')}
-              className="gap-2 px-6 py-3 rounded-full border shadow-sm hover:shadow-md transition-all duration-200"
-            >
-              <Calendar className="h-5 w-5" />
-              <span className="font-medium">Månad</span>
-            </Button>
-            <Button
-              variant={currentView === 'week' ? 'default' : 'outline'}
-              size="sm"
-              onClick={handleViewWeek}
-              className="gap-2 px-6 py-3 rounded-full border shadow-sm hover:shadow-md transition-all duration-200"
-            >
-              <CalendarRange className="h-5 w-5" />
-              <span className="font-medium">Vecka</span>
-            </Button>
-            <Button
-              variant={currentView === 'day' ? 'default' : 'outline'}
-              size="sm"
-              onClick={() => handleDateClick(selectedDay)}
-              className="gap-2 px-6 py-3 rounded-full border shadow-sm hover:shadow-md transition-all duration-200"
-            >
-              <CalendarDays className="h-5 w-5" />
-              <span className="font-medium">Dag</span>
-            </Button>
-          </div>
-          
-          {/* Action buttons */}
-          <div className="flex flex-wrap gap-3 items-center">
-            <Button 
-              onClick={() => setShowIntegrationModal(true)} 
-              variant="outline" 
-              className="gap-2 px-6 py-3 rounded-full border shadow-sm hover:shadow-md transition-all duration-200"
-            >
-              <Settings className="h-5 w-5" />
-              <span className="font-medium">Integrationer</span>
-              {integrations.length > 0 && (
-                <Badge variant="secondary" className="ml-1">{integrations.length}</Badge>
+              {/* Integration badges */}
+              {integrations.slice(0, 3).map(int => (
+                <Badge 
+                  key={int.id}
+                  variant={int.is_enabled && int.last_sync_status === 'success' ? 'default' : 'secondary'}
+                  className="cursor-pointer hover:opacity-80 transition-opacity"
+                  onClick={() => setShowIntegrationModal(true)}
+                >
+                  {int.provider_display_name}
+                  {!int.is_enabled && <span className="ml-1">⏸</span>}
+                  {int.last_sync_status === 'error' && <span className="ml-1">⚠️</span>}
+                </Badge>
+              ))}
+              {integrations.length > 3 && (
+                <Badge variant="outline" className="cursor-pointer" onClick={() => setShowIntegrationModal(true)}>
+                  +{integrations.length - 3}
+                </Badge>
               )}
-            </Button>
 
-            {/* Integration badges */}
-            {integrations.slice(0, 3).map(int => (
-              <Badge 
-                key={int.id}
-                variant={int.is_enabled && int.last_sync_status === 'success' ? 'default' : 'secondary'}
-                className="cursor-pointer hover:opacity-80 transition-opacity px-3 py-1 rounded-full"
-                onClick={() => setShowIntegrationModal(true)}
-              >
-                {int.provider_display_name}
-                {!int.is_enabled && <span className="ml-1">⏸</span>}
-                {int.last_sync_status === 'error' && <span className="ml-1">⚠️</span>}
-              </Badge>
-            ))}
-            {integrations.length > 3 && (
-              <Badge variant="outline" className="cursor-pointer rounded-full px-3 py-1" onClick={() => setShowIntegrationModal(true)}>
-                +{integrations.length - 3}
-              </Badge>
-            )}
-
-            <Button 
-              onClick={() => {
+              <Button onClick={() => {
                 setSelectedEvent(null);
                 setSelectedDate(new Date());
                 setShowEventModal(true);
-              }}
-              className="gap-2 px-6 py-3 rounded-full shadow-sm hover:shadow-md transition-all duration-200"
-            >
-              <Plus className="h-5 w-5" />
-              <span className="font-medium">Skapa händelse</span>
-            </Button>
+              }}>
+                <Plus className="h-4 w-4 mr-2" />
+                Skapa händelse
+              </Button>
+            </div>
           </div>
         </div>
       </div>
@@ -238,23 +227,11 @@ const CalendarPage = () => {
 
       {/* Month view */}
       {currentView === 'month' && (
-        <div className="px-6 pb-8 space-y-6 flex-1 overflow-auto">
+        <div className="px-6 py-4 space-y-6 flex-1 overflow-auto">
           <Tabs defaultValue="calendar" className="w-full">
-            <TabsList className="flex gap-3 bg-transparent border-0 p-0 mb-6">
-              <TabsTrigger 
-                value="calendar"
-                className="relative z-10 gap-2 px-6 py-3 bg-card text-foreground border border-border rounded-full shadow-sm hover:shadow-md hover:bg-accent data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:border-primary data-[state=active]:shadow-md transition-all duration-200"
-              >
-                <Calendar className="h-5 w-5" />
-                <span className="font-medium">Kalender</span>
-              </TabsTrigger>
-              <TabsTrigger 
-                value="availability"
-                className="relative z-10 gap-2 px-6 py-3 bg-card text-foreground border border-border rounded-full shadow-sm hover:shadow-md hover:bg-accent data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:border-primary data-[state=active]:shadow-md transition-all duration-200"
-              >
-                <CalendarClock className="h-5 w-5" />
-                <span className="font-medium">Min Tillgänglighet</span>
-              </TabsTrigger>
+            <TabsList>
+              <TabsTrigger value="calendar">Kalender</TabsTrigger>
+              <TabsTrigger value="availability">Min Tillgänglighet</TabsTrigger>
             </TabsList>
             
             <TabsContent value="calendar" className="space-y-6">
