@@ -18,7 +18,7 @@ export const LinkedInChatTab = () => {
             <div>
               <CardTitle className="text-xl">LinkedIn × Anthropic AI</CardTitle>
               <CardDescription>
-                Beskriv dina ideala kunder - AI:n hittar dem åt dig
+                Få färdiga leads med kontaktuppgifter direkt i din lista
               </CardDescription>
             </div>
           </div>
