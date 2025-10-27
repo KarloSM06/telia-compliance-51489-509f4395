@@ -60,9 +60,9 @@ All colors MUST be HSL.
     --shadow-button: 0 8px 24px -4px hsl(43 96% 56% / 0.4);
     --shadow-glow: 0 0 40px hsl(43 96% 56% / 0.3);
 
-    /* Smooth transitions */
-    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    --transition-spring: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    /* Smooth transitions - much slower */
+    --transition-smooth: all 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-spring: all 1.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 
     --radius: 0.75rem;
 
@@ -127,8 +127,17 @@ All colors MUST be HSL.
     @apply border-border;
   }
 
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 80px;
+  }
+
   body {
     @apply bg-background text-foreground font-sans antialiased;
+  }
+  
+  * {
+    scroll-behavior: smooth;
   }
 
   h1, h2, h3, h4, h5, h6 {
