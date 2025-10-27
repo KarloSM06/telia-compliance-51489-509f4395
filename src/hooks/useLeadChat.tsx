@@ -11,12 +11,25 @@ export interface ChatMessage {
   content: string;
   metadata: any;
   created_at: string;
+  conversation_id: string | null;
+}
+
+export interface Conversation {
+  id: string;
+  user_id: string;
+  provider: string;
+  title: string | null;
+  created_at: string;
+  updated_at: string;
+  message_count: number;
 }
 
 const CHAT_URL = "https://shskknkivuewuqonjdjc.supabase.co/functions/v1/linkedin-chat";
 
 export const useLeadChat = (provider: string = 'claude-linkedin') => {
   const { user } = useAuth();
+  const [conversations, setConversations] = useState<Conversation[]>([]);
+  const [currentConversationId, setCurrentConversationId] = useState<string | null>(null);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [loading, setLoading] = useState(true);
   const [sending, setSending] = useState(false);
@@ -24,14 +37,32 @@ export const useLeadChat = (provider: string = 'claude-linkedin') => {
   useEffect(() => {
     if (!user) {
       setMessages([]);
+      setConversations([]);
       setLoading(false);
       return;
     }
 
-    fetchMessages();
+    fetchConversations();
 
-    // Real-time subscription for new messages
-    const channel = supabase
+    // Real-time subscription for conversations
+    const conversationsChannel = supabase
+      .channel('lead_chat_conversations_changes')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'lead_chat_conversations',
+          filter: `user_id=eq.${user.id}`,
+        },
+        () => {
+          fetchConversations();
+        }
+      )
+      .subscribe();
+
+    // Real-time subscription for messages
+    const messagesChannel = supabase
       .channel('lead_chat_messages_changes')
       .on(
         'postgres_changes',
@@ -42,31 +73,58 @@ export const useLeadChat = (provider: string = 'claude-linkedin') => {
           filter: `user_id=eq.${user.id}`,
         },
         (payload) => {
-          setMessages(prev => [...prev, payload.new as ChatMessage]);
+          const newMessage = payload.new as ChatMessage;
+          if (newMessage.conversation_id === currentConversationId) {
+            setMessages(prev => [...prev, newMessage]);
+          }
         }
       )
       .subscribe();
 
     return () => {
-      supabase.removeChannel(channel);
+      supabase.removeChannel(conversationsChannel);
+      supabase.removeChannel(messagesChannel);
     };
-  }, [user, provider]);
+  }, [user, provider, currentConversationId]);
 
-  const fetchMessages = async () => {
+  const fetchConversations = async () => {
+    if (!user) return;
+
+    const { data, error } = await supabase
+      .from('lead_chat_conversations' as any)
+      .select('*')
+      .eq('provider', provider)
+      .order('updated_at', { ascending: false });
+
+    if (error) {
+      console.error('Error fetching conversations:', error);
+    } else {
+      const convData = (data as any as Conversation[]) || [];
+      setConversations(convData);
+      
+      // If no current conversation and we have conversations, select the most recent
+      if (!currentConversationId && convData.length > 0) {
+        setCurrentConversationId(convData[0].id);
+      }
+    }
+    setLoading(false);
+  };
+
+  const fetchMessages = async (conversationId: string) => {
     if (!user) return;
 
     setLoading(true);
     const { data, error } = await supabase
       .from('lead_chat_messages' as any)
       .select('*')
-      .eq('provider', provider)
+      .eq('conversation_id', conversationId)
       .order('created_at', { ascending: true });
 
     if (error) {
       console.error('Error fetching chat messages:', error);
       toast({
-        title: "Error",
-        description: "Failed to load chat history",
+        title: "Fel",
+        description: "Kunde inte ladda chatthistorik",
         variant: "destructive",
       });
     } else {
@@ -75,8 +133,87 @@ export const useLeadChat = (provider: string = 'claude-linkedin') => {
     setLoading(false);
   };
 
+  useEffect(() => {
+    if (currentConversationId) {
+      fetchMessages(currentConversationId);
+    } else {
+      setMessages([]);
+    }
+  }, [currentConversationId]);
+
+  const createNewConversation = async () => {
+    if (!user) return null;
+
+    const { data, error } = await supabase
+      .from('lead_chat_conversations' as any)
+      .insert({
+        user_id: user.id,
+        provider,
+      })
+      .select()
+      .single();
+
+    if (error) {
+      console.error('Error creating conversation:', error);
+      toast({
+        title: "Fel",
+        description: "Kunde inte skapa ny konversation",
+        variant: "destructive",
+      });
+      return null;
+    }
+
+    setCurrentConversationId((data as any).id);
+    setMessages([]);
+    await fetchConversations();
+    return (data as any).id;
+  };
+
+  const selectConversation = (conversationId: string) => {
+    setCurrentConversationId(conversationId);
+  };
+
+  const deleteConversation = async (conversationId: string) => {
+    if (!user) return false;
+
+    const { error } = await supabase
+      .from('lead_chat_conversations' as any)
+      .delete()
+      .eq('id', conversationId);
+
+    if (error) {
+      console.error('Error deleting conversation:', error);
+      toast({
+        title: "Fel",
+        description: "Kunde inte ta bort konversation",
+        variant: "destructive",
+      });
+      return false;
+    }
+
+    if (currentConversationId === conversationId) {
+      setCurrentConversationId(null);
+      setMessages([]);
+    }
+
+    await fetchConversations();
+    toast({
+      title: "Borttagen",
+      description: "Konversationen har tagits bort",
+    });
+    return true;
+  };
+
   const sendMessage = async (content: string, onChunk?: (chunk: string) => void) => {
     if (!user || !content.trim()) return false;
+
+    let conversationId = currentConversationId;
+    
+    // Create new conversation if none exists
+    if (!conversationId) {
+      conversationId = await createNewConversation();
+      if (!conversationId) return false;
+    }
 
     setSending(true);
 
@@ -90,6 +227,7 @@ export const useLeadChat = (provider: string = 'claude-linkedin') => {
           role: 'user',
           content: content.trim(),
           metadata: {},
+          conversation_id: conversationId,
         });
 
       if (insertError) {
@@ -118,12 +256,13 @@ export const useLeadChat = (provider: string = 'claude-linkedin') => {
         body: JSON.stringify({
           messages: allMessages,
           userId: user.id,
+          conversationId,
         }),
       });
 
       if (!response.ok || !response.body) {
         const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.error || 'Failed to get AI response');
+        throw new Error(errorData.error || 'Kunde inte få AI-svar');
       }
 
       // Stream the response
@@ -176,39 +315,16 @@ export const useLeadChat = (provider: string = 'claude-linkedin') => {
     }
   };
 
-  const clearHistory = async () => {
-    if (!user) return false;
-
-    const { error } = await supabase
-      .from('lead_chat_messages' as any)
-      .delete()
-      .eq('user_id', user.id)
-      .eq('provider', provider);
-
-    if (error) {
-      console.error('Error clearing chat history:', error);
-      toast({
-        title: "Error",
-        description: "Failed to clear chat history",
-        variant: "destructive",
-      });
-      return false;
-    }
-
-    setMessages([]);
-    toast({
-      title: "Success",
-      description: "Chat history cleared",
-    });
-    return true;
-  };
-
   return {
+    conversations,
+    currentConversationId,
     messages,
     loading,
     sending,
     sendMessage,
-    clearHistory,
-    refetch: fetchMessages,
+    createNewConversation,
+    selectConversation,
+    deleteConversation,
+    refetch: fetchConversations,
   };
 };

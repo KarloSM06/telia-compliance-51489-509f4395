@@ -3,15 +3,28 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Send, Trash2, Bot, User } from "lucide-react";
+import { Send, Bot, User, Menu } from "lucide-react";
 import { useLeadChat } from "@/hooks/useLeadChat";
 import { cn } from "@/lib/utils";
 import linkedinLogo from "@/assets/linkedin-logo.png";
 import anthropicLogo from "@/assets/anthropic-logo.png";
+import { ConversationList } from "./ConversationList";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
 export const LeadChatInterface = () => {
-  const { messages, loading, sending, sendMessage, clearHistory } = useLeadChat('claude-linkedin');
+  const { 
+    conversations,
+    currentConversationId,
+    messages, 
+    loading, 
+    sending, 
+    sendMessage,
+    createNewConversation,
+    selectConversation,
+    deleteConversation,
+  } = useLeadChat('claude-linkedin');
   const [input, setInput] = useState("");
+  const [showSidebar, setShowSidebar] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -47,27 +60,63 @@ export const LeadChatInterface = () => {
   };
 
   return (
-    <Card className="h-full flex flex-col bg-gradient-to-br from-blue-50/50 to-orange-50/50 dark:from-blue-950/20 dark:to-orange-950/20">
-      <CardHeader className="border-b bg-gradient-to-r from-blue-600 to-orange-600 text-white">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="flex items-center gap-2">
-              <img src={linkedinLogo} alt="LinkedIn" className="h-7 w-7 rounded-md bg-white/10 p-0.5" />
-              <span className="text-white/60">×</span>
-              <img src={anthropicLogo} alt="Anthropic" className="h-7 w-7 rounded-md bg-white/10 p-0.5" />
+    <div className="h-full flex gap-4">
+      {/* Desktop Sidebar */}
+      <div className="hidden lg:block w-72 flex-shrink-0">
+        <Card className="h-full">
+          <ConversationList
+            conversations={conversations}
+            currentConversationId={currentConversationId}
+            onSelectConversation={selectConversation}
+            onNewConversation={createNewConversation}
+            onDeleteConversation={deleteConversation}
+          />
+        </Card>
+      </div>
+
+      {/* Mobile Sidebar */}
+      <Sheet open={showSidebar} onOpenChange={setShowSidebar}>
+        <SheetContent side="left" className="w-80 p-0">
+          <ConversationList
+            conversations={conversations}
+            currentConversationId={currentConversationId}
+            onSelectConversation={(id) => {
+              selectConversation(id);
+              setShowSidebar(false);
+            }}
+            onNewConversation={() => {
+              createNewConversation();
+              setShowSidebar(false);
+            }}
+            onDeleteConversation={deleteConversation}
+          />
+        </SheetContent>
+      </Sheet>
+
+      {/* Chat Area */}
+      <Card className="flex-1 flex flex-col bg-gradient-to-br from-blue-50/50 to-orange-50/50 dark:from-blue-950/20 dark:to-orange-950/20">
+        <CardHeader className="border-b bg-gradient-to-r from-blue-600 to-orange-600 text-white">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <SheetTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="lg:hidden text-white hover:bg-white/20"
+                  onClick={() => setShowSidebar(true)}
+                >
+                  <Menu className="h-5 w-5" />
+                </Button>
+              </SheetTrigger>
+              <div className="flex items-center gap-2">
+                <img src={linkedinLogo} alt="LinkedIn" className="h-7 w-7 rounded-md bg-white/10 p-0.5" />
+                <span className="text-white/60">×</span>
+                <img src={anthropicLogo} alt="Anthropic" className="h-7 w-7 rounded-md bg-white/10 p-0.5 object-cover scale-[2.5]" />
+              </div>
+              <CardTitle className="text-lg">AI Chat Assistent</CardTitle>
             </div>
-            <CardTitle className="text-lg">AI Chat Assistent</CardTitle>
           </div>
-          <Button 
-            variant="ghost" 
-            size="sm"
-            onClick={clearHistory}
-            className="text-white hover:bg-white/20"
-          >
-            <Trash2 className="h-4 w-4" />
-          </Button>
-        </div>
-      </CardHeader>
+        </CardHeader>
 
       <CardContent className="flex-1 flex flex-col p-0">
         <ScrollArea className="flex-1 p-4" ref={scrollRef}>
@@ -81,12 +130,14 @@ export const LeadChatInterface = () => {
                 <div className="inline-flex items-center gap-3 mb-4">
                   <img src={linkedinLogo} alt="LinkedIn" className="h-12 w-12 rounded-lg" />
                   <span className="text-2xl text-muted-foreground">×</span>
-                  <img src={anthropicLogo} alt="Anthropic" className="h-12 w-12 rounded-lg" />
+                  <img src={anthropicLogo} alt="Anthropic" className="h-12 w-12 rounded-lg object-cover scale-[2.5]" />
                 </div>
                 <h3 className="font-semibold mb-2">Välkommen till AI Lead-assistenten</h3>
                 <p className="text-sm text-muted-foreground">
-                  Berätta vad för leads du söker, t.ex:<br />
-                  "Hitta tech-företag i Stockholm med 50+ anställda"
+                  {conversations.length === 0 
+                    ? "Starta en ny konversation för att börja söka leads."
+                    : "Berätta vad för leads du söker, t.ex: 'Hitta tech-företag i Stockholm med 50+ anställda'"
+                  }
                 </p>
               </div>
             </div>
@@ -167,5 +218,6 @@ export const LeadChatInterface = () => {
         </div>
       </CardContent>
     </Card>
+    </div>
   );
 };

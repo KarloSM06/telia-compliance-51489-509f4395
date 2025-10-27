@@ -12,7 +12,7 @@ serve(async (req) => {
   }
 
   try {
-    const { messages, userId } = await req.json();
+    const { messages, userId, conversationId } = await req.json();
     
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     const SUPABASE_URL = Deno.env.get("SUPABASE_URL");
@@ -109,7 +109,7 @@ Svara alltid på svenska och håll svaren kortfattade och praktiska.`;
       },
       async flush() {
         // Save the complete assistant response to Supabase
-        if (fullResponse && userId) {
+        if (fullResponse && userId && conversationId) {
           await supabase
             .from('lead_chat_messages')
             .insert({
@@ -118,6 +118,7 @@ Svara alltid på svenska och håll svaren kortfattade och praktiska.`;
               role: 'assistant',
               content: fullResponse,
               metadata: {},
+              conversation_id: conversationId,
             });
         }
       }
