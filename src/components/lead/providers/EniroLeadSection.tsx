@@ -129,19 +129,17 @@ export function EniroLeadSection() {
                 </Button>
               </div>
             ) : (
-              <TabsContent value={viewMode} className="mt-0">
-                {viewMode === 'kanban' ? (
-                  <KanbanView
-                    leads={filteredLeads}
-                    onViewDetails={handleViewDetails}
-                  />
-                ) : (
-                  <LeadsTable
-                    leads={filteredLeads}
-                    onViewDetails={handleViewDetails}
-                  />
-                )}
-              </TabsContent>
+              viewMode === 'kanban' ? (
+                <KanbanView
+                  leads={filteredLeads}
+                  onViewDetails={handleViewDetails}
+                />
+              ) : (
+                <LeadsTable
+                  leads={filteredLeads}
+                  onViewDetails={handleViewDetails}
+                />
+              )
             )}
           </CardContent>
         </Card>
