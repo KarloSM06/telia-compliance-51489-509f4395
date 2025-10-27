@@ -2,7 +2,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { LeadChatInterface } from "@/components/lead/chat/LeadChatInterface";
 import { Sparkles } from "lucide-react";
 import anthropicLogo from "@/assets/anthropic-ai-logo.png";
-import linkedinLogo from "@/assets/linkedin-logo-new.png";
+import linkedinLogo from "@/assets/linkedin-icon.webp";
 
 export const LinkedInChatTab = () => {
   return (

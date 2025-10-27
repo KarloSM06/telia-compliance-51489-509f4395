@@ -2,7 +2,7 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ListChecks } from "lucide-react";
 import eniroLogo from "@/assets/eniro-logo-new.png";
-import linkedinLogo from "@/assets/linkedin-logo-new.png";
+import linkedinLogo from "@/assets/linkedin-icon.webp";
 
 interface LeadPageHeaderProps {
   activeTab: 'eniro' | 'linkedin' | 'lists';
