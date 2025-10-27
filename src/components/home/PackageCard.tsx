@@ -25,22 +25,17 @@ export const PackageCard = ({
       <div className={`flex-1 flex flex-row items-center ${isImageLeft ? 'lg:order-2' : 'lg:order-1'}`}>
         <div className="w-full grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8 p-8 lg:p-10">
           <div className="lg:col-span-1 space-y-4">
-            <div className="flex items-center gap-3 mb-4">
-              
-            </div>
             <div>
-              <CardTitle className="text-2xl lg:text-3xl mb-3 leading-tight bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent font-bold">
+              <CardTitle className="text-2xl lg:text-3xl mb-3 leading-tight font-bold">
                 {pkg.name}
               </CardTitle>
               <p className="text-sm lg:text-base text-muted-foreground/90 font-medium mb-3">
                 {pkg.targetAudience}
               </p>
-            </div>
-            {pkg.description && <div className="pt-3 border-t border-border/50">
-                <p className="text-xs lg:text-sm leading-relaxed text-muted-foreground line-clamp-4">
+              {pkg.description && <p className="text-xs lg:text-sm leading-relaxed text-muted-foreground mt-3">
                   {pkg.description}
-                </p>
-              </div>}
+                </p>}
+            </div>
           </div>
           
           <div className="lg:col-span-1 space-y-3">
@@ -79,7 +74,7 @@ export const PackageCard = ({
                   </div>)}
               </div>
             </div>
-            <Button size="lg" className="w-full shadow-lg hover:shadow-xl hover:scale-[1.02] transition-all duration-300 bg-gradient-to-r from-primary via-primary to-accent hover:from-primary/90 hover:via-primary/90 hover:to-accent/90 font-semibold" onClick={onBookDemo}>
+            <Button size="lg" className="w-full shadow-lg hover:shadow-xl hover:scale-[1.02] transition-all duration-300 bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-semibold" onClick={onBookDemo}>
               Boka kostnadsfri demo
             </Button>
           </div>
