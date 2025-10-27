@@ -14,8 +14,8 @@ export default function Communications() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-background to-muted/20">
       {/* Premium Hero Section */}
-      <div className="relative bg-gradient-hero text-primary-foreground overflow-hidden">
-        <div className="absolute inset-0 bg-[url('/images/tools-background.jpg')] opacity-5 bg-cover bg-center rounded-lg" />
+      <div className="relative bg-gradient-hero text-primary-foreground overflow-hidden rounded-lg">
+        <div className="absolute inset-0 bg-[url('/images/tools-background.jpg')] opacity-5 bg-cover bg-center" />
         <div className="relative container mx-auto px-6 py-12">
           <div className="max-w-3xl">
             <h1 className="text-4xl lg:text-5xl font-display font-bold mb-4 animate-fade-in">
