@@ -8,6 +8,7 @@ import { Lead, useLeads } from "@/hooks/useLeads";
 import { LeadsTable } from "@/components/lead/LeadsTable";
 import { KanbanView } from "@/components/lead/KanbanView";
 import { LeadDetailModal } from "@/components/lead/LeadDetailModal";
+import { LeadListSelector } from "@/components/lead/LeadListSelector";
 
 type ListType = 'organizations' | 'contacts';
 type LeadType = 'all' | 'brf' | 'business';
@@ -16,6 +17,7 @@ export const LeadsListTab = () => {
   const [listType, setListType] = useState<ListType>('organizations');
   const [view, setView] = useState<'table' | 'kanban'>('table');
   const [leadType, setLeadType] = useState<LeadType>('all');
+  const [selectedSearchId, setSelectedSearchId] = useState<string | null>(null);
   const [selectedLead, setSelectedLead] = useState<Lead | null>(null);
   const [showDetailModal, setShowDetailModal] = useState(false);
 
@@ -26,9 +28,16 @@ export const LeadsListTab = () => {
     setShowDetailModal(true);
   };
 
+  // Filter by search first
+  const filteredBySearch = selectedSearchId === 'ungrouped'
+    ? leads.filter(lead => !lead.search_id)
+    : selectedSearchId
+    ? leads.filter(lead => lead.search_id === selectedSearchId)
+    : leads;
+
   // Filter leads based on listType - support both old and new contact fields
   const filteredByListType = listType === 'contacts' 
-    ? leads.filter(lead => {
+    ? filteredBySearch.filter(lead => {
         // Check for LinkedIn contact info (new fields)
         const hasLinkedInContact = (lead.full_name && lead.full_name.trim() !== '') || 
                                    (lead.first_name && lead.first_name.trim() !== '');
@@ -38,7 +47,7 @@ export const LeadsListTab = () => {
         
         return hasLinkedInContact || hasEniroContact;
       })
-    : leads;
+    : filteredBySearch;
 
   // Filter by lead type
   const filteredLeads = leadType === 'all' 
@@ -50,6 +59,13 @@ export const LeadsListTab = () => {
       {/* Header Controls */}
       <Card className="border-b">
         <div className="p-4 space-y-4">
+          {/* List Selector */}
+          <LeadListSelector
+            leads={leads}
+            selectedSearchId={selectedSearchId}
+            onSelectSearch={setSelectedSearchId}
+          />
+
           {/* List Type and View Toggle */}
           <div className="flex items-center justify-between flex-wrap gap-4">
             <div className="flex items-center gap-2">
