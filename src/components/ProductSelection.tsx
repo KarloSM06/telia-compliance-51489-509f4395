@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { ArrowRight, CheckCircle, Zap, Target, Sparkles, ChefHat, Headphones, UserCheck, TrendingUp, MessageSquare, ShoppingCart, Award, Send, Loader2, Phone, BarChart3, Users, Clock, Star } from "lucide-react";
+import { ArrowRight, CheckCircle, Zap, Target, Sparkles, ChefHat, Headphones, UserCheck, TrendingUp, MessageSquare, ShoppingCart, Award, Send, Loader2, Phone, BarChart3, Users, Clock, Star, Wrench } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { useState, useRef, useEffect } from "react";
@@ -545,477 +545,129 @@ export const ProductSelection = () => {
         </div>
       </section>
 
-      {/* Products Section */}
-      <section id="products" className="relative py-32" style={{
-      backgroundImage: 'url(/images/tools-background.jpg)',
-      backgroundSize: 'cover',
-      backgroundPosition: 'center'
-    }}>
-        <div className="absolute inset-0 bg-gradient-to-b from-primary/80 via-primary/40 to-primary/80"></div>
-        <div className="mx-auto max-w-[1800px] px-6 lg:px-8 relative z-10">
-          <div className="mx-auto max-w-4xl text-center mb-12 animate-fade-in bg-primary/30 backdrop-blur-sm rounded-2xl p-8 border border-primary/30">
-            <h2 className="text-5xl font-display font-bold text-white mb-6 drop-shadow-lg">Är ni endast i behov av ett visst verktyg?</h2>
+      {/* Om oss Section */}
+      <section id="about" className="relative py-32 bg-gradient-to-b from-background via-primary/10 to-background">
+        <div className="mx-auto max-w-7xl px-6 lg:px-8">
+          <AnimatedSection className="mx-auto max-w-3xl text-center mb-16">
+            <div className="inline-flex items-center gap-2 rounded-full bg-accent/10 px-4 py-2 mb-6 backdrop-blur-sm border border-accent/20">
+              <Sparkles className="h-4 w-4 text-accent" />
+              <span className="text-sm font-medium text-foreground">Om oss – Hiems</span>
+            </div>
+            <h2 className="text-5xl font-display font-bold mb-6">Vi är unga, drivna och brinner för AI</h2>
             <div className="w-24 h-1.5 bg-gradient-gold mx-auto rounded-full mb-8"></div>
-            <p className="text-lg text-white mb-8 drop-shadow-md">Kolla in våra färdiga paket. Vi har utvecklat dessa för att göra processen så snabb och smidig som möjligt.</p>
-            <Button onClick={() => setShowPackages(!showPackages)} size="lg" variant="outline" className="border-2 border-white/20 text-white bg-white/5 hover:bg-white/10 hover:scale-105 transition-all duration-300 font-semibold">
-              {showPackages ? 'Dölj paket' : 'Se mer'}
-              <ArrowRight className={`ml-2 h-5 w-5 transition-transform duration-300 ${showPackages ? 'rotate-90' : ''}`} />
-            </Button>
+            <p className="text-lg text-muted-foreground leading-relaxed">
+              Hiems grundades av ett team som ser möjligheterna med AI och vill göra tekniken tillgänglig för alla företag, inte bara stora aktörer. Vi kombinerar ung drivkraft, nyfikenhet och teknisk expertis med förståelse för bygg- och VVS-verksamheter. Vårt mål är enkelt: skapa lösningar som sparar tid, minskar dubbelarbete och gör vardagen enklare.
+            </p>
+          </AnimatedSection>
+
+          {/* Values */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto mb-20">
+            <AnimatedSection delay={0} className="group text-center">
+              <div className="relative rounded-2xl bg-card p-8 border border-border hover:border-accent/50 transition-all duration-300 h-full hover:shadow-elegant">
+                <div className="absolute inset-0 bg-gradient-gold opacity-0 group-hover:opacity-5 rounded-2xl transition-opacity"></div>
+                <div className="relative">
+                  <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-accent/10 mb-6 group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
+                    <Zap className="h-8 w-8 text-accent" />
+                  </div>
+                  <h3 className="text-xl font-display font-bold mb-3">Tillgänglig AI för alla</h3>
+                  <p className="text-muted-foreground leading-relaxed">Vi tror på tillgänglig AI som alla kan använda, oavsett företagsstorlek eller teknisk expertis.</p>
+                </div>
+              </div>
+            </AnimatedSection>
+
+            <AnimatedSection delay={100} className="group text-center">
+              <div className="relative rounded-2xl bg-card p-8 border border-border hover:border-accent/50 transition-all duration-300 h-full hover:shadow-elegant">
+                <div className="absolute inset-0 bg-gradient-gold opacity-0 group-hover:opacity-5 rounded-2xl transition-opacity"></div>
+                <div className="relative">
+                  <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-accent/10 mb-6 group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
+                    <Wrench className="h-8 w-8 text-accent" />
+                  </div>
+                  <h3 className="text-xl font-display font-bold mb-3">Hands-on & kreativa</h3>
+                  <p className="text-muted-foreground leading-relaxed">Vi är hands-on och kreativa, och bygger lösningar som faktiskt fungerar i verkligheten.</p>
+                </div>
+              </div>
+            </AnimatedSection>
+
+            <AnimatedSection delay={200} className="group text-center">
+              <div className="relative rounded-2xl bg-card p-8 border border-border hover:border-accent/50 transition-all duration-300 h-full hover:shadow-elegant">
+                <div className="absolute inset-0 bg-gradient-gold opacity-0 group-hover:opacity-5 rounded-2xl transition-opacity"></div>
+                <div className="relative">
+                  <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-accent/10 mb-6 group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
+                    <Users className="h-8 w-8 text-accent" />
+                  </div>
+                  <h3 className="text-xl font-display font-bold mb-3">Personliga relationer</h3>
+                  <p className="text-muted-foreground leading-relaxed">Vi värdesätter personliga relationer med våra kunder och ser er framgång som vår framgång.</p>
+                </div>
+              </div>
+            </AnimatedSection>
           </div>
 
-          {showPackages && <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-6 max-w-[1800px] mx-auto animate-fade-in animate-scale-in">
-            {/* AI Receptionist - Krono */}
-            <AnimatedSection delay={0}>
-            <Card className="group relative overflow-hidden border-2 border-white/10 bg-gradient-card backdrop-blur-sm hover:border-accent/50 hover:scale-[1.02] transition-all duration-500 hover:shadow-glow h-full flex flex-col">
-              <div className="absolute inset-0 bg-gradient-gold opacity-0 group-hover:opacity-10 transition-opacity duration-500"></div>
-              <CardHeader className="relative p-6">
-                <div className="flex items-center justify-center w-16 h-16 rounded-2xl bg-accent/10 mb-4 group-hover:scale-110 group-hover:rotate-3 transition-all duration-500">
-                  <Headphones className="h-8 w-8 text-accent" />
+          {/* Team Section */}
+          <AnimatedSection className="mb-12">
+            <h3 className="text-3xl font-display font-bold text-center mb-12">Möt teamet</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              <AnimatedSection delay={0} className="rounded-2xl bg-card backdrop-blur-sm border border-border p-8 text-center hover:border-accent/50 transition-all duration-300 hover:shadow-elegant">
+                <img 
+                  src={antonImage} 
+                  alt="Anton Sallnäs" 
+                  className="w-40 h-40 rounded-full mx-auto mb-6 object-cover border-2 border-accent/30"
+                  loading="lazy"
+                />
+                <h4 className="text-xl font-bold mb-2">Anton Sallnäs</h4>
+                <p className="text-lg text-muted-foreground mb-4">CEO</p>
+                <p className="text-sm text-muted-foreground mb-1">anton@hiems.se</p>
+                <p className="text-sm text-muted-foreground">070-657 15 32</p>
+                <p className="text-xs text-muted-foreground/70 italic mt-4">"Jag brinner för att göra AI begripligt"</p>
+              </AnimatedSection>
+              
+              <AnimatedSection delay={100} className="rounded-2xl bg-card backdrop-blur-sm border border-border p-8 text-center hover:border-accent/50 transition-all duration-300 hover:shadow-elegant">
+                <img 
+                  src={karloImage} 
+                  alt="Karlo Mangione" 
+                  className="w-40 h-40 rounded-full mx-auto mb-6 object-cover border-2 border-accent/30"
+                  loading="lazy"
+                />
+                <h4 className="text-xl font-bold mb-2">Karlo Mangione</h4>
+                <p className="text-lg text-muted-foreground mb-4">COO</p>
+                <p className="text-sm text-muted-foreground mb-1">karlo.mangione@hiems.se</p>
+                <p className="text-sm text-muted-foreground">070-231 22 71</p>
+                <p className="text-xs text-muted-foreground/70 italic mt-4">"AI ska vara enkelt att använda"</p>
+              </AnimatedSection>
+              
+              <AnimatedSection delay={200} className="rounded-2xl bg-card backdrop-blur-sm border border-border p-8 text-center hover:border-accent/50 transition-all duration-300 hover:shadow-elegant">
+                <img 
+                  src={emilImage} 
+                  alt="Emil Westerberg" 
+                  className="w-40 h-40 rounded-full mx-auto mb-6 object-cover border-2 border-accent/30"
+                  loading="lazy"
+                />
+                <h4 className="text-xl font-bold mb-2">Emil Westerberg</h4>
+                <p className="text-lg text-muted-foreground mb-4">CLO</p>
+                <p className="text-sm text-muted-foreground mb-1">emil@hiems.se</p>
+                <p className="text-sm text-muted-foreground">072-327 34 65</p>
+                <p className="text-xs text-muted-foreground/70 italic mt-4">"Teknologi som skapar verkligt värde"</p>
+              </AnimatedSection>
+              
+              <AnimatedSection delay={300} className="rounded-2xl bg-card backdrop-blur-sm border border-border p-8 text-center hover:border-accent/50 transition-all duration-300 hover:shadow-elegant">
+                <div className="w-40 h-40 rounded-full mx-auto mb-6 bg-gradient-primary flex items-center justify-center border-2 border-accent/30">
+                  <span className="text-4xl font-bold text-white">ME</span>
                 </div>
-                <CardTitle className="text-xl font-display mb-2">AI Receptionist</CardTitle>
-                <CardDescription className="text-sm text-muted-foreground">Missa aldrig ett samtal eller en affär. AI-receptionisten hanterar samtal, SMS och mejl dygnet runt – bokar, avbokar och kvalificerar kunder automatiskt. Perfekt för serviceföretag, kliniker och byråer som vill frigöra tid utan att tappa kundkontakt.</CardDescription>
-              </CardHeader>
-              <CardContent className="relative space-y-4 p-6 pt-0 flex-1 flex flex-col">
-                <ul className="space-y-3 mb-6 flex-1">
-                  {packageDetails.krono.features.slice(0, 3).map((feature, idx) => <li key={idx} className="flex items-start gap-2">
-                      <div className="flex-shrink-0 w-5 h-5 rounded-full bg-accent/10 flex items-center justify-center mt-0.5">
-                        <CheckCircle className="h-3 w-3 text-accent" />
-                      </div>
-                      <span className="text-foreground/80 leading-relaxed text-sm">{feature}</span>
-                    </li>)}
-                </ul>
-                <Dialog>
-                  <DialogTrigger asChild>
-                    <Button size="lg" className="w-full bg-primary text-primary-foreground hover:bg-primary/90 shadow-button group-hover:shadow-glow transition-all duration-300 font-semibold text-sm h-12 mt-auto" onClick={() => handlePackageClick('krono')}>
-                      Läs mer
-                      <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
-                    </Button>
-                  </DialogTrigger>
-                  <DialogContent className="sm:max-w-4xl max-h-[90vh] overflow-y-auto">
-                    <DialogHeader>
-                      <DialogTitle className="text-3xl font-display mb-4">{packageDetails.krono.title}</DialogTitle>
-                      <DialogDescription className="text-base leading-relaxed">
-                        {packageDetails.krono.fullDescription}
-                      </DialogDescription>
-                    </DialogHeader>
-                    
-                    <div className="py-6">
-                      <div className="mb-6">
-                        <label className="text-sm font-medium mb-2 block">Välj antal minuter:</label>
-                        <div className="flex items-center gap-4 mb-4">
-                          <Slider value={[minuteOptions.indexOf(selectedMinutes)]} onValueChange={value => setSelectedMinutes(minuteOptions[value[0]])} max={minuteOptions.length - 1} step={1} className="flex-1" />
-                          <span className="font-semibold min-w-[80px]">{selectedMinutes} min</span>
-                        </div>
-                        <p className="text-sm text-muted-foreground">Överanvändning: 5 kr/min | SMS: 3 kr/st</p>
-                      </div>
+                <h4 className="text-xl font-bold mb-2">Malte Ekbäck</h4>
+                <p className="text-lg text-muted-foreground mb-4">CFO</p>
+                <p className="text-sm text-muted-foreground mb-1">malte@hiems.se</p>
+                <p className="text-sm text-muted-foreground">073-024 66 28</p>
+                <p className="text-xs text-muted-foreground/70 italic mt-4">"Smart tillväxt med AI"</p>
+              </AnimatedSection>
+            </div>
+          </AnimatedSection>
 
-                      <div className="grid md:grid-cols-3 gap-4">
-                        <Card className="border-2 hover:border-accent/50 transition-colors h-full flex flex-col">
-                          <CardHeader>
-                            <CardTitle className="text-xl">Pro</CardTitle>
-                            <div className="text-3xl font-bold">{minutePricing[selectedMinutes].pro} kr<span className="text-sm font-normal">/mån</span></div>
-                          </CardHeader>
-                          <CardContent className="flex-1 flex flex-col">
-                            <ul className="space-y-2 mb-4 text-sm flex-1">
-                              {packageDetails.krono.pricing?.pro.features.map((f, i) => <li key={i} className="flex items-start gap-2">
-                                  <CheckCircle className="h-4 w-4 text-accent mt-0.5 flex-shrink-0" />
-                                  <span>{f}</span>
-                                </li>)}
-                            </ul>
-                            <Button onClick={() => handleCheckout('krono', 'pro')} className="w-full mt-auto" disabled={isCheckingOut}>
-                              Välj Pro
-                            </Button>
-                          </CardContent>
-                        </Card>
-
-                        <Card className="border-2 border-accent/50 relative h-full flex flex-col">
-                          <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-accent text-accent-foreground px-3 py-1 rounded-full text-xs font-semibold">
-                            POPULÄR
-                          </div>
-                          <CardHeader>
-                            <CardTitle className="text-xl">Business</CardTitle>
-                            <div className="text-3xl font-bold">{minutePricing[selectedMinutes].business} kr<span className="text-sm font-normal">/mån</span></div>
-                          </CardHeader>
-                          <CardContent className="flex-1 flex flex-col">
-                            <ul className="space-y-2 mb-4 text-sm flex-1">
-                              {packageDetails.krono.pricing?.business.features.map((f, i) => <li key={i} className="flex items-start gap-2">
-                                  <CheckCircle className="h-4 w-4 text-accent mt-0.5 flex-shrink-0" />
-                                  <span>{f}</span>
-                                </li>)}
-                            </ul>
-                            <Button onClick={() => handleCheckout('krono', 'business')} className="w-full bg-gradient-gold text-primary hover:shadow-glow hover:scale-105 transition-all duration-300 mt-auto" disabled={isCheckingOut}>
-                              Välj Business
-                            </Button>
-                          </CardContent>
-                        </Card>
-
-                        <Card className="border-2 hover:border-accent/50 transition-colors h-full flex flex-col">
-                          <CardHeader>
-                            <CardTitle className="text-xl">Enterprise</CardTitle>
-                            <div className="text-3xl font-bold">{minutePricing[selectedMinutes].enterprise}</div>
-                          </CardHeader>
-                          <CardContent className="flex-1 flex flex-col">
-                            <ul className="space-y-2 mb-4 text-sm flex-1">
-                              {packageDetails.krono.pricing?.enterprise.features.map((f, i) => <li key={i} className="flex items-start gap-2">
-                                  <CheckCircle className="h-4 w-4 text-accent mt-0.5 flex-shrink-0" />
-                                  <span>{f}</span>
-                                </li>)}
-                            </ul>
-                            <Button onClick={() => handleCheckout('krono', 'enterprise')} variant="outline" className="w-full mt-auto" disabled={isCheckingOut}>
-                              Kontakta oss
-                            </Button>
-                          </CardContent>
-                        </Card>
-                      </div>
-                    </div>
-                  </DialogContent>
-                </Dialog>
-              </CardContent>
-            </Card>
-            </AnimatedSection>
-
-            {/* AI Restaurang - Gastro */}
-            <AnimatedSection delay={100}>
-            <Card className="group relative overflow-hidden border-2 border-white/10 bg-gradient-card backdrop-blur-sm hover:border-accent/50 hover:scale-[1.02] transition-all duration-500 hover:shadow-glow h-full flex flex-col">
-              <div className="absolute inset-0 bg-gradient-gold opacity-0 group-hover:opacity-10 transition-opacity duration-500"></div>
-              <CardHeader className="relative p-6">
-                <div className="flex items-center justify-center w-16 h-16 rounded-2xl bg-accent/10 mb-4 group-hover:scale-110 group-hover:rotate-3 transition-all duration-500">
-                  <ChefHat className="h-8 w-8 text-accent" />
-                </div>
-                <CardTitle className="text-xl font-display mb-2">Restaurang & Café</CardTitle>
-                <CardDescription className="text-sm text-muted-foreground">Missa aldrig en bokning eller beställning – även under rusningstid. AI hanterar bokningar, menyfrågor och kundfeedback via telefon och SMS. För restauranger, caféer och hotell som vill ge snabb service utan stress.</CardDescription>
-              </CardHeader>
-              <CardContent className="relative space-y-4 p-6 pt-0 flex-1 flex flex-col">
-                <ul className="space-y-3 mb-6 flex-1">
-                  {packageDetails.gastro.features.map((feature, idx) => <li key={idx} className="flex items-start gap-2">
-                      <div className="flex-shrink-0 w-5 h-5 rounded-full bg-accent/10 flex items-center justify-center mt-0.5">
-                        <CheckCircle className="h-3 w-3 text-accent" />
-                      </div>
-                      <span className="text-foreground/80 leading-relaxed text-sm">{feature}</span>
-                    </li>)}
-                </ul>
-                <Dialog>
-                  <DialogTrigger asChild>
-                    <Button size="lg" className="w-full bg-primary text-primary-foreground hover:bg-primary/90 shadow-button group-hover:shadow-glow transition-all duration-300 font-semibold text-sm h-12 mt-auto" onClick={() => handlePackageClick('gastro')}>
-                      Läs mer
-                      <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
-                    </Button>
-                  </DialogTrigger>
-                  <DialogContent className="sm:max-w-4xl max-h-[90vh] overflow-y-auto">
-                    <DialogHeader>
-                      <DialogTitle className="text-3xl font-display mb-4">{packageDetails.gastro.title}</DialogTitle>
-                      <DialogDescription className="text-base leading-relaxed">
-                        {packageDetails.gastro.fullDescription}
-                      </DialogDescription>
-                    </DialogHeader>
-                    
-                    <div className="py-6">
-                      <div className="mb-6">
-                        <label className="text-sm font-medium mb-2 block">Välj antal minuter:</label>
-                        <div className="flex items-center gap-4 mb-4">
-                          <Slider value={[minuteOptions.indexOf(selectedMinutes)]} onValueChange={value => setSelectedMinutes(minuteOptions[value[0]])} max={minuteOptions.length - 1} step={1} className="flex-1" />
-                          <span className="font-semibold min-w-[80px]">{selectedMinutes} min</span>
-                        </div>
-                        <p className="text-sm text-muted-foreground">Överanvändning: 5 kr/min | SMS: 3 kr/st</p>
-                      </div>
-
-                      <div className="grid md:grid-cols-3 gap-4">
-                        {['pro', 'business', 'enterprise'].map(tier => <Card key={tier} className={`border-2 ${tier === 'business' ? 'border-accent/50 relative' : 'hover:border-accent/50'} transition-colors`}>
-                            {tier === 'business' && <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-accent text-accent-foreground px-3 py-1 rounded-full text-xs font-semibold">POPULÄR</div>}
-                            <CardHeader>
-                              <CardTitle className="text-xl capitalize">{tier}</CardTitle>
-                              <div className="text-3xl font-bold">
-                                {tier === 'enterprise' ? minutePricing[selectedMinutes].enterprise : `${minutePricing[selectedMinutes][tier as 'pro' | 'business']} kr`}
-                                {tier !== 'enterprise' && <span className="text-sm font-normal">/mån</span>}
-                              </div>
-                            </CardHeader>
-                            <CardContent>
-                              <ul className="space-y-2 mb-4 text-sm">
-                                {packageDetails.gastro.pricing?.[tier as 'pro' | 'business' | 'enterprise'].features.map((f, i) => <li key={i} className="flex items-start gap-2">
-                                    <CheckCircle className="h-4 w-4 text-accent mt-0.5 flex-shrink-0" />
-                                    <span>{f}</span>
-                                  </li>)}
-                              </ul>
-                              <Button onClick={() => handleCheckout('gastro', tier as 'pro' | 'business' | 'enterprise')} className={`w-full ${tier === 'business' ? 'bg-accent hover:bg-accent/90' : ''}`} variant={tier === 'enterprise' ? 'outline' : 'default'} disabled={isCheckingOut}>
-                                {tier === 'enterprise' ? 'Kontakta oss' : `Välj ${tier}`}
-                              </Button>
-                            </CardContent>
-                          </Card>)}
-                      </div>
-                    </div>
-                  </DialogContent>
-                </Dialog>
-              </CardContent>
-            </Card>
-            </AnimatedSection>
-
-            {/* AI Rekrytering - Talent */}
-            <AnimatedSection delay={200}>
-            <Card className="group relative overflow-hidden border-2 border-white/10 bg-gradient-card backdrop-blur-sm hover:border-accent/50 hover:scale-[1.02] transition-all duration-500 hover:shadow-glow h-full flex flex-col">
-              <div className="absolute inset-0 bg-gradient-gold opacity-0 group-hover:opacity-10 transition-opacity duration-500"></div>
-              <CardHeader className="relative p-6">
-                <div className="flex items-center justify-center w-16 h-16 rounded-2xl bg-accent/10 mb-4 group-hover:scale-110 group-hover:rotate-3 transition-all duration-500">
-                  <UserCheck className="h-8 w-8 text-accent" />
-                </div>
-                <CardTitle className="text-xl font-display mb-2">AI Rekrytering</CardTitle>
-                <CardDescription className="text-sm text-muted-foreground">Hitta rätt kandidater snabbare. AI screenar ansökningar, rankar kandidater och hittar nya via LinkedIn – helt automatiskt. För HR-avdelningar och rekryteringsbyråer som vill effektivisera sin rekrytering.</CardDescription>
-              </CardHeader>
-              <CardContent className="relative space-y-4 p-6 pt-0 flex-1 flex flex-col">
-                <ul className="space-y-3 mb-6 flex-1">
-                  {packageDetails.talent.features.map((feature, idx) => <li key={idx} className="flex items-start gap-2">
-                      <div className="flex-shrink-0 w-5 h-5 rounded-full bg-accent/10 flex items-center justify-center mt-0.5">
-                        <CheckCircle className="h-3 w-3 text-accent" />
-                      </div>
-                      <span className="text-foreground/80 leading-relaxed text-sm">{feature}</span>
-                    </li>)}
-                </ul>
-                <Dialog>
-                  <DialogTrigger asChild>
-                    <Button size="lg" className="w-full bg-primary text-primary-foreground hover:bg-primary/90 shadow-button group-hover:shadow-glow transition-all duration-300 font-semibold text-sm h-12 mt-auto" onClick={() => handlePackageClick('talent')}>
-                      Läs mer
-                      <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
-                    </Button>
-                  </DialogTrigger>
-                  <DialogContent className="sm:max-w-4xl max-h-[90vh] overflow-y-auto">
-                    <DialogHeader>
-                      <DialogTitle className="text-3xl font-display mb-4">{packageDetails.talent.title}</DialogTitle>
-                      <DialogDescription className="text-base leading-relaxed">
-                        {packageDetails.talent.fullDescription}
-                      </DialogDescription>
-                    </DialogHeader>
-                    
-                    <div className="py-6">
-                      <div className="grid md:grid-cols-3 gap-4">
-                        {['pro', 'business', 'enterprise'].map(tier => <Card key={tier} className={`border-2 ${tier === 'business' ? 'border-accent/50 relative' : 'hover:border-accent/50'} transition-colors`}>
-                            {tier === 'business' && <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-accent text-accent-foreground px-3 py-1 rounded-full text-xs font-semibold">POPULÄR</div>}
-                            <CardHeader>
-                              <CardTitle className="text-xl capitalize">{tier}</CardTitle>
-                              <div className="text-3xl font-bold">
-                                {packageDetails.talent.pricing?.[tier as 'pro' | 'business' | 'enterprise'].price}
-                                {tier !== 'enterprise' && <span className="text-sm font-normal"> kr/mån</span>}
-                              </div>
-                            </CardHeader>
-                            <CardContent>
-                              <ul className="space-y-2 mb-4 text-sm">
-                                {packageDetails.talent.pricing?.[tier as 'pro' | 'business' | 'enterprise'].features.map((f, i) => <li key={i} className="flex items-start gap-2">
-                                    <CheckCircle className="h-4 w-4 text-accent mt-0.5 flex-shrink-0" />
-                                    <span>{f}</span>
-                                  </li>)}
-                              </ul>
-                              <Button onClick={() => handleCheckout('talent', tier as 'pro' | 'business' | 'enterprise')} className={`w-full ${tier === 'business' ? 'bg-accent hover:bg-accent/90' : ''}`} variant={tier === 'enterprise' ? 'outline' : 'default'} disabled={isCheckingOut}>
-                                {tier === 'enterprise' ? 'Kontakta oss' : `Välj ${tier}`}
-                              </Button>
-                            </CardContent>
-                          </Card>)}
-                      </div>
-                    </div>
-                  </DialogContent>
-                </Dialog>
-              </CardContent>
-            </Card>
-            </AnimatedSection>
-
-            {/* AI Prospektering - Lead */}
-            <AnimatedSection delay={300}>
-            <Card className="group relative overflow-hidden border-2 border-white/10 bg-gradient-card backdrop-blur-sm hover:border-accent/50 hover:scale-[1.02] transition-all duration-500 hover:shadow-glow h-full flex flex-col">
-              <div className="absolute inset-0 bg-gradient-gold opacity-0 group-hover:opacity-10 transition-opacity duration-500"></div>
-              <CardHeader className="relative p-6">
-                <div className="flex items-center justify-center w-16 h-16 rounded-2xl bg-accent/10 mb-4 group-hover:scale-110 group-hover:rotate-3 transition-all duration-500">
-                  <TrendingUp className="h-8 w-8 text-accent" />
-                </div>
-                <CardTitle className="text-xl font-display mb-2">AI Prospektering</CardTitle>
-                <CardDescription className="text-sm text-muted-foreground">Fyll din säljpipeline automatiskt. AI hittar, kontaktar och följer upp leads med personliga mejl och meddelanden. För B2B-företag och säljteam som vill växa utan manuell prospektering.</CardDescription>
-              </CardHeader>
-              <CardContent className="relative space-y-4 p-6 pt-0 flex-1 flex flex-col">
-                <ul className="space-y-3 mb-6 flex-1">
-                  {packageDetails.lead.features.map((feature, idx) => <li key={idx} className="flex items-start gap-2">
-                      <div className="flex-shrink-0 w-5 h-5 rounded-full bg-accent/10 flex items-center justify-center mt-0.5">
-                        <CheckCircle className="h-3 w-3 text-accent" />
-                      </div>
-                      <span className="text-foreground/80 leading-relaxed text-sm">{feature}</span>
-                    </li>)}
-                </ul>
-                <Dialog>
-                  <DialogTrigger asChild>
-                    <Button size="lg" className="w-full bg-primary text-primary-foreground hover:bg-primary/90 shadow-button group-hover:shadow-glow transition-all duration-300 font-semibold text-sm h-12 mt-auto" onClick={() => handlePackageClick('lead')}>
-                      Läs mer
-                      <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
-                    </Button>
-                  </DialogTrigger>
-                  <DialogContent className="sm:max-w-4xl max-h-[90vh] overflow-y-auto">
-                    <DialogHeader>
-                      <DialogTitle className="text-3xl font-display mb-4">{packageDetails.lead.title}</DialogTitle>
-                      <DialogDescription className="text-base leading-relaxed">
-                        {packageDetails.lead.fullDescription}
-                      </DialogDescription>
-                    </DialogHeader>
-                    
-                    <div className="py-6">
-                      <div className="grid md:grid-cols-3 gap-4">
-                        {['pro', 'business', 'enterprise'].map(tier => <Card key={tier} className={`border-2 ${tier === 'business' ? 'border-accent/50 relative' : 'hover:border-accent/50'} transition-colors`}>
-                            {tier === 'business' && <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-accent text-accent-foreground px-3 py-1 rounded-full text-xs font-semibold">POPULÄR</div>}
-                            <CardHeader>
-                              <CardTitle className="text-xl capitalize">{tier}</CardTitle>
-                              <div className="text-3xl font-bold">
-                                {packageDetails.lead.pricing?.[tier as 'pro' | 'business' | 'enterprise'].price}
-                                {tier !== 'enterprise' && <span className="text-sm font-normal"> kr/mån</span>}
-                              </div>
-                            </CardHeader>
-                            <CardContent>
-                              <ul className="space-y-2 mb-4 text-sm">
-                                {packageDetails.lead.pricing?.[tier as 'pro' | 'business' | 'enterprise'].features.map((f, i) => <li key={i} className="flex items-start gap-2">
-                                    <CheckCircle className="h-4 w-4 text-accent mt-0.5 flex-shrink-0" />
-                                    <span>{f}</span>
-                                  </li>)}
-                              </ul>
-                              <Button onClick={() => handleCheckout('lead', tier as 'pro' | 'business' | 'enterprise')} className={`w-full ${tier === 'business' ? 'bg-accent hover:bg-accent/90' : ''}`} variant={tier === 'enterprise' ? 'outline' : 'default'} disabled={isCheckingOut}>
-                                {tier === 'enterprise' ? 'Kontakta oss' : `Välj ${tier}`}
-                              </Button>
-                            </CardContent>
-                          </Card>)}
-                      </div>
-                    </div>
-                  </DialogContent>
-                </Dialog>
-              </CardContent>
-            </Card>
-            </AnimatedSection>
-
-            {/* AI Compliance - Thor */}
-            <AnimatedSection delay={400}>
-            <Card className="group relative overflow-hidden border-2 border-accent/30 bg-gradient-card backdrop-blur-sm hover:border-accent hover:scale-[1.02] transition-all duration-500 hover:shadow-glow h-full flex flex-col">
-              <div className="absolute inset-0 bg-gradient-gold opacity-5 group-hover:opacity-20 transition-opacity duration-500"></div>
-              <div className="absolute top-4 right-4 px-3 py-1 bg-accent/20 rounded-full border border-accent/50">
-                <span className="text-xs font-semibold text-accent">POPULÄR</span>
-              </div>
-              <CardHeader className="relative p-6">
-                <div className="flex items-center justify-center w-16 h-16 rounded-2xl bg-accent/10 mb-4 group-hover:scale-110 group-hover:rotate-3 transition-all duration-500">
-                  <MessageSquare className="h-8 w-8 text-accent" />
-                </div>
-                <CardTitle className="text-xl font-display mb-2">AI Compliance & Coaching</CardTitle>
-                <CardDescription className="text-sm text-muted-foreground">Säkerställ kvalitet i varje samtal. AI analyserar säljsamtal, ger feedback och coachar säljare i realtid. För säljteam och kundservice som vill förbättra prestation och kundupplevelse.</CardDescription>
-              </CardHeader>
-              <CardContent className="relative space-y-4 p-6 pt-0 flex-1 flex flex-col">
-                <ul className="space-y-3 mb-6 flex-1">
-                  {packageDetails.thor.features.map((feature, idx) => <li key={idx} className="flex items-start gap-2">
-                      <div className="flex-shrink-0 w-5 h-5 rounded-full bg-accent/10 flex items-center justify-center mt-0.5">
-                        <CheckCircle className="h-3 w-3 text-accent" />
-                      </div>
-                      <span className="text-foreground/80 leading-relaxed text-sm">{feature}</span>
-                    </li>)}
-                </ul>
-                <Dialog>
-                  <DialogTrigger asChild>
-                    <Button size="lg" className="w-full bg-gradient-gold text-accent-foreground hover:opacity-90 shadow-button group-hover:shadow-glow transition-all duration-300 font-semibold text-sm h-12 mt-auto" onClick={() => handlePackageClick('thor')}>
-                      Läs mer
-                      <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
-                    </Button>
-                  </DialogTrigger>
-                  <DialogContent className="sm:max-w-4xl max-h-[90vh] overflow-y-auto">
-                    <DialogHeader>
-                      <DialogTitle className="text-3xl font-display mb-4">{packageDetails.thor.title}</DialogTitle>
-                      <DialogDescription className="text-base leading-relaxed">
-                        {packageDetails.thor.fullDescription}
-                      </DialogDescription>
-                    </DialogHeader>
-                    
-                    <div className="py-6">
-                      <div className="grid md:grid-cols-3 gap-4">
-                        {['pro', 'business', 'enterprise'].map(tier => <Card key={tier} className={`border-2 ${tier === 'business' ? 'border-accent/50 relative' : 'hover:border-accent/50'} transition-colors`}>
-                            {tier === 'business' && <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-accent text-accent-foreground px-3 py-1 rounded-full text-xs font-semibold">POPULÄR</div>}
-                            <CardHeader>
-                              <CardTitle className="text-xl capitalize">{tier}</CardTitle>
-                              <div className="text-3xl font-bold">
-                                {packageDetails.thor.pricing?.[tier as 'pro' | 'business' | 'enterprise'].price}
-                                {tier !== 'enterprise' && <span className="text-sm font-normal"> kr/mån</span>}
-                              </div>
-                            </CardHeader>
-                            <CardContent>
-                              <ul className="space-y-2 mb-4 text-sm">
-                                {packageDetails.thor.pricing?.[tier as 'pro' | 'business' | 'enterprise'].features.map((f, i) => <li key={i} className="flex items-start gap-2">
-                                    <CheckCircle className="h-4 w-4 text-accent mt-0.5 flex-shrink-0" />
-                                    <span>{f}</span>
-                                  </li>)}
-                              </ul>
-                              <Button onClick={() => handleCheckout('thor', tier as 'pro' | 'business' | 'enterprise')} className={`w-full ${tier === 'business' ? 'bg-accent hover:bg-accent/90' : ''}`} variant={tier === 'enterprise' ? 'outline' : 'default'} disabled={isCheckingOut}>
-                                {tier === 'enterprise' ? 'Kontakta oss' : `Välj ${tier}`}
-                              </Button>
-                            </CardContent>
-                          </Card>)}
-                      </div>
-                    </div>
-                  </DialogContent>
-                </Dialog>
-              </CardContent>
-            </Card>
-            </AnimatedSection>
-
-            {/* AI Omdömeshantering - Eko */}
-            <AnimatedSection delay={500}>
-            <Card className="group relative overflow-hidden border-2 border-white/10 bg-gradient-card backdrop-blur-sm hover:border-accent/50 hover:scale-[1.02] transition-all duration-500 hover:shadow-glow h-full flex flex-col">
-              <div className="absolute inset-0 bg-gradient-gold opacity-0 group-hover:opacity-10 transition-opacity duration-500"></div>
-              <CardHeader className="relative p-6">
-                <div className="flex items-center justify-center w-16 h-16 rounded-2xl bg-accent/10 mb-4 group-hover:scale-110 group-hover:rotate-3 transition-all duration-500">
-                  <Star className="h-8 w-8 text-accent" />
-                </div>
-                <CardTitle className="text-xl font-display mb-2">AI Omdömen</CardTitle>
-                <CardDescription className="text-sm text-muted-foreground">Förvandla kundfeedback till konkurrensfördelar. AI samlar, analyserar och svarar på omdömen från alla plattformar – så ni kan fokusera på att förbättra er verksamhet baserat på data.</CardDescription>
-              </CardHeader>
-              <CardContent className="relative space-y-4 p-6 pt-0 flex-1 flex flex-col">
-                <ul className="space-y-3 mb-6 flex-1">
-                  {packageDetails.eko.features.map((feature, idx) => <li key={idx} className="flex items-start gap-2">
-                      <div className="flex-shrink-0 w-5 h-5 rounded-full bg-accent/10 flex items-center justify-center mt-0.5">
-                        <CheckCircle className="h-3 w-3 text-accent" />
-                      </div>
-                      <span className="text-foreground/80 leading-relaxed text-sm">{feature}</span>
-                    </li>)}
-                </ul>
-                <Dialog>
-                  <DialogTrigger asChild>
-                    <Button size="lg" className="w-full bg-primary text-primary-foreground hover:bg-primary/90 shadow-button group-hover:shadow-glow transition-all duration-300 font-semibold text-sm h-12 mt-auto" onClick={() => handlePackageClick('eko')}>
-                      Läs mer
-                      <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
-                    </Button>
-                  </DialogTrigger>
-                  <DialogContent className="sm:max-w-4xl max-h-[90vh] overflow-y-auto">
-                    <DialogHeader>
-                      <DialogTitle className="text-3xl font-display mb-4">{packageDetails.eko.title}</DialogTitle>
-                      <DialogDescription className="text-base leading-relaxed">
-                        {packageDetails.eko.fullDescription}
-                      </DialogDescription>
-                    </DialogHeader>
-                    
-                    <div className="py-6">
-                      <div className="grid md:grid-cols-3 gap-4">
-                        {['pro', 'business', 'enterprise'].map(tier => <Card key={tier} className={`border-2 ${tier === 'business' ? 'border-accent/50 relative' : 'hover:border-accent/50'} transition-colors`}>
-                            {tier === 'business' && <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-accent text-accent-foreground px-3 py-1 rounded-full text-xs font-semibold">POPULÄR</div>}
-                            <CardHeader>
-                              <CardTitle className="text-xl capitalize">{tier}</CardTitle>
-                              <div className="text-3xl font-bold">
-                                {packageDetails.eko.pricing?.[tier as 'pro' | 'business' | 'enterprise'].price}
-                                {tier !== 'enterprise' && <span className="text-sm font-normal"> kr/mån</span>}
-                              </div>
-                            </CardHeader>
-                            <CardContent>
-                              <ul className="space-y-2 mb-4 text-sm">
-                                {packageDetails.eko.pricing?.[tier as 'pro' | 'business' | 'enterprise'].features.map((f, i) => <li key={i} className="flex items-start gap-2">
-                                    <CheckCircle className="h-4 w-4 text-accent mt-0.5 flex-shrink-0" />
-                                    <span>{f}</span>
-                                  </li>)}
-                              </ul>
-                              <Button onClick={() => handleCheckout('eko', tier as 'pro' | 'business' | 'enterprise')} className={`w-full ${tier === 'business' ? 'bg-accent hover:bg-accent/90' : ''}`} variant={tier === 'enterprise' ? 'outline' : 'default'} disabled={isCheckingOut}>
-                                {tier === 'enterprise' ? 'Kontakta oss' : `Välj ${tier}`}
-                              </Button>
-                            </CardContent>
-                          </Card>)}
-                      </div>
-                    </div>
-                  </DialogContent>
-                </Dialog>
-              </CardContent>
-            </Card>
-            </AnimatedSection>
-          </div>}
+          {/* CTA */}
+          <AnimatedSection delay={400} className="text-center mt-16">
+            <Button onClick={() => setIsConsultationModalOpen(true)} size="lg" className="bg-gradient-gold text-accent-foreground hover:opacity-90 shadow-button font-semibold text-lg px-8 py-6 h-auto">
+              Boka behovsanalys
+              <ArrowRight className="ml-2 h-5 w-5" />
+            </Button>
+          </AnimatedSection>
         </div>
       </section>
 
@@ -1070,58 +722,6 @@ export const ProductSelection = () => {
       {/* Testa själv Section */}
       <section id="krono-chat" className="relative py-24">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
-          {/* Contact Profiles Row */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-            <AnimatedSection delay={0} className="rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 p-10 text-center">
-              <img 
-                src={antonImage} 
-                alt="Anton Sallnäs" 
-                className="w-44 h-44 rounded-full mx-auto mb-6 object-cover border-2 border-accent/30"
-                loading="lazy"
-              />
-              <h3 className="text-2xl font-bold text-white mb-3">Anton Sallnäs</h3>
-              <p className="text-lg text-white/70 mb-4">CEO</p>
-              <p className="text-lg text-white/60 mb-2">anton@hiems.se</p>
-              <p className="text-lg text-white/60">070-657 15 32</p>
-            </AnimatedSection>
-            
-            <AnimatedSection delay={100} className="rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 p-10 text-center">
-              <img 
-                src={karloImage} 
-                alt="Karlo Mangione" 
-                className="w-44 h-44 rounded-full mx-auto mb-6 object-cover border-2 border-accent/30"
-                loading="lazy"
-              />
-              <h3 className="text-2xl font-bold text-white mb-3">Karlo Mangione</h3>
-              <p className="text-lg text-white/70 mb-4">COO</p>
-              <p className="text-lg text-white/60 mb-2">karlo.mangione@hiems.se</p>
-              <p className="text-lg text-white/60">070-231 22 71</p>
-            </AnimatedSection>
-            
-            <AnimatedSection delay={200} className="rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 p-10 text-center">
-              <img 
-                src={emilImage} 
-                alt="Emil Westerberg" 
-                className="w-44 h-44 rounded-full mx-auto mb-6 object-cover border-2 border-accent/30"
-                loading="lazy"
-              />
-              <h3 className="text-2xl font-bold text-white mb-3">Emil Westerberg</h3>
-              <p className="text-lg text-white/70 mb-4">CLO</p>
-              <p className="text-lg text-white/60 mb-2">emil@hiems.se</p>
-              <p className="text-lg text-white/60">072-327 34 65</p>
-            </AnimatedSection>
-            
-            <AnimatedSection delay={300} className="rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 p-10 text-center">
-              <div className="w-44 h-44 rounded-full mx-auto mb-6 bg-gradient-primary flex items-center justify-center border-2 border-accent/30">
-                <span className="text-5xl font-bold text-white">ME</span>
-              </div>
-              <h3 className="text-2xl font-bold text-white mb-3">Malte Ekbäck</h3>
-              <p className="text-lg text-white/70 mb-4">CFO</p>
-              <p className="text-lg text-white/60 mb-2">malte@hiems.se</p>
-              <p className="text-lg text-white/60">073-024 66 28</p>
-            </AnimatedSection>
-          </div>
-
           {/* Krono Chat Center */}
           <AnimatedSection className="max-w-4xl mx-auto">
             <div className="relative rounded-3xl bg-gradient-primary overflow-hidden shadow-elegant">
