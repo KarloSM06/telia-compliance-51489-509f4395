@@ -25,7 +25,7 @@ export const aiPackages: Package[] = [
     tagline: 'Accelerera din försäljning med AI',
     targetAudience: 'Företag som vill öka försäljning och leads',
     image: '/src/assets/growth-sales-presentation.png',
-    description: 'Komplett försäljningssystem för att hitta kunder och stänga affärer snabbare',
+    description: 'Hitta rätt kunder och stäng affärer snabbare',
     components: [
       'Lead Generator med AI-berikning',
       'AI-receptionist för mötesbokning',
