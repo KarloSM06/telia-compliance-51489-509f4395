@@ -12,10 +12,10 @@ export default function Communications() {
   const [activeTab, setActiveTab] = useState("templates");
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background to-muted/20">
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-8">
+    <div className="min-h-screen bg-gradient-to-b from-background to-muted/20 p-6">
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-8 max-w-7xl mx-auto">
         {/* Premium Hero Section with Integrated Navigation */}
-        <div className="relative bg-gradient-hero text-primary-foreground overflow-hidden rounded-lg mb-8">
+        <div className="relative bg-gradient-hero text-primary-foreground overflow-hidden rounded-2xl mb-8">
           <div className="absolute inset-0 bg-[url('/images/tools-background.jpg')] opacity-5 bg-cover bg-center" />
           <div className="relative container mx-auto px-6 py-16 pb-8">
             <div className="max-w-3xl mb-12">
@@ -111,7 +111,7 @@ export default function Communications() {
           </div>
         </div>
 
-        <div className="container mx-auto px-6 max-w-full">
+        <div>
           <TabsContent value="templates" className="animate-fade-in mt-0">
             <MessageTemplates />
           </TabsContent>
