@@ -1126,27 +1126,40 @@ export type Database = {
           ai_reasoning: string | null
           ai_score: number | null
           apartment_count: number | null
+          business_id: string | null
+          city: string | null
+          company_linkedin: string | null
           company_name: string
           company_size: string | null
           construction_year: number | null
           contact_person: string | null
           contacted_at: string | null
           converted_at: string | null
+          country_name: string | null
           created_at: string
           description: string | null
           email: string | null
           employee_count: number | null
+          experience: Json | null
           Facebook: string | null
+          first_name: string | null
+          full_name: string | null
           id: string
           industry: string | null
           Instagram: string | null
+          interests: Json | null
+          job_department: string | null
+          job_seniority_level: string | null
+          job_title: string | null
           kontakt_person: string | null
           kontakt_person_facebook: string | null
           kontakt_person_insta: string | null
           kontakt_person_LinkedIN: string | null
           kontakt_person_mail: string | null
           kontakt_person_telefon: string | null
+          last_name: string | null
           lead_type: string | null
+          linkedin: string | null
           LinkedIn: string | null
           location: string | null
           monthly_fee: number | null
@@ -1156,8 +1169,11 @@ export type Database = {
           phone: string | null
           Postal_Area: string | null
           priority: string | null
+          prospect_id: string | null
           provider: string | null
+          region_name: string | null
           search_id: string | null
+          skills: Json | null
           source: string | null
           status: string
           Twitter: string | null
@@ -1170,27 +1186,40 @@ export type Database = {
           ai_reasoning?: string | null
           ai_score?: number | null
           apartment_count?: number | null
+          business_id?: string | null
+          city?: string | null
+          company_linkedin?: string | null
           company_name: string
           company_size?: string | null
           construction_year?: number | null
           contact_person?: string | null
           contacted_at?: string | null
           converted_at?: string | null
+          country_name?: string | null
           created_at?: string
           description?: string | null
           email?: string | null
           employee_count?: number | null
+          experience?: Json | null
           Facebook?: string | null
+          first_name?: string | null
+          full_name?: string | null
           id?: string
           industry?: string | null
           Instagram?: string | null
+          interests?: Json | null
+          job_department?: string | null
+          job_seniority_level?: string | null
+          job_title?: string | null
           kontakt_person?: string | null
           kontakt_person_facebook?: string | null
           kontakt_person_insta?: string | null
           kontakt_person_LinkedIN?: string | null
           kontakt_person_mail?: string | null
           kontakt_person_telefon?: string | null
+          last_name?: string | null
           lead_type?: string | null
+          linkedin?: string | null
           LinkedIn?: string | null
           location?: string | null
           monthly_fee?: number | null
@@ -1200,8 +1229,11 @@ export type Database = {
           phone?: string | null
           Postal_Area?: string | null
           priority?: string | null
+          prospect_id?: string | null
           provider?: string | null
+          region_name?: string | null
           search_id?: string | null
+          skills?: Json | null
           source?: string | null
           status?: string
           Twitter?: string | null
@@ -1214,27 +1246,40 @@ export type Database = {
           ai_reasoning?: string | null
           ai_score?: number | null
           apartment_count?: number | null
+          business_id?: string | null
+          city?: string | null
+          company_linkedin?: string | null
           company_name?: string
           company_size?: string | null
           construction_year?: number | null
           contact_person?: string | null
           contacted_at?: string | null
           converted_at?: string | null
+          country_name?: string | null
           created_at?: string
           description?: string | null
           email?: string | null
           employee_count?: number | null
+          experience?: Json | null
           Facebook?: string | null
+          first_name?: string | null
+          full_name?: string | null
           id?: string
           industry?: string | null
           Instagram?: string | null
+          interests?: Json | null
+          job_department?: string | null
+          job_seniority_level?: string | null
+          job_title?: string | null
           kontakt_person?: string | null
           kontakt_person_facebook?: string | null
           kontakt_person_insta?: string | null
           kontakt_person_LinkedIN?: string | null
           kontakt_person_mail?: string | null
           kontakt_person_telefon?: string | null
+          last_name?: string | null
           lead_type?: string | null
+          linkedin?: string | null
           LinkedIn?: string | null
           location?: string | null
           monthly_fee?: number | null
@@ -1244,8 +1289,11 @@ export type Database = {
           phone?: string | null
           Postal_Area?: string | null
           priority?: string | null
+          prospect_id?: string | null
           provider?: string | null
+          region_name?: string | null
           search_id?: string | null
+          skills?: Json | null
           source?: string | null
           status?: string
           Twitter?: string | null

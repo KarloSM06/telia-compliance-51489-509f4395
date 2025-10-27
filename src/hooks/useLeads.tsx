@@ -36,6 +36,24 @@ export interface Lead {
   Adress?: string | null;
   Postal_Area?: string | null;
   provider?: string;
+  
+  // LinkedIn-specifika fält
+  prospect_id?: string;
+  first_name?: string;
+  last_name?: string;
+  full_name?: string;
+  country_name?: string;
+  region_name?: string;
+  city?: string;
+  linkedin?: string;
+  experience?: any[];
+  skills?: string[];
+  interests?: string[];
+  company_linkedin?: string;
+  job_department?: string;
+  job_seniority_level?: string;
+  job_title?: string;
+  business_id?: string;
 }
 
 export interface LeadActivity {
