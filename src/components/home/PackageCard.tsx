@@ -32,7 +32,7 @@ export const PackageCard = ({
           </p>
         </div>
         
-        <div className="w-full grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8 p-8">
+        <div className="w-full grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8 px-8 pb-8 pt-4">
           <div className="lg:col-span-1 space-y-3">
             <div className="flex items-center gap-2 mb-4">
               <div className="h-px flex-1 bg-gradient-to-r from-transparent via-primary/20 to-transparent" />
