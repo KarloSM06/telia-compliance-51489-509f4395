@@ -25,47 +25,47 @@ export default function Communications() {
           <div className="absolute inset-0 bg-grid-white/[0.05] bg-[length:20px_20px]" />
         </div>
 
-        {/* Desktop Navigation - Organic Floating Cards */}
+        {/* Desktop Navigation - Minimalist Pill Design */}
         <div className="hidden lg:block mb-8">
-          <TabsList className="flex flex-wrap justify-center gap-20 bg-transparent border-0 p-0">
+          <TabsList className="flex flex-wrap justify-center gap-3 bg-transparent border-0 p-0">
             <TabsTrigger 
               value="templates" 
-              className="group relative gap-3 px-8 py-4 bg-card text-foreground backdrop-blur-md border-2 border-border rounded-2xl shadow-lg hover:shadow-2xl hover:bg-accent hover:-translate-y-1 hover:scale-105 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:border-primary data-[state=active]:shadow-2xl data-[state=active]:scale-110 transition-all duration-300"
+              className="group relative gap-2 px-6 py-3 bg-card text-foreground border border-border rounded-full shadow-sm hover:shadow-md hover:bg-accent data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:border-primary data-[state=active]:shadow-md transition-all duration-200"
             >
-              <FileText className="h-6 w-6 group-data-[state=active]:animate-pulse" />
-              <span className="font-semibold">Mallar</span>
+              <FileText className="h-5 w-5" />
+              <span className="font-medium">Mallar</span>
             </TabsTrigger>
             
             <TabsTrigger 
               value="reminders" 
-              className="group relative gap-3 px-8 py-4 bg-card text-foreground backdrop-blur-md border-2 border-border rounded-full shadow-lg hover:shadow-2xl hover:bg-accent hover:-translate-y-1 hover:scale-105 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:border-primary data-[state=active]:shadow-2xl data-[state=active]:scale-110 transition-all duration-300"
+              className="group relative gap-2 px-6 py-3 bg-card text-foreground border border-border rounded-full shadow-sm hover:shadow-md hover:bg-accent data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:border-primary data-[state=active]:shadow-md transition-all duration-200"
             >
-              <Bell className="h-6 w-6 group-data-[state=active]:animate-pulse" />
-              <span className="font-semibold">Påminnelser</span>
+              <Bell className="h-5 w-5" />
+              <span className="font-medium">Påminnelser</span>
             </TabsTrigger>
             
             <TabsTrigger 
               value="notifications" 
-              className="group relative gap-3 px-8 py-4 bg-card text-foreground backdrop-blur-md border-2 border-border rounded-3xl shadow-lg hover:shadow-2xl hover:bg-accent hover:-translate-y-1 hover:scale-105 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:border-primary data-[state=active]:shadow-2xl data-[state=active]:scale-110 transition-all duration-300"
+              className="group relative gap-2 px-6 py-3 bg-card text-foreground border border-border rounded-full shadow-sm hover:shadow-md hover:bg-accent data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:border-primary data-[state=active]:shadow-md transition-all duration-200"
             >
-              <BellRing className="h-6 w-6 group-data-[state=active]:animate-pulse" />
-              <span className="font-semibold">Ägarnotiser</span>
+              <BellRing className="h-5 w-5" />
+              <span className="font-medium">Ägarnotiser</span>
             </TabsTrigger>
             
             <TabsTrigger 
               value="sms-provider" 
-              className="group relative gap-3 px-8 py-4 bg-card text-foreground backdrop-blur-md border-2 border-border rounded-2xl shadow-lg hover:shadow-2xl hover:bg-accent hover:-translate-y-1 hover:scale-105 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:border-primary data-[state=active]:shadow-2xl data-[state=active]:scale-110 transition-all duration-300"
+              className="group relative gap-2 px-6 py-3 bg-card text-foreground border border-border rounded-full shadow-sm hover:shadow-md hover:bg-accent data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:border-primary data-[state=active]:shadow-md transition-all duration-200"
             >
-              <MessageSquare className="h-6 w-6 group-data-[state=active]:animate-pulse" />
-              <span className="font-semibold">SMS-leverantör</span>
+              <MessageSquare className="h-5 w-5" />
+              <span className="font-medium">SMS-leverantör</span>
             </TabsTrigger>
             
             <TabsTrigger 
               value="insights" 
-              className="group relative gap-3 px-8 py-4 bg-card text-foreground backdrop-blur-md border-2 border-border rounded-full shadow-lg hover:shadow-2xl hover:bg-accent hover:-translate-y-1 hover:scale-105 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:border-primary data-[state=active]:shadow-2xl data-[state=active]:scale-110 transition-all duration-300"
+              className="group relative gap-2 px-6 py-3 bg-card text-foreground border border-border rounded-full shadow-sm hover:shadow-md hover:bg-accent data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:border-primary data-[state=active]:shadow-md transition-all duration-200"
             >
-              <BarChart className="h-6 w-6 group-data-[state=active]:animate-pulse" />
-              <span className="font-semibold">Insikter</span>
+              <BarChart className="h-5 w-5" />
+              <span className="font-medium">Insikter</span>
             </TabsTrigger>
           </TabsList>
         </div>
