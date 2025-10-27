@@ -104,12 +104,12 @@ export const LeadChatInterface = () => {
 
       {/* Chat Area */}
       <Card className="flex-1 flex flex-col bg-orange-50/30 dark:bg-orange-950/10">
-        <CardHeader className="border-b bg-[#D97642] text-white">
+        <CardHeader className="border-b-4 border-[#D97642]">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="flex items-center gap-2">
                 <img src={linkedinLogo} alt="LinkedIn" className="h-7 w-7 object-contain" />
-                <span className="text-white/60">×</span>
+                <span className="text-muted-foreground">×</span>
                 <img src={anthropicLogo} alt="Anthropic" className="h-7 w-7 object-contain" />
               </div>
               <CardTitle className="text-lg">AI Chat Assistent</CardTitle>

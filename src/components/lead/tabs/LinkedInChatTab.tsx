@@ -8,16 +8,16 @@ export const LinkedInChatTab = () => {
   return (
     <div className="space-y-6">
       <Card>
-        <CardHeader className="border-b bg-[#D97642] text-white">
+        <CardHeader className="border-b-4 border-[#D97642]">
           <div className="flex items-center gap-3">
             <div className="flex items-center gap-2">
               <img src={linkedinLogo} alt="LinkedIn" className="h-7 w-7 object-contain" />
-              <span className="text-white/60">×</span>
+              <span className="text-muted-foreground">×</span>
               <img src={anthropicLogo} alt="Anthropic AI" className="h-6 w-6 object-contain" />
             </div>
             <div>
               <CardTitle className="text-xl">LinkedIn × Anthropic AI</CardTitle>
-              <CardDescription className="text-white/90">
+              <CardDescription>
                 Beskriv dina ideala kunder - AI:n hittar dem åt dig
               </CardDescription>
             </div>
