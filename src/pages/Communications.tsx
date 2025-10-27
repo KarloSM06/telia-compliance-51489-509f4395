@@ -27,7 +27,7 @@ export default function Communications() {
 
         {/* Desktop Navigation - Organic Floating Cards */}
         <div className="hidden lg:block mb-8">
-          <TabsList className="flex flex-wrap justify-center gap-12 bg-transparent border-0 p-0">
+          <TabsList className="flex flex-wrap justify-center gap-20 bg-transparent border-0 p-0">
             <TabsTrigger 
               value="templates" 
               className="group relative gap-3 px-8 py-4 bg-card text-foreground backdrop-blur-md border-2 border-border rounded-2xl shadow-lg hover:shadow-2xl hover:bg-accent hover:-translate-y-1 hover:scale-105 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:border-primary data-[state=active]:shadow-2xl data-[state=active]:scale-110 transition-all duration-300"
