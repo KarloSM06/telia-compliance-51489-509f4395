@@ -934,6 +934,77 @@ export type Database = {
           },
         ]
       }
+      lead_chat_conversations: {
+        Row: {
+          created_at: string | null
+          id: string
+          message_count: number | null
+          provider: string
+          title: string | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          message_count?: number | null
+          provider?: string
+          title?: string | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          message_count?: number | null
+          provider?: string
+          title?: string | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      lead_chat_messages: {
+        Row: {
+          content: string
+          conversation_id: string | null
+          created_at: string | null
+          id: string
+          metadata: Json | null
+          provider: string
+          role: string
+          user_id: string
+        }
+        Insert: {
+          content: string
+          conversation_id?: string | null
+          created_at?: string | null
+          id?: string
+          metadata?: Json | null
+          provider?: string
+          role: string
+          user_id: string
+        }
+        Update: {
+          content?: string
+          conversation_id?: string | null
+          created_at?: string | null
+          id?: string
+          metadata?: Json | null
+          provider?: string
+          role?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "lead_chat_messages_conversation_id_fkey"
+            columns: ["conversation_id"]
+            isOneToOne: false
+            referencedRelation: "lead_chat_conversations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       lead_searches: {
         Row: {
           apartment_range: string | null
@@ -952,6 +1023,7 @@ export type Database = {
           monthly_fee_range: string | null
           organization_id: string | null
           organization_type: string | null
+          provider: string | null
           revenue_range: string | null
           search_name: string
           status: string
@@ -975,6 +1047,7 @@ export type Database = {
           monthly_fee_range?: string | null
           organization_id?: string | null
           organization_type?: string | null
+          provider?: string | null
           revenue_range?: string | null
           search_name: string
           status?: string
@@ -998,6 +1071,7 @@ export type Database = {
           monthly_fee_range?: string | null
           organization_id?: string | null
           organization_type?: string | null
+          provider?: string | null
           revenue_range?: string | null
           search_name?: string
           status?: string
@@ -1082,6 +1156,7 @@ export type Database = {
           phone: string | null
           Postal_Area: string | null
           priority: string | null
+          provider: string | null
           search_id: string | null
           source: string | null
           status: string
@@ -1125,6 +1200,7 @@ export type Database = {
           phone?: string | null
           Postal_Area?: string | null
           priority?: string | null
+          provider?: string | null
           search_id?: string | null
           source?: string | null
           status?: string
@@ -1168,6 +1244,7 @@ export type Database = {
           phone?: string | null
           Postal_Area?: string | null
           priority?: string | null
+          provider?: string | null
           search_id?: string | null
           source?: string | null
           status?: string
