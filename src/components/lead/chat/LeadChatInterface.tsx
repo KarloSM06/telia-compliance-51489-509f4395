@@ -76,6 +76,15 @@ export const LeadChatInterface = () => {
 
       {/* Mobile Sidebar */}
       <Sheet open={showSidebar} onOpenChange={setShowSidebar}>
+        <SheetTrigger asChild>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="lg:hidden fixed top-4 left-4 z-50 text-white bg-gradient-to-r from-blue-600 to-orange-600 hover:from-blue-700 hover:to-orange-700"
+          >
+            <Menu className="h-5 w-5" />
+          </Button>
+        </SheetTrigger>
         <SheetContent side="left" className="w-80 p-0">
           <ConversationList
             conversations={conversations}
@@ -98,16 +107,6 @@ export const LeadChatInterface = () => {
         <CardHeader className="border-b bg-gradient-to-r from-blue-600 to-orange-600 text-white">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <SheetTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="lg:hidden text-white hover:bg-white/20"
-                  onClick={() => setShowSidebar(true)}
-                >
-                  <Menu className="h-5 w-5" />
-                </Button>
-              </SheetTrigger>
               <div className="flex items-center gap-2">
                 <img src={linkedinLogo} alt="LinkedIn" className="h-7 w-7 rounded-md bg-white/10 p-0.5" />
                 <span className="text-white/60">×</span>
