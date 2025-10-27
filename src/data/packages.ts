@@ -25,16 +25,16 @@ export const aiPackages: Package[] = [
     tagline: 'Accelerera din försäljning med AI',
     targetAudience: 'Företag som vill öka försäljning och leads',
     image: '/src/assets/growth-sales-presentation.png',
-    description: 'Ett komplett försäljningssystem som hjälper dig att hitta rätt kunder, kvalificera leads automatiskt och stänga fler affärer snabbare. Med AI-driven lead-berikning får du värdefull information om potentiella kunder innan första kontakten, medan vår intelligenta receptionist hanterar inkommande förfrågningar dygnet runt och bokar möten direkt i din kalender.',
+    description: 'Komplett försäljningssystem för att hitta kunder och stänga affärer snabbare',
     components: [
-      'Lead Generator med AI-berikning och scoring',
-      'AI-receptionist för kvalificering och mötesbokning',
-      'CRM med automatiserade follow-ups och pipeline dashboards',
+      'Lead Generator med AI-berikning',
+      'AI-receptionist för mötesbokning',
+      'CRM med automatiserade follow-ups',
       'Sales forecasting & KPI-analys'
     ],
     valueBullets: [
       'Kortare säljcykel',
-      'Högre lead-to-customer-konvertering',
+      'Högre konvertering',
       'Full kontroll över säljflödet'
     ],
     pricing: {
@@ -50,14 +50,14 @@ export const aiPackages: Package[] = [
     tagline: 'Automatisera din marknadsföring',
     targetAudience: 'Företag som vill integrera marknadsföring med försäljning',
     components: [
-      'AI-driven content creation (annonser, nyhetsbrev, sociala medier)',
-      'Automatiserade kampanjer med lead nurturing',
-      'Lead scoring och berikning i CRM',
-      'Dashboard för ROI på marknadsinitiativ'
+      'AI-driven content creation',
+      'Automatiserade kampanjer',
+      'Lead scoring i CRM',
+      'ROI-dashboard för marknadsföring'
     ],
     valueBullets: [
       'Effektivare kampanjer',
-      'Sömlös koppling mellan marknadsföring och försäljning',
+      'Sömlös integration',
       'Automatiserat lead-flöde'
     ],
     pricing: {
@@ -73,14 +73,14 @@ export const aiPackages: Package[] = [
     tagline: 'Optimera din serviceverksamhet',
     targetAudience: 'Serviceföretag, hantverk, B2C-tjänster',
     components: [
-      'AI-receptionist för bokningar och kundservice',
-      'Automatiserade SMS & e-mail-notifieringar',
-      'Offertgenerering och signering automatiserad',
-      'CRM med återkommande jobb och kundhistorik'
+      'AI-receptionist för bokningar',
+      'Automatiserade notifieringar',
+      'Automatisk offertgenerering',
+      'CRM med kundhistorik'
     ],
     valueBullets: [
       'Färre missade jobb',
-      'Mindre administrativt arbete',
+      'Mindre administration',
       'Högre kundnöjdhet'
     ],
     pricing: {
@@ -96,15 +96,15 @@ export const aiPackages: Package[] = [
     tagline: 'Öka din e-handelsförsäljning',
     targetAudience: 'Onlinebutiker och retail',
     components: [
-      'AI-rekommendationer för kunder (cross-sell, upsell)',
-      'Automatiserad order- och kundhantering',
-      'Churn prevention och lojalitetsprogram med AI',
-      'Integrerat CRM med kundsegmentering och feedback'
+      'AI-rekommendationer (cross-sell, upsell)',
+      'Automatiserad orderhantering',
+      'Churn prevention med AI',
+      'CRM med kundsegmentering'
     ],
     valueBullets: [
       'Ökad försäljning per kund',
       'Bättre retention',
-      'Automatiserad hantering → mindre manuellt arbete'
+      'Mindre manuellt arbete'
     ],
     pricing: {
       starter: 'Från 11 995 kr/mån',
@@ -119,15 +119,15 @@ export const aiPackages: Package[] = [
     tagline: 'Fatta beslut baserat på data',
     targetAudience: 'Företag som vill fatta beslut baserat på data',
     components: [
-      'Datainsamling, berikning och rengöring',
-      'AI-driven analys av kunddata, leads och marknad',
-      'Automatiserade dashboards & rapporter',
-      'Predictive analytics för beslut & prognoser'
+      'Datainsamling och berikning',
+      'AI-driven analys av kunddata',
+      'Automatiserade dashboards',
+      'Predictive analytics'
     ],
     valueBullets: [
-      'Snabbare och bättre beslut',
-      'Identifiera nya affärsmöjligheter',
-      'Proaktivt istället för reaktivt arbete'
+      'Snabbare beslut',
+      'Nya affärsmöjligheter',
+      'Proaktivt arbete'
     ],
     pricing: {
       starter: 'Från 13 995 kr/mån',
@@ -142,15 +142,15 @@ export const aiPackages: Package[] = [
     tagline: 'Skräddarsytt för stora företag',
     targetAudience: 'Stora företag och branschspecifika lösningar',
     components: [
-      'Fullständigt skräddarsytt AI-ekosystem',
-      'Integration med interna system, ERP, CRM, e-handel',
-      'AI-receptionist, Lead Generator, automatisering och analyser',
-      'Branschspecifika lösningar (finans, hälsa, fastighet)'
+      'Skräddarsytt AI-ekosystem',
+      'Integration med ERP, CRM, e-handel',
+      'AI-receptionist och automatisering',
+      'Branschspecifika lösningar'
     ],
     valueBullets: [
-      'Maximal effektivitet och skalbarhet',
-      'Skräddarsytt för varje kunds behov',
-      'Direkt ROI och långsiktig transformation'
+      'Maximal effektivitet',
+      'Skräddarsytt för dina behov',
+      'Direkt ROI'
     ],
     pricing: {
       starter: 'Från 49 995 kr/mån',
