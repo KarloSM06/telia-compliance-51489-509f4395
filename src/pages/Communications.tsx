@@ -111,7 +111,7 @@ export default function Communications() {
           <div className="absolute inset-0 bg-grid-white/[0.05] bg-[length:20px_20px]" />
         </div>
 
-        <div className="w-full px-2">
+        <div className="w-full px-1">
           <TabsContent value="templates" className="animate-fade-in mt-0">
             <MessageTemplates />
           </TabsContent>
