@@ -1,104 +1,73 @@
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Plus, List, LayoutGrid, Building, Users } from "lucide-react";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Search, MessageSquare, ListChecks } from "lucide-react";
 
 interface LeadPageHeaderProps {
-  listType: 'organizations' | 'contacts';
-  onListTypeChange: (type: 'organizations' | 'contacts') => void;
-  view?: 'table' | 'kanban';
-  onViewChange?: (view: 'table' | 'kanban') => void;
+  activeTab: 'eniro' | 'linkedin' | 'lists';
+  onTabChange: (tab: 'eniro' | 'linkedin' | 'lists') => void;
   stats: {
     totalLeads: number;
+    contacted: number;
+    conversions: number;
     newLeads: number;
     enrichedLeads: number;
+    avgAiScore: number;
   };
-  onNewSearch?: () => void;
 }
 
-export function LeadPageHeader({
-  listType,
-  onListTypeChange,
-  view,
-  onViewChange,
+export function LeadPageHeader({ 
+  activeTab,
+  onTabChange,
   stats,
-  onNewSearch,
 }: LeadPageHeaderProps) {
   return (
     <div className="border-b bg-background">
       <div className="px-6 py-4">
-        <div className="flex justify-between items-center">
+        <div className="flex items-center justify-between mb-4">
           <div>
-            <h1 className="text-2xl font-bold">Lead Management</h1>
-            <p className="text-sm text-muted-foreground">
-              Hantera organisationer och kontaktpersoner
-            </p>
+            <h1 className="text-3xl font-bold">Lead Management</h1>
+            <p className="text-muted-foreground">Hantera och spåra dina leads</p>
           </div>
-          <div className="flex gap-2 items-center">
-            {/* List Type Selector */}
-            <div className="flex gap-1 border rounded-lg p-1 bg-muted/50">
-              <Button
-                variant={listType === 'organizations' ? 'default' : 'ghost'}
-                size="sm"
-                onClick={() => onListTypeChange('organizations')}
-                className="gap-2"
-              >
-                <Building className="h-4 w-4" />
-                Organisationer
-              </Button>
-              <Button
-                variant={listType === 'contacts' ? 'default' : 'ghost'}
-                size="sm"
-                onClick={() => onListTypeChange('contacts')}
-                className="gap-2"
-              >
-                <Users className="h-4 w-4" />
-                Kontaktpersoner
-              </Button>
-            </div>
+        </div>
 
-            {/* View Selector */}
-            {onViewChange && (
-              <div className="flex gap-1 border rounded-lg p-1 bg-muted/50">
-                <Button
-                  variant={view === 'table' ? 'default' : 'ghost'}
-                  size="sm"
-                  onClick={() => onViewChange('table')}
-                  className="gap-2"
-                >
-                  <List className="h-4 w-4" />
-                  Tabell
-                </Button>
-                <Button
-                  variant={view === 'kanban' ? 'default' : 'ghost'}
-                  size="sm"
-                  onClick={() => onViewChange('kanban')}
-                  className="gap-2"
-                >
-                  <LayoutGrid className="h-4 w-4" />
-                  Kanban
-                </Button>
-              </div>
-            )}
+        {/* Tabs and Stats Row */}
+        <div className="flex items-center justify-between flex-wrap gap-4">
+          {/* Tabs */}
+          <Tabs value={activeTab} onValueChange={onTabChange} className="w-auto">
+            <TabsList>
+              <TabsTrigger value="eniro" className="gap-2">
+                <Search className="h-4 w-4" />
+                Eniro
+              </TabsTrigger>
+              <TabsTrigger value="linkedin" className="gap-2">
+                <MessageSquare className="h-4 w-4" />
+                LinkedIn AI
+              </TabsTrigger>
+              <TabsTrigger value="lists" className="gap-2">
+                <ListChecks className="h-4 w-4" />
+                Listor
+              </TabsTrigger>
+            </TabsList>
+          </Tabs>
 
-            {/* Stats Badges */}
+          {/* Stats */}
+          <div className="flex items-center gap-2 flex-wrap">
             <Badge variant="secondary">
               Totalt: {stats.totalLeads}
             </Badge>
             <Badge variant="secondary">
               Nya: {stats.newLeads}
             </Badge>
-            {stats.enrichedLeads > 0 && (
-              <Badge className="bg-emerald-500 hover:bg-emerald-600">
-                AI-berikade: {stats.enrichedLeads}
+            <Badge variant="secondary">
+              Berikade: {stats.enrichedLeads}
+            </Badge>
+            <Badge variant="secondary">
+              Konverteringar: {stats.conversions}
+            </Badge>
+            {stats.avgAiScore > 0 && (
+              <Badge variant="secondary">
+                Snitt AI-score: {stats.avgAiScore}
               </Badge>
-            )}
-
-            {/* New Search Button */}
-            {onNewSearch && (
-              <Button onClick={onNewSearch} className="bg-yellow-600 hover:bg-yellow-700">
-                <Plus className="h-4 w-4 mr-2" />
-                Ny sökning
-              </Button>
             )}
           </div>
         </div>

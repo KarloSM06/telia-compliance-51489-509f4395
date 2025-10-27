@@ -1,51 +1,33 @@
 import { useState } from "react";
 import { LeadPageHeader } from "@/components/lead/LeadPageHeader";
-import { LeadStats } from "@/components/lead/LeadStats";
-import { EniroLeadsContent } from "@/components/lead/eniro/EniroLeadsContent";
 import { useLeads } from "@/hooks/useLeads";
-import { LeadWizard } from "@/components/lead/LeadWizard";
-import { useLeadSearches } from "@/hooks/useLeadSearches";
+import { EniroSearchTab } from "@/components/lead/tabs/EniroSearchTab";
+import { LinkedInChatTab } from "@/components/lead/tabs/LinkedInChatTab";
+import { LeadsListTab } from "@/components/lead/tabs/LeadsListTab";
+
+type TabType = 'eniro' | 'linkedin' | 'lists';
 
 export function LeadSection() {
-  const [listType, setListType] = useState<'organizations' | 'contacts'>('organizations');
-  const [view, setView] = useState<'table' | 'kanban'>('table');
-  const [showSearchForm, setShowSearchForm] = useState(false);
-  
+  const [activeTab, setActiveTab] = useState<TabType>('eniro');
   const { stats } = useLeads();
-  const { createSearch } = useLeadSearches();
 
   return (
     <div className="h-screen flex flex-col">
-      {/* Global Header */}
+      {/* Global Header with Tabs */}
       <LeadPageHeader
-        listType={listType}
-        onListTypeChange={setListType}
-        view={view}
-        onViewChange={setView}
+        activeTab={activeTab}
+        onTabChange={setActiveTab}
         stats={stats}
-        onNewSearch={() => setShowSearchForm(true)}
       />
 
       {/* Main Content */}
       <div className="flex-1 overflow-auto">
-        <div className="px-6 py-4 space-y-6">
-          {/* Compact Stats */}
-          <LeadStats stats={stats} compact />
-
-          {/* Content */}
-          <EniroLeadsContent view={view} listType={listType} />
+        <div className="px-6 py-4">
+          {activeTab === 'eniro' && <EniroSearchTab />}
+          {activeTab === 'linkedin' && <LinkedInChatTab />}
+          {activeTab === 'lists' && <LeadsListTab />}
         </div>
       </div>
-
-      {/* Search Modal */}
-      <LeadWizard 
-        open={showSearchForm} 
-        onOpenChange={setShowSearchForm} 
-        onSubmit={async (data) => {
-          await createSearch({ ...data, provider: 'eniro' } as any);
-          setShowSearchForm(false);
-        }} 
-      />
     </div>
   );
 }
