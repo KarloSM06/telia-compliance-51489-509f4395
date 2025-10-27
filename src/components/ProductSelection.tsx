@@ -10,6 +10,7 @@ import { PackageCard } from "@/components/home/PackageCard";
 import { IndustryCard } from "@/components/home/IndustryCard";
 import { CustomerJourneyFlow } from "@/components/home/CustomerJourneyFlow";
 import { OnboardingTimeline } from "@/components/home/OnboardingTimeline";
+import { TechnicalExpertise } from "@/components/home/TechnicalExpertise";
 import { CaseStudyCard } from "@/components/home/CaseStudyCard";
 import { aiPackages } from "@/data/packages";
 import { industries } from "@/data/industries";
@@ -162,30 +163,21 @@ export const ProductSelection = () => {
       <section id="kundflode" className="relative py-24 bg-white/5">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <AnimatedSection className="text-center mb-16">
-            <h2 className="text-4xl sm:text-5xl font-bold mb-4 text-white">
-              Så skapar vi värde med AI
+            <h2 className="text-4xl sm:text-5xl font-bold mb-6 text-white">
+              Kundflöde & värde
             </h2>
+            <div className="w-24 h-1.5 bg-gradient-gold mx-auto rounded-full mb-6"></div>
             <p className="text-xl text-white/80 max-w-3xl mx-auto">
-              Från första kundkontakten till långsiktig tillväxt – se hur vårt AI-ekosystem transformerar er verksamhet
+              Se hur dina kunder möter Hiems AI – från första kontakten till långsiktig tillväxt
             </p>
           </AnimatedSection>
           
           <CustomerJourneyFlow />
-          
-          <AnimatedSection className="text-center mt-12">
-            <p className="text-2xl font-semibold mb-6">
-              Är ditt företag redo för AI?
-            </p>
-            <Button 
-              size="lg"
-              className="bg-gradient-gold text-primary hover:shadow-glow transition-all duration-300 font-semibold"
-              onClick={() => setIsConsultationModalOpen(true)}
-            >
-              Boka demo
-            </Button>
-          </AnimatedSection>
         </div>
       </section>
+
+      {/* Teknisk Expertis */}
+      <TechnicalExpertise onBookDemo={() => setIsConsultationModalOpen(true)} />
 
       {/* Onboarding-process */}
       <section id="onboarding" className="relative py-24">
