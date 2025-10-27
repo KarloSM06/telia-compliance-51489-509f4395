@@ -4,37 +4,31 @@ import { useAuth } from "@/hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 import hiems_logo from "@/assets/hiems_snowflake_logo.png";
 import { useState, useEffect } from "react";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
 import { ReceptionistModal } from "@/components/ReceptionistModal";
 import { ConsultationModal } from "@/components/ConsultationModal";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { ShoppingCart } from "@/components/cart/ShoppingCart";
 import { useCart } from "@/hooks/useCart";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-
 export const Header = () => {
-  const { user, signOut } = useAuth();
+  const {
+    user,
+    signOut
+  } = useAuth();
   const navigate = useNavigate();
-  const { toast } = useToast();
-  const { items, removeItem, clearCart } = useCart();
+  const {
+    toast
+  } = useToast();
+  const {
+    items,
+    removeItem,
+    clearCart
+  } = useCart();
   const [email, setEmail] = useState("");
   const [isNewsletterOpen, setIsNewsletterOpen] = useState(false);
   const [isReceptionistOpen, setIsReceptionistOpen] = useState(false);
@@ -42,7 +36,6 @@ export const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [showStickyCTA, setShowStickyCTA] = useState(false);
-
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20);
@@ -51,25 +44,21 @@ export const Header = () => {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
-
   const scrollToSection = (id: string) => {
     const element = document.getElementById(id);
     if (element) {
       const offset = 80;
       const elementPosition = element.getBoundingClientRect().top;
       const offsetPosition = elementPosition + window.pageYOffset - offset;
-      
       window.scrollTo({
         top: offsetPosition,
         behavior: 'smooth'
       });
     }
   };
-
   const getInitials = (email: string) => {
     return email.charAt(0).toUpperCase();
   };
-
   const handleAuthClick = () => {
     if (user) {
       signOut();
@@ -77,38 +66,21 @@ export const Header = () => {
       navigate("/auth");
     }
   };
-
   const handleNewsletterSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     toast({
       title: "Tack för din anmälan!",
-      description: "Du kommer snart få vårt nyhetsbrev.",
+      description: "Du kommer snart få vårt nyhetsbrev."
     });
     setEmail("");
     setIsNewsletterOpen(false);
   };
-
-  return (
-    <header className={cn(
-      "sticky top-0 z-50 bg-background/95 backdrop-blur-lg border-b border-border",
-      "transition-all duration-300",
-      isScrolled ? "shadow-elegant py-2" : "shadow-sm py-4"
-    )}>
+  return <header className={cn("sticky top-0 z-50 bg-background/95 backdrop-blur-lg border-b border-border", "transition-all duration-300", isScrolled ? "shadow-elegant py-2" : "shadow-sm py-4")}>
       <div className="mx-auto max-w-[1440px] px-6 md:px-8 lg:px-16">
-        <div className={cn(
-          "flex items-center justify-between transition-all duration-300",
-          isScrolled ? "h-16" : "h-24"
-        )}>
+        <div className={cn("flex items-center justify-between transition-all duration-300", isScrolled ? "h-16" : "h-24")}>
           <div className="flex items-center">
-            <button 
-              onClick={() => navigate("/")}
-              className="flex items-center space-x-3 group transition-all duration-300 hover:scale-[1.02]"
-            >
-              <img 
-                src={hiems_logo} 
-                alt="Hiems logo" 
-                className="h-14 w-14 rounded-xl shadow-md transition-all duration-300 group-hover:shadow-glow group-hover:rotate-3" 
-              />
+            <button onClick={() => navigate("/")} className="flex items-center space-x-3 group transition-all duration-300 hover:scale-[1.02]">
+              <img src={hiems_logo} alt="Hiems logo" className="h-14 w-14 rounded-xl shadow-md transition-all duration-300 group-hover:shadow-glow group-hover:rotate-3" />
               <div className="flex flex-col items-start">
                 <span className="text-3xl font-bold bg-gradient-primary bg-clip-text text-transparent transition-all duration-300 group-hover:tracking-wide">
                   Hiems
@@ -121,33 +93,20 @@ export const Header = () => {
           </div>
           
           {/* Desktop Navigation */}
-          {!user && (
-            <nav className="hidden lg:flex items-center space-x-10">
-              <button
-                onClick={() => navigate("/")}
-                className="relative text-sm font-medium text-muted-foreground hover:text-foreground transition-colors group"
-              >
+          {!user && <nav className="hidden lg:flex items-center space-x-10">
+              <button onClick={() => navigate("/")} className="relative text-sm font-medium text-muted-foreground hover:text-foreground transition-colors group">
                 Hem
                 <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-gold transition-all duration-300 group-hover:w-full" />
               </button>
-              <button
-                onClick={() => scrollToSection('paket')}
-                className="relative text-sm font-medium text-muted-foreground hover:text-foreground transition-colors group"
-              >
+              <button onClick={() => scrollToSection('paket')} className="relative text-sm font-medium text-muted-foreground hover:text-foreground transition-colors group">
                 Lösningar
                 <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-gold transition-all duration-300 group-hover:w-full" />
               </button>
-              <button
-                onClick={() => scrollToSection('branscher')}
-                className="relative text-sm font-medium text-muted-foreground hover:text-foreground transition-colors group"
-              >
+              <button onClick={() => scrollToSection('branscher')} className="relative text-sm font-medium text-muted-foreground hover:text-foreground transition-colors group">
                 Bransch
                 <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-gold transition-all duration-300 group-hover:w-full" />
               </button>
-              <button
-                onClick={() => scrollToSection('case')}
-                className="relative text-sm font-medium text-muted-foreground hover:text-foreground transition-colors group"
-              >
+              <button onClick={() => scrollToSection('case')} className="relative text-sm font-medium text-muted-foreground hover:text-foreground transition-colors group">
                 Case
                 <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-gold transition-all duration-300 group-hover:w-full" />
               </button>
@@ -155,44 +114,29 @@ export const Header = () => {
                 Om oss
                 <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-gold transition-all duration-300 group-hover:w-full" />
               </a>
-              <button
-                onClick={() => scrollToSection('kontakt')}
-                className="relative text-sm font-medium text-muted-foreground hover:text-foreground transition-colors group"
-              >
+              <button onClick={() => scrollToSection('kontakt')} className="relative text-sm font-medium text-muted-foreground hover:text-foreground transition-colors group">
                 Kontakt
                 <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-gold transition-all duration-300 group-hover:w-full" />
               </button>
-            </nav>
-          )}
+            </nav>}
           
           {/* Right Side */}
           <div className="flex items-center gap-4">
             {/* Mobile Menu Toggle */}
-            <button
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="lg:hidden p-2 hover:bg-accent rounded-md transition-colors"
-              aria-label="Toggle menu"
-            >
+            <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="lg:hidden p-2 hover:bg-accent rounded-md transition-colors" aria-label="Toggle menu">
               {isMobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
             </button>
 
             {/* Desktop Actions */}
             <div className="hidden lg:flex items-center gap-4">
               <div className="relative">
-                <ShoppingCart 
-                  items={items} 
-                  onRemoveItem={removeItem} 
-                  onClearCart={clearCart}
-                />
-                {items.length > 0 && (
-                  <span className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-gradient-gold text-primary text-xs font-bold flex items-center justify-center shadow-button animate-scale-in">
+                <ShoppingCart items={items} onRemoveItem={removeItem} onClearCart={clearCart} />
+                {items.length > 0 && <span className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-gradient-gold text-primary text-xs font-bold flex items-center justify-center shadow-button animate-scale-in">
                     {items.length}
-                  </span>
-                )}
+                  </span>}
               </div>
               
-              {user ? (
-                <DropdownMenu>
+              {user ? <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Avatar className="h-11 w-11 cursor-pointer ring-2 ring-primary/20 hover:ring-primary/60 transition-all duration-300 hover:scale-110">
                       <AvatarFallback className="bg-gradient-gold text-primary font-semibold text-lg">
@@ -224,17 +168,10 @@ export const Header = () => {
                       Logga ut
                     </DropdownMenuItem>
                   </DropdownMenuContent>
-                </DropdownMenu>
-              ) : (
-                <Button variant="ghost" size="sm" onClick={handleAuthClick}>
+                </DropdownMenu> : <Button variant="ghost" size="sm" onClick={handleAuthClick}>
                   Logga in
-                </Button>
-              )}
-              <Button 
-                className="relative overflow-hidden bg-gradient-gold text-primary hover:shadow-glow hover:scale-105 transition-all duration-300 font-semibold before:absolute before:inset-0 before:bg-white/20 before:translate-x-[-100%] before:transition-transform before:duration-500 hover:before:translate-x-[100%]"
-                onClick={() => setIsConsultationModalOpen(true)}
-                size="sm"
-              >
+                </Button>}
+              <Button className="relative overflow-hidden bg-gradient-gold text-primary hover:shadow-glow hover:scale-105 transition-all duration-300 font-semibold before:absolute before:inset-0 before:bg-white/20 before:translate-x-[-100%] before:transition-transform before:duration-500 hover:before:translate-x-[100%]" onClick={() => setIsConsultationModalOpen(true)} size="sm">
                 Boka demo
               </Button>
             </div>
@@ -242,56 +179,33 @@ export const Header = () => {
         </div>
 
         {/* Mobile Menu */}
-        {isMobileMenuOpen && (
-          <div className="lg:hidden absolute top-full left-0 right-0 bg-background/95 backdrop-blur-xl border-b border-border shadow-elegant animate-fade-in">
+        {isMobileMenuOpen && <div className="lg:hidden absolute top-full left-0 right-0 bg-background/95 backdrop-blur-xl border-b border-border shadow-elegant animate-fade-in">
             <div className="mx-auto max-w-[1440px] px-6 py-6">
               <div className="flex flex-col gap-4">
-              <ShoppingCart 
-                items={items} 
-                onRemoveItem={removeItem} 
-                onClearCart={clearCart}
-              />
+              <ShoppingCart items={items} onRemoveItem={removeItem} onClearCart={clearCart} />
               
-              {!user && (
-                <>
-                  <button
-                    onClick={() => navigate("/")}
-                    className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors py-2 text-left"
-                  >
+              {!user && <>
+                  <button onClick={() => navigate("/")} className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors py-2 text-left">
                     Hem
                   </button>
-                  <button
-                    onClick={() => scrollToSection('paket')}
-                    className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors py-2 text-left"
-                  >
+                  <button onClick={() => scrollToSection('paket')} className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors py-2 text-left">
                     Lösningar
                   </button>
-                  <button
-                    onClick={() => scrollToSection('branscher')}
-                    className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors py-2 text-left"
-                  >
+                  <button onClick={() => scrollToSection('branscher')} className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors py-2 text-left">
                     Bransch
                   </button>
-                  <button
-                    onClick={() => scrollToSection('case')}
-                    className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors py-2 text-left"
-                  >
+                  <button onClick={() => scrollToSection('case')} className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors py-2 text-left">
                     Case
                   </button>
                   <a href="/om-oss" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors py-2">
                     Om oss
                   </a>
-                  <button
-                    onClick={() => scrollToSection('kontakt')}
-                    className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors py-2 text-left"
-                  >
+                  <button onClick={() => scrollToSection('kontakt')} className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors py-2 text-left">
                     Kontakt
                   </button>
-                </>
-              )}
+                </>}
               
-              {user ? (
-                <div className="space-y-3">
+              {user ? <div className="space-y-3">
                   <div className="flex items-center gap-3 py-2">
                     <Avatar className="h-11 w-11 ring-2 ring-primary/20">
                       <AvatarFallback className="bg-gradient-gold text-primary font-semibold text-lg">
@@ -303,75 +217,47 @@ export const Header = () => {
                       <span className="text-xs text-muted-foreground truncate">{user.email}</span>
                     </div>
                   </div>
-                  <Button 
-                    variant="ghost" 
-                    onClick={() => {
-                      navigate("/dashboard");
-                      setIsMobileMenuOpen(false);
-                    }} 
-                    className="justify-start w-full"
-                  >
+                  <Button variant="ghost" onClick={() => {
+                navigate("/dashboard");
+                setIsMobileMenuOpen(false);
+              }} className="justify-start w-full">
                     <LayoutDashboard className="mr-2 h-4 w-4" />
                     Dashboard
                   </Button>
-                  <Button 
-                    variant="ghost" 
-                    onClick={() => {
-                      navigate("/gdpr-settings");
-                      setIsMobileMenuOpen(false);
-                    }} 
-                    className="justify-start w-full"
-                  >
+                  <Button variant="ghost" onClick={() => {
+                navigate("/gdpr-settings");
+                setIsMobileMenuOpen(false);
+              }} className="justify-start w-full">
                     <Settings className="mr-2 h-4 w-4" />
                     Inställningar
                   </Button>
-                  <Button 
-                    variant="ghost" 
-                    onClick={() => {
-                      handleAuthClick();
-                      setIsMobileMenuOpen(false);
-                    }} 
-                    className="justify-start w-full text-destructive"
-                  >
+                  <Button variant="ghost" onClick={() => {
+                handleAuthClick();
+                setIsMobileMenuOpen(false);
+              }} className="justify-start w-full text-destructive">
                     <LogOut className="mr-2 h-4 w-4" />
                     Logga ut
                   </Button>
-                </div>
-              ) : (
-                <Button variant="ghost" onClick={handleAuthClick} className="justify-start">
+                </div> : <Button variant="ghost" onClick={handleAuthClick} className="justify-start">
                   Logga in
-                </Button>
-              )}
+                </Button>}
               
-              <Button 
-                className="w-full relative overflow-hidden bg-gradient-gold text-primary hover:shadow-glow transition-all duration-300 font-semibold before:absolute before:inset-0 before:bg-white/20 before:translate-x-[-100%] before:transition-transform before:duration-500 hover:before:translate-x-[100%]"
-                onClick={() => {
-                  setIsConsultationModalOpen(true);
-                  setIsMobileMenuOpen(false);
-                }}
-              >
+              <Button className="w-full relative overflow-hidden bg-gradient-gold text-primary hover:shadow-glow transition-all duration-300 font-semibold before:absolute before:inset-0 before:bg-white/20 before:translate-x-[-100%] before:transition-transform before:duration-500 hover:before:translate-x-[100%]" onClick={() => {
+              setIsConsultationModalOpen(true);
+              setIsMobileMenuOpen(false);
+            }}>
                 Boka demo
               </Button>
               </div>
             </div>
-          </div>
-        )}
+          </div>}
       </div>
       <ReceptionistModal open={isReceptionistOpen} onOpenChange={setIsReceptionistOpen} />
       <ConsultationModal open={isConsultationModalOpen} onOpenChange={setIsConsultationModalOpen} />
       
       {/* Sticky CTA Button */}
-      {showStickyCTA && (
-        <div className="fixed bottom-8 right-8 z-50 animate-fade-in">
-          <Button 
-            size="lg"
-            className="bg-gradient-gold text-primary shadow-xl hover:shadow-2xl transition-shadow duration-300 font-semibold"
-            onClick={() => setIsConsultationModalOpen(true)}
-          >
-            Boka demo
-          </Button>
-        </div>
-      )}
-    </header>
-  );
+      {showStickyCTA && <div className="fixed bottom-8 right-8 z-50 animate-fade-in">
+          
+        </div>}
+    </header>;
 };
