@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { formatInTimeZone, sv } from "../_shared/timezoneUtils.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -87,18 +88,19 @@ serve(async (req) => {
       };
     }
 
-    // Format date and time for Swedish locale
-    const eventDate = new Date(event.start_time);
-    const formattedDate = eventDate.toLocaleDateString('sv-SE', { 
-      weekday: 'long', 
-      year: 'numeric', 
-      month: 'long', 
-      day: 'numeric' 
-    });
-    const formattedTime = eventDate.toLocaleTimeString('sv-SE', { 
-      hour: '2-digit', 
-      minute: '2-digit' 
-    });
+    // Format date and time for Swedish locale using correct timezone
+    const timezone = event.timezone || 'Europe/Stockholm';
+    const formattedDate = formatInTimeZone(
+      event.start_time,
+      'EEEE d MMMM yyyy',
+      timezone,
+      { locale: sv }
+    );
+    const formattedTime = formatInTimeZone(
+      event.start_time,
+      'HH:mm',
+      timezone
+    );
 
     // Prepare variables
     const variables = {
