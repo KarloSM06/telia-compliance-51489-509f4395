@@ -30,10 +30,7 @@ const LeadPage = lazy(() => import("./pages/LeadPage"));
 const ThorPage = lazy(() => import("./pages/ThorPage"));
 const EkoPage = lazy(() => import("./pages/EkoPage"));
 const CalendarPage = lazy(() => import("./pages/CalendarPage"));
-const ReminderSettings = lazy(() => import("./pages/ReminderSettings"));
-const MessageTemplates = lazy(() => import("./pages/MessageTemplates"));
-const SMSProviderSettings = lazy(() => import("./pages/SMSProviderSettings"));
-const MessageInsights = lazy(() => import("./pages/MessageInsights"));
+const Communications = lazy(() => import("./pages/Communications"));
 const CompanyProfile = lazy(() => import("./pages/CompanyProfile"));
 const ReviewDashboard = lazy(() => import("./pages/ReviewDashboard"));
 const Unsubscribe = lazy(() => import("./pages/Unsubscribe"));
@@ -85,10 +82,7 @@ const App = () => (
               <Route path="/dashboard/thor" element={<DashboardLayout><ThorPage /></DashboardLayout>} />
               <Route path="/dashboard/eko" element={<DashboardLayout><EkoPage /></DashboardLayout>} />
               <Route path="/dashboard/calendar" element={<DashboardLayout><CalendarPage /></DashboardLayout>} />
-              <Route path="/dashboard/reminders" element={<DashboardLayout><ReminderSettings /></DashboardLayout>} />
-              <Route path="/dashboard/templates" element={<DashboardLayout><MessageTemplates /></DashboardLayout>} />
-              <Route path="/dashboard/sms-settings" element={<DashboardLayout><SMSProviderSettings /></DashboardLayout>} />
-              <Route path="/dashboard/message-insights" element={<DashboardLayout><MessageInsights /></DashboardLayout>} />
+              <Route path="/dashboard/communications" element={<DashboardLayout><Communications /></DashboardLayout>} />
               <Route path="/dashboard/company" element={<DashboardLayout><CompanyProfile /></DashboardLayout>} />
               <Route path="/dashboard/reviews" element={<DashboardLayout><ReviewDashboard /></DashboardLayout>} />
               <Route path="/unsubscribe" element={<Unsubscribe />} />
