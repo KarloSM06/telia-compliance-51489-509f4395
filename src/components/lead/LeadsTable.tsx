@@ -3,8 +3,9 @@ import { Lead } from "@/hooks/useLeads";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Eye, Mail, Phone, Sparkles, Loader2, Linkedin } from "lucide-react";
+import { Eye, Mail, Phone, Sparkles, Loader2, Building2 } from "lucide-react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import linkedinIcon from "@/assets/linkedin-icon.webp";
 import { format } from "date-fns";
 import { useEnrichLead } from "@/hooks/useEnrichLead";
 
@@ -153,11 +154,23 @@ export function LeadsTable({ leads, onViewDetails, onBulkEnrich, isBulkEnriching
                               href={lead.linkedin.startsWith('http') ? lead.linkedin : `https://${lead.linkedin}`}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="text-blue-600 hover:underline text-xs flex items-center gap-1"
+                              className="text-xs flex items-center gap-1 hover:opacity-80 transition-opacity"
                               onClick={(e) => e.stopPropagation()}
                             >
-                              <Linkedin className="h-3 w-3" />
-                              LinkedIn
+                              <img src={linkedinIcon} alt="LinkedIn" className="h-3.5 w-3.5" />
+                              <span className="text-[#0077b5] font-medium">LinkedIn</span>
+                            </a>
+                          )}
+                          {lead.company_linkedin && (
+                            <a 
+                              href={lead.company_linkedin.startsWith('http') ? lead.company_linkedin : `https://${lead.company_linkedin}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-xs flex items-center gap-1 hover:opacity-80 transition-opacity"
+                              onClick={(e) => e.stopPropagation()}
+                            >
+                              <img src={linkedinIcon} alt="LinkedIn" className="h-3.5 w-3.5" />
+                              <span className="text-[#0077b5] font-medium">Företag</span>
                             </a>
                           )}
                         </div>
@@ -232,10 +245,23 @@ export function LeadsTable({ leads, onViewDetails, onBulkEnrich, isBulkEnriching
                             href={lead.linkedin.startsWith('http') ? lead.linkedin : `https://${lead.linkedin}`}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="text-blue-600 hover:underline text-xs"
+                            className="text-xs flex items-center gap-1 hover:opacity-80 transition-opacity"
                             onClick={(e) => e.stopPropagation()}
                           >
-                            LinkedIn
+                            <img src={linkedinIcon} alt="LinkedIn" className="h-3.5 w-3.5" />
+                            <span className="text-[#0077b5] font-medium">LinkedIn</span>
+                          </a>
+                        )}
+                        {lead.company_linkedin && (
+                          <a 
+                            href={lead.company_linkedin.startsWith('http') ? lead.company_linkedin : `https://${lead.company_linkedin}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-xs flex items-center gap-1 hover:opacity-80 transition-opacity"
+                            onClick={(e) => e.stopPropagation()}
+                          >
+                            <img src={linkedinIcon} alt="LinkedIn" className="h-3.5 w-3.5" />
+                            <span className="text-[#0077b5] font-medium">Företag</span>
                           </a>
                         )}
                       </div>

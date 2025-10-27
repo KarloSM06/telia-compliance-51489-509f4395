@@ -6,6 +6,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Lead } from "@/hooks/useLeads";
 import { Mail, Phone, Globe, Building2, MapPin, Save } from "lucide-react";
+import linkedinIcon from "@/assets/linkedin-icon.webp";
 
 interface LeadDetailModalProps {
   lead: Lead | null;
@@ -165,17 +166,26 @@ export function LeadDetailModal({ lead, open, onOpenChange, onUpdate }: LeadDeta
                 </p>
               )}
               {lead.linkedin && (
-                <p className="flex items-center gap-2">
-                  <Globe className="h-4 w-4" />
-                  <a 
-                    href={lead.linkedin.startsWith('http') ? lead.linkedin : `https://${lead.linkedin}`}
-                    target="_blank" 
-                    rel="noopener noreferrer" 
-                    className="text-primary hover:underline"
-                  >
-                    LinkedIn-profil
-                  </a>
-                </p>
+                <a 
+                  href={lead.linkedin.startsWith('http') ? lead.linkedin : `https://${lead.linkedin}`}
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="flex items-center gap-2 hover:opacity-80 transition-opacity"
+                >
+                  <img src={linkedinIcon} alt="LinkedIn" className="h-4 w-4" />
+                  <span className="text-[#0077b5] font-medium hover:underline">LinkedIn-profil</span>
+                </a>
+              )}
+              {lead.company_linkedin && (
+                <a 
+                  href={lead.company_linkedin.startsWith('http') ? lead.company_linkedin : `https://${lead.company_linkedin}`}
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="flex items-center gap-2 hover:opacity-80 transition-opacity"
+                >
+                  <img src={linkedinIcon} alt="LinkedIn" className="h-4 w-4" />
+                  <span className="text-[#0077b5] font-medium hover:underline">Företagets LinkedIn</span>
+                </a>
               )}
               {lead.website && (
                 <p className="flex items-center gap-2">

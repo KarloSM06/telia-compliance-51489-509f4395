@@ -2,8 +2,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Building2, MapPin, User, Mail, Phone, Sparkles, Home, Linkedin, Briefcase } from "lucide-react";
+import { Building2, MapPin, User, Mail, Phone, Sparkles, Home, Briefcase } from "lucide-react";
 import { Lead } from "@/hooks/useLeads";
+import linkedinIcon from "@/assets/linkedin-icon.webp";
 
 interface LeadCardProps {
   lead: Lead;
@@ -68,11 +69,23 @@ export function LeadCard({ lead, onViewDetails, viewMode = 'organizations' }: Le
                     href={lead.linkedin.startsWith('http') ? lead.linkedin : `https://${lead.linkedin}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-blue-600 hover:underline text-xs flex items-center gap-1 mt-1"
+                    className="text-xs flex items-center gap-1 mt-1 hover:opacity-80 transition-opacity"
                     onClick={(e) => e.stopPropagation()}
                   >
-                    <Linkedin className="h-3 w-3" />
-                    LinkedIn
+                    <img src={linkedinIcon} alt="LinkedIn" className="h-3.5 w-3.5" />
+                    <span className="text-[#0077b5] font-medium">LinkedIn</span>
+                  </a>
+                )}
+                {lead.company_linkedin && (
+                  <a 
+                    href={lead.company_linkedin.startsWith('http') ? lead.company_linkedin : `https://${lead.company_linkedin}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-xs flex items-center gap-1 mt-1 hover:opacity-80 transition-opacity"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <img src={linkedinIcon} alt="LinkedIn" className="h-3.5 w-3.5" />
+                    <span className="text-[#0077b5] font-medium">Företag</span>
                   </a>
                 )}
               </div>
