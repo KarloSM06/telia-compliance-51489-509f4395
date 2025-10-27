@@ -35,6 +35,7 @@ export interface Lead {
   employee_count?: number | null;
   Adress?: string | null;
   Postal_Area?: string | null;
+  provider?: string;
 }
 
 export interface LeadActivity {
