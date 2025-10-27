@@ -12,6 +12,7 @@ import { LeadWizard } from "@/components/lead/LeadWizard";
 import { LeadStats } from "@/components/lead/LeadStats";
 import { KanbanView } from "@/components/lead/KanbanView";
 import { LeadsTable } from "@/components/lead/LeadsTable";
+import eniroLogo from "@/assets/eniro-logo.png";
 
 export const EniroLeadsTab = () => {
   const { bulkEnrichLeads, isEnriching: isBulkEnriching, bulkProgress } = useEnrichLead();
@@ -80,11 +81,14 @@ export const EniroLeadsTab = () => {
       <Card>
         <CardHeader>
           <div className="flex items-center justify-between">
-            <div>
-              <CardTitle>Eniro Leads</CardTitle>
-              <CardDescription>
-                {filteredLeads.length} leads
-              </CardDescription>
+            <div className="flex items-center gap-3">
+              <img src={eniroLogo} alt="Eniro" className="h-10 w-10 rounded-lg" />
+              <div>
+                <CardTitle>Eniro Leads</CardTitle>
+                <CardDescription>
+                  {filteredLeads.length} leads
+                </CardDescription>
+              </div>
             </div>
             <div className="flex gap-2">
               <Button 

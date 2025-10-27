@@ -6,6 +6,8 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Send, Trash2, Bot, User } from "lucide-react";
 import { useLeadChat } from "@/hooks/useLeadChat";
 import { cn } from "@/lib/utils";
+import linkedinLogo from "@/assets/linkedin-logo.png";
+import anthropicLogo from "@/assets/anthropic-logo.png";
 
 export const LeadChatInterface = () => {
   const { messages, loading, sending, sendMessage, clearHistory } = useLeadChat('claude-linkedin');
@@ -38,9 +40,13 @@ export const LeadChatInterface = () => {
     <Card className="h-full flex flex-col bg-gradient-to-br from-blue-50/50 to-orange-50/50 dark:from-blue-950/20 dark:to-orange-950/20">
       <CardHeader className="border-b bg-gradient-to-r from-blue-600 to-orange-600 text-white">
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Bot className="h-5 w-5" />
-            <CardTitle>AI Chat Assistent</CardTitle>
+          <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2">
+              <img src={linkedinLogo} alt="LinkedIn" className="h-7 w-7 rounded-md bg-white/10 p-0.5" />
+              <span className="text-white/60">×</span>
+              <img src={anthropicLogo} alt="Anthropic" className="h-7 w-7 rounded-md bg-white/10 p-0.5" />
+            </div>
+            <CardTitle className="text-lg">AI Chat Assistent</CardTitle>
           </div>
           <Button 
             variant="ghost" 
@@ -62,7 +68,11 @@ export const LeadChatInterface = () => {
           ) : messages.length === 0 ? (
             <div className="flex items-center justify-center h-full text-center px-4">
               <div>
-                <Bot className="h-12 w-12 mx-auto mb-4 text-blue-600" />
+                <div className="inline-flex items-center gap-3 mb-4">
+                  <img src={linkedinLogo} alt="LinkedIn" className="h-12 w-12 rounded-lg" />
+                  <span className="text-2xl text-muted-foreground">×</span>
+                  <img src={anthropicLogo} alt="Anthropic" className="h-12 w-12 rounded-lg" />
+                </div>
                 <h3 className="font-semibold mb-2">Välkommen till AI Lead-assistenten</h3>
                 <p className="text-sm text-muted-foreground">
                   Berätta vad för leads du söker, t.ex:<br />

@@ -6,6 +6,7 @@ import { useLeads, Lead } from "@/hooks/useLeads";
 import { LeadChatInterface } from "@/components/lead/chat/LeadChatInterface";
 import { LeadDetailModal } from "@/components/lead/LeadDetailModal";
 import { Building, MapPin, Users, Mail, Phone } from "lucide-react";
+import linkedinLogo from "@/assets/linkedin-logo.png";
 
 export const LinkedInLeadsTab = () => {
   const { leads, loading, updateLead } = useLeads();
@@ -25,8 +26,8 @@ export const LinkedInLeadsTab = () => {
       {/* Left: Lead List */}
       <Card className="flex flex-col">
         <CardHeader className="border-b bg-gradient-to-r from-blue-600 to-blue-700 text-white">
-          <CardTitle className="flex items-center gap-2">
-            <Building className="h-5 w-5" />
+          <CardTitle className="flex items-center gap-3">
+            <img src={linkedinLogo} alt="LinkedIn" className="h-7 w-7 rounded-md bg-white/10 p-0.5" />
             LinkedIn Leads
             <Badge variant="secondary" className="ml-auto bg-white/20 text-white">
               {linkedinLeads.length}
