@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
 import { ReceptionistModal } from "@/components/ReceptionistModal";
+import { ConsultationModal } from "@/components/ConsultationModal";
 import {
   Dialog,
   DialogContent,
@@ -37,16 +38,33 @@ export const Header = () => {
   const [email, setEmail] = useState("");
   const [isNewsletterOpen, setIsNewsletterOpen] = useState(false);
   const [isReceptionistOpen, setIsReceptionistOpen] = useState(false);
+  const [isConsultationModalOpen, setIsConsultationModalOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [showStickyCTA, setShowStickyCTA] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20);
+      setShowStickyCTA(window.scrollY > 600);
     };
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  const scrollToSection = (id: string) => {
+    const element = document.getElementById(id);
+    if (element) {
+      const offset = 80;
+      const elementPosition = element.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.pageYOffset - offset;
+      
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth'
+      });
+    }
+  };
 
   const getInitials = (email: string) => {
     return email.charAt(0).toUpperCase();
@@ -91,54 +109,59 @@ export const Header = () => {
                 alt="Hiems logo" 
                 className="h-14 w-14 rounded-xl shadow-md transition-all duration-300 group-hover:shadow-glow group-hover:rotate-3" 
               />
-              <span className="text-3xl font-bold bg-gradient-primary bg-clip-text text-transparent transition-all duration-300 group-hover:tracking-wide">
-                Hiems
-              </span>
+              <div className="flex flex-col items-start">
+                <span className="text-3xl font-bold bg-gradient-primary bg-clip-text text-transparent transition-all duration-300 group-hover:tracking-wide">
+                  Hiems
+                </span>
+                <span className="hidden lg:block text-[10px] text-muted-foreground -mt-1">
+                  Skräddarsydda AI-ekosystem som transformerar ditt företag
+                </span>
+              </div>
             </button>
           </div>
           
           {/* Desktop Navigation */}
           {!user && (
             <nav className="hidden lg:flex items-center space-x-10">
+              <button
+                onClick={() => navigate("/")}
+                className="relative text-sm font-medium text-muted-foreground hover:text-foreground transition-colors group"
+              >
+                Hem
+                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-gold transition-all duration-300 group-hover:w-full" />
+              </button>
+              <button
+                onClick={() => scrollToSection('paket')}
+                className="relative text-sm font-medium text-muted-foreground hover:text-foreground transition-colors group"
+              >
+                Lösningar
+                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-gold transition-all duration-300 group-hover:w-full" />
+              </button>
+              <button
+                onClick={() => scrollToSection('branscher')}
+                className="relative text-sm font-medium text-muted-foreground hover:text-foreground transition-colors group"
+              >
+                Bransch
+                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-gold transition-all duration-300 group-hover:w-full" />
+              </button>
+              <button
+                onClick={() => scrollToSection('case')}
+                className="relative text-sm font-medium text-muted-foreground hover:text-foreground transition-colors group"
+              >
+                Case
+                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-gold transition-all duration-300 group-hover:w-full" />
+              </button>
               <a href="/om-oss" className="relative text-sm font-medium text-muted-foreground hover:text-foreground transition-colors group">
                 Om oss
                 <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-gold transition-all duration-300 group-hover:w-full" />
               </a>
-              <a href="/regelverk" className="relative text-sm font-medium text-muted-foreground hover:text-foreground transition-colors group">
-                Regelverk
+              <button
+                onClick={() => scrollToSection('kontakt')}
+                className="relative text-sm font-medium text-muted-foreground hover:text-foreground transition-colors group"
+              >
+                Kontakt
                 <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-gold transition-all duration-300 group-hover:w-full" />
-              </a>
-              <Dialog open={isNewsletterOpen} onOpenChange={setIsNewsletterOpen}>
-                <DialogTrigger asChild>
-                  <button className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
-                    Nyhetsbrev
-                  </button>
-                </DialogTrigger>
-                <DialogContent className="sm:max-w-md">
-                  <DialogHeader>
-                    <DialogTitle>Gå med i Hiems nyhetsbrev – helt gratis!</DialogTitle>
-                    <DialogDescription>
-                      Få de senaste tipsen, insikterna och verktygen inom AI-driven automation direkt i din inkorg – utan kostnad. Lär dig hur du kan effektivisera ditt företag, spara tid och öka lönsamheten.
-                    </DialogDescription>
-                  </DialogHeader>
-                  <form onSubmit={handleNewsletterSubmit} className="space-y-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="newsletter-email">Ange din e-postadress och börja prenumerera helt gratis idag!</Label>
-                      <Input
-                        id="newsletter-email"
-                        type="email"
-                        placeholder="E-postadress"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        required
-                      />
-                    </div>
-                    <Button type="submit" className="w-full">
-                      Gå med gratis
-                    </Button>
-                  </form>
-                </DialogContent>
-              </Dialog>
+              </button>
             </nav>
           )}
           
@@ -209,10 +232,10 @@ export const Header = () => {
               )}
               <Button 
                 className="relative overflow-hidden bg-gradient-gold text-primary hover:shadow-glow hover:scale-105 transition-all duration-300 font-semibold before:absolute before:inset-0 before:bg-white/20 before:translate-x-[-100%] before:transition-transform before:duration-500 hover:before:translate-x-[100%]"
-                onClick={() => setIsReceptionistOpen(true)}
+                onClick={() => setIsConsultationModalOpen(true)}
                 size="sm"
               >
-                Prova vår receptionist
+                Boka demo
               </Button>
             </div>
           </div>
@@ -231,17 +254,38 @@ export const Header = () => {
               
               {!user && (
                 <>
+                  <button
+                    onClick={() => navigate("/")}
+                    className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors py-2 text-left"
+                  >
+                    Hem
+                  </button>
+                  <button
+                    onClick={() => scrollToSection('paket')}
+                    className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors py-2 text-left"
+                  >
+                    Lösningar
+                  </button>
+                  <button
+                    onClick={() => scrollToSection('branscher')}
+                    className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors py-2 text-left"
+                  >
+                    Bransch
+                  </button>
+                  <button
+                    onClick={() => scrollToSection('case')}
+                    className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors py-2 text-left"
+                  >
+                    Case
+                  </button>
                   <a href="/om-oss" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors py-2">
                     Om oss
                   </a>
-                  <a href="/regelverk" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors py-2">
-                    Regelverk
-                  </a>
-                  <button 
-                    onClick={() => setIsNewsletterOpen(true)}
+                  <button
+                    onClick={() => scrollToSection('kontakt')}
                     className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors py-2 text-left"
                   >
-                    Nyhetsbrev
+                    Kontakt
                   </button>
                 </>
               )}
@@ -302,11 +346,11 @@ export const Header = () => {
               <Button 
                 className="w-full relative overflow-hidden bg-gradient-gold text-primary hover:shadow-glow transition-all duration-300 font-semibold before:absolute before:inset-0 before:bg-white/20 before:translate-x-[-100%] before:transition-transform before:duration-500 hover:before:translate-x-[100%]"
                 onClick={() => {
-                  setIsReceptionistOpen(true);
+                  setIsConsultationModalOpen(true);
                   setIsMobileMenuOpen(false);
                 }}
               >
-                Prova vår receptionist
+                Boka demo
               </Button>
               </div>
             </div>
@@ -314,6 +358,20 @@ export const Header = () => {
         )}
       </div>
       <ReceptionistModal open={isReceptionistOpen} onOpenChange={setIsReceptionistOpen} />
+      <ConsultationModal open={isConsultationModalOpen} onOpenChange={setIsConsultationModalOpen} />
+      
+      {/* Sticky CTA Button */}
+      {showStickyCTA && (
+        <div className="fixed bottom-8 right-8 z-50 animate-fade-in">
+          <Button 
+            size="lg"
+            className="bg-gradient-gold text-primary shadow-xl hover:shadow-2xl transition-shadow duration-300 font-semibold"
+            onClick={() => setIsConsultationModalOpen(true)}
+          >
+            Boka demo
+          </Button>
+        </div>
+      )}
     </header>
   );
 };
