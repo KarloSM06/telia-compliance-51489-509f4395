@@ -106,7 +106,7 @@ export default function MessageTemplates() {
   }
 
   return (
-    <div className="space-y-6 w-full px-6 pb-12">
+    <div className="space-y-6 w-full pb-12">
       {/* Stats Overview */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <StatCard title="Totalt antal mallar" value={stats.total} icon={FileText} />

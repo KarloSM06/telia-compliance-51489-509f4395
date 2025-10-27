@@ -39,7 +39,7 @@ export default function ReminderSettings() {
   }
 
   return (
-    <div className="space-y-8 w-full px-6 pb-12">
+    <div className="space-y-8 w-full pb-12">
       <div className="space-y-6">
         {/* Booking Confirmation */}
         <TimelineStep
