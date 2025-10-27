@@ -20,13 +20,13 @@ export const EniroSearchTab = () => {
     <div className="space-y-6">
       {/* Create Search Section */}
       <Card>
-        <CardHeader className="border-b bg-gradient-to-r from-yellow-500 to-orange-500 text-gray-900">
+        <CardHeader className="border-b bg-gradient-to-r from-blue-600 to-purple-600 text-white">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <img src={eniroLogo} alt="Eniro" className="h-8 w-8 object-contain" />
               <div>
                 <CardTitle className="text-xl">Eniro Lead Search</CardTitle>
-                <CardDescription className="text-gray-800">
+                <CardDescription className="text-white/90">
                   Sök efter företag och BRF:er i Eniro-databasen
                 </CardDescription>
               </div>

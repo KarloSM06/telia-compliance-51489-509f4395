@@ -8,7 +8,7 @@ export const LinkedInChatTab = () => {
   return (
     <div className="space-y-6">
       <Card>
-        <CardHeader className="border-b bg-gradient-to-r from-stone-600 via-amber-700 to-orange-700 text-white">
+        <CardHeader className="border-b bg-gradient-to-r from-blue-600 via-purple-600 to-orange-600 text-white">
           <div className="flex items-center gap-3">
             <div className="flex items-center gap-2">
               <img src={linkedinLogo} alt="LinkedIn" className="h-7 w-7 object-contain" />
