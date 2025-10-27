@@ -19,7 +19,7 @@ export default function Communications() {
           <div className="relative z-10">
             <h1 className="text-4xl font-bold mb-2">Kommunikation</h1>
             <p className="text-lg opacity-90 mb-6">
-              Hantera mallar, påminnelser, notifikationer och SMS-inställningar från ett centralt nav
+              Styr all kundkommunikation från en plats
             </p>
 
             {/* Desktop Navigation - Organic Floating Cards */}
