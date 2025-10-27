@@ -39,12 +39,12 @@ export const PackageCard = ({
               <h4 className="text-sm font-bold uppercase tracking-wider text-primary/80">Om paketet</h4>
               <div className="h-px flex-1 bg-gradient-to-r from-transparent via-primary/20 to-transparent" />
             </div>
-            <div className="space-y-2.5">
-              {pkg.description && <div className="flex items-start gap-2.5 p-2 rounded-lg hover:bg-primary/5 transition-colors group">
-                  <div className="mt-0.5 p-0.5 rounded-full bg-primary/10 group-hover:bg-primary/20 transition-colors">
-                    <CheckCircle className="h-3.5 w-3.5 text-primary" />
+            <div className="space-y-3">
+              {pkg.description && <div className="flex items-start gap-3 p-3 rounded-lg hover:bg-primary/5 transition-colors group">
+                  <div className="mt-1 p-1 rounded-full bg-primary/10 group-hover:bg-primary/20 transition-colors flex-shrink-0">
+                    <CheckCircle className="h-5 w-5 text-primary" />
                   </div>
-                  <span className="text-xs lg:text-sm leading-snug text-foreground/80 group-hover:text-foreground transition-colors">
+                  <span className="text-sm lg:text-base leading-relaxed text-foreground font-medium">
                     {pkg.description}
                   </span>
                 </div>}
@@ -57,12 +57,12 @@ export const PackageCard = ({
               <h4 className="text-sm font-bold uppercase tracking-wider text-primary/80">Funktioner</h4>
               <div className="h-px flex-1 bg-gradient-to-r from-transparent via-primary/20 to-transparent" />
             </div>
-            <div className="space-y-2.5">
-              {pkg.components.map((component, index) => <div key={index} className="flex items-start gap-2.5 p-2 rounded-lg hover:bg-primary/5 transition-colors group">
-                  <div className="mt-0.5 p-0.5 rounded-full bg-primary/10 group-hover:bg-primary/20 transition-colors">
-                    <CheckCircle className="h-3.5 w-3.5 text-primary" />
+            <div className="space-y-3">
+              {pkg.components.map((component, index) => <div key={index} className="flex items-start gap-3 p-3 rounded-lg hover:bg-primary/5 transition-colors group">
+                  <div className="mt-1 p-1 rounded-full bg-primary/10 group-hover:bg-primary/20 transition-colors flex-shrink-0">
+                    <CheckCircle className="h-5 w-5 text-primary" />
                   </div>
-                  <span className="text-xs lg:text-sm leading-snug text-foreground/80 group-hover:text-foreground transition-colors">
+                  <span className="text-sm lg:text-base leading-relaxed text-foreground font-medium">
                     {component}
                   </span>
                 </div>)}
@@ -76,12 +76,12 @@ export const PackageCard = ({
                 <h4 className="text-sm font-bold uppercase tracking-wider text-accent/80">Fördelar</h4>
                 <div className="h-px flex-1 bg-gradient-to-r from-transparent via-accent/20 to-transparent" />
               </div>
-              <div className="space-y-2.5">
-                {pkg.valueBullets.map((bullet, index) => <div key={index} className="flex items-start gap-2.5 p-2 rounded-lg hover:bg-accent/5 transition-colors group">
-                    <div className="mt-0.5 p-0.5 rounded-full bg-accent/10 group-hover:bg-accent/20 transition-colors">
-                      <CheckCircle className="h-3.5 w-3.5 text-accent" />
+              <div className="space-y-3">
+                {pkg.valueBullets.map((bullet, index) => <div key={index} className="flex items-start gap-3 p-3 rounded-lg hover:bg-accent/5 transition-colors group">
+                    <div className="mt-1 p-1 rounded-full bg-accent/10 group-hover:bg-accent/20 transition-colors flex-shrink-0">
+                      <CheckCircle className="h-5 w-5 text-accent" />
                     </div>
-                    <span className="text-xs lg:text-sm font-medium leading-snug text-foreground/80 group-hover:text-foreground transition-colors">
+                    <span className="text-sm lg:text-base font-semibold leading-relaxed text-foreground">
                       {bullet}
                     </span>
                   </div>)}
