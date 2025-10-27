@@ -2,6 +2,7 @@ import { TrendingUp, Sparkles, Wrench, ShoppingCart, BarChart3, Award, type Luci
 import marketingAutomationImage from "@/assets/marketing-automation-ai.png";
 import serviceOperationsImage from "@/assets/service-operations.png";
 import ecommerceRetailImage from "@/assets/ecommerce-retail.png";
+import dataInsightImage from "@/assets/data-insight.jpg";
 
 export interface Package {
   id: string;
@@ -124,6 +125,7 @@ export const aiPackages: Package[] = [
     icon: BarChart3,
     tagline: 'Fatta beslut baserat på data',
     targetAudience: 'Företag som vill fatta beslut baserat på data',
+    image: dataInsightImage,
     components: [
       'Datainsamling och berikning',
       'AI-driven analys av kunddata',
