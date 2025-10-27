@@ -165,7 +165,7 @@ async function sendSMS(message: ScheduledMessage, supabase: any) {
         authToken: credentials.authToken,
         fromNumber: userSettings.from_phone_number,
         toNumber: message.recipient_phone!,
-        body: message.message_body,
+        body: message.generated_message || message.message_body,
         userId: message.user_id,
         messageId: message.id,
         calendarEventId: message.calendar_event_id,
@@ -177,7 +177,7 @@ async function sendSMS(message: ScheduledMessage, supabase: any) {
         apiKey: credentials.apiKey,
         fromNumber: userSettings.from_phone_number,
         toNumber: message.recipient_phone!,
-        body: message.message_body,
+        body: message.generated_message || message.message_body,
         userId: message.user_id,
         messageId: message.id,
         calendarEventId: message.calendar_event_id,
@@ -320,7 +320,7 @@ async function sendViaSystemTwilio(message: ScheduledMessage, supabase: any) {
     body: new URLSearchParams({
       To: message.recipient_phone!,
       From: twilioPhoneNumber,
-      Body: message.message_body,
+      Body: message.generated_message || message.message_body,
     }),
   });
 
@@ -337,7 +337,7 @@ async function sendViaSystemTwilio(message: ScheduledMessage, supabase: any) {
     calendar_event_id: message.calendar_event_id,
     channel: 'sms',
     recipient: message.recipient_phone,
-    message_body: message.message_body,
+    message_body: message.generated_message || message.message_body,
     provider: 'twilio',
     provider_type: 'system',
     provider_message_id: result.sid,
@@ -368,7 +368,7 @@ async function sendEmail(message: ScheduledMessage, supabase: any) {
       from: 'notifications@yourdomain.com',
       to: message.recipient_email,
       subject: message.subject || 'Påminnelse om din bokning',
-      html: message.message_body.replace(/\n/g, '<br>'),
+      html: (message.generated_message || message.message_body).replace(/\n/g, '<br>'),
     }),
   });
 
@@ -385,7 +385,7 @@ async function sendEmail(message: ScheduledMessage, supabase: any) {
     calendar_event_id: message.calendar_event_id,
     channel: 'email',
     recipient: message.recipient_email,
-    message_body: message.message_body,
+    message_body: message.generated_message || message.message_body,
     subject: message.subject,
     provider: 'resend',
     provider_message_id: result.id,

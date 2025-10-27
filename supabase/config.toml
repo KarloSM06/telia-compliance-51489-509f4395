@@ -3,6 +3,9 @@ project_id = "shskknkivuewuqonjdjc"
 [functions.send-scheduled-messages]
 verify_jwt = false
 
+[functions.send-scheduled-messages.schedule]
+cron = "* * * * *"
+
 [functions.generate-message]
 verify_jwt = true
 

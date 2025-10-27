@@ -107,7 +107,12 @@ serve(async (req) => {
         .select()
         .single();
 
-      if (!error) scheduledMessages.push(confirmation);
+      if (error) {
+        console.error('❌ Failed to create confirmation:', error);
+      } else if (confirmation) {
+        scheduledMessages.push(confirmation);
+        console.log('✅ Created confirmation message:', confirmation.id);
+      }
     }
 
     // 2. First Reminder (e.g., 48 hours before)
@@ -138,7 +143,12 @@ serve(async (req) => {
           .select()
           .single();
 
-        if (!error) scheduledMessages.push(reminder1);
+        if (error) {
+          console.error('❌ Failed to create reminder 1:', error);
+        } else if (reminder1) {
+          scheduledMessages.push(reminder1);
+          console.log('✅ Created reminder 1:', reminder1.id);
+        }
       }
     }
 
@@ -170,7 +180,12 @@ serve(async (req) => {
           .select()
           .single();
 
-        if (!error) scheduledMessages.push(reminder2);
+        if (error) {
+          console.error('❌ Failed to create reminder 2:', error);
+        } else if (reminder2) {
+          scheduledMessages.push(reminder2);
+          console.log('✅ Created reminder 2:', reminder2.id);
+        }
       }
     }
 
@@ -201,7 +216,12 @@ serve(async (req) => {
         .select()
         .single();
 
-      if (!error) scheduledMessages.push(review);
+      if (error) {
+        console.error('❌ Failed to create review request:', error);
+      } else if (review) {
+        scheduledMessages.push(review);
+        console.log('✅ Created review request:', review.id);
+      }
     }
 
     // Create owner notification
