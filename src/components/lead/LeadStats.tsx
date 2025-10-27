@@ -1,5 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Target, TrendingUp, Users, CheckCircle, Sparkles, Award } from "lucide-react";
+import { cn } from "@/lib/utils";
+
 interface LeadStatsProps {
   stats: {
     totalLeads: number;
@@ -9,9 +11,11 @@ interface LeadStatsProps {
     enrichedLeads: number;
     avgAiScore: number;
   };
+  compact?: boolean;
 }
 export function LeadStats({
-  stats
+  stats,
+  compact = false
 }: LeadStatsProps) {
   const statCards = [{
     title: "Totalt Leads",
@@ -50,14 +54,35 @@ export function LeadStats({
     gradient: "from-green-500 to-green-600",
     change: "+20%"
   }];
-  return <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
+  if (compact) {
+    return (
+      <div className="grid gap-3 md:grid-cols-4 lg:grid-cols-6">
+        {statCards.map((stat, index) => (
+          <Card key={index} className="border-l-4" style={{ borderLeftColor: `hsl(var(--primary))` }}>
+            <CardContent className="p-4">
+              <div className="flex items-center justify-between mb-1">
+                <p className="text-xs font-medium text-muted-foreground">{stat.title}</p>
+                <div className={cn("p-1.5 rounded-md bg-gradient-to-br", stat.gradient)}>
+                  <stat.icon className="h-3 w-3 text-white" />
+                </div>
+              </div>
+              <div className="text-xl font-bold">{stat.value}</div>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+    );
+  }
+
+  return (
+    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
       {statCards.map((stat, index) => (
         <Card key={index}>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">
               {stat.title}
             </CardTitle>
-            <div className={`p-2 rounded-lg bg-gradient-to-br ${stat.gradient}`}>
+            <div className={cn("p-2 rounded-lg bg-gradient-to-br", stat.gradient)}>
               <stat.icon className="h-4 w-4 text-white" />
             </div>
           </CardHeader>
@@ -69,5 +94,6 @@ export function LeadStats({
           </CardContent>
         </Card>
       ))}
-    </div>;
+    </div>
+  );
 }

@@ -1,59 +1,53 @@
 import { useState } from "react";
-import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { EniroLeadsTab } from "@/components/lead/providers/EniroLeadsTab";
+import { LeadPageHeader } from "@/components/lead/LeadPageHeader";
+import { LeadStats } from "@/components/lead/LeadStats";
+import { EniroLeadsContent } from "@/components/lead/eniro/EniroLeadsContent";
 import { LinkedInLeadsTab } from "@/components/lead/providers/LinkedInLeadsTab";
-import eniroLogo from "@/assets/eniro-logo.png";
-import linkedinLogo from "@/assets/linkedin-logo.png";
-import anthropicLogo from "@/assets/anthropic-logo.png";
+import { useLeads } from "@/hooks/useLeads";
+import { LeadWizard } from "@/components/lead/LeadWizard";
+import { useLeadSearches } from "@/hooks/useLeadSearches";
+
 export function LeadSection() {
-  const [providerTab, setProviderTab] = useState<'eniro' | 'linkedin'>('eniro');
+  const [provider, setProvider] = useState<'eniro' | 'linkedin'>('eniro');
+  const [view, setView] = useState<'table' | 'kanban'>('table');
+  const [showSearchForm, setShowSearchForm] = useState(false);
+  
+  const { stats } = useLeads();
+  const { createSearch } = useLeadSearches();
 
   return (
-    <div className="space-y-6">
-      {/* Hero Section */}
-      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-blue-600 via-purple-600 to-pink-600 p-8 text-white">
-        <div className="relative z-10">
-          <h1 className="text-4xl font-bold mb-2">Hitta dina drömkunder</h1>
-          <p className="text-lg opacity-90 mb-6">AI-driven prospektering med flera källor</p>
+    <div className="h-screen flex flex-col">
+      {/* Global Header */}
+      <LeadPageHeader
+        provider={provider}
+        onProviderChange={setProvider}
+        view={view}
+        onViewChange={setView}
+        stats={stats}
+        onNewSearch={() => setShowSearchForm(true)}
+      />
+
+      {/* Main Content */}
+      <div className="flex-1 overflow-auto">
+        <div className="px-6 py-4 space-y-6">
+          {/* Compact Stats */}
+          <LeadStats stats={stats} compact />
+
+          {/* Provider Content */}
+          {provider === 'eniro' && <EniroLeadsContent view={view} />}
+          {provider === 'linkedin' && <LinkedInLeadsTab />}
         </div>
-        <div className="absolute inset-0 bg-grid-white/[0.05] bg-[length:20px_20px]" />
       </div>
 
-      {/* Provider Tabs */}
-      <Card>
-        <CardHeader className="pb-3">
-          <CardTitle>Välj källa</CardTitle>
-          <CardDescription>
-            Välj mellan Eniro-sökning och LinkedIn AI-assistent
-          </CardDescription>
-        </CardHeader>
-      </Card>
-
-      <Tabs value={providerTab} onValueChange={(v) => setProviderTab(v as any)}>
-        <TabsList className="grid w-full grid-cols-2 h-16 mb-6">
-          <TabsTrigger value="eniro" className="text-base gap-3 px-6">
-            <img src={eniroLogo} alt="Eniro" className="h-8 w-8 rounded-lg" />
-            <span className="font-semibold">Eniro Prospektering</span>
-          </TabsTrigger>
-          <TabsTrigger value="linkedin" className="text-base gap-2 px-6">
-            <div className="flex items-center gap-2">
-              <img src={linkedinLogo} alt="LinkedIn" className="h-7 w-7 rounded-md" />
-              <span className="text-muted-foreground">×</span>
-              <img src={anthropicLogo} alt="Anthropic" className="h-7 w-7 rounded-md" />
-            </div>
-            <span className="font-semibold">AI Assistant</span>
-          </TabsTrigger>
-        </TabsList>
-
-        <TabsContent value="eniro" className="mt-0">
-          <EniroLeadsTab />
-        </TabsContent>
-
-        <TabsContent value="linkedin" className="mt-0">
-          <LinkedInLeadsTab />
-        </TabsContent>
-      </Tabs>
+      {/* Search Modal */}
+      <LeadWizard 
+        open={showSearchForm} 
+        onOpenChange={setShowSearchForm} 
+        onSubmit={async (data) => {
+          await createSearch({ ...data, provider: 'eniro' } as any);
+          setShowSearchForm(false);
+        }} 
+      />
     </div>
   );
 }
