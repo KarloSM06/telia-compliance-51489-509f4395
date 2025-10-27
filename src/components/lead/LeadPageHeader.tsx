@@ -1,6 +1,8 @@
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Search, MessageSquare, ListChecks } from "lucide-react";
+import { ListChecks } from "lucide-react";
+import eniroLogo from "@/assets/eniro-logo-new.png";
+import linkedinLogo from "@/assets/linkedin-logo-new.png";
 
 interface LeadPageHeaderProps {
   activeTab: 'eniro' | 'linkedin' | 'lists';
@@ -36,11 +38,11 @@ export function LeadPageHeader({
           <Tabs value={activeTab} onValueChange={onTabChange} className="w-auto">
             <TabsList>
               <TabsTrigger value="eniro" className="gap-2">
-                <Search className="h-4 w-4" />
+                <img src={eniroLogo} alt="Eniro" className="h-4 w-4 object-contain" />
                 Eniro
               </TabsTrigger>
               <TabsTrigger value="linkedin" className="gap-2">
-                <MessageSquare className="h-4 w-4" />
+                <img src={linkedinLogo} alt="LinkedIn" className="h-4 w-4 object-contain" />
                 LinkedIn AI
               </TabsTrigger>
               <TabsTrigger value="lists" className="gap-2">

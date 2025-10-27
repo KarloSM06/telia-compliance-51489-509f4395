@@ -1,6 +1,8 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { LeadChatInterface } from "@/components/lead/chat/LeadChatInterface";
-import { MessageSquare, Sparkles } from "lucide-react";
+import { Sparkles } from "lucide-react";
+import anthropicLogo from "@/assets/anthropic-ai-logo.png";
+import linkedinLogo from "@/assets/linkedin-logo-new.png";
 
 export const LinkedInChatTab = () => {
   return (
@@ -8,11 +10,13 @@ export const LinkedInChatTab = () => {
       <Card>
         <CardHeader className="border-b bg-gradient-to-r from-blue-600 via-purple-600 to-orange-600 text-white">
           <div className="flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-white/20">
-              <MessageSquare className="h-6 w-6" />
+            <div className="flex items-center gap-2">
+              <img src={linkedinLogo} alt="LinkedIn" className="h-7 w-7 object-contain" />
+              <span className="text-white/60">×</span>
+              <img src={anthropicLogo} alt="Anthropic AI" className="h-6 w-6 object-contain" />
             </div>
             <div>
-              <CardTitle className="text-xl">LinkedIn AI Assistent</CardTitle>
+              <CardTitle className="text-xl">LinkedIn × Anthropic AI</CardTitle>
               <CardDescription className="text-white/90">
                 Beskriv dina ideala kunder - AI:n hittar dem åt dig
               </CardDescription>

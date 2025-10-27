@@ -1,10 +1,11 @@
 import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Search, Plus } from "lucide-react";
+import { Plus } from "lucide-react";
 import { LeadWizard } from "@/components/lead/LeadWizard";
 import { LeadSearchList } from "@/components/lead/LeadSearchList";
 import { useLeadSearches } from "@/hooks/useLeadSearches";
+import eniroLogo from "@/assets/eniro-logo-new.png";
 
 export const EniroSearchTab = () => {
   const [showWizard, setShowWizard] = useState(false);
@@ -22,9 +23,7 @@ export const EniroSearchTab = () => {
         <CardHeader className="border-b bg-gradient-to-r from-blue-600 to-purple-600 text-white">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="p-2 rounded-lg bg-white/20">
-                <Search className="h-6 w-6" />
-              </div>
+              <img src={eniroLogo} alt="Eniro" className="h-8 w-8 object-contain" />
               <div>
                 <CardTitle className="text-xl">Eniro Lead Search</CardTitle>
                 <CardDescription className="text-white/90">
