@@ -14,84 +14,64 @@ export const PackageCard = ({
 }: PackageCardProps) => {
   const Icon = pkg.icon;
   const isImageLeft = imagePosition === 'left';
-  return <Card className="h-[500px] flex flex-col lg:flex-row hover:shadow-2xl transition-all duration-500 border hover:border-primary/40 overflow-hidden bg-gradient-to-br from-card/95 to-card backdrop-blur-sm">
+  // Combine all points into a single list
+  const allPoints = [
+    ...(pkg.description ? [pkg.description] : []),
+    ...pkg.components,
+    ...pkg.valueBullets
+  ];
+
+  return (
+    <Card className="flex flex-col lg:flex-row hover:shadow-lg transition-shadow duration-300 border overflow-hidden bg-card">
       <div className={`lg:w-2/5 relative overflow-hidden flex-shrink-0 ${isImageLeft ? 'lg:order-1' : 'lg:order-2'}`}>
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-accent/5" />
-        {pkg.image ? <img src={pkg.image} alt={pkg.name} className="w-full h-full object-cover object-center hover:scale-105 transition-transform duration-700" /> : <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary/10 via-primary/5 to-accent/10">
-            <Icon className="h-32 w-32 text-primary/40" />
-          </div>}
+        {pkg.image ? (
+          <img 
+            src={pkg.image} 
+            alt={pkg.name} 
+            className="w-full h-full object-cover object-center" 
+          />
+        ) : (
+          <div className="w-full h-full flex items-center justify-center bg-muted">
+            <Icon className="h-32 w-32 text-muted-foreground/30" />
+          </div>
+        )}
       </div>
       
       <div className={`flex-1 flex flex-col ${isImageLeft ? 'lg:order-2' : 'lg:order-1'}`}>
-        <div className="border-b border-border/50 px-8 pt-8 pb-4">
-          <CardTitle className="text-2xl lg:text-3xl mb-2 leading-tight font-bold">
+        <div className="border-b px-8 pt-8 pb-6">
+          <CardTitle className="text-2xl lg:text-3xl mb-3 font-bold">
             {pkg.name}
           </CardTitle>
-          <p className="text-sm lg:text-base text-muted-foreground/90 font-medium">
+          <p className="text-base text-muted-foreground">
             {pkg.targetAudience}
           </p>
         </div>
         
-        <div className="w-full grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8 px-8 pb-8 pt-4">
-          <div className="lg:col-span-1 space-y-3">
-            <div className="flex items-center gap-2 mb-4">
-              <div className="h-px flex-1 bg-gradient-to-r from-transparent via-primary/20 to-transparent" />
-              <h4 className="text-sm font-bold uppercase tracking-wider text-primary/80">Om paketet</h4>
-              <div className="h-px flex-1 bg-gradient-to-r from-transparent via-primary/20 to-transparent" />
-            </div>
-            <div className="space-y-3">
-              {pkg.description && <div className="flex items-start gap-3 p-3 rounded-lg hover:bg-primary/5 transition-colors group">
-                  <div className="mt-1 p-1 rounded-full bg-primary/10 group-hover:bg-primary/20 transition-colors flex-shrink-0">
-                    <CheckCircle className="h-5 w-5 text-primary" />
-                  </div>
-                  <span className="text-sm lg:text-base leading-relaxed text-foreground font-medium">
-                    {pkg.description}
-                  </span>
-                </div>}
-            </div>
-          </div>
-          
-          <div className="lg:col-span-1 space-y-3">
-            <div className="flex items-center gap-2 mb-4">
-              <div className="h-px flex-1 bg-gradient-to-r from-transparent via-primary/20 to-transparent" />
-              <h4 className="text-sm font-bold uppercase tracking-wider text-primary/80">Funktioner</h4>
-              <div className="h-px flex-1 bg-gradient-to-r from-transparent via-primary/20 to-transparent" />
-            </div>
-            <div className="space-y-3">
-              {pkg.components.map((component, index) => <div key={index} className="flex items-start gap-3 p-3 rounded-lg hover:bg-primary/5 transition-colors group">
-                  <div className="mt-1 p-1 rounded-full bg-primary/10 group-hover:bg-primary/20 transition-colors flex-shrink-0">
-                    <CheckCircle className="h-5 w-5 text-primary" />
-                  </div>
-                  <span className="text-sm lg:text-base leading-relaxed text-foreground font-medium">
-                    {component}
-                  </span>
-                </div>)}
-            </div>
-          </div>
-          
-          <div className="lg:col-span-1 flex flex-col justify-between space-y-4">
-            <div className="space-y-3">
-              <div className="flex items-center gap-2 mb-4">
-                <div className="h-px flex-1 bg-gradient-to-r from-transparent via-accent/20 to-transparent" />
-                <h4 className="text-sm font-bold uppercase tracking-wider text-accent/80">Fördelar</h4>
-                <div className="h-px flex-1 bg-gradient-to-r from-transparent via-accent/20 to-transparent" />
+        <div className="flex-1 px-8 py-6 overflow-y-auto">
+          <div className="space-y-4">
+            {allPoints.map((point, index) => (
+              <div key={index} className="flex items-start gap-4">
+                <div className="mt-0.5 flex-shrink-0">
+                  <CheckCircle className="h-6 w-6 text-yellow-500" />
+                </div>
+                <span className="text-base leading-relaxed text-foreground">
+                  {point}
+                </span>
               </div>
-              <div className="space-y-3">
-                {pkg.valueBullets.map((bullet, index) => <div key={index} className="flex items-start gap-3 p-3 rounded-lg hover:bg-accent/5 transition-colors group">
-                    <div className="mt-1 p-1 rounded-full bg-accent/10 group-hover:bg-accent/20 transition-colors flex-shrink-0">
-                      <CheckCircle className="h-5 w-5 text-accent" />
-                    </div>
-                    <span className="text-sm lg:text-base font-semibold leading-relaxed text-foreground">
-                      {bullet}
-                    </span>
-                  </div>)}
-              </div>
-            </div>
-            <Button size="lg" className="w-full shadow-lg hover:shadow-xl hover:scale-[1.02] transition-all duration-300 bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-semibold" onClick={onBookDemo}>
-              Boka kostnadsfri demo
-            </Button>
+            ))}
           </div>
         </div>
+
+        <div className="px-8 pb-8">
+          <Button 
+            size="lg" 
+            className="w-full bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold text-base"
+            onClick={onBookDemo}
+          >
+            Boka kostnadsfri demo
+          </Button>
+        </div>
       </div>
-    </Card>;
+    </Card>
+  );
 };
