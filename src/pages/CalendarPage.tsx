@@ -243,14 +243,14 @@ const CalendarPage = () => {
             <TabsList className="flex gap-3 bg-transparent border-0 p-0 mb-6">
               <TabsTrigger 
                 value="calendar"
-                className="gap-2 px-6 py-3 bg-card text-foreground border border-border rounded-full shadow-sm hover:shadow-md hover:bg-accent data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:border-primary data-[state=active]:shadow-md transition-all duration-200"
+                className="relative z-10 gap-2 px-6 py-3 bg-card text-foreground border border-border rounded-full shadow-sm hover:shadow-md hover:bg-accent data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:border-primary data-[state=active]:shadow-md transition-all duration-200"
               >
                 <Calendar className="h-5 w-5" />
                 <span className="font-medium">Kalender</span>
               </TabsTrigger>
               <TabsTrigger 
                 value="availability"
-                className="gap-2 px-6 py-3 bg-card text-foreground border border-border rounded-full shadow-sm hover:shadow-md hover:bg-accent data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:border-primary data-[state=active]:shadow-md transition-all duration-200"
+                className="relative z-10 gap-2 px-6 py-3 bg-card text-foreground border border-border rounded-full shadow-sm hover:shadow-md hover:bg-accent data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:border-primary data-[state=active]:shadow-md transition-all duration-200"
               >
                 <CalendarClock className="h-5 w-5" />
                 <span className="font-medium">Min Tillgänglighet</span>
