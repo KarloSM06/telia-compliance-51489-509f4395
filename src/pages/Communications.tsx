@@ -22,43 +22,47 @@ export default function Communications() {
               Hantera mallar, påminnelser, notifikationer och SMS-inställningar från ett centralt nav
             </p>
 
-            {/* Desktop Navigation - Integrated into Hero */}
-            <div className="hidden lg:flex justify-center">
-              <TabsList className="inline-flex h-auto p-2 bg-primary-foreground/10 backdrop-blur-md border border-primary-foreground/20 shadow-elegant animate-scale-in">
+            {/* Desktop Navigation - Organic Floating Cards */}
+            <div className="hidden lg:block">
+              <TabsList className="flex flex-wrap justify-center gap-4 bg-transparent border-0 p-0">
                 <TabsTrigger 
                   value="templates" 
-                  className="gap-2 px-6 py-3 data-[state=active]:bg-primary-foreground data-[state=active]:text-primary data-[state=active]:shadow-lg transition-all duration-300"
+                  className="group relative gap-3 px-8 py-4 bg-white/10 backdrop-blur-md border-2 border-white/30 rounded-2xl shadow-lg hover:shadow-2xl hover:bg-white/20 hover:-translate-y-1 hover:scale-105 data-[state=active]:bg-white data-[state=active]:text-purple-600 data-[state=active]:border-white data-[state=active]:shadow-2xl data-[state=active]:scale-110 transition-all duration-300"
                 >
-                  <FileText className="h-5 w-5" />
-                  <span className="font-medium">Mallar</span>
+                  <FileText className="h-6 w-6 group-data-[state=active]:animate-pulse" />
+                  <span className="font-semibold">Mallar</span>
                 </TabsTrigger>
+                
                 <TabsTrigger 
                   value="reminders" 
-                  className="gap-2 px-6 py-3 data-[state=active]:bg-primary-foreground data-[state=active]:text-primary data-[state=active]:shadow-lg transition-all duration-300"
+                  className="group relative gap-3 px-8 py-4 bg-white/10 backdrop-blur-md border-2 border-white/30 rounded-full shadow-lg hover:shadow-2xl hover:bg-white/20 hover:-translate-y-1 hover:scale-105 data-[state=active]:bg-white data-[state=active]:text-purple-600 data-[state=active]:border-white data-[state=active]:shadow-2xl data-[state=active]:scale-110 transition-all duration-300"
                 >
-                  <Bell className="h-5 w-5" />
-                  <span className="font-medium">Påminnelser</span>
+                  <Bell className="h-6 w-6 group-data-[state=active]:animate-pulse" />
+                  <span className="font-semibold">Påminnelser</span>
                 </TabsTrigger>
+                
                 <TabsTrigger 
                   value="notifications" 
-                  className="gap-2 px-6 py-3 data-[state=active]:bg-primary-foreground data-[state=active]:text-primary data-[state=active]:shadow-lg transition-all duration-300"
+                  className="group relative gap-3 px-8 py-4 bg-white/10 backdrop-blur-md border-2 border-white/30 rounded-3xl shadow-lg hover:shadow-2xl hover:bg-white/20 hover:-translate-y-1 hover:scale-105 data-[state=active]:bg-white data-[state=active]:text-purple-600 data-[state=active]:border-white data-[state=active]:shadow-2xl data-[state=active]:scale-110 transition-all duration-300"
                 >
-                  <BellRing className="h-5 w-5" />
-                  <span className="font-medium">Ägarnotiser</span>
+                  <BellRing className="h-6 w-6 group-data-[state=active]:animate-pulse" />
+                  <span className="font-semibold">Ägarnotiser</span>
                 </TabsTrigger>
+                
                 <TabsTrigger 
                   value="sms-provider" 
-                  className="gap-2 px-6 py-3 data-[state=active]:bg-primary-foreground data-[state=active]:text-primary data-[state=active]:shadow-lg transition-all duration-300"
+                  className="group relative gap-3 px-8 py-4 bg-white/10 backdrop-blur-md border-2 border-white/30 rounded-2xl shadow-lg hover:shadow-2xl hover:bg-white/20 hover:-translate-y-1 hover:scale-105 data-[state=active]:bg-white data-[state=active]:text-purple-600 data-[state=active]:border-white data-[state=active]:shadow-2xl data-[state=active]:scale-110 transition-all duration-300"
                 >
-                  <MessageSquare className="h-5 w-5" />
-                  <span className="font-medium">SMS-leverantör</span>
+                  <MessageSquare className="h-6 w-6 group-data-[state=active]:animate-pulse" />
+                  <span className="font-semibold">SMS-leverantör</span>
                 </TabsTrigger>
+                
                 <TabsTrigger 
                   value="insights" 
-                  className="gap-2 px-6 py-3 data-[state=active]:bg-primary-foreground data-[state=active]:text-primary data-[state=active]:shadow-lg transition-all duration-300"
+                  className="group relative gap-3 px-8 py-4 bg-white/10 backdrop-blur-md border-2 border-white/30 rounded-full shadow-lg hover:shadow-2xl hover:bg-white/20 hover:-translate-y-1 hover:scale-105 data-[state=active]:bg-white data-[state=active]:text-purple-600 data-[state=active]:border-white data-[state=active]:shadow-2xl data-[state=active]:scale-110 transition-all duration-300"
                 >
-                  <BarChart className="h-5 w-5" />
-                  <span className="font-medium">Insikter</span>
+                  <BarChart className="h-6 w-6 group-data-[state=active]:animate-pulse" />
+                  <span className="font-semibold">Insikter</span>
                 </TabsTrigger>
               </TabsList>
             </div>
