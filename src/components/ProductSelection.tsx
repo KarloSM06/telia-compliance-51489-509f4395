@@ -551,11 +551,11 @@ export const ProductSelection = () => {
           <AnimatedSection className="mx-auto max-w-3xl text-center mb-16">
             <div className="inline-flex items-center gap-2 rounded-full bg-accent/10 px-4 py-2 mb-6 backdrop-blur-sm border border-accent/20">
               <Sparkles className="h-4 w-4 text-accent" />
-              <span className="text-sm font-medium text-foreground">Om oss – Hiems</span>
+              <span className="text-sm font-medium text-white">Om oss – Hiems</span>
             </div>
-            <h2 className="text-5xl font-display font-bold mb-6">Vi är unga, drivna och brinner för AI</h2>
+            <h2 className="text-5xl font-display font-bold mb-6 text-white">Vi är unga, drivna och brinner för AI</h2>
             <div className="w-24 h-1.5 bg-gradient-gold mx-auto rounded-full mb-8"></div>
-            <p className="text-lg text-muted-foreground leading-relaxed">
+            <p className="text-lg text-white/90 leading-relaxed">
               Hiems grundades av ett team som ser möjligheterna med AI och vill göra tekniken tillgänglig för alla företag, inte bara stora aktörer. Vi kombinerar ung drivkraft, nyfikenhet och teknisk expertis med förståelse för bygg- och VVS-verksamheter. Vårt mål är enkelt: skapa lösningar som sparar tid, minskar dubbelarbete och gör vardagen enklare.
             </p>
           </AnimatedSection>
