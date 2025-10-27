@@ -40,7 +40,7 @@ export function LeadSection() {
             <div className="flex items-center gap-2">
               <img src={linkedinLogo} alt="LinkedIn" className="h-7 w-7 rounded-md" />
               <span className="text-muted-foreground">×</span>
-              <img src={anthropicLogo} alt="Anthropic" className="h-7 w-7 rounded-md" />
+              <img src={anthropicLogo} alt="Anthropic" className="h-7 w-7 rounded-md object-cover scale-[2.5]" />
             </div>
             <span className="font-semibold">AI Assistant</span>
           </TabsTrigger>
