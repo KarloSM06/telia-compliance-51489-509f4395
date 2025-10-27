@@ -11,17 +11,44 @@ import { Badge } from "@/components/ui/badge";
 
 export default function NotificationSettings() {
   const { settings, isLoading, updateSettings, isUpdating, sendTestNotification, isTesting } = useNotificationSettings();
-  const [localSettings, setLocalSettings] = useState(settings);
   const [testStatus, setTestStatus] = useState<string | null>(null);
+  
+  // Initialize with default values to prevent loading state issues
+  const [localSettings, setLocalSettings] = useState({
+    notification_email: "",
+    notification_phone: "",
+    enable_email_notifications: true,
+    enable_sms_notifications: false,
+    enable_inapp_notifications: true,
+    notify_on_new_booking: true,
+    notify_on_booking_cancelled: true,
+    notify_on_booking_updated: true,
+    notify_on_new_review: true,
+    notify_on_message_failed: true,
+    quiet_hours_start: "",
+    quiet_hours_end: "",
+  });
 
   useEffect(() => {
     if (settings) {
-      setLocalSettings(settings);
+      setLocalSettings({
+        notification_email: settings.notification_email || "",
+        notification_phone: settings.notification_phone || "",
+        enable_email_notifications: settings.enable_email_notifications ?? true,
+        enable_sms_notifications: settings.enable_sms_notifications ?? false,
+        enable_inapp_notifications: settings.enable_inapp_notifications ?? true,
+        notify_on_new_booking: settings.notify_on_new_booking ?? true,
+        notify_on_booking_cancelled: settings.notify_on_booking_cancelled ?? true,
+        notify_on_booking_updated: settings.notify_on_booking_updated ?? true,
+        notify_on_new_review: settings.notify_on_new_review ?? true,
+        notify_on_message_failed: settings.notify_on_message_failed ?? true,
+        quiet_hours_start: settings.quiet_hours_start || "",
+        quiet_hours_end: settings.quiet_hours_end || "",
+      });
     }
   }, [settings]);
 
   const handleSave = async () => {
-    if (!localSettings) return;
     await updateSettings(localSettings);
   };
 
@@ -35,7 +62,7 @@ export default function NotificationSettings() {
     }
   };
 
-  if (isLoading || !localSettings) {
+  if (isLoading) {
     return <div className="flex items-center justify-center py-12">Laddar inställningar...</div>;
   }
 
