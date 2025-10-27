@@ -14,9 +14,10 @@ import { LeadsTable } from "@/components/lead/LeadsTable";
 
 interface EniroLeadsContentProps {
   view: 'table' | 'kanban';
+  listType: 'organizations' | 'contacts';
 }
 
-export const EniroLeadsContent = ({ view }: EniroLeadsContentProps) => {
+export const EniroLeadsContent = ({ view, listType }: EniroLeadsContentProps) => {
   const { bulkEnrichLeads, isEnriching: isBulkEnriching, bulkProgress } = useEnrichLead();
   const {
     searches,
@@ -37,8 +38,15 @@ export const EniroLeadsContent = ({ view }: EniroLeadsContentProps) => {
   const [showLeadDetail, setShowLeadDetail] = useState(false);
   const [leadTypeFilter, setLeadTypeFilter] = useState<'all' | 'brf' | 'business'>('all');
 
-  // Filter by provider (Eniro + LinkedIn) and lead type
-  const allLeads = leads.filter(lead => lead.provider === 'eniro' || lead.provider === 'claude-linkedin' || !lead.provider);
+  // Filter by list type and lead type
+  const allLeads = leads.filter(lead => {
+    if (listType === 'contacts') {
+      // Only show leads with contact person
+      return lead.contact_person && lead.contact_person.trim() !== '';
+    }
+    return true; // Show all for organizations
+  });
+  
   const filteredLeads = leadTypeFilter === 'all' 
     ? allLeads 
     : allLeads.filter(lead => lead.lead_type === leadTypeFilter);
@@ -79,9 +87,11 @@ export const EniroLeadsContent = ({ view }: EniroLeadsContentProps) => {
         <CardHeader className="border-b">
           <div className="flex items-center justify-between">
             <div>
-              <CardTitle>Alla Leads</CardTitle>
+              <CardTitle>
+                {listType === 'organizations' ? 'Organisationer' : 'Kontaktpersoner'}
+              </CardTitle>
               <CardDescription>
-                {filteredLeads.length} leads från alla källor
+                {filteredLeads.length} {listType === 'organizations' ? 'organisationer' : 'kontaktpersoner'}
               </CardDescription>
             </div>
           </div>
@@ -113,9 +123,13 @@ export const EniroLeadsContent = ({ view }: EniroLeadsContentProps) => {
               <div className="inline-flex h-20 w-20 items-center justify-center rounded-full bg-primary/10 mb-4">
                 <Building className="h-10 w-10 text-primary" />
               </div>
-              <h3 className="text-xl font-semibold mb-2">Inga leads än</h3>
+              <h3 className="text-xl font-semibold mb-2">
+                {listType === 'organizations' ? 'Inga organisationer än' : 'Inga kontaktpersoner än'}
+              </h3>
               <p className="text-muted-foreground mb-6 max-w-sm mx-auto">
-                Skapa din första sökning eller använd LinkedIn AI-chatten för att hitta perfekta leads
+                {listType === 'organizations' 
+                  ? 'Skapa din första sökning för att hitta organisationer'
+                  : 'Inga leads med kontaktpersoner hittades. Berika dina leads för att få kontaktinformation.'}
               </p>
               <Button size="lg" onClick={() => setShowSearchForm(true)} className="bg-yellow-600 hover:bg-yellow-700">
                 Skapa första sökningen

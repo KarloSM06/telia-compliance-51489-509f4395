@@ -1,13 +1,10 @@
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Plus, List, LayoutGrid } from "lucide-react";
-import eniroLogo from "@/assets/eniro-logo.png";
-import linkedinLogo from "@/assets/linkedin-logo.png";
-import anthropicLogo from "@/assets/anthropic-logo.png";
+import { Plus, List, LayoutGrid, Building, Users } from "lucide-react";
 
 interface LeadPageHeaderProps {
-  provider: 'eniro' | 'linkedin';
-  onProviderChange: (provider: 'eniro' | 'linkedin') => void;
+  listType: 'organizations' | 'contacts';
+  onListTypeChange: (type: 'organizations' | 'contacts') => void;
   view?: 'table' | 'kanban';
   onViewChange?: (view: 'table' | 'kanban') => void;
   stats: {
@@ -19,8 +16,8 @@ interface LeadPageHeaderProps {
 }
 
 export function LeadPageHeader({
-  provider,
-  onProviderChange,
+  listType,
+  onListTypeChange,
   view,
   onViewChange,
   stats,
@@ -31,40 +28,36 @@ export function LeadPageHeader({
       <div className="px-6 py-4">
         <div className="flex justify-between items-center">
           <div>
-            <h1 className="text-2xl font-bold">Lead Management & AI Prospektering</h1>
+            <h1 className="text-2xl font-bold">Lead Management</h1>
             <p className="text-sm text-muted-foreground">
-              Hitta och hantera leads från flera källor med AI-assistans
+              Hantera organisationer och kontaktpersoner
             </p>
           </div>
           <div className="flex gap-2 items-center">
-            {/* Provider Selector */}
+            {/* List Type Selector */}
             <div className="flex gap-1 border rounded-lg p-1 bg-muted/50">
               <Button
-                variant={provider === 'eniro' ? 'default' : 'ghost'}
+                variant={listType === 'organizations' ? 'default' : 'ghost'}
                 size="sm"
-                onClick={() => onProviderChange('eniro')}
+                onClick={() => onListTypeChange('organizations')}
                 className="gap-2"
               >
-                <img src={eniroLogo} alt="Eniro" className="h-4 w-4 rounded" />
-                Eniro
+                <Building className="h-4 w-4" />
+                Organisationer
               </Button>
               <Button
-                variant={provider === 'linkedin' ? 'default' : 'ghost'}
+                variant={listType === 'contacts' ? 'default' : 'ghost'}
                 size="sm"
-                onClick={() => onProviderChange('linkedin')}
+                onClick={() => onListTypeChange('contacts')}
                 className="gap-2"
               >
-                <div className="flex items-center gap-1">
-                  <img src={linkedinLogo} alt="LinkedIn" className="h-4 w-4 rounded" />
-                  <span className="text-xs text-muted-foreground">×</span>
-                  <img src={anthropicLogo} alt="AI" className="h-4 w-4 rounded" />
-                </div>
-                AI Chat
+                <Users className="h-4 w-4" />
+                Kontaktpersoner
               </Button>
             </div>
 
-            {/* View Selector - only for Eniro */}
-            {provider === 'eniro' && onViewChange && (
+            {/* View Selector */}
+            {onViewChange && (
               <div className="flex gap-1 border rounded-lg p-1 bg-muted/50">
                 <Button
                   variant={view === 'table' ? 'default' : 'ghost'}
@@ -100,8 +93,8 @@ export function LeadPageHeader({
               </Badge>
             )}
 
-            {/* New Search Button - only for Eniro */}
-            {provider === 'eniro' && onNewSearch && (
+            {/* New Search Button */}
+            {onNewSearch && (
               <Button onClick={onNewSearch} className="bg-yellow-600 hover:bg-yellow-700">
                 <Plus className="h-4 w-4 mr-2" />
                 Ny sökning

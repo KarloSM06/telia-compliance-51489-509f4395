@@ -2,13 +2,12 @@ import { useState } from "react";
 import { LeadPageHeader } from "@/components/lead/LeadPageHeader";
 import { LeadStats } from "@/components/lead/LeadStats";
 import { EniroLeadsContent } from "@/components/lead/eniro/EniroLeadsContent";
-import { LinkedInLeadsTab } from "@/components/lead/providers/LinkedInLeadsTab";
 import { useLeads } from "@/hooks/useLeads";
 import { LeadWizard } from "@/components/lead/LeadWizard";
 import { useLeadSearches } from "@/hooks/useLeadSearches";
 
 export function LeadSection() {
-  const [provider, setProvider] = useState<'eniro' | 'linkedin'>('eniro');
+  const [listType, setListType] = useState<'organizations' | 'contacts'>('organizations');
   const [view, setView] = useState<'table' | 'kanban'>('table');
   const [showSearchForm, setShowSearchForm] = useState(false);
   
@@ -19,8 +18,8 @@ export function LeadSection() {
     <div className="h-screen flex flex-col">
       {/* Global Header */}
       <LeadPageHeader
-        provider={provider}
-        onProviderChange={setProvider}
+        listType={listType}
+        onListTypeChange={setListType}
         view={view}
         onViewChange={setView}
         stats={stats}
@@ -33,9 +32,8 @@ export function LeadSection() {
           {/* Compact Stats */}
           <LeadStats stats={stats} compact />
 
-          {/* Provider Content */}
-          {provider === 'eniro' && <EniroLeadsContent view={view} />}
-          {provider === 'linkedin' && <LinkedInLeadsTab />}
+          {/* Content */}
+          <EniroLeadsContent view={view} listType={listType} />
         </div>
       </div>
 
