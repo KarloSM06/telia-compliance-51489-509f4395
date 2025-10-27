@@ -6,63 +6,116 @@ import ReminderSettings from "@/pages/ReminderSettings";
 import NotificationSettings from "@/pages/NotificationSettings";
 import SMSProviderSettings from "@/pages/SMSProviderSettings";
 import MessageInsights from "@/pages/MessageInsights";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 export default function Communications() {
   const [activeTab, setActiveTab] = useState("templates");
 
   return (
-    <div className="container mx-auto py-8 px-4 max-w-7xl animate-fade-in">
-      <div className="mb-8 animate-scale-in">
-        <h1 className="text-3xl font-bold mb-2">Kommunikation</h1>
-        <p className="text-muted-foreground">
-          Hantera mallar, påminnelser, notifikationer och SMS-inställningar
-        </p>
+    <div className="min-h-screen bg-gradient-to-b from-background to-muted/20">
+      {/* Premium Hero Section */}
+      <div className="relative bg-gradient-hero text-primary-foreground overflow-hidden">
+        <div className="absolute inset-0 bg-[url('/images/tools-background.jpg')] opacity-5 bg-cover bg-center" />
+        <div className="relative container mx-auto px-6 py-12">
+          <div className="max-w-3xl">
+            <h1 className="text-4xl lg:text-5xl font-display font-bold mb-4 animate-fade-in">
+              Kommunikation
+            </h1>
+            <p className="text-lg text-primary-foreground/80 animate-fade-in">
+              Hantera mallar, påminnelser, notifikationer och SMS-inställningar från ett centralt nav
+            </p>
+          </div>
+        </div>
       </div>
 
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-        <TabsList className="grid grid-cols-2 lg:grid-cols-5 gap-2 h-auto p-1 animate-slide-in-right">
-          <TabsTrigger value="templates" className="gap-2 hover-scale">
-            <FileText className="h-4 w-4" />
-            <span className="hidden sm:inline">Mallar</span>
-          </TabsTrigger>
-          <TabsTrigger value="reminders" className="gap-2 hover-scale">
-            <Bell className="h-4 w-4" />
-            <span className="hidden sm:inline">Påminnelser</span>
-          </TabsTrigger>
-          <TabsTrigger value="notifications" className="gap-2 hover-scale">
-            <BellRing className="h-4 w-4" />
-            <span className="hidden sm:inline">Ägarnotiser</span>
-          </TabsTrigger>
-          <TabsTrigger value="sms-provider" className="gap-2 hover-scale">
-            <MessageSquare className="h-4 w-4" />
-            <span className="hidden sm:inline">SMS-leverantör</span>
-          </TabsTrigger>
-          <TabsTrigger value="insights" className="gap-2 hover-scale">
-            <BarChart className="h-4 w-4" />
-            <span className="hidden sm:inline">Insikter</span>
-          </TabsTrigger>
-        </TabsList>
+      <div className="container mx-auto px-6 -mt-8">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-8">
+          {/* Desktop Navigation */}
+          <TabsList className="hidden lg:inline-flex h-auto p-1.5 bg-card shadow-card animate-scale-in">
+            <TabsTrigger value="templates" className="gap-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
+              <FileText className="h-4 w-4" />
+              Mallar
+            </TabsTrigger>
+            <TabsTrigger value="reminders" className="gap-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
+              <Bell className="h-4 w-4" />
+              Påminnelser
+            </TabsTrigger>
+            <TabsTrigger value="notifications" className="gap-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
+              <BellRing className="h-4 w-4" />
+              Ägarnotiser
+            </TabsTrigger>
+            <TabsTrigger value="sms-provider" className="gap-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
+              <MessageSquare className="h-4 w-4" />
+              SMS-leverantör
+            </TabsTrigger>
+            <TabsTrigger value="insights" className="gap-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
+              <BarChart className="h-4 w-4" />
+              Insikter
+            </TabsTrigger>
+          </TabsList>
 
-        <TabsContent value="templates" className="animate-enter">
-          <MessageTemplates />
-        </TabsContent>
+          {/* Mobile Navigation */}
+          <div className="lg:hidden animate-scale-in">
+            <Select value={activeTab} onValueChange={setActiveTab}>
+              <SelectTrigger className="w-full bg-card shadow-card">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="templates">
+                  <div className="flex items-center gap-2">
+                    <FileText className="h-4 w-4" />
+                    Mallar
+                  </div>
+                </SelectItem>
+                <SelectItem value="reminders">
+                  <div className="flex items-center gap-2">
+                    <Bell className="h-4 w-4" />
+                    Påminnelser
+                  </div>
+                </SelectItem>
+                <SelectItem value="notifications">
+                  <div className="flex items-center gap-2">
+                    <BellRing className="h-4 w-4" />
+                    Ägarnotiser
+                  </div>
+                </SelectItem>
+                <SelectItem value="sms-provider">
+                  <div className="flex items-center gap-2">
+                    <MessageSquare className="h-4 w-4" />
+                    SMS-leverantör
+                  </div>
+                </SelectItem>
+                <SelectItem value="insights">
+                  <div className="flex items-center gap-2">
+                    <BarChart className="h-4 w-4" />
+                    Insikter
+                  </div>
+                </SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
 
-        <TabsContent value="reminders" className="animate-enter">
-          <ReminderSettings />
-        </TabsContent>
+          <TabsContent value="templates" className="animate-fade-in mt-0">
+            <MessageTemplates />
+          </TabsContent>
 
-        <TabsContent value="notifications" className="animate-enter">
-          <NotificationSettings />
-        </TabsContent>
+          <TabsContent value="reminders" className="animate-fade-in mt-0">
+            <ReminderSettings />
+          </TabsContent>
 
-        <TabsContent value="sms-provider" className="animate-enter">
-          <SMSProviderSettings />
-        </TabsContent>
+          <TabsContent value="notifications" className="animate-fade-in mt-0">
+            <NotificationSettings />
+          </TabsContent>
 
-        <TabsContent value="insights" className="animate-enter">
-          <MessageInsights />
-        </TabsContent>
-      </Tabs>
+          <TabsContent value="sms-provider" className="animate-fade-in mt-0">
+            <SMSProviderSettings />
+          </TabsContent>
+
+          <TabsContent value="insights" className="animate-fade-in mt-0">
+            <MessageInsights />
+          </TabsContent>
+        </Tabs>
+      </div>
     </div>
   );
 }

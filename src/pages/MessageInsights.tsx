@@ -4,9 +4,11 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { useMessageLogs, MessageLogFilters } from "@/hooks/useMessageLogs";
-import { Loader2, Mail, MessageSquare, CheckCircle2, XCircle, Clock } from "lucide-react";
+import { Loader2, Mail, MessageSquare, CheckCircle2, XCircle, Clock, TrendingUp, DollarSign, Send } from "lucide-react";
 import { format } from "date-fns";
 import { sv } from "date-fns/locale";
+import { StatCard } from "@/components/communications/StatCard";
+import { Button } from "@/components/ui/button";
 
 export default function MessageInsights() {
   const [filters, setFilters] = useState<MessageLogFilters>({});
@@ -16,99 +18,124 @@ export default function MessageInsights() {
     switch (status) {
       case 'sent':
       case 'delivered':
-        return <CheckCircle2 className="h-4 w-4 text-green-600" />;
+        return <CheckCircle2 className="h-4 w-4 text-success" />;
       case 'failed':
       case 'bounced':
-        return <XCircle className="h-4 w-4 text-red-600" />;
+        return <XCircle className="h-4 w-4 text-destructive" />;
       default:
-        return <Clock className="h-4 w-4 text-yellow-600" />;
+        return <Clock className="h-4 w-4 text-warning" />;
     }
   };
 
   const getStatusBadge = (status: string) => {
-    const variants: Record<string, "default" | "secondary" | "destructive" | "outline"> = {
-      sent: 'default',
-      delivered: 'default',
-      failed: 'destructive',
-      bounced: 'destructive',
+    const config = {
+      sent: { variant: 'default' as const, label: 'Skickat' },
+      delivered: { variant: 'default' as const, label: 'Levererat' },
+      failed: { variant: 'destructive' as const, label: 'Misslyckades' },
+      bounced: { variant: 'destructive' as const, label: 'Studsade' },
+      pending: { variant: 'secondary' as const, label: 'Väntande' },
     };
+    const { variant, label } = config[status as keyof typeof config] || { variant: 'secondary' as const, label: status };
+    
     return (
-      <Badge variant={variants[status] || 'secondary'} className="gap-1">
+      <Badge variant={variant} className="gap-1">
         {getStatusIcon(status)}
-        {status === 'sent' ? 'Skickat' : status === 'delivered' ? 'Levererat' : status === 'failed' ? 'Misslyckades' : status}
+        {label}
       </Badge>
     );
   };
 
   if (isLoading) {
     return (
-      <div className="p-8 max-w-7xl mx-auto flex items-center justify-center">
+      <div className="flex items-center justify-center py-12">
         <Loader2 className="h-8 w-8 animate-spin text-primary" />
       </div>
     );
   }
 
+  // Calculate success rate
+  const successRate = stats.total > 0 
+    ? Math.round((stats.sent / stats.total) * 100) 
+    : 0;
+
   return (
-    <div className="p-8 max-w-7xl mx-auto space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold mb-2">Meddelandeöversikt</h1>
-        <p className="text-muted-foreground">
-          Fullständig översikt över alla SMS och e-post som skickats
-        </p>
+    <div className="space-y-6 max-w-7xl mx-auto pb-12">
+      {/* KPI Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <StatCard 
+          title="Totalt antal" 
+          value={stats.total} 
+          icon={Send}
+        />
+        <StatCard 
+          title="Skickade" 
+          value={stats.sent} 
+          icon={CheckCircle2}
+        />
+        <StatCard 
+          title="Leveransgrad" 
+          value={`${successRate}%`} 
+          icon={TrendingUp}
+        />
+        <StatCard 
+          title="Total kostnad" 
+          value={`${stats.totalCost.toFixed(2)} kr`} 
+          icon={DollarSign}
+        />
       </div>
 
-      {/* Statistik */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <Card>
+      {/* Cost Breakdown */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <Card className="hover:shadow-card transition-all">
           <CardHeader className="pb-3">
-            <CardDescription>Totalt antal</CardDescription>
-            <CardTitle className="text-4xl">{stats.total}</CardTitle>
+            <CardDescription>SMS kostnad</CardDescription>
+            <CardTitle className="text-3xl flex items-baseline gap-2">
+              {stats.smsCost.toFixed(2)} 
+              <span className="text-sm font-normal text-muted-foreground">kr</span>
+            </CardTitle>
           </CardHeader>
+          <CardContent>
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <MessageSquare className="h-4 w-4" />
+              Denna månad
+            </div>
+          </CardContent>
         </Card>
-        <Card>
+
+        <Card className="hover:shadow-card transition-all">
           <CardHeader className="pb-3">
-            <CardDescription>Skickade</CardDescription>
-            <CardTitle className="text-4xl text-green-600">{stats.sent}</CardTitle>
+            <CardDescription>E-post kostnad</CardDescription>
+            <CardTitle className="text-3xl flex items-baseline gap-2">
+              {stats.emailCost.toFixed(2)} 
+              <span className="text-sm font-normal text-muted-foreground">kr</span>
+            </CardTitle>
           </CardHeader>
+          <CardContent>
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <Mail className="h-4 w-4" />
+              Denna månad
+            </div>
+          </CardContent>
         </Card>
-        <Card>
-          <CardHeader className="pb-3">
-            <CardDescription>Väntande</CardDescription>
-            <CardTitle className="text-4xl text-yellow-600">{stats.pending}</CardTitle>
-          </CardHeader>
-        </Card>
-        <Card>
+
+        <Card className="border-2 border-primary/20 hover:shadow-card transition-all">
           <CardHeader className="pb-3">
             <CardDescription>Misslyckade</CardDescription>
-            <CardTitle className="text-4xl text-red-600">{stats.failed}</CardTitle>
+            <CardTitle className="text-3xl flex items-baseline gap-2 text-destructive">
+              {stats.failed} 
+              <span className="text-sm font-normal text-muted-foreground">st</span>
+            </CardTitle>
           </CardHeader>
+          <CardContent>
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <XCircle className="h-4 w-4" />
+              Denna månad
+            </div>
+          </CardContent>
         </Card>
       </div>
 
-      {/* Kostnad */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Kostnad denna månad</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="flex gap-8">
-            <div>
-              <div className="text-sm text-muted-foreground">SMS</div>
-              <div className="text-2xl font-bold">{stats.smsCost.toFixed(2)} kr</div>
-            </div>
-            <div>
-              <div className="text-sm text-muted-foreground">E-post</div>
-              <div className="text-2xl font-bold">{stats.emailCost.toFixed(2)} kr</div>
-            </div>
-            <div>
-              <div className="text-sm text-muted-foreground">Totalt</div>
-              <div className="text-2xl font-bold">{stats.totalCost.toFixed(2)} kr</div>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Filter */}
+      {/* Filters */}
       <Card>
         <CardHeader>
           <CardTitle>Filter</CardTitle>
@@ -125,9 +152,19 @@ export default function MessageInsights() {
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">Alla</SelectItem>
-                  <SelectItem value="sms">SMS</SelectItem>
-                  <SelectItem value="email">E-post</SelectItem>
+                  <SelectItem value="all">Alla kanaler</SelectItem>
+                  <SelectItem value="sms">
+                    <div className="flex items-center gap-2">
+                      <MessageSquare className="h-4 w-4" />
+                      SMS
+                    </div>
+                  </SelectItem>
+                  <SelectItem value="email">
+                    <div className="flex items-center gap-2">
+                      <Mail className="h-4 w-4" />
+                      E-post
+                    </div>
+                  </SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -141,70 +178,90 @@ export default function MessageInsights() {
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">Alla</SelectItem>
+                  <SelectItem value="all">Alla statusar</SelectItem>
                   <SelectItem value="sent">Skickat</SelectItem>
                   <SelectItem value="delivered">Levererat</SelectItem>
                   <SelectItem value="failed">Misslyckades</SelectItem>
+                  <SelectItem value="pending">Väntande</SelectItem>
                 </SelectContent>
               </Select>
+            </div>
+            <div className="flex items-end">
+              <Button 
+                variant="outline" 
+                onClick={() => setFilters({})}
+                className="w-full"
+              >
+                Rensa filter
+              </Button>
             </div>
           </div>
         </CardContent>
       </Card>
 
-      {/* Tabell */}
+      {/* Messages Table */}
       <Card>
         <CardHeader>
-          <CardTitle>Meddelanden ({logs.length})</CardTitle>
+          <div className="flex items-center justify-between">
+            <div>
+              <CardTitle>Meddelanden</CardTitle>
+              <CardDescription className="mt-1">
+                {logs.length} {logs.length === 1 ? 'meddelande' : 'meddelanden'}
+              </CardDescription>
+            </div>
+          </div>
         </CardHeader>
         <CardContent>
           {logs.length === 0 ? (
-            <div className="text-center py-12 text-muted-foreground">
-              Inga meddelanden ännu
+            <div className="text-center py-12">
+              <Send className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
+              <p className="text-muted-foreground">Inga meddelanden ännu</p>
             </div>
           ) : (
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Datum & Tid</TableHead>
-                  <TableHead>Mottagare</TableHead>
-                  <TableHead>Kanal</TableHead>
-                  <TableHead>Provider</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead>Kostnad</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {logs.map((log) => (
-                  <TableRow key={log.id}>
-                    <TableCell>
-                      {format(new Date(log.sent_at), 'PPP HH:mm', { locale: sv })}
-                    </TableCell>
-                    <TableCell className="font-medium">{log.recipient}</TableCell>
-                    <TableCell>
-                      <Badge variant="outline" className="gap-1">
-                        {log.channel === 'sms' ? (
-                          <>
-                            <MessageSquare className="h-3 w-3" />
-                            SMS
-                          </>
-                        ) : (
-                          <>
-                            <Mail className="h-3 w-3" />
-                            E-post
-                          </>
-                        )}
-                      </Badge>
-                    </TableCell>
-                    <TableCell className="capitalize">{log.provider}</TableCell>
-                    <TableCell>{getStatusBadge(log.status)}</TableCell>
-                    <TableCell>
-                      {log.cost ? `${log.cost.toFixed(2)} kr` : '-'}
-                    </TableCell>
+            <div className="overflow-x-auto">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Datum & Tid</TableHead>
+                    <TableHead>Mottagare</TableHead>
+                    <TableHead>Kanal</TableHead>
+                    <TableHead>Provider</TableHead>
+                    <TableHead>Status</TableHead>
+                    <TableHead className="text-right">Kostnad</TableHead>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+                </TableHeader>
+                <TableBody>
+                  {logs.map((log) => (
+                    <TableRow key={log.id} className="hover:bg-muted/50 transition-colors">
+                      <TableCell className="font-medium">
+                        {format(new Date(log.sent_at), 'PPP HH:mm', { locale: sv })}
+                      </TableCell>
+                      <TableCell>{log.recipient}</TableCell>
+                      <TableCell>
+                        <Badge variant="outline" className="gap-1">
+                          {log.channel === 'sms' ? (
+                            <>
+                              <MessageSquare className="h-3 w-3" />
+                              SMS
+                            </>
+                          ) : (
+                            <>
+                              <Mail className="h-3 w-3" />
+                              E-post
+                            </>
+                          )}
+                        </Badge>
+                      </TableCell>
+                      <TableCell className="capitalize">{log.provider}</TableCell>
+                      <TableCell>{getStatusBadge(log.status)}</TableCell>
+                      <TableCell className="text-right font-mono">
+                        {log.cost ? `${log.cost.toFixed(2)} kr` : '-'}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
           )}
         </CardContent>
       </Card>
