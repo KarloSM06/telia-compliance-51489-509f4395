@@ -839,6 +839,203 @@ export const ProductSelection = () => {
           </AnimatedSection>
         </div>
       </section>
+
+      {/* Testa själv Section */}
+      <section id="krono-chat" className="relative py-24 bg-muted/30">
+        <div className="mx-auto max-w-7xl px-6 lg:px-8">
+          {/* Krono Chat Center */}
+          <AnimatedSection className="max-w-4xl mx-auto">
+            <div className="relative rounded-3xl bg-gradient-primary overflow-hidden shadow-elegant border border-border">
+              <div className="absolute inset-0 bg-gradient-gold opacity-10"></div>
+              <div className="absolute top-0 right-0 w-64 h-64 bg-accent/20 rounded-full blur-3xl"></div>
+              
+              {/* Header */}
+              <div className="relative p-8 md:p-12 text-center border-b border-white/10">
+                <h2 className="text-4xl font-display font-bold text-white mb-4">Testa Krono AI-rådgivaren</h2>
+                <p className="text-lg text-white/90 leading-relaxed max-w-2xl mx-auto">
+                  Prata med vår AI-rådgivare Krono eller prova vårt demo för att se hur en AI-receptionist fungerar
+                </p>
+              </div>
+
+              {/* Chat Area */}
+              <div className="relative bg-white/5 backdrop-blur-sm">
+                <ScrollArea className="h-[400px] p-6" ref={scrollRef}>
+                  <div className="space-y-4">
+                    {messages.map((msg, idx) => <div key={idx} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+                        <div className={`max-w-[80%] rounded-2xl px-4 py-2.5 ${msg.role === 'user' ? 'bg-white text-primary' : 'bg-white/10 text-white backdrop-blur-sm border border-white/20'}`}>
+                          <p className="text-sm whitespace-pre-wrap">{msg.content}</p>
+                        </div>
+                      </div>)}
+                    {isLoading && <div className="flex justify-start">
+                        <div className="bg-white/10 rounded-2xl px-4 py-2.5 backdrop-blur-sm border border-white/20">
+                          <Loader2 className="h-4 w-4 animate-spin text-white" />
+                        </div>
+                      </div>}
+                  </div>
+                </ScrollArea>
+
+                {/* Input */}
+                <div className="p-6 border-t border-white/10">
+                  <div className="flex gap-3">
+                    <Input ref={inputRef} value={input} onChange={e => setInput(e.target.value)} onKeyDown={handleKeyPress} placeholder="Skriv ditt meddelande till Krono..." disabled={isLoading} className="flex-1 bg-white/10 border-white/20 text-white placeholder:text-white/50 focus:bg-white/15" />
+                    <Button onClick={handleSend} disabled={!input.trim() || isLoading} size="icon" className="bg-white text-primary hover:bg-white/90 h-10 w-10">
+                      <Send className="h-4 w-4" />
+                    </Button>
+                  </div>
+                  <div className="mt-4 text-center">
+                    <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+                      <DialogTrigger asChild>
+                        <Button variant="outline" size="lg" className="bg-white/5 border-white/20 text-white hover:bg-white/10 font-semibold group">
+                          Prova receptionistdemo
+                          <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent className="sm:max-w-md bg-background border-border">
+                        <DialogHeader>
+                          <DialogTitle className="flex items-center gap-2">
+                            <Phone className="h-5 w-5 text-accent" />
+                            Prova Receptionistdemo
+                          </DialogTitle>
+                          <DialogDescription>
+                            Skriv in telefonnummer för att bli uppringd av vår receptionist
+                          </DialogDescription>
+                        </DialogHeader>
+                        <div className="space-y-4 pt-4">
+                          <Input placeholder="070-123 45 67" value={phoneNumber} onChange={e => setPhoneNumber(e.target.value)} onKeyDown={e => {
+                          if (e.key === 'Enter') {
+                            handlePhoneSubmit();
+                          }
+                        }} className="text-base" />
+                          <Button onClick={handlePhoneSubmit} className="w-full bg-primary text-primary-foreground hover:bg-primary/90" size="lg">
+                            Ring mig
+                          </Button>
+                        </div>
+                      </DialogContent>
+                    </Dialog>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </AnimatedSection>
+            <AnimatedSection delay={0} className="group text-center">
+              <div className="relative rounded-2xl bg-white/5 p-10 backdrop-blur-sm border border-white/10 hover:border-accent/50 transition-all duration-300 h-full">
+                <div className="absolute inset-0 bg-gradient-gold opacity-0 group-hover:opacity-5 rounded-2xl transition-opacity"></div>
+                <div className="relative">
+                  <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-accent/10 mb-6 group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
+                    <Target className="h-8 w-8 text-accent" />
+                  </div>
+                  <h3 className="text-2xl font-display font-bold text-white mb-3">Skräddarsydd AI</h3>
+                  <p className="text-white/70 leading-relaxed">Vi skapar AI-lösningar helt anpassade efter er verksamhet och era mål – inget standardpaket, allt designat för maximal effekt.</p>
+                </div>
+              </div>
+            </AnimatedSection>
+            <AnimatedSection delay={100} className="group text-center">
+              <div className="relative rounded-2xl bg-white/5 p-10 backdrop-blur-sm border border-white/10 hover:border-accent/50 transition-all duration-300 h-full">
+                <div className="absolute inset-0 bg-gradient-gold opacity-0 group-hover:opacity-5 rounded-2xl transition-opacity"></div>
+                <div className="relative">
+                  <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-accent/10 mb-6 group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
+                    <CheckCircle className="h-8 w-8 text-accent" />
+                  </div>
+                  <h3 className="text-2xl font-display font-bold text-white mb-3">Ni ser bara resultaten</h3>
+                  <p className="text-white/70 leading-relaxed">Vi tar hand om allt – från utveckling till implementation. Ni behöver inte lyfta ett finger, utan får direkt värde och mätbara resultat.</p>
+                </div>
+              </div>
+            </AnimatedSection>
+            <AnimatedSection delay={200} className="group text-center">
+              <div className="relative rounded-2xl bg-white/5 p-10 backdrop-blur-sm border border-white/10 hover:border-accent/50 transition-all duration-300">
+                <div className="absolute inset-0 bg-gradient-gold opacity-0 group-hover:opacity-5 rounded-2xl transition-opacity"></div>
+                <div className="relative">
+                  <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-accent/10 mb-6 group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
+                    <Award className="h-8 w-8 text-accent" />
+                  </div>
+                  <h3 className="text-2xl font-display font-bold text-white mb-3">Hiems som partner</h3>
+                  <p className="text-white/70 leading-relaxed"> Med Hiems får ni inte bara AI – ni får en pålitlig partner som skapar kontinuerlig tillväxt och långsiktigt värde.</p>
+                </div>
+              </div>
+            </AnimatedSection>
+          </div>
+        </div>
+      </section>
+
+      {/* Testa själv Section */}
+      <section id="krono-chat" className="relative py-24 bg-muted/30">
+        <div className="mx-auto max-w-7xl px-6 lg:px-8">
+          {/* Krono Chat Center */}
+          <AnimatedSection className="max-w-4xl mx-auto">
+            <div className="relative rounded-3xl bg-gradient-primary overflow-hidden shadow-elegant border border-border">
+              <div className="absolute inset-0 bg-gradient-gold opacity-10"></div>
+              <div className="absolute top-0 right-0 w-64 h-64 bg-accent/20 rounded-full blur-3xl"></div>
+              
+              {/* Header */}
+              <div className="relative p-8 md:p-12 text-center border-b border-white/10">
+                <h2 className="text-4xl font-display font-bold text-white mb-4">Testa Krono AI-rådgivaren</h2>
+                <p className="text-lg text-white/90 leading-relaxed max-w-2xl mx-auto">
+                  Prata med vår AI-rådgivare Krono eller prova vårt demo för att se hur en AI-receptionist fungerar
+                </p>
+              </div>
+
+              {/* Chat Area */}
+              <div className="relative bg-white/5 backdrop-blur-sm">
+                <ScrollArea className="h-[400px] p-6" ref={scrollRef}>
+                  <div className="space-y-4">
+                    {messages.map((msg, idx) => <div key={idx} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+                        <div className={`max-w-[80%] rounded-2xl px-4 py-2.5 ${msg.role === 'user' ? 'bg-white text-primary' : 'bg-white/10 text-white backdrop-blur-sm border border-white/20'}`}>
+                          <p className="text-sm whitespace-pre-wrap">{msg.content}</p>
+                        </div>
+                      </div>)}
+                    {isLoading && <div className="flex justify-start">
+                        <div className="bg-white/10 rounded-2xl px-4 py-2.5 backdrop-blur-sm border border-white/20">
+                          <Loader2 className="h-4 w-4 animate-spin text-white" />
+                        </div>
+                      </div>}
+                  </div>
+                </ScrollArea>
+
+                {/* Input */}
+                <div className="p-6 border-t border-white/10">
+                  <div className="flex gap-3">
+                    <Input ref={inputRef} value={input} onChange={e => setInput(e.target.value)} onKeyDown={handleKeyPress} placeholder="Skriv ditt meddelande till Krono..." disabled={isLoading} className="flex-1 bg-white/10 border-white/20 text-white placeholder:text-white/50 focus:bg-white/15" />
+                    <Button onClick={handleSend} disabled={!input.trim() || isLoading} size="icon" className="bg-white text-primary hover:bg-white/90 h-10 w-10">
+                      <Send className="h-4 w-4" />
+                    </Button>
+                  </div>
+                  <div className="mt-4 text-center">
+                    <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+                      <DialogTrigger asChild>
+                        <Button variant="outline" size="lg" className="bg-white/5 border-white/20 text-white hover:bg-white/10 font-semibold group">
+                          Prova receptionistdemo
+                          <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent className="sm:max-w-md bg-background border-border">
+                        <DialogHeader>
+                          <DialogTitle className="flex items-center gap-2">
+                            <Phone className="h-5 w-5 text-accent" />
+                            Prova Receptionistdemo
+                          </DialogTitle>
+                          <DialogDescription>
+                            Skriv in telefonnummer för att bli uppringd av vår receptionist
+                          </DialogDescription>
+                        </DialogHeader>
+                        <div className="space-y-4 pt-4">
+                          <Input placeholder="070-123 45 67" value={phoneNumber} onChange={e => setPhoneNumber(e.target.value)} onKeyDown={e => {
+                          if (e.key === 'Enter') {
+                            handlePhoneSubmit();
+                          }
+                        }} className="text-base" />
+                          <Button onClick={handlePhoneSubmit} className="w-full bg-primary text-primary-foreground hover:bg-primary/90" size="lg">
+                            Ring mig
+                          </Button>
+                        </div>
+                      </DialogContent>
+                    </Dialog>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </AnimatedSection>
+        </div>
+      </section>
       
       <QuoteModal open={isQuoteModalOpen} onOpenChange={setIsQuoteModalOpen} />
       <ConsultationModal open={isConsultationModalOpen} onOpenChange={setIsConsultationModalOpen} />
