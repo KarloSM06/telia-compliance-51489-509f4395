@@ -80,7 +80,7 @@ export const LeadChatInterface = () => {
           <Button
             variant="ghost"
             size="icon"
-            className="lg:hidden fixed top-4 left-4 z-50 text-white bg-gradient-to-r from-blue-600 to-orange-600 hover:from-blue-700 hover:to-orange-700"
+            className="lg:hidden fixed top-4 left-4 z-50 text-white bg-[#D97642] hover:bg-[#C66632]"
           >
             <Menu className="h-5 w-5" />
           </Button>
@@ -103,8 +103,8 @@ export const LeadChatInterface = () => {
       </Sheet>
 
       {/* Chat Area */}
-      <Card className="flex-1 flex flex-col bg-gradient-to-br from-blue-50/50 to-orange-50/50 dark:from-blue-950/20 dark:to-orange-950/20">
-        <CardHeader className="border-b bg-gradient-to-r from-blue-600 to-orange-600 text-white">
+      <Card className="flex-1 flex flex-col bg-orange-50/30 dark:bg-orange-950/10">
+        <CardHeader className="border-b bg-[#D97642] text-white">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="flex items-center gap-2">
@@ -151,7 +151,7 @@ export const LeadChatInterface = () => {
                   )}
                 >
                   {message.role === 'assistant' && (
-                    <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-600 to-orange-600 flex items-center justify-center flex-shrink-0">
+                    <div className="w-8 h-8 rounded-full bg-[#D97642] flex items-center justify-center flex-shrink-0">
                       <Bot className="h-4 w-4 text-white" />
                     </div>
                   )}
@@ -159,7 +159,7 @@ export const LeadChatInterface = () => {
                     className={cn(
                       "max-w-[80%] rounded-2xl px-4 py-2 shadow-sm",
                       message.role === 'user'
-                        ? "bg-blue-600 text-white"
+                        ? "bg-[#D97642] text-white"
                         : "bg-white dark:bg-gray-800 border"
                     )}
                   >
@@ -172,7 +172,7 @@ export const LeadChatInterface = () => {
                     </span>
                   </div>
                   {message.role === 'user' && (
-                    <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center flex-shrink-0">
+                    <div className="w-8 h-8 rounded-full bg-[#D97642] flex items-center justify-center flex-shrink-0">
                       <User className="h-4 w-4 text-white" />
                     </div>
                   )}
@@ -180,7 +180,7 @@ export const LeadChatInterface = () => {
               ))}
               {sending && (
                 <div className="flex gap-3 animate-fade-in">
-                  <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-600 to-orange-600 flex items-center justify-center flex-shrink-0">
+                  <div className="w-8 h-8 rounded-full bg-[#D97642] flex items-center justify-center flex-shrink-0">
                     <Bot className="h-4 w-4 text-white" />
                   </div>
                   <div className="max-w-[80%] rounded-2xl px-4 py-2 bg-white dark:bg-gray-800 border">
@@ -209,7 +209,7 @@ export const LeadChatInterface = () => {
             <Button
               onClick={handleSend}
               disabled={!input.trim() || sending}
-              className="bg-gradient-to-r from-blue-600 to-orange-600 hover:from-blue-700 hover:to-orange-700"
+              className="bg-[#D97642] hover:bg-[#C66632]"
             >
               <Send className="h-4 w-4" />
             </Button>
