@@ -21,8 +21,8 @@ export function LeadSection() {
       />
 
       {/* Main Content */}
-      <div className="flex-1 overflow-auto">
-        <div className="px-6 py-4">
+      <div className="flex-1 min-h-0">
+        <div className="h-full px-6 py-4">
           {activeTab === 'eniro' && <EniroSearchTab />}
           {activeTab === 'linkedin' && <LinkedInChatTab />}
           {activeTab === 'lists' && <LeadsListTab />}
