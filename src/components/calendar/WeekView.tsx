@@ -342,7 +342,7 @@ export const WeekView = ({
 
       {/* Mini Calendar Panel - Desktop Only */}
       <div className="hidden lg:block w-[280px] flex-shrink-0">
-        <div className="sticky top-0">
+        <div className="sticky top-0 mt-[72px]">
           <MiniCalendarPanel
             selectedDate={date}
             events={events}
