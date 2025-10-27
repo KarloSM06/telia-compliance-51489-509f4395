@@ -111,12 +111,12 @@ export const ProductSelection = () => {
             </p>
           </AnimatedSection>
           
-        <div className="max-w-7xl mx-auto space-y-16 mb-12">
+        <div className="max-w-[1600px] mx-auto space-y-32 mb-12">
           {aiPackages.map((pkg, index) => (
             <AnimatedSection 
               key={pkg.id} 
-              delay={index * 200}
-              direction="up"
+              delay={index * 150}
+              direction={index % 2 === 0 ? 'left' : 'right'}
             >
               <PackageCard 
                 package={pkg} 

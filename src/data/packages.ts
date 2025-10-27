@@ -6,6 +6,7 @@ export interface Package {
   icon: LucideIcon;
   tagline: string;
   targetAudience: string;
+  description?: string;
   components: string[];
   valueBullets: string[];
   image?: string;
@@ -24,6 +25,7 @@ export const aiPackages: Package[] = [
     tagline: 'Accelerera din försäljning med AI',
     targetAudience: 'Företag som vill öka försäljning och leads',
     image: '/src/assets/growth-sales-presentation.png',
+    description: 'Ett komplett försäljningssystem som hjälper dig att hitta rätt kunder, kvalificera leads automatiskt och stänga fler affärer snabbare. Med AI-driven lead-berikning får du värdefull information om potentiella kunder innan första kontakten, medan vår intelligenta receptionist hanterar inkommande förfrågningar dygnet runt och bokar möten direkt i din kalender.',
     components: [
       'Lead Generator med AI-berikning och scoring',
       'AI-receptionist för kvalificering och mötesbokning',
