@@ -56,34 +56,91 @@ export function LeadDetailModal({ lead, open, onOpenChange, onUpdate }: LeadDeta
         </DialogHeader>
 
         <div className="space-y-6">
-          {/* Company Info */}
+          {/* Contact Person Info */}
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <Label className="text-muted-foreground">Kontaktperson</Label>
-              <p className="font-medium">{lead.contact_person || "-"}</p>
-            </div>
-            <div>
-              <Label className="text-muted-foreground">Bransch</Label>
-              <p className="font-medium">{lead.industry || "-"}</p>
-            </div>
-            <div>
-              <Label className="text-muted-foreground">Adress</Label>
-              <p className="flex items-center gap-1">
-                <MapPin className="h-4 w-4" />
-                {lead.Adress || "-"}
+              <Label className="text-muted-foreground">Namn</Label>
+              <p className="font-medium">
+                {lead.full_name || 
+                 (lead.first_name && lead.last_name ? `${lead.first_name} ${lead.last_name}` : 
+                  lead.contact_person || "-")}
               </p>
             </div>
             <div>
-              <Label className="text-muted-foreground">Postnummer</Label>
-              <p className="font-medium">{lead.Postal_Area || "-"}</p>
+              <Label className="text-muted-foreground">Jobbtitel</Label>
+              <p className="font-medium">{lead.job_title || "-"}</p>
+            </div>
+            {lead.job_seniority_level && (
+              <div>
+                <Label className="text-muted-foreground">Senioritetsnivå</Label>
+                <p className="font-medium capitalize">{lead.job_seniority_level}</p>
+              </div>
+            )}
+            {lead.job_department && (
+              <div>
+                <Label className="text-muted-foreground">Avdelning</Label>
+                <p className="font-medium">{lead.job_department}</p>
+              </div>
+            )}
+          </div>
+
+          {/* Location */}
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <Label className="text-muted-foreground">Stad</Label>
+              <p className="font-medium">{lead.city || lead.location || "-"}</p>
             </div>
             <div>
-              <Label className="text-muted-foreground">Plats</Label>
-              <p className="font-medium">{lead.location || "-"}</p>
+              <Label className="text-muted-foreground">Region</Label>
+              <p className="font-medium">{lead.region_name || "-"}</p>
             </div>
             <div>
-              <Label className="text-muted-foreground">Företagsstorlek</Label>
-              <p className="font-medium">{lead.company_size || "-"}</p>
+              <Label className="text-muted-foreground">Land</Label>
+              <p className="font-medium">{lead.country_name || "-"}</p>
+            </div>
+            {(lead.Adress || lead.Postal_Area) && (
+              <>
+                <div>
+                  <Label className="text-muted-foreground">Adress</Label>
+                  <p className="flex items-center gap-1">
+                    <MapPin className="h-4 w-4" />
+                    {lead.Adress || "-"}
+                  </p>
+                </div>
+                <div>
+                  <Label className="text-muted-foreground">Postnummer</Label>
+                  <p className="font-medium">{lead.Postal_Area || "-"}</p>
+                </div>
+              </>
+            )}
+          </div>
+
+          {/* Company Info */}
+          <div className="border-t pt-4">
+            <h3 className="font-semibold mb-3">Företagsinformation</h3>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <Label className="text-muted-foreground">Bransch</Label>
+                <p className="font-medium">{lead.industry || "-"}</p>
+              </div>
+              <div>
+                <Label className="text-muted-foreground">Företagsstorlek</Label>
+                <p className="font-medium">{lead.company_size || "-"}</p>
+              </div>
+              {lead.company_linkedin && (
+                <div className="col-span-2">
+                  <Label className="text-muted-foreground">Företagets LinkedIn</Label>
+                  <a 
+                    href={lead.company_linkedin.startsWith('http') ? lead.company_linkedin : `https://${lead.company_linkedin}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-blue-600 hover:underline flex items-center gap-1"
+                  >
+                    <Globe className="h-4 w-4" />
+                    {lead.company_linkedin}
+                  </a>
+                </div>
+              )}
             </div>
           </div>
 
@@ -107,6 +164,19 @@ export function LeadDetailModal({ lead, open, onOpenChange, onUpdate }: LeadDeta
                   </a>
                 </p>
               )}
+              {lead.linkedin && (
+                <p className="flex items-center gap-2">
+                  <Globe className="h-4 w-4" />
+                  <a 
+                    href={lead.linkedin.startsWith('http') ? lead.linkedin : `https://${lead.linkedin}`}
+                    target="_blank" 
+                    rel="noopener noreferrer" 
+                    className="text-primary hover:underline"
+                  >
+                    LinkedIn-profil
+                  </a>
+                </p>
+              )}
               {lead.website && (
                 <p className="flex items-center gap-2">
                   <Globe className="h-4 w-4" />
@@ -117,6 +187,58 @@ export function LeadDetailModal({ lead, open, onOpenChange, onUpdate }: LeadDeta
               )}
             </div>
           </div>
+
+          {/* Experience */}
+          {lead.experience && lead.experience.length > 0 && (
+            <div className="border-t pt-4">
+              <Label className="text-muted-foreground mb-2 block">Erfarenhet</Label>
+              <div className="space-y-2">
+                {lead.experience.slice(0, 5).map((exp, idx) => (
+                  <div key={idx} className="text-sm bg-muted/50 rounded p-2">
+                    {exp}
+                  </div>
+                ))}
+                {lead.experience.length > 5 && (
+                  <p className="text-xs text-muted-foreground">
+                    +{lead.experience.length - 5} fler positioner
+                  </p>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* Skills */}
+          {lead.skills && lead.skills.length > 0 && (
+            <div className="border-t pt-4">
+              <Label className="text-muted-foreground mb-2 block">Kompetenser</Label>
+              <div className="flex flex-wrap gap-1">
+                {lead.skills.slice(0, 15).map((skill, idx) => (
+                  <Badge key={idx} variant="secondary" className="text-xs">
+                    {skill}
+                  </Badge>
+                ))}
+                {lead.skills.length > 15 && (
+                  <Badge variant="outline" className="text-xs">
+                    +{lead.skills.length - 15} fler
+                  </Badge>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* Interests */}
+          {lead.interests && lead.interests.length > 0 && (
+            <div className="border-t pt-4">
+              <Label className="text-muted-foreground mb-2 block">Intressen</Label>
+              <div className="flex flex-wrap gap-1">
+                {lead.interests.map((interest, idx) => (
+                  <Badge key={idx} variant="outline" className="text-xs">
+                    {interest}
+                  </Badge>
+                ))}
+              </div>
+            </div>
+          )}
 
           {/* AI Analysis */}
           {lead.ai_score && (

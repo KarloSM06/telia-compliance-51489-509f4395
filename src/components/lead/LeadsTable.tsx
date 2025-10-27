@@ -89,10 +89,10 @@ export function LeadsTable({ leads, onViewDetails, onBulkEnrich, isBulkEnriching
         <TableHeader>
           <TableRow>
             <TableHead>Företag</TableHead>
-            <TableHead>Adress</TableHead>
-            <TableHead>Postnummer</TableHead>
+            <TableHead>Kontaktperson</TableHead>
+            <TableHead>Jobbtitel</TableHead>
+            <TableHead>Plats</TableHead>
             <TableHead>Kontakt</TableHead>
-            <TableHead>Bransch</TableHead>
             <TableHead>AI Score</TableHead>
             <TableHead>Status</TableHead>
             <TableHead>AI-berikning</TableHead>
@@ -110,11 +110,21 @@ export function LeadsTable({ leads, onViewDetails, onBulkEnrich, isBulkEnriching
                 className={`cursor-pointer hover:bg-muted/50 ${isEnrichingThis ? 'bg-emerald-50 dark:bg-emerald-950/20 border-l-4 border-l-emerald-500' : ''}`}
               >
                 <TableCell className="font-medium">{lead.company_name}</TableCell>
-                <TableCell className="text-sm text-muted-foreground">{lead.Adress || "-"}</TableCell>
-                <TableCell className="text-sm text-muted-foreground">{lead.Postal_Area || "-"}</TableCell>
                 <TableCell>
                   <div className="text-sm">
-                    {lead.contact_person && <div>{lead.contact_person}</div>}
+                    {lead.full_name || lead.contact_person || 
+                     (lead.first_name && lead.last_name ? `${lead.first_name} ${lead.last_name}` : 
+                      lead.first_name || "-")}
+                  </div>
+                </TableCell>
+                <TableCell className="text-sm text-muted-foreground">
+                  {lead.job_title || "-"}
+                </TableCell>
+                <TableCell className="text-sm text-muted-foreground">
+                  {lead.city || lead.location || lead.region_name || "-"}
+                </TableCell>
+                <TableCell>
+                  <div className="text-sm space-y-1">
                     {lead.email && (
                       <div className="flex items-center gap-1 text-muted-foreground">
                         <Mail className="h-3 w-3" />
@@ -127,9 +137,19 @@ export function LeadsTable({ leads, onViewDetails, onBulkEnrich, isBulkEnriching
                         {lead.phone}
                       </div>
                     )}
+                    {lead.linkedin && (
+                      <a 
+                        href={lead.linkedin.startsWith('http') ? lead.linkedin : `https://${lead.linkedin}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-blue-600 hover:underline text-xs"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        LinkedIn
+                      </a>
+                    )}
                   </div>
                 </TableCell>
-                <TableCell>{lead.industry || "-"}</TableCell>
                 <TableCell>
                   {lead.ai_score ? (
                     <Badge variant={lead.ai_score >= 80 ? "default" : "secondary"}>
