@@ -28,7 +28,7 @@ export default function Communications() {
         </div>
       </div>
 
-      <div className="container mx-auto px-6 -mt-8">
+      <div className="container mx-auto px-6 py-8 max-w-full">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-8">
           {/* Desktop Navigation */}
           <TabsList className="hidden lg:inline-flex h-auto p-1.5 bg-card shadow-card animate-scale-in">
