@@ -6,6 +6,7 @@ import { Building2, MapPin, User, Sparkles, Home, Briefcase } from "lucide-react
 import { Lead } from "@/hooks/useLeads";
 import { ContactLinkGroup } from "./ContactLinkGroup";
 import { QuickContactButtons } from "./QuickContactButtons";
+import { translateSeniorityLevel } from "@/lib/utils";
 
 interface LeadCardProps {
   lead: Lead;
@@ -66,8 +67,8 @@ export function LeadCard({ lead, onViewDetails, viewMode = 'organizations' }: Le
                   </div>
                 )}
                 {lead.job_seniority_level && (
-                  <div className="text-xs text-muted-foreground capitalize mt-0.5">
-                    {lead.job_seniority_level} level
+                  <div className="text-xs text-muted-foreground mt-0.5">
+                    {translateSeniorityLevel(lead.job_seniority_level)}
                   </div>
                 )}
               </div>

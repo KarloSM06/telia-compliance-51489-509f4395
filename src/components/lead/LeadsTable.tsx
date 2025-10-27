@@ -9,6 +9,7 @@ import { format } from "date-fns";
 import { useEnrichLead } from "@/hooks/useEnrichLead";
 import { ContactLinkGroup } from "./ContactLinkGroup";
 import { QuickContactButtons } from "./QuickContactButtons";
+import { translateSeniorityLevel } from "@/lib/utils";
 
 interface LeadsTableProps {
   leads: Lead[];
@@ -169,8 +170,8 @@ export function LeadsTable({ leads, onViewDetails, onBulkEnrich, isBulkEnriching
                             <span className="truncate">{lead.job_title || "-"}</span>
                           </div>
                           {lead.job_seniority_level && (
-                            <div className="text-xs text-muted-foreground capitalize ml-5">
-                              {lead.job_seniority_level}
+                            <div className="text-xs text-muted-foreground ml-5">
+                              {translateSeniorityLevel(lead.job_seniority_level)}
                             </div>
                           )}
                         </div>
