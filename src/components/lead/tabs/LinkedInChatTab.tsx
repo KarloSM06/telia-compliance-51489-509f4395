@@ -13,7 +13,7 @@ export const LinkedInChatTab = () => {
             <div className="flex items-center gap-2">
               <img src={linkedinLogo} alt="LinkedIn" className="h-7 w-7 object-contain" />
               <span className="text-muted-foreground">×</span>
-              <img src={anthropicLogo} alt="Anthropic AI" className="h-8 w-8 object-contain" />
+              <img src={anthropicLogo} alt="Anthropic AI" className="h-6 w-6 object-contain" />
             </div>
             <div>
               <CardTitle className="text-xl">LinkedIn × Anthropic AI</CardTitle>
