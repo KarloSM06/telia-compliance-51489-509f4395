@@ -299,6 +299,38 @@ async function generateMessage(supabaseClient: any, event: any, messageType: str
     };
   }
 
+  // Generate unsubscribe token for customer
+  let unsubscribeToken = '';
+  const customerEmail = event.contact_email;
+  const customerPhone = event.contact_phone;
+
+  if (customerEmail || customerPhone) {
+    // Get or create customer preferences
+    const { data: existingPrefs } = await supabaseClient
+      .from('customer_preferences')
+      .select('unsubscribe_token')
+      .or(customerEmail ? `email.eq.${customerEmail}` : `phone.eq.${customerPhone}`)
+      .maybeSingle();
+
+    if (existingPrefs) {
+      unsubscribeToken = existingPrefs.unsubscribe_token;
+    } else {
+      // Create new preferences entry
+      const { data: newPrefs } = await supabaseClient
+        .from('customer_preferences')
+        .insert({
+          email: customerEmail,
+          phone: customerPhone,
+        })
+        .select('unsubscribe_token')
+        .single();
+
+      if (newPrefs) {
+        unsubscribeToken = newPrefs.unsubscribe_token;
+      }
+    }
+  }
+
   const variables = {
     customer_name: event.contact_person || 'Kund',
     date: formattedDate,
@@ -316,6 +348,12 @@ async function generateMessage(supabaseClient: any, event: any, messageType: str
     subject = subject.replace(regex, value);
   });
 
+  // Add unsubscribe footer
+  if (unsubscribeToken) {
+    const unsubscribeUrl = `https://shskknkivuewuqonjdjc.supabase.co/unsubscribe?token=${unsubscribeToken}`;
+    message += `\n\n---\nVill du inte längre få dessa meddelanden? Klicka här: ${unsubscribeUrl}`;
+  }
+
   return { message, subject };
 }
 
@@ -324,11 +362,11 @@ function getDefaultTemplate(messageType: string): string {
     case 'booking_confirmation':
       return 'Hej {{customer_name}}! Din bokning är bekräftad för {{date}} kl {{time}}. Vi ser fram emot att träffa dig!';
     case 'reminder':
-      return 'Påminnelse: Du har en bokning {{date}} kl {{time}}. Vi ses snart!';
+      return 'Påminnelse: Du har en bokning {{date}} kl {{time}}. Vi ses snart!\n\nSvara STOP för att sluta få påminnelser.';
     case 'review_request':
       return 'Hej {{customer_name}}! Tack för att du besökte oss. Vi skulle uppskatta om du kunde dela din upplevelse med oss.';
     default:
-      return 'Meddelande om din bokning.';
+      return 'Meddelande om din bokning.\n\nSvara STOP för att sluta få meddelanden.';
   }
 }
 

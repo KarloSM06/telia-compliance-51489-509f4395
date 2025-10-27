@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ShoppingCart, FileText, Settings, HelpCircle, BarChart3, Upload } from "lucide-react";
+import { ShoppingCart, Settings, Calendar, MessageSquare, Star, BarChart3 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 export function QuickActions() {
@@ -8,34 +8,44 @@ export function QuickActions() {
 
   const actions = [
     {
+      title: "Boka möte",
+      description: "Skapa ny kalenderhändelse",
+      icon: Calendar,
+      color: "text-blue-600",
+      bgColor: "bg-blue-100",
+      onClick: () => navigate('/dashboard/calendar'),
+    },
+    {
+      title: "Skicka meddelande",
+      description: "Snabbmeddelande till kund",
+      icon: MessageSquare,
+      color: "text-green-600",
+      bgColor: "bg-green-100",
+      onClick: () => navigate('/dashboard/templates'),
+    },
+    {
+      title: "Visa recensioner",
+      description: "Analysera kundrecensioner",
+      icon: Star,
+      color: "text-yellow-600",
+      bgColor: "bg-yellow-100",
+      onClick: () => navigate('/dashboard/reviews'),
+    },
+    {
       title: "Köp mer paket",
       description: "Utöka dina AI-funktioner",
       icon: ShoppingCart,
-      color: "text-blue-600",
-      bgColor: "bg-blue-100",
+      color: "text-purple-600",
+      bgColor: "bg-purple-100",
       onClick: () => navigate('/dashboard/packages'),
     },
     {
       title: "Visa rapport",
       description: "Se din månadsrapport",
       icon: BarChart3,
-      color: "text-green-600",
-      bgColor: "bg-green-100",
-      onClick: () => navigate('/example-report'),
-    },
-    {
-      title: "Ladda upp samtal",
-      description: "Analysera nya samtal",
-      icon: Upload,
-      color: "text-purple-600",
-      bgColor: "bg-purple-100",
-      onClick: () => {
-        // Scroll to upload section if on Thor dashboard
-        const uploadSection = document.querySelector('[data-upload-section]');
-        if (uploadSection) {
-          uploadSection.scrollIntoView({ behavior: 'smooth' });
-        }
-      },
+      color: "text-indigo-600",
+      bgColor: "bg-indigo-100",
+      onClick: () => navigate('/dashboard/analytics'),
     },
     {
       title: "Inställningar",
@@ -43,23 +53,7 @@ export function QuickActions() {
       icon: Settings,
       color: "text-orange-600",
       bgColor: "bg-orange-100",
-      onClick: () => navigate('/gdpr-settings'),
-    },
-    {
-      title: "Dokumentation",
-      description: "Läs guider och FAQ",
-      icon: FileText,
-      color: "text-indigo-600",
-      bgColor: "bg-indigo-100",
-      onClick: () => window.open('https://docs.lovable.dev', '_blank'),
-    },
-    {
-      title: "Support",
-      description: "Få hjälp från oss",
-      icon: HelpCircle,
-      color: "text-pink-600",
-      bgColor: "bg-pink-100",
-      onClick: () => navigate('/#contact'),
+      onClick: () => navigate('/dashboard/settings'),
     },
   ];
 

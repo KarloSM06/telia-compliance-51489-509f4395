@@ -7,13 +7,15 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Checkbox } from "@/components/ui/checkbox";
 import { useMessageTemplates, type TemplateType, type Tone } from "@/hooks/useMessageTemplates";
 import { useState } from "react";
-import { Plus, Trash2, Edit, FileText } from "lucide-react";
+import { Plus, Trash2, Edit, FileText, Send } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
+import { TestMessageModal } from "@/components/message-templates/TestMessageModal";
 
 export default function MessageTemplates() {
   const { templates, createTemplate, updateTemplate, deleteTemplate, isLoading } = useMessageTemplates();
   const [editingId, setEditingId] = useState<string | null>(null);
   const [isCreating, setIsCreating] = useState(false);
+  const [testingTemplate, setTestingTemplate] = useState<{ id: string; name: string } | null>(null);
 
   const [formData, setFormData] = useState({
     name: "",
@@ -251,6 +253,14 @@ export default function MessageTemplates() {
                 </div>
                 <div className="flex gap-2">
                   <Button
+                    variant="secondary"
+                    size="sm"
+                    onClick={() => setTestingTemplate({ id: template.id, name: template.name })}
+                  >
+                    <Send className="h-4 w-4 mr-1" />
+                    Testa
+                  </Button>
+                  <Button
                     variant="outline"
                     size="sm"
                     onClick={() => handleEdit(template)}
@@ -278,6 +288,15 @@ export default function MessageTemplates() {
           </Card>
         ))}
       </div>
+
+      {testingTemplate && (
+        <TestMessageModal
+          open={!!testingTemplate}
+          onClose={() => setTestingTemplate(null)}
+          templateId={testingTemplate.id}
+          templateName={testingTemplate.name}
+        />
+      )}
     </div>
   );
 }

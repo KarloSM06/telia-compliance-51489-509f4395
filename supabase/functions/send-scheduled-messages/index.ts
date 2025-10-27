@@ -60,6 +60,26 @@ Deno.serve(async (req) => {
     for (const message of messages as ScheduledMessage[]) {
       console.log(`Processing message ${message.id} (${message.message_type})`);
 
+      // Check customer opt-out preferences
+      const shouldSkip = await checkOptOut(
+        message.recipient_email,
+        message.recipient_phone,
+        message.channel,
+        supabase
+      );
+
+      if (shouldSkip) {
+        console.log(`⚠️ Skipping message ${message.id} - customer has opted out`);
+        await supabase
+          .from('scheduled_messages')
+          .update({ 
+            status: 'cancelled',
+            delivery_status: { reason: 'Customer opted out' }
+          })
+          .eq('id', message.id);
+        continue;
+      }
+
       await supabase
         .from('scheduled_messages')
         .update({ status: 'processing' })
@@ -394,4 +414,39 @@ async function sendEmail(message: ScheduledMessage, supabase: any) {
   });
 
   console.log(`📧 Email sent via Resend: ${result.id}`);
+}
+
+async function checkOptOut(
+  email: string | undefined,
+  phone: string | undefined,
+  channel: 'sms' | 'email' | 'both',
+  supabase: any
+): Promise<boolean> {
+  if (!email && !phone) return false;
+
+  try {
+    let query = supabase
+      .from('customer_preferences')
+      .select('opt_out_sms, opt_out_email');
+
+    if (email) {
+      query = query.eq('email', email);
+    } else if (phone) {
+      query = query.eq('phone', phone);
+    }
+
+    const { data, error } = await query.maybeSingle();
+
+    if (error || !data) return false;
+
+    // Check if customer has opted out of the specific channel
+    if (channel === 'sms' && data.opt_out_sms) return true;
+    if (channel === 'email' && data.opt_out_email) return true;
+    if (channel === 'both' && (data.opt_out_sms || data.opt_out_email)) return true;
+
+    return false;
+  } catch (error) {
+    console.error('Error checking opt-out status:', error);
+    return false; // Don't block sending on error
+  }
 }
