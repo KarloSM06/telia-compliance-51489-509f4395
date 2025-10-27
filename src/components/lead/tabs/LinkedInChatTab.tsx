@@ -25,16 +25,13 @@ export const LinkedInChatTab = () => {
         </CardHeader>
         <CardContent className="p-0">
           <div className="bg-muted/30 border-b p-4">
-            <div className="flex items-start gap-3">
-              <Sparkles className="h-5 w-5 text-primary mt-0.5" />
-              <div className="text-sm space-y-1">
-                <p className="font-medium">Så här använder du LinkedIn AI-chatten:</p>
-                <ul className="list-disc list-inside text-muted-foreground space-y-1">
-                  <li>Beskriv dina ideala leads (bransch, storlek, plats, etc.)</li>
-                  <li>AI:n söker och skapar kvalificerade leads automatiskt</li>
-                  <li>Alla leads hamnar i fliken "Listor" där du kan hantera dem</li>
-                </ul>
-              </div>
+            <div className="text-sm space-y-2">
+              <p className="font-semibold text-base">Hur det fungerar:</p>
+              <ol className="list-decimal list-inside text-muted-foreground space-y-2 ml-1">
+                <li>Beskriv dina ideala kunder (bransch, företagsstorlek, geografisk plats)</li>
+                <li>AI:n söker automatiskt och genererar kompletta leadprofiler</li>
+                <li>Alla leads sparas i fliken "Listor" med fullständiga kontaktuppgifter</li>
+              </ol>
             </div>
           </div>
           <div className="h-[calc(100vh-400px)]">
