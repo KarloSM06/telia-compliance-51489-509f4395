@@ -12,27 +12,27 @@ export const PackageCard = ({
 }: PackageCardProps) => {
   const Icon = pkg.icon;
   return <Card className="h-full flex flex-col hover:shadow-xl hover:scale-[1.02] transition-all duration-300 border-2 hover:border-primary/20">
-      <CardHeader>
-        <div className="mb-4 p-3 bg-primary/10 rounded-lg w-fit">
-          <Icon className="h-14 w-14 text-primary" />
+      <CardHeader className="p-8">
+        <div className="mb-6 p-4 bg-primary/10 rounded-lg w-fit">
+          <Icon className="h-20 w-20 text-primary" />
         </div>
-        <CardTitle className="text-2xl mb-2">{pkg.name}</CardTitle>
-        <CardDescription className="text-base">{pkg.targetAudience}</CardDescription>
+        <CardTitle className="text-4xl mb-4">{pkg.name}</CardTitle>
+        <CardDescription className="text-lg">{pkg.targetAudience}</CardDescription>
       </CardHeader>
       
-      <CardContent className="flex-1">
-        <div className="space-y-3 mb-6">
-          {pkg.valueBullets.map((bullet, index) => <div key={index} className="flex items-start gap-2">
-              <CheckCircle className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
-              <span className="text-sm">{bullet}</span>
+      <CardContent className="flex-1 p-8 pt-0">
+        <div className="space-y-4 mb-8">
+          {pkg.valueBullets.map((bullet, index) => <div key={index} className="flex items-start gap-3">
+              <CheckCircle className="h-6 w-6 text-primary mt-0.5 flex-shrink-0" />
+              <span className="text-base">{bullet}</span>
             </div>)}
         </div>
         
         
       </CardContent>
       
-      <CardFooter className="flex flex-col gap-2">
-        <Button className="w-full bg-gradient-to-r from-primary to-primary/80 hover:shadow-lg" onClick={onBookDemo}>
+      <CardFooter className="flex flex-col gap-2 p-8 pt-0">
+        <Button size="lg" className="w-full bg-gradient-to-r from-primary to-primary/80 hover:shadow-lg" onClick={onBookDemo}>
           Boka demo
         </Button>
       </CardFooter>

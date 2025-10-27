@@ -100,9 +100,9 @@ export const ProductSelection = () => {
       </section>
 
       {/* Våra AI-paket / Lösningar */}
-      <section id="paket" className="relative py-24 bg-white/5">
+      <section id="paket" className="relative py-48 bg-white/5">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
-          <AnimatedSection className="text-center mb-16">
+          <AnimatedSection className="text-center mb-20">
             <h2 className="text-4xl sm:text-5xl font-bold mb-4 text-white">
               Välj paket för ditt företag / din bransch
             </h2>
@@ -111,9 +111,13 @@ export const ProductSelection = () => {
             </p>
           </AnimatedSection>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 mb-12">
             {aiPackages.map((pkg, index) => (
-              <AnimatedSection key={pkg.id} delay={index * 100}>
+              <AnimatedSection 
+                key={pkg.id} 
+                delay={index * 200}
+                direction={index % 2 === 0 ? 'left' : 'right'}
+              >
                 <PackageCard 
                   package={pkg} 
                   onBookDemo={() => setIsConsultationModalOpen(true)}
