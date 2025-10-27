@@ -2,15 +2,16 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Building2, MapPin, User, Mail, Phone, Sparkles, Home } from "lucide-react";
+import { Building2, MapPin, User, Mail, Phone, Sparkles, Home, Linkedin, Briefcase } from "lucide-react";
 import { Lead } from "@/hooks/useLeads";
 
 interface LeadCardProps {
   lead: Lead;
   onViewDetails: (lead: Lead) => void;
+  viewMode?: 'organizations' | 'contacts';
 }
 
-export function LeadCard({ lead, onViewDetails }: LeadCardProps) {
+export function LeadCard({ lead, onViewDetails, viewMode = 'organizations' }: LeadCardProps) {
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'new': return 'bg-blue-500/10 text-blue-700 border-blue-200';
@@ -31,41 +32,99 @@ export function LeadCard({ lead, onViewDetails }: LeadCardProps) {
     }
   };
 
+  const personName = lead.full_name || lead.contact_person || 
+    (lead.first_name && lead.last_name ? `${lead.first_name} ${lead.last_name}` : 
+     lead.first_name || "");
+
+  const personInitials = personName
+    .split(' ')
+    .map(n => n[0])
+    .slice(0, 2)
+    .join('')
+    .toUpperCase() || lead.company_name.slice(0, 2).toUpperCase();
+
   return (
     <Card className="group hover:shadow-lg transition-all hover:-translate-y-1">
       <CardHeader className="pb-3">
-        <div className="flex items-start justify-between">
-          <div className="flex items-center gap-3 flex-1">
-            <Avatar className="h-12 w-12">
-              <AvatarFallback className="bg-gradient-to-br from-blue-500 to-purple-500 text-white">
-                {lead.company_name.slice(0, 2).toUpperCase()}
-              </AvatarFallback>
-            </Avatar>
-            <div className="flex-1 min-w-0">
-              <CardTitle className="text-lg truncate">{lead.company_name}</CardTitle>
-              <div className="flex items-center gap-2 mt-1">
-                {lead.location && (
-                  <div className="flex items-center text-sm text-muted-foreground">
-                    <MapPin className="h-3 w-3 mr-1" />
-                    <span className="truncate">{lead.location}</span>
+        {viewMode === 'contacts' ? (
+          // Person-focused layout
+          <div className="space-y-3">
+            <div className="flex items-start gap-3">
+              <Avatar className="h-14 w-14">
+                <AvatarFallback className="bg-gradient-to-br from-purple-500 to-pink-500 text-white font-bold text-lg">
+                  {personInitials}
+                </AvatarFallback>
+              </Avatar>
+              <div className="flex-1 min-w-0">
+                <CardTitle className="text-lg truncate">{personName || "-"}</CardTitle>
+                {lead.job_title && (
+                  <div className="flex items-center gap-1 mt-1 text-sm text-muted-foreground">
+                    <Briefcase className="h-3 w-3" />
+                    <span className="truncate">{lead.job_title}</span>
                   </div>
                 )}
-                {lead.lead_type === 'brf' && (
-                  <Badge variant="outline" className="text-xs gap-1">
-                    <Home className="h-3 w-3" />
-                    BRF
-                  </Badge>
+                {lead.linkedin && (
+                  <a 
+                    href={lead.linkedin.startsWith('http') ? lead.linkedin : `https://${lead.linkedin}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-blue-600 hover:underline text-xs flex items-center gap-1 mt-1"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <Linkedin className="h-3 w-3" />
+                    LinkedIn
+                  </a>
                 )}
               </div>
+              {lead.ai_score && (
+                <Badge variant="outline" className="gap-1 whitespace-nowrap">
+                  <Sparkles className="h-3 w-3" />
+                  {lead.ai_score}%
+                </Badge>
+              )}
+            </div>
+            
+            {/* Company as secondary info */}
+            <div className="flex items-center gap-2 text-sm text-muted-foreground border-t pt-3">
+              <Building2 className="h-4 w-4 flex-shrink-0" />
+              <span className="truncate font-medium">{lead.company_name}</span>
             </div>
           </div>
-          {lead.ai_score && (
-            <Badge variant="outline" className="gap-1 whitespace-nowrap">
-              <Sparkles className="h-3 w-3" />
-              {lead.ai_score}%
-            </Badge>
-          )}
-        </div>
+        ) : (
+          // Organization-focused layout (original)
+          <div className="flex items-start justify-between">
+            <div className="flex items-center gap-3 flex-1">
+              <Avatar className="h-12 w-12">
+                <AvatarFallback className="bg-gradient-to-br from-blue-500 to-purple-500 text-white">
+                  {lead.company_name.slice(0, 2).toUpperCase()}
+                </AvatarFallback>
+              </Avatar>
+              <div className="flex-1 min-w-0">
+                <CardTitle className="text-lg truncate">{lead.company_name}</CardTitle>
+                <div className="flex items-center gap-2 mt-1">
+                  {lead.location && (
+                    <div className="flex items-center text-sm text-muted-foreground">
+                      <MapPin className="h-3 w-3 mr-1" />
+                      <span className="truncate">{lead.location}</span>
+                    </div>
+                  )}
+                  {lead.lead_type === 'brf' && (
+                    <Badge variant="outline" className="text-xs gap-1">
+                      <Home className="h-3 w-3" />
+                      BRF
+                    </Badge>
+                  )}
+                </div>
+              </div>
+            </div>
+            {lead.ai_score && (
+              <Badge variant="outline" className="gap-1 whitespace-nowrap">
+                <Sparkles className="h-3 w-3" />
+                {lead.ai_score}%
+              </Badge>
+            )}
+          </div>
+        )}
       </CardHeader>
       
       <CardContent className="space-y-3">
@@ -85,27 +144,66 @@ export function LeadCard({ lead, onViewDetails }: LeadCardProps) {
           </Badge>
         </div>
 
-        {(lead.Adress || lead.Postal_Area) && (
-          <div className="flex items-center gap-2 text-sm">
-            <MapPin className="h-4 w-4 text-muted-foreground flex-shrink-0" />
-            <span className="truncate">
-              {lead.Adress}{lead.Adress && lead.Postal_Area && ', '}{lead.Postal_Area}
-            </span>
-          </div>
-        )}
+        {viewMode === 'contacts' ? (
+          // Person-focused details
+          <>
+            {(lead.city || lead.location || lead.region_name) && (
+              <div className="flex items-center gap-2 text-sm">
+                <MapPin className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+                <span className="truncate">
+                  {lead.city || lead.location || lead.region_name}
+                </span>
+              </div>
+            )}
 
-        {lead.industry && (
-          <div className="flex items-center gap-2 text-sm">
-            <Building2 className="h-4 w-4 text-muted-foreground flex-shrink-0" />
-            <span className="truncate">{lead.industry}</span>
-          </div>
-        )}
-        
-        {lead.contact_person && (
-          <div className="flex items-center gap-2 text-sm">
-            <User className="h-4 w-4 text-muted-foreground flex-shrink-0" />
-            <span className="truncate">{lead.contact_person}</span>
-          </div>
+            {lead.job_seniority_level && (
+              <div className="text-sm">
+                <span className="text-muted-foreground">Nivå: </span>
+                <span className="capitalize">{lead.job_seniority_level}</span>
+              </div>
+            )}
+
+            {lead.skills && lead.skills.length > 0 && (
+              <div className="flex flex-wrap gap-1 pt-2 border-t">
+                {lead.skills.slice(0, 3).map((skill, idx) => (
+                  <Badge key={idx} variant="secondary" className="text-xs">
+                    {skill}
+                  </Badge>
+                ))}
+                {lead.skills.length > 3 && (
+                  <Badge variant="outline" className="text-xs">
+                    +{lead.skills.length - 3}
+                  </Badge>
+                )}
+              </div>
+            )}
+          </>
+        ) : (
+          // Organization-focused details (original)
+          <>
+            {(lead.Adress || lead.Postal_Area) && (
+              <div className="flex items-center gap-2 text-sm">
+                <MapPin className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+                <span className="truncate">
+                  {lead.Adress}{lead.Adress && lead.Postal_Area && ', '}{lead.Postal_Area}
+                </span>
+              </div>
+            )}
+
+            {lead.industry && (
+              <div className="flex items-center gap-2 text-sm">
+                <Building2 className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+                <span className="truncate">{lead.industry}</span>
+              </div>
+            )}
+            
+            {personName && (
+              <div className="flex items-center gap-2 text-sm">
+                <User className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+                <span className="truncate">{personName}</span>
+              </div>
+            )}
+          </>
         )}
 
         {lead.ai_score && lead.ai_reasoning && (

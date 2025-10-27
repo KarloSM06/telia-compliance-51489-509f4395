@@ -3,7 +3,8 @@ import { Lead } from "@/hooks/useLeads";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Eye, Mail, Phone, Sparkles, Loader2 } from "lucide-react";
+import { Eye, Mail, Phone, Sparkles, Loader2, Linkedin } from "lucide-react";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { format } from "date-fns";
 import { useEnrichLead } from "@/hooks/useEnrichLead";
 
@@ -13,6 +14,7 @@ interface LeadsTableProps {
   onBulkEnrich?: () => void;
   isBulkEnriching?: boolean;
   bulkProgress?: { current: number; total: number };
+  viewMode?: 'organizations' | 'contacts';
 }
 
 const statusColors = {
@@ -33,7 +35,7 @@ const statusLabels = {
   rejected: "Avvisad",
 };
 
-export function LeadsTable({ leads, onViewDetails, onBulkEnrich, isBulkEnriching, bulkProgress }: LeadsTableProps) {
+export function LeadsTable({ leads, onViewDetails, onBulkEnrich, isBulkEnriching, bulkProgress, viewMode = 'organizations' }: LeadsTableProps) {
   const { enrichLead, isEnriching, enrichingLeadId } = useEnrichLead();
 
   const newLeadsCount = leads.filter(l => l.status === 'new').length;
@@ -88,16 +90,32 @@ export function LeadsTable({ leads, onViewDetails, onBulkEnrich, isBulkEnriching
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>Företag</TableHead>
-            <TableHead>Kontaktperson</TableHead>
-            <TableHead>Jobbtitel</TableHead>
-            <TableHead>Plats</TableHead>
-            <TableHead>Kontakt</TableHead>
-            <TableHead>AI Score</TableHead>
-            <TableHead>Status</TableHead>
-            <TableHead>AI-berikning</TableHead>
-            <TableHead>Skapad</TableHead>
-            <TableHead className="text-right">Åtgärder</TableHead>
+            {viewMode === 'contacts' ? (
+              <>
+                <TableHead>Person</TableHead>
+                <TableHead>Jobbtitel</TableHead>
+                <TableHead>Företag</TableHead>
+                <TableHead>Plats</TableHead>
+                <TableHead>Kontakt</TableHead>
+                <TableHead>AI Score</TableHead>
+                <TableHead>Status</TableHead>
+                <TableHead>Skapad</TableHead>
+                <TableHead className="text-right">Åtgärder</TableHead>
+              </>
+            ) : (
+              <>
+                <TableHead>Företag</TableHead>
+                <TableHead>Kontaktperson</TableHead>
+                <TableHead>Jobbtitel</TableHead>
+                <TableHead>Plats</TableHead>
+                <TableHead>Kontakt</TableHead>
+                <TableHead>AI Score</TableHead>
+                <TableHead>Status</TableHead>
+                <TableHead>AI-berikning</TableHead>
+                <TableHead>Skapad</TableHead>
+                <TableHead className="text-right">Åtgärder</TableHead>
+              </>
+            )}
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -109,47 +127,121 @@ export function LeadsTable({ leads, onViewDetails, onBulkEnrich, isBulkEnriching
                 key={lead.id} 
                 className={`cursor-pointer hover:bg-muted/50 ${isEnrichingThis ? 'bg-emerald-50 dark:bg-emerald-950/20 border-l-4 border-l-emerald-500' : ''}`}
               >
-                <TableCell className="font-medium">{lead.company_name}</TableCell>
-                <TableCell>
-                  <div className="text-sm">
-                    {lead.full_name || lead.contact_person || 
-                     (lead.first_name && lead.last_name ? `${lead.first_name} ${lead.last_name}` : 
-                      lead.first_name || "-")}
-                  </div>
-                </TableCell>
-                <TableCell className="text-sm text-muted-foreground">
-                  {lead.job_title || "-"}
-                </TableCell>
-                <TableCell className="text-sm text-muted-foreground">
-                  {lead.city || lead.location || lead.region_name || "-"}
-                </TableCell>
-                <TableCell>
-                  <div className="text-sm space-y-1">
-                    {lead.email && (
-                      <div className="flex items-center gap-1 text-muted-foreground">
-                        <Mail className="h-3 w-3" />
-                        {lead.email}
+                {viewMode === 'contacts' ? (
+                  <>
+                    {/* Person-focused view */}
+                    <TableCell>
+                      <div className="flex items-center gap-3">
+                        <Avatar className="h-10 w-10">
+                          <AvatarFallback className="bg-gradient-to-br from-purple-500 to-pink-500 text-white font-semibold">
+                            {(lead.full_name || lead.first_name || lead.contact_person || 'U')
+                              .split(' ')
+                              .map(n => n[0])
+                              .slice(0, 2)
+                              .join('')
+                              .toUpperCase()}
+                          </AvatarFallback>
+                        </Avatar>
+                        <div>
+                          <div className="font-semibold">
+                            {lead.full_name || lead.contact_person || 
+                             (lead.first_name && lead.last_name ? `${lead.first_name} ${lead.last_name}` : 
+                              lead.first_name || "-")}
+                          </div>
+                          {lead.linkedin && (
+                            <a 
+                              href={lead.linkedin.startsWith('http') ? lead.linkedin : `https://${lead.linkedin}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-blue-600 hover:underline text-xs flex items-center gap-1"
+                              onClick={(e) => e.stopPropagation()}
+                            >
+                              <Linkedin className="h-3 w-3" />
+                              LinkedIn
+                            </a>
+                          )}
+                        </div>
                       </div>
-                    )}
-                    {lead.phone && (
-                      <div className="flex items-center gap-1 text-muted-foreground">
-                        <Phone className="h-3 w-3" />
-                        {lead.phone}
+                    </TableCell>
+                    <TableCell>
+                      <div className="text-sm">
+                        <div className="font-medium">{lead.job_title || "-"}</div>
+                        {lead.job_seniority_level && (
+                          <div className="text-xs text-muted-foreground capitalize">
+                            {lead.job_seniority_level}
+                          </div>
+                        )}
                       </div>
-                    )}
-                    {lead.linkedin && (
-                      <a 
-                        href={lead.linkedin.startsWith('http') ? lead.linkedin : `https://${lead.linkedin}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-blue-600 hover:underline text-xs"
-                        onClick={(e) => e.stopPropagation()}
-                      >
-                        LinkedIn
-                      </a>
-                    )}
-                  </div>
-                </TableCell>
+                    </TableCell>
+                    <TableCell className="text-sm text-muted-foreground">
+                      {lead.company_name}
+                    </TableCell>
+                    <TableCell className="text-sm text-muted-foreground">
+                      {lead.city || lead.location || lead.region_name || "-"}
+                    </TableCell>
+                    <TableCell>
+                      <div className="text-sm space-y-1">
+                        {lead.email && (
+                          <div className="flex items-center gap-1 text-muted-foreground">
+                            <Mail className="h-3 w-3" />
+                            <span className="truncate max-w-[150px]">{lead.email}</span>
+                          </div>
+                        )}
+                        {lead.phone && (
+                          <div className="flex items-center gap-1 text-muted-foreground">
+                            <Phone className="h-3 w-3" />
+                            {lead.phone}
+                          </div>
+                        )}
+                      </div>
+                    </TableCell>
+                  </>
+                ) : (
+                  <>
+                    {/* Organization-focused view */}
+                    <TableCell className="font-medium">{lead.company_name}</TableCell>
+                    <TableCell>
+                      <div className="text-sm">
+                        {lead.full_name || lead.contact_person || 
+                         (lead.first_name && lead.last_name ? `${lead.first_name} ${lead.last_name}` : 
+                          lead.first_name || "-")}
+                      </div>
+                    </TableCell>
+                    <TableCell className="text-sm text-muted-foreground">
+                      {lead.job_title || "-"}
+                    </TableCell>
+                    <TableCell className="text-sm text-muted-foreground">
+                      {lead.city || lead.location || lead.region_name || "-"}
+                    </TableCell>
+                    <TableCell>
+                      <div className="text-sm space-y-1">
+                        {lead.email && (
+                          <div className="flex items-center gap-1 text-muted-foreground">
+                            <Mail className="h-3 w-3" />
+                            {lead.email}
+                          </div>
+                        )}
+                        {lead.phone && (
+                          <div className="flex items-center gap-1 text-muted-foreground">
+                            <Phone className="h-3 w-3" />
+                            {lead.phone}
+                          </div>
+                        )}
+                        {lead.linkedin && (
+                          <a 
+                            href={lead.linkedin.startsWith('http') ? lead.linkedin : `https://${lead.linkedin}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-blue-600 hover:underline text-xs"
+                            onClick={(e) => e.stopPropagation()}
+                          >
+                            LinkedIn
+                          </a>
+                        )}
+                      </div>
+                    </TableCell>
+                  </>
+                )}
                 <TableCell>
                   {lead.ai_score ? (
                     <Badge variant={lead.ai_score >= 80 ? "default" : "secondary"}>
@@ -164,34 +256,36 @@ export function LeadsTable({ leads, onViewDetails, onBulkEnrich, isBulkEnriching
                     {statusLabels[lead.status]}
                   </Badge>
                 </TableCell>
-                <TableCell>
-                  {lead.status === 'new' ? (
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={(e) => handleEnrich(lead.id, e)}
-                      disabled={isEnrichingThis}
-                      className="gap-1"
-                    >
-                      {isEnrichingThis ? (
-                        <>
-                          <Loader2 className="h-3 w-3 animate-spin" />
-                          Berikar...
-                        </>
-                      ) : (
-                        <>
-                          <Sparkles className="h-3 w-3" />
-                          Berika
-                        </>
-                      )}
-                    </Button>
-                  ) : (
-                    <div className="flex items-center gap-1 text-emerald-600 dark:text-emerald-400 text-sm">
-                      <Sparkles className="h-3 w-3" />
-                      Berikad
-                    </div>
-                  )}
-                </TableCell>
+                {viewMode !== 'contacts' && (
+                  <TableCell>
+                    {lead.status === 'new' ? (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={(e) => handleEnrich(lead.id, e)}
+                        disabled={isEnrichingThis}
+                        className="gap-1"
+                      >
+                        {isEnrichingThis ? (
+                          <>
+                            <Loader2 className="h-3 w-3 animate-spin" />
+                            Berikar...
+                          </>
+                        ) : (
+                          <>
+                            <Sparkles className="h-3 w-3" />
+                            Berika
+                          </>
+                        )}
+                      </Button>
+                    ) : (
+                      <div className="flex items-center gap-1 text-emerald-600 dark:text-emerald-400 text-sm">
+                        <Sparkles className="h-3 w-3" />
+                        Berikad
+                      </div>
+                    )}
+                  </TableCell>
+                )}
                 <TableCell className="text-sm text-muted-foreground">
                   {format(new Date(lead.created_at), "yyyy-MM-dd")}
                 </TableCell>

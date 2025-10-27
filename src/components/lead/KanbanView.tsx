@@ -5,9 +5,10 @@ import { LeadCard } from "./LeadCard";
 interface KanbanViewProps {
   leads: Lead[];
   onViewDetails: (lead: Lead) => void;
+  viewMode?: 'organizations' | 'contacts';
 }
 
-export function KanbanView({ leads, onViewDetails }: KanbanViewProps) {
+export function KanbanView({ leads, onViewDetails, viewMode = 'organizations' }: KanbanViewProps) {
   const columns = [
     { status: 'new', title: 'Nya', color: 'border-t-blue-500' },
     { status: 'enriched', title: 'Berikade', color: 'border-t-emerald-500' },
@@ -47,6 +48,7 @@ export function KanbanView({ leads, onViewDetails }: KanbanViewProps) {
                     key={lead.id} 
                     lead={lead} 
                     onViewDetails={onViewDetails}
+                    viewMode={viewMode}
                   />
                 ))
               )}

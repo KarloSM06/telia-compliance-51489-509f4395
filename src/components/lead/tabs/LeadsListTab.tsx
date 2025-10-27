@@ -143,9 +143,17 @@ export const LeadsListTab = () => {
       ) : (
         <div>
           {view === 'table' ? (
-            <LeadsTable leads={filteredLeads} onViewDetails={handleViewDetails} />
+            <LeadsTable 
+              leads={filteredLeads} 
+              onViewDetails={handleViewDetails}
+              viewMode={listType}
+            />
           ) : (
-            <KanbanView leads={filteredLeads} onViewDetails={handleViewDetails} />
+            <KanbanView 
+              leads={filteredLeads} 
+              onViewDetails={handleViewDetails}
+              viewMode={listType}
+            />
           )}
         </div>
       )}
