@@ -1,5 +1,6 @@
 import { TrendingUp, Sparkles, Wrench, ShoppingCart, BarChart3, Award, type LucideIcon } from "lucide-react";
 import marketingAutomationImage from "@/assets/marketing-automation-ai.png";
+import serviceOperationsImage from "@/assets/service-operations.png";
 
 export interface Package {
   id: string;
@@ -74,6 +75,7 @@ export const aiPackages: Package[] = [
     icon: Wrench,
     tagline: 'Optimera din serviceverksamhet',
     targetAudience: 'Serviceföretag, hantverk, B2C-tjänster',
+    image: serviceOperationsImage,
     components: [
       'AI-receptionist för bokningar',
       'Automatiserade notifieringar',
