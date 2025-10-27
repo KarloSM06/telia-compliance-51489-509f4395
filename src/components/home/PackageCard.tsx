@@ -5,66 +5,71 @@ import type { Package } from "@/data/packages";
 interface PackageCardProps {
   package: Package;
   onBookDemo: () => void;
+  imagePosition?: 'left' | 'right';
 }
 export const PackageCard = ({
   package: pkg,
-  onBookDemo
+  onBookDemo,
+  imagePosition = 'left'
 }: PackageCardProps) => {
   const Icon = pkg.icon;
-  return <Card className="h-full flex flex-col lg:flex-row hover:shadow-2xl transition-all duration-500 border-2 hover:border-primary/30 overflow-hidden bg-gradient-to-br from-white/5 to-white/10">
-      {pkg.image && (
-        <div className="lg:w-1/3 relative overflow-hidden min-h-[300px] lg:min-h-[400px]">
+  const isImageLeft = imagePosition === 'left';
+  
+  return <Card className="h-[500px] flex flex-col lg:flex-row hover:shadow-2xl transition-all duration-500 border-2 hover:border-primary/30 overflow-hidden bg-gradient-to-br from-white/5 to-white/10">
+      <div className={`lg:w-2/5 relative overflow-hidden bg-muted/20 flex-shrink-0 ${isImageLeft ? 'lg:order-1' : 'lg:order-2'}`}>
+        {pkg.image ? (
           <img 
             src={pkg.image} 
             alt={pkg.name}
-            className="w-full h-full object-cover hover:scale-110 transition-transform duration-700"
+            className="w-full h-full object-cover object-center hover:scale-110 transition-transform duration-700"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-background/80 to-transparent lg:block hidden" />
-        </div>
-      )}
+        ) : (
+          <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary/10 to-primary/5">
+            <Icon className="h-32 w-32 text-primary/30" />
+          </div>
+        )}
+      </div>
       
-      <div className="flex-1 flex flex-row items-center">
-        <div className="w-full grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8 p-8 lg:p-10">
+      <div className={`flex-1 flex flex-row items-center ${isImageLeft ? 'lg:order-2' : 'lg:order-1'}`}>
+        <div className="w-full grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-6 p-6 lg:p-8">
           <div className="lg:col-span-1">
-            <div className="mb-4 p-3 bg-primary/10 rounded-xl w-fit">
-              <Icon className="h-12 w-12 text-primary" />
+            <div className="mb-3 p-2 bg-primary/10 rounded-lg w-fit">
+              <Icon className="h-8 w-8 text-primary" />
             </div>
-            <CardTitle className="text-3xl lg:text-4xl mb-3 leading-tight">{pkg.name}</CardTitle>
-            <p className="text-base lg:text-lg text-muted-foreground mb-3">{pkg.targetAudience}</p>
+            <CardTitle className="text-2xl lg:text-3xl mb-2 leading-tight">{pkg.name}</CardTitle>
+            <p className="text-sm lg:text-base text-muted-foreground mb-2">{pkg.targetAudience}</p>
             {pkg.description && (
-              <p className="text-sm lg:text-base leading-relaxed text-foreground/80">
+              <p className="text-xs lg:text-sm leading-relaxed text-foreground/70 line-clamp-4">
                 {pkg.description}
               </p>
             )}
           </div>
           
           <div className="lg:col-span-1">
-            <h4 className="text-lg font-semibold mb-4">Nyckelfunktioner</h4>
-            <div className="space-y-3">
-              {pkg.components.map((component, index) => <div key={index} className="flex items-start gap-3">
-                  <CheckCircle className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
-                  <span className="text-sm lg:text-base">{component}</span>
+            <h4 className="text-base font-semibold mb-3">Nyckelfunktioner</h4>
+            <div className="space-y-2">
+              {pkg.components.map((component, index) => <div key={index} className="flex items-start gap-2">
+                  <CheckCircle className="h-4 w-4 text-primary mt-0.5 flex-shrink-0" />
+                  <span className="text-xs lg:text-sm leading-snug">{component}</span>
                 </div>)}
             </div>
           </div>
           
           <div className="lg:col-span-1 flex flex-col justify-between">
             <div>
-              <h4 className="text-lg font-semibold mb-4">Fördelar</h4>
-              <div className="space-y-3 mb-6">
-                {pkg.valueBullets.map((bullet, index) => <div key={index} className="flex items-start gap-3">
-                    <CheckCircle className="h-5 w-5 text-accent mt-0.5 flex-shrink-0" />
-                    <span className="text-sm lg:text-base font-medium">{bullet}</span>
+              <h4 className="text-base font-semibold mb-3">Fördelar</h4>
+              <div className="space-y-2 mb-4">
+                {pkg.valueBullets.map((bullet, index) => <div key={index} className="flex items-start gap-2">
+                    <CheckCircle className="h-4 w-4 text-accent mt-0.5 flex-shrink-0" />
+                    <span className="text-xs lg:text-sm font-medium leading-snug">{bullet}</span>
                   </div>)}
               </div>
             </div>
-            <Button size="lg" className="w-full text-base py-6 bg-gradient-to-r from-primary to-primary/80 hover:shadow-2xl hover:scale-105 transition-all" onClick={onBookDemo}>
+            <Button size="default" className="w-full text-sm py-5 bg-gradient-to-r from-primary to-primary/80 hover:shadow-xl hover:scale-105 transition-all" onClick={onBookDemo}>
               Boka demo
             </Button>
           </div>
         </div>
       </div>
-        
-        
     </Card>;
 };

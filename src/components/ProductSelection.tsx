@@ -111,7 +111,7 @@ export const ProductSelection = () => {
             </p>
           </AnimatedSection>
           
-        <div className="max-w-[2000px] mx-auto space-y-16 mb-12">
+        <div className="max-w-[1800px] mx-auto space-y-12 mb-12">
           {aiPackages.map((pkg, index) => (
             <AnimatedSection 
               key={pkg.id} 
@@ -120,6 +120,7 @@ export const ProductSelection = () => {
             >
               <PackageCard 
                 package={pkg} 
+                imagePosition={index % 2 === 0 ? 'left' : 'right'}
                 onBookDemo={() => setIsConsultationModalOpen(true)}
               />
             </AnimatedSection>
