@@ -1,11 +1,7 @@
-import { LeadSection } from "@/components/dashboard/LeadSection";
+import { LeadProviderSelector } from "@/components/lead/LeadProviderSelector";
 
 const LeadPage = () => {
-  return (
-    <div className="animate-fade-in">
-      <LeadSection />
-    </div>
-  );
+  return <LeadProviderSelector />;
 };
 
 export default LeadPage;

@@ -27,6 +27,8 @@ const KronoPage = lazy(() => import("./pages/KronoPage"));
 const GastroPage = lazy(() => import("./pages/GastroPage"));
 const TalentPage = lazy(() => import("./pages/TalentPage"));
 const LeadPage = lazy(() => import("./pages/LeadPage"));
+const EniroLeadPage = lazy(() => import("./pages/EniroLeadPage"));
+const ClaudeLinkedInLeadPage = lazy(() => import("./pages/ClaudeLinkedInLeadPage"));
 const ThorPage = lazy(() => import("./pages/ThorPage"));
 const EkoPage = lazy(() => import("./pages/EkoPage"));
 const CalendarPage = lazy(() => import("./pages/CalendarPage"));
@@ -79,6 +81,8 @@ const App = () => (
               <Route path="/dashboard/gastro" element={<DashboardLayout><GastroPage /></DashboardLayout>} />
               <Route path="/dashboard/talent" element={<DashboardLayout><TalentPage /></DashboardLayout>} />
               <Route path="/dashboard/lead" element={<DashboardLayout><LeadPage /></DashboardLayout>} />
+              <Route path="/dashboard/lead/eniro" element={<DashboardLayout><EniroLeadPage /></DashboardLayout>} />
+              <Route path="/dashboard/lead/claude-linkedin" element={<DashboardLayout><ClaudeLinkedInLeadPage /></DashboardLayout>} />
               <Route path="/dashboard/thor" element={<DashboardLayout><ThorPage /></DashboardLayout>} />
               <Route path="/dashboard/eko" element={<DashboardLayout><EkoPage /></DashboardLayout>} />
               <Route path="/dashboard/calendar" element={<DashboardLayout><CalendarPage /></DashboardLayout>} />

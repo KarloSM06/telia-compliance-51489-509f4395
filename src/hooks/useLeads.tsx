@@ -47,7 +47,7 @@ export interface LeadActivity {
   created_at: string;
 }
 
-export const useLeads = () => {
+export const useLeads = (provider?: string) => {
   const { user } = useAuth();
   const [leads, setLeads] = useState<Lead[]>([]);
   const [loading, setLoading] = useState(true);
@@ -86,10 +86,15 @@ export const useLeads = () => {
     if (!user) return;
 
     setLoading(true);
-    const { data, error } = await supabase
+    let query = supabase
       .from('leads')
-      .select('*')
-      .order('created_at', { ascending: false });
+      .select('*');
+
+    if (provider) {
+      query = query.eq('provider', provider);
+    }
+
+    const { data, error } = await query.order('created_at', { ascending: false });
 
     if (error) {
       console.error('Error fetching leads:', error);

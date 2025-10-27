@@ -33,7 +33,7 @@ export interface CreateLeadSearchData {
 
 const N8N_WEBHOOK_URL = "https://n8n.srv1053222.hstgr.cloud/webhook-test/007abc28-2188-4bd0-989c-b086b935e25e";
 
-export const useLeadSearches = () => {
+export const useLeadSearches = (provider?: string) => {
   const { user } = useAuth();
   const [searches, setSearches] = useState<LeadSearch[]>([]);
   const [loading, setLoading] = useState(true);
@@ -72,10 +72,15 @@ export const useLeadSearches = () => {
     if (!user) return;
 
     setLoading(true);
-    const { data, error } = await supabase
+    let query = supabase
       .from('lead_searches')
-      .select('*')
-      .order('created_at', { ascending: false });
+      .select('*');
+
+    if (provider) {
+      query = query.eq('provider', provider);
+    }
+
+    const { data, error } = await query.order('created_at', { ascending: false });
 
     if (error) {
       console.error('Error fetching lead searches:', error);

@@ -934,6 +934,36 @@ export type Database = {
           },
         ]
       }
+      lead_chat_messages: {
+        Row: {
+          content: string
+          created_at: string | null
+          id: string
+          metadata: Json | null
+          provider: string
+          role: string
+          user_id: string
+        }
+        Insert: {
+          content: string
+          created_at?: string | null
+          id?: string
+          metadata?: Json | null
+          provider?: string
+          role: string
+          user_id: string
+        }
+        Update: {
+          content?: string
+          created_at?: string | null
+          id?: string
+          metadata?: Json | null
+          provider?: string
+          role?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       lead_searches: {
         Row: {
           apartment_range: string | null
@@ -952,6 +982,7 @@ export type Database = {
           monthly_fee_range: string | null
           organization_id: string | null
           organization_type: string | null
+          provider: string | null
           revenue_range: string | null
           search_name: string
           status: string
@@ -975,6 +1006,7 @@ export type Database = {
           monthly_fee_range?: string | null
           organization_id?: string | null
           organization_type?: string | null
+          provider?: string | null
           revenue_range?: string | null
           search_name: string
           status?: string
@@ -998,6 +1030,7 @@ export type Database = {
           monthly_fee_range?: string | null
           organization_id?: string | null
           organization_type?: string | null
+          provider?: string | null
           revenue_range?: string | null
           search_name?: string
           status?: string
@@ -1082,6 +1115,7 @@ export type Database = {
           phone: string | null
           Postal_Area: string | null
           priority: string | null
+          provider: string | null
           search_id: string | null
           source: string | null
           status: string
@@ -1125,6 +1159,7 @@ export type Database = {
           phone?: string | null
           Postal_Area?: string | null
           priority?: string | null
+          provider?: string | null
           search_id?: string | null
           source?: string | null
           status?: string
@@ -1168,6 +1203,7 @@ export type Database = {
           phone?: string | null
           Postal_Area?: string | null
           priority?: string | null
+          provider?: string | null
           search_id?: string | null
           source?: string | null
           status?: string
