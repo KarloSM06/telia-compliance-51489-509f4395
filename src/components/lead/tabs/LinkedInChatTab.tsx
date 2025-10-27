@@ -6,8 +6,8 @@ import linkedinLogo from "@/assets/linkedin-icon.webp";
 
 export const LinkedInChatTab = () => {
   return (
-    <div className="space-y-6">
-      <Card>
+    <div className="h-full flex flex-col min-h-0">
+      <Card className="flex-1 flex flex-col min-h-0">
         <CardHeader className="border-b-4 border-[#D97642]">
           <div className="flex items-center gap-3">
             <div className="flex items-center gap-2">
@@ -23,7 +23,7 @@ export const LinkedInChatTab = () => {
             </div>
           </div>
         </CardHeader>
-        <CardContent className="p-0">
+        <CardContent className="flex-1 flex flex-col p-0 min-h-0">
           <div className="bg-muted/30 border-b p-4">
             <div className="text-sm space-y-2">
               <p className="font-semibold text-base">Hur det fungerar:</p>
@@ -34,7 +34,7 @@ export const LinkedInChatTab = () => {
               </ol>
             </div>
           </div>
-          <div className="h-[calc(100vh-400px)]">
+          <div className="flex-1 min-h-0">
             <LeadChatInterface />
           </div>
         </CardContent>
