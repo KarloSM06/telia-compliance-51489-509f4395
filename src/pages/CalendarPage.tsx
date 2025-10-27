@@ -7,12 +7,13 @@ import { CalendarView } from "@/components/calendar/CalendarView";
 import { DayView } from "@/components/calendar/DayView";
 import { WeekView } from "@/components/calendar/WeekView";
 import { YearView } from "@/components/calendar/YearView";
+import { TimelineView } from "@/components/calendar/TimelineView";
 import { EventModal } from "@/components/calendar/EventModal";
 import { IntegrationSetupModal } from "@/components/calendar/IntegrationSetupModal";
 import { AvailabilitySettings } from "@/components/calendar/AvailabilitySettings";
 import { useCalendarEvents, CalendarEvent } from "@/hooks/useCalendarEvents";
 import { useBookingIntegrations } from "@/hooks/useBookingIntegrations";
-import { Plus, Settings, Calendar, CalendarDays, CalendarRange, CalendarClock } from "lucide-react";
+import { Plus, Settings, Calendar, CalendarDays, CalendarRange, CalendarClock, List } from "lucide-react";
 import { addMinutes, isSameDay, startOfWeek, endOfWeek, isWithinInterval, format } from "date-fns";
 import { sv } from "date-fns/locale";
 import { checkEventConflicts } from "@/lib/calendarUtils";
@@ -24,7 +25,7 @@ const CalendarPage = () => {
   const { events, loading, createEvent, updateEvent, deleteEvent } = useCalendarEvents();
   const { integrations, createIntegration, updateIntegration, deleteIntegration, triggerSync } = useBookingIntegrations();
   
-  const [currentView, setCurrentView] = useState<'month' | 'week' | 'day' | 'year'>('month');
+  const [currentView, setCurrentView] = useState<'month' | 'week' | 'day' | 'year' | 'timeline'>('month');
   const [selectedDay, setSelectedDay] = useState<Date>(new Date());
   const [showEventModal, setShowEventModal] = useState(false);
   const [showIntegrationModal, setShowIntegrationModal] = useState(false);
@@ -169,6 +170,15 @@ const CalendarPage = () => {
                   <CalendarDays className="h-4 w-4" />
                   Dag
                 </Button>
+                <Button
+                  variant={currentView === 'timeline' ? 'default' : 'ghost'}
+                  size="sm"
+                  onClick={() => setCurrentView('timeline')}
+                  className="gap-2"
+                >
+                  <List className="h-4 w-4" />
+                  Timeline
+                </Button>
               </div>
               
               <Button onClick={() => setShowIntegrationModal(true)} variant="outline" className="gap-2">
@@ -275,6 +285,17 @@ const CalendarPage = () => {
           selectedEvent={selectedEvent}
           onCloseModal={handleCloseModal}
           onEventSave={handleEventSave}
+          onMonthViewClick={() => setCurrentView('month')}
+        />
+      )}
+
+      {/* Timeline view */}
+      {currentView === 'timeline' && (
+        <TimelineView
+          events={events}
+          onEventClick={handleEventClick}
+          onEventSave={handleEventSave}
+          onEventDelete={deleteEvent}
         />
       )}
 

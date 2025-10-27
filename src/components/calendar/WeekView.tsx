@@ -8,6 +8,7 @@ import { EventBlock } from './EventBlock';
 import { CurrentTimeIndicator } from './CurrentTimeIndicator';
 import { EventDragPreview } from './EventDragPreview';
 import { EventModal } from './EventModal';
+import { MiniCalendarPanel } from './MiniCalendarPanel';
 import { layoutOverlappingEvents, getEventPosition } from '@/lib/calendarUtils';
 import { useOptimizedEventInteraction } from '@/hooks/useOptimizedEventInteraction';
 import { usePendingEventChanges } from '@/hooks/usePendingEventChanges';
@@ -30,6 +31,7 @@ interface WeekViewProps {
   selectedEvent: CalendarEvent | null;
   onCloseModal: () => void;
   onEventSave: (eventData: Partial<CalendarEvent>) => Promise<void>;
+  onMonthViewClick?: () => void;
 }
 export const WeekView = ({
   date,
@@ -43,7 +45,8 @@ export const WeekView = ({
   showEventModal,
   selectedEvent,
   onCloseModal,
-  onEventSave
+  onEventSave,
+  onMonthViewClick
 }: WeekViewProps) => {
   const { timezone } = useUserTimezone();
   const { settings } = useProfileSettings();
@@ -176,9 +179,11 @@ export const WeekView = ({
     });
     return layoutOverlappingEvents(dayEvents, timezone);
   };
-  return <div className="flex flex-col h-full">
-      {/* Header */}
-      <div className="flex items-center justify-between p-4 border-b">
+  return <div className="flex h-full gap-4">
+      {/* Main calendar area */}
+      <div className="flex-1 flex flex-col min-w-0">
+        {/* Header */}
+        <div className="flex items-center justify-between p-4 border-b">
         <div className="flex items-center gap-4">
           <Button variant="outline" size="sm" onClick={onBackToMonth}>
             <CalendarIcon className="h-4 w-4 mr-2" />
@@ -331,7 +336,21 @@ export const WeekView = ({
         </div>
       </div>
 
-      {/* Event Modal with pending changes support */}
-      {showEventModal && <EventModal open={showEventModal} onClose={onCloseModal} event={selectedEvent} onSave={onEventSave} onDelete={onDelete} pendingChanges={selectedEvent ? pendingChanges.get(selectedEvent.id) : undefined} />}
+        {/* Event Modal with pending changes support */}
+        {showEventModal && <EventModal open={showEventModal} onClose={onCloseModal} event={selectedEvent} onSave={onEventSave} onDelete={onDelete} pendingChanges={selectedEvent ? pendingChanges.get(selectedEvent.id) : undefined} />}
+      </div>
+
+      {/* Mini Calendar Panel - Desktop Only */}
+      <div className="hidden lg:block w-[280px] flex-shrink-0">
+        <div className="sticky top-4 mt-4">
+          <MiniCalendarPanel
+            selectedDate={date}
+            events={events}
+            onMonthViewClick={() => onMonthViewClick?.()}
+            onDateSelect={onDateChange}
+            onEventClick={onEventClick}
+          />
+        </div>
+      </div>
     </div>;
 };
