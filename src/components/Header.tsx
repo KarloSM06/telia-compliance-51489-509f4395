@@ -84,20 +84,15 @@ export const Header = () => {
           <div className="flex items-center">
             <button 
               onClick={() => navigate("/")}
-              className="flex flex-col group transition-all duration-300 hover:scale-[1.02]"
+              className="flex items-center space-x-3 group transition-all duration-300 hover:scale-[1.02]"
             >
-              <div className="flex items-center space-x-3">
-                <img 
-                  src={hiems_logo} 
-                  alt="Hiems logo" 
-                  className="h-14 w-14 rounded-xl shadow-md transition-all duration-300 group-hover:shadow-glow group-hover:rotate-3" 
-                />
-                <span className="text-3xl font-bold bg-gradient-primary bg-clip-text text-transparent transition-all duration-300 group-hover:tracking-wide">
-                  Hiems
-                </span>
-              </div>
-              <span className="text-[10px] text-muted-foreground ml-[4.5rem] mt-1">
-                Skräddarsydda AI-ekosystem som transformerar ditt företag
+              <img 
+                src={hiems_logo} 
+                alt="Hiems logo" 
+                className="h-14 w-14 rounded-xl shadow-md transition-all duration-300 group-hover:shadow-glow group-hover:rotate-3" 
+              />
+              <span className="text-3xl font-bold bg-gradient-primary bg-clip-text text-transparent transition-all duration-300 group-hover:tracking-wide">
+                Hiems
               </span>
             </button>
           </div>
@@ -105,42 +100,45 @@ export const Header = () => {
           {/* Desktop Navigation */}
           {!user && (
             <nav className="hidden lg:flex items-center space-x-10">
-              <a href="/" className="relative text-sm font-medium text-muted-foreground hover:text-foreground transition-colors group">
-                Hem
-                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-gold transition-all duration-300 group-hover:w-full" />
-              </a>
-              <button 
-                onClick={() => document.getElementById('packages')?.scrollIntoView({ behavior: 'smooth' })}
-                className="relative text-sm font-medium text-muted-foreground hover:text-foreground transition-colors group"
-              >
-                Lösningar
-                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-gold transition-all duration-300 group-hover:w-full" />
-              </button>
-              <button 
-                onClick={() => document.getElementById('industries')?.scrollIntoView({ behavior: 'smooth' })}
-                className="relative text-sm font-medium text-muted-foreground hover:text-foreground transition-colors group"
-              >
-                Bransch
-                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-gold transition-all duration-300 group-hover:w-full" />
-              </button>
-              <button 
-                onClick={() => document.getElementById('cases')?.scrollIntoView({ behavior: 'smooth' })}
-                className="relative text-sm font-medium text-muted-foreground hover:text-foreground transition-colors group"
-              >
-                Case
-                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-gold transition-all duration-300 group-hover:w-full" />
-              </button>
               <a href="/om-oss" className="relative text-sm font-medium text-muted-foreground hover:text-foreground transition-colors group">
                 Om oss
                 <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-gold transition-all duration-300 group-hover:w-full" />
               </a>
-              <button 
-                onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
-                className="relative text-sm font-medium text-muted-foreground hover:text-foreground transition-colors group"
-              >
-                Kontakt
+              <a href="/regelverk" className="relative text-sm font-medium text-muted-foreground hover:text-foreground transition-colors group">
+                Regelverk
                 <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-gold transition-all duration-300 group-hover:w-full" />
-              </button>
+              </a>
+              <Dialog open={isNewsletterOpen} onOpenChange={setIsNewsletterOpen}>
+                <DialogTrigger asChild>
+                  <button className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
+                    Nyhetsbrev
+                  </button>
+                </DialogTrigger>
+                <DialogContent className="sm:max-w-md">
+                  <DialogHeader>
+                    <DialogTitle>Gå med i Hiems nyhetsbrev – helt gratis!</DialogTitle>
+                    <DialogDescription>
+                      Få de senaste tipsen, insikterna och verktygen inom AI-driven automation direkt i din inkorg – utan kostnad. Lär dig hur du kan effektivisera ditt företag, spara tid och öka lönsamheten.
+                    </DialogDescription>
+                  </DialogHeader>
+                  <form onSubmit={handleNewsletterSubmit} className="space-y-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="newsletter-email">Ange din e-postadress och börja prenumerera helt gratis idag!</Label>
+                      <Input
+                        id="newsletter-email"
+                        type="email"
+                        placeholder="E-postadress"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        required
+                      />
+                    </div>
+                    <Button type="submit" className="w-full">
+                      Gå med gratis
+                    </Button>
+                  </form>
+                </DialogContent>
+              </Dialog>
             </nav>
           )}
           
@@ -214,7 +212,7 @@ export const Header = () => {
                 onClick={() => setIsReceptionistOpen(true)}
                 size="sm"
               >
-                Boka demo
+                Prova vår receptionist
               </Button>
             </div>
           </div>
@@ -233,47 +231,17 @@ export const Header = () => {
               
               {!user && (
                 <>
-                  <a href="/" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors py-2" onClick={() => setIsMobileMenuOpen(false)}>
-                    Hem
-                  </a>
-                  <button 
-                    onClick={() => {
-                      document.getElementById('packages')?.scrollIntoView({ behavior: 'smooth' });
-                      setIsMobileMenuOpen(false);
-                    }}
-                    className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors py-2 text-left"
-                  >
-                    Lösningar
-                  </button>
-                  <button 
-                    onClick={() => {
-                      document.getElementById('industries')?.scrollIntoView({ behavior: 'smooth' });
-                      setIsMobileMenuOpen(false);
-                    }}
-                    className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors py-2 text-left"
-                  >
-                    Bransch
-                  </button>
-                  <button 
-                    onClick={() => {
-                      document.getElementById('cases')?.scrollIntoView({ behavior: 'smooth' });
-                      setIsMobileMenuOpen(false);
-                    }}
-                    className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors py-2 text-left"
-                  >
-                    Case
-                  </button>
-                  <a href="/om-oss" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors py-2" onClick={() => setIsMobileMenuOpen(false)}>
+                  <a href="/om-oss" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors py-2">
                     Om oss
                   </a>
+                  <a href="/regelverk" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors py-2">
+                    Regelverk
+                  </a>
                   <button 
-                    onClick={() => {
-                      document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
-                      setIsMobileMenuOpen(false);
-                    }}
+                    onClick={() => setIsNewsletterOpen(true)}
                     className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors py-2 text-left"
                   >
-                    Kontakt
+                    Nyhetsbrev
                   </button>
                 </>
               )}
@@ -338,7 +306,7 @@ export const Header = () => {
                   setIsMobileMenuOpen(false);
                 }}
               >
-                Boka demo
+                Prova vår receptionist
               </Button>
               </div>
             </div>
