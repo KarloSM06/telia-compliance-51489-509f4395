@@ -71,7 +71,7 @@ export const ConversationList = ({
               <div
                 key={conv.id}
                 className={cn(
-                  "group relative flex items-start gap-3 p-3 rounded-lg cursor-pointer transition-colors",
+                  "group relative flex items-start gap-2 p-3 rounded-lg cursor-pointer transition-colors",
                   "hover:bg-accent",
                   currentConversationId === conv.id && "bg-accent"
                 )}
@@ -79,18 +79,18 @@ export const ConversationList = ({
               >
                 <MessageSquare className="h-4 w-4 mt-0.5 flex-shrink-0" />
                 
-                <div className="flex-1 min-w-0">
+                <div className="flex-1 min-w-0 overflow-hidden">
                   <p className="text-sm font-medium truncate">
                     {conv.title || 'Ny konversation'}
                   </p>
                   <div className="flex items-center gap-2 mt-1">
-                    <span className="text-xs text-muted-foreground">
+                    <span className="text-xs text-muted-foreground truncate">
                       {conv.message_count} meddelanden
                     </span>
                     <span className="text-xs text-muted-foreground">
                       •
                     </span>
-                    <span className="text-xs text-muted-foreground">
+                    <span className="text-xs text-muted-foreground truncate">
                       {formatDate(conv.updated_at)}
                     </span>
                   </div>
@@ -101,7 +101,7 @@ export const ConversationList = ({
                     <Button
                       variant="ghost"
                       size="icon"
-                      className="h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity"
+                      className="h-8 w-8 flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity"
                       onClick={(e) => e.stopPropagation()}
                     >
                       <Trash2 className="h-4 w-4" />
