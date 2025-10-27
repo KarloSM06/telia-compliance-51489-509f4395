@@ -546,7 +546,7 @@ export const ProductSelection = () => {
       </section>
 
       {/* Om oss Section */}
-      <section id="about" className="relative py-32 bg-gradient-to-b from-background via-primary/10 to-background">
+      <section id="about" className="relative py-32 bg-primary/20">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <AnimatedSection className="mx-auto max-w-3xl text-center mb-16">
             <div className="inline-flex items-center gap-2 rounded-full bg-accent/10 px-4 py-2 mb-6 backdrop-blur-sm border border-accent/20">
@@ -610,7 +610,7 @@ export const ProductSelection = () => {
                 <img 
                   src={antonImage} 
                   alt="Anton Sallnäs" 
-                  className="w-40 h-40 rounded-full mx-auto mb-6 object-cover border-2 border-accent/30"
+                  className="w-64 h-64 rounded-full mx-auto mb-6 object-cover border-2 border-accent/30"
                   loading="lazy"
                 />
                 <h4 className="text-xl font-bold mb-2">Anton Sallnäs</h4>
@@ -624,7 +624,7 @@ export const ProductSelection = () => {
                 <img 
                   src={karloImage} 
                   alt="Karlo Mangione" 
-                  className="w-40 h-40 rounded-full mx-auto mb-6 object-cover border-2 border-accent/30"
+                  className="w-64 h-64 rounded-full mx-auto mb-6 object-cover border-2 border-accent/30"
                   loading="lazy"
                 />
                 <h4 className="text-xl font-bold mb-2">Karlo Mangione</h4>
@@ -638,7 +638,7 @@ export const ProductSelection = () => {
                 <img 
                   src={emilImage} 
                   alt="Emil Westerberg" 
-                  className="w-40 h-40 rounded-full mx-auto mb-6 object-cover border-2 border-accent/30"
+                  className="w-64 h-64 rounded-full mx-auto mb-6 object-cover border-2 border-accent/30"
                   loading="lazy"
                 />
                 <h4 className="text-xl font-bold mb-2">Emil Westerberg</h4>
@@ -649,8 +649,8 @@ export const ProductSelection = () => {
               </AnimatedSection>
               
               <AnimatedSection delay={300} className="rounded-2xl bg-card backdrop-blur-sm border border-border p-8 text-center hover:border-accent/50 transition-all duration-300 hover:shadow-elegant">
-                <div className="w-40 h-40 rounded-full mx-auto mb-6 bg-gradient-primary flex items-center justify-center border-2 border-accent/30">
-                  <span className="text-4xl font-bold text-white">ME</span>
+                <div className="w-64 h-64 rounded-full mx-auto mb-6 bg-gradient-primary flex items-center justify-center border-2 border-accent/30">
+                  <span className="text-6xl font-bold text-white">ME</span>
                 </div>
                 <h4 className="text-xl font-bold mb-2">Malte Ekbäck</h4>
                 <p className="text-lg text-muted-foreground mb-4">CFO</p>
