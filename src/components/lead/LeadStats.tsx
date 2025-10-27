@@ -51,6 +51,23 @@ export function LeadStats({
     change: "+20%"
   }];
   return <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
-      {statCards.map((stat, index) => {})}
+      {statCards.map((stat, index) => (
+        <Card key={index}>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">
+              {stat.title}
+            </CardTitle>
+            <div className={`p-2 rounded-lg bg-gradient-to-br ${stat.gradient}`}>
+              <stat.icon className="h-4 w-4 text-white" />
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{stat.value}</div>
+            <p className="text-xs text-muted-foreground">
+              {stat.change}
+            </p>
+          </CardContent>
+        </Card>
+      ))}
     </div>;
 }

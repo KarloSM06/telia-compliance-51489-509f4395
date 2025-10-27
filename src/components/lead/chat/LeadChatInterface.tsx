@@ -23,9 +23,19 @@ export const LeadChatInterface = () => {
   const handleSend = async () => {
     if (!input.trim() || sending) return;
     
-    const success = await sendMessage(input);
-    if (success) {
-      setInput("");
+    const userInput = input;
+    setInput("");
+    
+    // Create a temporary assistant message that will be updated with streamed content
+    let streamedContent = "";
+    
+    const success = await sendMessage(userInput, (chunk) => {
+      streamedContent += chunk;
+      // The message will be added to the list via real-time subscription
+    });
+    
+    if (!success) {
+      setInput(userInput); // Restore input on error
     }
   };
 

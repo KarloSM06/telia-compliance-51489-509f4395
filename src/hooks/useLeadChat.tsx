@@ -13,7 +13,7 @@ export interface ChatMessage {
   created_at: string;
 }
 
-const N8N_CHAT_WEBHOOK_URL = "https://n8n.srv1053222.hstgr.cloud/webhook/linkedin-chat";
+const CHAT_URL = "https://shskknkivuewuqonjdjc.supabase.co/functions/v1/linkedin-chat";
 
 export const useLeadChat = (provider: string = 'claude-linkedin') => {
   const { user } = useAuth();
@@ -75,14 +75,14 @@ export const useLeadChat = (provider: string = 'claude-linkedin') => {
     setLoading(false);
   };
 
-  const sendMessage = async (content: string) => {
+  const sendMessage = async (content: string, onChunk?: (chunk: string) => void) => {
     if (!user || !content.trim()) return false;
 
     setSending(true);
 
     try {
       // 1. Save user message to Supabase
-      const { data: userMessage, error: insertError } = await supabase
+      const { error: insertError } = await supabase
         .from('lead_chat_messages' as any)
         .insert({
           user_id: user.id,
@@ -90,36 +90,85 @@ export const useLeadChat = (provider: string = 'claude-linkedin') => {
           role: 'user',
           content: content.trim(),
           metadata: {},
-        })
-        .select()
-        .single();
+        });
 
       if (insertError) {
         throw insertError;
       }
 
-      // 2. Send to n8n webhook for AI processing
-      await fetch(N8N_CHAT_WEBHOOK_URL, {
+      // 2. Get all messages for context
+      const allMessages = messages.map(msg => ({
+        role: msg.role,
+        content: msg.content,
+      }));
+      
+      // Add the new user message
+      allMessages.push({
+        role: 'user' as const,
+        content: content.trim(),
+      });
+
+      // 3. Stream response from AI
+      const response = await fetch(CHAT_URL, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${(await supabase.auth.getSession()).data.session?.access_token}`,
         },
         body: JSON.stringify({
-          user_id: user.id,
-          message: content.trim(),
-          message_id: (userMessage as any)?.id,
-          provider,
-          timestamp: new Date().toISOString(),
+          messages: allMessages,
+          userId: user.id,
         }),
       });
+
+      if (!response.ok || !response.body) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.error || 'Failed to get AI response');
+      }
+
+      // Stream the response
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder();
+      let buffer = '';
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        buffer += decoder.decode(value, { stream: true });
+
+        // Process line by line
+        let newlineIndex: number;
+        while ((newlineIndex = buffer.indexOf('\n')) !== -1) {
+          let line = buffer.slice(0, newlineIndex);
+          buffer = buffer.slice(newlineIndex + 1);
+
+          if (line.endsWith('\r')) line = line.slice(0, -1);
+          if (line.startsWith(':') || line.trim() === '') continue;
+          if (!line.startsWith('data: ')) continue;
+
+          const jsonStr = line.slice(6).trim();
+          if (jsonStr === '[DONE]') break;
+
+          try {
+            const parsed = JSON.parse(jsonStr);
+            const chunk = parsed.choices?.[0]?.delta?.content;
+            if (chunk && onChunk) {
+              onChunk(chunk);
+            }
+          } catch {
+            // Ignore parse errors for incomplete JSON
+          }
+        }
+      }
 
       setSending(false);
       return true;
     } catch (error) {
       console.error('Error sending message:', error);
       toast({
-        title: "Error",
-        description: "Failed to send message",
+        title: "Fel",
+        description: error instanceof Error ? error.message : "Kunde inte skicka meddelande",
         variant: "destructive",
       });
       setSending(false);
