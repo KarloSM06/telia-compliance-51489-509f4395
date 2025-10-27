@@ -110,7 +110,7 @@ export const LeadChatInterface = () => {
               <div className="flex items-center gap-2">
                 <img src={linkedinLogo} alt="LinkedIn" className="h-7 w-7 object-contain" />
                 <span className="text-white/60">×</span>
-                <img src={anthropicLogo} alt="Anthropic" className="h-6 w-6 object-contain" />
+                <img src={anthropicLogo} alt="Anthropic" className="h-7 w-7 object-contain" />
               </div>
               <CardTitle className="text-lg">AI Chat Assistent</CardTitle>
             </div>
@@ -129,7 +129,7 @@ export const LeadChatInterface = () => {
                 <div className="inline-flex items-center gap-3 mb-4">
                   <img src={linkedinLogo} alt="LinkedIn" className="h-12 w-12 object-contain" />
                   <span className="text-2xl text-muted-foreground">×</span>
-                  <img src={anthropicLogo} alt="Anthropic" className="h-10 w-10 object-contain" />
+                  <img src={anthropicLogo} alt="Anthropic" className="h-12 w-12 object-contain" />
                 </div>
                 <h3 className="font-semibold mb-2">Välkommen till AI Lead-assistenten</h3>
                 <p className="text-sm text-muted-foreground">
