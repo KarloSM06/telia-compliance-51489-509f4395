@@ -111,20 +111,20 @@ export const ProductSelection = () => {
             </p>
           </AnimatedSection>
           
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 mb-12">
-            {aiPackages.map((pkg, index) => (
-              <AnimatedSection 
-                key={pkg.id} 
-                delay={index * 200}
-                direction={index % 2 === 0 ? 'left' : 'right'}
-              >
-                <PackageCard 
-                  package={pkg} 
-                  onBookDemo={() => setIsConsultationModalOpen(true)}
-                />
-              </AnimatedSection>
-            ))}
-          </div>
+        <div className="max-w-7xl mx-auto space-y-16 mb-12">
+          {aiPackages.map((pkg, index) => (
+            <AnimatedSection 
+              key={pkg.id} 
+              delay={index * 200}
+              direction="up"
+            >
+              <PackageCard 
+                package={pkg} 
+                onBookDemo={() => setIsConsultationModalOpen(true)}
+              />
+            </AnimatedSection>
+          ))}
+        </div>
         </div>
       </section>
 

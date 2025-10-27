@@ -8,6 +8,7 @@ export interface Package {
   targetAudience: string;
   components: string[];
   valueBullets: string[];
+  image?: string;
   pricing: {
     starter: string;
     growth: string;
@@ -22,6 +23,7 @@ export const aiPackages: Package[] = [
     icon: TrendingUp,
     tagline: 'Accelerera din försäljning med AI',
     targetAudience: 'Företag som vill öka försäljning och leads',
+    image: '/src/assets/growth-sales-presentation.png',
     components: [
       'Lead Generator med AI-berikning och scoring',
       'AI-receptionist för kvalificering och mötesbokning',
