@@ -100,16 +100,15 @@ Svara alltid på svenska och håll svaren kortfattade och praktiska.`;
 
     // Create a readable stream that saves the complete response to Supabase
     let fullResponse = "";
-    const reader = response.body?.getReader();
-    const decoder = new TextDecoder();
     
-    if (!reader) {
+    if (!response.body) {
       throw new Error("No response body");
     }
 
     // Create a transform stream to intercept and save the response
     const transformStream = new TransformStream({
       async transform(chunk, controller) {
+        const decoder = new TextDecoder();
         const text = decoder.decode(chunk, { stream: true });
         
         // Parse SSE data to extract content
@@ -152,7 +151,7 @@ Svara alltid på svenska och håll svaren kortfattade och praktiska.`;
           // Send webhook to n8n with chat data
           try {
             const webhookUrl = "https://n8n.srv1053222.hstgr.cloud/webhook-test/8c46d3ab-14aa-4535-be9b-9619866305aa";
-            await fetch(webhookUrl, {
+            const webhookResponse = await fetch(webhookUrl, {
               method: "POST",
               headers: {
                 "Content-Type": "application/json",
@@ -167,7 +166,7 @@ Svara alltid på svenska och håll svaren kortfattade och praktiska.`;
                 timestamp: new Date().toISOString(),
               }),
             });
-            console.log("Webhook sent successfully for assistant message");
+            console.log("Webhook sent successfully for assistant message:", webhookResponse.status);
           } catch (webhookError) {
             console.error("Failed to send webhook:", webhookError);
             // Don't fail the request if webhook fails
