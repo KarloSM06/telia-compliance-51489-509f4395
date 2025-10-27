@@ -34,6 +34,9 @@ const ReminderSettings = lazy(() => import("./pages/ReminderSettings"));
 const MessageTemplates = lazy(() => import("./pages/MessageTemplates"));
 const SMSProviderSettings = lazy(() => import("./pages/SMSProviderSettings"));
 const MessageInsights = lazy(() => import("./pages/MessageInsights"));
+const CompanyProfile = lazy(() => import("./pages/CompanyProfile"));
+const ReviewDashboard = lazy(() => import("./pages/ReviewDashboard"));
+const Unsubscribe = lazy(() => import("./pages/Unsubscribe"));
 const DashboardLayout = lazy(() => import("./components/dashboard/DashboardLayout").then(m => ({ default: m.DashboardLayout })));
 
 // Loading fallback component
@@ -86,6 +89,9 @@ const App = () => (
               <Route path="/dashboard/templates" element={<DashboardLayout><MessageTemplates /></DashboardLayout>} />
               <Route path="/dashboard/sms-settings" element={<DashboardLayout><SMSProviderSettings /></DashboardLayout>} />
               <Route path="/dashboard/message-insights" element={<DashboardLayout><MessageInsights /></DashboardLayout>} />
+              <Route path="/dashboard/company" element={<DashboardLayout><CompanyProfile /></DashboardLayout>} />
+              <Route path="/dashboard/reviews" element={<DashboardLayout><ReviewDashboard /></DashboardLayout>} />
+              <Route path="/unsubscribe" element={<Unsubscribe />} />
               <Route path="/demo" element={<Demo />} />
               <Route path="/om-oss" element={<AboutUs />} />
               <Route path="/gdpr" element={<GDPRSettings />} />

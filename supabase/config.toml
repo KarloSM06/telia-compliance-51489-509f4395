@@ -1,5 +1,14 @@
 project_id = "shskknkivuewuqonjdjc"
 
+[functions.send-test-message]
+verify_jwt = true
+
+[functions.resend-webhook]
+verify_jwt = false
+
+[functions.handle-unsubscribe]
+verify_jwt = false
+
 [functions.send-scheduled-messages]
 verify_jwt = false
 
