@@ -24,6 +24,32 @@ serve(async (req) => {
 
     const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
 
+    // Send webhook for user's message
+    const lastUserMessage = messages[messages.length - 1];
+    if (lastUserMessage && lastUserMessage.role === 'user') {
+      try {
+        const webhookUrl = "https://n8n.srv1053222.hstgr.cloud/webhook-test/8c46d3ab-14aa-4535-be9b-9619866305aa";
+        await fetch(webhookUrl, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            conversation_id: conversationId,
+            user_id: userId,
+            role: 'user',
+            content: lastUserMessage.content,
+            provider: 'claude-linkedin',
+            timestamp: new Date().toISOString(),
+          }),
+        });
+        console.log("Webhook sent successfully for user message");
+      } catch (webhookError) {
+        console.error("Failed to send webhook for user message:", webhookError);
+        // Don't fail the request if webhook fails
+      }
+    }
+
     // System prompt for LinkedIn lead assistant
     const systemPrompt = `Du är en AI-assistent som hjälper användare att hitta och analysera leads från LinkedIn.
 
@@ -110,7 +136,7 @@ Svara alltid på svenska och håll svaren kortfattade och praktiska.`;
       async flush() {
         // Save the complete assistant response to Supabase
         if (fullResponse && userId && conversationId) {
-          await supabase
+          const { data: savedMessage } = await supabase
             .from('lead_chat_messages')
             .insert({
               user_id: userId,
@@ -119,7 +145,33 @@ Svara alltid på svenska och håll svaren kortfattade och praktiska.`;
               content: fullResponse,
               metadata: {},
               conversation_id: conversationId,
+            })
+            .select()
+            .single();
+
+          // Send webhook to n8n with chat data
+          try {
+            const webhookUrl = "https://n8n.srv1053222.hstgr.cloud/webhook-test/8c46d3ab-14aa-4535-be9b-9619866305aa";
+            await fetch(webhookUrl, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                conversation_id: conversationId,
+                message_id: savedMessage?.id,
+                user_id: userId,
+                role: 'assistant',
+                content: fullResponse,
+                provider: 'claude-linkedin',
+                timestamp: new Date().toISOString(),
+              }),
             });
+            console.log("Webhook sent successfully for assistant message");
+          } catch (webhookError) {
+            console.error("Failed to send webhook:", webhookError);
+            // Don't fail the request if webhook fails
+          }
         }
       }
     });
