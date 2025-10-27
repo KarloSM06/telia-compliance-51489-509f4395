@@ -1,4 +1,5 @@
 import { TrendingUp, Sparkles, Wrench, ShoppingCart, BarChart3, Award, type LucideIcon } from "lucide-react";
+import marketingAutomationImage from "@/assets/marketing-automation-ai.png";
 
 export interface Package {
   id: string;
@@ -49,6 +50,7 @@ export const aiPackages: Package[] = [
     icon: Sparkles,
     tagline: 'Automatisera din marknadsföring',
     targetAudience: 'Företag som vill integrera marknadsföring med försäljning',
+    image: marketingAutomationImage,
     components: [
       'AI-driven content creation',
       'Automatiserade kampanjer',
