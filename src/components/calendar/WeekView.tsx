@@ -342,13 +342,14 @@ export const WeekView = ({
 
       {/* Mini Calendar Panel - Desktop Only */}
       <div className="hidden lg:block w-[280px] flex-shrink-0">
-        <div className="sticky top-4 mt-4">
+        <div className="sticky top-0">
           <MiniCalendarPanel
             selectedDate={date}
             events={events}
             onMonthViewClick={() => onMonthViewClick?.()}
             onDateSelect={onDateChange}
             onEventClick={onEventClick}
+            timezone={timezone}
           />
         </div>
       </div>

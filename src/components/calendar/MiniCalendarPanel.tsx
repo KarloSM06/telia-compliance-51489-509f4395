@@ -13,6 +13,7 @@ interface MiniCalendarPanelProps {
   onMonthViewClick: () => void;
   onDateSelect: (date: Date) => void;
   onEventClick: (event: CalendarEvent) => void;
+  timezone?: string;
 }
 
 export const MiniCalendarPanel = ({
@@ -21,6 +22,7 @@ export const MiniCalendarPanel = ({
   onMonthViewClick,
   onDateSelect,
   onEventClick,
+  timezone,
 }: MiniCalendarPanelProps) => {
   const weekStart = startOfWeek(selectedDate, { locale: sv });
   const weekEnd = endOfWeek(selectedDate, { locale: sv });
@@ -85,6 +87,7 @@ export const MiniCalendarPanel = ({
                     events={events}
                     onEventClick={onEventClick}
                     maxEvents={5}
+                    timezone={timezone}
                   />
                 </div>
               </div>

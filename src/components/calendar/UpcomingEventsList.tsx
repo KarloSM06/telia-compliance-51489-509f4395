@@ -4,11 +4,13 @@ import { format, parseISO } from "date-fns";
 import { sv } from "date-fns/locale";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
+import { getCurrentTimeInZone } from "@/lib/timezoneUtils";
 
 interface UpcomingEventsListProps {
   events: CalendarEvent[];
   onEventClick: (event: CalendarEvent) => void;
   maxEvents?: number;
+  timezone?: string;
 }
 
 const getEventTypeIcon = (eventType: string) => {
@@ -44,9 +46,10 @@ const getEventTypeColor = (eventType: string, source?: string) => {
 export const UpcomingEventsList = ({ 
   events, 
   onEventClick, 
-  maxEvents = 5 
+  maxEvents = 5,
+  timezone = 'Europe/Stockholm'
 }: UpcomingEventsListProps) => {
-  const now = new Date();
+  const now = getCurrentTimeInZone(timezone);
   const upcomingEvents = events
     .filter(event => parseISO(event.start_time) > now)
     .sort((a, b) => parseISO(a.start_time).getTime() - parseISO(b.start_time).getTime())
