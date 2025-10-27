@@ -563,8 +563,8 @@ export const ProductSelection = () => {
           {/* Values */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto mb-20">
             <AnimatedSection delay={0} className="group text-center">
-              <div className="relative rounded-2xl bg-card p-8 border border-border hover:border-accent/50 transition-all duration-300 h-full hover:shadow-elegant">
-                <div className="absolute inset-0 bg-gradient-gold opacity-0 group-hover:opacity-5 rounded-2xl transition-opacity"></div>
+              <div className="relative rounded-none bg-card p-8 border border-border hover:border-accent/50 transition-all duration-300 h-full hover:shadow-elegant">
+                <div className="absolute inset-0 bg-gradient-gold opacity-0 group-hover:opacity-5 rounded-none transition-opacity"></div>
                 <div className="relative">
                   <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-accent/10 mb-6 group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
                     <Zap className="h-8 w-8 text-accent" />
@@ -576,8 +576,8 @@ export const ProductSelection = () => {
             </AnimatedSection>
 
             <AnimatedSection delay={100} className="group text-center">
-              <div className="relative rounded-2xl bg-card p-8 border border-border hover:border-accent/50 transition-all duration-300 h-full hover:shadow-elegant">
-                <div className="absolute inset-0 bg-gradient-gold opacity-0 group-hover:opacity-5 rounded-2xl transition-opacity"></div>
+              <div className="relative rounded-none bg-card p-8 border border-border hover:border-accent/50 transition-all duration-300 h-full hover:shadow-elegant">
+                <div className="absolute inset-0 bg-gradient-gold opacity-0 group-hover:opacity-5 rounded-none transition-opacity"></div>
                 <div className="relative">
                   <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-accent/10 mb-6 group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
                     <Wrench className="h-8 w-8 text-accent" />
@@ -589,8 +589,8 @@ export const ProductSelection = () => {
             </AnimatedSection>
 
             <AnimatedSection delay={200} className="group text-center">
-              <div className="relative rounded-2xl bg-card p-8 border border-border hover:border-accent/50 transition-all duration-300 h-full hover:shadow-elegant">
-                <div className="absolute inset-0 bg-gradient-gold opacity-0 group-hover:opacity-5 rounded-2xl transition-opacity"></div>
+              <div className="relative rounded-none bg-card p-8 border border-border hover:border-accent/50 transition-all duration-300 h-full hover:shadow-elegant">
+                <div className="absolute inset-0 bg-gradient-gold opacity-0 group-hover:opacity-5 rounded-none transition-opacity"></div>
                 <div className="relative">
                   <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-accent/10 mb-6 group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
                     <Users className="h-8 w-8 text-accent" />
@@ -606,7 +606,7 @@ export const ProductSelection = () => {
           <AnimatedSection className="mb-12">
             <h3 className="text-3xl font-display font-bold text-center mb-12">Möt teamet</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              <AnimatedSection delay={0} className="rounded-2xl bg-card backdrop-blur-sm border border-border p-8 text-center hover:border-accent/50 transition-all duration-300 hover:shadow-elegant">
+              <AnimatedSection delay={0} className="rounded-none bg-card backdrop-blur-sm border border-border p-8 text-center hover:border-accent/50 transition-all duration-300 hover:shadow-elegant">
                 <img 
                   src={antonImage} 
                   alt="Anton Sallnäs" 
@@ -620,7 +620,7 @@ export const ProductSelection = () => {
                 <p className="text-xs text-muted-foreground/70 italic mt-4">"Jag brinner för att göra AI begripligt"</p>
               </AnimatedSection>
               
-              <AnimatedSection delay={100} className="rounded-2xl bg-card backdrop-blur-sm border border-border p-8 text-center hover:border-accent/50 transition-all duration-300 hover:shadow-elegant">
+              <AnimatedSection delay={100} className="rounded-none bg-card backdrop-blur-sm border border-border p-8 text-center hover:border-accent/50 transition-all duration-300 hover:shadow-elegant">
                 <img 
                   src={karloImage} 
                   alt="Karlo Mangione" 
@@ -634,7 +634,7 @@ export const ProductSelection = () => {
                 <p className="text-xs text-muted-foreground/70 italic mt-4">"AI ska vara enkelt att använda"</p>
               </AnimatedSection>
               
-              <AnimatedSection delay={200} className="rounded-2xl bg-card backdrop-blur-sm border border-border p-8 text-center hover:border-accent/50 transition-all duration-300 hover:shadow-elegant">
+              <AnimatedSection delay={200} className="rounded-none bg-card backdrop-blur-sm border border-border p-8 text-center hover:border-accent/50 transition-all duration-300 hover:shadow-elegant">
                 <img 
                   src={emilImage} 
                   alt="Emil Westerberg" 
@@ -648,7 +648,7 @@ export const ProductSelection = () => {
                 <p className="text-xs text-muted-foreground/70 italic mt-4">"Teknologi som skapar verkligt värde"</p>
               </AnimatedSection>
               
-              <AnimatedSection delay={300} className="rounded-2xl bg-card backdrop-blur-sm border border-border p-8 text-center hover:border-accent/50 transition-all duration-300 hover:shadow-elegant">
+              <AnimatedSection delay={300} className="rounded-none bg-card backdrop-blur-sm border border-border p-8 text-center hover:border-accent/50 transition-all duration-300 hover:shadow-elegant">
                 <div className="w-64 h-64 rounded-full mx-auto mb-6 bg-gradient-primary flex items-center justify-center border-2 border-accent/30">
                   <span className="text-6xl font-bold text-white">ME</span>
                 </div>
