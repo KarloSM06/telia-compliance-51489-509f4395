@@ -13,6 +13,7 @@ export interface Package {
     growth: string;
     enterprise: string;
   };
+  image?: string;
 }
 
 export const aiPackages: Package[] = [
@@ -22,6 +23,7 @@ export const aiPackages: Package[] = [
     icon: TrendingUp,
     tagline: 'Accelerera din försäljning med AI',
     targetAudience: 'Företag som vill öka försäljning och leads',
+    image: '/src/assets/growth-sales-hero.png',
     components: [
       'Lead Generator med AI-berikning och scoring',
       'AI-receptionist för kvalificering och mötesbokning',

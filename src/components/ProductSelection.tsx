@@ -3,6 +3,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { useState } from "react";
 import { ConsultationModal } from "@/components/ConsultationModal";
 import { AnimatedSection } from "@/components/AnimatedSection";
@@ -111,16 +112,28 @@ export const ProductSelection = () => {
             </p>
           </AnimatedSection>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
-            {aiPackages.map((pkg, index) => (
-              <AnimatedSection key={pkg.id} delay={index * 100}>
-                <PackageCard 
-                  package={pkg} 
-                  onBookDemo={() => setIsConsultationModalOpen(true)}
-                />
-              </AnimatedSection>
-            ))}
-          </div>
+          <Carousel
+            opts={{
+              align: "start",
+              loop: true,
+            }}
+            className="w-full"
+          >
+            <CarouselContent className="-ml-4">
+              {aiPackages.map((pkg, index) => (
+                <CarouselItem key={pkg.id} className="pl-4">
+                  <AnimatedSection delay={index * 150} className="h-full">
+                    <PackageCard 
+                      package={pkg} 
+                      onBookDemo={() => setIsConsultationModalOpen(true)}
+                    />
+                  </AnimatedSection>
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+            <CarouselPrevious className="left-4 bg-white/10 border-white/20 text-white hover:bg-white/20" />
+            <CarouselNext className="right-4 bg-white/10 border-white/20 text-white hover:bg-white/20" />
+          </Carousel>
         </div>
       </section>
 
