@@ -26,9 +26,18 @@ export const LeadsListTab = () => {
     setShowDetailModal(true);
   };
 
-  // Filter leads based on listType
+  // Filter leads based on listType - support both old and new contact fields
   const filteredByListType = listType === 'contacts' 
-    ? leads.filter(lead => lead.contact_person && lead.contact_person.trim() !== '')
+    ? leads.filter(lead => {
+        // Check for LinkedIn contact info (new fields)
+        const hasLinkedInContact = (lead.full_name && lead.full_name.trim() !== '') || 
+                                   (lead.first_name && lead.first_name.trim() !== '');
+        
+        // OR old Eniro contact_person field
+        const hasEniroContact = lead.contact_person && lead.contact_person.trim() !== '';
+        
+        return hasLinkedInContact || hasEniroContact;
+      })
     : leads;
 
   // Filter by lead type
