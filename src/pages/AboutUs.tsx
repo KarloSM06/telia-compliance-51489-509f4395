@@ -655,12 +655,6 @@ const AboutUs = () => {
               <Card className="max-w-4xl mx-auto border border-primary/20 bg-gradient-to-br from-card/90 via-card/70 to-card/50 backdrop-blur-md shadow-2xl shadow-primary/20">
                 <CardContent className="p-12 text-center space-y-8">
                   <div className="space-y-4">
-                    {/* Bildram - infoga egen bild här */}
-                    <div className="relative h-48 max-w-md mx-auto overflow-hidden rounded-lg border-2 border-primary/30">
-                      <div className="w-full h-full bg-gradient-to-br from-primary/10 via-primary/5 to-background flex items-center justify-center">
-                        <span className="text-muted-foreground">Infoga bild här</span>
-                      </div>
-                    </div>
                     <h2 className="text-4xl sm:text-5xl font-bold bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent">
                       Redo att ta steget in i AI-framtiden?
                     </h2>
