@@ -56,9 +56,9 @@ export const ProductSelection = () => {
         <div className="mx-auto max-w-7xl px-6 lg:px-12 relative z-10 w-full">
           <AnimatedSection className="max-w-7xl mx-auto text-center">
             <h1 className="text-6xl sm:text-7xl text-white mb-8 leading-tight font-extrabold text-center lg:text-8xl">
-              AI som driver din verksamhet –{" "}
+              Skala din verksamhet -{" "}
               <span className="bg-gradient-gold bg-clip-text text-transparent">
-                effektivt, skalbart och vinstdrivande
+                Utan att anställa fler
               </span>
             </h1>
             
