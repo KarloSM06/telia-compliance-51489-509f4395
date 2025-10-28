@@ -15,6 +15,7 @@ export interface ExpertiseCategory {
   icon: LucideIcon;
   items: ExpertiseItem[];
   color: string;
+  image?: string; // Path to category image
 }
 
 export interface ExpertiseItem {
@@ -28,23 +29,24 @@ export const expertiseCategories: ExpertiseCategory[] = [
   {
     id: "ai-llm",
     title: "AI Modeller (LLM)",
-    description: "Avancerade språkmodeller för intelligenta lösningar",
+    description: "Vi använder de mest avancerade AI-modellerna för att skapa intelligenta lösningar som förstår och kommunicerar på svenska. Från textgenerering till avancerad analys.",
     icon: Brain,
     color: "from-purple-500 to-pink-500",
+    image: "/images/expertise/ai-models.jpg",
     items: [
       { name: "OpenAI GPT-5", type: "model", description: "Avancerad språkmodell", logo: "/images/logos/openai.png" },
       { name: "Claude 3.7", type: "model", description: "Anthropic AI-modell", logo: "/images/logos/claude.png" },
       { name: "Deepseek", type: "model", description: "Specialist AI-modell", logo: "/images/logos/deepseek.png" },
-      { name: "Gemini", type: "model", description: "Google AI-modell", logo: "/images/logos/gemini.png" },
-      { name: "Perplexity AI", type: "model", description: "Sökning & reasoning", logo: "/images/logos/perplexity.png" }
+      { name: "Gemini", type: "model", description: "Google AI-modell", logo: "/images/logos/gemini.png" }
     ]
   },
   {
     id: "ai-voice",
     title: "AI Röstsystem",
-    description: "Intelligenta röstassistenter och telefonisystem",
+    description: "Naturliga röstassistenter som hanterar samtal dygnet runt. Perfekt för kundservice, bokningar och försäljning med mänsklig konversationsförmåga.",
     icon: Zap,
     color: "from-blue-500 to-cyan-500",
+    image: "/images/expertise/voice-systems.jpg",
     items: [
       { name: "Vapi", type: "tool", description: "Voice AI agent", logo: "/images/logos/vapi.png" },
       { name: "Retell", type: "tool", description: "AI phone system", logo: "/images/logos/retell.svg" }
@@ -53,48 +55,52 @@ export const expertiseCategories: ExpertiseCategory[] = [
   {
     id: "automation",
     title: "Automatiseringsplattformar",
-    description: "Kraftfulla verktyg för workflow automation",
+    description: "Kraftfulla workflows som kopplar samman alla era system. Automatisera repetitiva uppgifter och frigör tid för det som verkligen skapar värde.",
     icon: Workflow,
     color: "from-green-500 to-emerald-500",
+    image: "/images/n8n-workflow-background.png",
     items: [
-      { name: "n8n", type: "platform", description: "Automatiseringsplattform", logo: "/images/logos/n8n.png" },
-      { name: "Make.com", type: "platform", description: "Workflow automation", logo: "/images/logos/make.png" },
-      { name: "Lovable", type: "platform", description: "AI utvecklingsplattform", logo: "/images/logos/lovable.png" }
+      { name: "n8n", type: "platform", description: "Workflow automation", logo: "/images/logos/n8n.png" },
+      { name: "Make.com", type: "platform", description: "Integration platform", logo: "/images/logos/make.png" },
+      { name: "Lovable", type: "platform", description: "AI utveckling", logo: "/images/logos/lovable.png" }
     ]
   },
   {
     id: "telephony",
-    title: "Telefoni",
-    description: "Professionella kommunikationslösningar",
+    title: "Telefoni & SMS",
+    description: "Professionell telefoni och SMS-kommunikation i världsklass. Skicka meddelanden, ring samtal och hantera all kundkommunikation från en plattform.",
     icon: Server,
     color: "from-orange-500 to-red-500",
+    image: "/images/expertise/telephony.jpg",
     items: [
-      { name: "Telnyx", type: "service", description: "Telefoni & SMS", logo: "/images/logos/telnyx.png" },
-      { name: "Twilio", type: "service", description: "Kommunikationsplattform", logo: "/images/logos/twilio.png" }
+      { name: "Telnyx", type: "service", description: "Global telefoni", logo: "/images/logos/telnyx.png" },
+      { name: "Twilio", type: "service", description: "SMS & Voice API", logo: "/images/logos/twilio.png" }
     ]
   },
   {
     id: "calendars",
-    title: "Kalendrar",
-    description: "Integration med alla stora kalendertjänster",
+    title: "Kalenderintegrationer",
+    description: "Synkronisera alla era kalendrar och bokningssystem. Automatiska bokningar, påminnelser och full kontroll över tillgänglighet i realtid.",
     icon: Link2,
     color: "from-pink-500 to-purple-500",
+    image: "/images/expertise/calendar.jpg",
     items: [
-      { name: "Google Calendar", type: "service", description: "Kalenderintegration", logo: "/images/logos/google-calendar.png" },
-      { name: "Microsoft Outlook", type: "service", description: "Kalenderintegration", logo: "/images/logos/outlook.png" },
+      { name: "Google Calendar", type: "service", description: "Kalender & bokning", logo: "/images/logos/google-calendar.png" },
+      { name: "Microsoft Outlook", type: "service", description: "Enterprise kalender", logo: "/images/logos/outlook.png" },
       { name: "Calendly", type: "service", description: "Bokningssystem", logo: "/images/logos/calendly.png" }
     ]
   },
   {
     id: "lead-generation",
-    title: "Lead Generation",
-    description: "Avancerade verktyg för att hitta och berika leads",
+    title: "Lead Generation & Berikning",
+    description: "Hitta rätt kunder med AI-driven prospektering. Berika era leads med relevant data och bygg pipelines som konverterar.",
     icon: BarChart3,
     color: "from-cyan-500 to-blue-500",
+    image: "/images/expertise/lead-generation.jpg",
     items: [
-      { name: "Apollo", type: "platform", description: "B2B lead database", logo: "/images/logos/apollo.png" },
-      { name: "Apify", type: "platform", description: "Web scraping & automation", logo: "/images/logos/apify.png" },
-      { name: "Explorium", type: "platform", description: "Data enrichment platform", logo: "/images/logos/explorium.png" }
+      { name: "Apollo", type: "platform", description: "B2B prospektering", logo: "/images/logos/apollo.png" },
+      { name: "Apify", type: "platform", description: "Data extraction", logo: "/images/logos/apify.png" },
+      { name: "LinkedIn", type: "platform", description: "Social selling" }
     ]
   }
 ];
