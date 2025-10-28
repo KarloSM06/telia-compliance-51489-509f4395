@@ -128,8 +128,28 @@ All colors MUST be HSL.
   }
 
   html {
-    scroll-behavior: smooth;
     scroll-padding-top: 80px;
+    /* Lenis handles scroll-behavior via JS */
+  }
+  
+  html.lenis, html.lenis body {
+    height: auto;
+  }
+
+  .lenis.lenis-smooth {
+    scroll-behavior: auto !important;
+  }
+
+  .lenis.lenis-smooth [data-lenis-prevent] {
+    overscroll-behavior: contain;
+  }
+
+  .lenis.lenis-stopped {
+    overflow: hidden;
+  }
+
+  .lenis.lenis-scrolling iframe {
+    pointer-events: none;
   }
 
   body {
