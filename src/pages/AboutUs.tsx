@@ -565,13 +565,13 @@ const AboutUs = () => {
                       }
                     ].map((milestone, index) => (
                       <AnimatedSection key={milestone.year} delay={index * 100}>
-                        <div className="flex gap-6 group">
+                        <div className="flex gap-6 group items-center">
                           <div className="flex-shrink-0">
                             <div className="w-20 h-20 rounded-full bg-gradient-to-br from-primary to-primary/60 flex items-center justify-center font-bold text-lg shadow-lg shadow-primary/30 group-hover:scale-110 transition-transform duration-500">
                               {milestone.year}
                             </div>
                           </div>
-                          <div className="flex-1 pt-2">
+                          <div className="flex-1">
                             <h3 className="text-2xl font-bold mb-2">{milestone.title}</h3>
                             <p className="text-muted-foreground leading-relaxed">
                               {milestone.description}
