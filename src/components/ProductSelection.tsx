@@ -105,8 +105,8 @@ export const ProductSelection = () => {
       {/* Branschspecifika lösningar */}
       <section id="branscher" className="relative py-24 overflow-hidden" style={{ contain: 'content' }}>
         {/* Animated background elements */}
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_50%,hsl(var(--primary)/0.12),transparent_50%)]" style={{ transform: 'translateZ(0)' }} />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_50%,hsl(var(--primary)/0.08),transparent_50%)]" style={{ transform: 'translateZ(0)' }} />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_50%,hsl(var(--primary)/0.12),transparent_50%)]" style={{ transform: 'translateZ(0)', willChange: 'auto' }} />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_50%,hsl(var(--primary)/0.08),transparent_50%)]" style={{ transform: 'translateZ(0)', willChange: 'auto' }} />
         
         <div className="mx-auto max-w-7xl px-6 lg:px-8 relative z-10">
           <AnimatedSection className="text-center mb-16">

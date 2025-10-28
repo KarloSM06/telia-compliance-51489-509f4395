@@ -154,13 +154,23 @@ All colors MUST be HSL.
   }
 }
 
+@keyframes removeWillChange {
+  to { will-change: auto; }
+}
+
 .industry-grid {
-  contain: layout paint style;
-  will-change: transform;
+  contain: content;
+}
+
+.industry-card-wrapper {
+  content-visibility: auto;
+  contain-intrinsic-size: 400px;
 }
 
 .industry-grid.is-visible > .industry-card-wrapper {
-  animation: fadeInScale 600ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation: fadeInScale 600ms cubic-bezier(0.22, 1, 0.36, 1) both,
+             removeWillChange 0s 650ms forwards;
+  will-change: transform, opacity;
 }
 
 .industry-grid.is-visible > .industry-card-wrapper:nth-child(1) { animation-delay: 0ms; }
@@ -172,6 +182,11 @@ All colors MUST be HSL.
 .industry-grid.is-visible > .industry-card-wrapper:nth-child(7) { animation-delay: 360ms; }
 .industry-grid.is-visible > .industry-card-wrapper:nth-child(8) { animation-delay: 420ms; }
 
-.industry-card-wrapper:hover {
-  will-change: transform;
+/* Disable hover effects and transitions during scroll */
+body.is-scrolling .industry-card-wrapper {
+  pointer-events: none;
+}
+
+body.is-scrolling .industry-card-wrapper * {
+  transition: none !important;
 }
