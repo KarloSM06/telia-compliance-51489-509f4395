@@ -141,3 +141,37 @@ All colors MUST be HSL.
     @apply font-display;
   }
 }
+
+/* Industry Grid Optimizations - GPU-accelerated animations */
+@keyframes fadeInScale {
+  from { 
+    opacity: 0; 
+    transform: translate3d(0, 16px, 0) scale(0.98); 
+  }
+  to { 
+    opacity: 1; 
+    transform: translate3d(0, 0, 0) scale(1); 
+  }
+}
+
+.industry-grid {
+  contain: layout paint style;
+  will-change: transform;
+}
+
+.industry-grid.is-visible > .industry-card-wrapper {
+  animation: fadeInScale 600ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.industry-grid.is-visible > .industry-card-wrapper:nth-child(1) { animation-delay: 0ms; }
+.industry-grid.is-visible > .industry-card-wrapper:nth-child(2) { animation-delay: 60ms; }
+.industry-grid.is-visible > .industry-card-wrapper:nth-child(3) { animation-delay: 120ms; }
+.industry-grid.is-visible > .industry-card-wrapper:nth-child(4) { animation-delay: 180ms; }
+.industry-grid.is-visible > .industry-card-wrapper:nth-child(5) { animation-delay: 240ms; }
+.industry-grid.is-visible > .industry-card-wrapper:nth-child(6) { animation-delay: 300ms; }
+.industry-grid.is-visible > .industry-card-wrapper:nth-child(7) { animation-delay: 360ms; }
+.industry-grid.is-visible > .industry-card-wrapper:nth-child(8) { animation-delay: 420ms; }
+
+.industry-card-wrapper:hover {
+  will-change: transform;
+}

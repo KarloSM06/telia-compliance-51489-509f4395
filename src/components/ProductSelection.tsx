@@ -8,6 +8,7 @@ import { ConsultationModal } from "@/components/ConsultationModal";
 import { AnimatedSection } from "@/components/AnimatedSection";
 import { PackageCard } from "@/components/home/PackageCard";
 import { IndustryCard } from "@/components/home/IndustryCard";
+import { OptimizedIndustryGrid } from "@/components/home/OptimizedIndustryGrid";
 import { CustomerJourneyFlow } from "@/components/home/CustomerJourneyFlow";
 import { OnboardingTimeline } from "@/components/home/OnboardingTimeline";
 import { TechnicalExpertise } from "@/components/home/TechnicalExpertise";
@@ -102,10 +103,10 @@ export const ProductSelection = () => {
       </section>
 
       {/* Branschspecifika lösningar */}
-      <section id="branscher" className="relative py-24 overflow-hidden">
+      <section id="branscher" className="relative py-24 overflow-hidden" style={{ contain: 'content' }}>
         {/* Animated background elements */}
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_50%,hsl(var(--primary)/0.12),transparent_50%)]" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_50%,hsl(var(--primary)/0.08),transparent_50%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_50%,hsl(var(--primary)/0.12),transparent_50%)]" style={{ transform: 'translateZ(0)' }} />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_50%,hsl(var(--primary)/0.08),transparent_50%)]" style={{ transform: 'translateZ(0)' }} />
         
         <div className="mx-auto max-w-7xl px-6 lg:px-8 relative z-10">
           <AnimatedSection className="text-center mb-16">
@@ -120,11 +121,13 @@ export const ProductSelection = () => {
             </p>
           </AnimatedSection>
           
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-12">
-            {industries.map((industry, index) => <AnimatedSection key={industry.id} delay={index * 80}>
+          <OptimizedIndustryGrid className="industry-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-12">
+            {industries.map((industry) => (
+              <div key={industry.id} className="industry-card-wrapper">
                 <IndustryCard industry={industry} onClick={() => handleIndustryClick(industry.id)} />
-              </AnimatedSection>)}
-          </div>
+              </div>
+            ))}
+          </OptimizedIndustryGrid>
           
           <AnimatedSection className="text-center">
             <Button size="lg" className="bg-gradient-gold text-primary hover:shadow-glow transition-all duration-300 font-semibold" onClick={() => setIsConsultationModalOpen(true)}>
