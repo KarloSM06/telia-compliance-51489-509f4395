@@ -10,7 +10,7 @@ export const IndustryCard = memo(({
   onClick
 }: IndustryCardProps) => {
   const Icon = industry.icon;
-  return <Card className="group h-full flex flex-col overflow-hidden cursor-pointer border border-primary/10 bg-gradient-to-br from-card/80 via-card/50 to-card/30 backdrop-blur-md hover:bg-card/90 hover:border-primary/30 transition-all duration-500 hover:shadow-2xl hover:shadow-primary/20 hover:-translate-y-2 will-change-[transform,opacity]" onClick={onClick}>
+  return <Card className="group h-full flex flex-col overflow-hidden cursor-pointer border border-primary/10 bg-gradient-to-br from-card/80 via-card/50 to-card/30 backdrop-blur-md hover:bg-card/90 hover:border-primary/30 transition-all duration-500 hover:shadow-2xl hover:shadow-primary/20 hover:-translate-y-2" onClick={onClick}>
       {/* Image Section */}
       <div className="relative aspect-[4/3] overflow-hidden bg-muted/20">
         {industry.image ? <>
