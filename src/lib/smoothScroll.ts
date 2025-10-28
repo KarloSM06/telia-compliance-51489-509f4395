@@ -1,69 +1,61 @@
 /**
- * Custom smooth scroll implementation with momentum and ice-like feel
+ * Smooth scroll implementation using Lenis for premium inertial scroll
+ * Falls back to native smooth scroll if Lenis is not available
  */
-
-// Easing functions for smooth, gliding scroll
-const easeOutQuart = (t: number): number => 1 - Math.pow(1 - t, 4);
-const easeInOutCubic = (t: number): number => 
-  t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
 
 interface SmoothScrollOptions {
   duration?: number;
   offset?: number;
-  easing?: 'easeOutQuart' | 'easeInOutCubic';
 }
 
 /**
- * Smoothly scrolls to a target position with momentum effect
+ * Smoothly scrolls to a target position using Lenis
  */
 export const smoothScrollTo = (
   targetPosition: number, 
   options: SmoothScrollOptions = {}
 ): void => {
-  const {
-    duration = 1200, // Longer duration for ice-like feel
-    offset = 0,
-    easing = 'easeOutQuart'
-  } = options;
+  const { offset = 0, duration = 1.2 } = options;
+  const lenis = (window as any).lenis;
 
-  const startPosition = window.pageYOffset;
-  const distance = targetPosition - startPosition - offset;
-  let startTime: number | null = null;
-
-  const easingFunction = easing === 'easeInOutCubic' ? easeInOutCubic : easeOutQuart;
-
-  const animation = (currentTime: number) => {
-    if (startTime === null) startTime = currentTime;
-    
-    const timeElapsed = currentTime - startTime;
-    const progress = Math.min(timeElapsed / duration, 1);
-    
-    // Apply easing for smooth, ice-like momentum
-    const ease = easingFunction(progress);
-    
-    window.scrollTo(0, startPosition + distance * ease);
-    
-    if (timeElapsed < duration) {
-      requestAnimationFrame(animation);
-    }
-  };
-
-  requestAnimationFrame(animation);
+  if (lenis) {
+    // Use Lenis for buttery smooth scroll
+    lenis.scrollTo(targetPosition - offset, {
+      duration,
+      easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+    });
+  } else {
+    // Fallback to native smooth scroll
+    window.scrollTo({
+      top: targetPosition - offset,
+      behavior: 'smooth'
+    });
+  }
 };
 
 /**
- * Smoothly scrolls to an element with momentum effect
+ * Smoothly scrolls to an element using Lenis
  */
 export const smoothScrollToElement = (
   elementId: string,
   options: SmoothScrollOptions = {}
 ): void => {
   const element = document.getElementById(elementId);
+  const lenis = (window as any).lenis;
   
   if (element) {
-    const elementPosition = element.getBoundingClientRect().top;
-    const targetPosition = elementPosition + window.pageYOffset;
-    
-    smoothScrollTo(targetPosition, options);
+    if (lenis) {
+      // Use Lenis scrollTo with element
+      lenis.scrollTo(element, {
+        duration: options.duration || 1.2,
+        offset: -(options.offset || 0),
+        easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      });
+    } else {
+      // Fallback
+      const elementPosition = element.getBoundingClientRect().top;
+      const targetPosition = elementPosition + window.pageYOffset;
+      smoothScrollTo(targetPosition, options);
+    }
   }
 };
