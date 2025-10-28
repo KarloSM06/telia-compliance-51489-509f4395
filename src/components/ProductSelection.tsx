@@ -165,12 +165,12 @@ export const ProductSelection = () => {
       <TechnicalExpertise onBookDemo={() => setIsConsultationModalOpen(true)} />
 
       {/* Onboarding-process */}
-      <section id="onboarding" className="relative py-24 overflow-hidden">
+      <section id="onboarding" className="relative py-24 pb-32 overflow-hidden">
         {/* Animated background elements */}
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_40%_60%,hsl(var(--primary)/0.12),transparent_50%)]" />
         
         <div className="mx-auto max-w-7xl px-6 lg:px-8 relative z-10">
-          <AnimatedSection className="text-center mb-16">
+          <AnimatedSection className="text-center mb-20">
             <div className="inline-block">
               <h2 className="text-5xl sm:text-6xl font-bold bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent mb-4">
                 Så implementerar vi AI hos dig
@@ -184,7 +184,7 @@ export const ProductSelection = () => {
           
           <OnboardingTimeline />
           
-          <AnimatedSection className="text-center mt-12">
+          <AnimatedSection className="text-center mt-16">
             <Button size="lg" className="bg-gradient-gold text-primary hover:shadow-glow transition-all duration-300 font-semibold" onClick={() => setIsConsultationModalOpen(true)}>
               Boka onboarding-möte
             </Button>
