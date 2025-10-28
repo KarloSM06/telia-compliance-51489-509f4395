@@ -152,7 +152,7 @@ export const ProductSelection = () => {
               </h2>
               <div className="w-32 h-1.5 bg-gradient-to-r from-primary via-primary/60 to-transparent mx-auto rounded-full shadow-lg shadow-primary/50 mb-6" />
             </div>
-            <p className="text-xl sm:text-2xl text-muted-foreground max-w-3xl mx-auto font-light">
+            <p className="text-xl sm:text-2xl max-w-3xl mx-auto font-bold text-slate-800">
               Se hur dina kunder möter Hiems AI – från första kontakten till långsiktig tillväxt
             </p>
           </AnimatedSection>
@@ -215,7 +215,7 @@ export const ProductSelection = () => {
               </AnimatedSection>)}
           </div>
         </div>
-      </section> */}
+       </section> */}
 
       {/* Blogg / Insikter */}
       <section id="blogg" className="relative py-16">
