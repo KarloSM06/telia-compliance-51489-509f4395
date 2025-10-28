@@ -69,10 +69,7 @@ export const OnboardingTimeline = () => {
         ))}
       </div>
 
-      {/* Timeline Connection Line - Desktop Only */}
-      <div className="hidden xl:block relative -mt-[420px] pointer-events-none">
-        <div className="absolute top-0 left-[10%] right-[10%] h-1 bg-gradient-to-r from-transparent via-primary/30 to-transparent" />
-      </div>
+      {/* Timeline Connection Line - Desktop Only (removed to prevent overlap) */}
     </div>
   );
 };
