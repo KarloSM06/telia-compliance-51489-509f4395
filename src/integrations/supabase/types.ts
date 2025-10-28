@@ -1794,6 +1794,7 @@ export type Database = {
           lunch_break_end: string | null
           lunch_break_start: string | null
           preferred_language: string | null
+          telephony_webhook_token: string | null
           timezone: string
         }
         Insert: {
@@ -1812,6 +1813,7 @@ export type Database = {
           lunch_break_end?: string | null
           lunch_break_start?: string | null
           preferred_language?: string | null
+          telephony_webhook_token?: string | null
           timezone?: string
         }
         Update: {
@@ -1830,6 +1832,7 @@ export type Database = {
           lunch_break_end?: string | null
           lunch_break_start?: string | null
           preferred_language?: string | null
+          telephony_webhook_token?: string | null
           timezone?: string
         }
         Relationships: []
@@ -2307,7 +2310,6 @@ export type Database = {
           sync_status: string | null
           updated_at: string | null
           user_id: string
-          webhook_token: string | null
         }
         Insert: {
           config?: Json | null
@@ -2323,7 +2325,6 @@ export type Database = {
           sync_status?: string | null
           updated_at?: string | null
           user_id: string
-          webhook_token?: string | null
         }
         Update: {
           config?: Json | null
@@ -2339,7 +2340,6 @@ export type Database = {
           sync_status?: string | null
           updated_at?: string | null
           user_id?: string
-          webhook_token?: string | null
         }
         Relationships: [
           {
@@ -2509,6 +2509,48 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      telephony_webhook_logs: {
+        Row: {
+          created_at: string | null
+          error_message: string | null
+          id: string
+          processing_time_ms: number | null
+          provider: string | null
+          request_body: Json | null
+          request_headers: Json | null
+          request_method: string | null
+          response_body: string | null
+          response_status: number | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          error_message?: string | null
+          id?: string
+          processing_time_ms?: number | null
+          provider?: string | null
+          request_body?: Json | null
+          request_headers?: Json | null
+          request_method?: string | null
+          response_body?: string | null
+          response_status?: number | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          error_message?: string | null
+          id?: string
+          processing_time_ms?: number | null
+          provider?: string | null
+          request_body?: Json | null
+          request_headers?: Json | null
+          request_method?: string | null
+          response_body?: string | null
+          response_status?: number | null
+          user_id?: string | null
+        }
+        Relationships: []
       }
       user_analysis: {
         Row: {

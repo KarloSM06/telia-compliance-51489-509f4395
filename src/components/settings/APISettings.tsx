@@ -5,14 +5,14 @@ import { Label } from "@/components/ui/label";
 import { Code, Copy, Eye, EyeOff, Key, AlertCircle, CheckCircle } from "lucide-react";
 import { useState } from "react";
 import { useApiKeys } from "@/hooks/useApiKeys";
-import { useTelephonyAccounts } from "@/hooks/useTelephonyAccounts";
+import { useUserWebhook } from "@/hooks/useUserWebhook";
 import { toast } from "sonner";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 export function APISettings() {
   const { apiKeys, isLoading, generateKey, isGenerating } = useApiKeys();
-  const { accounts } = useTelephonyAccounts();
+  const { webhookUrl, isLoading: webhookLoading } = useUserWebhook();
   const [showKey, setShowKey] = useState(false);
   const [keyName, setKeyName] = useState("");
 
@@ -146,92 +146,63 @@ export function APISettings() {
           )}
         </div>
 
-        {/* Single MCP Webhook URL */}
+        {/* Single Universal Webhook URL */}
         <div className="space-y-4">
           <div className="flex items-center gap-2">
             <Code className="h-4 w-4 text-muted-foreground" />
-            <h3 className="font-semibold">Server Webhook URL</h3>
+            <h3 className="font-semibold">Universal Webhook URL</h3>
           </div>
           <p className="text-sm text-muted-foreground">
-            En universell webhook som fungerar för alla dina telephony providers (Vapi, Retell, Twilio, Telnyx)
+            En webhook som fungerar för ALLA dina telephony providers (Vapi, Retell, Twilio, Telnyx)
           </p>
           
-          {accounts.length > 0 ? (
-            <div className="space-y-3">
-              {accounts.map((account) => {
-                const fullUrl = `${mcpWebhookUrl}?token=${account.webhook_token}`;
-                
-                return (
-                  <div key={account.id} className="p-4 border rounded-lg space-y-2">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        <img 
-                          src={`/images/logos/${account.provider}.png`} 
-                          alt={account.provider_display_name}
-                          className="w-6 h-6 object-contain"
-                          onError={(e) => {
-                            e.currentTarget.style.display = 'none';
-                          }}
-                        />
-                        <span className="font-medium">{account.provider_display_name}</span>
-                        <CheckCircle className="h-4 w-4 text-green-500" />
-                      </div>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => copyToClipboard(fullUrl, `${account.provider_display_name} webhook URL`)}
-                      >
-                        <Copy className="h-4 w-4 mr-2" />
-                        Kopiera
-                      </Button>
-                    </div>
-                    <code className="text-xs bg-muted px-2 py-1 rounded block overflow-x-auto">
-                      {fullUrl}
-                    </code>
-                    <p className="text-xs text-muted-foreground">
-                      Lägg till denna URL i <strong>{account.provider_display_name}</strong>-inställningarna för att ta emot händelser
-                    </p>
-                  </div>
-                );
-              })}
+          {webhookLoading ? (
+            <div className="p-4 border rounded-lg">
+              <p className="text-sm text-muted-foreground">Laddar webhook URL...</p>
             </div>
-          ) : (
+          ) : webhookUrl ? (
             <div className="p-4 border rounded-lg space-y-3">
               <div className="flex items-center gap-2">
-                <AlertCircle className="h-5 w-5 text-muted-foreground" />
-                <span className="font-medium">Ingen provider konfigurerad ännu</span>
+                <CheckCircle className="h-5 w-5 text-green-600" />
+                <span className="font-medium">Din Webhook är redo</span>
               </div>
               <div className="space-y-2">
-                <Label>Din Webhook URL (exempel)</Label>
+                <Label>Webhook URL</Label>
                 <div className="flex gap-2">
                   <Input
-                    value={`${mcpWebhookUrl}?token=<DIN_TOKEN>`}
+                    value={webhookUrl}
                     readOnly
                     className="font-mono text-xs"
                   />
                   <Button
                     variant="outline"
                     size="sm"
-                    onClick={() => copyToClipboard(mcpWebhookUrl, "Webhook bas-URL")}
+                    onClick={() => copyToClipboard(webhookUrl, "Webhook URL")}
                   >
                     <Copy className="h-4 w-4" />
                   </Button>
                 </div>
               </div>
               <Alert>
+                <AlertDescription className="text-xs">
+                  Använd denna URL i alla dina telephony providers. Systemet detekterar automatiskt vilken provider som skickar data.
+                </AlertDescription>
+              </Alert>
+            </div>
+          ) : (
+            <div className="p-4 border rounded-lg space-y-3">
+              <div className="flex items-center gap-2">
+                <AlertCircle className="h-5 w-5 text-muted-foreground" />
+                <span className="font-medium">Lägg till din första provider</span>
+              </div>
+              <Alert>
                 <AlertCircle className="h-4 w-4" />
                 <AlertDescription className="text-xs">
-                  Din unika webhook token genereras automatiskt när du lägger till din första provider på <strong>Telefoni-sidan</strong>.
+                  Din webhook URL genereras automatiskt när du lägger till din första telephony provider på <strong>Telefoni-sidan</strong>.
                 </AlertDescription>
               </Alert>
             </div>
           )}
-
-          <Alert>
-            <AlertDescription className="text-xs">
-              <strong>Tips:</strong> Samma webhook URL fungerar för alla providers - systemet detekterar automatiskt vilken provider som skickar data.
-            </AlertDescription>
-          </Alert>
         </div>
       </CardContent>
     </Card>

@@ -22,19 +22,36 @@ serve(async (req) => {
       throw new Error('ENCRYPTION_KEY not configured');
     }
 
-    // Simple base64 encoding for now (in production, use proper encryption)
-    const jsonString = JSON.stringify(credentials);
-    const encrypted = btoa(jsonString);
+    // Import Web Crypto API for proper AES-GCM encryption
+    const encoder = new TextEncoder();
+    const keyMaterial = await crypto.subtle.importKey(
+      'raw',
+      encoder.encode(encryptionKey.padEnd(32, '0').slice(0, 32)),
+      { name: 'AES-GCM' },
+      false,
+      ['encrypt']
+    );
 
-    // Generate webhook token
-    const randomBytes = crypto.getRandomValues(new Uint8Array(32));
-    const webhookToken = Array.from(randomBytes)
-      .map(b => b.toString(16).padStart(2, '0'))
-      .join('');
-
-    console.log('✅ Credentials encrypted successfully');
+    // Generate IV (Initialization Vector)
+    const iv = crypto.getRandomValues(new Uint8Array(12));
     
-    return new Response(JSON.stringify({ encrypted, webhook_token: webhookToken }), {
+    // Encrypt credentials
+    const jsonString = JSON.stringify(credentials);
+    const encryptedBuffer = await crypto.subtle.encrypt(
+      { name: 'AES-GCM', iv },
+      keyMaterial,
+      encoder.encode(jsonString)
+    );
+
+    // Combine IV + encrypted data and encode as base64
+    const combined = new Uint8Array(iv.length + encryptedBuffer.byteLength);
+    combined.set(iv, 0);
+    combined.set(new Uint8Array(encryptedBuffer), iv.length);
+    const encrypted = btoa(String.fromCharCode(...combined));
+
+    console.log('✅ Credentials encrypted successfully with AES-256-GCM');
+    
+    return new Response(JSON.stringify({ encrypted }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
 

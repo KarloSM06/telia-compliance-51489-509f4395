@@ -8,7 +8,6 @@ export interface TelephonyAccount {
   provider: 'retell' | 'vapi' | 'twilio' | 'telnyx';
   provider_display_name: string;
   encrypted_credentials: any;
-  webhook_token: string;
   is_active: boolean;
   is_verified: boolean;
   config: any;
@@ -56,7 +55,6 @@ export const useTelephonyAccounts = () => {
           provider: provider,
           provider_display_name: displayName,
           encrypted_credentials: encryptResult.encrypted,
-          webhook_token: encryptResult.webhook_token,
           is_active: true,
         }] as any)
         .select()
@@ -110,6 +108,33 @@ export const useTelephonyAccounts = () => {
     },
   });
 
+  const updateCredentials = useMutation({
+    mutationFn: async ({ accountId, credentials }: { accountId: string; credentials: any }) => {
+      const { data: encryptResult, error: encryptError } = await supabase.functions.invoke(
+        'encrypt-telephony-credentials',
+        { body: { credentials } }
+      );
+
+      if (encryptError || !encryptResult) {
+        throw new Error('Failed to encrypt credentials');
+      }
+
+      const { error } = await supabase
+        .from('telephony_accounts')
+        .update({ encrypted_credentials: encryptResult.encrypted })
+        .eq('id', accountId);
+      
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['telephony-accounts'] });
+      toast.success('Credentials uppdaterade');
+    },
+    onError: (error: Error) => {
+      toast.error(`Fel: ${error.message}`);
+    },
+  });
+
   return {
     accounts: accounts || [],
     isLoading,
@@ -117,5 +142,7 @@ export const useTelephonyAccounts = () => {
     isAddingAccount: addAccount.isPending,
     toggleAccount: toggleAccount.mutate,
     deleteAccount: deleteAccount.mutate,
+    updateCredentials: updateCredentials.mutate,
+    isUpdatingCredentials: updateCredentials.isPending,
   };
 };

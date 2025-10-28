@@ -8,12 +8,14 @@ import { Copy, Key, RefreshCw, Eye, EyeOff, Info, Webhook } from 'lucide-react';
 import { toast } from 'sonner';
 import { useApiKeys } from '@/hooks/useApiKeys';
 import { useTelephonyAccounts } from '@/hooks/useTelephonyAccounts';
+import { useUserWebhook } from '@/hooks/useUserWebhook';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 
 export const WebhookSettings = () => {
   const [showApiKey, setShowApiKey] = useState(false);
   const { apiKeys, isLoading, generateKey, isGenerating } = useApiKeys();
   const { accounts } = useTelephonyAccounts();
+  const { webhookUrl } = useUserWebhook();
 
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text);
@@ -120,7 +122,6 @@ export const WebhookSettings = () => {
           <CardContent className="space-y-4">
             <div className="space-y-3">
               {accounts.map((account) => {
-                const webhookUrl = getMcpWebhookUrl(account.webhook_token);
                 
                 return (
                   <div key={account.id} className="space-y-2">
