@@ -1,10 +1,19 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
+
+// Validation schema for AI enrichment response
+const enrichmentSchema = z.object({
+  ai_score: z.number().int().min(1).max(100),
+  ai_reasoning: z.string().max(200).min(1),
+  description: z.string().max(300).min(1),
+  recommended_product: z.enum(['EKO', 'GASTRO', 'TALENT', 'KRONO', 'THOR']).optional(),
+});
 
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
@@ -126,12 +135,18 @@ Svara ENDAST med valid JSON i detta exakta format:
       throw new Error('No AI response content');
     }
 
-    // Parse AI response
+    // Parse and validate AI response
     let enrichmentData;
     try {
-      enrichmentData = JSON.parse(aiContent);
+      const parsedData = JSON.parse(aiContent);
+      enrichmentData = enrichmentSchema.parse(parsedData);
+      console.log('✅ AI response validated successfully:', enrichmentData);
     } catch (parseError) {
-      console.error('Failed to parse AI response:', aiContent);
+      console.error('Failed to parse/validate AI response:', aiContent);
+      if (parseError instanceof z.ZodError) {
+        console.error('Validation errors:', parseError.errors);
+        throw new Error(`Invalid AI response format: ${parseError.errors.map(e => `${e.path.join('.')}: ${e.message}`).join(', ')}`);
+      }
       throw new Error('Invalid AI response format');
     }
 
