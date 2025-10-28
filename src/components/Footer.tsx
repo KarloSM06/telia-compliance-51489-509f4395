@@ -4,38 +4,23 @@ import { ConsultationModal } from "@/components/ConsultationModal";
 import { Button } from "@/components/ui/button";
 import hiems_logo from "@/assets/hiems_snowflake_logo.png";
 import { Linkedin } from "lucide-react";
-
 export const Footer = () => {
   const [isConsultationModalOpen, setIsConsultationModalOpen] = useState(false);
-  
   const scrollToSection = (id: string) => {
     const element = document.getElementById(id);
     if (element) {
       const offset = 80;
       const elementPosition = element.getBoundingClientRect().top;
       const offsetPosition = elementPosition + window.pageYOffset - offset;
-      
       window.scrollTo({
         top: offsetPosition,
         behavior: 'smooth'
       });
     }
   };
-  
-  return (
-    <footer className="bg-[#0A0A0A] text-white py-16 px-6">
+  return <footer className="bg-[#0A0A0A] text-white py-16 px-6">
       {/* CTA Section */}
-      <div className="max-w-7xl mx-auto text-center pb-12 border-b border-white/10 mb-12">
-        <h3 className="text-3xl font-bold mb-4">Redo att transformera ditt företag?</h3>
-        <p className="text-muted-foreground mb-8 text-lg">Få en skräddarsydd offert idag</p>
-        <Button 
-          size="lg"
-          className="bg-gradient-gold text-primary hover:shadow-glow transition-all duration-300 font-semibold"
-          onClick={() => setIsConsultationModalOpen(true)}
-        >
-          Boka konsultation
-        </Button>
-      </div>
+      
 
       {/* Main Footer Content - 4 columns */}
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 mb-12">
@@ -61,26 +46,17 @@ export const Footer = () => {
               </Link>
             </li>
             <li>
-              <button 
-                onClick={() => scrollToSection('paket')}
-                className="hover:text-white transition-colors text-left"
-              >
+              <button onClick={() => scrollToSection('paket')} className="hover:text-white transition-colors text-left">
                 Lösningar
               </button>
             </li>
             <li>
-              <button 
-                onClick={() => scrollToSection('branscher')}
-                className="hover:text-white transition-colors text-left"
-              >
+              <button onClick={() => scrollToSection('branscher')} className="hover:text-white transition-colors text-left">
                 Bransch
               </button>
             </li>
             <li>
-              <button 
-                onClick={() => scrollToSection('case')}
-                className="hover:text-white transition-colors text-left"
-              >
+              <button onClick={() => scrollToSection('case')} className="hover:text-white transition-colors text-left">
                 Case
               </button>
             </li>
@@ -90,10 +66,7 @@ export const Footer = () => {
               </Link>
             </li>
             <li>
-              <button 
-                onClick={() => scrollToSection('kontakt')}
-                className="hover:text-white transition-colors text-left"
-              >
+              <button onClick={() => scrollToSection('kontakt')} className="hover:text-white transition-colors text-left">
                 Kontakt
               </button>
             </li>
@@ -117,13 +90,7 @@ export const Footer = () => {
         <div>
           <h4 className="mb-4 text-base font-semibold">Följ oss</h4>
           <div className="flex gap-4">
-            <a 
-              href="https://www.linkedin.com/company/hiems-hb" 
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:text-primary transition-colors"
-              aria-label="LinkedIn"
-            >
+            <a href="https://www.linkedin.com/company/hiems-hb" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors" aria-label="LinkedIn">
               <Linkedin className="h-6 w-6" />
             </a>
           </div>
@@ -152,6 +119,5 @@ export const Footer = () => {
       </div>
       
       <ConsultationModal open={isConsultationModalOpen} onOpenChange={setIsConsultationModalOpen} />
-    </footer>
-  );
+    </footer>;
 };

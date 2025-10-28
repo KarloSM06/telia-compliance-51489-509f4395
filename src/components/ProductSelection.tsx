@@ -328,50 +328,7 @@ export const ProductSelection = () => {
 
       {/* Varför Hiems Section */}
       <section className="relative py-24 bg-white/5 animate-fade-in">
-        <div className="mx-auto max-w-7xl px-6 lg:px-8">
-          <AnimatedSection className="mx-auto max-w-3xl text-center mb-16">
-            <h2 className="text-4xl font-display font-bold text-white mb-4">Varför Hiems?</h2>
-            <div className="w-20 h-1 bg-gradient-gold mx-auto rounded-full"></div>
-          </AnimatedSection>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-            <AnimatedSection delay={0} className="group text-center">
-              <div className="relative rounded-2xl bg-white/5 p-10 backdrop-blur-sm border border-white/10 hover:border-accent/50 transition-all duration-300 h-full">
-                <div className="absolute inset-0 bg-gradient-gold opacity-0 group-hover:opacity-5 rounded-2xl transition-opacity"></div>
-                <div className="relative">
-                  <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-accent/10 mb-6 group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
-                    <Target className="h-8 w-8 text-accent" />
-                  </div>
-                  <h3 className="text-2xl font-display font-bold text-white mb-3">Skräddarsydd AI</h3>
-                  <p className="text-white/70 leading-relaxed">Vi skapar AI-lösningar helt anpassade efter er verksamhet och era mål – inget standardpaket, allt designat för maximal effekt.</p>
-                </div>
-              </div>
-            </AnimatedSection>
-            <AnimatedSection delay={100} className="group text-center">
-              <div className="relative rounded-2xl bg-white/5 p-10 backdrop-blur-sm border border-white/10 hover:border-accent/50 transition-all duration-300 h-full">
-                <div className="absolute inset-0 bg-gradient-gold opacity-0 group-hover:opacity-5 rounded-2xl transition-opacity"></div>
-                <div className="relative">
-                  <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-accent/10 mb-6 group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
-                    <CheckCircle className="h-8 w-8 text-accent" />
-                  </div>
-                  <h3 className="text-2xl font-display font-bold text-white mb-3">Ni ser bara resultaten</h3>
-                  <p className="text-white/70 leading-relaxed">Vi tar hand om allt – från utveckling till implementation. Ni behöver inte lyfta ett finger, utan får direkt värde och mätbara resultat.</p>
-                </div>
-              </div>
-            </AnimatedSection>
-            <AnimatedSection delay={200} className="group text-center">
-              <div className="relative rounded-2xl bg-white/5 p-10 backdrop-blur-sm border border-white/10 hover:border-accent/50 transition-all duration-300">
-                <div className="absolute inset-0 bg-gradient-gold opacity-0 group-hover:opacity-5 rounded-2xl transition-opacity"></div>
-                <div className="relative">
-                  <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-accent/10 mb-6 group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
-                    <Award className="h-8 w-8 text-accent" />
-                  </div>
-                  <h3 className="text-2xl font-display font-bold text-white mb-3">Svensk support dygnet runt</h3>
-                  <p className="text-white/70 leading-relaxed">Vi finns alltid tillgängliga för er, med svensk kundservice och teknisk support som förstår er verksamhet.</p>
-                </div>
-              </div>
-            </AnimatedSection>
-          </div>
-        </div>
+        
       </section>
 
       <ConsultationModal open={isConsultationModalOpen} onOpenChange={setIsConsultationModalOpen} />
