@@ -111,11 +111,13 @@ export const TechnicalExpertise = ({ onBookDemo }: TechnicalExpertiseProps) => {
                                 <div className="w-full h-16 mb-2 flex items-center justify-center bg-white/90 rounded-md overflow-hidden group-hover/item:scale-105 transition-transform duration-300">
                                   <img 
                                     src={item.logo} 
-                                    alt={item.name}
+                                    alt={`${item.name} logo`}
+                                    loading="lazy"
                                     className="max-w-full max-h-full object-contain p-2"
                                     onError={(e) => {
-                                      e.currentTarget.style.display = 'none';
-                                      e.currentTarget.parentElement!.innerHTML = `<span class="text-white/70 text-xs font-medium">${item.name}</span>`;
+                                      const img = e.currentTarget as HTMLImageElement;
+                                      img.onerror = null;
+                                      img.src = '/placeholder.svg';
                                     }}
                                   />
                                 </div>
