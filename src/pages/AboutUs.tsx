@@ -544,19 +544,19 @@ const AboutUs = () => {
                   <div className="space-y-8">
                     {[
                       {
-                        year: "2022",
-                        title: "Grundandet",
-                        description: "Anton och Karlo grundar Hiems med en vision: göra AI praktiskt och lönsamt för svenska företag."
-                      },
-                      {
-                        year: "2023",
-                        title: "Första Kunderna",
-                        description: "Proof of concept levereras. Våra första kunder ser mätbar ROI från AI-implementation."
-                      },
-                      {
                         year: "2024",
-                        title: "Team Expansion",
-                        description: "Emil och Malte ansluter. Hiems-produktportfölj lanseras med Eko, Gastro, Krono och Talent."
+                        title: "Grundandet",
+                        description: "Hiems grundas med en vision om att revolutionera svensk affärsverksamhet genom innovativ teknologi."
+                      },
+                      {
+                        year: "Jan 2025",
+                        title: "Transformation till AI",
+                        description: "Hiems går ihop med ChronoDesk och transformeras till ett dedikerat AI-företag."
+                      },
+                      {
+                        year: "Feb 2025",
+                        title: "Första Partnerskapet",
+                        description: "Bara en månad efter transformationen etableras vårt första strategiska partnerskap."
                       },
                       {
                         year: "2025",
