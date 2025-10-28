@@ -2,13 +2,11 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { CheckCircle } from "lucide-react";
 import type { Package } from "@/data/packages";
-
 interface PackageCardProps {
   package: Package;
   onBookDemo: () => void;
   imagePosition?: 'left' | 'right';
 }
-
 export const PackageCard = ({
   package: pkg,
   onBookDemo,
@@ -18,37 +16,19 @@ export const PackageCard = ({
   const isImageLeft = imagePosition === 'left';
 
   // Combine all points into a single list
-  const allPoints = [
-    ...(pkg.description ? [pkg.description] : []),
-    ...pkg.components,
-    ...pkg.valueBullets
-  ];
-
-  return (
-    <Card 
-      className="flex flex-col lg:flex-row overflow-hidden border border-primary/10 bg-gradient-to-br from-card/80 via-card/50 to-card/30 backdrop-blur-md hover:bg-card/90 hover:border-primary/30 hover:-translate-y-1 hover:shadow-2xl transition-all duration-500 group"
-    >
+  const allPoints = [...(pkg.description ? [pkg.description] : []), ...pkg.components, ...pkg.valueBullets];
+  return <Card className="flex flex-col lg:flex-row overflow-hidden border border-primary/10 bg-gradient-to-br from-card/80 via-card/50 to-card/30 backdrop-blur-md hover:bg-card/90 hover:border-primary/30 hover:-translate-y-1 hover:shadow-2xl transition-all duration-500 group">
       {/* Image Section */}
       <div className={`lg:w-2/5 relative overflow-hidden flex-shrink-0 ${isImageLeft ? 'lg:order-1' : 'lg:order-2'}`}>
-        {pkg.image ? (
-          <>
-            <img 
-              src={pkg.image} 
-              alt={pkg.name} 
-              className="w-full h-full object-cover object-center transition-transform duration-700 group-hover:scale-110" 
-            />
+        {pkg.image ? <>
+            <img src={pkg.image} alt={pkg.name} className="w-full h-full object-cover object-center transition-transform duration-700 group-hover:scale-110" />
             <div className="absolute inset-0 bg-gradient-to-br from-primary/40 via-primary/20 to-transparent transition-opacity duration-500 group-hover:opacity-70" />
             
             {/* Icon Overlay */}
-            <div className="absolute top-6 left-6 p-4 rounded-xl bg-background/90 backdrop-blur-sm border border-primary/20 shadow-lg">
-              <Icon className="h-10 w-10 text-primary" />
-            </div>
-          </>
-        ) : (
-          <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary/20 to-primary/5">
+            
+          </> : <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary/20 to-primary/5">
             <Icon className="h-32 w-32 text-primary/30" />
-          </div>
-        )}
+          </div>}
       </div>
       
       {/* Content Section */}
@@ -66,31 +46,21 @@ export const PackageCard = ({
           
           {/* Features List */}
           <div className="space-y-3">
-            {allPoints.map((point, index) => (
-              <div 
-                key={index} 
-                className="flex items-start gap-3 group/item"
-              >
+            {allPoints.map((point, index) => <div key={index} className="flex items-start gap-3 group/item">
                 <div className="mt-1 flex-shrink-0">
                   <CheckCircle className="h-5 w-5 text-primary group-hover/item:scale-110 transition-transform duration-300" />
                 </div>
                 <span className="text-base leading-relaxed text-foreground/90">
                   {point}
                 </span>
-              </div>
-            ))}
+              </div>)}
           </div>
 
           {/* CTA Button */}
-          <Button 
-            size="lg" 
-            className="w-full bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 text-primary-foreground font-semibold text-lg shadow-lg hover:shadow-primary/50 transition-all duration-300 hover:scale-105"
-            onClick={onBookDemo}
-          >
+          <Button size="lg" className="w-full bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 text-primary-foreground font-semibold text-lg shadow-lg hover:shadow-primary/50 transition-all duration-300 hover:scale-105" onClick={onBookDemo}>
             Boka kostnadsfri demo
           </Button>
         </CardContent>
       </div>
-    </Card>
-  );
+    </Card>;
 };

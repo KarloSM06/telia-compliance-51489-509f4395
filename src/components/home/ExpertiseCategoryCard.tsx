@@ -24,9 +24,7 @@ export const ExpertiseCategoryCard = ({
             </div>}
           
           {/* Icon overlay in corner */}
-          <div className="absolute bottom-4 right-4 z-20 bg-background/90 backdrop-blur-sm rounded-full p-3 shadow-lg group-hover:bg-primary/20 transition-all duration-300">
-            <Icon className="h-6 w-6 text-primary" />
-          </div>
+          
         </div>
 
         {/* Content Section - 60% */}
