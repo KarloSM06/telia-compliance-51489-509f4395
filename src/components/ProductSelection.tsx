@@ -3,17 +3,15 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { useState, useCallback, useEffect } from "react";
+import { useState } from "react";
 import { ConsultationModal } from "@/components/ConsultationModal";
 import { AnimatedSection } from "@/components/AnimatedSection";
 import { PackageCard } from "@/components/home/PackageCard";
 import { IndustryCard } from "@/components/home/IndustryCard";
-import { OptimizedIndustryGrid } from "@/components/home/OptimizedIndustryGrid";
 import { CustomerJourneyFlow } from "@/components/home/CustomerJourneyFlow";
 import { OnboardingTimeline } from "@/components/home/OnboardingTimeline";
 import { TechnicalExpertise } from "@/components/home/TechnicalExpertise";
 import { CaseStudyCard } from "@/components/home/CaseStudyCard";
-import { smoothScrollToElement } from "@/lib/smoothScroll";
 import { aiPackages } from "@/data/packages";
 import { industries } from "@/data/industries";
 import { caseStudies } from "@/data/caseStudies";
@@ -22,31 +20,25 @@ import karloImage from "@/assets/karlo-mangione.png";
 import antonImage from "@/assets/anton-sallnas.png";
 import emilImage from "@/assets/emil-westerberg.png";
 import { Sparkles, Zap, Target, CheckCircle, Award, Users, Wrench, ArrowRight } from "lucide-react";
-import { useImagePreloader } from "@/hooks/useImagePreloader";
-
 export const ProductSelection = () => {
   const [isConsultationModalOpen, setIsConsultationModalOpen] = useState(false);
   const [selectedIndustry, setSelectedIndustry] = useState<string>('');
-  
-  // Preload industry images in the background
-  const industryImages = industries.map(i => i.image!).filter(Boolean);
-  useImagePreloader(industryImages, { concurrency: 2 });
-  
-  // Disable animations on low-memory devices
-  useEffect(() => {
-    const dm = (navigator as any).deviceMemory;
-    if (dm && dm < 4) document.body.classList.add("no-anim");
-    return () => document.body.classList.remove("no-anim");
-  }, []);
-  
-  const scrollToSection = useCallback((id: string) => {
-    smoothScrollToElement(id, { offset: 80 });
-  }, []);
-  
-  const handleIndustryClick = useCallback((industryId: string) => {
+  const scrollToSection = (id: string) => {
+    const element = document.getElementById(id);
+    if (element) {
+      const offset = 80;
+      const elementPosition = element.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.pageYOffset - offset;
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth'
+      });
+    }
+  };
+  const handleIndustryClick = (industryId: string) => {
     setSelectedIndustry(industryId);
     setIsConsultationModalOpen(true);
-  }, []);
+  };
   return <div className="relative overflow-hidden bg-gradient-hero min-h-screen">
       {/* Animated background elements */}
       <div className="absolute inset-0 overflow-hidden">
@@ -115,10 +107,10 @@ export const ProductSelection = () => {
       </section>
 
       {/* Branschspecifika lösningar */}
-      <section id="branscher" className="relative py-24 overflow-hidden" style={{ contain: 'content' }}>
+      <section id="branscher" className="relative py-24 overflow-hidden">
         {/* Animated background elements */}
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_50%,hsl(var(--primary)/0.12),transparent_50%)]" style={{ transform: 'translateZ(0)', willChange: 'auto' }} />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_50%,hsl(var(--primary)/0.08),transparent_50%)]" style={{ transform: 'translateZ(0)', willChange: 'auto' }} />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_50%,hsl(var(--primary)/0.12),transparent_50%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_50%,hsl(var(--primary)/0.08),transparent_50%)]" />
         
         <div className="mx-auto max-w-7xl px-6 lg:px-8 relative z-10">
           <AnimatedSection className="text-center mb-16">
@@ -133,13 +125,11 @@ export const ProductSelection = () => {
             </p>
           </AnimatedSection>
           
-          <OptimizedIndustryGrid className="industry-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-12">
-            {industries.map((industry) => (
-              <div key={industry.id} className="industry-card-wrapper">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-12">
+            {industries.map((industry, index) => <AnimatedSection key={industry.id} delay={index * 80}>
                 <IndustryCard industry={industry} onClick={() => handleIndustryClick(industry.id)} />
-              </div>
-            ))}
-          </OptimizedIndustryGrid>
+              </AnimatedSection>)}
+          </div>
           
           <AnimatedSection className="text-center">
             <Button size="lg" className="bg-gradient-gold text-primary hover:shadow-glow transition-all duration-300 font-semibold" onClick={() => setIsConsultationModalOpen(true)}>

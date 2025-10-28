@@ -3,10 +3,9 @@ import { LogOut, Menu, X, Settings, LayoutDashboard } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 import hiems_logo from "@/assets/hiems_snowflake_logo.png";
-import { useState, useEffect, useCallback, memo } from "react";
+import { useState, useEffect } from "react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
-import { smoothScrollToElement } from "@/lib/smoothScroll";
 import { ConsultationModal } from "@/components/ConsultationModal";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
@@ -15,8 +14,7 @@ import { useToast } from "@/hooks/use-toast";
 import { ShoppingCart } from "@/components/cart/ShoppingCart";
 import { useCart } from "@/hooks/useCart";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-
-export const Header = memo(() => {
+export const Header = () => {
   const {
     user,
     signOut
@@ -36,40 +34,37 @@ export const Header = memo(() => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [showStickyCTA, setShowStickyCTA] = useState(false);
-  
   useEffect(() => {
-    let ticking = false;
     const handleScroll = () => {
-      if (!ticking) {
-        window.requestAnimationFrame(() => {
-          setIsScrolled(window.scrollY > 20);
-          setShowStickyCTA(window.scrollY > 600);
-          ticking = false;
-        });
-        ticking = true;
-      }
+      setIsScrolled(window.scrollY > 20);
+      setShowStickyCTA(window.scrollY > 600);
     };
-    window.addEventListener('scroll', handleScroll, { passive: true });
+    window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
-  
-  const scrollToSection = useCallback((id: string) => {
-    smoothScrollToElement(id, { offset: 80 });
-  }, []);
-  
-  const getInitials = useCallback((email: string) => {
+  const scrollToSection = (id: string) => {
+    const element = document.getElementById(id);
+    if (element) {
+      const offset = 80;
+      const elementPosition = element.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.pageYOffset - offset;
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth'
+      });
+    }
+  };
+  const getInitials = (email: string) => {
     return email.charAt(0).toUpperCase();
-  }, []);
-  
-  const handleAuthClick = useCallback(() => {
+  };
+  const handleAuthClick = () => {
     if (user) {
       signOut();
     } else {
       navigate("/auth");
     }
-  }, [user, signOut, navigate]);
-  
-  const handleNewsletterSubmit = useCallback((e: React.FormEvent) => {
+  };
+  const handleNewsletterSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     toast({
       title: "Tack för din anmälan!",
@@ -77,7 +72,7 @@ export const Header = memo(() => {
     });
     setEmail("");
     setIsNewsletterOpen(false);
-  }, [toast]);
+  };
   return <header className={cn("sticky top-0 z-50 transition-all duration-500", "bg-background/60 backdrop-blur-2xl", "border-b border-border/50", isScrolled ? "shadow-elegant py-3" : "shadow-[0_4px_20px_-4px_rgba(0,0,0,0.1)] py-5")}>
       <div className="mx-auto max-w-[1440px] px-6 md:px-8 lg:px-16">
         <div className={cn("flex items-center justify-between transition-all duration-500", isScrolled ? "h-14" : "h-20")}>
@@ -301,4 +296,4 @@ export const Header = memo(() => {
           
         </div>}
     </header>;
-});
+};

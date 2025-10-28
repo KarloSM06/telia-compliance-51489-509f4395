@@ -18,45 +18,23 @@ export default defineConfig(({ mode }) => ({
   build: {
     rollupOptions: {
       output: {
-        manualChunks: (id) => {
-          // Core React libraries
-          if (id.includes('node_modules/react') || id.includes('node_modules/react-dom') || id.includes('node_modules/react-router-dom')) {
-            return 'react-vendor';
-          }
-          // Radix UI components
-          if (id.includes('node_modules/@radix-ui')) {
-            return 'ui-vendor';
-          }
-          // Charts
-          if (id.includes('node_modules/recharts')) {
-            return 'chart-vendor';
-          }
-          // Supabase
-          if (id.includes('node_modules/@supabase')) {
-            return 'supabase';
-          }
-          // React Query
-          if (id.includes('node_modules/@tanstack/react-query')) {
-            return 'query';
-          }
-          // Lucide icons - separate chunk for tree-shaking
-          if (id.includes('node_modules/lucide-react')) {
-            return 'icons';
-          }
-          // Date utilities
-          if (id.includes('node_modules/date-fns')) {
-            return 'date-utils';
-          }
-          // Split large components
-          if (id.includes('src/components/dashboard') && !id.includes('src/components/dashboard/DashboardLayout')) {
-            return 'dashboard-components';
-          }
-          if (id.includes('src/components/calendar')) {
-            return 'calendar-components';
-          }
-          if (id.includes('src/components/lead')) {
-            return 'lead-components';
-          }
+        manualChunks: {
+          'react-vendor': ['react', 'react-dom', 'react-router-dom'],
+          'ui-vendor': [
+            '@radix-ui/react-accordion',
+            '@radix-ui/react-alert-dialog',
+            '@radix-ui/react-avatar',
+            '@radix-ui/react-checkbox',
+            '@radix-ui/react-dialog',
+            '@radix-ui/react-dropdown-menu',
+            '@radix-ui/react-popover',
+            '@radix-ui/react-select',
+            '@radix-ui/react-tabs',
+            '@radix-ui/react-tooltip',
+          ],
+          'chart-vendor': ['recharts'],
+          'supabase': ['@supabase/supabase-js'],
+          'query': ['@tanstack/react-query'],
         },
       },
     },
@@ -65,16 +43,10 @@ export default defineConfig(({ mode }) => ({
       compress: {
         drop_console: mode === 'production',
         drop_debugger: true,
-        pure_funcs: mode === 'production' ? ['console.log', 'console.info', 'console.debug'] : [],
-      },
-      mangle: {
-        safari10: true,
       },
     },
     cssCodeSplit: true,
     chunkSizeWarningLimit: 600,
     sourcemap: mode === 'development',
-    target: 'esnext',
-    cssMinify: true,
   },
 }));
