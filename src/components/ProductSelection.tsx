@@ -49,7 +49,7 @@ export const ProductSelection = () => {
       {/* Hero Section */}
       <section id="hero" className="relative py-32 lg:py-48">
         <div className="absolute inset-0 overflow-hidden">
-          <img src={heroBackground} alt="Hero" className="w-full h-full object-cover" fetchPriority="high" />
+          <img src={heroBackground} alt="Hero" className="w-full h-full object-cover" />
           <div className="absolute inset-0 bg-gradient-to-b from-primary/90 via-primary/80 to-primary/95"></div>
         </div>
         

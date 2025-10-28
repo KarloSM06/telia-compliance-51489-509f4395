@@ -21,6 +21,9 @@ export function ConsultationModal({ open, onOpenChange }: ConsultationModalProps
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
 
+  // Debug logging
+  console.log('ConsultationModal open state:', open);
+
   // Section 1: Company info
   const [companyName, setCompanyName] = useState("");
   const [contactPerson, setContactPerson] = useState("");
