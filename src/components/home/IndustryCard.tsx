@@ -14,7 +14,14 @@ export const IndustryCard = ({
       <div className="relative aspect-[4/3] overflow-hidden">
         {industry.image ? <>
             <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent z-10 opacity-70 group-hover:opacity-50 transition-opacity duration-500" />
-            <img src={industry.image} alt={industry.name} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 group-hover:brightness-110" />
+            <img
+              src={industry.image}
+              alt={industry.name}
+              decoding="async"
+              loading="lazy"
+              fetchPriority="low"
+              className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 group-hover:brightness-110"
+            />
           </> : <div className="absolute inset-0 bg-gradient-to-br from-primary/30 via-primary/10 to-transparent flex items-center justify-center">
             <Icon className="h-24 w-24 text-primary/40 group-hover:text-primary/60 transition-colors duration-300" />
           </div>}

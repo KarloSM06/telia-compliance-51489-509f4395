@@ -20,9 +20,12 @@ import karloImage from "@/assets/karlo-mangione.png";
 import antonImage from "@/assets/anton-sallnas.png";
 import emilImage from "@/assets/emil-westerberg.png";
 import { Sparkles, Zap, Target, CheckCircle, Award, Users, Wrench, ArrowRight } from "lucide-react";
+import { usePreloadImages } from "@/hooks/usePreloadImages";
 export const ProductSelection = () => {
   const [isConsultationModalOpen, setIsConsultationModalOpen] = useState(false);
   const [selectedIndustry, setSelectedIndustry] = useState<string>('');
+  // Preload industry images in the background to eliminate jank when the section appears
+  usePreloadImages(industries.map(i => i.image).filter(Boolean) as string[]);
   const scrollToSection = (id: string) => {
     const element = document.getElementById(id);
     if (element) {
