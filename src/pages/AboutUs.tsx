@@ -3,21 +3,17 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { CheckCircle, Mail, Phone, Target, Rocket, Users, Lightbulb, Eye, Heart, TrendingUp, Shield, Handshake, Zap, Award, Globe } from "lucide-react";
 import { AnimatedSection } from "@/components/AnimatedSection";
+import { ConsultationModal } from "@/components/ConsultationModal";
+import { useState } from "react";
 import antonImage from "@/assets/anton-sallnas.png";
 import karloImage from "@/assets/karlo-mangione.png";
 import emilImage from "@/assets/emil-westerberg.png";
 import hiemsLogoSnowflake from "@/assets/hiems-logo-snowflake.png";
 
-// Logo imports for tech expertise
-import openaiLogo from "/images/logos/openai.png";
-import claudeLogo from "/images/logos/claude.png";
-import geminiLogo from "/images/logos/gemini.png";
-import deepseekLogo from "/images/logos/deepseek.png";
-import vapiLogo from "/images/logos/vapi.png";
-import retellLogo from "/images/logos/retell.png";
-import makeLogo from "/images/logos/make.png";
-import n8nLogo from "/images/logos/n8n.png";
-import lovableLogo from "/images/logos/lovable.png";
+// Expertise images
+import aiModelsImage from "/images/expertise/ai-models.jpg";
+import voiceSystemsImage from "/images/expertise/voice-systems.jpg";
+import leadGenerationImage from "/images/expertise/lead-generation.jpg";
 
 interface TeamMember {
   name: string;
@@ -101,6 +97,8 @@ const teamMembers: TeamMember[] = [
 ];
 
 const AboutUs = () => {
+  const [isConsultationModalOpen, setIsConsultationModalOpen] = useState(false);
+  
   const scrollToTeam = () => {
     document.getElementById('team-section')?.scrollIntoView({ behavior: 'smooth' });
   };
@@ -164,7 +162,7 @@ const AboutUs = () => {
                     <Users className="h-5 w-5" />
                     Möt teamet
                   </Button>
-                  <Button size="lg" variant="outline" onClick={() => window.location.href = '/demo'}>
+                  <Button size="lg" variant="outline" onClick={() => setIsConsultationModalOpen(true)}>
                     Boka demo
                   </Button>
                 </div>
@@ -592,52 +590,8 @@ const AboutUs = () => {
           </div>
         </section>
 
-        {/* Teknisk Expertis Section */}
+        {/* Varför Välja Hiems Section - Now with Images */}
         <section className="relative py-24 bg-gradient-to-b from-background via-primary/3 to-background overflow-hidden">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_70%,hsl(var(--primary)/0.12),transparent_50%)]" />
-          
-          <div className="mx-auto max-w-7xl px-6 lg:px-8 relative">
-            <AnimatedSection>
-              <div className="text-center space-y-4 mb-16">
-                <h2 className="text-4xl sm:text-5xl font-bold bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent">
-                  Teknisk Expertis
-                </h2>
-                <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-                  Vi behärskar hela AI-ekosystemet
-                </p>
-              </div>
-            </AnimatedSection>
-            
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-6">
-              {[
-                { name: "OpenAI", logo: openaiLogo },
-                { name: "Claude", logo: claudeLogo },
-                { name: "Gemini", logo: geminiLogo },
-                { name: "DeepSeek", logo: deepseekLogo },
-                { name: "Vapi", logo: vapiLogo },
-                { name: "Retell", logo: retellLogo },
-                { name: "Make", logo: makeLogo },
-                { name: "n8n", logo: n8nLogo },
-                { name: "Lovable", logo: lovableLogo }
-              ].map((tech, index) => (
-                <AnimatedSection key={tech.name} delay={index * 50}>
-                  <Card className="border border-primary/10 bg-gradient-to-br from-card/80 via-card/50 to-card/30 backdrop-blur-md hover:shadow-xl hover:shadow-primary/10 hover:-translate-y-1 transition-all duration-500 group">
-                    <CardContent className="p-6 flex items-center justify-center h-32">
-                      <img 
-                        src={tech.logo} 
-                        alt={tech.name} 
-                        className="max-w-full max-h-16 object-contain opacity-80 group-hover:opacity-100 transition-opacity duration-300"
-                      />
-                    </CardContent>
-                  </Card>
-                </AnimatedSection>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* Varför Välja Hiems Section */}
-        <section className="relative py-24 bg-gradient-to-b from-background via-primary/5 to-background overflow-hidden">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_60%,hsl(var(--primary)/0.15),transparent_50%)]" />
           
           <div className="mx-auto max-w-7xl px-6 lg:px-8 relative">
@@ -654,27 +608,42 @@ const AboutUs = () => {
                 {
                   icon: Globe,
                   title: "Svenskt & Lokalt",
-                  description: "Vi förstår svenska företag, svenska marknaden och svenska utmaningar. Ingen kulturell eller språklig barriär."
+                  description: "Vi förstår svenska företag, svenska marknaden och svenska utmaningar. Ingen kulturell eller språklig barriär.",
+                  image: aiModelsImage
                 },
                 {
                   icon: Award,
                   title: "End-to-End",
-                  description: "Från strategi till drift, vi hanterar allt. En partner för hela er AI-resa, inte bara en leverantör."
+                  description: "Från strategi till drift, vi hanterar allt. En partner för hela er AI-resa, inte bara en leverantör.",
+                  image: voiceSystemsImage
                 },
                 {
                   icon: TrendingUp,
                   title: "Bevisat ROI",
-                  description: "Våra kunder ser mätbar avkastning. Vi bygger system som faktiskt ökar lönsamhet och effektivitet."
+                  description: "Våra kunder ser mätbar avkastning. Vi bygger system som faktiskt ökar lönsamhet och effektivitet.",
+                  image: leadGenerationImage
                 }
               ].map((benefit, index) => (
                 <AnimatedSection key={benefit.title} delay={index * 100}>
-                  <Card className="h-full border border-primary/10 bg-gradient-to-br from-card/80 via-card/50 to-card/30 backdrop-blur-md hover:shadow-2xl hover:shadow-primary/10 hover:-translate-y-2 transition-all duration-500 group">
-                    <CardContent className="p-10 space-y-6 text-center h-full flex flex-col">
-                      <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-gradient-to-br from-primary to-primary/60 shadow-lg shadow-primary/30 mx-auto group-hover:scale-110 transition-transform duration-500">
-                        <benefit.icon className="h-10 w-10 text-primary-foreground" />
+                  <Card className="h-full border border-primary/10 bg-gradient-to-br from-card/80 via-card/50 to-card/30 backdrop-blur-md hover:shadow-2xl hover:shadow-primary/10 hover:-translate-y-2 transition-all duration-500 group overflow-hidden">
+                    {/* Image Header */}
+                    <div className="relative h-48 overflow-hidden">
+                      <img 
+                        src={benefit.image} 
+                        alt={benefit.title}
+                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-br from-primary/40 via-primary/20 to-transparent" />
+                      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+                        <div className="w-20 h-20 rounded-full bg-gradient-to-br from-primary to-primary/60 flex items-center justify-center shadow-lg shadow-primary/30 group-hover:scale-110 transition-transform duration-500">
+                          <benefit.icon className="h-10 w-10 text-primary-foreground" />
+                        </div>
                       </div>
+                    </div>
+                    
+                    <CardContent className="p-8 space-y-4 text-center">
                       <h3 className="text-2xl font-bold">{benefit.title}</h3>
-                      <p className="text-muted-foreground leading-relaxed flex-1">
+                      <p className="text-muted-foreground leading-relaxed">
                         {benefit.description}
                       </p>
                     </CardContent>
@@ -706,7 +675,7 @@ const AboutUs = () => {
                   </div>
                   
                   <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
-                    <Button size="lg" className="gap-2" onClick={() => window.location.href = '/demo'}>
+                    <Button size="lg" className="gap-2" onClick={() => setIsConsultationModalOpen(true)}>
                       <Rocket className="h-5 w-5" />
                       Boka Gratis Behovsanalys
                     </Button>
@@ -727,6 +696,11 @@ const AboutUs = () => {
           </div>
         </section>
       </main>
+      
+      <ConsultationModal
+        open={isConsultationModalOpen}
+        onOpenChange={setIsConsultationModalOpen}
+      />
     </div>
   );
 };
