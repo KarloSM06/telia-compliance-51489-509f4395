@@ -39,8 +39,17 @@ export const PROVIDER_CAPABILITIES: Record<string, Capability[]> = {
   vapi: ['voice', 'ai_agent', 'realtime_streaming'],
   retell: ['voice', 'ai_agent', 'websocket'],
   simplybook: ['calendar_sync', 'booking', 'customer_management'],
-  google_calendar: ['calendar_sync', 'event_management'],
+  bokamera: ['calendar_sync', 'booking', 'customer_management'],
+  hapio: ['calendar_sync', 'booking', 'customer_management'],
   bookeo: ['calendar_sync', 'booking', 'payment'],
+  supersaas: ['calendar_sync', 'booking', 'customer_management'],
+  tixly: ['calendar_sync', 'booking', 'customer_management'],
+  hogia_bookit: ['calendar_sync', 'booking', 'customer_management'],
+  ireserve: ['calendar_sync', 'booking', 'customer_management'],
+  bokadirekt: ['calendar_sync', 'booking', 'customer_management'],
+  bokase: ['calendar_sync'],
+  google_calendar: ['calendar_sync', 'event_management'],
+  outlook: ['calendar_sync', 'event_management'],
 };
 
 // Provider types
@@ -50,8 +59,17 @@ export const PROVIDER_TYPES: Record<string, ProviderType> = {
   vapi: 'telephony',
   retell: 'telephony',
   simplybook: 'calendar',
-  google_calendar: 'calendar',
+  bokamera: 'calendar',
+  hapio: 'calendar',
   bookeo: 'calendar',
+  supersaas: 'calendar',
+  tixly: 'calendar',
+  hogia_bookit: 'calendar',
+  ireserve: 'calendar',
+  bokadirekt: 'calendar',
+  bokase: 'calendar',
+  google_calendar: 'calendar',
+  outlook: 'calendar',
 };
 
 // Credentials schema per provider
@@ -61,8 +79,17 @@ export const PROVIDER_CREDENTIALS_SCHEMA: Record<string, string[]> = {
   vapi: ['apiKey'],
   retell: ['apiKey', 'webhookKey'],
   simplybook: ['companyLogin', 'apiKey'],
-  google_calendar: ['clientId', 'clientSecret', 'refreshToken'],
+  bokamera: ['apiKey'],
+  hapio: ['apiKey'],
   bookeo: ['apiKey', 'secretKey'],
+  supersaas: ['accountName', 'apiKey'],
+  tixly: ['apiKey'],
+  hogia_bookit: ['apiKey', 'accountId'],
+  ireserve: ['apiKey', 'hotelId'],
+  bokadirekt: ['apiKey'],
+  bokase: ['apiKey'],
+  google_calendar: ['clientId', 'clientSecret', 'refreshToken'],
+  outlook: ['clientId', 'clientSecret', 'refreshToken'],
 };
 
 export const useIntegrations = () => {

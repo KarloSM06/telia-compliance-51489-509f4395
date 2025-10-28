@@ -23,9 +23,18 @@ const AVAILABLE_PROVIDERS = [
   { id: 'telnyx', name: 'Telnyx', category: 'telephony' },
   { id: 'vapi', name: 'Vapi', category: 'telephony' },
   { id: 'retell', name: 'Retell', category: 'telephony' },
-  { id: 'simplybook', name: 'SimplyBook', category: 'calendar' },
-  { id: 'google_calendar', name: 'Google Calendar', category: 'calendar' },
-  { id: 'bookeo', name: 'Bookeo', category: 'calendar' },
+  { id: 'simplybook', name: 'SimplyBook.me', category: 'calendar', type: 'Full API' },
+  { id: 'bokamera', name: 'BokaMera', category: 'calendar', type: 'Full API' },
+  { id: 'hapio', name: 'Hapio', category: 'calendar', type: 'Full API' },
+  { id: 'bookeo', name: 'Bookeo', category: 'calendar', type: 'Full API' },
+  { id: 'supersaas', name: 'SuperSaaS', category: 'calendar', type: 'Full API' },
+  { id: 'tixly', name: 'Tixly', category: 'calendar', type: 'Full API' },
+  { id: 'hogia_bookit', name: 'Hogia BOOKIT', category: 'calendar', type: 'Full API' },
+  { id: 'ireserve', name: 'i-Reserve', category: 'calendar', type: 'Full API' },
+  { id: 'bokadirekt', name: 'Bokadirekt', category: 'calendar', type: 'Full API' },
+  { id: 'bokase', name: 'Boka.se', category: 'calendar', type: 'Kalendersynk' },
+  { id: 'google_calendar', name: 'Google Calendar', category: 'calendar', type: 'Kalendersynk' },
+  { id: 'outlook', name: 'Microsoft Outlook', category: 'calendar', type: 'Kalendersynk' },
 ];
 
 export const AddIntegrationModal = ({ open, onOpenChange }: AddIntegrationModalProps) => {
@@ -138,11 +147,19 @@ export const AddIntegrationModal = ({ open, onOpenChange }: AddIntegrationModalP
                         Tillagd
                       </Badge>
                     )}
-                    <span className="font-semibold mb-2">{provider.name}</span>
+                    <div className="flex items-center justify-between w-full mb-2">
+                      <span className="font-semibold">{provider.name}</span>
+                      {'type' in provider && (
+                        <Badge variant="outline" className="text-xs">
+                          {provider.type}
+                        </Badge>
+                      )}
+                    </div>
                     <div className="flex flex-wrap gap-1">
-                      {PROVIDER_CAPABILITIES[provider.id]?.slice(0, 3).map(cap => (
+                      {PROVIDER_CAPABILITIES[provider.id]?.slice(0, 2).map(cap => (
                         <Badge key={cap} variant="outline" className="text-xs">
-                          {cap}
+                          {cap === 'calendar_sync' && 'Kalender'}
+                          {cap === 'booking' && 'Bokning'}
                         </Badge>
                       ))}
                     </div>
@@ -184,10 +201,13 @@ export const AddIntegrationModal = ({ open, onOpenChange }: AddIntegrationModalP
                     {field === 'clientSecret' && 'Client Secret'}
                     {field === 'refreshToken' && 'Refresh Token'}
                     {field === 'secretKey' && 'Secret Key'}
+                    {field === 'accountName' && 'Account Name'}
+                    {field === 'accountId' && 'Account ID'}
+                    {field === 'hotelId' && 'Hotel ID'}
                   </Label>
                   <Input
                     id={field}
-                    type={field.includes('token') || field.includes('secret') ? 'password' : 'text'}
+                    type={field.includes('token') || field.includes('secret') || field.includes('key') ? 'password' : 'text'}
                     value={credentials[field] || ''}
                     onChange={(e) => setCredentials({ ...credentials, [field]: e.target.value })}
                     placeholder={`Ange ${field}`}

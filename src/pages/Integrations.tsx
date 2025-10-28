@@ -20,8 +20,10 @@ export default function Integrations() {
   
   const [addModalOpen, setAddModalOpen] = useState(false);
 
-  const telephonyIntegrations = getByType('telephony').concat(
-    integrations.filter(i => i.provider_type === 'multi')
+  const telephonyIntegrations = integrations.filter(i => 
+    i.provider_type === 'telephony' || 
+    i.provider_type === 'multi' ||
+    i.capabilities.includes('voice')
   );
   const messagingIntegrations = integrations.filter(i => 
     i.capabilities.includes('sms') || i.provider_type === 'messaging'
