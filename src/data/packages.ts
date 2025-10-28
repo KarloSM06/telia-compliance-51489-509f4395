@@ -4,6 +4,7 @@ import serviceOperationsImage from "@/assets/service-operations.jpg";
 import ecommerceRetailImage from "@/assets/ecommerce-retail.jpg";
 import dataInsightImage from "@/assets/data-insight.jpg";
 import growthSalesImage from "@/assets/growth-sales-accelerator.jpg";
+import enterpriseAiImage from "@/assets/enterprise-ai.jpg";
 
 export interface Package {
   id: string;
@@ -150,6 +151,7 @@ export const aiPackages: Package[] = [
     icon: Award,
     tagline: 'Skräddarsytt för stora företag',
     targetAudience: 'Stora företag och branschspecifika lösningar',
+    image: enterpriseAiImage,
     components: [
       'Skräddarsytt AI-ekosystem',
       'Integration med ERP, CRM, e-handel',
