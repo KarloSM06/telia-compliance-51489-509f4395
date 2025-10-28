@@ -6,6 +6,7 @@ import { AnimatedSection } from "@/components/AnimatedSection";
 import antonImage from "@/assets/anton-sallnas.png";
 import karloImage from "@/assets/karlo-mangione.png";
 import emilImage from "@/assets/emil-westerberg.png";
+import hiemsLogoSnowflake from "@/assets/hiems-logo-snowflake.png";
 
 // Logo imports for tech expertise
 import openaiLogo from "/images/logos/openai.png";
@@ -113,6 +114,15 @@ const AboutUs = () => {
         <section className="relative py-32 bg-gradient-to-b from-background via-primary/5 to-background overflow-hidden">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,hsl(var(--primary)/0.15),transparent_50%)]" />
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_80%,hsl(var(--primary)/0.1),transparent_50%)]" />
+          
+          {/* Large Hiems Logo Background */}
+          <div className="absolute top-0 right-0 w-[800px] h-[800px] -translate-y-1/4 translate-x-1/4 opacity-5 pointer-events-none">
+            <img 
+              src={hiemsLogoSnowflake} 
+              alt="" 
+              className="w-full h-full object-contain animate-[spin_60s_linear_infinite]"
+            />
+          </div>
           
           <div className="mx-auto max-w-7xl px-6 lg:px-8 relative">
             <AnimatedSection>
