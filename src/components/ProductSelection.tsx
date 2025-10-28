@@ -47,31 +47,31 @@ export const ProductSelection = () => {
       </div>
       
       {/* Hero Section */}
-      <section id="hero" className="relative py-32 lg:py-48">
+      <section id="hero" className="relative py-40 lg:py-56 min-h-screen flex items-center">
         <div className="absolute inset-0 overflow-hidden">
           <img src={heroBackground} alt="Hero" className="w-full h-full object-cover" />
           <div className="absolute inset-0 bg-gradient-to-b from-primary/90 via-primary/80 to-primary/95"></div>
         </div>
         
-        <div className="mx-auto max-w-7xl px-6 lg:px-8 relative z-10">
-          <AnimatedSection className="max-w-4xl mx-auto text-center">
-            <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight">
+        <div className="mx-auto max-w-7xl px-6 lg:px-12 relative z-10 w-full">
+          <AnimatedSection className="max-w-5xl mx-auto text-center">
+            <h1 className="text-6xl sm:text-7xl lg:text-8xl font-bold text-white mb-8 leading-tight">
               AI som driver din verksamhet –{" "}
               <span className="bg-gradient-gold bg-clip-text text-transparent">
                 effektivt, skalbart och vinstdrivande
               </span>
             </h1>
             
-            <p className="text-xl text-white/90 mb-12 leading-relaxed max-w-3xl mx-auto">
+            <p className="text-2xl sm:text-3xl text-white/95 mb-16 leading-relaxed max-w-4xl mx-auto font-light">
               Hiems levererar ett komplett AI-ekosystem som automatiserar kundflöden, 
               försäljning, bokningar, administration och dataanalys.
             </p>
             
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg" className="bg-gradient-gold text-primary hover:shadow-glow transition-all duration-300 font-semibold text-lg px-10 py-7" onClick={() => scrollToSection('paket')}>
+            <div className="flex flex-col sm:flex-row gap-6 justify-center">
+              <Button size="lg" className="bg-gradient-gold text-primary hover:shadow-glow transition-all duration-300 font-bold text-xl px-12 py-8 h-auto" onClick={() => scrollToSection('paket')}>
                 Se våra paket
               </Button>
-              <Button size="lg" variant="outline" className="border-2 border-white text-white bg-white/10 hover:bg-white hover:text-primary transition-all duration-300 font-semibold text-lg px-10 py-7" onClick={() => setIsConsultationModalOpen(true)}>
+              <Button size="lg" variant="outline" className="border-2 border-white text-white bg-white/10 hover:bg-white hover:text-primary transition-all duration-300 font-bold text-xl px-12 py-8 h-auto" onClick={() => setIsConsultationModalOpen(true)}>
                 Boka demo
               </Button>
             </div>
