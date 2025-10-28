@@ -18,9 +18,9 @@ export const IndustryCard = memo(({
             <img 
               src={industry.image} 
               alt={industry.name} 
-              loading="lazy"
-              decoding="async"
-              fetchPriority="low"
+              loading="eager"
+              decoding="sync"
+              fetchPriority="high"
               className="w-full h-full object-cover transition-opacity duration-300 group-hover:brightness-105"
             />
           </> : <div className="absolute inset-0 bg-gradient-to-br from-primary/30 via-primary/10 to-transparent flex items-center justify-center">
