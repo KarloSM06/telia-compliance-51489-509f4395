@@ -545,23 +545,23 @@ const AboutUs = () => {
                     {[
                       {
                         year: "2024",
-                        title: "Grundandet",
-                        description: "Hiems grundas med en vision om att revolutionera svensk affärsverksamhet genom innovativ teknologi."
-                      },
-                      {
-                        year: "Jan 2025",
-                        title: "Transformation till AI",
-                        description: "Hiems går ihop med ChronoDesk och transformeras till ett dedikerat AI-företag."
-                      },
-                      {
-                        year: "Feb 2025",
-                        title: "Första Partnerskapet",
-                        description: "Bara en månad efter transformationen etableras vårt första strategiska partnerskap."
+                        title: "Hiems Grundas",
+                        description: "Hiems grundas med fokus på AI-lösningar för att revolutionera svensk affärsverksamhet genom innovativ teknologi."
                       },
                       {
                         year: "2025",
-                        title: "Fortsatt Tillväxt",
-                        description: "Fler kunder, fler branscher, fler framgångshistorier. AI-framtiden är här."
+                        title: "ChronoDesk Grundas",
+                        description: "ChronoDesk startas med specialisering inom AI-driven automation och intelligenta system."
+                      },
+                      {
+                        year: "Okt 2025",
+                        title: "Historisk Sammanslagning",
+                        description: "Hiems och ChronoDesk slår sina krafter samman och etablerar samtidigt sitt första strategiska partnerskap med en klient. Ett otroligt snabbt växande företag föds."
+                      },
+                      {
+                        year: "2025-",
+                        title: "Explosiv Tillväxt",
+                        description: "Ett otroligt snabbt växande företag med fler kunder, fler branscher och fler framgångshistorier varje månad. AI-framtiden är här, och vi växer i raketfart."
                       }
                     ].map((milestone, index) => (
                       <AnimatedSection key={milestone.year} delay={index * 100}>
