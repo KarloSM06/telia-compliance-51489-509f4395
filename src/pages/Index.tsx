@@ -1,7 +1,6 @@
 import { Header } from "@/components/Header";
 import { ProductSelection } from "@/components/ProductSelection";
 import { Footer } from "@/components/Footer";
-import { PopupTimer } from "@/components/PopupTimer";
 
 const Index = () => {
   return (
@@ -11,7 +10,6 @@ const Index = () => {
         <ProductSelection />
       </main>
       <Footer />
-      <PopupTimer />
     </div>
   );
 };

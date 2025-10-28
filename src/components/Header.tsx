@@ -6,7 +6,6 @@ import hiems_logo from "@/assets/hiems_snowflake_logo.png";
 import { useState, useEffect } from "react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
-import { ReceptionistModal } from "@/components/ReceptionistModal";
 import { ConsultationModal } from "@/components/ConsultationModal";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
@@ -31,7 +30,6 @@ export const Header = () => {
   } = useCart();
   const [email, setEmail] = useState("");
   const [isNewsletterOpen, setIsNewsletterOpen] = useState(false);
-  const [isReceptionistOpen, setIsReceptionistOpen] = useState(false);
   const [isConsultationModalOpen, setIsConsultationModalOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
@@ -291,7 +289,6 @@ export const Header = () => {
             </div>
           </div>}
       </div>
-      <ReceptionistModal open={isReceptionistOpen} onOpenChange={setIsReceptionistOpen} />
       <ConsultationModal open={isConsultationModalOpen} onOpenChange={setIsConsultationModalOpen} />
       
       {/* Sticky CTA Button */}
