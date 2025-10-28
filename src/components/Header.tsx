@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { LogOut, Menu, X, Settings, LayoutDashboard } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import hiems_logo from "@/assets/hiems_snowflake_logo.png";
 import { useState, useEffect } from "react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
@@ -112,11 +112,11 @@ export const Header = () => {
           }, {
             label: 'Kontakt',
             action: () => scrollToSection('kontakt')
-          }].map((item, idx) => item.href ? <a key={idx} href={item.href} className="relative px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-all duration-300 group">
+          }].map((item, idx) => item.href ? <Link key={idx} to={item.href} className="relative px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-all duration-300 group">
                     <span className="relative z-10">{item.label}</span>
                     <div className="absolute inset-0 bg-gradient-gold opacity-0 group-hover:opacity-10 rounded-lg transition-all duration-300 scale-90 group-hover:scale-100" />
                     <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-0 h-0.5 bg-gradient-gold group-hover:w-1/2 transition-all duration-300" />
-                  </a> : <button key={idx} onClick={item.action} className="relative px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-all duration-300 group">
+                  </Link> : <button key={idx} onClick={item.action} className="relative px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-all duration-300 group">
                     <span className="relative z-10">{item.label}</span>
                     <div className="absolute inset-0 bg-gradient-gold opacity-0 group-hover:opacity-10 rounded-lg transition-all duration-300 scale-90 group-hover:scale-100" />
                     <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-0 h-0.5 bg-gradient-gold group-hover:w-1/2 transition-all duration-300" />
@@ -221,10 +221,10 @@ export const Header = () => {
               }, {
                 label: 'Kontakt',
                 action: () => scrollToSection('kontakt')
-              }].map((item, idx) => item.href ? <a key={idx} href={item.href} className="relative px-4 py-3 text-sm font-medium text-muted-foreground hover:text-foreground transition-all duration-300 rounded-xl hover:bg-accent/10 group">
+              }].map((item, idx) => item.href ? <Link key={idx} to={item.href} onClick={() => setIsMobileMenuOpen(false)} className="relative px-4 py-3 text-sm font-medium text-muted-foreground hover:text-foreground transition-all duration-300 rounded-xl hover:bg-accent/10 group">
                           <span className="relative z-10">{item.label}</span>
                           <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-0 bg-gradient-gold group-hover:h-1/2 transition-all duration-300 rounded-r-full" />
-                        </a> : <button key={idx} onClick={() => {
+                        </Link> : <button key={idx} onClick={() => {
                 item.action?.();
                 setIsMobileMenuOpen(false);
               }} className="relative px-4 py-3 text-sm font-medium text-muted-foreground hover:text-foreground transition-all duration-300 rounded-xl hover:bg-accent/10 text-left group">
