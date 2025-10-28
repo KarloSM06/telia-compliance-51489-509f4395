@@ -100,6 +100,7 @@ export const expertiseCategories: ExpertiseCategory[] = [
     items: [
       { name: "Apollo", type: "platform", description: "B2B prospektering", logo: "/images/logos/apollo.png" },
       { name: "Apify", type: "platform", description: "Data extraction", logo: "/images/logos/apify.png" },
+      { name: "Eniro", type: "platform", description: "Svensk företagsdata", logo: "/images/logos/eniro.png" },
       { name: "LinkedIn", type: "platform", description: "Social selling" }
     ]
   }
