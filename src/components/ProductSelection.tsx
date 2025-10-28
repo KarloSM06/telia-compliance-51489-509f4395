@@ -165,7 +165,7 @@ export const ProductSelection = () => {
       <TechnicalExpertise onBookDemo={() => setIsConsultationModalOpen(true)} />
 
       {/* Onboarding-process */}
-      <section id="onboarding" className="relative py-24 pb-32 overflow-hidden">
+      <section id="onboarding" className="relative py-24 pb-48 overflow-hidden">
         {/* Animated background elements */}
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_40%_60%,hsl(var(--primary)/0.12),transparent_50%)]" />
         
@@ -193,7 +193,7 @@ export const ProductSelection = () => {
       </section>
 
       {/* Case / Kundreferenser */}
-      <section id="case" className="relative pt-96 pb-24 bg-gradient-to-b from-background via-primary/5 to-background overflow-hidden">
+      <section id="case" className="relative py-24 bg-gradient-to-b from-background via-primary/5 to-background overflow-hidden">
         {/* Animated background elements */}
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_60%_40%,hsl(var(--primary)/0.15),transparent_50%)]" />
         
