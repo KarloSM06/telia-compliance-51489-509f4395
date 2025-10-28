@@ -567,7 +567,7 @@ const AboutUs = () => {
                       <AnimatedSection key={milestone.year} delay={index * 100}>
                         <div className="flex gap-6 group items-center">
                           <div className="flex-shrink-0">
-                            <div className="w-24 h-24 rounded-full bg-gradient-to-br from-primary to-primary/60 flex items-center justify-center font-bold text-sm text-center px-2 shadow-lg shadow-primary/30 group-hover:scale-110 transition-transform duration-500">
+                            <div className="w-24 h-24 rounded-full bg-gradient-to-br from-primary to-primary/60 flex items-center justify-center font-bold text-sm text-center text-primary-foreground px-2 shadow-lg shadow-primary/30 group-hover:scale-110 transition-transform duration-500">
                               {milestone.year}
                             </div>
                           </div>
