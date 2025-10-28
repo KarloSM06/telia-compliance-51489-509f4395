@@ -7,6 +7,11 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
+// Input validation schema
+const RequestSchema = z.object({
+  lead_id: z.string().uuid('Invalid lead ID format'),
+});
+
 // Validation schema for AI enrichment response
 const enrichmentSchema = z.object({
   ai_score: z.number().int().min(1).max(100),
@@ -21,31 +26,57 @@ serve(async (req) => {
   }
 
   try {
+    // Get authenticated user
+    const authHeader = req.headers.get('Authorization');
+    if (!authHeader) {
+      return new Response(
+        JSON.stringify({ error: 'Unauthorized' }),
+        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
     const supabaseClient = createClient(
       Deno.env.get('SUPABASE_URL') ?? '',
-      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
+      Deno.env.get('SUPABASE_ANON_KEY') ?? ''
     );
 
-    const { lead_id } = await req.json();
+    const token = authHeader.replace('Bearer ', '');
+    const { data: { user }, error: userError } = await supabaseClient.auth.getUser(token);
 
-    if (!lead_id) {
+    if (userError || !user) {
       return new Response(
-        JSON.stringify({ error: 'lead_id is required' }),
+        JSON.stringify({ error: 'Invalid token' }),
+        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    // Validate input
+    const rawBody = await req.json();
+    const result = RequestSchema.safeParse(rawBody);
+
+    if (!result.success) {
+      return new Response(
+        JSON.stringify({ 
+          error: 'Invalid input', 
+          details: result.error.errors 
+        }),
         { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
 
-    // Fetch the lead
+    const { lead_id } = result.data;
+
+    // Fetch the lead with ownership verification
     const { data: lead, error: leadError } = await supabaseClient
       .from('leads')
       .select('*')
       .eq('id', lead_id)
+      .eq('user_id', user.id)
       .single();
 
     if (leadError || !lead) {
-      console.error('Error fetching lead:', leadError);
       return new Response(
-        JSON.stringify({ error: 'Lead not found' }),
+        JSON.stringify({ error: 'Lead not found or unauthorized' }),
         { status: 404, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
@@ -108,9 +139,6 @@ Svara ENDAST med valid JSON i detta exakta format:
     });
 
     if (!aiResponse.ok) {
-      const errorText = await aiResponse.text();
-      console.error('AI API error:', aiResponse.status, errorText);
-      
       if (aiResponse.status === 429) {
         return new Response(
           JSON.stringify({ error: 'AI rate limit exceeded. Please try again later.' }),
@@ -140,17 +168,14 @@ Svara ENDAST med valid JSON i detta exakta format:
     try {
       const parsedData = JSON.parse(aiContent);
       enrichmentData = enrichmentSchema.parse(parsedData);
-      console.log('✅ AI response validated successfully:', enrichmentData);
     } catch (parseError) {
-      console.error('Failed to parse/validate AI response:', aiContent);
       if (parseError instanceof z.ZodError) {
-        console.error('Validation errors:', parseError.errors);
         throw new Error(`Invalid AI response format: ${parseError.errors.map(e => `${e.path.join('.')}: ${e.message}`).join(', ')}`);
       }
       throw new Error('Invalid AI response format');
     }
 
-    // Update the lead with enriched data
+    // Update the lead with enriched data (with ownership verification)
     const { data: updatedLead, error: updateError } = await supabaseClient
       .from('leads')
       .update({
@@ -161,11 +186,11 @@ Svara ENDAST med valid JSON i detta exakta format:
         updated_at: new Date().toISOString(),
       })
       .eq('id', lead_id)
+      .eq('user_id', user.id)
       .select()
       .single();
 
     if (updateError) {
-      console.error('Error updating lead:', updateError);
       throw new Error('Failed to update lead');
     }
 
@@ -179,9 +204,8 @@ Svara ENDAST med valid JSON i detta exakta format:
     );
 
   } catch (error) {
-    console.error('Error in enrich-lead function:', error);
     return new Response(
-      JSON.stringify({ error: error.message }),
+      JSON.stringify({ error: error.message || 'Internal server error' }),
       { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
   }

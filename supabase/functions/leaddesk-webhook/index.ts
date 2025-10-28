@@ -88,11 +88,7 @@ Deno.serve(async (req) => {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
     }
-    console.log('Webhook payload:', { 
-      call_id: payload.call_id, 
-      campaign_id: payload.campaign_id,
-      agent_id: payload.agent_id 
-    });
+    // Webhook received successfully
 
     // Initialize Supabase client
     const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
@@ -117,7 +113,6 @@ Deno.serve(async (req) => {
     }
 
     const userId = agentMapping.user_id;
-    console.log('Found user for agent:', userId);
 
     // Check if user has Leaddesk enabled and consent
     const { data: profile, error: profileError } = await supabase
@@ -155,7 +150,6 @@ Deno.serve(async (req) => {
     }
 
     // Encrypt PII data
-    console.log('Encrypting PII data...');
     const { data: encryptedPhone } = await supabase.rpc('encrypt_text', {
       data: payload.customer_phone,
       key: encryptionKey
@@ -174,7 +168,6 @@ Deno.serve(async (req) => {
     });
 
     // Download audio file from Leaddesk
-    console.log('Downloading audio file from Leaddesk...');
     const leaddeskApiKey = Deno.env.get('LEADDESK_API_KEY');
     const leaddeskZone = Deno.env.get('LEADDESK_ZONE') || 'NOR';
     
@@ -207,7 +200,6 @@ Deno.serve(async (req) => {
     
     // Double-check size after download
     if (audioSize > MAX_AUDIO_SIZE) {
-      console.error('Downloaded audio file too large:', audioSize);
       return new Response(JSON.stringify({ 
         error: 'Audio file exceeds maximum size (100MB)' 
       }), {
@@ -215,13 +207,10 @@ Deno.serve(async (req) => {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' }
       });
     }
-    console.log('Audio downloaded, size:', audioSize);
 
     // Upload to Supabase Storage
     const fileName = `leaddesk_${payload.call_id}_${Date.now()}.mp3`;
     const filePath = `${userId}/${fileName}`;
-
-    console.log('Uploading to Supabase Storage:', filePath);
     const { error: uploadError } = await supabase.storage
       .from('audio-files')
       .upload(filePath, audioBlob, {
@@ -244,7 +233,6 @@ Deno.serve(async (req) => {
     deletionDate.setDate(deletionDate.getDate() + (profile.data_retention_days || 90));
 
     // Create call record with encrypted Leaddesk data
-    console.log('Creating call record...');
     const { data: call, error: callError } = await supabase
       .from('calls')
       .insert({
@@ -298,34 +286,25 @@ Deno.serve(async (req) => {
     let skipReason = null;
 
     if (!subscription) {
-      console.log('No active subscription - skipping');
       skipReason = 'no_subscription';
     } else if (subscription.full_analysis_enabled) {
       shouldProcess = true;
-      console.log('Full analysis enabled');
     } else if (subscription.smart_analysis_enabled) {
       // Check if it's a sale (outcome field from payload)
       const isSale = payload.outcome === 'sale' || payload.disposition === 'sale';
       if (isSale) {
         shouldProcess = true;
-        console.log('Smart analysis - sale detected');
       } else {
         skipReason = 'not_sale';
-        console.log('Smart analysis - not a sale, skipping');
       }
     } else {
       skipReason = 'analysis_disabled';
     }
 
     if (shouldProcess) {
-      console.log('Triggering process-call-lovable...');
-      const { error: processError } = await supabase.functions.invoke('process-call-lovable', {
+      await supabase.functions.invoke('process-call-lovable', {
         body: { filePath },
       });
-
-      if (processError) {
-        console.error('Failed to trigger processing:', processError);
-      }
     } else {
       // Mark call as skipped
       await supabase
@@ -335,11 +314,7 @@ Deno.serve(async (req) => {
           encrypted_analysis: { skip_reason: skipReason }
         })
         .eq('id', call.id);
-      
-      console.log(`Call skipped: ${skipReason}`);
     }
-
-    console.log('Leaddesk webhook processed successfully');
     return new Response(JSON.stringify({ 
       success: true,
       call_id: call.id,

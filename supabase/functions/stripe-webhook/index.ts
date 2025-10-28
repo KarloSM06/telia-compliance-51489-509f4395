@@ -27,8 +27,7 @@ serve(async (req) => {
       cryptoProvider
     );
   } catch (err) {
-    console.error("Webhook signature verification failed:", err.message);
-    return new Response(`Webhook Error: ${err.message}`, { status: 400 });
+    return new Response("Webhook signature verification failed", { status: 400 });
   }
 
   const supabase = createClient(
