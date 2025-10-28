@@ -2292,6 +2292,221 @@ export type Database = {
           },
         ]
       }
+      telephony_accounts: {
+        Row: {
+          config: Json | null
+          created_at: string | null
+          encrypted_credentials: Json
+          id: string
+          is_active: boolean | null
+          is_verified: boolean | null
+          last_synced_at: string | null
+          organization_id: string | null
+          provider: string
+          provider_display_name: string
+          sync_status: string | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          config?: Json | null
+          created_at?: string | null
+          encrypted_credentials: Json
+          id?: string
+          is_active?: boolean | null
+          is_verified?: boolean | null
+          last_synced_at?: string | null
+          organization_id?: string | null
+          provider: string
+          provider_display_name: string
+          sync_status?: string | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          config?: Json | null
+          created_at?: string | null
+          encrypted_credentials?: Json
+          id?: string
+          is_active?: boolean | null
+          is_verified?: boolean | null
+          last_synced_at?: string | null
+          organization_id?: string | null
+          provider?: string
+          provider_display_name?: string
+          sync_status?: string | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "telephony_accounts_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      telephony_attachments: {
+        Row: {
+          attachment_type: string
+          created_at: string | null
+          duration_seconds: number | null
+          event_id: string
+          file_path: string | null
+          file_size_bytes: number | null
+          file_url: string | null
+          id: string
+          metadata: Json | null
+          transcript_text: string | null
+        }
+        Insert: {
+          attachment_type: string
+          created_at?: string | null
+          duration_seconds?: number | null
+          event_id: string
+          file_path?: string | null
+          file_size_bytes?: number | null
+          file_url?: string | null
+          id?: string
+          metadata?: Json | null
+          transcript_text?: string | null
+        }
+        Update: {
+          attachment_type?: string
+          created_at?: string | null
+          duration_seconds?: number | null
+          event_id?: string
+          file_path?: string | null
+          file_size_bytes?: number | null
+          file_url?: string | null
+          id?: string
+          metadata?: Json | null
+          transcript_text?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "telephony_attachments_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "telephony_events"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      telephony_events: {
+        Row: {
+          account_id: string
+          cost_amount: number | null
+          cost_currency: string | null
+          created_at: string | null
+          direction: string | null
+          duration_seconds: number | null
+          event_timestamp: string | null
+          event_type: string
+          from_number: string | null
+          id: string
+          normalized: Json | null
+          provider: string
+          provider_event_id: string | null
+          provider_payload: Json | null
+          status: string | null
+          to_number: string | null
+        }
+        Insert: {
+          account_id: string
+          cost_amount?: number | null
+          cost_currency?: string | null
+          created_at?: string | null
+          direction?: string | null
+          duration_seconds?: number | null
+          event_timestamp?: string | null
+          event_type: string
+          from_number?: string | null
+          id?: string
+          normalized?: Json | null
+          provider: string
+          provider_event_id?: string | null
+          provider_payload?: Json | null
+          status?: string | null
+          to_number?: string | null
+        }
+        Update: {
+          account_id?: string
+          cost_amount?: number | null
+          cost_currency?: string | null
+          created_at?: string | null
+          direction?: string | null
+          duration_seconds?: number | null
+          event_timestamp?: string | null
+          event_type?: string
+          from_number?: string | null
+          id?: string
+          normalized?: Json | null
+          provider?: string
+          provider_event_id?: string | null
+          provider_payload?: Json | null
+          status?: string | null
+          to_number?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "telephony_events_account_id_fkey"
+            columns: ["account_id"]
+            isOneToOne: false
+            referencedRelation: "telephony_accounts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      telephony_metrics_snapshots: {
+        Row: {
+          account_id: string
+          cost_currency: string | null
+          created_at: string | null
+          id: string
+          metrics: Json | null
+          snapshot_date: string
+          total_calls: number | null
+          total_cost_amount: number | null
+          total_duration_seconds: number | null
+          total_sms: number | null
+        }
+        Insert: {
+          account_id: string
+          cost_currency?: string | null
+          created_at?: string | null
+          id?: string
+          metrics?: Json | null
+          snapshot_date: string
+          total_calls?: number | null
+          total_cost_amount?: number | null
+          total_duration_seconds?: number | null
+          total_sms?: number | null
+        }
+        Update: {
+          account_id?: string
+          cost_currency?: string | null
+          created_at?: string | null
+          id?: string
+          metrics?: Json | null
+          snapshot_date?: string
+          total_calls?: number | null
+          total_cost_amount?: number | null
+          total_duration_seconds?: number | null
+          total_sms?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "telephony_metrics_snapshots_account_id_fkey"
+            columns: ["account_id"]
+            isOneToOne: false
+            referencedRelation: "telephony_accounts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_analysis: {
         Row: {
           average_score: number | null
