@@ -35,7 +35,7 @@ export const expertiseCategories: ExpertiseCategory[] = [
       { name: "n8n", type: "platform", description: "Automatiseringsplattform", logo: "/images/logos/n8n.png" },
       { name: "Make.com", type: "platform", description: "Workflow automation", logo: "/images/logos/make.png" },
       { name: "Vapi", type: "tool", description: "Voice AI agent", logo: "/images/logos/vapi.png" },
-      { name: "Retell", type: "tool", description: "AI phone system", logo: "/images/logos/retell.png" },
+      { name: "Retell", type: "tool", description: "AI phone system", logo: "/images/logos/retell.svg" },
       { name: "OpenAI GPT-5", type: "model", description: "Avancerad språkmodell", logo: "/images/logos/openai.png" },
       { name: "Claude 3.7", type: "model", description: "Anthropic AI-modell", logo: "/images/logos/claude.png" },
       { name: "Deepseek", type: "model", description: "Specialist AI-modell", logo: "/images/logos/deepseek.png" },
