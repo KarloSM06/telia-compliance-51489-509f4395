@@ -328,15 +328,6 @@ export const ProductSelection = () => {
         </div>
       </section>
 
-      {/* Om oss Section */}
-      <section id="about" className="relative py-32">
-        
-      </section>
-
-      {/* Varför Hiems Section */}
-      <section className="relative py-24 bg-white/5 animate-fade-in">
-        
-      </section>
 
       <ConsultationModal open={isConsultationModalOpen} onOpenChange={setIsConsultationModalOpen} />
     </div>;
