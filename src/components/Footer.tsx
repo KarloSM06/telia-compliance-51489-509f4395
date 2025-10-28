@@ -111,6 +111,9 @@ export const Footer = () => {
             <Link to="/regelverk#anvandarvillkor" className="hover:text-white transition-colors">
               Användarvillkor
             </Link>
+            <Link to="/regelverk#allmanna-villkor" className="hover:text-white transition-colors">
+              Allmänna Villkor
+            </Link>
             <Link to="/regelverk#cookie-policy" className="hover:text-white transition-colors">
               Cookies
             </Link>
