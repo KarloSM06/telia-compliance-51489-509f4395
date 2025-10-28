@@ -29,7 +29,7 @@ export const TechnicalExpertise = ({ onBookDemo }: TechnicalExpertiseProps) => {
       <div 
         className="absolute inset-0 z-0"
         style={{
-          backgroundImage: "url('/src/assets/hero-background.jpg')",
+          backgroundImage: "url('/images/n8n-workflow-background.png')",
           backgroundSize: "cover",
           backgroundPosition: "center",
           backgroundAttachment: "fixed"
