@@ -12,27 +12,35 @@ serve(async (req) => {
   }
 
   try {
+    const url = new URL(req.url);
+    const webhookToken = url.searchParams.get('token');
+
+    if (!webhookToken) {
+      console.error('❌ No webhook token provided');
+      return new Response('Webhook token required', { status: 400, headers: corsHeaders });
+    }
+
     const body = await req.json();
-    console.log('📞 Retell webhook received:', body.event, body);
+    console.log('📞 Retell webhook received:', body.event, 'token:', webhookToken);
 
     const supabase = createClient(
       Deno.env.get('SUPABASE_URL')!,
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
     );
 
-    // Find account by provider
-    const { data: accounts } = await supabase
+    // Find account by webhook token
+    const { data: account } = await supabase
       .from('telephony_accounts')
-      .select('id, user_id')
+      .select('id, user_id, encrypted_credentials')
+      .eq('webhook_token', webhookToken)
       .eq('provider', 'retell')
-      .eq('is_active', true);
+      .eq('is_active', true)
+      .single();
 
-    if (!accounts || accounts.length === 0) {
-      console.log('⚠️ No active Retell account found');
-      return new Response('No account', { status: 404, headers: corsHeaders });
+    if (!account) {
+      console.log('⚠️ No active Retell account found for this webhook token');
+      return new Response('Invalid webhook token', { status: 404, headers: corsHeaders });
     }
-
-    const account = accounts[0];
 
     // Normalize data
     const normalized: any = {

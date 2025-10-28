@@ -2307,6 +2307,7 @@ export type Database = {
           sync_status: string | null
           updated_at: string | null
           user_id: string
+          webhook_token: string | null
         }
         Insert: {
           config?: Json | null
@@ -2322,6 +2323,7 @@ export type Database = {
           sync_status?: string | null
           updated_at?: string | null
           user_id: string
+          webhook_token?: string | null
         }
         Update: {
           config?: Json | null
@@ -2337,6 +2339,7 @@ export type Database = {
           sync_status?: string | null
           updated_at?: string | null
           user_id?: string
+          webhook_token?: string | null
         }
         Relationships: [
           {
@@ -2544,6 +2547,39 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      user_api_keys: {
+        Row: {
+          api_key: string
+          created_at: string | null
+          expires_at: string | null
+          id: string
+          is_active: boolean | null
+          key_name: string
+          last_used_at: string | null
+          user_id: string
+        }
+        Insert: {
+          api_key: string
+          created_at?: string | null
+          expires_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          key_name: string
+          last_used_at?: string | null
+          user_id: string
+        }
+        Update: {
+          api_key?: string
+          created_at?: string | null
+          expires_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          key_name?: string
+          last_used_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
       }
       user_products: {
         Row: {

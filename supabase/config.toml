@@ -101,3 +101,6 @@ verify_jwt = true
 
 [functions.encrypt-telephony-credentials]
 verify_jwt = true
+
+[functions.generate-api-key]
+verify_jwt = true

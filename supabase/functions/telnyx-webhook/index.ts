@@ -11,15 +11,37 @@ Deno.serve(async (req) => {
   }
 
   try {
+    const url = new URL(req.url);
+    const webhookToken = url.searchParams.get('token');
+
+    if (!webhookToken) {
+      console.error('❌ No webhook token provided');
+      return new Response('Webhook token required', { status: 400, headers: corsHeaders });
+    }
+
     const body = await req.json();
     const event = body.data;
     
-    console.log(`📥 Telnyx webhook:`, event);
+    console.log(`📥 Telnyx webhook:`, event, 'token:', webhookToken);
 
     const supabase = createClient(
       Deno.env.get('SUPABASE_URL') ?? '',
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
     );
+
+    // Verify webhook token exists and is active
+    const { data: account } = await supabase
+      .from('telephony_accounts')
+      .select('id')
+      .eq('webhook_token', webhookToken)
+      .eq('provider', 'telnyx')
+      .eq('is_active', true)
+      .single();
+
+    if (!account) {
+      console.log('⚠️ Invalid webhook token for Telnyx');
+      return new Response('Invalid webhook token', { status: 404, headers: corsHeaders });
+    }
 
     const messageId = event.id || event.payload?.id;
     const status = event.payload?.to?.[0]?.status || event.event_type;

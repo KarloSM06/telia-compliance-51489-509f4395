@@ -26,9 +26,15 @@ serve(async (req) => {
     const jsonString = JSON.stringify(credentials);
     const encrypted = btoa(jsonString);
 
+    // Generate webhook token
+    const randomBytes = crypto.getRandomValues(new Uint8Array(32));
+    const webhookToken = Array.from(randomBytes)
+      .map(b => b.toString(16).padStart(2, '0'))
+      .join('');
+
     console.log('✅ Credentials encrypted successfully');
     
-    return new Response(JSON.stringify({ encrypted }), {
+    return new Response(JSON.stringify({ encrypted, webhook_token: webhookToken }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
 

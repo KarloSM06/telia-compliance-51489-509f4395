@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Phone, BarChart3, List, Settings, Download } from 'lucide-react';
+import { Phone, BarChart3, List, Settings, Download, Key } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ProviderAccountCard } from '@/components/telephony/ProviderAccountCard';
 import { AddProviderModal } from '@/components/telephony/AddProviderModal';
@@ -9,6 +9,7 @@ import { TelephonyDashboard } from '@/components/telephony/TelephonyDashboard';
 import { EventTimeline } from '@/components/telephony/EventTimeline';
 import { DetailedMetricsTable } from '@/components/telephony/DetailedMetricsTable';
 import { CostBreakdownChart } from '@/components/telephony/CostBreakdownChart';
+import { WebhookSettings } from '@/components/telephony/WebhookSettings';
 import { useTelephonyAccounts } from '@/hooks/useTelephonyAccounts';
 import { useTelephonyMetrics } from '@/hooks/useTelephonyMetrics';
 
@@ -95,7 +96,7 @@ export default function TelephonyPage() {
       {/* Main Content Tabs */}
       {accounts.length > 0 && (
         <Tabs defaultValue="overview" className="space-y-4">
-          <TabsList className="grid w-full grid-cols-4">
+          <TabsList className="grid w-full grid-cols-5">
             <TabsTrigger value="overview">
               <BarChart3 className="h-4 w-4 mr-2" />
               Översikt
@@ -110,6 +111,10 @@ export default function TelephonyPage() {
             </TabsTrigger>
             <TabsTrigger value="costs">
               💰 Kostnader
+            </TabsTrigger>
+            <TabsTrigger value="webhooks">
+              <Key className="h-4 w-4 mr-2" />
+              Webhooks & API
             </TabsTrigger>
           </TabsList>
 
@@ -127,6 +132,10 @@ export default function TelephonyPage() {
 
           <TabsContent value="costs" className="space-y-4">
             <CostBreakdownChart metrics={metrics} />
+          </TabsContent>
+
+          <TabsContent value="webhooks" className="space-y-4">
+            <WebhookSettings />
           </TabsContent>
         </Tabs>
       )}

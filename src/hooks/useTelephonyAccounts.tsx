@@ -8,6 +8,7 @@ export interface TelephonyAccount {
   provider: 'retell' | 'vapi' | 'twilio' | 'telnyx';
   provider_display_name: string;
   encrypted_credentials: any;
+  webhook_token: string;
   is_active: boolean;
   is_verified: boolean;
   config: any;
@@ -55,6 +56,7 @@ export const useTelephonyAccounts = () => {
           provider: provider,
           provider_display_name: displayName,
           encrypted_credentials: encryptResult.encrypted,
+          webhook_token: encryptResult.webhook_token,
           is_active: true,
         }] as any)
         .select()
