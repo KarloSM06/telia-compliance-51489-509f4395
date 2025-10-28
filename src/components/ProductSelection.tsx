@@ -192,9 +192,8 @@ export const ProductSelection = () => {
         </div>
       </section>
 
-      {/* Case / Kundreferenser */}
-      <section id="case" className="relative py-24 bg-gradient-to-b from-background via-primary/5 to-background overflow-hidden">
-        {/* Animated background elements */}
+      {/* Case / Kundreferenser - DOLD (Ta bort kommentarerna för att visa igen) */}
+      {/* <section id="case" className="relative py-24 bg-gradient-to-b from-background via-primary/5 to-background overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_60%_40%,hsl(var(--primary)/0.15),transparent_50%)]" />
         
         <div className="mx-auto max-w-7xl px-6 lg:px-8 relative z-10">
@@ -216,7 +215,7 @@ export const ProductSelection = () => {
               </AnimatedSection>)}
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* Blogg / Insikter */}
       <section id="blogg" className="relative py-16">
