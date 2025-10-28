@@ -110,3 +110,6 @@ verify_jwt = true
 
 [functions.user-webhook]
 verify_jwt = false
+
+[functions.sync-vapi-calls]
+verify_jwt = true

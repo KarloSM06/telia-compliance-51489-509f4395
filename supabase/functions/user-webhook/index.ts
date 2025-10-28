@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.75.0';
+import { verifyTwilioSignature, verifyTelnyxSignature } from './_signature-verification.ts';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -41,24 +42,42 @@ serve(async (req) => {
     const userId = profile.id;
     console.log(`✅ Webhook authenticated for user: ${userId}`);
 
-    // Detect provider from request
+    // Get request body and headers
+    const body = await req.text();
     const contentType = req.headers.get('content-type') || '';
+    const allHeaders: Record<string, string> = {};
+    req.headers.forEach((value, key) => {
+      allHeaders[key] = value;
+    });
+
+    // Detect provider from request
     let provider: string;
-    let body: any;
+    let bodyData: any;
 
     if (contentType.includes('application/x-www-form-urlencoded')) {
-      const formData = await req.formData();
+      const formData = new URLSearchParams(body);
       provider = formData.has('MessageSid') ? 'twilio' : 'unknown';
-      body = Object.fromEntries(formData);
+      bodyData = Object.fromEntries(formData);
     } else {
-      body = await req.json();
-      if (body.message?.type || body.type === 'status-update') provider = 'vapi';
-      else if (body.event === 'call_ended' || body.event === 'call_started') provider = 'retell';
-      else if (body.data?.event_type) provider = 'telnyx';
+      try {
+        bodyData = JSON.parse(body);
+      } catch {
+        bodyData = {};
+      }
+      if (bodyData.message?.type || bodyData.type === 'status-update') provider = 'vapi';
+      else if (bodyData.event === 'call_ended' || bodyData.event === 'call_started') provider = 'retell';
+      else if (bodyData.data?.event_type) provider = 'telnyx';
       else provider = 'unknown';
     }
 
     console.log(`📥 Detected provider: ${provider}`);
+
+    // Extract signature headers
+    const twilioSignature = allHeaders['x-twilio-signature'] || null;
+    const telnyxSignature = allHeaders['telnyx-signature-ed25519'] || null;
+    const telnyxTimestamp = allHeaders['telnyx-timestamp'] || null;
+    const vapiSignature = allHeaders['x-vapi-signature'] || null;
+    const retellSignature = allHeaders['x-retell-signature'] || null;
 
     // Find telephony account
     const { data: account, error: accountError } = await supabase
@@ -73,18 +92,88 @@ serve(async (req) => {
       throw new Error(`No active ${provider} account configured`);
     }
 
-    // Log webhook
+    // Verify webhook signature
+    let signatureVerified = false;
+    let verificationError: string | null = null;
+
+    if (provider === 'twilio' && twilioSignature) {
+      const credentials = account.encrypted_credentials as any;
+      const authToken = credentials?.authToken;
+      
+      if (authToken) {
+        signatureVerified = await verifyTwilioSignature(
+          twilioSignature,
+          req.url,
+          bodyData,
+          authToken
+        );
+        if (!signatureVerified) {
+          verificationError = 'Twilio signature verification failed';
+        }
+      }
+    } else if (provider === 'telnyx' && telnyxSignature && telnyxTimestamp) {
+      const publicKey = account.webhook_public_key;
+      
+      if (publicKey) {
+        signatureVerified = await verifyTelnyxSignature(
+          telnyxSignature,
+          telnyxTimestamp,
+          body,
+          publicKey
+        );
+        if (!signatureVerified) {
+          verificationError = 'Telnyx signature verification failed';
+        }
+      }
+    } else {
+      // No signature to verify or provider doesn't require it
+      signatureVerified = true;
+    }
+
+    const processingTime = Date.now() - startTime;
+
+    // Log webhook with signature verification
     await supabase.from('telephony_webhook_logs').insert({
       user_id: userId,
       provider: provider,
       request_method: req.method,
-      request_headers: Object.fromEntries(req.headers),
-      request_body: body,
-      response_status: 200,
-      processing_time_ms: Date.now() - startTime
+      request_headers: allHeaders,
+      request_body: bodyData,
+      response_status: signatureVerified ? 200 : 401,
+      processing_time_ms: processingTime,
+      webhook_signature: twilioSignature || telnyxSignature || vapiSignature || retellSignature,
+      signature_verified: signatureVerified,
+      verification_error: verificationError,
     });
 
-    console.log(`✅ Webhook processed in ${Date.now() - startTime}ms`);
+    // If signature verification failed, reject the webhook
+    if (!signatureVerified && verificationError) {
+      console.error(`❌ Webhook signature verification failed: ${verificationError}`);
+      return new Response(JSON.stringify({ error: verificationError }), {
+        status: 401,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+
+    // Process webhook event (create telephony_event with idempotency)
+    const providerEventId = bodyData.id || bodyData.MessageSid || bodyData.data?.id || `${provider}-${Date.now()}`;
+    const idempotencyKey = `${provider}:${providerEventId}`;
+
+    // Check if already processed
+    const { data: existing } = await supabase
+      .from('telephony_events')
+      .select('id')
+      .eq('idempotency_key', idempotencyKey)
+      .maybeSingle();
+
+    if (existing) {
+      console.log(`✅ Duplicate webhook ignored: ${idempotencyKey}`);
+      return new Response(JSON.stringify({ status: 'duplicate' }), {
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+
+    console.log(`✅ Webhook processed successfully in ${processingTime}ms`);
     return new Response(JSON.stringify({ success: true }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });

@@ -2303,13 +2303,18 @@ export type Database = {
           id: string
           is_active: boolean | null
           is_verified: boolean | null
+          last_rate_limit_at: string | null
           last_synced_at: string | null
           organization_id: string | null
+          polling_enabled: boolean | null
+          polling_interval_minutes: number | null
           provider: string
           provider_display_name: string
+          rate_limit_per_minute: number | null
           sync_status: string | null
           updated_at: string | null
           user_id: string
+          webhook_public_key: string | null
         }
         Insert: {
           config?: Json | null
@@ -2318,13 +2323,18 @@ export type Database = {
           id?: string
           is_active?: boolean | null
           is_verified?: boolean | null
+          last_rate_limit_at?: string | null
           last_synced_at?: string | null
           organization_id?: string | null
+          polling_enabled?: boolean | null
+          polling_interval_minutes?: number | null
           provider: string
           provider_display_name: string
+          rate_limit_per_minute?: number | null
           sync_status?: string | null
           updated_at?: string | null
           user_id: string
+          webhook_public_key?: string | null
         }
         Update: {
           config?: Json | null
@@ -2333,13 +2343,18 @@ export type Database = {
           id?: string
           is_active?: boolean | null
           is_verified?: boolean | null
+          last_rate_limit_at?: string | null
           last_synced_at?: string | null
           organization_id?: string | null
+          polling_enabled?: boolean | null
+          polling_interval_minutes?: number | null
           provider?: string
           provider_display_name?: string
+          rate_limit_per_minute?: number | null
           sync_status?: string | null
           updated_at?: string | null
           user_id?: string
+          webhook_public_key?: string | null
         }
         Relationships: [
           {
@@ -2410,12 +2425,17 @@ export type Database = {
           event_type: string
           from_number: string | null
           id: string
+          idempotency_key: string | null
           normalized: Json | null
+          processing_status: string | null
           provider: string
           provider_event_id: string | null
           provider_payload: Json | null
+          raw_payload: Json | null
+          resource_type: string | null
           status: string | null
           to_number: string | null
+          webhook_received_at: string | null
         }
         Insert: {
           account_id: string
@@ -2428,12 +2448,17 @@ export type Database = {
           event_type: string
           from_number?: string | null
           id?: string
+          idempotency_key?: string | null
           normalized?: Json | null
+          processing_status?: string | null
           provider: string
           provider_event_id?: string | null
           provider_payload?: Json | null
+          raw_payload?: Json | null
+          resource_type?: string | null
           status?: string | null
           to_number?: string | null
+          webhook_received_at?: string | null
         }
         Update: {
           account_id?: string
@@ -2446,12 +2471,17 @@ export type Database = {
           event_type?: string
           from_number?: string | null
           id?: string
+          idempotency_key?: string | null
           normalized?: Json | null
+          processing_status?: string | null
           provider?: string
           provider_event_id?: string | null
           provider_payload?: Json | null
+          raw_payload?: Json | null
+          resource_type?: string | null
           status?: string | null
           to_number?: string | null
+          webhook_received_at?: string | null
         }
         Relationships: [
           {
@@ -2459,6 +2489,62 @@ export type Database = {
             columns: ["account_id"]
             isOneToOne: false
             referencedRelation: "telephony_accounts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      telephony_media: {
+        Row: {
+          created_at: string | null
+          download_error: string | null
+          download_status: string | null
+          downloaded_at: string | null
+          duration_seconds: number | null
+          event_id: string
+          expires_at: string | null
+          file_size_bytes: number | null
+          id: string
+          media_type: string
+          mime_type: string | null
+          provider_url: string | null
+          storage_path: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          download_error?: string | null
+          download_status?: string | null
+          downloaded_at?: string | null
+          duration_seconds?: number | null
+          event_id: string
+          expires_at?: string | null
+          file_size_bytes?: number | null
+          id?: string
+          media_type: string
+          mime_type?: string | null
+          provider_url?: string | null
+          storage_path?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          download_error?: string | null
+          download_status?: string | null
+          downloaded_at?: string | null
+          duration_seconds?: number | null
+          event_id?: string
+          expires_at?: string | null
+          file_size_bytes?: number | null
+          id?: string
+          media_type?: string
+          mime_type?: string | null
+          provider_url?: string | null
+          storage_path?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "telephony_media_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "telephony_events"
             referencedColumns: ["id"]
           },
         ]
@@ -2510,6 +2596,65 @@ export type Database = {
           },
         ]
       }
+      telephony_sync_jobs: {
+        Row: {
+          account_id: string
+          completed_at: string | null
+          created_at: string | null
+          cursor: string | null
+          error_message: string | null
+          id: string
+          items_synced: number | null
+          job_type: string
+          last_sync_timestamp: string | null
+          next_retry_at: string | null
+          provider: string
+          retry_count: number | null
+          started_at: string | null
+          status: string | null
+        }
+        Insert: {
+          account_id: string
+          completed_at?: string | null
+          created_at?: string | null
+          cursor?: string | null
+          error_message?: string | null
+          id?: string
+          items_synced?: number | null
+          job_type: string
+          last_sync_timestamp?: string | null
+          next_retry_at?: string | null
+          provider: string
+          retry_count?: number | null
+          started_at?: string | null
+          status?: string | null
+        }
+        Update: {
+          account_id?: string
+          completed_at?: string | null
+          created_at?: string | null
+          cursor?: string | null
+          error_message?: string | null
+          id?: string
+          items_synced?: number | null
+          job_type?: string
+          last_sync_timestamp?: string | null
+          next_retry_at?: string | null
+          provider?: string
+          retry_count?: number | null
+          started_at?: string | null
+          status?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "telephony_sync_jobs_account_id_fkey"
+            columns: ["account_id"]
+            isOneToOne: false
+            referencedRelation: "telephony_accounts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       telephony_webhook_logs: {
         Row: {
           created_at: string | null
@@ -2522,7 +2667,10 @@ export type Database = {
           request_method: string | null
           response_body: string | null
           response_status: number | null
+          signature_verified: boolean | null
           user_id: string | null
+          verification_error: string | null
+          webhook_signature: string | null
         }
         Insert: {
           created_at?: string | null
@@ -2535,7 +2683,10 @@ export type Database = {
           request_method?: string | null
           response_body?: string | null
           response_status?: number | null
+          signature_verified?: boolean | null
           user_id?: string | null
+          verification_error?: string | null
+          webhook_signature?: string | null
         }
         Update: {
           created_at?: string | null
@@ -2548,7 +2699,10 @@ export type Database = {
           request_method?: string | null
           response_body?: string | null
           response_status?: number | null
+          signature_verified?: boolean | null
           user_id?: string | null
+          verification_error?: string | null
+          webhook_signature?: string | null
         }
         Relationships: []
       }
