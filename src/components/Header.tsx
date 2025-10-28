@@ -108,7 +108,7 @@ export const Header = () => {
             action: () => scrollToSection('case')
           }, {
             label: 'Om oss',
-            href: '/om-oss'
+            href: '/about'
           }, {
             label: 'Kontakt',
             action: () => scrollToSection('kontakt')
@@ -217,7 +217,7 @@ export const Header = () => {
                 action: () => scrollToSection('case')
               }, {
                 label: 'Om oss',
-                href: '/om-oss'
+                href: '/about'
               }, {
                 label: 'Kontakt',
                 action: () => scrollToSection('kontakt')
