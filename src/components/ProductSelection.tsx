@@ -115,12 +115,12 @@ export const ProductSelection = () => {
         <div className="mx-auto max-w-7xl px-6 lg:px-8 relative z-10">
           <AnimatedSection className="text-center mb-16">
             <div className="inline-block">
-              <h2 className="text-5xl sm:text-6xl font-bold bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent mb-4">
+              <h2 className="text-5xl sm:text-6xl font-bold bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text mb-4 text-white">
                 Oavsett bransch kan Hiems bygga AI-lösningar som passar just er verksamhet
               </h2>
               <div className="w-32 h-1.5 bg-gradient-to-r from-primary via-primary/60 to-transparent mx-auto rounded-full shadow-lg shadow-primary/50" />
             </div>
-            <p className="text-xl sm:text-2xl text-muted-foreground max-w-3xl mx-auto mt-6 font-light">
+            <p className="text-xl sm:text-2xl max-w-3xl mx-auto mt-6 font-light text-slate-200">
               Vi har erfarenhet från många olika branscher och kan anpassa våra lösningar efter era unika behov
             </p>
           </AnimatedSection>
