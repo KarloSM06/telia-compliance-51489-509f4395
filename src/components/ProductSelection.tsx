@@ -125,19 +125,11 @@ export const ProductSelection = () => {
             </p>
           </AnimatedSection>
           
-          <AnimatedSection>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-12">
-              {industries.map((industry, index) => (
-                <div 
-                  key={industry.id}
-                  className="animate-fade-in"
-                  style={{ animationDelay: `${index * 80}ms`, animationFillMode: 'backwards' }}
-                >
-                  <IndustryCard industry={industry} onClick={() => handleIndustryClick(industry.id)} />
-                </div>
-              ))}
-            </div>
-          </AnimatedSection>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-12">
+            {industries.map((industry, index) => <AnimatedSection key={industry.id} delay={index * 80}>
+                <IndustryCard industry={industry} onClick={() => handleIndustryClick(industry.id)} />
+              </AnimatedSection>)}
+          </div>
           
           <AnimatedSection className="text-center">
             <Button size="lg" className="bg-gradient-gold text-primary hover:shadow-glow transition-all duration-300 font-semibold" onClick={() => setIsConsultationModalOpen(true)}>
