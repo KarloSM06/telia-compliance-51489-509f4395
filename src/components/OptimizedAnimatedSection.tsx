@@ -23,8 +23,8 @@ const getGlobalObserver = () => {
         });
       },
       {
-        threshold: 0.1,
-        rootMargin: '50px',
+        threshold: 0.05,
+        rootMargin: '200px',
       }
     );
   }
