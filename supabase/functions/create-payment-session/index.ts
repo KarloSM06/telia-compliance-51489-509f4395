@@ -8,14 +8,40 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
-// Allowed price IDs - Update these with your actual Stripe price IDs
+// Allowed price IDs for subscriptions
 const ALLOWED_PRICE_IDS = [
-  "price_REPLACE_WITH_YOUR_PRICE_ID_1",
-  "price_REPLACE_WITH_YOUR_PRICE_ID_2", 
-  "price_REPLACE_WITH_YOUR_PRICE_ID_3",
-  "price_REPLACE_WITH_YOUR_PRICE_ID_4",
-  "price_REPLACE_WITH_YOUR_PRICE_ID_5",
-  "price_REPLACE_WITH_YOUR_PRICE_ID_6",
+  // Hiems Krono Pro - AI receptionist
+  "price_1SHjyXEAFWei6whjXkkf2iN8", // 899 SEK/month
+  "price_1SHjyXEAFWei6whjlONwxZFs", // 1,999 SEK/month
+  "price_1SHjz7EAFWei6whj4gd9Cqts", // 3,799 SEK/month
+  "price_1SHk00EAFWei6whj3tl7nqUg", // 6,999 SEK/month
+  // Hiems Krono Business - AI receptionist
+  "price_1SHk4VEAFWei6whj7QONlp0T", // 3,499 SEK/month
+  "price_1SHk4VEAFWei6whjdfYhqL4E", // 1,499 SEK/month
+  "price_1SHk4VEAFWei6whj1SKZQCzH", // 6,499 SEK/month
+  "price_1SHk4VEAFWei6whjq324ZyHQ", // 11,999 SEK/month
+  // Hiems Gastro Pro - Restaurang
+  "price_1SHk7aEAFWei6whj2YGivPJw", // 899 SEK/month
+  "price_1SHk7aEAFWei6whjIsPZrvzB", // 1,999 SEK/month
+  "price_1SHk7ZEAFWei6whjLgrbEtOZ", // 3,799 SEK/month
+  "price_1SHk7ZEAFWei6whjWDDppm9f", // 6,999 SEK/month
+  // Hiems Gastro Business
+  "price_1SHkCGEAFWei6whjadEcSlVS", // 1,499 SEK/month
+  "price_1SHkCGEAFWei6whjKTfcf0or", // 3,499 SEK/month
+  "price_1SHkCGEAFWei6whjddDwrgPl", // 6,499 SEK/month
+  "price_1SHkCGEAFWei6whjAyLgW8Lg", // 11,999 SEK/month
+  // Hiems Rekrytering Pro
+  "price_1SHkDkEAFWei6whjuljypz19", // 2,999 SEK/month
+  // Hiems Rekrytering Business
+  "price_1SHkEtEAFWei6whjJORuM53G", // 5,499 SEK/month
+  // Hiems Prospekt Pro
+  "price_1SHkGpEAFWei6whjyCR7OnvD", // 3,999 SEK/month
+  // Hiems Prospekt Business
+  "price_1SHkHbEAFWei6whjHWTmqLox", // 7,499 SEK/month
+  // Hiems Thor Pro - AI Compliance & Coaching
+  "price_1SHkJkEAFWei6whj3t1KRhSs", // 499 SEK/month
+  // Hiems Thor Business - AI Compliance & Coaching
+  "price_1SHkLFEAFWei6whj68Dbb5op", // 699 SEK/month
 ];
 
 // Input validation schema
