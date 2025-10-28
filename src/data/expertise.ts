@@ -34,7 +34,7 @@ export const expertiseCategories: ExpertiseCategory[] = [
     color: "from-purple-500 to-pink-500",
     image: "/images/expertise/ai-models.jpg",
     items: [
-      { name: "OpenAI GPT-5", type: "model", description: "Avancerad språkmodell", logo: "/images/logos/openai.png" },
+      { name: "OpenAI GPT-5", type: "model", description: "Avancerad språkmodell", logo: "/images/logos/openai-new.png" },
       { name: "Claude 3.7", type: "model", description: "Anthropic AI-modell", logo: "/images/logos/claude.png" },
       { name: "Deepseek", type: "model", description: "Specialist AI-modell", logo: "/images/logos/deepseek.png" },
       { name: "Gemini", type: "model", description: "Google AI-modell", logo: "/images/logos/gemini.png" }
@@ -49,7 +49,7 @@ export const expertiseCategories: ExpertiseCategory[] = [
     image: "/images/expertise/voice-systems.jpg",
     items: [
       { name: "Vapi", type: "tool", description: "Voice AI agent", logo: "/images/logos/vapi.png" },
-      { name: "Retell", type: "tool", description: "AI phone system", logo: "/images/logos/retell.svg" }
+      { name: "Retell", type: "tool", description: "AI phone system", logo: "/images/logos/retell-backup.png" }
     ]
   },
   {

@@ -44,8 +44,14 @@ export const ExpertiseCategoryCard = ({
               <h4 className="text-sm font-semibold text-primary mb-4 uppercase tracking-wide">Verktyg & Plattformar</h4>
               <div className="grid grid-cols-1 gap-2">
                 {category.items.map((item, idx) => <div key={idx} className="flex items-center gap-3 p-3 rounded-lg bg-background/50 hover:bg-primary/10 border border-border/50 hover:border-primary/30 transition-all duration-300 group/item">
-                    {item.logo ? <div className="flex-shrink-0 w-10 h-10 flex items-center justify-center bg-background rounded-lg shadow-sm group-hover/item:shadow-md transition-shadow">
-                        <img src={item.logo} alt={item.name} className="w-7 h-7 object-contain group-hover/item:scale-110 transition-transform" />
+                    {item.logo ? <div className="flex-shrink-0 w-10 h-10 flex items-center justify-center bg-background rounded-lg shadow-sm group-hover/item:shadow-md transition-shadow overflow-hidden">
+                        <img 
+                          src={item.logo} 
+                          alt={item.name} 
+                          className={`object-contain group-hover/item:scale-110 transition-transform ${
+                            item.name === 'Vapi' ? 'w-14 h-14 scale-150' : 'w-7 h-7'
+                          }`} 
+                        />
                       </div> : <CheckCircle className="flex-shrink-0 h-5 w-5 text-primary group-hover/item:scale-110 transition-transform" />}
                     <div className="flex-1 min-w-0">
                       <p className="font-semibold text-sm group-hover/item:text-primary transition-colors">{item.name}</p>
