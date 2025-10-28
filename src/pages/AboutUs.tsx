@@ -10,10 +10,10 @@ import karloImage from "@/assets/karlo-mangione.png";
 import emilImage from "@/assets/emil-westerberg.png";
 import hiemsLogoSnowflake from "@/assets/hiems-logo-snowflake.png";
 
-// Expertise images
-import aiModelsImage from "/images/expertise/ai-models.jpg";
-import voiceSystemsImage from "/images/expertise/voice-systems.jpg";
-import leadGenerationImage from "/images/expertise/lead-generation.jpg";
+// Expertise images - importera från assets så de enkelt kan bytas ut
+import svensktLokalImage from "@/assets/data-insight.jpg";
+import endToEndImage from "@/assets/service-operations.jpg";
+import bvisatRoiImage from "@/assets/growth-sales-accelerator.jpg";
 
 interface TeamMember {
   name: string;
@@ -609,19 +609,19 @@ const AboutUs = () => {
                   icon: Globe,
                   title: "Svenskt & Lokalt",
                   description: "Vi förstår svenska företag, svenska marknaden och svenska utmaningar. Ingen kulturell eller språklig barriär.",
-                  image: aiModelsImage
+                  image: svensktLokalImage
                 },
                 {
                   icon: Award,
                   title: "End-to-End",
                   description: "Från strategi till drift, vi hanterar allt. En partner för hela er AI-resa, inte bara en leverantör.",
-                  image: voiceSystemsImage
+                  image: endToEndImage
                 },
                 {
                   icon: TrendingUp,
                   title: "Bevisat ROI",
                   description: "Våra kunder ser mätbar avkastning. Vi bygger system som faktiskt ökar lönsamhet och effektivitet.",
-                  image: leadGenerationImage
+                  image: bvisatRoiImage
                 }
               ].map((benefit, index) => (
                 <AnimatedSection key={benefit.title} delay={index * 100}>
