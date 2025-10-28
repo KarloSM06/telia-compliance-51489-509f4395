@@ -109,18 +109,37 @@ const AboutUs = () => {
     <div className="relative overflow-hidden min-h-screen bg-background">
       <Header />
       
-      <main className="pt-16 relative">
+      <main className="relative">
         {/* Hero Section */}
-        <section className="relative py-32 bg-gradient-to-b from-background via-primary/5 to-background overflow-hidden">
+        <section className="relative pt-32 pb-32 bg-gradient-to-b from-background via-primary/5 to-background overflow-hidden">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,hsl(var(--primary)/0.15),transparent_50%)]" />
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_80%,hsl(var(--primary)/0.1),transparent_50%)]" />
           
-          {/* Large Hiems Logo Background */}
-          <div className="absolute top-0 right-0 w-[800px] h-[800px] -translate-y-1/4 translate-x-1/4 opacity-5 pointer-events-none">
+          {/* Hiems Logo Backgrounds - Multiple Snowflakes */}
+          {/* Top Right - Large Slow Rotation */}
+          <div className="absolute -top-32 -right-32 w-[800px] h-[800px] opacity-5 pointer-events-none">
             <img 
               src={hiemsLogoSnowflake} 
               alt="" 
               className="w-full h-full object-contain animate-[spin_60s_linear_infinite]"
+            />
+          </div>
+          
+          {/* Top Left - Medium Fast Rotation */}
+          <div className="absolute -top-20 -left-20 w-[500px] h-[500px] opacity-[0.03] pointer-events-none">
+            <img 
+              src={hiemsLogoSnowflake} 
+              alt="" 
+              className="w-full h-full object-contain animate-[spin_40s_linear_infinite_reverse]"
+            />
+          </div>
+          
+          {/* Bottom Center - Small Medium Rotation */}
+          <div className="absolute -bottom-20 left-1/2 -translate-x-1/2 w-[400px] h-[400px] opacity-[0.04] pointer-events-none">
+            <img 
+              src={hiemsLogoSnowflake} 
+              alt="" 
+              className="w-full h-full object-contain animate-[spin_50s_linear_infinite]"
             />
           </div>
           
