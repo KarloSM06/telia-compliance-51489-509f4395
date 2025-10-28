@@ -1,6 +1,7 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Code, Copy, Eye, EyeOff, Key, AlertCircle, CheckCircle } from "lucide-react";
 import { useState } from "react";
 import { useApiKeys } from "@/hooks/useApiKeys";
@@ -146,16 +147,16 @@ export function APISettings() {
         </div>
 
         {/* Single MCP Webhook URL */}
-        {accounts.length > 0 && (
-          <div className="space-y-4">
-            <div className="flex items-center gap-2">
-              <Code className="h-4 w-4 text-muted-foreground" />
-              <h3 className="font-semibold">Server Webhook URL</h3>
-            </div>
-            <p className="text-sm text-muted-foreground">
-              En universell webhook som fungerar för alla dina telephony providers (Vapi, Retell, Twilio, Telnyx)
-            </p>
-            
+        <div className="space-y-4">
+          <div className="flex items-center gap-2">
+            <Code className="h-4 w-4 text-muted-foreground" />
+            <h3 className="font-semibold">Server Webhook URL</h3>
+          </div>
+          <p className="text-sm text-muted-foreground">
+            En universell webhook som fungerar för alla dina telephony providers (Vapi, Retell, Twilio, Telnyx)
+          </p>
+          
+          {accounts.length > 0 ? (
             <div className="space-y-3">
               {accounts.map((account) => {
                 const fullUrl = `${mcpWebhookUrl}?token=${account.webhook_token}`;
@@ -194,14 +195,44 @@ export function APISettings() {
                 );
               })}
             </div>
+          ) : (
+            <div className="p-4 border rounded-lg space-y-3">
+              <div className="flex items-center gap-2">
+                <AlertCircle className="h-5 w-5 text-muted-foreground" />
+                <span className="font-medium">Ingen provider konfigurerad ännu</span>
+              </div>
+              <div className="space-y-2">
+                <Label>Din Webhook URL (exempel)</Label>
+                <div className="flex gap-2">
+                  <Input
+                    value={`${mcpWebhookUrl}?token=<DIN_TOKEN>`}
+                    readOnly
+                    className="font-mono text-xs"
+                  />
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => copyToClipboard(mcpWebhookUrl, "Webhook bas-URL")}
+                  >
+                    <Copy className="h-4 w-4" />
+                  </Button>
+                </div>
+              </div>
+              <Alert>
+                <AlertCircle className="h-4 w-4" />
+                <AlertDescription className="text-xs">
+                  Din unika webhook token genereras automatiskt när du lägger till din första provider på <strong>Telefoni-sidan</strong>.
+                </AlertDescription>
+              </Alert>
+            </div>
+          )}
 
-            <Alert>
-              <AlertDescription className="text-xs">
-                <strong>Tips:</strong> Samma webhook URL fungerar för alla providers - systemet detekterar automatiskt vilken provider som skickar data.
-              </AlertDescription>
-            </Alert>
-          </div>
-        )}
+          <Alert>
+            <AlertDescription className="text-xs">
+              <strong>Tips:</strong> Samma webhook URL fungerar för alla providers - systemet detekterar automatiskt vilken provider som skickar data.
+            </AlertDescription>
+          </Alert>
+        </div>
       </CardContent>
     </Card>
   );
