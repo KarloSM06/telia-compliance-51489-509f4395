@@ -121,7 +121,15 @@ export const ProductSelection = () => {
           </AnimatedSection>
           
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-12">
-            {industries.map(industry => <IndustryCard key={industry.id} industry={industry} onClick={() => handleIndustryClick(industry.id)} />)}
+            {industries.map((industry, index) => (
+              <AnimatedSection 
+                key={industry.id} 
+                delay={index * 100}
+                direction={index % 3 === 0 ? 'left' : index % 3 === 1 ? 'up' : 'right'}
+              >
+                <IndustryCard industry={industry} onClick={() => handleIndustryClick(industry.id)} />
+              </AnimatedSection>
+            ))}
           </div>
           
           <AnimatedSection className="text-center">
