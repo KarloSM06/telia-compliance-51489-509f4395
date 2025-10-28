@@ -2,7 +2,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Shield, Key, Smartphone, Activity, Database } from "lucide-react";
 import { GDPRDashboard } from "@/components/GDPRDashboard";
-import { APISettings } from "./APISettings";
 
 export function SecuritySettings() {
   return (
@@ -103,8 +102,6 @@ export function SecuritySettings() {
           </div>
         </CardContent>
       </Card>
-
-      <APISettings />
     </div>
   );
 }

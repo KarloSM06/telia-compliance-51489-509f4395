@@ -29,7 +29,6 @@ const navigationItems = [
   { title: "Dashboard", url: "/dashboard", icon: Home },
   { title: "Analytics", url: "/dashboard/analytics", icon: BarChart3 },
   { title: "Kalender", url: "/dashboard/calendar", icon: Calendar },
-  { title: "Telefoni", url: "/dashboard/telephony", icon: Phone },
   { title: "Recensioner", url: "/dashboard/reviews", icon: Star },
   { title: "Kommunikation", url: "/dashboard/communications", icon: MessageSquare },
   { title: "Företag", url: "/dashboard/company", icon: Building2 },
