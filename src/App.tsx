@@ -92,6 +92,7 @@ const App = () => {
               <Route path="/unsubscribe" element={<Unsubscribe />} />
               <Route path="/demo" element={<Demo />} />
               <Route path="/om-oss" element={<AboutUs />} />
+              <Route path="/about" element={<AboutUs />} />
               <Route path="/gdpr" element={<GDPRSettings />} />
               <Route path="/regelverk" element={<Legal />} />
               <Route path="/exempelrapport" element={<ExampleReport />} />
