@@ -39,6 +39,12 @@ export const useTelephonyAccounts = () => {
       credentials: any;
       displayName: string;
     }) => {
+      // Get current user
+      const { data: { user }, error: userError } = await supabase.auth.getUser();
+      if (userError || !user) {
+        throw new Error('User not authenticated');
+      }
+
       // Encrypt credentials via edge function
       const { data: encryptResult, error: encryptError } = await supabase.functions.invoke(
         'encrypt-telephony-credentials',
@@ -52,6 +58,7 @@ export const useTelephonyAccounts = () => {
       const { data, error } = await supabase
         .from('telephony_accounts')
         .insert([{
+          user_id: user.id,
           provider: provider,
           provider_display_name: displayName,
           encrypted_credentials: encryptResult.encrypted,
