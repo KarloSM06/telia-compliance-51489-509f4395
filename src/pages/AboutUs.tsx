@@ -675,7 +675,7 @@ const AboutUs = () => {
                   </div>
                   
                   <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
-                    <Button size="lg" className="gap-2" onClick={() => setIsConsultationModalOpen(true)}>
+                    <Button size="lg" variant="gold" className="gap-2" onClick={() => setIsConsultationModalOpen(true)}>
                       <Rocket className="h-5 w-5" />
                       Boka Gratis Behovsanalys
                     </Button>
