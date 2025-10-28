@@ -1,8 +1,9 @@
 import { TrendingUp, Sparkles, Wrench, ShoppingCart, BarChart3, Award, type LucideIcon } from "lucide-react";
-import marketingAutomationImage from "@/assets/marketing-automation-ai.jpg";
+import marketingAutomationImage from "@/assets/marketing-automation-ai-wide.jpg";
 import serviceOperationsImage from "@/assets/service-operations.jpg";
 import ecommerceRetailImage from "@/assets/ecommerce-retail.png";
 import dataInsightImage from "@/assets/data-insight.jpg";
+import growthSalesImage from "@/assets/growth-sales-accelerator.jpg";
 
 export interface Package {
   id: string;
@@ -28,7 +29,7 @@ export const aiPackages: Package[] = [
     icon: TrendingUp,
     tagline: 'Accelerera din försäljning med AI',
     targetAudience: 'Företag som vill öka försäljning och leads',
-    image: '/src/assets/growth-sales-presentation.png',
+    image: growthSalesImage,
     description: 'Hitta rätt kunder och stäng affärer snabbare',
     components: [
       'Lead Generator med AI-berikning',
