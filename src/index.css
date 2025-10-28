@@ -155,27 +155,12 @@ All colors MUST be HSL.
   body {
     @apply bg-background text-foreground font-sans antialiased;
   }
+  
+  * {
+    scroll-behavior: smooth;
+  }
 
   h1, h2, h3, h4, h5, h6 {
     @apply font-display;
-  }
-
-  /* Performance optimizations for Branscher section */
-  #branscher { 
-    contain: content; 
-  }
-  
-  #branscher > .absolute { 
-    pointer-events: none; 
-  }
-  
-  #branscher .group { 
-    backface-visibility: hidden; 
-    transform: translateZ(0); 
-  }
-  
-  #branscher img { 
-    backface-visibility: hidden; 
-    transform: translateZ(0); 
   }
 }
