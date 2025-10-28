@@ -22,7 +22,7 @@ import karloImage from "@/assets/karlo-mangione.png";
 import antonImage from "@/assets/anton-sallnas.png";
 import emilImage from "@/assets/emil-westerberg.png";
 import { Sparkles, Zap, Target, CheckCircle, Award, Users, Wrench, ArrowRight } from "lucide-react";
-import { useImagePreloader } from "@/hooks/useImagePreloader";
+import { useImagesReady } from "@/hooks/useImagePreloader";
 
 export const ProductSelection = () => {
   const [isConsultationModalOpen, setIsConsultationModalOpen] = useState(false);
@@ -30,7 +30,7 @@ export const ProductSelection = () => {
   
   // Preload industry images in the background
   const industryImages = industries.map(i => i.image!).filter(Boolean);
-  useImagePreloader(industryImages, { concurrency: 2 });
+  const { ready: imagesReady } = useImagesReady(industryImages, { concurrency: 2, timeoutMs: 2500 });
   
   // Disable animations on low-memory devices
   useEffect(() => {
@@ -133,7 +133,7 @@ export const ProductSelection = () => {
             </p>
           </AnimatedSection>
           
-          <OptimizedIndustryGrid className="industry-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-12">
+          <OptimizedIndustryGrid className="industry-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-12" imagesReady={imagesReady}>
             {industries.map((industry) => (
               <div key={industry.id} className="industry-card-wrapper">
                 <IndustryCard industry={industry} onClick={() => handleIndustryClick(industry.id)} />

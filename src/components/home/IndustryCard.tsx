@@ -19,9 +19,9 @@ export const IndustryCard = memo(({
               src={industry.image} 
               alt={industry.name} 
               loading="eager"
-              decoding="sync"
+              decoding="async"
               fetchPriority="high"
-              className="w-full h-full object-cover transition-opacity duration-300 group-hover:brightness-105"
+              className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
             />
           </> : <div className="absolute inset-0 bg-gradient-to-br from-primary/30 via-primary/10 to-transparent flex items-center justify-center">
             <Icon className="h-24 w-24 text-primary/40 group-hover:text-primary/60 transition-colors duration-300" />
