@@ -1,32 +1,42 @@
-import { ArrowRight } from "lucide-react";
+import { PhoneIncoming, CalendarCheck, Target, Zap, Rocket } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { AnimatedSection } from "@/components/AnimatedSection";
 
 const journeySteps = [
   {
-    image: "/images/kundflode.jpg", // Placeholder - replace with actual image path
+    image: "/images/kundflode.jpg",
     title: "Kundflöde",
-    description: "AI-receptionist fångar alla kontakter 24/7, ingen lead går förlorad"
+    description: "AI-receptionist fångar alla kontakter 24/7, ingen lead går förlorad",
+    icon: PhoneIncoming,
+    step: "01"
   },
   {
-    image: "/images/bokning.jpg", // Placeholder - replace with actual image path
+    image: "/images/bokning.jpg",
     title: "Bokning",
-    description: "Automatisk kalenderhantering med bekräftelser och påminnelser"
+    description: "Automatisk kalenderhantering med bekräftelser och påminnelser",
+    icon: CalendarCheck,
+    step: "02"
   },
   {
-    image: "/images/forsaljning.jpg", // Placeholder - replace with actual image path
+    image: "/images/forsaljning.jpg",
     title: "Försäljning",
-    description: "AI kvalificerar leads och driver dem till avslut med smart automation"
+    description: "AI kvalificerar leads och driver dem till avslut med smart automation",
+    icon: Target,
+    step: "03"
   },
   {
-    image: "/images/tidseffektivitet.jpg", // Placeholder - replace with actual image path
+    image: "/images/tidseffektivitet.jpg",
     title: "Tidseffektivitet",
-    description: "Automatisering sparar 15+ timmar per vecka som ni kan fokusera på tillväxt"
+    description: "Automatisering sparar 15+ timmar per vecka som ni kan fokusera på tillväxt",
+    icon: Zap,
+    step: "04"
   },
   {
-    image: "/images/tillvaxt.jpg", // Placeholder - replace with actual image path
+    image: "/images/tillvaxt.jpg",
     title: "Tillväxt",
-    description: "Mer tid för strategiskt arbete leder till ökad omsättning och lönsamhet"
+    description: "Mer tid för strategiskt arbete leder till ökad omsättning och lönsamhet",
+    icon: Rocket,
+    step: "05"
   }
 ];
 
@@ -50,8 +60,13 @@ export const CustomerJourneyFlow = () => {
                     alt={step.title}
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 group-hover:brightness-110"
                   />
-                  <div className="absolute top-4 right-4 z-20 w-12 h-12 rounded-full bg-primary backdrop-blur-sm flex items-center justify-center text-white font-bold text-base shadow-lg group-hover:scale-110 transition-transform duration-300">
-                    {index + 1}
+                  {/* Step number badge - bottom left */}
+                  <div className="absolute bottom-4 left-4 z-20 px-3 py-1 rounded-full bg-background/80 backdrop-blur-sm border border-primary/20 shadow-lg">
+                    <span className="text-xs font-mono font-semibold text-primary">{step.step}</span>
+                  </div>
+                  {/* Icon - top right */}
+                  <div className="absolute top-4 right-4 z-20 w-12 h-12 rounded-xl bg-primary/90 backdrop-blur-sm flex items-center justify-center shadow-lg group-hover:scale-110 group-hover:bg-primary transition-all duration-300">
+                    <step.icon className="w-6 h-6 text-primary-foreground" strokeWidth={2} />
                   </div>
                 </div>
                 <div className="p-6 flex flex-col flex-1 bg-gradient-to-br from-card/5 to-transparent">
