@@ -120,11 +120,13 @@ export const ProductSelection = () => {
             </p>
           </AnimatedSection>
           
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-12">
-            {industries.map(industry => <IndustryCard key={industry.id} industry={industry} onClick={() => handleIndustryClick(industry.id)} />)}
-          </div>
+          <AnimatedSection>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-12">
+              {industries.map(industry => <IndustryCard key={industry.id} industry={industry} onClick={() => handleIndustryClick(industry.id)} />)}
+            </div>
+          </AnimatedSection>
           
-          <AnimatedSection className="text-center">
+          <AnimatedSection className="text-center" delay={200}>
             <Button size="lg" className="bg-gradient-gold text-primary hover:shadow-glow transition-all duration-300 font-semibold" onClick={() => setIsConsultationModalOpen(true)}>
               Boka branschspecifik konsultation
             </Button>
@@ -150,7 +152,9 @@ export const ProductSelection = () => {
             </p>
           </AnimatedSection>
           
-          <CustomerJourneyFlow />
+          <AnimatedSection delay={200}>
+            <CustomerJourneyFlow />
+          </AnimatedSection>
         </div>
       </section>
 
