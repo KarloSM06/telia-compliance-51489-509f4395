@@ -24,8 +24,21 @@ export const TechnicalExpertise = ({ onBookDemo }: TechnicalExpertiseProps) => {
   };
 
   return (
-    <section id="teknisk-expertis" className="relative py-24">
-      <div className="mx-auto max-w-7xl px-6 lg:px-8">
+    <section id="teknisk-expertis" className="relative py-24 overflow-hidden">
+      {/* Background Image */}
+      <div 
+        className="absolute inset-0 z-0"
+        style={{
+          backgroundImage: "url('/src/assets/hero-background.jpg')",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundAttachment: "fixed"
+        }}
+      >
+        <div className="absolute inset-0 bg-gradient-to-b from-primary/95 via-primary/90 to-primary/95"></div>
+      </div>
+
+      <div className="relative z-10 mx-auto max-w-7xl px-6 lg:px-8">
         {/* Header */}
         <AnimatedSection className="text-center mb-16">
           <h2 className="text-4xl sm:text-5xl font-bold mb-6 text-white">
@@ -88,15 +101,32 @@ export const TechnicalExpertise = ({ onBookDemo }: TechnicalExpertiseProps) => {
                       </CollapsibleTrigger>
                       
                       <CollapsibleContent className="space-y-2 mt-4">
-                        <div className="grid grid-cols-2 gap-2">
+                        <div className="grid grid-cols-2 gap-3">
                           {category.items.map((item, idx) => (
-                            <Badge 
+                            <div
                               key={idx}
-                              variant="secondary"
-                              className="bg-white/10 text-white border-white/20 hover:bg-white/20 transition-all justify-start text-left px-3 py-2"
+                              className="group/item bg-white/10 backdrop-blur-sm border border-white/20 rounded-lg p-3 hover:bg-white/20 hover:border-accent/50 transition-all duration-300 cursor-pointer"
                             >
-                              <span className="font-medium text-xs">{item.name}</span>
-                            </Badge>
+                              {item.logo && (
+                                <div className="w-full h-16 mb-2 flex items-center justify-center bg-white/90 rounded-md overflow-hidden group-hover/item:scale-105 transition-transform duration-300">
+                                  <img 
+                                    src={item.logo} 
+                                    alt={item.name}
+                                    className="max-w-full max-h-full object-contain p-2"
+                                    onError={(e) => {
+                                      e.currentTarget.style.display = 'none';
+                                      e.currentTarget.parentElement!.innerHTML = `<span class="text-white/70 text-xs font-medium">${item.name}</span>`;
+                                    }}
+                                  />
+                                </div>
+                              )}
+                              <div className="text-center">
+                                <span className="font-semibold text-white text-sm block mb-1">{item.name}</span>
+                                {item.description && (
+                                  <span className="text-white/60 text-xs block">{item.description}</span>
+                                )}
+                              </div>
+                            </div>
                           ))}
                         </div>
                       </CollapsibleContent>

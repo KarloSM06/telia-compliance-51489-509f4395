@@ -21,6 +21,7 @@ export interface ExpertiseItem {
   name: string;
   type: 'tool' | 'platform' | 'model' | 'service';
   description?: string;
+  logo?: string; // Path to PNG logo
 }
 
 export const expertiseCategories: ExpertiseCategory[] = [
@@ -31,14 +32,15 @@ export const expertiseCategories: ExpertiseCategory[] = [
     icon: Brain,
     color: "from-purple-500 to-pink-500",
     items: [
-      { name: "n8n", type: "platform", description: "Automatiseringsplattform" },
-      { name: "Make.com", type: "platform", description: "Workflow automation" },
-      { name: "Vapi", type: "tool", description: "Voice AI agent" },
-      { name: "Retell", type: "tool", description: "AI phone system" },
-      { name: "OpenAI GPT-5", type: "model", description: "Avancerad språkmodell" },
-      { name: "Claude 3.7", type: "model", description: "Anthropic AI-modell" },
-      { name: "Deepseek", type: "model", description: "Specialist AI-modell" },
-      { name: "Gemini", type: "model", description: "Google AI-modell" }
+      { name: "n8n", type: "platform", description: "Automatiseringsplattform", logo: "/images/logos/n8n.png" },
+      { name: "Make.com", type: "platform", description: "Workflow automation", logo: "/images/logos/make.png" },
+      { name: "Vapi", type: "tool", description: "Voice AI agent", logo: "/images/logos/vapi.png" },
+      { name: "Retell", type: "tool", description: "AI phone system", logo: "/images/logos/retell.png" },
+      { name: "OpenAI GPT-5", type: "model", description: "Avancerad språkmodell", logo: "/images/logos/openai.png" },
+      { name: "Claude 3.7", type: "model", description: "Anthropic AI-modell", logo: "/images/logos/claude.png" },
+      { name: "Deepseek", type: "model", description: "Specialist AI-modell", logo: "/images/logos/deepseek.png" },
+      { name: "Gemini", type: "model", description: "Google AI-modell", logo: "/images/logos/gemini.png" },
+      { name: "Lovable", type: "platform", description: "AI utvecklingsplattform", logo: "/images/logos/lovable.png" }
     ]
   },
   {
@@ -48,12 +50,13 @@ export const expertiseCategories: ExpertiseCategory[] = [
     icon: Link2,
     color: "from-blue-500 to-cyan-500",
     items: [
-      { name: "Google Calendar", type: "service", description: "Kalenderintegration" },
-      { name: "Microsoft Outlook", type: "service", description: "Kalenderintegration" },
-      { name: "Calendly", type: "service", description: "Bokningssystem" },
-      { name: "Telnyx", type: "service", description: "Telefoni & SMS" },
-      { name: "Twilio", type: "service", description: "Kommunikationsplattform" },
-      { name: "Unified Dashboard", type: "platform", description: "Allt sammankopplat på ett ställe" }
+      { name: "Google Calendar", type: "service", description: "Kalenderintegration", logo: "/images/logos/google-calendar.png" },
+      { name: "Microsoft Outlook", type: "service", description: "Kalenderintegration", logo: "/images/logos/outlook.png" },
+      { name: "Calendly", type: "service", description: "Bokningssystem", logo: "/images/logos/calendly.png" },
+      { name: "Telnyx", type: "service", description: "Telefoni & SMS", logo: "/images/logos/telnyx.png" },
+      { name: "Twilio", type: "service", description: "Kommunikationsplattform", logo: "/images/logos/twilio.png" },
+      { name: "Hostinger", type: "platform", description: "Webbhotell & hosting", logo: "/images/logos/hostinger.png" },
+      { name: "Unified Dashboard", type: "platform", description: "Allt sammankopplat på ett ställe", logo: "/images/logos/unified.png" }
     ]
   },
   {
@@ -63,10 +66,10 @@ export const expertiseCategories: ExpertiseCategory[] = [
     icon: BarChart3,
     color: "from-green-500 to-emerald-500",
     items: [
-      { name: "Realtidsstatistik", type: "tool", description: "Live data om kunder och leads" },
-      { name: "Automatiska påminnelser", type: "tool", description: "Smart notification system" },
-      { name: "ROI-beräkning", type: "tool", description: "Per process och kampanj" },
-      { name: "Full transparens", type: "tool", description: "Allt du behöver veta på ett ställe" }
+      { name: "Realtidsstatistik", type: "tool", description: "Live data om kunder och leads", logo: "/images/logos/analytics.png" },
+      { name: "Automatiska påminnelser", type: "tool", description: "Smart notification system", logo: "/images/logos/notifications.png" },
+      { name: "ROI-beräkning", type: "tool", description: "Per process och kampanj", logo: "/images/logos/roi.png" },
+      { name: "Full transparens", type: "tool", description: "Allt du behöver veta på ett ställe", logo: "/images/logos/dashboard.png" }
     ]
   },
   {
@@ -76,11 +79,11 @@ export const expertiseCategories: ExpertiseCategory[] = [
     icon: Server,
     color: "from-orange-500 to-red-500",
     items: [
-      { name: "Kundens hårdvara", type: "platform", description: "Setup på er egen infrastruktur" },
-      { name: "Molnlösning", type: "platform", description: "Flexibel cloud deployment" },
-      { name: "Kompletta integrationer", type: "service", description: "End-to-end setup" },
-      { name: "Personalutbildning", type: "service", description: "Omfattande training program" },
-      { name: "Svensk support", type: "service", description: "24/7 tillgänglighet" }
+      { name: "Kundens hårdvara", type: "platform", description: "Setup på er egen infrastruktur", logo: "/images/logos/hardware.png" },
+      { name: "Molnlösning", type: "platform", description: "Flexibel cloud deployment", logo: "/images/logos/cloud.png" },
+      { name: "Kompletta integrationer", type: "service", description: "End-to-end setup", logo: "/images/logos/integration.png" },
+      { name: "Personalutbildning", type: "service", description: "Omfattande training program", logo: "/images/logos/training.png" },
+      { name: "Svensk support", type: "service", description: "24/7 tillgänglighet", logo: "/images/logos/support.png" }
     ]
   }
 ];
