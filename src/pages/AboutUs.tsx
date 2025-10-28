@@ -1,7 +1,7 @@
 import { Header } from "@/components/Header";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { CheckCircle, Mail, Phone } from "lucide-react";
+import { CheckCircle, Mail, Phone, Users, Lightbulb, Rocket, TrendingUp } from "lucide-react";
 import { AnimatedSection } from "@/components/AnimatedSection";
 import { ConsultationModal } from "@/components/ConsultationModal";
 import { useState } from "react";
@@ -380,41 +380,33 @@ const AboutUs = () => {
               
               {[
                 {
-                  step: "01",
                   title: "Lyssna",
-                  description: "Vi börjar alltid med att förstå era specifika utmaningar och mål."
+                  description: "Vi börjar alltid med att förstå era specifika utmaningar och mål.",
+                  icon: Users
                 },
                 {
-                  step: "02",
                   title: "Analysera",
-                  description: "Djup behovsanalys innan vi föreslår någon lösning."
+                  description: "Djup behovsanalys innan vi föreslår någon lösning.",
+                  icon: Lightbulb
                 },
                 {
-                  step: "03",
                   title: "Bygga",
-                  description: "Skräddarsydda AI-system som löser era verkliga problem."
+                  description: "Skräddarsydda AI-system som löser era verkliga problem.",
+                  icon: Rocket
                 },
                 {
-                  step: "04",
                   title: "Optimera",
-                  description: "Kontinuerlig förbättring baserat på data och resultat."
+                  description: "Kontinuerlig förbättring baserat på data och resultat.",
+                  icon: TrendingUp
                 }
               ].map((step, index) => (
-                <AnimatedSection key={step.step} delay={index * 100}>
+                <AnimatedSection key={step.title} delay={index * 100}>
                   <div className="relative">
                     <div className="text-center space-y-4">
-                      <div className="relative inline-block">
-                        {/* Bildram - infoga egen bild här */}
-                        <div className="relative h-48 w-full overflow-hidden rounded-lg border-2 border-primary/20 hover:scale-105 transition-transform duration-500">
-                          <div className="w-full h-full bg-gradient-to-br from-primary/10 via-primary/5 to-background flex items-center justify-center">
-                            <span className="text-muted-foreground text-sm">Infoga bild här</span>
-                          </div>
-                        </div>
-                        <div className="absolute -bottom-3 -right-3 w-12 h-12 rounded-full bg-card border-2 border-primary flex items-center justify-center font-bold text-lg shadow-lg">
-                          {step.step}
-                        </div>
+                      <div className="inline-flex items-center justify-center w-24 h-24 rounded-full bg-gradient-to-br from-primary to-primary/60 shadow-lg shadow-primary/30 mx-auto hover:scale-110 transition-transform duration-500">
+                        <step.icon className="h-12 w-12 text-primary-foreground" />
                       </div>
-                      <h3 className="text-2xl font-bold pt-2">{step.title}</h3>
+                      <h3 className="text-2xl font-bold">{step.title}</h3>
                       <p className="text-sm text-muted-foreground leading-relaxed">
                         {step.description}
                       </p>
