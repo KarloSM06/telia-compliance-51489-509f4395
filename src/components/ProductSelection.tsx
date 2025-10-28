@@ -99,7 +99,7 @@ export const ProductSelection = () => {
           </AnimatedSection>
           
         <div className="max-w-[1800px] mx-auto space-y-12 mb-12">
-          {aiPackages.map((pkg, index) => <AnimatedSection key={pkg.id} delay={index * 150} direction={index % 2 === 0 ? 'left' : 'right'}>
+          {aiPackages.map((pkg, index) => <AnimatedSection key={pkg.id} delay={index * 200} direction={index % 2 === 0 ? 'left' : 'right'}>
               <PackageCard package={pkg} imagePosition={index % 2 === 0 ? 'left' : 'right'} onBookDemo={() => setIsConsultationModalOpen(true)} />
             </AnimatedSection>)}
         </div>
