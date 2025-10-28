@@ -170,6 +170,7 @@ All colors MUST be HSL.
 }
 
 .industry-card-wrapper {
+  content-visibility: auto;
   contain-intrinsic-size: 400px;
   opacity: 0;
 }
