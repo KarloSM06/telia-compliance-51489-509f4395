@@ -414,6 +414,7 @@ export type Database = {
           external_resource: Json | null
           id: string
           idempotency_key: string | null
+          integration_id: string | null
           last_synced_at: string | null
           lead_id: string | null
           next_steps: string | null
@@ -449,6 +450,7 @@ export type Database = {
           external_resource?: Json | null
           id?: string
           idempotency_key?: string | null
+          integration_id?: string | null
           last_synced_at?: string | null
           lead_id?: string | null
           next_steps?: string | null
@@ -484,6 +486,7 @@ export type Database = {
           external_resource?: Json | null
           id?: string
           idempotency_key?: string | null
+          integration_id?: string | null
           last_synced_at?: string | null
           lead_id?: string | null
           next_steps?: string | null
@@ -515,6 +518,13 @@ export type Database = {
             columns: ["created_by"]
             isOneToOne: false
             referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "calendar_events_integration_id_fkey"
+            columns: ["integration_id"]
+            isOneToOne: false
+            referencedRelation: "integrations"
             referencedColumns: ["id"]
           },
           {
@@ -895,6 +905,92 @@ export type Database = {
           username?: string | null
         }
         Relationships: []
+      }
+      integrations: {
+        Row: {
+          capabilities: string[]
+          config: Json | null
+          created_at: string | null
+          encrypted_credentials: Json
+          error_message: string | null
+          id: string
+          is_active: boolean | null
+          is_verified: boolean | null
+          last_synced_at: string | null
+          last_used_at: string | null
+          organization_id: string | null
+          polling_enabled: boolean | null
+          polling_interval_minutes: number | null
+          provider: string
+          provider_display_name: string
+          provider_type: string
+          sync_status: string | null
+          updated_at: string | null
+          user_id: string
+          verification_data: Json | null
+          webhook_enabled: boolean | null
+          webhook_secret: string | null
+          webhook_url: string | null
+        }
+        Insert: {
+          capabilities?: string[]
+          config?: Json | null
+          created_at?: string | null
+          encrypted_credentials: Json
+          error_message?: string | null
+          id?: string
+          is_active?: boolean | null
+          is_verified?: boolean | null
+          last_synced_at?: string | null
+          last_used_at?: string | null
+          organization_id?: string | null
+          polling_enabled?: boolean | null
+          polling_interval_minutes?: number | null
+          provider: string
+          provider_display_name: string
+          provider_type: string
+          sync_status?: string | null
+          updated_at?: string | null
+          user_id: string
+          verification_data?: Json | null
+          webhook_enabled?: boolean | null
+          webhook_secret?: string | null
+          webhook_url?: string | null
+        }
+        Update: {
+          capabilities?: string[]
+          config?: Json | null
+          created_at?: string | null
+          encrypted_credentials?: Json
+          error_message?: string | null
+          id?: string
+          is_active?: boolean | null
+          is_verified?: boolean | null
+          last_synced_at?: string | null
+          last_used_at?: string | null
+          organization_id?: string | null
+          polling_enabled?: boolean | null
+          polling_interval_minutes?: number | null
+          provider?: string
+          provider_display_name?: string
+          provider_type?: string
+          sync_status?: string | null
+          updated_at?: string | null
+          user_id?: string
+          verification_data?: Json | null
+          webhook_enabled?: boolean | null
+          webhook_secret?: string | null
+          webhook_url?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "integrations_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       lead_activities: {
         Row: {
@@ -1328,6 +1424,7 @@ export type Database = {
           delivered_at: string | null
           error_message: string | null
           id: string
+          integration_id: string | null
           message_body: string
           metadata: Json | null
           opened_at: string | null
@@ -1351,6 +1448,7 @@ export type Database = {
           delivered_at?: string | null
           error_message?: string | null
           id?: string
+          integration_id?: string | null
           message_body: string
           metadata?: Json | null
           opened_at?: string | null
@@ -1374,6 +1472,7 @@ export type Database = {
           delivered_at?: string | null
           error_message?: string | null
           id?: string
+          integration_id?: string | null
           message_body?: string
           metadata?: Json | null
           opened_at?: string | null
@@ -1394,6 +1493,13 @@ export type Database = {
             columns: ["calendar_event_id"]
             isOneToOne: false
             referencedRelation: "calendar_events"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "message_logs_integration_id_fkey"
+            columns: ["integration_id"]
+            isOneToOne: false
+            referencedRelation: "integrations"
             referencedColumns: ["id"]
           },
           {
@@ -2426,6 +2532,7 @@ export type Database = {
           from_number: string | null
           id: string
           idempotency_key: string | null
+          integration_id: string | null
           normalized: Json | null
           processing_status: string | null
           provider: string
@@ -2449,6 +2556,7 @@ export type Database = {
           from_number?: string | null
           id?: string
           idempotency_key?: string | null
+          integration_id?: string | null
           normalized?: Json | null
           processing_status?: string | null
           provider: string
@@ -2472,6 +2580,7 @@ export type Database = {
           from_number?: string | null
           id?: string
           idempotency_key?: string | null
+          integration_id?: string | null
           normalized?: Json | null
           processing_status?: string | null
           provider?: string
@@ -2489,6 +2598,13 @@ export type Database = {
             columns: ["account_id"]
             isOneToOne: false
             referencedRelation: "telephony_accounts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "telephony_events_integration_id_fkey"
+            columns: ["integration_id"]
+            isOneToOne: false
+            referencedRelation: "integrations"
             referencedColumns: ["id"]
           },
         ]
