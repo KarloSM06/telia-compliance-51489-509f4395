@@ -20,9 +20,7 @@ export const IndustryCard = ({
           </div>}
         
         {/* Icon Overlay in corner */}
-        <div className="absolute bottom-3 right-3 z-20 bg-background/90 backdrop-blur-sm rounded-full p-2.5 shadow-lg group-hover:bg-primary/20 transition-all duration-300">
-          <Icon className="h-5 w-5 text-primary" />
-        </div>
+        
       </div>
       
       {/* Content Section */}
