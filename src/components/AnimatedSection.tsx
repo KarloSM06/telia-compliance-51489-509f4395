@@ -12,7 +12,7 @@ export const AnimatedSection = ({ children, className = '', delay = 0, direction
   const { ref, inView } = useInView({
     triggerOnce: true,
     threshold: 0.1,
-    rootMargin: '-50px', // Start animation slightly before entering viewport
+    rootMargin: '-30px',
   });
 
   const getTransformClasses = () => {
@@ -34,10 +34,11 @@ export const AnimatedSection = ({ children, className = '', delay = 0, direction
   return (
     <div
       ref={ref}
-      className={`transition-all duration-1000 ease-out ${getTransformClasses()} ${className}`}
+      className={`transition-all duration-600 ease-out ${getTransformClasses()} ${className}`}
       style={{ 
         transitionDelay: `${delay}ms`,
-        willChange: inView ? 'auto' : 'opacity, transform'
+        willChange: 'transform, opacity',
+        transform: 'translateZ(0)'
       }}
     >
       {children}
