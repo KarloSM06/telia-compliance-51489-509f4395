@@ -1,7 +1,7 @@
 import { Header } from "@/components/Header";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { CheckCircle, Mail, Phone, Target, Rocket, Users, Lightbulb, Eye, Heart, TrendingUp, Shield, Handshake, Zap, Award, Globe } from "lucide-react";
+import { CheckCircle, Mail, Phone } from "lucide-react";
 import { AnimatedSection } from "@/components/AnimatedSection";
 import { ConsultationModal } from "@/components/ConsultationModal";
 import { useState } from "react";
@@ -158,8 +158,7 @@ const AboutUs = () => {
                 </p>
                 
                 <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
-                  <Button size="lg" onClick={scrollToTeam} className="gap-2">
-                    <Users className="h-5 w-5" />
+                  <Button size="lg" onClick={scrollToTeam}>
                     Möt teamet
                   </Button>
                   <Button size="lg" variant="outline" onClick={() => setIsConsultationModalOpen(true)}>
@@ -181,8 +180,11 @@ const AboutUs = () => {
                 <Card className="border border-primary/10 bg-gradient-to-br from-card/80 via-card/50 to-card/30 backdrop-blur-md hover:shadow-2xl hover:shadow-primary/10 transition-all duration-500">
                   <CardContent className="p-10 space-y-8">
                     <div className="text-center space-y-4">
-                      <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br from-primary to-primary/60 shadow-lg shadow-primary/30">
-                        <Rocket className="h-8 w-8 text-primary-foreground" />
+                      {/* Bildram - infoga egen bild här */}
+                      <div className="relative h-48 mx-auto overflow-hidden rounded-lg border-2 border-primary/20">
+                        <div className="w-full h-full bg-gradient-to-br from-primary/10 via-primary/5 to-background flex items-center justify-center">
+                          <span className="text-muted-foreground">Infoga bild här</span>
+                        </div>
                       </div>
                       <h2 className="text-4xl font-bold bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent">
                         Vad är Hiems?
@@ -243,8 +245,11 @@ const AboutUs = () => {
                 <Card className="h-full border border-primary/10 bg-gradient-to-br from-card/80 via-card/50 to-card/30 backdrop-blur-md hover:shadow-2xl hover:shadow-primary/10 hover:-translate-y-1 transition-all duration-500">
                   <CardContent className="p-10 space-y-6 h-full flex flex-col">
                     <div className="space-y-4">
-                      <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-gradient-to-br from-primary to-primary/60 shadow-lg shadow-primary/30">
-                        <Eye className="h-7 w-7 text-primary-foreground" />
+                      {/* Bildram - infoga egen bild här */}
+                      <div className="relative h-40 overflow-hidden rounded-lg border-2 border-primary/20">
+                        <div className="w-full h-full bg-gradient-to-br from-primary/10 via-primary/5 to-background flex items-center justify-center">
+                          <span className="text-muted-foreground">Infoga bild här</span>
+                        </div>
                       </div>
                       <h3 className="text-3xl font-bold bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent">
                         Vår Vision
@@ -268,8 +273,11 @@ const AboutUs = () => {
                 <Card className="h-full border border-primary/10 bg-gradient-to-br from-card/80 via-card/50 to-card/30 backdrop-blur-md hover:shadow-2xl hover:shadow-primary/10 hover:-translate-y-1 transition-all duration-500">
                   <CardContent className="p-10 space-y-6 h-full flex flex-col">
                     <div className="space-y-4">
-                      <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-gradient-to-br from-primary to-primary/60 shadow-lg shadow-primary/30">
-                        <Target className="h-7 w-7 text-primary-foreground" />
+                      {/* Bildram - infoga egen bild här */}
+                      <div className="relative h-40 overflow-hidden rounded-lg border-2 border-primary/20">
+                        <div className="w-full h-full bg-gradient-to-br from-primary/10 via-primary/5 to-background flex items-center justify-center">
+                          <span className="text-muted-foreground">Infoga bild här</span>
+                        </div>
                       </div>
                       <h3 className="text-3xl font-bold bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent">
                         Vår Mission
@@ -311,36 +319,37 @@ const AboutUs = () => {
             <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
               {[
                 {
-                  icon: Shield,
                   title: "Transparens",
                   description: "Inga dolda kostnader eller fluffiga löften. Vi är alltid ärliga om vad som är möjligt och vad det kostar."
                 },
                 {
-                  icon: Zap,
                   title: "Expertis",
                   description: "Djup teknisk kunskap från AI-modeller till implementation. Vi vet vad vi gör."
                 },
                 {
-                  icon: TrendingUp,
                   title: "Resultat",
                   description: "Vi mäts på er framgång, inte våra timmar. Mätbara resultat är vår målsättning."
                 },
                 {
-                  icon: Handshake,
                   title: "Partnerskap",
                   description: "Vi är er långsiktiga AI-partner, inte bara en leverantör. Vi växer tillsammans."
                 }
               ].map((value, index) => (
                 <AnimatedSection key={value.title} delay={index * 80}>
-                  <Card className="h-full border border-primary/10 bg-gradient-to-br from-card/80 via-card/50 to-card/30 backdrop-blur-md hover:shadow-2xl hover:shadow-primary/10 hover:-translate-y-2 transition-all duration-500 group">
-                    <CardContent className="p-8 space-y-4 text-center h-full flex flex-col">
-                      <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br from-primary to-primary/60 shadow-lg shadow-primary/30 mx-auto group-hover:scale-110 transition-transform duration-500">
-                        <value.icon className="h-8 w-8 text-primary-foreground" />
+                  <Card className="h-full border border-primary/10 bg-gradient-to-br from-card/80 via-card/50 to-card/30 backdrop-blur-md hover:shadow-2xl hover:shadow-primary/10 hover:-translate-y-2 transition-all duration-500 group overflow-hidden">
+                    <CardContent className="p-0 space-y-4 text-center h-full flex flex-col">
+                      {/* Bildram - infoga egen bild här */}
+                      <div className="relative h-40 overflow-hidden">
+                        <div className="w-full h-full bg-gradient-to-br from-primary/10 via-primary/5 to-background flex items-center justify-center">
+                          <span className="text-muted-foreground text-sm">Infoga bild här</span>
+                        </div>
                       </div>
-                      <h3 className="text-xl font-bold">{value.title}</h3>
-                      <p className="text-sm text-muted-foreground leading-relaxed flex-1">
-                        {value.description}
-                      </p>
+                      <div className="px-8 pb-8 flex-1 flex flex-col">
+                        <h3 className="text-xl font-bold mb-3">{value.title}</h3>
+                        <p className="text-sm text-muted-foreground leading-relaxed flex-1">
+                          {value.description}
+                        </p>
+                      </div>
                     </CardContent>
                   </Card>
                 </AnimatedSection>
@@ -373,40 +382,39 @@ const AboutUs = () => {
                 {
                   step: "01",
                   title: "Lyssna",
-                  description: "Vi börjar alltid med att förstå era specifika utmaningar och mål.",
-                  icon: Users
+                  description: "Vi börjar alltid med att förstå era specifika utmaningar och mål."
                 },
                 {
                   step: "02",
                   title: "Analysera",
-                  description: "Djup behovsanalys innan vi föreslår någon lösning.",
-                  icon: Lightbulb
+                  description: "Djup behovsanalys innan vi föreslår någon lösning."
                 },
                 {
                   step: "03",
                   title: "Bygga",
-                  description: "Skräddarsydda AI-system som löser era verkliga problem.",
-                  icon: Rocket
+                  description: "Skräddarsydda AI-system som löser era verkliga problem."
                 },
                 {
                   step: "04",
                   title: "Optimera",
-                  description: "Kontinuerlig förbättring baserat på data och resultat.",
-                  icon: TrendingUp
+                  description: "Kontinuerlig förbättring baserat på data och resultat."
                 }
               ].map((step, index) => (
                 <AnimatedSection key={step.step} delay={index * 100}>
                   <div className="relative">
                     <div className="text-center space-y-4">
                       <div className="relative inline-block">
-                        <div className="w-24 h-24 rounded-full bg-gradient-to-br from-primary to-primary/60 flex items-center justify-center shadow-lg shadow-primary/30 mx-auto hover:scale-110 transition-transform duration-500 relative z-10">
-                          <step.icon className="h-10 w-10 text-primary-foreground" />
+                        {/* Bildram - infoga egen bild här */}
+                        <div className="relative h-48 w-full overflow-hidden rounded-lg border-2 border-primary/20 hover:scale-105 transition-transform duration-500">
+                          <div className="w-full h-full bg-gradient-to-br from-primary/10 via-primary/5 to-background flex items-center justify-center">
+                            <span className="text-muted-foreground text-sm">Infoga bild här</span>
+                          </div>
                         </div>
-                        <div className="absolute -bottom-2 -right-2 w-12 h-12 rounded-full bg-card border-2 border-primary flex items-center justify-center font-bold text-lg">
+                        <div className="absolute -bottom-3 -right-3 w-12 h-12 rounded-full bg-card border-2 border-primary flex items-center justify-center font-bold text-lg shadow-lg">
                           {step.step}
                         </div>
                       </div>
-                      <h3 className="text-2xl font-bold">{step.title}</h3>
+                      <h3 className="text-2xl font-bold pt-2">{step.title}</h3>
                       <p className="text-sm text-muted-foreground leading-relaxed">
                         {step.description}
                       </p>
@@ -606,19 +614,16 @@ const AboutUs = () => {
             <div className="grid md:grid-cols-3 gap-8">
               {[
                 {
-                  icon: Globe,
                   title: "Svenskt & Lokalt",
                   description: "Vi förstår svenska företag, svenska marknaden och svenska utmaningar. Ingen kulturell eller språklig barriär.",
                   image: svensktLokalImage
                 },
                 {
-                  icon: Award,
                   title: "End-to-End",
                   description: "Från strategi till drift, vi hanterar allt. En partner för hela er AI-resa, inte bara en leverantör.",
                   image: endToEndImage
                 },
                 {
-                  icon: TrendingUp,
                   title: "Bevisat ROI",
                   description: "Våra kunder ser mätbar avkastning. Vi bygger system som faktiskt ökar lönsamhet och effektivitet.",
                   image: bvisatRoiImage
@@ -626,19 +631,14 @@ const AboutUs = () => {
               ].map((benefit, index) => (
                 <AnimatedSection key={benefit.title} delay={index * 100}>
                   <Card className="h-full border border-primary/10 bg-gradient-to-br from-card/80 via-card/50 to-card/30 backdrop-blur-md hover:shadow-2xl hover:shadow-primary/10 hover:-translate-y-2 transition-all duration-500 group overflow-hidden">
-                    {/* Image Header */}
-                    <div className="relative h-48 overflow-hidden">
+                    {/* Bildram - byt ut med egen bild */}
+                    <div className="relative h-48 overflow-hidden border-b-2 border-primary/20">
                       <img 
                         src={benefit.image} 
                         alt={benefit.title}
                         className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                       />
                       <div className="absolute inset-0 bg-gradient-to-br from-primary/40 via-primary/20 to-transparent" />
-                      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-                        <div className="w-20 h-20 rounded-full bg-gradient-to-br from-primary to-primary/60 flex items-center justify-center shadow-lg shadow-primary/30 group-hover:scale-110 transition-transform duration-500">
-                          <benefit.icon className="h-10 w-10 text-primary-foreground" />
-                        </div>
-                      </div>
                     </div>
                     
                     <CardContent className="p-8 space-y-4 text-center">
@@ -663,8 +663,11 @@ const AboutUs = () => {
               <Card className="max-w-4xl mx-auto border border-primary/20 bg-gradient-to-br from-card/90 via-card/70 to-card/50 backdrop-blur-md shadow-2xl shadow-primary/20">
                 <CardContent className="p-12 text-center space-y-8">
                   <div className="space-y-4">
-                    <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-gradient-to-br from-primary to-primary/60 shadow-lg shadow-primary/30 mx-auto">
-                      <Rocket className="h-10 w-10 text-primary-foreground" />
+                    {/* Bildram - infoga egen bild här */}
+                    <div className="relative h-48 max-w-md mx-auto overflow-hidden rounded-lg border-2 border-primary/30">
+                      <div className="w-full h-full bg-gradient-to-br from-primary/10 via-primary/5 to-background flex items-center justify-center">
+                        <span className="text-muted-foreground">Infoga bild här</span>
+                      </div>
                     </div>
                     <h2 className="text-4xl sm:text-5xl font-bold bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent">
                       Redo att ta steget in i AI-framtiden?
@@ -675,12 +678,10 @@ const AboutUs = () => {
                   </div>
                   
                   <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
-                    <Button size="lg" variant="gold" className="gap-2" onClick={() => setIsConsultationModalOpen(true)}>
-                      <Rocket className="h-5 w-5" />
+                    <Button size="lg" variant="gold" onClick={() => setIsConsultationModalOpen(true)}>
                       Boka Gratis Behovsanalys
                     </Button>
                     <Button size="lg" variant="outline" onClick={() => window.location.href = 'mailto:info@hiems.se'}>
-                      <Mail className="h-5 w-5" />
                       Kontakta Oss
                     </Button>
                   </div>
