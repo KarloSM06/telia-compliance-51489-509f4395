@@ -33,28 +33,38 @@ export const CustomerJourneyFlow = () => {
   return (
     <div className="max-w-7xl mx-auto">
       {/* Desktop: Horizontal flow */}
-      <div className="hidden lg:flex items-center justify-between gap-4">
+      <div className="hidden lg:grid lg:grid-cols-5 gap-6 items-start">
         {journeySteps.map((step, index) => {
           return (
-            <div key={index} className="flex items-center flex-1">
-              <Card className="flex-1 hover:shadow-lg transition-shadow duration-300 overflow-hidden">
-                <CardContent className="p-0">
-                  <div className="relative aspect-[4/3] overflow-hidden">
+            <div key={index} className="group relative">
+              <Card className="h-full overflow-hidden border-0 bg-card/50 backdrop-blur-sm hover:bg-card/80 transition-all duration-300 hover:shadow-2xl hover:-translate-y-2">
+                <CardContent className="p-0 flex flex-col h-full">
+                  <div className="relative aspect-square overflow-hidden">
+                    <div className="absolute inset-0 bg-gradient-to-t from-background/90 to-transparent z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                     <img 
                       src={step.image} 
                       alt={step.title}
-                      className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
+                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                     />
+                    <div className="absolute top-4 right-4 z-20 w-10 h-10 rounded-full bg-primary/90 backdrop-blur-sm flex items-center justify-center text-white font-bold text-sm">
+                      {index + 1}
+                    </div>
                   </div>
-                  <div className="p-6 text-center">
-                    <h3 className="font-bold text-lg mb-2">{step.title}</h3>
-                    <p className="text-sm text-muted-foreground">{step.description}</p>
+                  <div className="p-6 flex flex-col flex-1">
+                    <h3 className="font-bold text-xl mb-3 text-foreground group-hover:text-primary transition-colors duration-300">
+                      {step.title}
+                    </h3>
+                    <p className="text-sm text-muted-foreground leading-relaxed flex-1">
+                      {step.description}
+                    </p>
                   </div>
                 </CardContent>
               </Card>
               
               {index < journeySteps.length - 1 && (
-                <ArrowRight className="h-8 w-8 text-primary mx-2 flex-shrink-0" />
+                <div className="absolute top-1/2 -right-3 transform -translate-y-1/2 z-20 hidden lg:block">
+                  <ArrowRight className="h-6 w-6 text-primary animate-pulse" />
+                </div>
               )}
             </div>
           );
@@ -62,29 +72,33 @@ export const CustomerJourneyFlow = () => {
       </div>
 
       {/* Mobile: Vertical flow */}
-      <div className="lg:hidden space-y-4">
+      <div className="lg:hidden space-y-6">
         {journeySteps.map((step, index) => {
           return (
-            <div key={index} className="space-y-2">
-              <Card className="hover:shadow-lg transition-shadow duration-300 overflow-hidden">
+            <div key={index} className="relative">
+              <Card className="overflow-hidden border-0 bg-card/50 backdrop-blur-sm hover:bg-card/80 transition-all duration-300 hover:shadow-xl">
                 <CardContent className="p-0">
                   <div className="relative aspect-video overflow-hidden">
+                    <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent z-10" />
                     <img 
                       src={step.image} 
                       alt={step.title}
                       className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
                     />
+                    <div className="absolute top-4 left-4 z-20 w-12 h-12 rounded-full bg-primary/90 backdrop-blur-sm flex items-center justify-center text-white font-bold">
+                      {index + 1}
+                    </div>
                   </div>
                   <div className="p-6">
-                    <h3 className="font-bold text-lg mb-2">{step.title}</h3>
-                    <p className="text-sm text-muted-foreground">{step.description}</p>
+                    <h3 className="font-bold text-xl mb-3 text-foreground">{step.title}</h3>
+                    <p className="text-sm text-muted-foreground leading-relaxed">{step.description}</p>
                   </div>
                 </CardContent>
               </Card>
               
               {index < journeySteps.length - 1 && (
-                <div className="flex justify-center">
-                  <ArrowRight className="h-8 w-8 text-primary rotate-90" />
+                <div className="flex justify-center py-4">
+                  <ArrowRight className="h-8 w-8 text-primary rotate-90 animate-pulse" />
                 </div>
               )}
             </div>
