@@ -1,29 +1,20 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { memo } from "react";
 import type { Industry } from "@/data/industries";
 interface IndustryCardProps {
   industry: Industry;
   onClick: () => void;
 }
-export const IndustryCard = memo(({
+export const IndustryCard = ({
   industry,
   onClick
 }: IndustryCardProps) => {
   const Icon = industry.icon;
   return <Card className="group h-full flex flex-col overflow-hidden cursor-pointer border border-primary/10 bg-gradient-to-br from-card/80 via-card/50 to-card/30 backdrop-blur-md hover:bg-card/90 hover:border-primary/30 transition-all duration-500 hover:shadow-2xl hover:shadow-primary/20 hover:-translate-y-2" onClick={onClick}>
       {/* Image Section */}
-      <div className="relative aspect-[4/3] overflow-hidden bg-muted/20">
+      <div className="relative aspect-[4/3] overflow-hidden">
         {industry.image ? <>
             <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent z-10 opacity-70 group-hover:opacity-50 transition-opacity duration-500" />
-            <img 
-              src={industry.image} 
-              alt={`${industry.name} - AI lösningar för branschen`}
-              loading="lazy"
-              decoding="async"
-              width="400"
-              height="300"
-              className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 group-hover:brightness-110" 
-            />
+            <img src={industry.image} alt={industry.name} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 group-hover:brightness-110" />
           </> : <div className="absolute inset-0 bg-gradient-to-br from-primary/30 via-primary/10 to-transparent flex items-center justify-center">
             <Icon className="h-24 w-24 text-primary/40 group-hover:text-primary/60 transition-colors duration-300" />
           </div>}
@@ -45,4 +36,4 @@ export const IndustryCard = memo(({
         </CardDescription>
       </CardContent>
     </Card>;
-});
+};

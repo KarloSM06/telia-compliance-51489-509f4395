@@ -1,6 +1,6 @@
 import { Calendar, FileText, Settings, CheckCircle, Rocket } from "lucide-react";
 import { OnboardingStepCard } from "./OnboardingStepCard";
-import { OptimizedAnimatedSection } from "@/components/OptimizedAnimatedSection";
+import { AnimatedSection } from "@/components/AnimatedSection";
 
 const onboardingSteps = [
   {
@@ -51,7 +51,7 @@ export const OnboardingTimeline = () => {
       {/* Grid Layout - Responsive and Symmetrical */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
         {onboardingSteps.map((step, index) => (
-          <OptimizedAnimatedSection 
+          <AnimatedSection 
             key={index} 
             delay={index * 150}
             direction="up"
@@ -65,7 +65,7 @@ export const OnboardingTimeline = () => {
               image={step.image}
               stepNumber={index + 1}
             />
-          </OptimizedAnimatedSection>
+          </AnimatedSection>
         ))}
       </div>
 

@@ -1,14 +1,13 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { CheckCircle } from "lucide-react";
-import { memo } from "react";
 import type { Package } from "@/data/packages";
 interface PackageCardProps {
   package: Package;
   onBookDemo: () => void;
   imagePosition?: 'left' | 'right';
 }
-export const PackageCard = memo(({
+export const PackageCard = ({
   package: pkg,
   onBookDemo,
   imagePosition = 'left'
@@ -22,13 +21,7 @@ export const PackageCard = memo(({
       {/* Image Section */}
       <div className={`lg:w-2/5 relative overflow-hidden flex-shrink-0 ${isImageLeft ? 'lg:order-1' : 'lg:order-2'}`}>
         {pkg.image ? <>
-            <img 
-              src={pkg.image} 
-              alt={pkg.name} 
-              loading="lazy"
-              decoding="async"
-              className="w-full h-full object-cover object-center transition-transform duration-700 group-hover:scale-110" 
-            />
+            <img src={pkg.image} alt={pkg.name} className="w-full h-full object-cover object-center transition-transform duration-700 group-hover:scale-110" />
             <div className="absolute inset-0 bg-gradient-to-br from-primary/40 via-primary/20 to-transparent transition-opacity duration-500 group-hover:opacity-70" />
             
             {/* Icon Overlay */}
@@ -70,4 +63,4 @@ export const PackageCard = memo(({
         </CardContent>
       </div>
     </Card>;
-});
+};
