@@ -1,39 +1,23 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import type { Industry } from "@/data/industries";
-
 interface IndustryCardProps {
   industry: Industry;
   onClick: () => void;
 }
-
-export const IndustryCard = ({ industry, onClick }: IndustryCardProps) => {
+export const IndustryCard = ({
+  industry,
+  onClick
+}: IndustryCardProps) => {
   const Icon = industry.icon;
-  
-  return (
-    <Card 
-      className="group h-full flex flex-col overflow-hidden cursor-pointer border-border/50 bg-card/80 hover:bg-card hover:border-primary/40 transition-[transform,border-color] duration-300 hover:shadow-lg hover:-translate-y-1 transform-gpu"
-      onClick={onClick}
-    >
+  return <Card className="group h-full flex flex-col overflow-hidden cursor-pointer border-border/50 bg-card/80 hover:bg-card hover:border-primary/40 transition-[transform,border-color] duration-300 hover:shadow-lg hover:-translate-y-1 transform-gpu" onClick={onClick}>
       {/* Image Section */}
       <div className="relative aspect-[4/3] overflow-hidden bg-muted">
-        {industry.image ? (
-          <img 
-            src={industry.image} 
-            alt={industry.name}
-            loading="lazy"
-            decoding="async"
-            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 transform-gpu"
-          />
-        ) : (
-          <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-primary/10 to-muted flex items-center justify-center">
+        {industry.image ? <img src={industry.image} alt={industry.name} loading="lazy" decoding="async" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 transform-gpu" /> : <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-primary/10 to-muted flex items-center justify-center">
             <Icon className="h-20 w-20 text-primary/30 group-hover:text-primary/50 transition-colors duration-300" />
-          </div>
-        )}
+          </div>}
         
         {/* Icon Badge */}
-        <div className="absolute top-3 right-3 p-2 rounded-lg bg-background/90 shadow-sm">
-          <Icon className="h-5 w-5 text-primary" />
-        </div>
+        
       </div>
       
       {/* Content Section */}
@@ -48,6 +32,5 @@ export const IndustryCard = ({ industry, onClick }: IndustryCardProps) => {
           {industry.description}
         </CardDescription>
       </CardContent>
-    </Card>
-  );
+    </Card>;
 };
