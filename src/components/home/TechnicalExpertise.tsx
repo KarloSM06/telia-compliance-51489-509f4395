@@ -109,13 +109,27 @@ export const TechnicalExpertise = ({ onBookDemo }: TechnicalExpertiseProps) => {
                             >
                               {item.logo && (
                                 <div className="w-full h-16 mb-2 flex items-center justify-center bg-white/90 rounded-md overflow-hidden group-hover/item:scale-105 transition-transform duration-300">
-                                  <img 
-                                    src={item.logo} 
+                                  <img
+                                    src={item.logo}
+                                    data-logo={item.logo}
                                     alt={`${item.name} logo`}
                                     loading="lazy"
                                     className="max-w-full max-h-full object-contain p-2"
                                     onError={(e) => {
                                       const img = e.currentTarget as HTMLImageElement;
+                                      const base = img.dataset.logo || '';
+                                      const tried = (img.getAttribute('data-tried') || '').split(',').filter(Boolean);
+                                      const candidates = [
+                                        base.endsWith('.png') ? base.replace('.png', '.svg') : '',
+                                        base.endsWith('.svg') ? base.replace('.svg', '.png') : '',
+                                        base.endsWith('.png') ? base.replace('.png', '.webp') : ''
+                                      ].filter(Boolean) as string[];
+                                      const next = candidates.find((c) => !tried.includes(c) && c && c !== img.src);
+                                      if (next) {
+                                        img.setAttribute('data-tried', [...tried, img.src].join(','));
+                                        img.src = next;
+                                        return;
+                                      }
                                       img.onerror = null;
                                       img.src = '/placeholder.svg';
                                     }}
