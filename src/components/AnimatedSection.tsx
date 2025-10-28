@@ -82,7 +82,7 @@ export const AnimatedSection = ({
         ref(node);
         if (elementRef) elementRef.current = node;
       }}
-      className={`transition-all duration-700 ${!scrollDriven ? getTransformClasses() : ''} ${className}`}
+      className={`transform-gpu [will-change:transform,opacity] transition-[transform,opacity] duration-700 ${!scrollDriven ? getTransformClasses() : ''} ${className}`}
       style={scrollDriven ? getScrollDrivenStyle() : { transitionDelay: `${delay}ms` }}
     >
       {children}
