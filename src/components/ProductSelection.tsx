@@ -3,7 +3,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { ConsultationModal } from "@/components/ConsultationModal";
 import { AnimatedSection } from "@/components/AnimatedSection";
 import { PackageCard } from "@/components/home/PackageCard";
@@ -20,10 +20,12 @@ import karloImage from "@/assets/karlo-mangione.png";
 import antonImage from "@/assets/anton-sallnas.png";
 import emilImage from "@/assets/emil-westerberg.png";
 import { Sparkles, Zap, Target, CheckCircle, Award, Users, Wrench, ArrowRight } from "lucide-react";
+
 export const ProductSelection = () => {
   const [isConsultationModalOpen, setIsConsultationModalOpen] = useState(false);
   const [selectedIndustry, setSelectedIndustry] = useState<string>('');
-  const scrollToSection = (id: string) => {
+  
+  const scrollToSection = useCallback((id: string) => {
     const element = document.getElementById(id);
     if (element) {
       const offset = 80;
@@ -34,11 +36,12 @@ export const ProductSelection = () => {
         behavior: 'smooth'
       });
     }
-  };
-  const handleIndustryClick = (industryId: string) => {
+  }, []);
+  
+  const handleIndustryClick = useCallback((industryId: string) => {
     setSelectedIndustry(industryId);
     setIsConsultationModalOpen(true);
-  };
+  }, []);
   return <div className="relative overflow-hidden bg-gradient-hero min-h-screen">
       {/* Animated background elements */}
       <div className="absolute inset-0 overflow-hidden">

@@ -2,6 +2,19 @@ import { createRoot } from "react-dom/client";
 import App from "./App.tsx";
 import "./index.css";
 
+// Preload critical resources
+const preloadCriticalResources = () => {
+  // Preload hero image for faster LCP
+  const heroImage = new Image();
+  heroImage.src = '/src/assets/hero-background.jpg';
+  
+  // Preload font if applicable
+  const link = document.createElement('link');
+  link.rel = 'preconnect';
+  link.href = 'https://fonts.googleapis.com';
+  document.head.appendChild(link);
+};
+
 // Web Vitals tracking for performance monitoring
 const reportWebVitals = () => {
   if (typeof window !== 'undefined' && 'performance' in window) {
@@ -27,6 +40,8 @@ const reportWebVitals = () => {
   }
 };
 
+// Initialize performance optimizations
+preloadCriticalResources();
 reportWebVitals();
 
 createRoot(document.getElementById("root")!).render(<App />);

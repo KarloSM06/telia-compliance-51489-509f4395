@@ -1,13 +1,14 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { CheckCircle } from "lucide-react";
+import { memo, useMemo } from "react";
 import type { Package } from "@/data/packages";
 interface PackageCardProps {
   package: Package;
   onBookDemo: () => void;
   imagePosition?: 'left' | 'right';
 }
-export const PackageCard = ({
+export const PackageCard = memo(({
   package: pkg,
   onBookDemo,
   imagePosition = 'left'
@@ -15,8 +16,11 @@ export const PackageCard = ({
   const Icon = pkg.icon;
   const isImageLeft = imagePosition === 'left';
 
-  // Combine all points into a single list
-  const allPoints = [...(pkg.description ? [pkg.description] : []), ...pkg.components, ...pkg.valueBullets];
+  // Combine all points into a single list - memoized to prevent recalculation
+  const allPoints = useMemo(
+    () => [...(pkg.description ? [pkg.description] : []), ...pkg.components, ...pkg.valueBullets],
+    [pkg.description, pkg.components, pkg.valueBullets]
+  );
   return <Card className="flex flex-col lg:flex-row overflow-hidden border border-primary/10 bg-gradient-to-br from-card/80 via-card/50 to-card/30 backdrop-blur-md hover:bg-card/90 hover:border-primary/30 hover:-translate-y-1 hover:shadow-2xl transition-all duration-500 group">
       {/* Image Section */}
       <div className={`lg:w-2/5 relative overflow-hidden flex-shrink-0 ${isImageLeft ? 'lg:order-1' : 'lg:order-2'}`}>
@@ -63,4 +67,4 @@ export const PackageCard = ({
         </CardContent>
       </div>
     </Card>;
-};
+});

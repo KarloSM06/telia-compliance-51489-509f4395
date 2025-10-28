@@ -1,10 +1,11 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { memo } from "react";
 import type { Industry } from "@/data/industries";
 interface IndustryCardProps {
   industry: Industry;
   onClick: () => void;
 }
-export const IndustryCard = ({
+export const IndustryCard = memo(({
   industry,
   onClick
 }: IndustryCardProps) => {
@@ -36,4 +37,4 @@ export const IndustryCard = ({
         </CardDescription>
       </CardContent>
     </Card>;
-};
+});
