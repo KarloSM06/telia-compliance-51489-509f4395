@@ -2,18 +2,44 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Button } from "@/components/ui/button";
 import { CheckCircle } from "lucide-react";
 import type { Package } from "@/data/packages";
+import { useState, useEffect, useRef } from "react";
+
 interface PackageCardProps {
   package: Package;
   onBookDemo: () => void;
   imagePosition?: 'left' | 'right';
 }
+
 export const PackageCard = ({
   package: pkg,
   onBookDemo,
   imagePosition = 'left'
 }: PackageCardProps) => {
+  const [isZoomed, setIsZoomed] = useState(false);
+  const [isHovering, setIsHovering] = useState(false);
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  
   const Icon = pkg.icon;
   const isImageLeft = imagePosition === 'left';
+
+  useEffect(() => {
+    if (isHovering) {
+      timeoutRef.current = setTimeout(() => {
+        setIsZoomed(true);
+      }, 2000);
+    } else {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+      setIsZoomed(false);
+    }
+
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+  }, [isHovering]);
   // Combine all points into a single list
   const allPoints = [
     ...(pkg.description ? [pkg.description] : []),
@@ -22,7 +48,13 @@ export const PackageCard = ({
   ];
 
   return (
-    <Card className="flex flex-col lg:flex-row hover:shadow-lg transition-shadow duration-300 border overflow-hidden bg-card">
+    <Card 
+      className={`flex flex-col lg:flex-row hover:shadow-lg border overflow-hidden bg-card transition-all duration-500 ${
+        isZoomed ? 'scale-110 shadow-2xl z-50 relative' : 'scale-100'
+      }`}
+      onMouseEnter={() => setIsHovering(true)}
+      onMouseLeave={() => setIsHovering(false)}
+    >
       <div className={`lg:w-2/5 relative overflow-hidden flex-shrink-0 ${isImageLeft ? 'lg:order-1' : 'lg:order-2'}`}>
         {pkg.image ? (
           <img 
