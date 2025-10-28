@@ -1,7 +1,7 @@
 import { TrendingUp, Sparkles, Wrench, ShoppingCart, BarChart3, Award, type LucideIcon } from "lucide-react";
 import marketingAutomationImage from "@/assets/marketing-automation-ai-wide.jpg";
 import serviceOperationsImage from "@/assets/service-operations.jpg";
-import ecommerceRetailImage from "@/assets/ecommerce-retail.png";
+import ecommerceRetailImage from "@/assets/ecommerce-retail.jpg";
 import dataInsightImage from "@/assets/data-insight.jpg";
 import growthSalesImage from "@/assets/growth-sales-accelerator.jpg";
 
