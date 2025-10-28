@@ -48,7 +48,13 @@ export const CustomerJourneyFlow = () => {
                   <img 
                     src={step.image} 
                     alt={step.title}
+                    loading="eager"
+                    decoding="async"
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 group-hover:brightness-110"
+                    onError={(e) => {
+                      e.currentTarget.style.display = 'none';
+                      console.error(`Failed to load image: ${step.image}`);
+                    }}
                   />
                   <div className="absolute top-4 right-4 z-20 w-12 h-12 rounded-full bg-primary backdrop-blur-sm flex items-center justify-center text-white font-bold text-base shadow-lg group-hover:scale-110 transition-transform duration-300">
                     {index + 1}
