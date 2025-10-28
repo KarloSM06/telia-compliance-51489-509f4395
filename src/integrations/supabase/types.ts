@@ -930,6 +930,7 @@ export type Database = {
           verification_data: Json | null
           webhook_enabled: boolean | null
           webhook_secret: string | null
+          webhook_token: string | null
           webhook_url: string | null
         }
         Insert: {
@@ -955,6 +956,7 @@ export type Database = {
           verification_data?: Json | null
           webhook_enabled?: boolean | null
           webhook_secret?: string | null
+          webhook_token?: string | null
           webhook_url?: string | null
         }
         Update: {
@@ -980,6 +982,7 @@ export type Database = {
           verification_data?: Json | null
           webhook_enabled?: boolean | null
           webhook_secret?: string | null
+          webhook_token?: string | null
           webhook_url?: string | null
         }
         Relationships: [
@@ -2720,6 +2723,7 @@ export type Database = {
           cursor: string | null
           error_message: string | null
           id: string
+          integration_id: string | null
           items_synced: number | null
           job_type: string
           last_sync_timestamp: string | null
@@ -2736,6 +2740,7 @@ export type Database = {
           cursor?: string | null
           error_message?: string | null
           id?: string
+          integration_id?: string | null
           items_synced?: number | null
           job_type: string
           last_sync_timestamp?: string | null
@@ -2752,6 +2757,7 @@ export type Database = {
           cursor?: string | null
           error_message?: string | null
           id?: string
+          integration_id?: string | null
           items_synced?: number | null
           job_type?: string
           last_sync_timestamp?: string | null
@@ -2767,6 +2773,13 @@ export type Database = {
             columns: ["account_id"]
             isOneToOne: false
             referencedRelation: "telephony_accounts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "telephony_sync_jobs_integration_id_fkey"
+            columns: ["integration_id"]
+            isOneToOne: false
+            referencedRelation: "integrations"
             referencedColumns: ["id"]
           },
         ]

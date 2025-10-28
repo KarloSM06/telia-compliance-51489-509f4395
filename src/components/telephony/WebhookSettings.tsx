@@ -7,23 +7,22 @@ import { Badge } from '@/components/ui/badge';
 import { Copy, Key, RefreshCw, Eye, EyeOff, Info, Webhook } from 'lucide-react';
 import { toast } from 'sonner';
 import { useApiKeys } from '@/hooks/useApiKeys';
-import { useTelephonyAccounts } from '@/hooks/useTelephonyAccounts';
-import { useUserWebhook } from '@/hooks/useUserWebhook';
+import { useIntegrations } from '@/hooks/useIntegrations';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 
 export const WebhookSettings = () => {
   const [showApiKey, setShowApiKey] = useState(false);
   const { apiKeys, isLoading, generateKey, isGenerating } = useApiKeys();
-  const { accounts } = useTelephonyAccounts();
-  const { webhookUrl } = useUserWebhook();
+  const { integrations, getByCapability } = useIntegrations();
+  const telephonyIntegrations = getByCapability('voice').concat(getByCapability('sms'));
 
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text);
     toast.success('Webhook URL kopierad!');
   };
 
-  const getMcpWebhookUrl = (token: string) => {
-    return `https://shskknkivuewuqonjdjc.supabase.co/functions/v1/user-webhook?token=${token}`;
+  const getIntegrationWebhookUrl = (webhookToken: string) => {
+    return `https://shskknkivuewuqonjdjc.supabase.co/functions/v1/user-webhook?token=${webhookToken}`;
   };
 
   const primaryApiKey = apiKeys?.[0];
@@ -107,50 +106,55 @@ export const WebhookSettings = () => {
         </CardContent>
       </Card>
 
-      {/* Server Webhook URL Section */}
-      {accounts && accounts.length > 0 && (
+      {/* Integration Webhook URLs Section */}
+      {telephonyIntegrations && telephonyIntegrations.length > 0 && (
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Webhook className="h-5 w-5" />
-              Server Webhook URL
+              Integration Webhook URLs
             </CardTitle>
             <CardDescription>
-              En universell webhook för alla dina telephony providers
+              Webhook URLs för varje integration
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-3">
-              {accounts.map((account) => {
+              {telephonyIntegrations.map((integration) => {
+                const webhookUrl = integration.webhook_token 
+                  ? getIntegrationWebhookUrl(integration.webhook_token)
+                  : 'Webhook token saknas';
                 
                 return (
-                  <div key={account.id} className="space-y-2">
+                  <div key={integration.id} className="space-y-2">
                     <div className="flex items-center gap-3 p-4 rounded-lg bg-muted/50 border">
                       <div className="flex-shrink-0">
                         <img 
-                          src={`/images/logos/${account.provider}.png`} 
-                          alt={account.provider}
+                          src={`/images/logos/${integration.provider}.png`} 
+                          alt={integration.provider}
                           className="w-8 h-8 object-contain"
                         />
                       </div>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 mb-1">
-                          <div className="font-semibold text-sm">{account.provider_display_name}</div>
-                          <Badge variant={account.is_active ? "default" : "secondary"} className="text-xs">
-                            {account.is_active ? "Aktiv" : "Inaktiv"}
+                          <div className="font-semibold text-sm">{integration.provider_display_name}</div>
+                          <Badge variant={integration.is_active ? "default" : "secondary"} className="text-xs">
+                            {integration.is_active ? "Aktiv" : "Inaktiv"}
                           </Badge>
                         </div>
                         <code className="text-xs text-muted-foreground break-all block bg-background/50 p-2 rounded">
                           {webhookUrl}
                         </code>
                       </div>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => copyToClipboard(webhookUrl)}
-                      >
-                        <Copy className="h-4 w-4" />
-                      </Button>
+                      {integration.webhook_token && (
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => copyToClipboard(webhookUrl)}
+                        >
+                          <Copy className="h-4 w-4" />
+                        </Button>
+                      )}
                     </div>
                   </div>
                 );
@@ -160,14 +164,14 @@ export const WebhookSettings = () => {
             <Alert>
               <Webhook className="h-4 w-4" />
               <AlertDescription className="text-sm">
-                <strong>Konfigurera samma webhook URL i alla providers:</strong>
+                <strong>Konfigurera webhook URL i varje provider:</strong>
                 <ul className="list-disc list-inside mt-2 space-y-1">
                   <li><strong>Vapi:</strong> Dashboard → Settings → Webhooks</li>
                   <li><strong>Retell:</strong> Dashboard → Settings → Webhooks</li>
                   <li><strong>Twilio:</strong> Console → Phone Numbers → Configure</li>
                   <li><strong>Telnyx:</strong> Portal → Messaging → Settings</li>
                 </ul>
-                <p className="mt-2 text-xs">Systemet detekterar automatiskt vilken provider som skickar data.</p>
+                <p className="mt-2 text-xs">Varje integration har sin egen webhook URL för säkerhet.</p>
               </AlertDescription>
             </Alert>
           </CardContent>

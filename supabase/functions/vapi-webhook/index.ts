@@ -30,17 +30,17 @@ serve(async (req) => {
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
     );
 
-    // Find account by webhook token
-    const { data: account } = await supabase
-      .from('telephony_accounts')
+    // Find integration by webhook token
+    const { data: integration } = await supabase
+      .from('integrations')
       .select('id, user_id, encrypted_credentials')
       .eq('webhook_token', webhookToken)
       .eq('provider', 'vapi')
       .eq('is_active', true)
       .single();
 
-    if (!account) {
-      console.log('⚠️ No active Vapi account found for this webhook token');
+    if (!integration) {
+      console.log('⚠️ No active Vapi integration found for this webhook token');
       return new Response('Invalid webhook token', { status: 404, headers: corsHeaders });
     }
 
@@ -66,7 +66,7 @@ serve(async (req) => {
     const { data: event, error: eventError } = await supabase
       .from('telephony_events')
       .insert({
-        account_id: account.id,
+        integration_id: integration.id,
         provider: 'vapi',
         event_type: eventType,
         direction: body.call?.direction || 'outbound',

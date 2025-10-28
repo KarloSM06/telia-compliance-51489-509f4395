@@ -22,6 +22,7 @@ export interface Integration {
   webhook_enabled: boolean;
   webhook_url?: string;
   webhook_secret?: string;
+  webhook_token?: string;
   polling_enabled: boolean;
   polling_interval_minutes: number;
   last_used_at?: string;

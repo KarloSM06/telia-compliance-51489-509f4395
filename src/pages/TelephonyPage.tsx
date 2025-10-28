@@ -4,13 +4,12 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Phone, BarChart3, List, Settings, Download, Key } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ProviderAccountCard } from '@/components/telephony/ProviderAccountCard';
-import { AddProviderModal } from '@/components/telephony/AddProviderModal';
 import { TelephonyDashboard } from '@/components/telephony/TelephonyDashboard';
 import { EventTimeline } from '@/components/telephony/EventTimeline';
 import { DetailedMetricsTable } from '@/components/telephony/DetailedMetricsTable';
 import { CostBreakdownChart } from '@/components/telephony/CostBreakdownChart';
 import { WebhookSettings } from '@/components/telephony/WebhookSettings';
-import { useTelephonyAccounts } from '@/hooks/useTelephonyAccounts';
+import { useIntegrations } from '@/hooks/useIntegrations';
 import { useTelephonyMetrics } from '@/hooks/useTelephonyMetrics';
 
 const exportAllData = (events: any[]) => {
@@ -38,9 +37,9 @@ const exportAllData = (events: any[]) => {
 };
 
 export default function TelephonyPage() {
-  const { accounts, isLoading: accountsLoading } = useTelephonyAccounts();
+  const { integrations, isLoading: integrationsLoading, getByCapability } = useIntegrations();
+  const telephonyIntegrations = getByCapability('voice').concat(getByCapability('sms'));
   const { metrics, isLoading: metricsLoading } = useTelephonyMetrics();
-  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
 
   return (
     <div className="space-y-6 animate-fade-in p-6">
@@ -59,8 +58,8 @@ export default function TelephonyPage() {
             <Download className="h-4 w-4 mr-2" />
             Exportera data
           </Button>
-          <Button onClick={() => setIsAddModalOpen(true)}>
-            Lägg till provider
+          <Button onClick={() => window.location.href = '/dashboard/integrations'}>
+            Hantera Integrationer
           </Button>
         </div>
       </div>
@@ -71,22 +70,25 @@ export default function TelephonyPage() {
           <CardTitle>Anslutna leverantörer</CardTitle>
         </CardHeader>
         <CardContent>
-          {accountsLoading ? (
+          {integrationsLoading ? (
             <div className="text-center py-12">
               <p className="text-muted-foreground">Laddar...</p>
             </div>
-          ) : accounts.length === 0 ? (
+          ) : telephonyIntegrations.length === 0 ? (
             <div className="text-center py-12">
               <Phone className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
-              <p className="text-lg mb-4">Inga leverantörer anslutna än</p>
-              <Button onClick={() => setIsAddModalOpen(true)}>
-                Lägg till din första leverantör
+              <p className="text-lg mb-4">Inga telefoni-leverantörer anslutna än</p>
+              <p className="text-sm text-muted-foreground mb-4">
+                Gå till Integrationer för att lägga till en telefoni-leverantör
+              </p>
+              <Button onClick={() => window.location.href = '/dashboard/integrations'}>
+                Gå till Integrationer
               </Button>
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-              {accounts.map(account => (
-                <ProviderAccountCard key={account.id} account={account} />
+              {telephonyIntegrations.map(integration => (
+                <ProviderAccountCard key={integration.id} integration={integration} />
               ))}
             </div>
           )}
@@ -94,7 +96,7 @@ export default function TelephonyPage() {
       </Card>
 
       {/* Main Content Tabs */}
-      {accounts.length > 0 && (
+      {telephonyIntegrations.length > 0 && (
         <Tabs defaultValue="overview" className="space-y-4">
           <TabsList className="grid w-full grid-cols-5">
             <TabsTrigger value="overview">
@@ -140,10 +142,6 @@ export default function TelephonyPage() {
         </Tabs>
       )}
 
-      <AddProviderModal
-        open={isAddModalOpen}
-        onClose={() => setIsAddModalOpen(false)}
-      />
     </div>
   );
 }

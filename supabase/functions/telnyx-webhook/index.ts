@@ -30,15 +30,15 @@ Deno.serve(async (req) => {
     );
 
     // Verify webhook token exists and is active
-    const { data: account } = await supabase
-      .from('telephony_accounts')
+    const { data: integration } = await supabase
+      .from('integrations')
       .select('id')
       .eq('webhook_token', webhookToken)
       .eq('provider', 'telnyx')
       .eq('is_active', true)
       .single();
 
-    if (!account) {
+    if (!integration) {
       console.log('⚠️ Invalid webhook token for Telnyx');
       return new Response('Invalid webhook token', { status: 404, headers: corsHeaders });
     }

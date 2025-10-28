@@ -7,9 +7,23 @@ export const useTelephonyMetrics = (dateRange?: { from: Date; to: Date }) => {
   const { data: metrics, isLoading, refetch } = useQuery({
     queryKey: ['telephony-metrics', dateRange],
     queryFn: async () => {
+      // Get user's active telephony integrations
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error('Not authenticated');
+
+      const { data: integrations } = await supabase
+        .from('integrations')
+        .select('id')
+        .eq('user_id', user.id)
+        .eq('is_active', true)
+        .or('capabilities.cs.{voice},capabilities.cs.{sms}');
+
+      const integrationIds = integrations?.map(i => i.id) || [];
+
       let query = supabase
         .from('telephony_events')
-        .select('*');
+        .select('*')
+        .in('integration_id', integrationIds);
 
       if (dateRange) {
         query = query

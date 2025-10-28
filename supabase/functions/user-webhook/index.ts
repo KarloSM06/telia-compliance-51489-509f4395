@@ -79,17 +79,17 @@ serve(async (req) => {
     const vapiSignature = allHeaders['x-vapi-signature'] || null;
     const retellSignature = allHeaders['x-retell-signature'] || null;
 
-    // Find telephony account
-    const { data: account, error: accountError } = await supabase
-      .from('telephony_accounts')
+    // Find telephony integration
+    const { data: integration, error: integrationError } = await supabase
+      .from('integrations')
       .select('*')
       .eq('user_id', userId)
       .eq('provider', provider)
       .eq('is_active', true)
       .single();
 
-    if (accountError || !account) {
-      throw new Error(`No active ${provider} account configured`);
+    if (integrationError || !integration) {
+      throw new Error(`No active ${provider} integration configured`);
     }
 
     // Verify webhook signature
@@ -97,7 +97,7 @@ serve(async (req) => {
     let verificationError: string | null = null;
 
     if (provider === 'twilio' && twilioSignature) {
-      const credentials = account.encrypted_credentials as any;
+      const credentials = integration.encrypted_credentials as any;
       const authToken = credentials?.authToken;
       
       if (authToken) {
@@ -112,7 +112,8 @@ serve(async (req) => {
         }
       }
     } else if (provider === 'telnyx' && telnyxSignature && telnyxTimestamp) {
-      const publicKey = account.webhook_public_key;
+      const credentials = integration.encrypted_credentials as any;
+      const publicKey = credentials?.webhookPublicKey;
       
       if (publicKey) {
         signatureVerified = await verifyTelnyxSignature(
