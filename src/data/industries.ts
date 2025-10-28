@@ -24,7 +24,7 @@ export const industries: Industry[] = [
     icon: Wrench,
     description: 'Perfekt för VVS, el, bygg och andra servicetjänster',
     relevantPackages: ['service-operations', 'growth-sales'],
-    image: '/images/industries/service.jpg' // Placeholder - replace with actual image
+    image: '/images/industries/service-hantverk.jpg'
   },
   {
     id: 'e-handel',
@@ -40,7 +40,7 @@ export const industries: Industry[] = [
     icon: DollarSign,
     description: 'Banktjänster, försäkring och finansiell rådgivning',
     relevantPackages: ['enterprise-custom', 'data-insight'],
-    image: '/images/industries/finance.jpg' // Placeholder - replace with actual image
+    image: '/images/industries/finans.jpg'
   },
   {
     id: 'halsa',
@@ -48,7 +48,7 @@ export const industries: Industry[] = [
     icon: Heart,
     description: 'Vårdcentraler, kliniker och hälsoföretag',
     relevantPackages: ['service-operations', 'enterprise-custom'],
-    image: '/images/industries/health.jpg' // Placeholder - replace with actual image
+    image: '/images/industries/halsa.jpg'
   },
   {
     id: 'fastighet',
@@ -56,7 +56,7 @@ export const industries: Industry[] = [
     icon: Building,
     description: 'Fastighetsmäklare, bostadsrättsföreningar och fastighetsförvaltning',
     relevantPackages: ['growth-sales', 'service-operations'],
-    image: '/images/industries/real-estate.jpg' // Placeholder - replace with actual image
+    image: '/images/industries/fastighet.jpg'
   },
   {
     id: 'restaurang',
@@ -64,7 +64,7 @@ export const industries: Industry[] = [
     icon: UtensilsCrossed,
     description: 'Restauranger, catering och livsmedelstjänster',
     relevantPackages: ['service-operations', 'ecommerce-retail'],
-    image: '/images/industries/restaurant.jpg' // Placeholder - replace with actual image
+    image: '/images/industries/restaurang.jpg'
   },
   {
     id: 'retail',
