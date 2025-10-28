@@ -9,29 +9,31 @@ export const IndustryCard = ({
   onClick
 }: IndustryCardProps) => {
   const Icon = industry.icon;
-  return <Card className="group h-full flex flex-col overflow-hidden cursor-pointer border-0 bg-card/50 backdrop-blur-sm hover:bg-card/80 transition-all duration-300 hover:shadow-2xl hover:-translate-y-2" onClick={onClick}>
+  return <Card className="group h-full flex flex-col overflow-hidden cursor-pointer border border-primary/10 bg-gradient-to-br from-card/80 via-card/50 to-card/30 backdrop-blur-md hover:bg-card/90 hover:border-primary/30 transition-all duration-500 hover:shadow-2xl hover:shadow-primary/20 hover:-translate-y-2" onClick={onClick}>
       {/* Image Section */}
       <div className="relative aspect-[4/3] overflow-hidden">
         {industry.image ? <>
-            <div className="absolute inset-0 bg-gradient-to-t from-background via-background/50 to-transparent z-10 opacity-60 group-hover:opacity-40 transition-opacity duration-300" />
-            <img src={industry.image} alt={industry.name} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
-          </> : <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center">
-            <Icon className="h-24 w-24 text-primary/40" />
+            <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent z-10 opacity-70 group-hover:opacity-50 transition-opacity duration-500" />
+            <img src={industry.image} alt={industry.name} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 group-hover:brightness-110" />
+          </> : <div className="absolute inset-0 bg-gradient-to-br from-primary/30 via-primary/10 to-transparent flex items-center justify-center">
+            <Icon className="h-24 w-24 text-primary/40 group-hover:text-primary/60 transition-colors duration-300" />
           </div>}
         
-        {/* Icon Overlay */}
-        
+        {/* Icon Overlay in corner */}
+        <div className="absolute bottom-3 right-3 z-20 bg-background/90 backdrop-blur-sm rounded-full p-2.5 shadow-lg group-hover:bg-primary/20 transition-all duration-300">
+          <Icon className="h-5 w-5 text-primary" />
+        </div>
       </div>
       
       {/* Content Section */}
-      <CardHeader className="pb-3">
-        <CardTitle className="text-xl group-hover:text-primary transition-colors duration-300">
+      <CardHeader className="pb-3 bg-gradient-to-br from-card/5 to-transparent">
+        <CardTitle className="text-xl font-bold group-hover:text-primary transition-colors duration-300">
           {industry.name}
         </CardTitle>
       </CardHeader>
       
       <CardContent className="flex-1 pt-0">
-        <CardDescription className="text-sm leading-relaxed">
+        <CardDescription className="text-sm leading-relaxed text-muted-foreground">
           {industry.description}
         </CardDescription>
       </CardContent>

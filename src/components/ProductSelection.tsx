@@ -100,13 +100,20 @@ export const ProductSelection = () => {
       </section>
 
       {/* Våra AI-paket / Lösningar */}
-      <section id="paket" className="relative py-48 bg-white/5">
-        <div className="mx-auto max-w-7xl px-6 lg:px-8">
+      <section id="paket" className="relative py-48 bg-gradient-to-b from-background via-primary/5 to-background">
+        {/* Animated background elements */}
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,hsl(var(--primary)/0.15),transparent_50%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_80%,hsl(var(--primary)/0.1),transparent_50%)]" />
+        
+        <div className="mx-auto max-w-7xl px-6 lg:px-8 relative z-10">
           <AnimatedSection className="text-center mb-20">
-            <h2 className="text-4xl sm:text-5xl font-bold mb-4 text-white">
-              Välj paket för ditt företag / din bransch
-            </h2>
-            <p className="text-xl text-white/80 max-w-3xl mx-auto">
+            <div className="inline-block">
+              <h2 className="text-5xl sm:text-6xl font-bold bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent mb-4">
+                Välj paket för ditt företag / din bransch
+              </h2>
+              <div className="w-32 h-1.5 bg-gradient-to-r from-primary via-primary/60 to-transparent mx-auto rounded-full shadow-lg shadow-primary/50" />
+            </div>
+            <p className="text-xl sm:text-2xl text-muted-foreground max-w-3xl mx-auto mt-6 font-light">
               Vi erbjuder sex skräddarsydda AI-paket som kan anpassas efter era specifika behov
             </p>
           </AnimatedSection>
@@ -130,13 +137,20 @@ export const ProductSelection = () => {
       </section>
 
       {/* Branschspecifika lösningar */}
-      <section id="branscher" className="relative py-24">
-        <div className="mx-auto max-w-7xl px-6 lg:px-8">
+      <section id="branscher" className="relative py-24 overflow-hidden">
+        {/* Animated background elements */}
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_50%,hsl(var(--primary)/0.12),transparent_50%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_50%,hsl(var(--primary)/0.08),transparent_50%)]" />
+        
+        <div className="mx-auto max-w-7xl px-6 lg:px-8 relative z-10">
           <AnimatedSection className="text-center mb-16">
-            <h2 className="text-4xl sm:text-5xl font-bold mb-4 text-white">
-              Oavsett bransch kan Hiems bygga AI-lösningar som passar just er verksamhet
-            </h2>
-            <p className="text-xl text-white/80 max-w-3xl mx-auto">
+            <div className="inline-block">
+              <h2 className="text-5xl sm:text-6xl font-bold bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent mb-4">
+                Oavsett bransch kan Hiems bygga AI-lösningar som passar just er verksamhet
+              </h2>
+              <div className="w-32 h-1.5 bg-gradient-to-r from-primary via-primary/60 to-transparent mx-auto rounded-full shadow-lg shadow-primary/50" />
+            </div>
+            <p className="text-xl sm:text-2xl text-muted-foreground max-w-3xl mx-auto mt-6 font-light">
               Vi har erfarenhet från många olika branscher och kan anpassa våra lösningar efter era unika behov
             </p>
           </AnimatedSection>
@@ -165,14 +179,19 @@ export const ProductSelection = () => {
       </section>
 
       {/* Kundflöde & värde */}
-      <section id="kundflode" className="relative py-24 bg-white/5">
-        <div className="mx-auto max-w-7xl px-6 lg:px-8">
+      <section id="kundflode" className="relative py-24 bg-gradient-to-b from-background via-primary/5 to-background overflow-hidden">
+        {/* Animated background elements */}
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_20%,hsl(var(--primary)/0.15),transparent_50%)]" />
+        
+        <div className="mx-auto max-w-7xl px-6 lg:px-8 relative z-10">
           <AnimatedSection className="text-center mb-16">
-            <h2 className="text-4xl sm:text-5xl font-bold mb-6 text-white">
-              Kundflöde & värde
-            </h2>
-            <div className="w-24 h-1.5 bg-gradient-gold mx-auto rounded-full mb-6"></div>
-            <p className="text-xl text-white/80 max-w-3xl mx-auto">
+            <div className="inline-block">
+              <h2 className="text-5xl sm:text-6xl font-bold bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent mb-4">
+                Kundflöde & värde
+              </h2>
+              <div className="w-32 h-1.5 bg-gradient-to-r from-primary via-primary/60 to-transparent mx-auto rounded-full shadow-lg shadow-primary/50 mb-6" />
+            </div>
+            <p className="text-xl sm:text-2xl text-muted-foreground max-w-3xl mx-auto font-light">
               Se hur dina kunder möter Hiems AI – från första kontakten till långsiktig tillväxt
             </p>
           </AnimatedSection>
@@ -185,13 +204,19 @@ export const ProductSelection = () => {
       <TechnicalExpertise onBookDemo={() => setIsConsultationModalOpen(true)} />
 
       {/* Onboarding-process */}
-      <section id="onboarding" className="relative py-24">
-        <div className="mx-auto max-w-7xl px-6 lg:px-8">
+      <section id="onboarding" className="relative py-24 overflow-hidden">
+        {/* Animated background elements */}
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_40%_60%,hsl(var(--primary)/0.12),transparent_50%)]" />
+        
+        <div className="mx-auto max-w-7xl px-6 lg:px-8 relative z-10">
           <AnimatedSection className="text-center mb-16">
-            <h2 className="text-4xl sm:text-5xl font-bold mb-4 text-white">
-              Så implementerar vi AI hos dig
-            </h2>
-            <p className="text-xl text-white/80 max-w-3xl mx-auto">
+            <div className="inline-block">
+              <h2 className="text-5xl sm:text-6xl font-bold bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent mb-4">
+                Så implementerar vi AI hos dig
+              </h2>
+              <div className="w-32 h-1.5 bg-gradient-to-r from-primary via-primary/60 to-transparent mx-auto rounded-full shadow-lg shadow-primary/50" />
+            </div>
+            <p className="text-xl sm:text-2xl text-muted-foreground max-w-3xl mx-auto mt-6 font-light">
               En tydlig process från dag 1 till driftstart – så att ni vet exakt vad som händer
             </p>
           </AnimatedSection>
@@ -211,13 +236,19 @@ export const ProductSelection = () => {
       </section>
 
       {/* Case / Kundreferenser */}
-      <section id="case" className="relative py-24 bg-white/5">
-        <div className="mx-auto max-w-7xl px-6 lg:px-8">
+      <section id="case" className="relative py-24 bg-gradient-to-b from-background via-primary/5 to-background overflow-hidden">
+        {/* Animated background elements */}
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_60%_40%,hsl(var(--primary)/0.15),transparent_50%)]" />
+        
+        <div className="mx-auto max-w-7xl px-6 lg:px-8 relative z-10">
           <AnimatedSection className="text-center mb-16">
-            <h2 className="text-4xl sm:text-5xl font-bold mb-4 text-white">
-              Verkliga resultat från våra kunder
-            </h2>
-            <p className="text-xl text-white/80 max-w-3xl mx-auto">
+            <div className="inline-block">
+              <h2 className="text-5xl sm:text-6xl font-bold bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent mb-4">
+                Verkliga resultat från våra kunder
+              </h2>
+              <div className="w-32 h-1.5 bg-gradient-to-r from-primary via-primary/60 to-transparent mx-auto rounded-full shadow-lg shadow-primary/50" />
+            </div>
+            <p className="text-xl sm:text-2xl text-muted-foreground max-w-3xl mx-auto mt-6 font-light">
               Se hur andra företag har transformerat sin verksamhet med Hiems AI-lösningar
             </p>
           </AnimatedSection>
@@ -279,8 +310,8 @@ export const ProductSelection = () => {
           
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 max-w-6xl mx-auto">
             {/* Vänster: Kontaktformulär */}
-            <Card className="p-8 bg-white/5 backdrop-blur-sm border-white/10">
-              <h3 className="text-2xl font-bold mb-6 text-white">Kontakta oss</h3>
+            <Card className="p-8 border border-primary/10 bg-gradient-to-br from-card/80 via-card/50 to-card/30 backdrop-blur-md hover:bg-card/90 hover:border-primary/30 transition-all duration-500">
+              <h3 className="text-2xl font-bold mb-6">Kontakta oss</h3>
               <form className="space-y-4">
                 <div>
                   <Label className="text-white">Namn *</Label>
@@ -336,8 +367,8 @@ export const ProductSelection = () => {
             </Card>
             
             {/* Höger: Placeholder för bokningskalender */}
-            <Card className="p-8 bg-white/5 backdrop-blur-sm border-white/10">
-              <h3 className="text-2xl font-bold mb-6 text-white">Boka direkt</h3>
+            <Card className="p-8 border border-primary/10 bg-gradient-to-br from-card/80 via-card/50 to-card/30 backdrop-blur-md hover:bg-card/90 hover:border-primary/30 transition-all duration-500">
+              <h3 className="text-2xl font-bold mb-6">Boka direkt</h3>
               <div className="aspect-video bg-white/5 rounded-lg flex items-center justify-center">
                 <p className="text-white/70 text-center px-4">
                   Calendly-integration kommer här

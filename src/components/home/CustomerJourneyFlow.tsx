@@ -37,20 +37,20 @@ export const CustomerJourneyFlow = () => {
         {journeySteps.map((step, index) => {
           return (
             <div key={index} className="group relative">
-              <Card className="h-full overflow-hidden border-0 bg-card/50 backdrop-blur-sm hover:bg-card/80 transition-all duration-300 hover:shadow-2xl hover:-translate-y-2">
+              <Card className="h-full overflow-hidden border border-primary/10 bg-gradient-to-br from-card/80 via-card/50 to-card/30 backdrop-blur-md hover:bg-card/90 hover:border-primary/30 transition-all duration-500 hover:shadow-2xl hover:shadow-primary/20 hover:-translate-y-2">
                 <CardContent className="p-0 flex flex-col h-full">
                   <div className="relative aspect-square overflow-hidden">
-                    <div className="absolute inset-0 bg-gradient-to-t from-background/90 to-transparent z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent z-10 opacity-70 group-hover:opacity-50 transition-opacity duration-500" />
                     <img 
                       src={step.image} 
                       alt={step.title}
-                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 group-hover:brightness-110"
                     />
-                    <div className="absolute top-4 right-4 z-20 w-10 h-10 rounded-full bg-primary/90 backdrop-blur-sm flex items-center justify-center text-white font-bold text-sm">
+                    <div className="absolute top-4 right-4 z-20 w-12 h-12 rounded-full bg-primary backdrop-blur-sm flex items-center justify-center text-white font-bold text-base shadow-lg group-hover:scale-110 transition-transform duration-300">
                       {index + 1}
                     </div>
                   </div>
-                  <div className="p-6 flex flex-col flex-1">
+                  <div className="p-6 flex flex-col flex-1 bg-gradient-to-br from-card/5 to-transparent">
                     <h3 className="font-bold text-xl mb-3 text-foreground group-hover:text-primary transition-colors duration-300">
                       {step.title}
                     </h3>
@@ -76,20 +76,20 @@ export const CustomerJourneyFlow = () => {
         {journeySteps.map((step, index) => {
           return (
             <div key={index} className="relative">
-              <Card className="overflow-hidden border-0 bg-card/50 backdrop-blur-sm hover:bg-card/80 transition-all duration-300 hover:shadow-xl">
+              <Card className="overflow-hidden border border-primary/10 bg-gradient-to-br from-card/80 via-card/50 to-card/30 backdrop-blur-md hover:bg-card/90 hover:border-primary/30 transition-all duration-500 hover:shadow-2xl hover:shadow-primary/20">
                 <CardContent className="p-0">
                   <div className="relative aspect-video overflow-hidden">
-                    <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent z-10" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent z-10 opacity-70" />
                     <img 
                       src={step.image} 
                       alt={step.title}
-                      className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
+                      className="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
                     />
-                    <div className="absolute top-4 left-4 z-20 w-12 h-12 rounded-full bg-primary/90 backdrop-blur-sm flex items-center justify-center text-white font-bold">
+                    <div className="absolute top-4 left-4 z-20 w-14 h-14 rounded-full bg-primary backdrop-blur-sm flex items-center justify-center text-white font-bold shadow-lg">
                       {index + 1}
                     </div>
                   </div>
-                  <div className="p-6">
+                  <div className="p-6 bg-gradient-to-br from-card/5 to-transparent">
                     <h3 className="font-bold text-xl mb-3 text-foreground">{step.title}</h3>
                     <p className="text-sm text-muted-foreground leading-relaxed">{step.description}</p>
                   </div>
