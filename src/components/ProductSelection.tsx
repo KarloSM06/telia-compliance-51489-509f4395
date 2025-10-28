@@ -111,31 +111,21 @@ export const ProductSelection = () => {
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_40%_60%,hsl(var(--primary)/0.12),transparent_50%)]" />
         <div className="mx-auto max-w-7xl px-6 lg:px-8 relative z-10">
           <AnimatedSection className="text-center mb-16">
-            <h2 className="text-4xl sm:text-5xl font-bold text-foreground mb-4">
+            <h2 className="text-4xl font-bold mb-4 text-slate-100 sm:text-5xl">
               Oavsett bransch kan Hiems bygga AI-lösningar som passar just er verksamhet
             </h2>
-            <div className="w-24 h-1 bg-primary mx-auto rounded-full mb-6" />
-            <p className="text-lg sm:text-xl max-w-3xl mx-auto text-muted-foreground">
+            <div className="w-24 h-1 mx-auto rounded-full mb-6 bg-slate-400" />
+            <p className="text-lg max-w-3xl mx-auto text-slate-300 sm:text-2xl">
               Vi har erfarenhet från många olika branscher och kan anpassa våra lösningar efter era unika behov
             </p>
           </AnimatedSection>
           
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-12">
-            {industries.map((industry) => (
-              <IndustryCard 
-                key={industry.id} 
-                industry={industry} 
-                onClick={() => handleIndustryClick(industry.id)} 
-              />
-            ))}
+            {industries.map(industry => <IndustryCard key={industry.id} industry={industry} onClick={() => handleIndustryClick(industry.id)} />)}
           </div>
           
           <AnimatedSection className="text-center">
-            <Button 
-              size="lg" 
-              className="bg-gradient-gold text-primary hover:shadow-glow transition-all duration-300 font-semibold" 
-              onClick={() => setIsConsultationModalOpen(true)}
-            >
+            <Button size="lg" className="bg-gradient-gold text-primary hover:shadow-glow transition-all duration-300 font-semibold" onClick={() => setIsConsultationModalOpen(true)}>
               Boka branschspecifik konsultation
             </Button>
           </AnimatedSection>
