@@ -83,7 +83,7 @@ export const OptimizedAnimatedSection = ({
   return (
     <div
       ref={ref}
-      className={`transition-all duration-500 ${getTransformClasses()} ${className}`}
+      className={`transition-all duration-400 will-change-[transform,opacity] ${getTransformClasses()} ${className}`}
       style={{ transitionDelay: `${delay}ms` }}
     >
       {children}
