@@ -3,7 +3,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { ConsultationModal } from "@/components/ConsultationModal";
 import { AnimatedSection } from "@/components/AnimatedSection";
 import { PackageCard } from "@/components/home/PackageCard";
@@ -22,10 +22,22 @@ import karloImage from "@/assets/karlo-mangione.png";
 import antonImage from "@/assets/anton-sallnas.png";
 import emilImage from "@/assets/emil-westerberg.png";
 import { Sparkles, Zap, Target, CheckCircle, Award, Users, Wrench, ArrowRight } from "lucide-react";
+import { useImagePreloader } from "@/hooks/useImagePreloader";
 
 export const ProductSelection = () => {
   const [isConsultationModalOpen, setIsConsultationModalOpen] = useState(false);
   const [selectedIndustry, setSelectedIndustry] = useState<string>('');
+  
+  // Preload industry images in the background
+  const industryImages = industries.map(i => i.image!).filter(Boolean);
+  useImagePreloader(industryImages, { concurrency: 2 });
+  
+  // Disable animations on low-memory devices
+  useEffect(() => {
+    const dm = (navigator as any).deviceMemory;
+    if (dm && dm < 4) document.body.classList.add("no-anim");
+    return () => document.body.classList.remove("no-anim");
+  }, []);
   
   const scrollToSection = useCallback((id: string) => {
     smoothScrollToElement(id, { offset: 80 });

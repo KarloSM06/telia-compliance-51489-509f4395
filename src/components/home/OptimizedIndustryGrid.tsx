@@ -18,11 +18,11 @@ export const OptimizedIndustryGrid = ({ children, className = "" }: OptimizedInd
           if (entry.isIntersecting) {
             el.classList.add("is-visible");
             // Disconnect after animation completes to save resources
-            setTimeout(() => io.disconnect(), 1000);
+            setTimeout(() => io.disconnect(), 800);
           }
         });
       },
-      { threshold: 0.1, rootMargin: "0px" }
+      { threshold: 0.05, rootMargin: "200px 0px -50px 0px" }
     );
 
     io.observe(el);
