@@ -6,6 +6,7 @@ import hiems_logo from "@/assets/hiems_snowflake_logo.png";
 import { useState, useEffect, useCallback, memo } from "react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
+import { smoothScrollToElement } from "@/lib/smoothScroll";
 import { ConsultationModal } from "@/components/ConsultationModal";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
@@ -53,16 +54,7 @@ export const Header = memo(() => {
   }, []);
   
   const scrollToSection = useCallback((id: string) => {
-    const element = document.getElementById(id);
-    if (element) {
-      const offset = 80;
-      const elementPosition = element.getBoundingClientRect().top;
-      const offsetPosition = elementPosition + window.pageYOffset - offset;
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: 'smooth'
-      });
-    }
+    smoothScrollToElement(id, { offset: 80 });
   }, []);
   
   const getInitials = useCallback((email: string) => {

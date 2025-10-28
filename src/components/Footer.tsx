@@ -4,19 +4,11 @@ import { ConsultationModal } from "@/components/ConsultationModal";
 import { Button } from "@/components/ui/button";
 import hiems_logo from "@/assets/hiems_snowflake_logo.png";
 import { Linkedin } from "lucide-react";
+import { smoothScrollToElement } from "@/lib/smoothScroll";
 export const Footer = () => {
   const [isConsultationModalOpen, setIsConsultationModalOpen] = useState(false);
   const scrollToSection = (id: string) => {
-    const element = document.getElementById(id);
-    if (element) {
-      const offset = 80;
-      const elementPosition = element.getBoundingClientRect().top;
-      const offsetPosition = elementPosition + window.pageYOffset - offset;
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: 'smooth'
-      });
-    }
+    smoothScrollToElement(id, { offset: 80 });
   };
   return <footer className="bg-[#0A0A0A] text-white py-16 px-6">
       {/* CTA Section */}

@@ -12,6 +12,7 @@ import { CustomerJourneyFlow } from "@/components/home/CustomerJourneyFlow";
 import { OnboardingTimeline } from "@/components/home/OnboardingTimeline";
 import { TechnicalExpertise } from "@/components/home/TechnicalExpertise";
 import { CaseStudyCard } from "@/components/home/CaseStudyCard";
+import { smoothScrollToElement } from "@/lib/smoothScroll";
 import { aiPackages } from "@/data/packages";
 import { industries } from "@/data/industries";
 import { caseStudies } from "@/data/caseStudies";
@@ -26,16 +27,7 @@ export const ProductSelection = () => {
   const [selectedIndustry, setSelectedIndustry] = useState<string>('');
   
   const scrollToSection = useCallback((id: string) => {
-    const element = document.getElementById(id);
-    if (element) {
-      const offset = 80;
-      const elementPosition = element.getBoundingClientRect().top;
-      const offsetPosition = elementPosition + window.pageYOffset - offset;
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: 'smooth'
-      });
-    }
+    smoothScrollToElement(id, { offset: 80 });
   }, []);
   
   const handleIndustryClick = useCallback((industryId: string) => {
