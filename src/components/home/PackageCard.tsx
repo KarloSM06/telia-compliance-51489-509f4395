@@ -26,7 +26,7 @@ export const PackageCard = ({
     if (isHovering) {
       timeoutRef.current = setTimeout(() => {
         setIsZoomed(true);
-      }, 1000);
+      }, 500);
     } else {
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current);
