@@ -175,56 +175,150 @@ const Architecture = () => {
             <AnimatedSection delay={0.2}>
               <Card className="border-primary/20">
                 <CardHeader>
-                  <CardTitle className="text-3xl mb-6">Bemästrandet av Prompt Engineering och RAG</CardTitle>
+                  <CardTitle className="text-3xl mb-6">Vad är Prompt Engineering?</CardTitle>
                   <CardDescription className="text-base">
-                    Prompt Engineering är den vetenskapliga metoden för att instruera en LLM för att framkalla en 
-                    optimal, förutsägbar output. Vi arbetar på flera nivåer:
+                    Prompt engineering – en term som snabbt blivit central i diskussionen kring artificiell intelligens 
+                    – är konsten och vetenskapen att utforma de instruktioner, eller "prompter", som matas in i 
+                    generativa AI-modeller för att uppnå önskat resultat.
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <div className="space-y-6">
-                    <div className="flex items-start gap-4">
-                      <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center flex-shrink-0 mt-1">
-                        <span className="text-primary font-bold">1</span>
-                      </div>
-                      <div>
-                        <h4 className="text-lg font-semibold mb-2">Zero-Shot/Few-Shot Prompting</h4>
-                        <p className="text-muted-foreground">
-                          Skapa effektiva prompts utan eller med minimala exempel.
-                        </p>
-                      </div>
+                  <div className="space-y-8">
+                    {/* Introduction */}
+                    <div>
+                      <p className="text-muted-foreground leading-relaxed">
+                        Det är en avgörande disciplin som överbryggar klyftan mellan mänsklig intention och maskinell 
+                        tolkning, särskilt i användningen av Stora Språkmodeller (LLMs) som ChatGPT och liknande tjänster. 
+                        I grunden är en prompt den text eller de data som initierar en respons från en AI-modell. Det kan 
+                        vara en enkel fråga, en detaljerad uppgiftsbeskrivning, eller till och med ett komplext kodstycke.
+                      </p>
                     </div>
 
                     <Separator />
 
-                    <div className="flex items-start gap-4">
-                      <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center flex-shrink-0 mt-1">
-                        <span className="text-primary font-bold">2</span>
-                      </div>
-                      <div>
-                        <h4 className="text-lg font-semibold mb-2">System Prompts och Guardrails</h4>
-                        <p className="text-muted-foreground">
-                          Implementera djupt rotade System Prompts som definierar modellens roll, ton och begränsningar 
-                          (t.ex. Constitutional AI-principer för Claude) för att säkerställa varumärkeskonsistens och 
-                          etisk efterlevnad.
-                        </p>
-                      </div>
+                    {/* Clear Instructions */}
+                    <div>
+                      <h4 className="text-2xl font-bold mb-4">Konsten att Ge Klara Instruktioner</h4>
+                      <p className="text-muted-foreground mb-6 leading-relaxed">
+                        Framgångsrik prompt engineering bygger på ett antal best practices. Den viktigaste principen är 
+                        klarhet och specificitet. En vag prompt som "Skriv om hundar" kan ge ett allmänt och intetsägande 
+                        svar. En ingenjörsmässigt utformad prompt kan däremot vara:
+                      </p>
+                      <Card className="bg-primary/5 border-primary/20 mb-6">
+                        <CardContent className="pt-6">
+                          <p className="text-sm italic text-muted-foreground">
+                            "Skriv en 500 ord lång, humoristisk essä i stil med Mark Twain om vikten av att ha en 
+                            Golden Retriever som sällskapshund."
+                          </p>
+                        </CardContent>
+                      </Card>
+                      <p className="text-muted-foreground leading-relaxed">
+                        Genom att specificera ämne, längd, ton, stil och format guidas AI:n till att leverera ett 
+                        högkvalitativt och relevant resultat.
+                      </p>
                     </div>
 
                     <Separator />
 
-                    <div className="flex items-start gap-4">
-                      <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center flex-shrink-0 mt-1">
-                        <span className="text-primary font-bold">3</span>
+                    {/* Iterative Refinement */}
+                    <div>
+                      <h4 className="text-xl font-semibold mb-3">Iterativ Förfining</h4>
+                      <p className="text-muted-foreground leading-relaxed">
+                        Ett annat centralt element är den iterativa förfiningen. Sällan ger den första prompten det 
+                        perfekta svaret. Prompt engineering är en process av kontinuerlig justering: man utvärderar 
+                        resultatet, identifierar brister och förfinar prompten tills utgången matchar målet. Detta kan 
+                        innebära att man lägger till mer kontext, ger exempel på önskat utdataformat (så kallad 
+                        "few-shot prompting") eller till och med instruerar modellen att anta en specifik roll, som 
+                        till exempel en "expertmarknadsförare" eller en "akademisk forskare".
+                      </p>
+                    </div>
+
+                    <Separator />
+
+                    {/* Techniques */}
+                    <div>
+                      <h4 className="text-2xl font-bold mb-4">Teknik och Användningsområden</h4>
+                      <p className="text-muted-foreground mb-6 leading-relaxed">
+                        Prompt engineering är inte enbart en textbaserad konst. Det finns avancerade tekniker som:
+                      </p>
+                      
+                      <div className="grid md:grid-cols-3 gap-4 mb-6">
+                        <Card className="bg-card-foreground/5">
+                          <CardHeader>
+                            <CardTitle className="text-lg">Zero-shot/Few-shot Prompting</CardTitle>
+                          </CardHeader>
+                          <CardContent>
+                            <p className="text-sm text-muted-foreground">
+                              Att ge inga eller ett fåtal exempel i prompten för att visa AI:n det önskade mönstret.
+                            </p>
+                          </CardContent>
+                        </Card>
+
+                        <Card className="bg-card-foreground/5">
+                          <CardHeader>
+                            <CardTitle className="text-lg">Chain-of-Thought (CoT)</CardTitle>
+                          </CardHeader>
+                          <CardContent>
+                            <p className="text-sm text-muted-foreground">
+                              Att instruera AI:n att visa sina mellanliggande tankesteg innan den ger ett slutgiltigt 
+                              svar, vilket ofta förbättrar komplexa resonemang.
+                            </p>
+                          </CardContent>
+                        </Card>
+
+                        <Card className="bg-card-foreground/5">
+                          <CardHeader>
+                            <CardTitle className="text-lg">Role Prompting</CardTitle>
+                          </CardHeader>
+                          <CardContent>
+                            <p className="text-sm text-muted-foreground">
+                              Att tilldela AI:n en persona eller roll för att styra dess perspektiv och ton.
+                            </p>
+                          </CardContent>
+                        </Card>
                       </div>
-                      <div>
-                        <h4 className="text-lg font-semibold mb-2">RAG (Retrieval-Augmented Generation)</h4>
-                        <p className="text-muted-foreground">
-                          Detta är kritiskt för att eliminera AI-hallucinationer. Vi använder vektordatabaser för att 
-                          infoga realtidsdata (t.ex. från er CRM eller interna dokument) i LLM:ens kontext vid behov. 
-                          Detta gör att LLM:en kan basera sina svar på faktiskt, proprietärt underlag.
-                        </p>
-                      </div>
+
+                      <p className="text-muted-foreground leading-relaxed">
+                        Användningsområdena är enorma: från att generera kod och designa bilder till att sammanfatta 
+                        komplexa rapporter och simulera kundtjänstdialoger. I en kommersiell kontext möjliggör prompt 
+                        engineering utvecklingen av specialiserade AI-applikationer genom att finjustera LLM:s beteende 
+                        utan att behöva träna om hela modellen.
+                      </p>
+                    </div>
+
+                    <Separator />
+
+                    {/* Key Competency */}
+                    <div>
+                      <h4 className="text-2xl font-bold mb-4">En Nyckelkompetens i AI-Åldern</h4>
+                      <p className="text-muted-foreground mb-4 leading-relaxed">
+                        I takt med att generativa AI-modeller blir allt mer integrerade i vårt arbetsliv och samhälle, 
+                        växer prompt engineering fram som en kritisk kompetens. Det är den mänskliga inblandningen som 
+                        säkerställer att de kraftfulla AI-verktygen används effektivt och etiskt. Det handlar om att 
+                        lära sig "tala AI:s språk" för att låsa upp dess fulla potential.
+                      </p>
+                      <Card className="bg-gradient-gold/10 border-primary/30">
+                        <CardContent className="pt-6">
+                          <p className="text-foreground font-semibold text-center leading-relaxed">
+                            Sammanfattningsvis är prompt engineering mycket mer än att bara skriva instruktioner. Det är 
+                            en sofistikerad metodik som kombinerar språkförståelse, logik och experimenterande. Det är en 
+                            nyckel till att transformera rå AI-kapacitet till målinriktade, värdefulla applikationer och 
+                            utgör därmed en hörnsten i den pågående AI-revolutionen.
+                          </p>
+                        </CardContent>
+                      </Card>
+                    </div>
+
+                    <Separator />
+
+                    {/* RAG Section */}
+                    <div>
+                      <h4 className="text-2xl font-bold mb-4">RAG (Retrieval-Augmented Generation)</h4>
+                      <p className="text-muted-foreground leading-relaxed">
+                        Detta är kritiskt för att eliminera AI-hallucinationer. Vi använder vektordatabaser för att 
+                        infoga realtidsdata (t.ex. från er CRM eller interna dokument) i LLM:ens kontext vid behov. 
+                        Detta gör att LLM:en kan basera sina svar på faktiskt, proprietärt underlag.
+                      </p>
                     </div>
                   </div>
                 </CardContent>
