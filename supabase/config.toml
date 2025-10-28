@@ -89,3 +89,27 @@ verify_jwt = false
 
 [functions.enrich-lead]
 verify_jwt = true
+
+[functions.vapi-webhook]
+verify_jwt = false
+
+[functions.retell-webhook]
+verify_jwt = false
+
+[functions.telephony-account-sync]
+verify_jwt = true
+
+[functions.encrypt-telephony-credentials]
+verify_jwt = true
+
+[functions.decrypt-telephony-credentials]
+verify_jwt = true
+
+[functions.generate-api-key]
+verify_jwt = true
+
+[functions.user-webhook]
+verify_jwt = false
+
+[functions.sync-vapi-calls]
+verify_jwt = true

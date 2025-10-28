@@ -11,17 +11,39 @@ Deno.serve(async (req) => {
   }
 
   try {
+    const url = new URL(req.url);
+    const webhookToken = url.searchParams.get('token');
+
+    if (!webhookToken) {
+      console.error('❌ No webhook token provided');
+      return new Response('Webhook token required', { status: 400, headers: corsHeaders });
+    }
+
     const formData = await req.formData();
     const messageSid = formData.get('MessageSid') as string;
     const messageStatus = formData.get('MessageStatus') as string;
     const errorCode = formData.get('ErrorCode') as string;
     
-    console.log(`📥 Twilio webhook: ${messageSid} - ${messageStatus}`);
+    console.log(`📥 Twilio webhook: ${messageSid} - ${messageStatus}, token: ${webhookToken}`);
 
     const supabase = createClient(
       Deno.env.get('SUPABASE_URL') ?? '',
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
     );
+
+    // Verify webhook token exists and is active
+    const { data: account } = await supabase
+      .from('telephony_accounts')
+      .select('id')
+      .eq('webhook_token', webhookToken)
+      .eq('provider', 'twilio')
+      .eq('is_active', true)
+      .single();
+
+    if (!account) {
+      console.log('⚠️ Invalid webhook token for Twilio');
+      return new Response('Invalid webhook token', { status: 404, headers: corsHeaders });
+    }
 
     const updateData: any = {
       status: messageStatus === 'delivered' ? 'delivered' : 
