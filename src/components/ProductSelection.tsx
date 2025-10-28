@@ -7,7 +7,7 @@ import { useState, useCallback } from "react";
 import { ConsultationModal } from "@/components/ConsultationModal";
 import { AnimatedSection } from "@/components/AnimatedSection";
 import { PackageCard } from "@/components/home/PackageCard";
-import { OptimizedIndustryGrid } from "@/components/home/OptimizedIndustryGrid";
+import { IndustryCard } from "@/components/home/IndustryCard";
 import { CustomerJourneyFlow } from "@/components/home/CustomerJourneyFlow";
 import { OnboardingTimeline } from "@/components/home/OnboardingTimeline";
 import { TechnicalExpertise } from "@/components/home/TechnicalExpertise";
@@ -102,10 +102,10 @@ export const ProductSelection = () => {
       </section>
 
       {/* Branschspecifika lösningar */}
-      <section id="branscher" className="relative py-24 overflow-hidden" style={{ contain: 'content' }}>
+      <section id="branscher" className="relative py-24 overflow-hidden">
         {/* Animated background elements */}
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_50%,hsl(var(--primary)/0.12),transparent_50%)]" style={{ transform: 'translateZ(0)' }} />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_50%,hsl(var(--primary)/0.08),transparent_50%)]" style={{ transform: 'translateZ(0)' }} />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_50%,hsl(var(--primary)/0.12),transparent_50%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_50%,hsl(var(--primary)/0.08),transparent_50%)]" />
         
         <div className="mx-auto max-w-7xl px-6 lg:px-8 relative z-10">
           <AnimatedSection className="text-center mb-16">
@@ -120,11 +120,10 @@ export const ProductSelection = () => {
             </p>
           </AnimatedSection>
           
-          <div className="mb-12">
-            <OptimizedIndustryGrid 
-              industries={industries} 
-              onIndustryClick={handleIndustryClick} 
-            />
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-12">
+            {industries.map((industry, index) => <AnimatedSection key={industry.id} delay={index * 80}>
+                <IndustryCard industry={industry} onClick={() => handleIndustryClick(industry.id)} />
+              </AnimatedSection>)}
           </div>
           
           <AnimatedSection className="text-center">
