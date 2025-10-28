@@ -35,6 +35,8 @@ export default defineConfig(({ mode }) => ({
           'chart-vendor': ['recharts'],
           'supabase': ['@supabase/supabase-js'],
           'query': ['@tanstack/react-query'],
+          'form-vendor': ['react-hook-form', 'zod', '@hookform/resolvers'],
+          'date-vendor': ['date-fns', 'date-fns-tz'],
         },
       },
     },
@@ -43,10 +45,17 @@ export default defineConfig(({ mode }) => ({
       compress: {
         drop_console: mode === 'production',
         drop_debugger: true,
+        passes: 2,
+        pure_funcs: mode === 'production' ? ['console.log', 'console.info', 'console.debug'] : [],
+      },
+      mangle: {
+        safari10: true,
       },
     },
     cssCodeSplit: true,
-    chunkSizeWarningLimit: 600,
+    chunkSizeWarningLimit: 500,
     sourcemap: mode === 'development',
+    reportCompressedSize: false,
+    assetsInlineLimit: 4096,
   },
 }));

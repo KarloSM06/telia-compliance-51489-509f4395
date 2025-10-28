@@ -3,26 +3,49 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { useState } from "react";
+import { useState, lazy, Suspense, useMemo, useEffect } from "react";
 import { ConsultationModal } from "@/components/ConsultationModal";
-import { AnimatedSection } from "@/components/AnimatedSection";
+import { OptimizedAnimatedSection } from "@/components/OptimizedAnimatedSection";
 import { PackageCard } from "@/components/home/PackageCard";
 import { IndustryCard } from "@/components/home/IndustryCard";
-import { CustomerJourneyFlow } from "@/components/home/CustomerJourneyFlow";
-import { OnboardingTimeline } from "@/components/home/OnboardingTimeline";
-import { TechnicalExpertise } from "@/components/home/TechnicalExpertise";
-import { CaseStudyCard } from "@/components/home/CaseStudyCard";
-import { aiPackages } from "@/data/packages";
-import { industries } from "@/data/industries";
-import { caseStudies } from "@/data/caseStudies";
+import { Skeleton } from "@/components/ui/skeleton";
 import heroBackground from "@/assets/hero-background.jpg";
 import karloImage from "@/assets/karlo-mangione.png";
 import antonImage from "@/assets/anton-sallnas.png";
 import emilImage from "@/assets/emil-westerberg.png";
 import { Sparkles, Zap, Target, CheckCircle, Award, Users, Wrench, ArrowRight } from "lucide-react";
+
+// Lazy load heavy components
+const CustomerJourneyFlow = lazy(() => import("@/components/home/CustomerJourneyFlow").then(m => ({ default: m.CustomerJourneyFlow })));
+const OnboardingTimeline = lazy(() => import("@/components/home/OnboardingTimeline").then(m => ({ default: m.OnboardingTimeline })));
+const TechnicalExpertise = lazy(() => import("@/components/home/TechnicalExpertise").then(m => ({ default: m.TechnicalExpertise })));
+const CaseStudyCard = lazy(() => import("@/components/home/CaseStudyCard").then(m => ({ default: m.CaseStudyCard })));
+
+// Lazy load data for better code splitting
+const getPackages = () => import("@/data/packages").then(m => m.aiPackages);
+const getIndustries = () => import("@/data/industries").then(m => m.industries);
+const getCaseStudies = () => import("@/data/caseStudies").then(m => m.caseStudies);
+
+// Section loading fallback
+const SectionLoader = () => (
+  <div className="space-y-4 py-12">
+    <Skeleton className="h-48 w-full" />
+    <Skeleton className="h-8 w-3/4 mx-auto" />
+  </div>
+);
 export const ProductSelection = () => {
   const [isConsultationModalOpen, setIsConsultationModalOpen] = useState(false);
   const [selectedIndustry, setSelectedIndustry] = useState<string>('');
+  const [packages, setPackages] = useState<any[]>([]);
+  const [industries, setIndustries] = useState<any[]>([]);
+  const [caseStudies, setCaseStudies] = useState<any[]>([]);
+  
+  // Load data on component mount
+  useEffect(() => {
+    getPackages().then(setPackages);
+    getIndustries().then(setIndustries);
+    getCaseStudies().then(setCaseStudies);
+  }, []);
   const scrollToSection = (id: string) => {
     const element = document.getElementById(id);
     if (element) {
@@ -49,12 +72,18 @@ export const ProductSelection = () => {
       {/* Hero Section */}
       <section id="hero" className="relative py-40 lg:py-56 min-h-screen flex items-center">
         <div className="absolute inset-0 overflow-hidden">
-          <img src={heroBackground} alt="Hero" className="w-full h-full object-cover" />
+          <img 
+            src={heroBackground} 
+            alt="Hero" 
+            className="w-full h-full object-cover"
+            fetchPriority="high"
+            decoding="async"
+          />
           <div className="absolute inset-0 bg-gradient-to-b from-primary/90 via-primary/80 to-primary/95"></div>
         </div>
         
         <div className="mx-auto max-w-7xl px-6 lg:px-12 relative z-10 w-full">
-          <AnimatedSection className="max-w-7xl mx-auto text-center">
+          <OptimizedAnimatedSection className="max-w-7xl mx-auto text-center">
             <h1 className="text-6xl sm:text-7xl text-white mb-8 leading-tight font-extrabold lg:text-8xl">
               AI som driver din verksamhet –{" "}
               <span className="bg-gradient-gold bg-clip-text text-transparent">
@@ -75,7 +104,7 @@ export const ProductSelection = () => {
                 Boka demo
               </Button>
             </div>
-          </AnimatedSection>
+          </OptimizedAnimatedSection>
         </div>
       </section>
 
@@ -86,7 +115,7 @@ export const ProductSelection = () => {
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_80%,hsl(var(--primary)/0.1),transparent_50%)]" />
         
         <div className="mx-auto max-w-7xl px-6 lg:px-8 relative z-10">
-          <AnimatedSection className="text-center mb-20">
+          <OptimizedAnimatedSection className="text-center mb-20">
             <div className="inline-block">
               <h2 className="text-5xl sm:text-6xl font-bold bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent mb-4">
                 Välj paket för ditt företag / din bransch
@@ -96,12 +125,12 @@ export const ProductSelection = () => {
             <p className="text-xl sm:text-2xl text-muted-foreground max-w-3xl mx-auto mt-6 font-light">
               Vi erbjuder sex skräddarsydda AI-paket som kan anpassas efter era specifika behov
             </p>
-          </AnimatedSection>
+          </OptimizedAnimatedSection>
           
         <div className="max-w-[1800px] mx-auto space-y-12 mb-12">
-          {aiPackages.map((pkg, index) => <AnimatedSection key={pkg.id} delay={index * 200} direction={index % 2 === 0 ? 'left' : 'right'}>
+          {packages.map((pkg, index) => <OptimizedAnimatedSection key={pkg.id} delay={index * 200} direction={index % 2 === 0 ? 'left' : 'right'}>
               <PackageCard package={pkg} imagePosition={index % 2 === 0 ? 'left' : 'right'} onBookDemo={() => setIsConsultationModalOpen(true)} />
-            </AnimatedSection>)}
+            </OptimizedAnimatedSection>)}
         </div>
         </div>
       </section>
@@ -113,7 +142,7 @@ export const ProductSelection = () => {
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_50%,hsl(var(--primary)/0.08),transparent_50%)]" />
         
         <div className="mx-auto max-w-7xl px-6 lg:px-8 relative z-10">
-          <AnimatedSection className="text-center mb-16">
+          <OptimizedAnimatedSection className="text-center mb-16">
             <div className="inline-block">
               <h2 className="text-5xl sm:text-6xl font-bold bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text mb-4 text-white">
                 Oavsett bransch kan Hiems bygga AI-lösningar som passar just er verksamhet
@@ -123,19 +152,19 @@ export const ProductSelection = () => {
             <p className="text-xl sm:text-2xl max-w-3xl mx-auto mt-6 font-light text-slate-200">
               Vi har erfarenhet från många olika branscher och kan anpassa våra lösningar efter era unika behov
             </p>
-          </AnimatedSection>
+          </OptimizedAnimatedSection>
           
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-12">
-            {industries.map((industry, index) => <AnimatedSection key={industry.id} delay={index * 80}>
+            {industries.map((industry, index) => <OptimizedAnimatedSection key={industry.id} delay={index * 80}>
                 <IndustryCard industry={industry} onClick={() => handleIndustryClick(industry.id)} />
-              </AnimatedSection>)}
+              </OptimizedAnimatedSection>)}
           </div>
           
-          <AnimatedSection className="text-center">
+          <OptimizedAnimatedSection className="text-center">
             <Button size="lg" className="bg-gradient-gold text-primary hover:shadow-glow transition-all duration-300 font-semibold" onClick={() => setIsConsultationModalOpen(true)}>
               Boka branschspecifik konsultation
             </Button>
-          </AnimatedSection>
+          </OptimizedAnimatedSection>
         </div>
       </section>
 
@@ -145,7 +174,7 @@ export const ProductSelection = () => {
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_20%,hsl(var(--primary)/0.15),transparent_50%)]" />
         
         <div className="mx-auto max-w-7xl px-6 lg:px-8 relative z-10">
-          <AnimatedSection className="text-center mb-16">
+          <OptimizedAnimatedSection className="text-center mb-16">
             <div className="inline-block">
               <h2 className="text-5xl sm:text-6xl font-bold bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent mb-4">
                 Kundflöde & värde
@@ -155,14 +184,18 @@ export const ProductSelection = () => {
             <p className="text-xl sm:text-2xl max-w-3xl mx-auto font-bold text-slate-800">
               Se hur dina kunder möter Hiems AI – från första kontakten till långsiktig tillväxt
             </p>
-          </AnimatedSection>
+          </OptimizedAnimatedSection>
           
-          <CustomerJourneyFlow />
+          <Suspense fallback={<SectionLoader />}>
+            <CustomerJourneyFlow />
+          </Suspense>
         </div>
       </section>
 
       {/* Teknisk Expertis */}
-      <TechnicalExpertise onBookDemo={() => setIsConsultationModalOpen(true)} />
+      <Suspense fallback={<SectionLoader />}>
+        <TechnicalExpertise onBookDemo={() => setIsConsultationModalOpen(true)} />
+      </Suspense>
 
       {/* Onboarding-process */}
       <section id="onboarding" className="relative py-24 pb-48 overflow-hidden">
@@ -170,7 +203,7 @@ export const ProductSelection = () => {
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_40%_60%,hsl(var(--primary)/0.12),transparent_50%)]" />
         
         <div className="mx-auto max-w-7xl px-6 lg:px-8 relative z-10">
-          <AnimatedSection className="text-center mb-20">
+          <OptimizedAnimatedSection className="text-center mb-20">
             <div className="inline-block">
               <h2 className="text-5xl sm:text-6xl font-bold bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent mb-4">
                 Så implementerar vi AI hos dig
@@ -180,15 +213,17 @@ export const ProductSelection = () => {
             <p className="text-xl sm:text-2xl text-muted-foreground max-w-3xl mx-auto mt-6 font-light">
               En tydlig process från dag 1 till driftstart – så att ni vet exakt vad som händer
             </p>
-          </AnimatedSection>
+          </OptimizedAnimatedSection>
           
-          <OnboardingTimeline />
+          <Suspense fallback={<SectionLoader />}>
+            <OnboardingTimeline />
+          </Suspense>
           
-          <AnimatedSection className="text-center mt-16">
+          <OptimizedAnimatedSection className="text-center mt-16">
             <Button size="lg" className="bg-gradient-gold text-primary hover:shadow-glow transition-all duration-300 font-semibold" onClick={() => setIsConsultationModalOpen(true)}>
               Boka onboarding-möte
             </Button>
-          </AnimatedSection>
+          </OptimizedAnimatedSection>
         </div>
       </section>
 
@@ -220,7 +255,7 @@ export const ProductSelection = () => {
       {/* Blogg / Insikter */}
       <section id="blogg" className="relative py-16">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
-          <AnimatedSection className="text-center">
+          <OptimizedAnimatedSection className="text-center">
             <h3 className="text-3xl font-bold mb-4 text-white">
               Läs våra insikter om AI, automation och ROI
             </h3>
@@ -239,7 +274,7 @@ export const ProductSelection = () => {
                 Få våra nyhetsbrev helt gratis – ingen spam, bara värdefulla insikter
               </p>
             </div>
-          </AnimatedSection>
+          </OptimizedAnimatedSection>
         </div>
       </section>
 
@@ -250,7 +285,7 @@ export const ProductSelection = () => {
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_50%,hsl(var(--primary)/0.08),transparent_50%)]" />
         
         <div className="mx-auto max-w-7xl px-6 lg:px-8 relative z-10">
-          <AnimatedSection className="text-center mb-20">
+          <OptimizedAnimatedSection className="text-center mb-20">
             <div className="inline-block">
               <h2 className="text-5xl sm:text-6xl font-bold bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent mb-4">
                 Boka din gratis behovsanalys
@@ -260,11 +295,11 @@ export const ProductSelection = () => {
             <p className="text-xl sm:text-2xl text-muted-foreground max-w-3xl mx-auto mt-6 font-light">
               Vi visar hur AI och automation kan effektivisera just er verksamhet – utan förpliktelser
             </p>
-          </AnimatedSection>
+          </OptimizedAnimatedSection>
           
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-6xl mx-auto">
             {/* Vänster: Kontaktformulär */}
-            <AnimatedSection delay={100}>
+            <OptimizedAnimatedSection delay={100}>
               <Card className="group h-full p-8 border border-primary/10 bg-gradient-to-br from-card/80 via-card/50 to-card/30 backdrop-blur-md hover:bg-card/90 hover:border-primary/30 hover:-translate-y-1 hover:shadow-2xl hover:shadow-primary/20 transition-all duration-500">
                 <h3 className="text-3xl font-bold mb-6 bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent">
                   Kontakta oss
@@ -316,10 +351,10 @@ export const ProductSelection = () => {
                   </div>
                 </div>
               </Card>
-            </AnimatedSection>
+            </OptimizedAnimatedSection>
             
             {/* Höger: Placeholder för bokningskalender */}
-            <AnimatedSection delay={200}>
+            <OptimizedAnimatedSection delay={200}>
               <Card className="group h-full p-8 border border-primary/10 bg-gradient-to-br from-card/80 via-card/50 to-card/30 backdrop-blur-md hover:bg-card/90 hover:border-primary/30 hover:-translate-y-1 hover:shadow-2xl hover:shadow-primary/20 transition-all duration-500">
                 <h3 className="text-3xl font-bold mb-6 bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent">
                   Boka direkt
@@ -330,7 +365,7 @@ export const ProductSelection = () => {
                   </p>
                 </div>
               </Card>
-            </AnimatedSection>
+            </OptimizedAnimatedSection>
           </div>
         </div>
       </section>

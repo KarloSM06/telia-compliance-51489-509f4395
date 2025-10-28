@@ -1,6 +1,6 @@
 import { ArrowRight } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
-import { AnimatedSection } from "@/components/AnimatedSection";
+import { OptimizedAnimatedSection } from "@/components/OptimizedAnimatedSection";
 
 const journeySteps = [
   {
@@ -36,7 +36,7 @@ export const CustomerJourneyFlow = () => {
       {/* Grid Layout - Responsive and Symmetrical */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
         {journeySteps.map((step, index) => (
-          <AnimatedSection 
+          <OptimizedAnimatedSection 
             key={index} 
             delay={index * 150}
             direction="up"
@@ -48,6 +48,8 @@ export const CustomerJourneyFlow = () => {
                   <img 
                     src={step.image} 
                     alt={step.title}
+                    loading="lazy"
+                    decoding="async"
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 group-hover:brightness-110"
                   />
                   <div className="absolute top-4 right-4 z-20 w-12 h-12 rounded-full bg-primary backdrop-blur-sm flex items-center justify-center text-white font-bold text-base shadow-lg group-hover:scale-110 transition-transform duration-300">
@@ -64,7 +66,7 @@ export const CustomerJourneyFlow = () => {
                 </div>
               </CardContent>
             </Card>
-          </AnimatedSection>
+          </OptimizedAnimatedSection>
         ))}
       </div>
     </div>

@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { expertiseCategories } from "@/data/expertise";
 import { ExpertiseCategoryCard } from "./ExpertiseCategoryCard";
-import { AnimatedSection } from "@/components/AnimatedSection";
+import { OptimizedAnimatedSection } from "@/components/OptimizedAnimatedSection";
 
 interface TechnicalExpertiseProps {
   onBookDemo: () => void;
@@ -31,7 +31,7 @@ export const TechnicalExpertise = ({ onBookDemo }: TechnicalExpertiseProps) => {
         {/* Expertise Categories - Alternating Layout */}
         <div className="space-y-16 mb-20">
           {expertiseCategories.map((category, index) => (
-            <AnimatedSection 
+            <OptimizedAnimatedSection 
               key={category.id} 
               delay={index * 200} 
               direction={index % 2 === 0 ? 'left' : 'right'}
@@ -40,7 +40,7 @@ export const TechnicalExpertise = ({ onBookDemo }: TechnicalExpertiseProps) => {
                 category={category}
                 imagePosition={index % 2 === 0 ? "left" : "right"}
               />
-            </AnimatedSection>
+            </OptimizedAnimatedSection>
           ))}
         </div>
 
