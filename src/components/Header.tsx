@@ -107,9 +107,6 @@ export const Header = () => {
             label: 'Case',
             action: () => scrollToSection('case')
           }, {
-            label: 'Arkitektur',
-            href: '/arkitektur'
-          }, {
             label: 'Om oss',
             href: '/om-oss'
           }, {
@@ -218,9 +215,6 @@ export const Header = () => {
               }, {
                 label: 'Case',
                 action: () => scrollToSection('case')
-              }, {
-                label: 'Arkitektur',
-                href: '/arkitektur'
               }, {
                 label: 'Om oss',
                 href: '/om-oss'

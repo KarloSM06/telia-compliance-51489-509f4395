@@ -11,7 +11,6 @@ import { useLenis } from "@/hooks/useLenis";
 
 // Lazy load all routes for better performance
 const Index = lazy(() => import("./pages/Index"));
-const Architecture = lazy(() => import("./pages/Architecture"));
 const ExampleReport = lazy(() => import("./pages/ExampleReport"));
 const Auth = lazy(() => import("./pages/Auth"));
 const Dashboard = lazy(() => import("./pages/Dashboard"));
@@ -74,7 +73,6 @@ const App = () => {
           <Suspense fallback={<PageLoader />}>
             <Routes>
               <Route path="/" element={<Index />} />
-              <Route path="/arkitektur" element={<Architecture />} />
               <Route path="/auth" element={<Auth />} />
               <Route path="/dashboard" element={<DashboardLayout><Dashboard /></DashboardLayout>} />
               <Route path="/dashboard/analytics" element={<DashboardLayout><DashboardAnalytics /></DashboardLayout>} />
