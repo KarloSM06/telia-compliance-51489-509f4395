@@ -20,32 +20,26 @@ import karloImage from "@/assets/karlo-mangione.png";
 import antonImage from "@/assets/anton-sallnas.png";
 import emilImage from "@/assets/emil-westerberg.png";
 import { Sparkles, Zap, Target, CheckCircle, Award, Users, Wrench, ArrowRight } from "lucide-react";
-
 export const ProductSelection = () => {
   const [isConsultationModalOpen, setIsConsultationModalOpen] = useState(false);
   const [selectedIndustry, setSelectedIndustry] = useState<string>('');
-
   const scrollToSection = (id: string) => {
     const element = document.getElementById(id);
     if (element) {
       const offset = 80;
       const elementPosition = element.getBoundingClientRect().top;
       const offsetPosition = elementPosition + window.pageYOffset - offset;
-      
       window.scrollTo({
         top: offsetPosition,
         behavior: 'smooth'
       });
     }
   };
-
   const handleIndustryClick = (industryId: string) => {
     setSelectedIndustry(industryId);
     setIsConsultationModalOpen(true);
   };
-
-  return (
-    <div className="relative overflow-hidden bg-gradient-hero min-h-screen">
+  return <div className="relative overflow-hidden bg-gradient-hero min-h-screen">
       {/* Animated background elements */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute top-20 left-10 w-72 h-72 bg-accent/10 rounded-full blur-3xl animate-pulse"></div>
@@ -55,12 +49,7 @@ export const ProductSelection = () => {
       {/* Hero Section */}
       <section id="hero" className="relative py-32 lg:py-48">
         <div className="absolute inset-0 overflow-hidden">
-          <img 
-            src={heroBackground} 
-            alt="Hero" 
-            className="w-full h-full object-cover"
-            fetchPriority="high"
-          />
+          <img src={heroBackground} alt="Hero" className="w-full h-full object-cover" fetchPriority="high" />
           <div className="absolute inset-0 bg-gradient-to-b from-primary/90 via-primary/80 to-primary/95"></div>
         </div>
         
@@ -79,19 +68,10 @@ export const ProductSelection = () => {
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button 
-                size="lg" 
-                className="bg-gradient-gold text-primary hover:shadow-glow transition-all duration-300 font-semibold text-lg px-10 py-7"
-                onClick={() => scrollToSection('paket')}
-              >
+              <Button size="lg" className="bg-gradient-gold text-primary hover:shadow-glow transition-all duration-300 font-semibold text-lg px-10 py-7" onClick={() => scrollToSection('paket')}>
                 Se våra paket
               </Button>
-              <Button 
-                size="lg" 
-                variant="outline"
-                className="border-2 border-white text-white bg-white/10 hover:bg-white hover:text-primary transition-all duration-300 font-semibold text-lg px-10 py-7"
-                onClick={() => setIsConsultationModalOpen(true)}
-              >
+              <Button size="lg" variant="outline" className="border-2 border-white text-white bg-white/10 hover:bg-white hover:text-primary transition-all duration-300 font-semibold text-lg px-10 py-7" onClick={() => setIsConsultationModalOpen(true)}>
                 Boka demo
               </Button>
             </div>
@@ -119,19 +99,9 @@ export const ProductSelection = () => {
           </AnimatedSection>
           
         <div className="max-w-[1800px] mx-auto space-y-12 mb-12">
-          {aiPackages.map((pkg, index) => (
-            <AnimatedSection 
-              key={pkg.id} 
-              delay={index * 150}
-              direction={index % 2 === 0 ? 'left' : 'right'}
-            >
-              <PackageCard 
-                package={pkg} 
-                imagePosition={index % 2 === 0 ? 'left' : 'right'}
-                onBookDemo={() => setIsConsultationModalOpen(true)}
-              />
-            </AnimatedSection>
-          ))}
+          {aiPackages.map((pkg, index) => <AnimatedSection key={pkg.id} delay={index * 150} direction={index % 2 === 0 ? 'left' : 'right'}>
+              <PackageCard package={pkg} imagePosition={index % 2 === 0 ? 'left' : 'right'} onBookDemo={() => setIsConsultationModalOpen(true)} />
+            </AnimatedSection>)}
         </div>
         </div>
       </section>
@@ -156,22 +126,13 @@ export const ProductSelection = () => {
           </AnimatedSection>
           
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-12">
-            {industries.map((industry, index) => (
-              <AnimatedSection key={industry.id} delay={index * 80}>
-                <IndustryCard 
-                  industry={industry} 
-                  onClick={() => handleIndustryClick(industry.id)}
-                />
-              </AnimatedSection>
-            ))}
+            {industries.map((industry, index) => <AnimatedSection key={industry.id} delay={index * 80}>
+                <IndustryCard industry={industry} onClick={() => handleIndustryClick(industry.id)} />
+              </AnimatedSection>)}
           </div>
           
           <AnimatedSection className="text-center">
-            <Button 
-              size="lg"
-              className="bg-gradient-gold text-primary hover:shadow-glow transition-all duration-300 font-semibold"
-              onClick={() => setIsConsultationModalOpen(true)}
-            >
+            <Button size="lg" className="bg-gradient-gold text-primary hover:shadow-glow transition-all duration-300 font-semibold" onClick={() => setIsConsultationModalOpen(true)}>
               Boka branschspecifik konsultation
             </Button>
           </AnimatedSection>
@@ -224,11 +185,7 @@ export const ProductSelection = () => {
           <OnboardingTimeline />
           
           <AnimatedSection className="text-center mt-12">
-            <Button 
-              size="lg"
-              className="bg-gradient-gold text-primary hover:shadow-glow transition-all duration-300 font-semibold"
-              onClick={() => setIsConsultationModalOpen(true)}
-            >
+            <Button size="lg" className="bg-gradient-gold text-primary hover:shadow-glow transition-all duration-300 font-semibold" onClick={() => setIsConsultationModalOpen(true)}>
               Boka onboarding-möte
             </Button>
           </AnimatedSection>
@@ -254,14 +211,9 @@ export const ProductSelection = () => {
           </AnimatedSection>
           
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {caseStudies.map((caseStudy, index) => (
-              <AnimatedSection key={caseStudy.id} delay={index * 150}>
-                <CaseStudyCard 
-                  caseStudy={caseStudy}
-                  onBookDemo={() => setIsConsultationModalOpen(true)}
-                />
-              </AnimatedSection>
-            ))}
+            {caseStudies.map((caseStudy, index) => <AnimatedSection key={caseStudy.id} delay={index * 150}>
+                <CaseStudyCard caseStudy={caseStudy} onBookDemo={() => setIsConsultationModalOpen(true)} />
+              </AnimatedSection>)}
           </div>
         </div>
       </section>
@@ -279,11 +231,7 @@ export const ProductSelection = () => {
             
             <div className="max-w-md mx-auto">
               <div className="flex gap-2">
-                <Input 
-                  type="email" 
-                  placeholder="Din e-postadress"
-                  className="flex-1 bg-white/10 border-white/20 text-white placeholder:text-white/60"
-                />
+                <Input type="email" placeholder="Din e-postadress" className="flex-1 bg-white/10 border-white/20 text-white placeholder:text-white/60" />
                 <Button className="bg-gradient-gold text-primary hover:shadow-glow transition-all duration-300">
                   Prenumerera
                 </Button>
@@ -336,22 +284,16 @@ export const ProductSelection = () => {
                       <SelectValue placeholder="Välj bransch" />
                     </SelectTrigger>
                     <SelectContent>
-                      {industries.map(ind => (
-                        <SelectItem key={ind.id} value={ind.id}>
+                      {industries.map(ind => <SelectItem key={ind.id} value={ind.id}>
                           {ind.name}
-                        </SelectItem>
-                      ))}
+                        </SelectItem>)}
                     </SelectContent>
                   </Select>
                 </div>
-                <Button 
-                  type="submit" 
-                  className="w-full bg-gradient-gold text-primary hover:shadow-glow transition-all duration-300 font-semibold"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    setIsConsultationModalOpen(true);
-                  }}
-                >
+                <Button type="submit" className="w-full bg-gradient-gold text-primary hover:shadow-glow transition-all duration-300 font-semibold" onClick={e => {
+                e.preventDefault();
+                setIsConsultationModalOpen(true);
+              }}>
                   Boka behovsanalys
                 </Button>
               </form>
@@ -381,132 +323,7 @@ export const ProductSelection = () => {
 
       {/* Om oss Section */}
       <section id="about" className="relative py-32">
-        <div className="mx-auto max-w-7xl px-6 lg:px-8">
-          <AnimatedSection className="mx-auto max-w-3xl text-center mb-16">
-            <div className="inline-flex items-center gap-2 rounded-full bg-accent/10 px-4 py-2 mb-6 backdrop-blur-sm border border-accent/20">
-              <Sparkles className="h-4 w-4 text-accent" />
-              <span className="text-sm font-medium text-white">Om oss – Hiems</span>
-            </div>
-            <h2 className="text-5xl font-display font-bold mb-6 text-white">Vi är unga, drivna och brinner för AI</h2>
-            <div className="w-24 h-1.5 bg-gradient-gold mx-auto rounded-full mb-8"></div>
-            <p className="text-lg text-white/90 leading-relaxed">
-              Hiems grundades av ett team som ser möjligheterna med AI och vill göra tekniken tillgänglig för alla företag, inte bara stora aktörer. Vi kombinerar ung drivkraft, nyfikenhet och teknisk expertis med förståelse för olika verksamheter. Vårt mål är enkelt: skapa lösningar som sparar tid, minskar dubbelarbete och gör vardagen enklare.
-            </p>
-          </AnimatedSection>
-
-          {/* Values */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto mb-20">
-            <AnimatedSection delay={0} className="group text-center">
-              <div className="relative rounded-lg bg-white/5 p-8 backdrop-blur-sm border border-white/10 hover:border-accent/50 transition-all duration-300 h-full">
-                <div className="absolute inset-0 bg-gradient-gold opacity-0 group-hover:opacity-5 rounded-lg transition-opacity"></div>
-                <div className="relative">
-                  <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-accent/10 mb-6 group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
-                    <Zap className="h-8 w-8 text-accent" />
-                  </div>
-                  <h3 className="text-xl font-display font-bold mb-3 text-white">Tillgänglig AI för alla</h3>
-                  <p className="text-white/70 leading-relaxed">Vi tror på tillgänglig AI som alla kan använda, oavsett företagsstorlek eller teknisk expertis.</p>
-                </div>
-              </div>
-            </AnimatedSection>
-
-            <AnimatedSection delay={100} className="group text-center">
-              <div className="relative rounded-lg bg-white/5 p-8 backdrop-blur-sm border border-white/10 hover:border-accent/50 transition-all duration-300 h-full">
-                <div className="absolute inset-0 bg-gradient-gold opacity-0 group-hover:opacity-5 rounded-lg transition-opacity"></div>
-                <div className="relative">
-                  <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-accent/10 mb-6 group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
-                    <Wrench className="h-8 w-8 text-accent" />
-                  </div>
-                  <h3 className="text-xl font-display font-bold mb-3 text-white">Hands-on & kreativa</h3>
-                  <p className="text-white/70 leading-relaxed">Vi är hands-on och kreativa, och bygger lösningar som faktiskt fungerar i verkligheten.</p>
-                </div>
-              </div>
-            </AnimatedSection>
-
-            <AnimatedSection delay={200} className="group text-center">
-              <div className="relative rounded-lg bg-white/5 p-8 backdrop-blur-sm border border-white/10 hover:border-accent/50 transition-all duration-300 h-full">
-                <div className="absolute inset-0 bg-gradient-gold opacity-0 group-hover:opacity-5 rounded-lg transition-opacity"></div>
-                <div className="relative">
-                  <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-accent/10 mb-6 group-hover:scale-110 group-hover:rotate-6 transition-all duration-300">
-                    <Users className="h-8 w-8 text-accent" />
-                  </div>
-                  <h3 className="text-xl font-display font-bold mb-3 text-white">Personliga relationer</h3>
-                  <p className="text-white/70 leading-relaxed">Vi värdesätter personliga relationer med våra kunder och ser er framgång som vår framgång.</p>
-                </div>
-              </div>
-            </AnimatedSection>
-          </div>
-
-          {/* Team Section */}
-          <AnimatedSection className="mb-12">
-            <h3 className="text-3xl font-display font-bold text-center mb-12 text-white">Möt teamet</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              <AnimatedSection delay={0} className="rounded-lg bg-white/5 backdrop-blur-sm border border-white/10 p-8 text-center hover:border-accent/50 transition-all duration-300">
-                <img 
-                  src={antonImage} 
-                  alt="Anton Sallnäs" 
-                  className="w-64 h-64 rounded-full mx-auto mb-6 object-cover border-2 border-accent/30"
-                  loading="lazy"
-                />
-                <h4 className="text-xl font-bold mb-2 text-white">Anton Sallnäs</h4>
-                <p className="text-lg text-white/70 mb-4">CEO</p>
-                <p className="text-sm text-white/60 mb-1">anton@hiems.se</p>
-                <p className="text-sm text-white/60">070-657 15 32</p>
-                <p className="text-xs text-white/50 italic mt-4">"Jag brinner för att göra AI begripligt"</p>
-              </AnimatedSection>
-              
-              <AnimatedSection delay={100} className="rounded-lg bg-white/5 backdrop-blur-sm border border-white/10 p-8 text-center hover:border-accent/50 transition-all duration-300">
-                <img 
-                  src={karloImage} 
-                  alt="Karlo Mangione" 
-                  className="w-64 h-64 rounded-full mx-auto mb-6 object-cover border-2 border-accent/30"
-                  loading="lazy"
-                />
-                <h4 className="text-xl font-bold mb-2 text-white">Karlo Mangione</h4>
-                <p className="text-lg text-white/70 mb-4">COO</p>
-                <p className="text-sm text-white/60 mb-1">karlo.mangione@hiems.se</p>
-                <p className="text-sm text-white/60">070-231 22 71</p>
-                <p className="text-xs text-white/50 italic mt-4">"AI ska vara enkelt att använda"</p>
-              </AnimatedSection>
-              
-              <AnimatedSection delay={200} className="rounded-lg bg-white/5 backdrop-blur-sm border border-white/10 p-8 text-center hover:border-accent/50 transition-all duration-300">
-                <img 
-                  src={emilImage} 
-                  alt="Emil Westerberg" 
-                  className="w-64 h-64 rounded-full mx-auto mb-6 object-cover border-2 border-accent/30"
-                  loading="lazy"
-                />
-                <h4 className="text-xl font-bold mb-2 text-white">Emil Westerberg</h4>
-                <p className="text-lg text-white/70 mb-4">CLO</p>
-                <p className="text-sm text-white/60 mb-1">emil@hiems.se</p>
-                <p className="text-sm text-white/60">072-327 34 65</p>
-                <p className="text-xs text-white/50 italic mt-4">"Teknologi som skapar verkligt värde"</p>
-              </AnimatedSection>
-              
-              <AnimatedSection delay={300} className="rounded-lg bg-white/5 backdrop-blur-sm border border-white/10 p-8 text-center hover:border-accent/50 transition-all duration-300">
-                <div className="w-64 h-64 rounded-full mx-auto mb-6 bg-gradient-primary flex items-center justify-center border-2 border-accent/30">
-                  <span className="text-6xl font-bold text-white">ME</span>
-                </div>
-                <h4 className="text-xl font-bold mb-2 text-white">Malte Ekbäck</h4>
-                <p className="text-lg text-white/70 mb-4">CFO</p>
-                <p className="text-sm text-white/60 mb-1">malte@hiems.se</p>
-                <p className="text-sm text-white/60">073-024 66 28</p>
-                <p className="text-xs text-white/50 italic mt-4">"Smart tillväxt med AI"</p>
-              </AnimatedSection>
-            </div>
-          </AnimatedSection>
-
-          {/* CTA */}
-          <AnimatedSection delay={400} className="text-center mt-16">
-            <Button 
-              onClick={() => setIsConsultationModalOpen(true)} 
-              size="lg" 
-              className="bg-gradient-gold text-accent-foreground hover:opacity-90 shadow-button font-semibold text-lg px-8 py-6 h-auto"
-            >
-              Boka behovsanalys
-              <ArrowRight className="ml-2 h-5 w-5" />
-            </Button>
-          </AnimatedSection>
-        </div>
+        
       </section>
 
       {/* Varför Hiems Section */}
@@ -557,10 +374,6 @@ export const ProductSelection = () => {
         </div>
       </section>
 
-      <ConsultationModal 
-        open={isConsultationModalOpen} 
-        onOpenChange={setIsConsultationModalOpen}
-      />
-    </div>
-  );
+      <ConsultationModal open={isConsultationModalOpen} onOpenChange={setIsConsultationModalOpen} />
+    </div>;
 };
