@@ -18,12 +18,8 @@ export function APISettings() {
   const activeKey = apiKeys?.[0];
   const projectId = "shskknkivuewuqonjdjc";
   
-  const webhookUrls = [
-    { name: "Vapi", url: `https://${projectId}.supabase.co/functions/v1/vapi-webhook`, provider: "vapi" },
-    { name: "Retell", url: `https://${projectId}.supabase.co/functions/v1/retell-webhook`, provider: "retell" },
-    { name: "Twilio", url: `https://${projectId}.supabase.co/functions/v1/twilio-webhook`, provider: "twilio" },
-    { name: "Telnyx", url: `https://${projectId}.supabase.co/functions/v1/telnyx-webhook`, provider: "telnyx" },
-  ];
+  // Single MCP webhook URL for all providers
+  const mcpWebhookUrl = `https://${projectId}.supabase.co/functions/v1/user-webhook`;
 
   const copyToClipboard = (text: string, label: string) => {
     navigator.clipboard.writeText(text);
@@ -37,11 +33,6 @@ export function APISettings() {
     }
     generateKey(keyName);
     setKeyName("");
-  };
-
-  const getAccountToken = (provider: string) => {
-    const account = accounts.find(acc => acc.provider === provider && acc.is_active);
-    return account?.webhook_token;
   };
 
   return (
@@ -154,60 +145,63 @@ export function APISettings() {
           )}
         </div>
 
-        {/* Webhook URLs Section */}
-        <div className="space-y-4">
-          <div className="flex items-center gap-2">
-            <Code className="h-4 w-4 text-muted-foreground" />
-            <h3 className="font-semibold">Webhook-URLs</h3>
-          </div>
-          
-          <div className="space-y-3">
-            {webhookUrls.map((webhook) => {
-              const token = getAccountToken(webhook.provider);
-              const fullUrl = token ? `${webhook.url}?webhookToken=${token}` : webhook.url;
-              const hasAccount = !!token;
-              
-              return (
-                <div key={webhook.provider} className="p-4 border rounded-lg space-y-2">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <span className="font-medium">{webhook.name}</span>
-                      {hasAccount ? (
+        {/* Single MCP Webhook URL */}
+        {accounts.length > 0 && (
+          <div className="space-y-4">
+            <div className="flex items-center gap-2">
+              <Code className="h-4 w-4 text-muted-foreground" />
+              <h3 className="font-semibold">Server Webhook URL</h3>
+            </div>
+            <p className="text-sm text-muted-foreground">
+              En universell webhook som fungerar för alla dina telephony providers (Vapi, Retell, Twilio, Telnyx)
+            </p>
+            
+            <div className="space-y-3">
+              {accounts.map((account) => {
+                const fullUrl = `${mcpWebhookUrl}?token=${account.webhook_token}`;
+                
+                return (
+                  <div key={account.id} className="p-4 border rounded-lg space-y-2">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <img 
+                          src={`/images/logos/${account.provider}.png`} 
+                          alt={account.provider_display_name}
+                          className="w-6 h-6 object-contain"
+                          onError={(e) => {
+                            e.currentTarget.style.display = 'none';
+                          }}
+                        />
+                        <span className="font-medium">{account.provider_display_name}</span>
                         <CheckCircle className="h-4 w-4 text-green-500" />
-                      ) : (
-                        <AlertCircle className="h-4 w-4 text-muted-foreground" />
-                      )}
+                      </div>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => copyToClipboard(fullUrl, `${account.provider_display_name} webhook URL`)}
+                      >
+                        <Copy className="h-4 w-4 mr-2" />
+                        Kopiera
+                      </Button>
                     </div>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => copyToClipboard(fullUrl, `${webhook.name} webhook`)}
-                      disabled={!hasAccount}
-                    >
-                      <Copy className="h-4 w-4 mr-2" />
-                      Kopiera
-                    </Button>
-                  </div>
-                  <code className="text-xs bg-muted px-2 py-1 rounded block overflow-x-auto">
-                    {hasAccount ? fullUrl : `${webhook.url}?webhookToken=<DIN_TOKEN>`}
-                  </code>
-                  {!hasAccount && (
+                    <code className="text-xs bg-muted px-2 py-1 rounded block overflow-x-auto">
+                      {fullUrl}
+                    </code>
                     <p className="text-xs text-muted-foreground">
-                      Konfigurera ett {webhook.name}-konto i Telefoni-sektionen först
+                      Lägg till denna URL i <strong>{account.provider_display_name}</strong>-inställningarna för att ta emot händelser
                     </p>
-                  )}
-                </div>
-              );
-            })}
-          </div>
-        </div>
+                  </div>
+                );
+              })}
+            </div>
 
-        <Alert>
-          <AlertDescription className="text-xs">
-            <strong>Tips:</strong> Använd dessa webhook-URLs när du konfigurerar externa tjänster som Vapi, Retell, Twilio eller Telnyx. 
-            Webhook-token inkluderas automatiskt som en URL-parameter för säker autentisering.
-          </AlertDescription>
-        </Alert>
+            <Alert>
+              <AlertDescription className="text-xs">
+                <strong>Tips:</strong> Samma webhook URL fungerar för alla providers - systemet detekterar automatiskt vilken provider som skickar data.
+              </AlertDescription>
+            </Alert>
+          </div>
+        )}
       </CardContent>
     </Card>
   );

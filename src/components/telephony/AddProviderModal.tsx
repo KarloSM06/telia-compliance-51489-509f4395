@@ -55,7 +55,8 @@ export const AddProviderModal = ({ open, onClose }: AddProviderModalProps) => {
         <DialogHeader>
           <DialogTitle>Lägg till telefonileverantör</DialogTitle>
           <DialogDescription>
-            Anslut en ny telefonileverantör för att börja samla in data
+            Lägg till en ny telefoni-provider för att hantera samtal och meddelanden.
+            Du får en universell webhook URL som fungerar för alla providers.
           </DialogDescription>
         </DialogHeader>
 

@@ -3,24 +3,25 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Copy, Key, RefreshCw, Eye, EyeOff, Info } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { Copy, Key, RefreshCw, Eye, EyeOff, Info, Webhook } from 'lucide-react';
 import { toast } from 'sonner';
 import { useApiKeys } from '@/hooks/useApiKeys';
 import { useTelephonyAccounts } from '@/hooks/useTelephonyAccounts';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 
 export const WebhookSettings = () => {
   const [showApiKey, setShowApiKey] = useState(false);
   const { apiKeys, isLoading, generateKey, isGenerating } = useApiKeys();
   const { accounts } = useTelephonyAccounts();
 
-  const copyToClipboard = (text: string, label: string) => {
+  const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text);
-    toast.success(`${label} kopierad!`);
+    toast.success('Webhook URL kopierad!');
   };
 
-  const getWebhookUrl = (provider: string, webhookToken: string) => {
-    const baseUrl = 'https://shskknkivuewuqonjdjc.supabase.co/functions/v1';
-    return `${baseUrl}/${provider}-webhook?token=${webhookToken}`;
+  const getMcpWebhookUrl = (token: string) => {
+    return `https://shskknkivuewuqonjdjc.supabase.co/functions/v1/user-webhook?token=${token}`;
   };
 
   const primaryApiKey = apiKeys?.[0];
@@ -64,7 +65,10 @@ export const WebhookSettings = () => {
                   </div>
                   <Button
                     variant="outline"
-                    onClick={() => copyToClipboard(primaryApiKey.api_key, 'API-nyckel')}
+                    onClick={() => {
+                      navigator.clipboard.writeText(primaryApiKey.api_key);
+                      toast.success('API-nyckel kopierad!');
+                    }}
                   >
                     <Copy className="h-4 w-4 mr-2" />
                     Kopiera
@@ -101,59 +105,70 @@ export const WebhookSettings = () => {
         </CardContent>
       </Card>
 
-      {/* Webhook URLs Section */}
+      {/* Server Webhook URL Section */}
       {accounts && accounts.length > 0 && (
         <Card>
           <CardHeader>
-            <CardTitle>Webhook-URLs</CardTitle>
+            <CardTitle className="flex items-center gap-2">
+              <Webhook className="h-5 w-5" />
+              Server Webhook URL
+            </CardTitle>
             <CardDescription>
-              Konfigurera dessa URLs i dina telefonileverantörers webhook-inställningar
+              En universell webhook för alla dina telephony providers
             </CardDescription>
           </CardHeader>
-          <CardContent className="space-y-6">
-            {accounts.map(account => (
-              <div key={account.id} className="space-y-3">
-                <Label className="flex items-center gap-2">
-                  <img 
-                    src={`/images/logos/${account.provider}.png`}
-                    alt={account.provider}
-                    className="h-5 w-5 object-contain"
-                    onError={(e) => {
-                      e.currentTarget.style.display = 'none';
-                    }}
-                  />
-                  {account.provider_display_name}
-                </Label>
-                <div className="flex gap-2">
-                  <Input
-                    value={getWebhookUrl(account.provider, account.webhook_token)}
-                    readOnly
-                    className="font-mono text-xs"
-                  />
-                  <Button
-                    variant="outline"
-                    onClick={() => copyToClipboard(
-                      getWebhookUrl(account.provider, account.webhook_token),
-                      `${account.provider} webhook-URL`
-                    )}
-                  >
-                    <Copy className="h-4 w-4" />
-                  </Button>
-                </div>
-                <div className="bg-muted/50 p-3 rounded-lg">
-                  <div className="flex items-start gap-2 text-xs">
-                    <Info className="h-4 w-4 mt-0.5 flex-shrink-0 text-muted-foreground" />
-                    <div className="space-y-1 text-muted-foreground">
-                      <p><strong>För {account.provider_display_name}:</strong></p>
-                      {account.provider === 'vapi' && <p>Settings → Webhooks → Add URL</p>}
-                      {account.provider === 'retell' && <p>Dashboard → Webhooks → Configure</p>}
-                      {account.provider === 'twilio' && <p>Phone Numbers → Configure → Webhook URL</p>}
-                      {account.provider === 'telnyx' && <p>Messaging → Webhooks → Add Webhook</p>}
+          <CardContent className="space-y-4">
+            <div className="space-y-3">
+              {accounts.map((account) => {
+                const webhookUrl = getMcpWebhookUrl(account.webhook_token);
+                
+                return (
+                  <div key={account.id} className="space-y-2">
+                    <div className="flex items-center gap-3 p-4 rounded-lg bg-muted/50 border">
+                      <div className="flex-shrink-0">
+                        <img 
+                          src={`/images/logos/${account.provider}.png`} 
+                          alt={account.provider}
+                          className="w-8 h-8 object-contain"
+                        />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2 mb-1">
+                          <div className="font-semibold text-sm">{account.provider_display_name}</div>
+                          <Badge variant={account.is_active ? "default" : "secondary"} className="text-xs">
+                            {account.is_active ? "Aktiv" : "Inaktiv"}
+                          </Badge>
+                        </div>
+                        <code className="text-xs text-muted-foreground break-all block bg-background/50 p-2 rounded">
+                          {webhookUrl}
+                        </code>
+                      </div>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => copyToClipboard(webhookUrl)}
+                      >
+                        <Copy className="h-4 w-4" />
+                      </Button>
                     </div>
                   </div>
-                </div>
-              </div>
-            ))}
+                );
+              })}
+            </div>
+
+            <Alert>
+              <Webhook className="h-4 w-4" />
+              <AlertDescription className="text-sm">
+                <strong>Konfigurera samma webhook URL i alla providers:</strong>
+                <ul className="list-disc list-inside mt-2 space-y-1">
+                  <li><strong>Vapi:</strong> Dashboard → Settings → Webhooks</li>
+                  <li><strong>Retell:</strong> Dashboard → Settings → Webhooks</li>
+                  <li><strong>Twilio:</strong> Console → Phone Numbers → Configure</li>
+                  <li><strong>Telnyx:</strong> Portal → Messaging → Settings</li>
+                </ul>
+                <p className="mt-2 text-xs">Systemet detekterar automatiskt vilken provider som skickar data.</p>
+              </AlertDescription>
+            </Alert>
           </CardContent>
         </Card>
       )}

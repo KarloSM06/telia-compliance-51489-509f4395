@@ -104,3 +104,6 @@ verify_jwt = true
 
 [functions.generate-api-key]
 verify_jwt = true
+
+[functions.user-webhook]
+verify_jwt = false
