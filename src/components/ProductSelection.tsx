@@ -107,32 +107,34 @@ export const ProductSelection = () => {
       </section>
 
       {/* Branschspecifika lösningar */}
-      <section id="branscher" className="relative py-24 overflow-hidden">
-        {/* Animated background elements */}
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_50%,hsl(var(--primary)/0.12),transparent_50%)]" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_50%,hsl(var(--primary)/0.08),transparent_50%)]" />
-        
+      <section id="branscher" className="relative py-24 overflow-hidden bg-gradient-to-b from-background via-background to-muted/20">
         <div className="mx-auto max-w-7xl px-6 lg:px-8 relative z-10">
           <AnimatedSection className="text-center mb-16">
-            <div className="inline-block">
-              <h2 className="text-5xl sm:text-6xl font-bold bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text mb-4 text-white">
-                Oavsett bransch kan Hiems bygga AI-lösningar som passar just er verksamhet
-              </h2>
-              <div className="w-32 h-1.5 bg-gradient-to-r from-primary via-primary/60 to-transparent mx-auto rounded-full shadow-lg shadow-primary/50" />
-            </div>
-            <p className="text-xl sm:text-2xl max-w-3xl mx-auto mt-6 font-light text-slate-200">
+            <h2 className="text-4xl sm:text-5xl font-bold text-foreground mb-4">
+              Oavsett bransch kan Hiems bygga AI-lösningar som passar just er verksamhet
+            </h2>
+            <div className="w-24 h-1 bg-primary mx-auto rounded-full mb-6" />
+            <p className="text-lg sm:text-xl max-w-3xl mx-auto text-muted-foreground">
               Vi har erfarenhet från många olika branscher och kan anpassa våra lösningar efter era unika behov
             </p>
           </AnimatedSection>
           
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-12">
-            {industries.map((industry, index) => <AnimatedSection key={industry.id} delay={index * 80}>
-                <IndustryCard industry={industry} onClick={() => handleIndustryClick(industry.id)} />
-              </AnimatedSection>)}
+            {industries.map((industry) => (
+              <IndustryCard 
+                key={industry.id} 
+                industry={industry} 
+                onClick={() => handleIndustryClick(industry.id)} 
+              />
+            ))}
           </div>
           
           <AnimatedSection className="text-center">
-            <Button size="lg" className="bg-gradient-gold text-primary hover:shadow-glow transition-all duration-300 font-semibold" onClick={() => setIsConsultationModalOpen(true)}>
+            <Button 
+              size="lg" 
+              className="bg-gradient-gold text-primary hover:shadow-glow transition-all duration-300 font-semibold" 
+              onClick={() => setIsConsultationModalOpen(true)}
+            >
               Boka branschspecifik konsultation
             </Button>
           </AnimatedSection>

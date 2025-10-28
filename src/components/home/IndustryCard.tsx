@@ -1,39 +1,53 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import type { Industry } from "@/data/industries";
+
 interface IndustryCardProps {
   industry: Industry;
   onClick: () => void;
 }
-export const IndustryCard = ({
-  industry,
-  onClick
-}: IndustryCardProps) => {
+
+export const IndustryCard = ({ industry, onClick }: IndustryCardProps) => {
   const Icon = industry.icon;
-  return <Card className="group h-full flex flex-col overflow-hidden cursor-pointer border border-primary/10 bg-gradient-to-br from-card/80 via-card/50 to-card/30 backdrop-blur-md hover:bg-card/90 hover:border-primary/30 transition-all duration-500 hover:shadow-2xl hover:shadow-primary/20 hover:-translate-y-2" onClick={onClick}>
+  
+  return (
+    <Card 
+      className="group h-full flex flex-col overflow-hidden cursor-pointer border-border/50 bg-card/80 hover:bg-card hover:border-primary/40 transition-[transform,border-color] duration-300 hover:shadow-lg hover:-translate-y-1 transform-gpu"
+      onClick={onClick}
+    >
       {/* Image Section */}
-      <div className="relative aspect-[4/3] overflow-hidden">
-        {industry.image ? <>
-            <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent z-10 opacity-70 group-hover:opacity-50 transition-opacity duration-500" />
-            <img src={industry.image} alt={industry.name} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 group-hover:brightness-110" />
-          </> : <div className="absolute inset-0 bg-gradient-to-br from-primary/30 via-primary/10 to-transparent flex items-center justify-center">
-            <Icon className="h-24 w-24 text-primary/40 group-hover:text-primary/60 transition-colors duration-300" />
-          </div>}
+      <div className="relative aspect-[4/3] overflow-hidden bg-muted">
+        {industry.image ? (
+          <img 
+            src={industry.image} 
+            alt={industry.name}
+            loading="lazy"
+            decoding="async"
+            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 transform-gpu"
+          />
+        ) : (
+          <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-primary/10 to-muted flex items-center justify-center">
+            <Icon className="h-20 w-20 text-primary/30 group-hover:text-primary/50 transition-colors duration-300" />
+          </div>
+        )}
         
-        {/* Icon Overlay in corner */}
-        
+        {/* Icon Badge */}
+        <div className="absolute top-3 right-3 p-2 rounded-lg bg-background/90 shadow-sm">
+          <Icon className="h-5 w-5 text-primary" />
+        </div>
       </div>
       
       {/* Content Section */}
-      <CardHeader className="pb-3 bg-gradient-to-br from-card/5 to-transparent">
-        <CardTitle className="text-xl font-bold group-hover:text-primary transition-colors duration-300">
+      <CardHeader className="pb-3">
+        <CardTitle className="text-lg font-semibold group-hover:text-primary transition-colors duration-300">
           {industry.name}
         </CardTitle>
       </CardHeader>
       
       <CardContent className="flex-1 pt-0">
-        <CardDescription className="text-sm leading-relaxed text-muted-foreground">
+        <CardDescription className="text-sm leading-relaxed">
           {industry.description}
         </CardDescription>
       </CardContent>
-    </Card>;
+    </Card>
+  );
 };

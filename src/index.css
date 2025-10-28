@@ -144,6 +144,21 @@ All colors MUST be HSL.
     overscroll-behavior: contain;
   }
 
+  /* Branch section performance optimizations */
+  #branscher {
+    contain: layout style;
+  }
+  
+  #branscher .group {
+    backface-visibility: hidden;
+    transform: translateZ(0);
+  }
+  
+  #branscher img {
+    backface-visibility: hidden;
+    transform: translateZ(0);
+  }
+
   .lenis.lenis-stopped {
     overflow: hidden;
   }
@@ -154,10 +169,6 @@ All colors MUST be HSL.
 
   body {
     @apply bg-background text-foreground font-sans antialiased;
-  }
-  
-  * {
-    scroll-behavior: smooth;
   }
 
   h1, h2, h3, h4, h5, h6 {
