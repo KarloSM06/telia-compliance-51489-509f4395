@@ -1117,6 +1117,48 @@ serve(async (req) => {
         if (newEvent && parentEventId) {
           await aggregateCosts(supabase, parentEventId, newEvent);
         }
+
+        // If this is an SMS, also save to message_logs for SMS-specific tracking
+        if (eventType === 'message' && newEvent) {
+          const messageLogData = {
+            user_id: integration.user_id,
+            integration_id: integration.id,
+            channel: 'sms' as const,
+            recipient: finalDirection === 'outbound' ? toNumber : fromNumber,
+            message_body: bodyData.Body || bodyData.text || '',
+            provider: provider,
+            provider_type: providerType,
+            provider_message_id: bodyData.MessageSid || bodyData.SmsSid || externalCallId,
+            status: bodyData.SmsStatus === 'received' ? 'delivered' : 
+                    bodyData.SmsStatus === 'sent' ? 'sent' :
+                    bodyData.MessageStatus === 'delivered' ? 'delivered' :
+                    bodyData.MessageStatus === 'failed' || bodyData.MessageStatus === 'undelivered' ? 'failed' :
+                    'sent',
+            sent_at: new Date().toISOString(),
+            delivered_at: (bodyData.SmsStatus === 'received' || bodyData.MessageStatus === 'delivered') 
+              ? new Date().toISOString() 
+              : null,
+            cost: costAmount,
+            metadata: {
+              from: fromNumber,
+              to: toNumber,
+              direction: finalDirection,
+              numSegments: bodyData.NumSegments ? parseInt(bodyData.NumSegments) : 1,
+              provider_status: bodyData.SmsStatus || bodyData.MessageStatus,
+              event_id: newEvent.id,
+            },
+          };
+
+          const { error: messageLogError } = await supabase
+            .from('message_logs')
+            .insert(messageLogData);
+
+          if (messageLogError) {
+            console.error('❌ Failed to insert message_log:', messageLogError);
+          } else {
+            console.log(`📨 Saved SMS to message_logs: ${messageLogData.provider_message_id}`);
+          }
+        }
       }
     }
 
