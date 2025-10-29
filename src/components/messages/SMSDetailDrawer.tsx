@@ -64,7 +64,7 @@ export const SMSDetailDrawer = ({ message, open, onClose }: SMSDetailDrawerProps
             <div className="space-y-3">
               <div className="flex items-center gap-2">
                 {getStatusBadge(message.status)}
-                {message.direction && getDirectionBadge(message.direction)}
+                {message.provider && <Badge variant="outline">{message.provider}</Badge>}
                 <Badge variant="outline">{message.channel}</Badge>
               </div>
             </div>
