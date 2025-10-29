@@ -237,9 +237,26 @@ export const useIntegrations = () => {
         .eq('id', integrationId);
       
       if (error) throw error;
+
+      // Auto-sync phone numbers when activating telephony integrations
+      if (isActive) {
+        const integration = integrations?.find(i => i.id === integrationId);
+        const isTelephonyProvider = integration && 
+          (integration.provider === 'twilio' || integration.provider === 'telnyx');
+        
+        if (isTelephonyProvider) {
+          console.log('🔄 Auto-syncing phone numbers after integration activation...');
+          try {
+            await supabase.functions.invoke('sync-phone-numbers');
+          } catch (syncError) {
+            console.error('Phone number auto-sync failed:', syncError);
+          }
+        }
+      }
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['integrations'] });
+      queryClient.invalidateQueries({ queryKey: ['phone-numbers'] });
       toast.success('Status uppdaterad');
     },
     onError: (error: Error) => {

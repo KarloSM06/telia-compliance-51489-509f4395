@@ -1,9 +1,10 @@
 import { useState, useMemo } from 'react';
 import { Button } from '@/components/ui/button';
-import { RefreshCw, Settings, Download } from 'lucide-react';
+import { RefreshCw, Settings, Download, Phone } from 'lucide-react';
 import { toast } from 'sonner';
 import { useIntegrations } from '@/hooks/useIntegrations';
 import { useTelephonyMetrics } from '@/hooks/useTelephonyMetrics';
+import { usePhoneNumbers } from '@/hooks/usePhoneNumbers';
 import { EventsTable } from '@/components/telephony/EventsTable';
 import { EventFilters, EventFilterValues } from '@/components/telephony/EventFilters';
 import { ProviderManagementDialog } from '@/components/telephony/ProviderManagementDialog';
@@ -27,6 +28,7 @@ export default function TelephonyPage() {
 
   const { integrations, getByCapability } = useIntegrations();
   const { metrics, isLoading, refetch } = useTelephonyMetrics();
+  const { syncNumbers, isSyncing } = usePhoneNumbers();
 
   const telephonyProviders = getByCapability('voice').concat(getByCapability('sms'));
 
@@ -194,6 +196,15 @@ export default function TelephonyPage() {
           <Button variant="outline" size="sm" onClick={() => setShowProviderDialog(true)}>
             <Settings className="h-4 w-4 mr-2" />
             Providers
+          </Button>
+          <Button 
+            variant="outline" 
+            size="sm" 
+            onClick={() => syncNumbers()}
+            disabled={isSyncing}
+          >
+            <Phone className={`h-4 w-4 mr-2 ${isSyncing ? 'animate-spin' : ''}`} />
+            Synka nummer
           </Button>
           <Button variant="outline" size="sm" onClick={handleRefresh}>
             <RefreshCw className="h-4 w-4 mr-2" />
