@@ -16,6 +16,7 @@ import { Separator } from '@/components/ui/separator';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { Bot, MessageSquare, User } from 'lucide-react';
+import { ConversationViewer } from './ConversationViewer';
 
 interface EventDetailModalProps {
   event: any;
@@ -177,6 +178,14 @@ export const EventDetailModal = ({ event, open, onClose }: EventDetailModalProps
                   ))}
                 </div>
               </div>
+            </>
+          )}
+
+          {/* Conversation Viewer */}
+          {event.normalized?.conversation && (
+            <>
+              <Separator />
+              <ConversationViewer event={event} />
             </>
           )}
 

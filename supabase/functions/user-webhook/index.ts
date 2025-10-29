@@ -96,11 +96,22 @@ serve(async (req) => {
       } catch {
         bodyData = {};
       }
-      // Vapi: check for message.type or call.* events
-      if (bodyData.message?.type === 'status-update' || (typeof bodyData.type === 'string' && bodyData.type.startsWith('call.'))) provider = 'vapi';
-      else if (bodyData.event === 'call_ended' || bodyData.event === 'call_started') provider = 'retell';
-      else if (bodyData.data?.event_type) provider = 'telnyx';
-      else provider = 'unknown';
+      // Vapi: detect any server message or call event
+      // Vapi always has either message.type, message.call, call.assistantId, or assistant.id
+      if (
+        bodyData.message?.type || 
+        bodyData.message?.call || 
+        bodyData.call?.assistantId || 
+        bodyData.assistant?.id
+      ) {
+        provider = 'vapi';
+      } else if (bodyData.event === 'call_ended' || bodyData.event === 'call_started') {
+        provider = 'retell';
+      } else if (bodyData.data?.event_type) {
+        provider = 'telnyx';
+      } else {
+        provider = 'unknown';
+      }
     }
 
     console.log(`📥 Detected provider: ${provider}`);
@@ -237,7 +248,13 @@ serve(async (req) => {
     }
 
     // Process webhook event (create telephony_event with idempotency)
-    const providerEventId = bodyData.id || bodyData.MessageSid || bodyData.data?.id || `${provider}-${Date.now()}`;
+    const providerEventId = 
+      bodyData.id || 
+      bodyData.message?.call?.id || 
+      bodyData.call?.id ||
+      bodyData.MessageSid || 
+      bodyData.data?.id || 
+      `${provider}-${Date.now()}`;
     const idempotencyKey = `${provider}:${providerEventId}`;
 
     // Check if already processed
@@ -258,12 +275,26 @@ serve(async (req) => {
     console.log(`📝 Creating telephony_event with provider_event_id: ${providerEventId}`);
     
     const eventType = 
-      body.type === 'call.started' || bodyData.CallStatus === 'in-progress' ? 'call.start' :
-      body.type === 'call.ended' || bodyData.CallStatus === 'completed' ? 'call.end' :
+      // Vapi call events
+      bodyData.type === 'call-started' || bodyData.type === 'call.started' ? 'call.start' :
+      bodyData.type === 'call-ended' || bodyData.type === 'call.ended' ? 'call.end' :
+      // Vapi server messages
+      bodyData.message?.type === 'conversation-update' ? 'conversation.update' :
+      bodyData.message?.type === 'transcript' ? 'transcript' :
+      bodyData.message?.type === 'status-update' ? 'status.update' :
+      bodyData.message?.type === 'tool-calls' ? 'tool.calls' :
+      bodyData.message?.type === 'assistant-request' ? 'assistant.request' :
+      // Twilio
+      bodyData.CallStatus === 'in-progress' ? 'call.start' :
+      bodyData.CallStatus === 'completed' ? 'call.end' :
+      bodyData.MessageStatus ? 'message.status' :
+      // Retell
       bodyData.event === 'call_started' ? 'call.start' :
       bodyData.event === 'call_ended' ? 'call.end' :
-      bodyData.MessageStatus ? 'message.status' :
-      bodyData.data?.event_type || 'event.other';
+      // Telnyx
+      bodyData.data?.event_type || 
+      // Fallback
+      'event.other';
 
     const direction = 
       bodyData.call?.direction || 
@@ -297,6 +328,19 @@ serve(async (req) => {
       bodyData.data?.occurred_at || 
       new Date().toISOString();
 
+    // Extract conversation data for Vapi
+    const conversationData = bodyData.message?.conversation || null;
+    const conversationMessages = bodyData.message?.messages || null;
+    const assistantData = bodyData.assistant || bodyData.message?.assistant || null;
+
+    // Merge into normalized field
+    const normalized = {
+      ...(bodyData.normalized || {}),
+      conversation: conversationData,
+      messages: conversationMessages,
+      assistant: assistantData,
+    };
+
     const { error: eventError } = await supabase
       .from('telephony_events')
       .upsert({
@@ -310,6 +354,7 @@ serve(async (req) => {
         status: status,
         provider_event_id: providerEventId,
         provider_payload: bodyData,
+        normalized: normalized,
         event_timestamp: eventTimestamp,
         idempotency_key: idempotencyKey,
       }, {
