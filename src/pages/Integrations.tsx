@@ -3,10 +3,13 @@ import { DashboardLayout } from '@/components/dashboard/DashboardLayout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Plus, Loader2 } from 'lucide-react';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Plus, Loader2, Activity } from 'lucide-react';
 import { useIntegrations } from '@/hooks/useIntegrations';
 import { IntegrationCard } from '@/components/integrations/IntegrationCard';
 import { AddIntegrationModal } from '@/components/integrations/AddIntegrationModal';
+import { IntegrationTester } from '@/components/integrations/IntegrationTester';
+import { SyncStatusDashboard } from '@/components/integrations/SyncStatusDashboard';
 import { toast } from 'sonner';
 
 export default function Integrations() {
@@ -19,6 +22,9 @@ export default function Integrations() {
   } = useIntegrations();
   
   const [addModalOpen, setAddModalOpen] = useState(false);
+  const [testerModalOpen, setTesterModalOpen] = useState(false);
+  const [syncDashboardOpen, setSyncDashboardOpen] = useState(false);
+  const [selectedIntegration, setSelectedIntegration] = useState<any>(null);
 
   const telephonyIntegrations = integrations.filter(i => 
     i.provider_type === 'telephony' || 
@@ -35,7 +41,8 @@ export default function Integrations() {
   };
 
   const handleTest = (integration: any) => {
-    toast.info('Test-funktion kommer snart');
+    setSelectedIntegration(integration);
+    setTesterModalOpen(true);
   };
 
   const handleDelete = (id: string) => {
@@ -68,10 +75,16 @@ export default function Integrations() {
               Hantera alla dina externa tjänster och API-anslutningar på ett ställe
             </p>
           </div>
-          <Button onClick={() => setAddModalOpen(true)}>
-            <Plus className="h-4 w-4 mr-2" />
-            Lägg till integration
-          </Button>
+          <div className="flex gap-2">
+            <Button variant="outline" onClick={() => setSyncDashboardOpen(true)}>
+              <Activity className="h-4 w-4 mr-2" />
+              Sync-status
+            </Button>
+            <Button onClick={() => setAddModalOpen(true)}>
+              <Plus className="h-4 w-4 mr-2" />
+              Lägg till integration
+            </Button>
+          </div>
         </div>
 
         {integrations.length === 0 ? (
@@ -188,6 +201,21 @@ export default function Integrations() {
           open={addModalOpen}
           onOpenChange={setAddModalOpen}
         />
+
+        <IntegrationTester
+          integration={selectedIntegration}
+          open={testerModalOpen}
+          onOpenChange={setTesterModalOpen}
+        />
+
+        <Dialog open={syncDashboardOpen} onOpenChange={setSyncDashboardOpen}>
+          <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle>Sync-status Dashboard</DialogTitle>
+            </DialogHeader>
+            <SyncStatusDashboard />
+          </DialogContent>
+        </Dialog>
       </div>
     </DashboardLayout>
   );

@@ -14,9 +14,12 @@ import {
   Radio,
   CheckCircle,
   XCircle,
-  Clock
+  Clock,
+  CheckCircle2,
+  AlertCircle
 } from 'lucide-react';
 import { Integration } from '@/hooks/useIntegrations';
+import { useTelephonySyncJobs } from '@/hooks/useTelephonySyncJobs';
 import { formatDistanceToNow } from 'date-fns';
 import { sv } from 'date-fns/locale';
 
@@ -66,6 +69,36 @@ export const IntegrationCard = ({
   onTest, 
   onToggle 
 }: IntegrationCardProps) => {
+  const { data: syncJobs } = useTelephonySyncJobs(integration.id);
+  
+  const getHealthStatus = () => {
+    if (!syncJobs || syncJobs.length === 0) {
+      return { status: 'unknown', label: 'Okänd', icon: Clock, color: 'secondary' };
+    }
+
+    const latestJob = syncJobs[0];
+    
+    if (latestJob.status === 'failed') {
+      return { status: 'error', label: 'Fel', icon: XCircle, color: 'destructive' };
+    }
+
+    if (latestJob.status === 'completed') {
+      const hoursSinceSync = latestJob.completed_at 
+        ? (Date.now() - new Date(latestJob.completed_at).getTime()) / (1000 * 60 * 60)
+        : 999;
+
+      if (hoursSinceSync > 24) {
+        return { status: 'warning', label: 'Varning', icon: AlertCircle, color: 'outline' };
+      }
+      return { status: 'healthy', label: 'Healthy', icon: CheckCircle2, color: 'default' };
+    }
+
+    return { status: 'unknown', label: 'Okänd', icon: Clock, color: 'secondary' };
+  };
+
+  const health = getHealthStatus();
+  const HealthIcon = health.icon;
+
   const getUsedBy = () => {
     const uses: string[] = [];
     if (integration.capabilities.includes('voice')) uses.push('Telefoni Dashboard');
@@ -97,6 +130,10 @@ export const IntegrationCard = ({
           />
           <Badge variant={integration.is_active ? 'default' : 'secondary'}>
             {integration.is_active ? 'Aktiv' : 'Inaktiv'}
+          </Badge>
+          <Badge variant={health.color as any} className="flex items-center gap-1">
+            <HealthIcon className="h-3 w-3" />
+            {health.label}
           </Badge>
         </div>
       </CardHeader>
@@ -135,11 +172,11 @@ export const IntegrationCard = ({
             )}
             <span className="text-sm">{integration.is_verified ? 'Verifierad' : 'Ej verifierad'}</span>
           </div>
-          {integration.last_used_at && (
+          {integration.last_synced_at && (
             <div className="flex items-center gap-2">
               <Clock className="h-4 w-4 text-muted-foreground" />
               <span className="text-sm text-muted-foreground">
-                {formatDistanceToNow(new Date(integration.last_used_at), { 
+                {formatDistanceToNow(new Date(integration.last_synced_at), { 
                   addSuffix: true,
                   locale: sv 
                 })}
@@ -147,6 +184,14 @@ export const IntegrationCard = ({
             </div>
           )}
         </div>
+        
+        {syncJobs && syncJobs[0] && syncJobs[0].items_synced > 0 && (
+          <div className="pt-2 border-t">
+            <p className="text-xs text-muted-foreground">
+              Senaste sync: {syncJobs[0].items_synced} items hämtade
+            </p>
+          </div>
+        )}
       </CardContent>
       
       <CardFooter className="flex gap-2">
