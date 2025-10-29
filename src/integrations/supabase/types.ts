@@ -2742,7 +2742,6 @@ export type Database = {
       }
       telephony_events: {
         Row: {
-          account_id: string | null
           agent_id: string | null
           cost_amount: number | null
           cost_currency: string | null
@@ -2764,11 +2763,10 @@ export type Database = {
           resource_type: string | null
           status: string | null
           to_number: string | null
-          user_id: string | null
+          user_id: string
           webhook_received_at: string | null
         }
         Insert: {
-          account_id?: string | null
           agent_id?: string | null
           cost_amount?: number | null
           cost_currency?: string | null
@@ -2790,11 +2788,10 @@ export type Database = {
           resource_type?: string | null
           status?: string | null
           to_number?: string | null
-          user_id?: string | null
+          user_id: string
           webhook_received_at?: string | null
         }
         Update: {
-          account_id?: string | null
           agent_id?: string | null
           cost_amount?: number | null
           cost_currency?: string | null
@@ -2816,17 +2813,10 @@ export type Database = {
           resource_type?: string | null
           status?: string | null
           to_number?: string | null
-          user_id?: string | null
+          user_id?: string
           webhook_received_at?: string | null
         }
         Relationships: [
-          {
-            foreignKeyName: "telephony_events_account_id_fkey"
-            columns: ["account_id"]
-            isOneToOne: false
-            referencedRelation: "telephony_accounts"
-            referencedColumns: ["id"]
-          },
           {
             foreignKeyName: "telephony_events_agent_id_fkey"
             columns: ["agent_id"]
@@ -2948,7 +2938,6 @@ export type Database = {
       }
       telephony_sync_jobs: {
         Row: {
-          account_id: string
           completed_at: string | null
           created_at: string | null
           cursor: string | null
@@ -2963,9 +2952,9 @@ export type Database = {
           retry_count: number | null
           started_at: string | null
           status: string | null
+          user_id: string
         }
         Insert: {
-          account_id: string
           completed_at?: string | null
           created_at?: string | null
           cursor?: string | null
@@ -2980,9 +2969,9 @@ export type Database = {
           retry_count?: number | null
           started_at?: string | null
           status?: string | null
+          user_id: string
         }
         Update: {
-          account_id?: string
           completed_at?: string | null
           created_at?: string | null
           cursor?: string | null
@@ -2997,15 +2986,9 @@ export type Database = {
           retry_count?: number | null
           started_at?: string | null
           status?: string | null
+          user_id?: string
         }
         Relationships: [
-          {
-            foreignKeyName: "telephony_sync_jobs_account_id_fkey"
-            columns: ["account_id"]
-            isOneToOne: false
-            referencedRelation: "telephony_accounts"
-            referencedColumns: ["id"]
-          },
           {
             foreignKeyName: "telephony_sync_jobs_integration_id_fkey"
             columns: ["integration_id"]

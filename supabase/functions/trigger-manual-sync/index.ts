@@ -90,7 +90,8 @@ serve(async (req) => {
         const { error: jobError } = await adminClient
           .from('telephony_sync_jobs')
           .insert({
-            account_id: integration_id,
+            integration_id: integration_id,
+            user_id: integration.user_id,
             provider: integration.provider,
             job_type: job.job_type,
             status: job.status,

@@ -23,10 +23,10 @@ export function SyncStatusDashboard() {
   
   // Group sync jobs by integration
   const syncJobsByIntegration = syncJobs?.reduce((acc, job) => {
-    if (!acc[job.account_id]) {
-      acc[job.account_id] = [];
+    if (!acc[job.integration_id]) {
+      acc[job.integration_id] = [];
     }
-    acc[job.account_id].push(job);
+    acc[job.integration_id].push(job);
     return acc;
   }, {} as Record<string, typeof syncJobs>);
 

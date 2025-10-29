@@ -139,25 +139,17 @@ export const EventDetailDrawer = ({ event, open, onClose }: EventDetailDrawerPro
               </CardContent>
             </Card>
 
-            {/* Agent & Account Info */}
-            {(event.agent_id || event.account_id) && (
+            {/* Agent Info */}
+            {event.agent_id && (
               <Card>
-                <CardContent className="p-4 space-y-2">
-                  {event.agent_id && (
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <User className="h-4 w-4 text-muted-foreground" />
-                        <span className="text-sm text-muted-foreground">Agent:</span>
-                      </div>
-                      <span className="text-sm font-mono">{event.agent_id.slice(0, 16)}...</span>
+                <CardContent className="p-4">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <User className="h-4 w-4 text-muted-foreground" />
+                      <span className="text-sm text-muted-foreground">Agent:</span>
                     </div>
-                  )}
-                  {event.account_id && (
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm text-muted-foreground">Account:</span>
-                      <span className="text-sm font-mono">{event.account_id.slice(0, 16)}...</span>
-                    </div>
-                  )}
+                    <span className="text-sm font-mono">{event.agent_id.slice(0, 16)}...</span>
+                  </div>
                 </CardContent>
               </Card>
             )}

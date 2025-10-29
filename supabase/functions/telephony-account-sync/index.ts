@@ -97,7 +97,8 @@ Deno.serve(async (req) => {
         const { data: syncJob } = await supabase
           .from('telephony_sync_jobs')
           .insert({
-            account_id: integration.id,
+            integration_id: integration.id,
+            user_id: integration.user_id,
             provider: integration.provider,
             job_type: 'calls',
             status: 'running',

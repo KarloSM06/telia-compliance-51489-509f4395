@@ -68,11 +68,23 @@ serve(async (req) => {
 
     const { apiKey } = decryptedData.credentials;
 
+    // Get integration data for user_id
+    const { data: integration, error: integrationError } = await supabaseClient
+      .from('integrations')
+      .select('id, user_id')
+      .eq('id', accountId)
+      .single();
+
+    if (integrationError || !integration) {
+      throw new Error('Integration not found');
+    }
+
     // Create or update sync job
     const { data: syncJob, error: jobError } = await supabaseClient
       .from('telephony_sync_jobs')
       .insert({
-        account_id: accountId,
+        integration_id: accountId,
+        user_id: integration.user_id,
         provider: 'vapi',
         job_type: 'calls',
         status: 'running',

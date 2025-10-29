@@ -3,7 +3,8 @@ import { supabase } from "@/integrations/supabase/client";
 
 export interface TelephonySyncJob {
   id: string;
-  account_id: string;
+  integration_id: string;
+  user_id: string;
   provider: string;
   job_type: 'calls' | 'messages' | 'recordings' | 'transcripts';
   status: 'pending' | 'running' | 'completed' | 'failed' | 'rate_limited';
@@ -18,17 +19,17 @@ export interface TelephonySyncJob {
   completed_at: string | null;
 }
 
-export function useTelephonySyncJobs(accountId?: string) {
+export function useTelephonySyncJobs(integrationId?: string) {
   return useQuery({
-    queryKey: ['telephony-sync-jobs', accountId],
+    queryKey: ['telephony-sync-jobs', integrationId],
     queryFn: async () => {
       let query = supabase
         .from('telephony_sync_jobs')
         .select('*')
         .order('created_at', { ascending: false });
 
-      if (accountId) {
-        query = query.eq('account_id', accountId);
+      if (integrationId) {
+        query = query.eq('integration_id', integrationId);
       }
 
       const { data, error } = await query.limit(50);
