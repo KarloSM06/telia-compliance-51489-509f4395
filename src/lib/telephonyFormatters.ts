@@ -6,6 +6,13 @@ export const formatDuration = (seconds: number | null): string => {
   return `${mins}m ${secs}s`;
 };
 
+export const formatCallDuration = (seconds: number | null): string => {
+  if (!seconds) return '-';
+  const mins = Math.floor(seconds / 60);
+  const secs = seconds % 60;
+  return `${mins}m ${secs}s`;
+};
+
 export const formatPhoneNumber = (number: string | null): string => {
   if (!number) return '-';
   // +46701234567 → +46 70 123 45 67
