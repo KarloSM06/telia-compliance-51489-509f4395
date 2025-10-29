@@ -326,18 +326,14 @@ serve(async (req) => {
         const callData = bodyData.message?.call || {};
         const direction = callData.type === 'inboundPhoneCall' ? 'inbound' : 'outbound';
         
-        // Extract phone numbers with multiple fallbacks
+        // Extract phone number (only from_number, to_number is always null)
         const fromRaw = callData.customer?.number || 
                         bodyData.message?.customer?.number || 
                         parseNumberFromHeader(callData.phoneCallProviderDetails?.sip?.headers?.['p-asserted-identity']);
-        const toRaw = bodyData.message?.phoneNumber?.name || 
-                      callData.phoneNumber?.name || 
-                      parseNumberFromHeader(callData.phoneCallProviderDetails?.sip?.headers?.to);
         
         const fromNumber = formatPhone(fromRaw);
-        const toNumber = formatPhone(toRaw);
         
-        console.log('📞 Phone numbers:', { fromRaw, toRaw, from: fromNumber, to: toNumber });
+        console.log('📞 Phone number:', { fromRaw, from: fromNumber });
 
         // Store initial call data
         const { error: createError } = await supabase
@@ -350,7 +346,7 @@ serve(async (req) => {
             event_type: 'call.start',
             direction: direction,
             from_number: fromNumber,
-            to_number: toNumber,
+            to_number: null,
             status: callData.status || 'in-progress',
             normalized: {
               callId: callId,
@@ -392,14 +388,10 @@ serve(async (req) => {
           const fromRaw = callData.customer?.number || 
                           bodyData.message?.customer?.number || 
                           parseNumberFromHeader(callData.phoneCallProviderDetails?.sip?.headers?.['p-asserted-identity']);
-          const toRaw = bodyData.message?.phoneNumber?.name || 
-                        callData.phoneNumber?.name || 
-                        parseNumberFromHeader(callData.phoneCallProviderDetails?.sip?.headers?.to);
           
           const fromNumber = formatPhone(fromRaw);
-          const toNumber = formatPhone(toRaw);
           
-          console.log('📞 Phone numbers (fallback):', { fromRaw, toRaw, from: fromNumber, to: toNumber });
+          console.log('📞 Phone number (fallback):', { fromRaw, from: fromNumber });
 
           await supabase
             .from('telephony_events')
@@ -411,7 +403,7 @@ serve(async (req) => {
               event_type: 'call.end',
               direction: direction,
               from_number: fromNumber,
-              to_number: toNumber,
+              to_number: null,
               status: bodyData.message?.endedReason || 'completed',
               normalized: {
                 callId: callId,
@@ -563,7 +555,7 @@ serve(async (req) => {
           event_type: eventType,
           direction: direction,
           from_number: fromNumber,
-          to_number: toNumber,
+          to_number: null,
           status: status,
           provider_event_id: providerEventId,
           provider_payload: bodyData,

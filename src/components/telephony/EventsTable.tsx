@@ -96,7 +96,7 @@ export const EventsTable = ({ events, onViewDetails }: EventsTableProps) => {
             <TableHead className="w-[120px]">Provider</TableHead>
             <TableHead className="w-[150px]">Event Type</TableHead>
             <TableHead className="w-[100px]">Riktning</TableHead>
-            <TableHead className="w-[200px]">Från → Till</TableHead>
+            <TableHead className="w-[160px]">Från</TableHead>
             <TableHead className="w-[120px]">Samtalsstatus</TableHead>
             <TableHead 
               className="w-[100px] cursor-pointer"
@@ -161,11 +161,9 @@ export const EventsTable = ({ events, onViewDetails }: EventsTableProps) => {
                   )}
                 </TableCell>
                 <TableCell>
-                  <div className="flex items-center gap-1 text-sm font-mono">
-                    <span className="truncate max-w-[80px]">{event.from_number || '-'}</span>
-                    <span className="text-muted-foreground">→</span>
-                    <span className="truncate max-w-[80px]">{event.to_number || '-'}</span>
-                  </div>
+                  <span className="text-sm font-mono truncate">
+                    {event.from_number || '-'}
+                  </span>
                 </TableCell>
                 <TableCell>
                   {isInProgress ? (

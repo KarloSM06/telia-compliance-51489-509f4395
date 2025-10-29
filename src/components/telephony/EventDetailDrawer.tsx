@@ -54,9 +54,9 @@ export const EventDetailDrawer = ({ event, open, onClose }: EventDetailDrawerPro
               </div>
             </div>
 
-            {/* Phone Numbers */}
+            {/* Phone Number */}
             <Card>
-              <CardContent className="p-4 space-y-2">
+              <CardContent className="p-4">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <Phone className="h-4 w-4 text-muted-foreground" />
@@ -68,23 +68,6 @@ export const EventDetailDrawer = ({ event, open, onClose }: EventDetailDrawerPro
                       variant="ghost"
                       size="sm"
                       onClick={() => copyToClipboard(event.from_number, 'Telefonnummer')}
-                    >
-                      <Copy className="h-3 w-3" />
-                    </Button>
-                  )}
-                </div>
-
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <Phone className="h-4 w-4 text-muted-foreground" />
-                    <span className="text-sm font-medium">Till:</span>
-                    <span className="font-mono text-sm">{event.to_number || '-'}</span>
-                  </div>
-                  {event.to_number && (
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => copyToClipboard(event.to_number, 'Telefonnummer')}
                     >
                       <Copy className="h-3 w-3" />
                     </Button>
