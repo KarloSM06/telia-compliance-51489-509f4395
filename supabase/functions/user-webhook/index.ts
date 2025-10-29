@@ -243,14 +243,14 @@ async function calculateTwilioSmsCost(
   
   // Verify direction against owned numbers
   const { data: toNumberOwned } = await supabase
-    .from('phone_numbers')
+    .from('phone_numbers_duplicate')
     .select('phone_number')
     .eq('integration_id', integrationId)
     .eq('phone_number', toNumber)
     .maybeSingle();
   
   const { data: fromNumberOwned } = await supabase
-    .from('phone_numbers')
+    .from('phone_numbers_duplicate')
     .select('phone_number')
     .eq('integration_id', integrationId)
     .eq('phone_number', fromNumber)
@@ -812,14 +812,14 @@ serve(async (req) => {
             
             // ALWAYS verify direction against owned numbers (don't trust payload blindly)
             const { data: toNumberOwned } = await supabase
-              .from('phone_numbers')
+              .from('phone_numbers_duplicate')
               .select('phone_number, integration_id')
               .eq('integration_id', integrationId)
               .eq('phone_number', toNumber)
               .maybeSingle();
             
             const { data: fromNumberOwned } = await supabase
-              .from('phone_numbers')
+              .from('phone_numbers_duplicate')
               .select('phone_number, integration_id')
               .eq('integration_id', integrationId)
               .eq('phone_number', fromNumber)
@@ -1043,7 +1043,7 @@ serve(async (req) => {
         
         // Check if phone numbers are synced for this integration
         const { count: phoneCount } = await supabase
-          .from('phone_numbers')
+          .from('phone_numbers_duplicate')
           .select('*', { count: 'exact', head: true })
           .eq('integration_id', integration.id);
 

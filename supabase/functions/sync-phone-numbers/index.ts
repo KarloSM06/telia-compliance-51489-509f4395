@@ -136,7 +136,7 @@ async function syncTwilioNumbers(integration: any, credentials: any, supabase: a
     for (const number of numbers) {
       // Check if number already exists for this integration
       const { data: existing } = await supabase
-        .from('phone_numbers')
+        .from('phone_numbers_duplicate')
         .select('id')
         .eq('integration_id', integration.id)
         .eq('phone_number', number.phone_number)
@@ -163,12 +163,12 @@ async function syncTwilioNumbers(integration: any, credentials: any, supabase: a
       let result;
       if (existing) {
         result = await supabase
-          .from('phone_numbers')
+          .from('phone_numbers_duplicate')
           .update(phoneData)
           .eq('id', existing.id);
       } else {
         result = await supabase
-          .from('phone_numbers')
+          .from('phone_numbers_duplicate')
           .insert(phoneData);
       }
       
@@ -205,7 +205,7 @@ async function syncTelnyxNumbers(integration: any, credentials: any, supabase: a
     for (const number of numbers) {
       // Check if number already exists for this integration
       const { data: existing } = await supabase
-        .from('phone_numbers')
+        .from('phone_numbers_duplicate')
         .select('id')
         .eq('integration_id', integration.id)
         .eq('phone_number', number.phone_number)
@@ -232,12 +232,12 @@ async function syncTelnyxNumbers(integration: any, credentials: any, supabase: a
       let result;
       if (existing) {
         result = await supabase
-          .from('phone_numbers')
+          .from('phone_numbers_duplicate')
           .update(phoneData)
           .eq('id', existing.id);
       } else {
         result = await supabase
-          .from('phone_numbers')
+          .from('phone_numbers_duplicate')
           .insert(phoneData);
       }
       

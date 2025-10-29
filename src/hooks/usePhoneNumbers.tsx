@@ -28,7 +28,7 @@ export const usePhoneNumbers = () => {
       if (!user) throw new Error('Not authenticated');
 
       const { data, error } = await supabase
-        .from('phone_numbers')
+        .from('phone_numbers_duplicate')
         .select('*')
         .eq('user_id', user.id)
         .order('created_at', { ascending: false });

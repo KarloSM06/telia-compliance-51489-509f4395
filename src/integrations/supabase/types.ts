@@ -2015,6 +2015,50 @@ export type Database = {
           },
         ]
       }
+      phone_numbers_duplicate: {
+        Row: {
+          capabilities: Json | null
+          created_at: string
+          id: string
+          integration_id: string | null
+          metadata: Json | null
+          phone_number: string
+          status: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          capabilities?: Json | null
+          created_at?: string
+          id?: string
+          integration_id?: string | null
+          metadata?: Json | null
+          phone_number: string
+          status?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          capabilities?: Json | null
+          created_at?: string
+          id?: string
+          integration_id?: string | null
+          metadata?: Json | null
+          phone_number?: string
+          status?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "phone_numbers_duplicate_integration_id_fkey"
+            columns: ["integration_id"]
+            isOneToOne: false
+            referencedRelation: "integrations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           availability_enabled: boolean | null
