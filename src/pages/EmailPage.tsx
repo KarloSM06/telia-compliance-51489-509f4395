@@ -1,6 +1,6 @@
 import { useState, useMemo } from "react";
 import { Button } from '@/components/ui/button';
-import { RefreshCw, Download } from 'lucide-react';
+import { RefreshCw, Download, Settings } from 'lucide-react';
 import { toast } from 'sonner';
 import { useQueryClient } from '@tanstack/react-query';
 import { useAuth } from '@/hooks/useAuth';
@@ -9,11 +9,13 @@ import { EmailStatsCards } from "@/components/messages/EmailStatsCards";
 import { EmailTable } from "@/components/messages/EmailTable";
 import { EmailFilters, EmailFilterValues } from "@/components/messages/EmailFilters";
 import { EmailDetailDrawer } from "@/components/messages/EmailDetailDrawer";
+import { MessageProvidersDialog } from "@/components/messages/MessageProvidersDialog";
 
 export default function EmailPage() {
   const { user } = useAuth();
   const queryClient = useQueryClient();
   const [selectedMessage, setSelectedMessage] = useState<any>(null);
+  const [showProvidersDialog, setShowProvidersDialog] = useState(false);
   const [filters, setFilters] = useState<EmailFilterValues>({
     search: '',
     status: 'all',
@@ -34,6 +36,25 @@ export default function EmailPage() {
     failed: stats.failed,
     cost: stats.emailCost,
   };
+
+  // Calculate provider statistics
+  const providerStats = useMemo(() => {
+    const stats = new Map<string, { count: number; cost: number }>();
+    
+    logs.forEach((log) => {
+      const provider = log.provider || 'unknown';
+      const current = stats.get(provider) || { count: 0, cost: 0 };
+      stats.set(provider, {
+        count: current.count + 1,
+        cost: current.cost + (log.cost || 0),
+      });
+    });
+
+    return Array.from(stats.entries()).map(([provider, data]) => ({
+      provider,
+      ...data,
+    }));
+  }, [logs]);
 
   // Filter messages based on search
   const filteredMessages = useMemo(() => {
@@ -94,6 +115,10 @@ export default function EmailPage() {
           </p>
         </div>
         <div className="flex gap-2">
+          <Button variant="outline" size="sm" onClick={() => setShowProvidersDialog(true)}>
+            <Settings className="h-4 w-4 mr-2" />
+            Leverantörer
+          </Button>
           <Button variant="outline" size="sm" onClick={handleRefresh}>
             <RefreshCw className="h-4 w-4 mr-2" />
             Uppdatera
@@ -140,6 +165,14 @@ export default function EmailPage() {
         message={selectedMessage}
         open={!!selectedMessage}
         onClose={() => setSelectedMessage(null)}
+      />
+
+      {/* Providers Dialog */}
+      <MessageProvidersDialog
+        open={showProvidersDialog}
+        onClose={() => setShowProvidersDialog(false)}
+        providers={providerStats}
+        type="email"
       />
     </div>
   );
