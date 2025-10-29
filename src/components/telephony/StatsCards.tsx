@@ -13,8 +13,13 @@ interface StatsCardsProps {
 export const StatsCards = ({
   metrics
 }: StatsCardsProps) => {
-  // Calculate in-progress calls
-  const inProgressCalls = metrics.events?.filter(event => !event.normalized?.endedAt && !event.normalized?.endedReason).length || 0;
+  // Calculate in-progress calls (only count parent events)
+  const inProgressCalls = metrics.events?.filter(event => 
+    !event.normalized?.endedAt && 
+    !event.normalized?.endedReason && 
+    !event.parent_event_id &&
+    (event.provider_layer === 'agent' || ['vapi', 'retell'].includes(event.provider))
+  ).length || 0;
 
   // Calculate completed calls for accurate averages
   const completedCalls = metrics.totalCalls - inProgressCalls;

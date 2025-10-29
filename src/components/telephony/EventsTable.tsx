@@ -26,7 +26,12 @@ export const EventsTable = ({ events, onViewDetails }: EventsTableProps) => {
     }));
   };
 
-  const sortedEvents = [...events].sort((a, b) => {
+  // Filter to only show parent events (agent layer)
+  const parentEvents = events.filter(e => 
+    !e.parent_event_id && (e.provider_layer === 'agent' || ['vapi', 'retell'].includes(e.provider))
+  );
+
+  const sortedEvents = [...parentEvents].sort((a, b) => {
     const { key, direction } = sortConfig;
     let aVal, bVal;
 
@@ -80,10 +85,10 @@ export const EventsTable = ({ events, onViewDetails }: EventsTableProps) => {
     return colors[provider.toLowerCase()] || 'bg-gray-500/10 text-gray-700 dark:text-gray-300';
   };
 
-  if (events.length === 0) {
+  if (sortedEvents.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-12 text-center">
-        <p className="text-muted-foreground">Inga events ännu</p>
+        <p className="text-muted-foreground">Inga samtal att visa</p>
       </div>
     );
   }
@@ -185,7 +190,11 @@ export const EventsTable = ({ events, onViewDetails }: EventsTableProps) => {
                 </TableCell>
                 <TableCell>
                   <span className="text-sm font-medium">
-                    {isInProgress ? '-' : formatCost(event.cost_amount, event.cost_currency)}
+                    {isInProgress ? '-' : (
+                      event.aggregate_cost_amount 
+                        ? `${parseFloat(event.aggregate_cost_amount).toFixed(2)} SEK`
+                        : formatCost(event.cost_amount, event.cost_currency)
+                    )}
                   </span>
                 </TableCell>
                 <TableCell>

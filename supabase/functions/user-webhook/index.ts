@@ -743,23 +743,45 @@ serve(async (req) => {
           }
           
           // Calculate Telnyx cost based on direction and duration
-          const calculateTelnyxCost = (durationSec: number, direction: string): number => {
-            const minutes = durationSec / 60;
+          const calculateTelnyxCost = async (
+            durationSec: number, 
+            directionFromPayload: string | null,
+            toNumber: string,
+            integrationId: string
+          ): Promise<{ usd: number; direction: string }> => {
+            const minutes = durationSec / 60; // Exact per-second billing
             
-            // Pricing based on Swedish rates
-            let usdPerMin = 0.006; // Inbound to Swedish landline
+            let finalDirection = directionFromPayload;
             
-            if (direction === 'outbound') {
-              usdPerMin = 0.02; // Outbound to Swedish mobile
+            // If direction missing, infer from phone_numbers table
+            if (!finalDirection) {
+              const { data: ownedNumber } = await supabase
+                .from('phone_numbers')
+                .select('id')
+                .eq('integration_id', integrationId)
+                .eq('phone_number', toNumber)
+                .maybeSingle();
+              
+              finalDirection = ownedNumber ? 'inbound' : 'outbound';
+              console.log(`🔍 Inferred direction: ${finalDirection} (to: ${toNumber}, owned: ${!!ownedNumber})`);
             }
             
-            return minutes * usdPerMin;
+            // Pricing: inbound $0.006/min, outbound $0.02/min
+            const usdPerMin = finalDirection === 'inbound' ? 0.006 : 0.02;
+            const usdCost = minutes * usdPerMin;
+            
+            return { usd: usdCost, direction: finalDirection };
           };
           
-          const costAmount = calculateTelnyxCost(durationSeconds, direction);
+          const { usd: costAmount, direction: finalDirection } = await calculateTelnyxCost(
+            durationSeconds,
+            direction,
+            toNumber,
+            integration.id
+          );
           const costCurrency = 'USD'; // Store in USD for easier aggregation with Vapi
           
-          console.log(`📞 Processing Telnyx call.hangup: ${durationSeconds}s, cost: ${costAmount.toFixed(4)} ${costCurrency}`);
+          console.log(`📞 Processing Telnyx call.hangup: ${durationSeconds}s, direction: ${finalDirection}, cost: ${costAmount.toFixed(4)} ${costCurrency}`);
           
           // Try to find related Vapi/Retell event with X-Call-Sid priority
           const relatedAgentEvent = await findRelatedEvent(
@@ -779,6 +801,25 @@ serve(async (req) => {
             parentEventId = relatedAgentEvent.id;
             providerLayer = 'telephony';
             console.log(`🔗 Linking Telnyx call to ${relatedAgentEvent.provider} event ${parentEventId}`);
+            
+            // Update parent event duration with Telnyx duration if greater
+            const currentNormalized = relatedAgentEvent.normalized as any || {};
+            const parentDuration = relatedAgentEvent.duration_seconds || 0;
+            
+            if (durationSeconds > parentDuration) {
+              await supabase
+                .from('telephony_events')
+                .update({
+                  duration_seconds: durationSeconds,
+                  normalized: {
+                    ...currentNormalized,
+                    telnyxDurationSeconds: durationSeconds,
+                  }
+                })
+                .eq('id', relatedAgentEvent.id);
+              
+              console.log(`⏱️ Updated parent duration: ${parentDuration}s → ${durationSeconds}s`);
+            }
           }
           
           // Create the aggregated Telnyx event
@@ -789,7 +830,7 @@ serve(async (req) => {
               user_id: integration.user_id,
               provider: 'telnyx',
               event_type: 'call.end',
-              direction: direction,
+              direction: finalDirection,
               from_number: fromNumber,
               to_number: toNumber,
               status: payload?.hangup_cause || 'completed',
@@ -806,7 +847,7 @@ serve(async (req) => {
                 call_quality: payload?.call_quality_stats,
                 from: fromNumber,
                 to: toNumber,
-                direction: direction
+                direction: finalDirection
               },
               duration_seconds: durationSeconds,
               event_timestamp: payload?.end_time || new Date().toISOString(),

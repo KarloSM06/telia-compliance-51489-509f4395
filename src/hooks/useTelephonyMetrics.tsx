@@ -41,15 +41,25 @@ export const useTelephonyMetrics = (dateRange?: { from: Date; to: Date }) => {
         .select('*')
         .eq('user_id', user.id);
 
-      // Calculate aggregated statistics
-      const totalCalls = data.filter(e => e.event_type.includes('call')).length;
-      const totalSMS = data.filter(e => e.event_type.includes('sms')).length;
-      const totalDuration = data.reduce((sum, e) => sum + (e.duration_seconds || 0), 0);
-      const totalCost = data.reduce((sum, e) => sum + (parseFloat(e.cost_amount as any) || 0), 0);
+      // Filter to only parent events (agent layer) for statistics
+      const parentEvents = data.filter(e => 
+        !e.parent_event_id && (e.provider_layer === 'agent' || ['vapi', 'retell'].includes(e.provider))
+      );
+      
+      // Calculate aggregated statistics from parent events only
+      const totalCalls = parentEvents.filter(e => e.event_type.includes('call')).length;
+      const totalSMS = parentEvents.filter(e => e.event_type.includes('sms')).length;
+      const totalDuration = parentEvents.reduce((sum, e) => sum + (e.duration_seconds || 0), 0);
+      
+      // Use aggregate_cost_amount if available (in SEK), otherwise fall back to cost_amount
+      const totalCost = parentEvents.reduce((sum, e) => {
+        const cost = e.aggregate_cost_amount || parseFloat(e.cost_amount as any) || 0;
+        return sum + cost;
+      }, 0);
 
-      // Group by provider
+      // Group by provider (using parent events only)
       const byProvider: Record<string, any> = {};
-      data.forEach(event => {
+      parentEvents.forEach(event => {
         if (!byProvider[event.provider]) {
           byProvider[event.provider] = {
             calls: 0,
@@ -69,9 +79,9 @@ export const useTelephonyMetrics = (dateRange?: { from: Date; to: Date }) => {
         p.events.push(event);
       });
 
-      // Group by agent
+      // Group by agent (using parent events only)
       const byAgent: Record<string, any> = {};
-      data.forEach(event => {
+      parentEvents.forEach(event => {
         if (event.agent_id) {
           const agent = agents?.find(a => a.id === event.agent_id);
           if (agent && !byAgent[event.agent_id]) {
@@ -99,10 +109,10 @@ export const useTelephonyMetrics = (dateRange?: { from: Date; to: Date }) => {
         totalSMS,
         totalDuration,
         totalCost,
-        totalEvents: data.length,
+        totalEvents: parentEvents.length,
         byProvider,
         byAgent,
-        events: data,
+        events: parentEvents, // Return only parent events
         agents: agents || [],
       };
     },
