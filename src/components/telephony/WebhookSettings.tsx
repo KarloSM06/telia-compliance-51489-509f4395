@@ -12,7 +12,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 
 export const WebhookSettings = () => {
   const [showApiKey, setShowApiKey] = useState(false);
-  const { apiKeys, isLoading, generateKey, isGenerating } = useApiKeys();
+  const { apiKeys, isLoading, generateKey, isGenerating, deleteKey } = useApiKeys();
   const { integrations, getByCapability } = useIntegrations();
   const telephonyIntegrations = getByCapability('voice').concat(getByCapability('sms'));
 
@@ -34,10 +34,10 @@ export const WebhookSettings = () => {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Key className="h-5 w-5" />
-            API-nyckel
+            API-nyckel (valfritt)
           </CardTitle>
           <CardDescription>
-            Använd denna nyckel för att autentisera API-anrop till Hiems
+            Skapa en API-nyckel endast om du behöver autentisera API-anrop till Hiems
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -80,26 +80,39 @@ export const WebhookSettings = () => {
                 </p>
               </div>
 
+              <div className="flex gap-2">
+                <Button
+                  variant="outline"
+                  onClick={() => generateKey('Telephony Integration')}
+                  disabled={isGenerating}
+                >
+                  <RefreshCw className="h-4 w-4 mr-2" />
+                  Generera ny nyckel
+                </Button>
+                <Button
+                  variant="destructive"
+                  onClick={() => {
+                    if (confirm('Är du säker på att du vill ta bort denna API-nyckel?')) {
+                      deleteKey(primaryApiKey.id);
+                    }
+                  }}
+                >
+                  Ta bort nyckel
+                </Button>
+              </div>
+            </div>
+          ) : (
+            <div className="text-center py-4">
+              <p className="text-sm text-muted-foreground mb-4">
+                Du har ingen API-nyckel. Webhook-integrationer fungerar utan API-nyckel.
+              </p>
               <Button
                 variant="outline"
                 onClick={() => generateKey('Telephony Integration')}
                 disabled={isGenerating}
               >
-                <RefreshCw className="h-4 w-4 mr-2" />
-                Generera ny nyckel
-              </Button>
-            </div>
-          ) : (
-            <div className="text-center py-4">
-              <p className="text-sm text-muted-foreground mb-4">
-                Du har ingen API-nyckel ännu
-              </p>
-              <Button
-                onClick={() => generateKey('Telephony Integration')}
-                disabled={isGenerating}
-              >
                 <Key className="h-4 w-4 mr-2" />
-                Skapa API-nyckel
+                Skapa API-nyckel (valfritt)
               </Button>
             </div>
           )}
