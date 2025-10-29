@@ -21,8 +21,8 @@ export function CostBreakdownCard({ event }: CostBreakdownProps) {
     };
     
     const layerNames: Record<string, string> = {
-      agent: 'AI Agent',
-      telephony: 'Telephony',
+      agent: 'AI Agent Layer',
+      telephony: 'Telephony Layer',
       standalone: 'Standalone',
     };
     
@@ -62,9 +62,16 @@ export function CostBreakdownCard({ event }: CostBreakdownProps) {
                       <span className="font-medium">{info.name}</span>
                       <span className="text-xs text-muted-foreground">{info.layerLabel}</span>
                     </div>
-                    <span className="font-mono">
-                      {Number(data.amount).toFixed(4)} {data.currency}
-                    </span>
+                    <div className="flex flex-col items-end">
+                      <span className="font-mono">
+                        {Number(data.amount).toFixed(4)} {data.currency}
+                      </span>
+                      {data.currency === 'SEK' && (
+                        <span className="text-xs text-muted-foreground">
+                          ≈ ${(data.amount / 10.5).toFixed(4)} USD
+                        </span>
+                      )}
+                    </div>
                   </div>
                 );
               })}

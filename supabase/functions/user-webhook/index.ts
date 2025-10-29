@@ -52,23 +52,51 @@ function parseNumberFromHeader(header?: string): string | null {
   return match ? match[1] : null;
 }
 
-// Helper to find related event within time window
+// Helper to find related event within time window with X-Call-Sid priority
 async function findRelatedEvent(
   supabase: any,
   userId: string,
   fromNumber: string | null,
   toNumber: string | null,
   eventTimestamp: string,
-  provider: string
+  provider: string,
+  xCallSid?: string  // Optional X-Call-Sid for exact matching
 ): Promise<any | null> {
-  // Only try to match if we have a phone number
-  if (!fromNumber && !toNumber) return null;
+  // PRIORITY 1: If we have X-Call-Sid, try exact match first
+  if (xCallSid) {
+    console.log(`🔍 Searching for call with X-Call-Sid: ${xCallSid}`);
+    
+    // Search for X-Call-Sid in Vapi events (stored in provider_payload or normalized)
+    const { data: exactMatch } = await supabase
+      .from('telephony_events')
+      .select('*')
+      .eq('user_id', userId)
+      .neq('provider', provider)
+      .is('parent_event_id', null)
+      .or(`normalized->xCallSid.eq."${xCallSid}",provider_payload->message->call->transport->callSid.eq."${xCallSid}"`)
+      .limit(1)
+      .maybeSingle();
+    
+    if (exactMatch) {
+      console.log(`✅ Found exact match via X-Call-Sid: ${exactMatch.id} (${exactMatch.provider})`);
+      return exactMatch;
+    }
+    
+    console.log(`⚠️ No exact X-Call-Sid match found, falling back to phone + time window`);
+  }
   
-  // Search for event within ±30 seconds with same phone numbers but different provider
+  // PRIORITY 2: Fallback to phone number + time window matching
+  if (!fromNumber && !toNumber) {
+    console.log('⚠️ No phone numbers or X-Call-Sid available for matching');
+    return null;
+  }
+  
   const timeWindow = 30000; // 30 seconds
   const eventTime = new Date(eventTimestamp);
   const startTime = new Date(eventTime.getTime() - timeWindow);
   const endTime = new Date(eventTime.getTime() + timeWindow);
+  
+  console.log(`🔍 Searching with phone numbers: from=${fromNumber}, to=${toNumber}, window=±30s`);
   
   // Build phone number filter - check if either from or to matches
   let phoneFilter = '';
@@ -86,8 +114,8 @@ async function findRelatedEvent(
     .from('telephony_events')
     .select('*')
     .eq('user_id', userId)
-    .neq('provider', provider) // Different provider
-    .is('parent_event_id', null) // Only match with parent/standalone events
+    .neq('provider', provider)
+    .is('parent_event_id', null)
     .or(phoneFilter)
     .gte('event_timestamp', startTime.toISOString())
     .lte('event_timestamp', endTime.toISOString())
@@ -95,7 +123,21 @@ async function findRelatedEvent(
     .limit(1)
     .maybeSingle();
   
+  if (data) {
+    console.log(`✅ Found match via phone + time: ${data.id} (${data.provider})`);
+  } else {
+    console.log(`❌ No matching event found`);
+  }
+  
   return data;
+}
+
+// Helper to normalize costs to USD for aggregation
+function normalizeCostToUSD(amount: number, currency: string): number {
+  if (currency === 'SEK') {
+    return amount / 10.5; // Approximate SEK to USD exchange rate
+  }
+  return amount;
 }
 
 // Helper to aggregate costs and link events
@@ -115,7 +157,7 @@ async function aggregateCosts(
   const currentCostBreakdown = parentEvent.cost_breakdown || {};
   const currentRelatedEvents = parentEvent.related_events || [];
   
-  // Add child provider to cost breakdown
+  // Add child provider to cost breakdown (keep original currency)
   const newCostBreakdown = {
     ...currentCostBreakdown,
     [childEvent.provider]: {
@@ -125,9 +167,12 @@ async function aggregateCosts(
     }
   };
   
-  // Calculate total cost from breakdown
-  const totalCost = Object.values(newCostBreakdown).reduce(
-    (sum: number, item: any) => sum + (Number(item.amount) || 0), 
+  // Calculate total cost in USD by normalizing all currencies
+  const totalCostUSD = Object.values(newCostBreakdown).reduce(
+    (sum: number, item: any) => {
+      const normalizedAmount = normalizeCostToUSD(Number(item.amount) || 0, item.currency);
+      return sum + normalizedAmount;
+    }, 
     0
   );
   
@@ -135,13 +180,17 @@ async function aggregateCosts(
   await supabase
     .from('telephony_events')
     .update({
-      aggregate_cost_amount: totalCost,
+      aggregate_cost_amount: totalCostUSD,
+      cost_currency: 'USD',
       cost_breakdown: newCostBreakdown,
       related_events: [...currentRelatedEvents, childEvent.id]
     })
     .eq('id', parentEventId);
   
-  console.log(`✅ Aggregated costs: Parent ${parentEventId} now has total ${totalCost}`);
+  console.log(`✅ Aggregated costs: Parent ${parentEventId} total ${totalCostUSD.toFixed(4)} USD`);
+  console.log(`   Breakdown:`, Object.entries(newCostBreakdown).map(([p, d]: [string, any]) => 
+    `${p}: ${d.amount} ${d.currency}`
+  ).join(', '));
 }
 
 // Inline AES-GCM decryption helper
@@ -425,7 +474,11 @@ serve(async (req) => {
         
         const fromNumber = formatPhone(fromRaw);
         
+        // Extract X-Call-Sid from Vapi transport
+        const xCallSid = callData.transport?.callSid || bodyData.message?.call?.transport?.callSid;
+        
         console.log('📞 Phone number:', { fromRaw, from: fromNumber });
+        console.log('🔑 X-Call-Sid:', xCallSid);
 
         // Store initial call data
         const { data: newEvent, error: createError } = await supabase
@@ -444,6 +497,7 @@ serve(async (req) => {
             cost_breakdown: {},
             normalized: {
               callId: callId,
+              xCallSid: xCallSid,
               messageType: messageType,
               call: callData,
               phoneNumber: bodyData.message?.phoneNumber,
@@ -464,14 +518,15 @@ serve(async (req) => {
           console.log('✅ Vapi call created with ID:', callId);
           
           // Try to find and link related Telnyx/Twilio event
-          if (newEvent && fromNumber) {
+          if (newEvent && (fromNumber || xCallSid)) {
             const relatedEvent = await findRelatedEvent(
               supabase,
               userId,
               fromNumber,
               null,
               convertTimestamp(bodyData.message?.timestamp),
-              'vapi'
+              'vapi',
+              xCallSid  // Pass X-Call-Sid for exact matching
             );
             
             if (relatedEvent) {
@@ -669,6 +724,13 @@ serve(async (req) => {
           const toNumber = payload?.to;
           const direction = payload?.direction === 'incoming' ? 'inbound' : 'outbound';
           
+          // Extract X-Call-Sid from custom_headers
+          const customHeaders = payload?.custom_headers || [];
+          const xCallSidHeader = customHeaders.find((h: any) => h.name === 'X-Call-Sid');
+          const xCallSid = xCallSidHeader?.value;
+          
+          console.log('🔑 Telnyx X-Call-Sid:', xCallSid);
+          
           // Calculate duration from start_time and end_time
           let durationSeconds = 0;
           if (payload?.start_time && payload?.end_time) {
@@ -688,14 +750,15 @@ serve(async (req) => {
           
           console.log(`📞 Processing Telnyx call.hangup: ${durationSeconds}s, cost: ${costAmount.toFixed(4)} ${costCurrency}`);
           
-          // Try to find related Vapi/Retell event
+          // Try to find related Vapi/Retell event with X-Call-Sid priority
           const relatedAgentEvent = await findRelatedEvent(
             supabase,
             integration.user_id,
             fromNumber,
             toNumber,
             payload?.end_time || new Date().toISOString(),
-            provider
+            provider,
+            xCallSid  // Pass X-Call-Sid for exact matching
           );
           
           let parentEventId = null;
@@ -723,6 +786,7 @@ serve(async (req) => {
               provider_payload: bodyData,
               normalized: {
                 call_session_id: callSessionId,
+                xCallSid: xCallSid,
                 start_time: payload?.start_time,
                 end_time: payload?.end_time,
                 duration_seconds: durationSeconds,
