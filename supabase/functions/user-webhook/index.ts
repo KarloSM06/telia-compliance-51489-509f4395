@@ -228,6 +228,57 @@ async function decryptCredentials(encryptedData: any): Promise<any> {
   return JSON.parse(decryptedString);
 }
 
+// Helper to calculate Twilio SMS cost
+async function calculateTwilioSmsCost(
+  supabase: any,
+  fromNumber: string,
+  toNumber: string,
+  numSegments: number,
+  integrationId: string
+): Promise<{ usd: number; direction: string }> {
+  console.log(`📊 Twilio SMS cost calculation:
+    - From: ${fromNumber}
+    - To: ${toNumber}
+    - Segments: ${numSegments}`);
+  
+  // Verify direction against owned numbers
+  const { data: toNumberOwned } = await supabase
+    .from('phone_numbers')
+    .select('phone_number')
+    .eq('integration_id', integrationId)
+    .eq('phone_number', toNumber)
+    .maybeSingle();
+  
+  const { data: fromNumberOwned } = await supabase
+    .from('phone_numbers')
+    .select('phone_number')
+    .eq('integration_id', integrationId)
+    .eq('phone_number', fromNumber)
+    .maybeSingle();
+  
+  let finalDirection: string;
+  if (toNumberOwned) {
+    finalDirection = 'inbound';
+    console.log(`🔍 Ownership: To (${toNumber}) is OWNED → inbound`);
+  } else if (fromNumberOwned) {
+    finalDirection = 'outbound';
+    console.log(`🔍 Ownership: From (${fromNumber}) is OWNED → outbound`);
+  } else {
+    finalDirection = 'outbound'; // default
+    console.log(`🔍 Ownership: Neither owned → defaulting to outbound`);
+  }
+  
+  // Twilio SMS pricing (Sweden):
+  // Inbound: $0.0075/segment
+  // Outbound: $0.0445/segment
+  const usdPerSegment = finalDirection === 'inbound' ? 0.0075 : 0.0445;
+  const usdCost = numSegments * usdPerSegment;
+  
+  console.log(`💵 SMS Cost: ${numSegments} segments × $${usdPerSegment}/segment = $${usdCost.toFixed(4)} USD (${finalDirection})`);
+  
+  return { usd: usdCost, direction: finalDirection };
+}
+
 serve(async (req) => {
   const startTime = Date.now();
 
@@ -946,7 +997,7 @@ serve(async (req) => {
       const eventType = 
         bodyData.CallStatus === 'in-progress' ? 'call.start' :
         bodyData.CallStatus === 'completed' ? 'call.end' :
-        bodyData.MessageStatus ? 'message.status' :
+        (bodyData.MessageStatus || bodyData.SmsStatus) ? 'message' :
         bodyData.event === 'call_started' ? 'call.start' :
         bodyData.event === 'call_ended' ? 'call.end' :
         bodyData.data?.event_type || 
@@ -971,6 +1022,7 @@ serve(async (req) => {
       const status = 
         bodyData.CallStatus || 
         bodyData.MessageStatus || 
+        bodyData.SmsStatus ||
         bodyData.status ||
         bodyData.data?.status ||
         'received';
@@ -981,8 +1033,24 @@ serve(async (req) => {
         new Date().toISOString();
       
       // Extract cost for Twilio/Retell
-      const costAmount = bodyData.price ? Math.abs(Number(bodyData.price)) : 0;
-      const costCurrency = bodyData.price_unit || 'USD';
+      let costAmount = bodyData.price ? Math.abs(Number(bodyData.price)) : 0;
+      let costCurrency = bodyData.price_unit || 'USD';
+      let finalDirection = direction;
+
+      // Special handling for Twilio SMS (no price field in webhook)
+      if (provider === 'twilio' && (bodyData.SmsStatus || bodyData.MessageStatus)) {
+        const numSegments = parseInt(bodyData.NumSegments || '1');
+        const smsCalculation = await calculateTwilioSmsCost(
+          supabase,
+          fromNumber,
+          toNumber,
+          numSegments,
+          integration.id
+        );
+        costAmount = smsCalculation.usd;
+        finalDirection = smsCalculation.direction;
+        console.log(`📱 Twilio SMS: ${finalDirection} with ${numSegments} segments = $${costAmount.toFixed(4)} USD`);
+      }
 
       // Try to find related Vapi/Retell event first
       const relatedAgentEvent = await findRelatedEvent(
@@ -1011,13 +1079,17 @@ serve(async (req) => {
           user_id: integration.user_id,
           provider: provider,
           event_type: eventType,
-          direction: direction,
+          direction: finalDirection,
           from_number: fromNumber,
-          to_number: null,
+          to_number: toNumber,
           status: status,
           provider_event_id: providerEventId,
           provider_payload: bodyData,
-          normalized: bodyData,
+          normalized: {
+            ...bodyData,
+            numSegments: bodyData.NumSegments ? parseInt(bodyData.NumSegments) : 1,
+            calculatedDirection: finalDirection
+          },
           event_timestamp: eventTimestamp,
           idempotency_key: idempotencyKey,
           parent_event_id: parentEventId,

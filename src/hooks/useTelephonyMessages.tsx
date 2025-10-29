@@ -24,7 +24,7 @@ export const useTelephonyMessages = (dateRange?: { from: Date; to: Date }) => {
         .from('telephony_events')
         .select('*')
         .in('integration_id', integrationIds)
-        .eq('event_type', 'message');
+        .like('event_type', '%message%');
 
       if (dateRange) {
         query = query
@@ -66,7 +66,7 @@ export const useTelephonyMessages = (dateRange?: { from: Date; to: Date }) => {
           event: '*',
           schema: 'public',
           table: 'telephony_events',
-          filter: 'event_type=eq.message',
+          filter: 'event_type=like.%message%',
         },
         (payload) => {
           console.log('📨 SMS-händelse:', payload.eventType, payload.new || payload.old);
