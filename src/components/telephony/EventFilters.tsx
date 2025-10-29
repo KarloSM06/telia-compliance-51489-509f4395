@@ -14,6 +14,7 @@ export interface EventFilterValues {
   eventType: string;
   direction: string;
   status: string;
+  callStatus?: string;
   dateFrom?: Date;
   dateTo?: Date;
 }
@@ -30,6 +31,7 @@ export const EventFilters = ({ onFilterChange, providers }: EventFiltersProps) =
     eventType: 'all',
     direction: 'all',
     status: 'all',
+    callStatus: 'all',
   });
 
   const handleFilterChange = (key: keyof EventFilterValues, value: any) => {
@@ -45,6 +47,7 @@ export const EventFilters = ({ onFilterChange, providers }: EventFiltersProps) =
       eventType: 'all',
       direction: 'all',
       status: 'all',
+      callStatus: 'all',
     };
     setFilters(clearedFilters);
     onFilterChange(clearedFilters);
@@ -109,6 +112,17 @@ export const EventFilters = ({ onFilterChange, providers }: EventFiltersProps) =
             <SelectItem value="completed">Klar</SelectItem>
             <SelectItem value="failed">Misslyckad</SelectItem>
             <SelectItem value="pending">Pågående</SelectItem>
+          </SelectContent>
+        </Select>
+
+        <Select value={filters.callStatus || 'all'} onValueChange={(v) => handleFilterChange('callStatus', v)}>
+          <SelectTrigger className="w-[140px]">
+            <SelectValue placeholder="Samtalsstatus" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">Alla samtal</SelectItem>
+            <SelectItem value="in-progress">Pågående</SelectItem>
+            <SelectItem value="completed">Avslutade</SelectItem>
           </SelectContent>
         </Select>
 

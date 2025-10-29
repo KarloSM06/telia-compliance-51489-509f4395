@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Phone, MessageSquare, Clock, DollarSign, TrendingUp } from 'lucide-react';
+import { Phone, MessageSquare, Clock, DollarSign, TrendingUp, Loader2 } from 'lucide-react';
 import { formatDuration, formatCost } from '@/lib/telephonyFormatters';
 
 interface StatsCardsProps {
@@ -8,12 +8,20 @@ interface StatsCardsProps {
     totalSMS: number;
     totalDuration: number;
     totalCost: number;
+    events: any[];
   };
 }
 
 export const StatsCards = ({ metrics }: StatsCardsProps) => {
-  const avgCallDuration = metrics.totalCalls > 0 
-    ? Math.round(metrics.totalDuration / metrics.totalCalls)
+  // Calculate in-progress calls
+  const inProgressCalls = metrics.events?.filter(event => 
+    !event.normalized?.endedAt && !event.normalized?.endedReason
+  ).length || 0;
+
+  // Calculate completed calls for accurate averages
+  const completedCalls = metrics.totalCalls - inProgressCalls;
+  const avgCallDuration = completedCalls > 0 
+    ? Math.round(metrics.totalDuration / completedCalls)
     : 0;
 
   const stats = [
@@ -23,15 +31,16 @@ export const StatsCards = ({ metrics }: StatsCardsProps) => {
       icon: Phone,
       color: 'text-blue-600',
       bgColor: 'bg-blue-500/10',
-      subtitle: metrics.totalCalls > 0 ? `⌀ ${formatDuration(avgCallDuration)}` : 'Inga samtal ännu',
+      subtitle: metrics.totalCalls > 0 ? `${completedCalls} avslutade` : 'Inga samtal ännu',
     },
     {
-      title: 'Total SMS',
-      value: metrics.totalSMS,
-      icon: MessageSquare,
+      title: 'Pågående',
+      value: inProgressCalls,
+      icon: Loader2,
       color: 'text-green-600',
       bgColor: 'bg-green-500/10',
-      subtitle: metrics.totalSMS > 0 ? `${(metrics.totalCost / (metrics.totalCalls + metrics.totalSMS) * metrics.totalSMS).toFixed(2)} SEK total` : 'Inga SMS ännu',
+      subtitle: 'Aktiva samtal',
+      animate: true,
     },
     {
       title: 'Total Tid',
@@ -39,7 +48,7 @@ export const StatsCards = ({ metrics }: StatsCardsProps) => {
       icon: Clock,
       color: 'text-purple-600',
       bgColor: 'bg-purple-500/10',
-      subtitle: metrics.totalCalls > 0 ? `⌀ ${formatDuration(avgCallDuration)} per samtal` : '-',
+      subtitle: completedCalls > 0 ? `⌀ ${formatDuration(avgCallDuration)} per samtal` : '-',
     },
     {
       title: 'Total Kostnad',
@@ -60,7 +69,7 @@ export const StatsCards = ({ metrics }: StatsCardsProps) => {
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">{stat.title}</CardTitle>
             <div className={`${stat.bgColor} p-2 rounded-full`}>
-              <stat.icon className={`h-4 w-4 ${stat.color}`} />
+              <stat.icon className={`h-4 w-4 ${stat.color} ${stat.animate ? 'animate-spin' : ''}`} />
             </div>
           </CardHeader>
           <CardContent>

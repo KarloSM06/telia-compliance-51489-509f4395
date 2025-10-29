@@ -22,6 +22,7 @@ export default function TelephonyPage() {
     eventType: 'all',
     direction: 'all',
     status: 'all',
+    callStatus: 'all',
   });
 
   const { integrations, getByCapability } = useIntegrations();
@@ -72,6 +73,14 @@ export default function TelephonyPage() {
         if (filters.status === 'pending' && !status.includes('progress') && !status.includes('pending')) {
           return false;
         }
+      }
+
+      // Call status filter (in-progress vs completed)
+      if (filters.callStatus && filters.callStatus !== 'all') {
+        const normalized = event.normalized as any;
+        const isInProgress = !normalized?.endedAt && !normalized?.endedReason;
+        if (filters.callStatus === 'in-progress' && !isInProgress) return false;
+        if (filters.callStatus === 'completed' && isInProgress) return false;
       }
 
       // Date filters
