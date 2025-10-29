@@ -228,6 +228,20 @@ async function decryptCredentials(encryptedData: any): Promise<any> {
   return JSON.parse(decryptedString);
 }
 
+// Helper to construct public webhook URL for signature verification
+function constructPublicUrl(req: Request): string {
+  const url = new URL(req.url);
+  const SUPABASE_URL = Deno.env.get('SUPABASE_URL') ?? '';
+  
+  // Extract project ref from SUPABASE_URL (e.g., "shskknkivuewuqonjdjc" from "https://shskknkivuewuqonjdjc.supabase.co")
+  const projectRef = new URL(SUPABASE_URL).hostname.split('.')[0];
+  
+  // Construct public URL: https://PROJECT_REF.supabase.co/functions/v1/user-webhook?token=...
+  const publicUrl = `https://${projectRef}.supabase.co/functions/v1/user-webhook${url.search}`;
+  
+  return publicUrl;
+}
+
 // Helper to calculate Twilio SMS cost
 async function calculateTwilioSmsCost(
   supabase: any,
@@ -400,14 +414,27 @@ serve(async (req) => {
       const authToken = credentials?.authToken;
       
       if (authToken) {
+        // Construct public URL that Twilio used to sign the request
+        const publicUrl = constructPublicUrl(req);
+        
+        console.log(`🔐 Verifying Twilio signature with public URL: ${publicUrl}`);
+        console.log(`   Received signature: ${twilioSignature}`);
+        console.log(`   AuthToken length: ${authToken.length}`);
+        
         signatureVerified = await verifyTwilioSignature(
           twilioSignature,
-          req.url,
+          publicUrl,  // Use public URL instead of req.url
           bodyData,
           authToken
         );
+        
         if (!signatureVerified) {
           verificationError = 'Twilio signature verification failed';
+          console.error(`❌ Twilio signature verification failed`);
+          console.error(`   Public URL used: ${publicUrl}`);
+          console.error(`   Body keys: ${Object.keys(bodyData).join(', ')}`);
+        } else {
+          console.log('✅ Twilio signature verified successfully');
         }
       } else {
         console.log('⚠️ No authToken found, accepting without verification');
@@ -416,14 +443,24 @@ serve(async (req) => {
       const publicKey = credentials?.webhookPublicKey;
       
       if (publicKey) {
+        console.log(`🔐 Verifying Telnyx signature (Ed25519)`);
+        console.log(`   Timestamp: ${telnyxTimestamp}`);
+        console.log(`   Signature: ${telnyxSignature.substring(0, 20)}...`);
+        
         signatureVerified = await verifyTelnyxSignature(
           telnyxSignature,
           telnyxTimestamp,
           body,
           publicKey
         );
+        
         if (!signatureVerified) {
           verificationError = 'Telnyx signature verification failed';
+          console.error(`❌ Telnyx signature verification failed`);
+          console.error(`   Timestamp: ${telnyxTimestamp}`);
+          console.error(`   Body length: ${body.length}`);
+        } else {
+          console.log('✅ Telnyx signature verified successfully');
         }
       } else {
         console.log('⚠️ No webhookPublicKey found, accepting without verification');
