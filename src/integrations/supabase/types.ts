@@ -2770,6 +2770,7 @@ export type Database = {
           to_number: string | null
           user_id: string
           webhook_received_at: string | null
+          x_call_sid: string | null
         }
         Insert: {
           agent_id?: string | null
@@ -2800,6 +2801,7 @@ export type Database = {
           to_number?: string | null
           user_id: string
           webhook_received_at?: string | null
+          x_call_sid?: string | null
         }
         Update: {
           agent_id?: string | null
@@ -2830,6 +2832,7 @@ export type Database = {
           to_number?: string | null
           user_id?: string
           webhook_received_at?: string | null
+          x_call_sid?: string | null
         }
         Relationships: [
           {

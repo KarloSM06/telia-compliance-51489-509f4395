@@ -92,6 +92,42 @@ serve(async (req) => {
     const timeWindow = 30000; // 30 seconds
 
     for (const orphan of orphanEvents) {
+      // PRIORITY 1: Try X-Call-Sid matching first
+      if (orphan.x_call_sid) {
+        console.log(`🔍 Checking X-Call-Sid for orphan: ${orphan.x_call_sid}`);
+        
+        const { data: xCallSidMatch } = await supabase
+          .from('telephony_events')
+          .select('*')
+          .eq('user_id', orphan.user_id)
+          .neq('provider', orphan.provider)
+          .in('provider', ['vapi', 'retell'])
+          .is('parent_event_id', null)
+          .eq('x_call_sid', orphan.x_call_sid)
+          .limit(1)
+          .maybeSingle();
+        
+        if (xCallSidMatch) {
+          console.log(`✅ Found X-Call-Sid match: ${xCallSidMatch.id}`);
+          
+          // Link orphan to parent and aggregate costs
+          await supabase
+            .from('telephony_events')
+            .update({
+              parent_event_id: xCallSidMatch.id,
+              provider_layer: 'telephony'
+            })
+            .eq('id', orphan.id);
+          
+          await aggregateCosts(supabase, xCallSidMatch.id, orphan);
+          matchedCount++;
+          continue;
+        }
+        
+        console.log(`⚠️ No X-Call-Sid match found for orphan, trying phone + time window`);
+      }
+      
+      // PRIORITY 2: Fallback to phone number + time window matching
       // Skip if no phone numbers
       if (!orphan.from_number && !orphan.to_number) continue;
 

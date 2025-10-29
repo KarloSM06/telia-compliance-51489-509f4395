@@ -66,14 +66,14 @@ async function findRelatedEvent(
   if (xCallSid) {
     console.log(`🔍 Searching for call with X-Call-Sid: ${xCallSid}`);
     
-    // Search for X-Call-Sid in Vapi events (stored in provider_payload or normalized)
+    // Search directly on x_call_sid column (indexed, reliable)
     const { data: exactMatch } = await supabase
       .from('telephony_events')
       .select('*')
       .eq('user_id', userId)
       .neq('provider', provider)
       .is('parent_event_id', null)
-      .or(`normalized->xCallSid.eq."${xCallSid}",provider_payload->message->call->transport->callSid.eq."${xCallSid}"`)
+      .eq('x_call_sid', xCallSid)
       .limit(1)
       .maybeSingle();
     
@@ -497,6 +497,7 @@ serve(async (req) => {
             to_number: null,
             status: callData.status || 'in-progress',
             provider_layer: 'agent',
+            x_call_sid: xCallSid,
             cost_breakdown: {},
             normalized: {
               callId: callId,
@@ -835,6 +836,7 @@ serve(async (req) => {
               to_number: toNumber,
               status: payload?.hangup_cause || 'completed',
               provider_event_id: callSessionId,
+              x_call_sid: xCallSid,
               provider_payload: bodyData,
               normalized: {
                 call_session_id: callSessionId,
