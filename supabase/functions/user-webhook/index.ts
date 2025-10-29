@@ -1129,7 +1129,7 @@ serve(async (req) => {
             recipient: finalDirection === 'outbound' ? toNumber : fromNumber,
             message_body: bodyData.Body || bodyData.text || '',
             provider: provider,
-            provider_type: providerType,
+            provider_type: integration.provider_type, // Fixed: use integration.provider_type
             provider_message_id: bodyData.MessageSid || bodyData.SmsSid || externalCallId,
             status: bodyData.SmsStatus === 'received' ? 'delivered' : 
                     bodyData.SmsStatus === 'sent' ? 'sent' :
