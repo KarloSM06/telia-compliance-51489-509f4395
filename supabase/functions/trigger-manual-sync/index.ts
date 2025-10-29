@@ -28,18 +28,42 @@ serve(async (req) => {
     const { integration_id } = await req.json();
 
     console.log('🔄 Triggering manual sync for integration:', integration_id);
+    console.log('👤 User ID:', user.id);
 
-    // Fetch integration
+    // Fetch integration with detailed error logging
     const { data: integration, error: integrationError } = await supabase
       .from('integrations')
       .select('*')
       .eq('id', integration_id)
-      .eq('user_id', user.id)
       .single();
 
-    if (integrationError || !integration) {
-      throw new Error('Integration not found');
+    console.log('📊 Integration query result:', { integration, error: integrationError });
+
+    if (integrationError) {
+      console.error('❌ Database error fetching integration:', integrationError);
+      throw new Error(`Integration query failed: ${integrationError.message}`);
     }
+
+    if (!integration) {
+      console.error('❌ No integration found with ID:', integration_id);
+      throw new Error('Integration not found in database');
+    }
+
+    // Verify ownership
+    if (integration.user_id !== user.id && integration.organization_id !== user.id) {
+      console.error('❌ User does not own this integration:', {
+        integration_user_id: integration.user_id,
+        integration_org_id: integration.organization_id,
+        requesting_user_id: user.id
+      });
+      throw new Error('Unauthorized: You do not have access to this integration');
+    }
+
+    console.log('✅ Integration found:', {
+      provider: integration.provider,
+      provider_type: integration.provider_type,
+      display_name: integration.provider_display_name
+    });
 
     const isTelephony = integration.provider_type === 'telephony' || integration.provider_type === 'multi';
     const isCalendar = integration.provider_type === 'calendar';
