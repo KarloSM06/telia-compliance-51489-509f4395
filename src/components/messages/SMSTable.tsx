@@ -5,7 +5,6 @@ import { Eye, CheckCircle, XCircle, Clock, ArrowDown, ArrowUp, Star, Calendar, H
 import { format } from "date-fns";
 import { sv } from "date-fns/locale";
 import { MessageLog } from "@/hooks/useMessageLogs";
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 
 interface SMSTableProps {
   messages: MessageLog[];
@@ -37,24 +36,16 @@ const getStatusBadge = (status: string) => {
 const getDirectionBadge = (direction?: string) => {
   if (!direction) return null;
   return direction === 'inbound' ? (
-    <Badge variant="outline" className="gap-1.5 bg-primary/10 text-primary border-primary/20 font-medium">
-      <ArrowDown className="h-3.5 w-3.5" />
+    <Badge variant="outline" className="gap-1 bg-blue-500/10 text-blue-700 border-blue-200">
+      <ArrowDown className="h-3 w-3" />
       Inkommande
     </Badge>
   ) : (
-    <Badge variant="outline" className="gap-1.5 bg-accent/50 text-accent-foreground border-accent/50 font-medium">
-      <ArrowUp className="h-3.5 w-3.5" />
+    <Badge variant="outline" className="gap-1 bg-green-500/10 text-green-700 border-green-200">
+      <ArrowUp className="h-3 w-3" />
       Utgående
     </Badge>
   );
-};
-
-const getProviderLogo = (provider: string) => {
-  const logos: Record<string, string> = {
-    twilio: '/images/logos/twilio.png',
-    telnyx: '/images/logos/telnyx.png',
-  };
-  return logos[provider.toLowerCase()] || null;
 };
 
 const getMessageTypeBadge = (type?: string) => {
@@ -106,97 +97,78 @@ export const SMSTable = ({ messages, onViewDetails }: SMSTableProps) => {
   }
 
   return (
-    <div className="border rounded-lg overflow-hidden bg-card">
+    <div className="border rounded-lg">
       <Table>
         <TableHeader>
-          <TableRow className="bg-muted/50">
-            <TableHead className="font-semibold">Provider</TableHead>
-            <TableHead className="font-semibold">Riktning</TableHead>
-            <TableHead className="font-semibold">Från</TableHead>
-            <TableHead className="font-semibold">Till</TableHead>
-            <TableHead className="font-semibold min-w-[250px]">Meddelande</TableHead>
-            <TableHead className="font-semibold">Typ/Källa</TableHead>
-            <TableHead className="font-semibold">Status</TableHead>
-            <TableHead className="font-semibold">Skickat</TableHead>
-            <TableHead className="font-semibold">Levererat</TableHead>
-            <TableHead className="font-semibold text-right">Kostnad</TableHead>
-            <TableHead className="text-right font-semibold">Åtgärder</TableHead>
+          <TableRow>
+            <TableHead>Riktning</TableHead>
+            <TableHead>Från</TableHead>
+            <TableHead>Till</TableHead>
+            <TableHead>Meddelande</TableHead>
+            <TableHead>Typ/Källa</TableHead>
+            <TableHead>Status</TableHead>
+            <TableHead>Skickat</TableHead>
+            <TableHead>Levererat</TableHead>
+            <TableHead>Kostnad</TableHead>
+            <TableHead className="text-right">Åtgärder</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
-          {messages.map((message) => {
-            const providerLogo = getProviderLogo(message.provider);
-            return (
-              <TableRow key={message.id} className="hover:bg-muted/30 transition-colors">
-                <TableCell>
-                  {providerLogo ? (
-                    <Avatar className="h-8 w-8">
-                      <AvatarImage src={providerLogo} alt={message.provider} />
-                      <AvatarFallback className="text-xs font-semibold">
-                        {message.provider.substring(0, 2).toUpperCase()}
-                      </AvatarFallback>
-                    </Avatar>
-                  ) : (
-                    <div className="text-xs font-medium text-muted-foreground uppercase">
-                      {message.provider}
-                    </div>
-                  )}
-                </TableCell>
-                <TableCell>{getDirectionBadge(message.direction)}</TableCell>
-                <TableCell>
-                  <p className="text-sm font-medium font-mono text-foreground">
-                    {message.metadata?.from || message.recipient}
-                  </p>
-                </TableCell>
-                <TableCell>
-                  <p className="text-sm font-medium font-mono text-foreground">
-                    {message.metadata?.to || '-'}
-                  </p>
-                </TableCell>
-                <TableCell className="max-w-[300px]">
-                  <p className="truncate text-sm text-foreground leading-relaxed">
-                    {message.message_body.substring(0, 80)}
-                    {message.message_body.length > 80 ? '...' : ''}
-                  </p>
-                </TableCell>
-                <TableCell>
-                  <div className="flex flex-col gap-1.5">
-                    {message.direction === 'inbound' && getMessageTypeBadge(message.message_type)}
-                    {message.direction === 'outbound' && getMessageSourceBadge(message.message_source)}
-                  </div>
-                </TableCell>
-                <TableCell>{getStatusBadge(message.status)}</TableCell>
-                <TableCell>
-                  <p className="text-sm text-muted-foreground whitespace-nowrap">
-                    {format(new Date(message.sent_at), "d MMM HH:mm", { locale: sv })}
-                  </p>
-                </TableCell>
-                <TableCell>
-                  <p className="text-sm text-muted-foreground whitespace-nowrap">
-                    {message.delivered_at 
-                      ? format(new Date(message.delivered_at), "d MMM HH:mm", { locale: sv })
-                      : '-'
-                    }
-                  </p>
-                </TableCell>
-                <TableCell className="text-right">
-                  <p className="text-sm font-medium text-foreground">
-                    {message.cost ? `${message.cost.toFixed(2)} kr` : '-'}
-                  </p>
-                </TableCell>
-                <TableCell className="text-right">
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => onViewDetails(message)}
-                    className="hover:bg-primary/10"
-                  >
-                    <Eye className="h-4 w-4" />
-                  </Button>
-                </TableCell>
-              </TableRow>
-            );
-          })}
+          {messages.map((message) => (
+            <TableRow key={message.id}>
+              <TableCell>{getDirectionBadge(message.direction)}</TableCell>
+              <TableCell>
+                <p className="text-sm font-medium font-mono">
+                  {message.metadata?.from || message.recipient}
+                </p>
+              </TableCell>
+              <TableCell>
+                <p className="text-sm font-medium font-mono">
+                  {message.metadata?.to || '-'}
+                </p>
+              </TableCell>
+              <TableCell className="max-w-xs">
+                <p className="truncate text-sm">
+                  {message.message_body.substring(0, 50)}
+                  {message.message_body.length > 50 ? '...' : ''}
+                </p>
+              </TableCell>
+              <TableCell>
+                <div className="flex flex-col gap-1">
+                  {message.direction === 'inbound' && getMessageTypeBadge(message.message_type)}
+                  {message.direction === 'outbound' && getMessageSourceBadge(message.message_source)}
+                </div>
+              </TableCell>
+              <TableCell>{getStatusBadge(message.status)}</TableCell>
+              <TableCell>
+                <p className="text-sm">
+                  {format(new Date(message.sent_at), "PPP HH:mm", { locale: sv })}
+                </p>
+              </TableCell>
+              <TableCell>
+                <p className="text-sm">
+                  {message.delivered_at 
+                    ? format(new Date(message.delivered_at), "PPP HH:mm", { locale: sv })
+                    : '-'
+                  }
+                </p>
+              </TableCell>
+              <TableCell>
+                <p className="text-sm">
+                  {message.cost ? `${message.cost.toFixed(3)} SEK` : '-'}
+                </p>
+              </TableCell>
+              <TableCell className="text-right">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => onViewDetails(message)}
+                >
+                  <Eye className="h-4 w-4" />
+                </Button>
+              </TableCell>
+            </TableRow>
+          ))}
         </TableBody>
       </Table>
     </div>

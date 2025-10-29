@@ -1203,12 +1203,6 @@ serve(async (req) => {
           console.log('✅ Conditions met, saving to message_logs...');
           console.log(`   Direction: ${finalDirection}, From: ${fromNumber}, To: ${toNumber}`);
           
-          // Konvertera Twilio USD till SEK (ca 10.5 SEK per USD)
-          const USD_TO_SEK = 10.5;
-          const costInSEK = provider === 'twilio' && costAmount 
-            ? costAmount * USD_TO_SEK 
-            : costAmount;
-          
           const messageLogData = {
             user_id: integration.user_id,
             integration_id: integration.id,
@@ -1230,7 +1224,7 @@ serve(async (req) => {
             delivered_at: (bodyData.SmsStatus === 'received' || bodyData.MessageStatus === 'delivered') 
               ? new Date().toISOString() 
               : null,
-            cost: costInSEK,
+            cost: costAmount,
             metadata: {
               from: fromNumber,     // ✅ Explicit from
               to: toNumber,         // ✅ Explicit to
