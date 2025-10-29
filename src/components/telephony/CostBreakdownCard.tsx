@@ -9,7 +9,20 @@ export function CostBreakdownCard({ event }: CostBreakdownProps) {
   const breakdown = event.cost_breakdown || {};
   const hasBreakdown = Object.keys(breakdown).length > 0;
   const totalCost = event.aggregate_cost_amount || event.cost_amount || 0;
-  const currency = event.cost_currency || 'USD';
+  const currency = event.cost_currency || 'SEK';
+  const SEK_TO_USD = 10.5;
+  
+  // Convert total to both currencies
+  const totalInSEK = currency === 'USD' ? totalCost * SEK_TO_USD : totalCost;
+  const totalInUSD = currency === 'SEK' ? totalCost / SEK_TO_USD : totalCost;
+  
+  // Helper to format cost: USD first, then SEK
+  const formatCost = (amount: number, currency: string) => {
+    const usdAmount = currency === 'SEK' ? amount / SEK_TO_USD : amount;
+    const sekAmount = currency === 'USD' ? amount * SEK_TO_USD : amount;
+    
+    return `$${usdAmount.toFixed(4)} USD (≈ ${sekAmount.toFixed(2)} SEK)`;
+  };
   
   // Map provider to display name and layer label
   const getProviderInfo = (provider: string, layer: string) => {
@@ -45,7 +58,7 @@ export function CostBreakdownCard({ event }: CostBreakdownProps) {
           <div className="flex justify-between items-center font-semibold text-lg border-b pb-2">
             <span>Total kostnad</span>
             <span className="text-primary">
-              {Number(totalCost).toFixed(4)} {currency}
+              {totalInSEK.toFixed(2)} SEK (≈ ${totalInUSD.toFixed(4)} USD)
             </span>
           </div>
           
@@ -63,14 +76,9 @@ export function CostBreakdownCard({ event }: CostBreakdownProps) {
                       <span className="text-xs text-muted-foreground">{info.layerLabel}</span>
                     </div>
                     <div className="flex flex-col items-end">
-                      <span className="font-mono">
-                        {Number(data.amount).toFixed(4)} {data.currency}
+                      <span className="font-mono text-xs">
+                        {formatCost(data.amount, data.currency)}
                       </span>
-                      {data.currency === 'SEK' && (
-                        <span className="text-xs text-muted-foreground">
-                          ≈ ${(data.amount / 10.5).toFixed(4)} USD
-                        </span>
-                      )}
                     </div>
                   </div>
                 );

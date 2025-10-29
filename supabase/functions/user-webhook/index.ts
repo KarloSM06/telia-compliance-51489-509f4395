@@ -132,12 +132,14 @@ async function findRelatedEvent(
   return data;
 }
 
-// Helper to normalize costs to USD for aggregation
-function normalizeCostToUSD(amount: number, currency: string): number {
-  if (currency === 'SEK') {
-    return amount / 10.5; // Approximate SEK to USD exchange rate
+// Helper to normalize costs to SEK for aggregation
+function normalizeCostToSEK(amount: number, currency: string): number {
+  const SEK_TO_USD = 10.5;
+  
+  if (currency === 'USD') {
+    return amount * SEK_TO_USD; // Convert USD to SEK
   }
-  return amount;
+  return amount; // Already SEK
 }
 
 // Helper to aggregate costs and link events
@@ -167,27 +169,28 @@ async function aggregateCosts(
     }
   };
   
-  // Calculate total cost in USD by normalizing all currencies
-  const totalCostUSD = Object.values(newCostBreakdown).reduce(
+  // Calculate total cost in SEK by normalizing all currencies
+  const totalCostSEK = Object.values(newCostBreakdown).reduce(
     (sum: number, item: any) => {
-      const normalizedAmount = normalizeCostToUSD(Number(item.amount) || 0, item.currency);
+      const normalizedAmount = normalizeCostToSEK(Number(item.amount) || 0, item.currency);
       return sum + normalizedAmount;
     }, 
     0
   );
   
+  console.log(`💰 Updating parent event ${parentEventId} with aggregated cost: ${totalCostSEK.toFixed(2)} SEK (≈ $${(totalCostSEK / 10.5).toFixed(4)} USD)`);
+  
   // Update parent event
   await supabase
     .from('telephony_events')
     .update({
-      aggregate_cost_amount: totalCostUSD,
-      cost_currency: 'USD',
+      aggregate_cost_amount: totalCostSEK,
+      cost_currency: 'SEK',
       cost_breakdown: newCostBreakdown,
       related_events: [...currentRelatedEvents, childEvent.id]
     })
     .eq('id', parentEventId);
   
-  console.log(`✅ Aggregated costs: Parent ${parentEventId} total ${totalCostUSD.toFixed(4)} USD`);
   console.log(`   Breakdown:`, Object.entries(newCostBreakdown).map(([p, d]: [string, any]) => 
     `${p}: ${d.amount} ${d.currency}`
   ).join(', '));
@@ -739,14 +742,22 @@ serve(async (req) => {
             durationSeconds = Math.round((endTime.getTime() - startTime.getTime()) / 1000);
           }
           
-          // Calculate cost based on duration using our cost calculator
-          const calculateCost = (durationSec: number): number => {
-            // Telnyx pricing: ~$0.013/min average (0.14 SEK/min)
-            return (durationSec / 60) * 0.14;
+          // Calculate Telnyx cost based on direction and duration
+          const calculateTelnyxCost = (durationSec: number, direction: string): number => {
+            const minutes = durationSec / 60;
+            
+            // Pricing based on Swedish rates
+            let usdPerMin = 0.006; // Inbound to Swedish landline
+            
+            if (direction === 'outbound') {
+              usdPerMin = 0.02; // Outbound to Swedish mobile
+            }
+            
+            return minutes * usdPerMin;
           };
           
-          const costAmount = calculateCost(durationSeconds);
-          const costCurrency = 'SEK';
+          const costAmount = calculateTelnyxCost(durationSeconds, direction);
+          const costCurrency = 'USD'; // Store in USD for easier aggregation with Vapi
           
           console.log(`📞 Processing Telnyx call.hangup: ${durationSeconds}s, cost: ${costAmount.toFixed(4)} ${costCurrency}`);
           
