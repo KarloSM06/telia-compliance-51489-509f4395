@@ -1,23 +1,30 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
+import { Button } from '@/components/ui/button';
+import { RefreshCw, Download } from 'lucide-react';
+import { toast } from 'sonner';
+import { useQueryClient } from '@tanstack/react-query';
+import { useAuth } from '@/hooks/useAuth';
 import { useMessageLogs } from "@/hooks/useMessageLogs";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { MessageFilters } from "@/components/messages/MessageFilters";
 import { EmailStatsCards } from "@/components/messages/EmailStatsCards";
 import { EmailTable } from "@/components/messages/EmailTable";
-import { MessageDetailModal } from "@/components/messages/MessageDetailModal";
-import { Mail } from "lucide-react";
+import { EmailFilters, EmailFilterValues } from "@/components/messages/EmailFilters";
+import { EmailDetailDrawer } from "@/components/messages/EmailDetailDrawer";
 
 export default function EmailPage() {
-  const [filters, setFilters] = useState({
-    channel: 'email' as const,
-    status: undefined as string | undefined,
-    dateFrom: undefined as string | undefined,
-    dateTo: undefined as string | undefined,
-  });
+  const { user } = useAuth();
+  const queryClient = useQueryClient();
   const [selectedMessage, setSelectedMessage] = useState<any>(null);
-  const [modalOpen, setModalOpen] = useState(false);
+  const [filters, setFilters] = useState<EmailFilterValues>({
+    search: '',
+    status: 'all',
+  });
 
-  const { logs, stats, isLoading } = useMessageLogs(filters);
+  const { logs, stats, isLoading } = useMessageLogs({
+    channel: 'email',
+    status: filters.status === 'all' ? undefined : filters.status,
+    dateFrom: filters.dateFrom?.toISOString().split('T')[0],
+    dateTo: filters.dateTo?.toISOString().split('T')[0],
+  });
 
   const emailStats = {
     total: stats.total,
@@ -28,30 +35,77 @@ export default function EmailPage() {
     cost: stats.emailCost,
   };
 
-  const handleFilterChange = (newFilters: { status: string; dateFrom?: string; dateTo?: string }) => {
-    setFilters({
-      channel: 'email',
-      status: newFilters.status === 'all' ? undefined : newFilters.status,
-      dateFrom: newFilters.dateFrom,
-      dateTo: newFilters.dateTo,
+  // Filter messages based on search
+  const filteredMessages = useMemo(() => {
+    return logs.filter((message) => {
+      if (filters.search) {
+        const searchLower = filters.search.toLowerCase();
+        const matchesSearch =
+          message.recipient?.toLowerCase().includes(searchLower) ||
+          message.subject?.toLowerCase().includes(searchLower) ||
+          message.message_body?.toLowerCase().includes(searchLower);
+        if (!matchesSearch) return false;
+      }
+      return true;
     });
+  }, [logs, filters.search]);
+
+  const handleRefresh = async () => {
+    toast.loading('Uppdaterar data...');
+    await queryClient.invalidateQueries({ queryKey: ['message-logs', user?.id] });
+    toast.dismiss();
+    toast.success('Data uppdaterad');
   };
 
-  const handleViewDetails = (message: any) => {
-    setSelectedMessage(message);
-    setModalOpen(true);
+  const handleExport = () => {
+    const csvContent = [
+      ['Mottagare', 'Ämne', 'Status', 'Skickat', 'Levererat', 'Öppnat', 'Klickat'].join(','),
+      ...filteredMessages.map((msg) =>
+        [
+          msg.recipient || '-',
+          msg.subject || '-',
+          msg.status || '-',
+          msg.sent_at || '-',
+          msg.delivered_at || '-',
+          msg.opened_at || '-',
+          msg.clicked_at || '-',
+        ].join(',')
+      ),
+    ].join('\n');
+
+    const blob = new Blob([csvContent], { type: 'text/csv' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `email-messages-${new Date().toISOString().split('T')[0]}.csv`;
+    a.click();
+    window.URL.revokeObjectURL(url);
+    toast.success('Export klar');
   };
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center gap-2">
-        <Mail className="h-8 w-8 text-primary" />
+    <div className="p-6 space-y-6">
+      {/* Header */}
+      <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold">Email-meddelanden</h1>
-          <p className="text-muted-foreground">Översikt över skickade email</p>
+          <h1 className="text-3xl font-bold">Email</h1>
+          <p className="text-muted-foreground">
+            Realtidsövervakning av alla dina email-meddelanden
+          </p>
+        </div>
+        <div className="flex gap-2">
+          <Button variant="outline" size="sm" onClick={handleRefresh}>
+            <RefreshCw className="h-4 w-4 mr-2" />
+            Uppdatera
+          </Button>
+          <Button variant="outline" size="sm" onClick={handleExport}>
+            <Download className="h-4 w-4 mr-2" />
+            Export
+          </Button>
         </div>
       </div>
 
+      {/* Stats Cards */}
       <EmailStatsCards
         total={emailStats.total}
         sent={emailStats.sent}
@@ -61,39 +115,31 @@ export default function EmailPage() {
         cost={emailStats.cost}
       />
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Filteralternativ</CardTitle>
-          <CardDescription>Filtrera email efter status och datum</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <MessageFilters type="email" onFilterChange={handleFilterChange} />
-        </CardContent>
-      </Card>
+      {/* Filters */}
+      <EmailFilters onFilterChange={setFilters} />
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Email-meddelanden</CardTitle>
-          <CardDescription>
-            Visar {logs.length} meddelanden
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          {isLoading ? (
-            <div className="text-center py-12">
-              <p className="text-muted-foreground">Laddar email-meddelanden...</p>
-            </div>
-          ) : (
-            <EmailTable messages={logs} onViewDetails={handleViewDetails} />
-          )}
-        </CardContent>
-      </Card>
+      {/* Messages Table */}
+      <div className="space-y-2">
+        <div className="flex items-center justify-between">
+          <h2 className="text-xl font-semibold">Meddelanden</h2>
+          <p className="text-sm text-muted-foreground">
+            Visar {filteredMessages.length} av {logs.length} meddelanden
+          </p>
+        </div>
+        {isLoading ? (
+          <div className="flex items-center justify-center py-12">
+            <RefreshCw className="h-8 w-8 animate-spin text-muted-foreground" />
+          </div>
+        ) : (
+          <EmailTable messages={filteredMessages} onViewDetails={setSelectedMessage} />
+        )}
+      </div>
 
-      <MessageDetailModal
-        type="email"
+      {/* Message Detail Drawer */}
+      <EmailDetailDrawer
         message={selectedMessage}
-        open={modalOpen}
-        onClose={() => setModalOpen(false)}
+        open={!!selectedMessage}
+        onClose={() => setSelectedMessage(null)}
       />
     </div>
   );
