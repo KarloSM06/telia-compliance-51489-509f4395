@@ -52,6 +52,98 @@ function parseNumberFromHeader(header?: string): string | null {
   return match ? match[1] : null;
 }
 
+// Helper to find related event within time window
+async function findRelatedEvent(
+  supabase: any,
+  userId: string,
+  fromNumber: string | null,
+  toNumber: string | null,
+  eventTimestamp: string,
+  provider: string
+): Promise<any | null> {
+  // Only try to match if we have a phone number
+  if (!fromNumber && !toNumber) return null;
+  
+  // Search for event within ±30 seconds with same phone numbers but different provider
+  const timeWindow = 30000; // 30 seconds
+  const eventTime = new Date(eventTimestamp);
+  const startTime = new Date(eventTime.getTime() - timeWindow);
+  const endTime = new Date(eventTime.getTime() + timeWindow);
+  
+  // Build phone number filter - check if either from or to matches
+  let phoneFilter = '';
+  if (fromNumber && toNumber) {
+    phoneFilter = `from_number.eq.${fromNumber},to_number.eq.${fromNumber},from_number.eq.${toNumber},to_number.eq.${toNumber}`;
+  } else if (fromNumber) {
+    phoneFilter = `from_number.eq.${fromNumber},to_number.eq.${fromNumber}`;
+  } else if (toNumber) {
+    phoneFilter = `from_number.eq.${toNumber},to_number.eq.${toNumber}`;
+  }
+  
+  if (!phoneFilter) return null;
+  
+  const { data } = await supabase
+    .from('telephony_events')
+    .select('*')
+    .eq('user_id', userId)
+    .neq('provider', provider) // Different provider
+    .is('parent_event_id', null) // Only match with parent/standalone events
+    .or(phoneFilter)
+    .gte('event_timestamp', startTime.toISOString())
+    .lte('event_timestamp', endTime.toISOString())
+    .order('event_timestamp', { ascending: false })
+    .limit(1)
+    .maybeSingle();
+  
+  return data;
+}
+
+// Helper to aggregate costs and link events
+async function aggregateCosts(
+  supabase: any,
+  parentEventId: string,
+  childEvent: any
+): Promise<void> {
+  const { data: parentEvent } = await supabase
+    .from('telephony_events')
+    .select('*')
+    .eq('id', parentEventId)
+    .single();
+  
+  if (!parentEvent) return;
+  
+  const currentCostBreakdown = parentEvent.cost_breakdown || {};
+  const currentRelatedEvents = parentEvent.related_events || [];
+  
+  // Add child provider to cost breakdown
+  const newCostBreakdown = {
+    ...currentCostBreakdown,
+    [childEvent.provider]: {
+      amount: childEvent.cost_amount || 0,
+      currency: childEvent.cost_currency || 'USD',
+      layer: childEvent.provider_layer || 'telephony'
+    }
+  };
+  
+  // Calculate total cost from breakdown
+  const totalCost = Object.values(newCostBreakdown).reduce(
+    (sum: number, item: any) => sum + (Number(item.amount) || 0), 
+    0
+  );
+  
+  // Update parent event
+  await supabase
+    .from('telephony_events')
+    .update({
+      aggregate_cost_amount: totalCost,
+      cost_breakdown: newCostBreakdown,
+      related_events: [...currentRelatedEvents, childEvent.id]
+    })
+    .eq('id', parentEventId);
+  
+  console.log(`✅ Aggregated costs: Parent ${parentEventId} now has total ${totalCost}`);
+}
+
 // Inline AES-GCM decryption helper
 async function decryptCredentials(encryptedData: any): Promise<any> {
   const ENCRYPTION_KEY = Deno.env.get('ENCRYPTION_KEY');
@@ -336,7 +428,7 @@ serve(async (req) => {
         console.log('📞 Phone number:', { fromRaw, from: fromNumber });
 
         // Store initial call data
-        const { error: createError } = await supabase
+        const { data: newEvent, error: createError } = await supabase
           .from('telephony_events')
           .insert({
             user_id: userId,
@@ -348,6 +440,8 @@ serve(async (req) => {
             from_number: fromNumber,
             to_number: null,
             status: callData.status || 'in-progress',
+            provider_layer: 'agent',
+            cost_breakdown: {},
             normalized: {
               callId: callId,
               messageType: messageType,
@@ -360,12 +454,42 @@ serve(async (req) => {
             event_timestamp: convertTimestamp(bodyData.message?.call?.createdAt || bodyData.message?.timestamp),
             idempotency_key: idempotencyKey,
             provider_payload: bodyData
-          });
+          })
+          .select()
+          .single();
 
         if (createError) {
           console.error('❌ Error creating Vapi call event:', createError);
         } else {
           console.log('✅ Vapi call created with ID:', callId);
+          
+          // Try to find and link related Telnyx/Twilio event
+          if (newEvent && fromNumber) {
+            const relatedEvent = await findRelatedEvent(
+              supabase,
+              userId,
+              fromNumber,
+              null,
+              convertTimestamp(bodyData.message?.timestamp),
+              'vapi'
+            );
+            
+            if (relatedEvent) {
+              console.log(`🔗 Found related ${relatedEvent.provider} event, linking...`);
+              
+              // Update related event to point to this Vapi event as parent
+              await supabase
+                .from('telephony_events')
+                .update({
+                  parent_event_id: newEvent.id,
+                  provider_layer: 'telephony'
+                })
+                .eq('id', relatedEvent.id);
+              
+              // Aggregate costs
+              await aggregateCosts(supabase, newEvent.id, relatedEvent);
+            }
+          }
         }
 
       } else if (isEndOfCallReport) {
@@ -458,6 +582,23 @@ serve(async (req) => {
           const durationSeconds = Math.round(Number(bodyData.message?.durationSeconds) || 0);
           const costAmount = Number(bodyData.message?.cost ?? bodyData.message?.costBreakdown?.total ?? 0);
           
+          // Update cost breakdown for Vapi
+          const currentCostBreakdown = existingEvent.cost_breakdown || {};
+          const updatedCostBreakdown = {
+            ...currentCostBreakdown,
+            vapi: {
+              amount: costAmount,
+              currency: 'USD',
+              layer: 'agent'
+            }
+          };
+          
+          // Recalculate aggregate cost
+          const aggregateCost = Object.values(updatedCostBreakdown).reduce(
+            (sum: number, item: any) => sum + (Number(item.amount) || 0), 
+            0
+          );
+          
           const { error: updateError } = await supabase
             .from('telephony_events')
             .update({
@@ -467,6 +608,8 @@ serve(async (req) => {
               duration_seconds: durationSeconds,
               cost_amount: costAmount,
               cost_currency: 'USD',
+              cost_breakdown: updatedCostBreakdown,
+              aggregate_cost_amount: aggregateCost,
               event_timestamp: convertTimestamp(bodyData.message?.endedAt),
               provider_payload: bodyData
             })
@@ -545,8 +688,32 @@ serve(async (req) => {
         bodyData.timestamp || 
         bodyData.data?.occurred_at || 
         new Date().toISOString();
+      
+      // Extract cost for Telnyx/Twilio
+      const costAmount = bodyData.price ? Math.abs(Number(bodyData.price)) : 0;
+      const costCurrency = bodyData.price_unit || 'USD';
 
-      const { error: eventError } = await supabase
+      // Try to find related Vapi/Retell event first
+      const relatedAgentEvent = await findRelatedEvent(
+        supabase,
+        integration.user_id,
+        fromNumber,
+        toNumber,
+        eventTimestamp,
+        provider
+      );
+      
+      let parentEventId = null;
+      let providerLayer = 'standalone';
+      
+      if (relatedAgentEvent && ['vapi', 'retell'].includes(relatedAgentEvent.provider)) {
+        // Found a matching agent event, link to it
+        parentEventId = relatedAgentEvent.id;
+        providerLayer = 'telephony';
+        console.log(`🔗 Linking ${provider} event to ${relatedAgentEvent.provider} event ${parentEventId}`);
+      }
+
+      const { data: newEvent, error: eventError } = await supabase
         .from('telephony_events')
         .insert({
           integration_id: integration.id,
@@ -562,12 +729,31 @@ serve(async (req) => {
           normalized: bodyData,
           event_timestamp: eventTimestamp,
           idempotency_key: idempotencyKey,
-        });
+          parent_event_id: parentEventId,
+          provider_layer: providerLayer,
+          cost_amount: costAmount,
+          cost_currency: costCurrency,
+          cost_breakdown: {
+            [provider]: {
+              amount: costAmount,
+              currency: costCurrency,
+              layer: providerLayer
+            }
+          },
+          aggregate_cost_amount: costAmount,
+        })
+        .select()
+        .single();
 
       if (eventError) {
         console.error('❌ Failed to create telephony_event:', eventError);
       } else {
         console.log('✅ Telephony event created successfully');
+        
+        // If we linked to a parent, aggregate costs
+        if (newEvent && parentEventId) {
+          await aggregateCosts(supabase, parentEventId, newEvent);
+        }
       }
     }
 

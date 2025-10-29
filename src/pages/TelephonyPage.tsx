@@ -33,6 +33,9 @@ export default function TelephonyPage() {
   // Filter events based on filters
   const filteredEvents = useMemo(() => {
     return metrics.events.filter((event) => {
+      // Filter out child events (linked to parent)
+      if (event.parent_event_id) return false;
+      
       // Search filter
       if (filters.search) {
         const searchLower = filters.search.toLowerCase();
@@ -43,9 +46,11 @@ export default function TelephonyPage() {
         if (!matchesSearch) return false;
       }
 
-      // Provider filter
-      if (filters.provider !== 'all' && event.provider !== filters.provider) {
-        return false;
+      // Provider filter - check both main provider and cost breakdown
+      if (filters.provider !== 'all') {
+        const hasProvider = event.provider === filters.provider || 
+                          (event.cost_breakdown && Object.keys(event.cost_breakdown).includes(filters.provider));
+        if (!hasProvider) return false;
       }
 
       // Event type filter

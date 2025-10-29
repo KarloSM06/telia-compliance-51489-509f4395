@@ -2743,7 +2743,9 @@ export type Database = {
       telephony_events: {
         Row: {
           agent_id: string | null
+          aggregate_cost_amount: number | null
           cost_amount: number | null
+          cost_breakdown: Json | null
           cost_currency: string | null
           created_at: string | null
           direction: string | null
@@ -2755,11 +2757,14 @@ export type Database = {
           idempotency_key: string | null
           integration_id: string | null
           normalized: Json | null
+          parent_event_id: string | null
           processing_status: string | null
           provider: string
           provider_event_id: string | null
+          provider_layer: string | null
           provider_payload: Json | null
           raw_payload: Json | null
+          related_events: Json | null
           resource_type: string | null
           status: string | null
           to_number: string | null
@@ -2768,7 +2773,9 @@ export type Database = {
         }
         Insert: {
           agent_id?: string | null
+          aggregate_cost_amount?: number | null
           cost_amount?: number | null
+          cost_breakdown?: Json | null
           cost_currency?: string | null
           created_at?: string | null
           direction?: string | null
@@ -2780,11 +2787,14 @@ export type Database = {
           idempotency_key?: string | null
           integration_id?: string | null
           normalized?: Json | null
+          parent_event_id?: string | null
           processing_status?: string | null
           provider: string
           provider_event_id?: string | null
+          provider_layer?: string | null
           provider_payload?: Json | null
           raw_payload?: Json | null
+          related_events?: Json | null
           resource_type?: string | null
           status?: string | null
           to_number?: string | null
@@ -2793,7 +2803,9 @@ export type Database = {
         }
         Update: {
           agent_id?: string | null
+          aggregate_cost_amount?: number | null
           cost_amount?: number | null
+          cost_breakdown?: Json | null
           cost_currency?: string | null
           created_at?: string | null
           direction?: string | null
@@ -2805,11 +2817,14 @@ export type Database = {
           idempotency_key?: string | null
           integration_id?: string | null
           normalized?: Json | null
+          parent_event_id?: string | null
           processing_status?: string | null
           provider?: string
           provider_event_id?: string | null
+          provider_layer?: string | null
           provider_payload?: Json | null
           raw_payload?: Json | null
+          related_events?: Json | null
           resource_type?: string | null
           status?: string | null
           to_number?: string | null
@@ -2829,6 +2844,13 @@ export type Database = {
             columns: ["integration_id"]
             isOneToOne: false
             referencedRelation: "integrations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "telephony_events_parent_event_id_fkey"
+            columns: ["parent_event_id"]
+            isOneToOne: false
+            referencedRelation: "telephony_events"
             referencedColumns: ["id"]
           },
         ]

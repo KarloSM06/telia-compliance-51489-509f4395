@@ -9,6 +9,7 @@ import { toast } from 'sonner';
 import { formatDuration, formatCost, formatFullTimestamp, getProviderDisplayName, getDirectionLabel } from '@/lib/telephonyFormatters';
 import { useState } from 'react';
 import { ConversationViewer } from './ConversationViewer';
+import { CostBreakdownCard } from './CostBreakdownCard';
 
 interface EventDetailDrawerProps {
   event: any;
@@ -99,7 +100,7 @@ export const EventDetailDrawer = ({ event, open, onClose }: EventDetailDrawerPro
                     <div>
                       <p className="text-xs text-muted-foreground">Kostnad</p>
                       <p className="text-lg font-semibold">
-                        {formatCost(event.cost_amount, event.cost_currency)}
+                        {formatCost(event.aggregate_cost_amount || event.cost_amount, event.cost_currency)}
                       </p>
                     </div>
                   </div>
@@ -122,6 +123,11 @@ export const EventDetailDrawer = ({ event, open, onClose }: EventDetailDrawerPro
                 </div>
               </CardContent>
             </Card>
+
+            {/* Cost Breakdown */}
+            {(event.cost_breakdown || event.aggregate_cost_amount) && (
+              <CostBreakdownCard event={event} />
+            )}
 
             {/* Analysis Summary */}
             {event.normalized?.analysis && (

@@ -143,3 +143,9 @@ verify_jwt = false
 
 [functions.sync-fallback-manager.schedule]
 cron = "*/10 * * * *"
+
+[functions.match-orphan-events]
+verify_jwt = false
+
+[functions.match-orphan-events.schedule]
+cron = "*/5 * * * *"
