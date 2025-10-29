@@ -12,18 +12,24 @@ serve(async (req) => {
   }
 
   try {
-    const supabase = createClient(
+    const anonClient = createClient(
       Deno.env.get('SUPABASE_URL') ?? '',
       Deno.env.get('SUPABASE_ANON_KEY') ?? ''
     );
 
     const authHeader = req.headers.get('Authorization')!;
     const token = authHeader.replace('Bearer ', '');
-    const { data: { user } } = await supabase.auth.getUser(token);
+    const { data: { user } } = await anonClient.auth.getUser(token);
 
     if (!user) {
       throw new Error('Unauthorized');
     }
+
+    // Use service role for database queries after authentication
+    const supabase = createClient(
+      Deno.env.get('SUPABASE_URL') ?? '',
+      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
+    );
 
     const { integration_id, test_type } = await req.json();
 
