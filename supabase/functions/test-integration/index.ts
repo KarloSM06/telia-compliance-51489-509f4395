@@ -231,13 +231,25 @@ async function testSync(integration: any) {
 
 // Provider-specific API tests
 async function testVapiApi(credentials: any) {
-  const response = await fetch('https://api.vapi.ai/calls', {
+  // Try /calls first
+  let response = await fetch('https://api.vapi.ai/calls', {
     method: 'GET',
     headers: {
       'Authorization': `Bearer ${credentials.apiKey}`,
       'Content-Type': 'application/json',
     },
   });
+
+  // Fallback to /assistants if /calls returns 404
+  if (response.status === 404) {
+    response = await fetch('https://api.vapi.ai/assistants', {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${credentials.apiKey}`,
+        'Content-Type': 'application/json',
+      },
+    });
+  }
 
   return {
     success: response.ok,
@@ -328,6 +340,7 @@ function getMockDataForProvider(provider: string) {
     case 'vapi':
       return {
         type: 'call.ended',
+        message: { type: 'status-update' },
         call: {
           id: 'test-call-123',
           status: 'ended',

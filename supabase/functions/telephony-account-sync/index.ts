@@ -478,7 +478,7 @@ async function syncVapi(integration: any, credentials: any, supabase: any, lastS
     }
 
     // Build URL with createdAtGt for incremental sync
-    let url = 'https://api.vapi.ai/call?limit=100';
+    let url = 'https://api.vapi.ai/calls?limit=100';
     if (lastSyncedTimestamp) {
       url += `&createdAtGt=${encodeURIComponent(lastSyncedTimestamp)}`;
     }
@@ -559,7 +559,7 @@ async function syncRetell(integration: any, credentials: any, supabase: any, las
     }
 
     // Build URL with start_timestamp for incremental sync
-    let url = 'https://api.retellai.com/list-calls?limit=100';
+    let url = 'https://api.retellai.com/v2/calls?limit=100';
     if (lastSyncedTimestamp) {
       url += `&start_timestamp_gt=${Math.floor(new Date(lastSyncedTimestamp).getTime())}`;
     }

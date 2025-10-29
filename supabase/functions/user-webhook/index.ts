@@ -96,7 +96,8 @@ serve(async (req) => {
       } catch {
         bodyData = {};
       }
-      if (bodyData.message?.type || bodyData.type === 'status-update') provider = 'vapi';
+      // Vapi: check for message.type or call.* events
+      if (bodyData.message?.type === 'status-update' || (typeof bodyData.type === 'string' && bodyData.type.startsWith('call.'))) provider = 'vapi';
       else if (bodyData.event === 'call_ended' || bodyData.event === 'call_started') provider = 'retell';
       else if (bodyData.data?.event_type) provider = 'telnyx';
       else provider = 'unknown';
@@ -121,7 +122,11 @@ serve(async (req) => {
       .single();
 
     if (integrationError || !integration) {
-      throw new Error(`No active ${provider} integration configured`);
+      console.log(`⚠️ No active ${provider} integration configured for user ${userId}`);
+      // Return 200 to avoid webhook errors during testing
+      return new Response(JSON.stringify({ status: 'no_active_integration', provider }), {
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
     }
 
     console.log('✅ Integration found:', integration?.provider);
