@@ -916,16 +916,20 @@ serve(async (req) => {
             return { usd: usdCost, direction: finalDirection };
           };
           
-          const { usd: costAmount, direction: finalDirection } = await calculateTelnyxCost(
+          const { usd: costAmountUSD, direction: finalDirection } = await calculateTelnyxCost(
             durationSeconds,
             direction,
             fromNumber,
             toNumber,
             integration.id
           );
-          const costCurrency = 'USD'; // Store in USD for easier aggregation with Vapi
           
-          console.log(`📞 Processing Telnyx call.hangup: ${durationSeconds}s, direction: ${finalDirection}, cost: ${costAmount.toFixed(4)} ${costCurrency}`);
+          // Konvertera från USD till SEK
+          const USD_TO_SEK = 10.5;
+          const costAmount = costAmountUSD * USD_TO_SEK;
+          const costCurrency = 'SEK';
+          
+          console.log(`📞 Processing Telnyx call.hangup: ${durationSeconds}s, direction: ${finalDirection}, cost: $${costAmountUSD.toFixed(4)} USD (${costAmount.toFixed(2)} SEK)`);
           
           // Try to find related Vapi/Retell event with X-Call-Sid priority
           const relatedAgentEvent = await findRelatedEvent(
@@ -1094,6 +1098,8 @@ serve(async (req) => {
       let costAmount = bodyData.price ? Math.abs(Number(bodyData.price)) : 0;
       let costCurrency = bodyData.price_unit || 'USD';
       let finalDirection = direction;
+      
+      const USD_TO_SEK = 10.5;
 
       // Special handling for Twilio SMS (no price field in webhook)
       if (provider === 'twilio' && (bodyData.SmsStatus || bodyData.MessageStatus)) {
@@ -1126,9 +1132,11 @@ serve(async (req) => {
           numSegments,
           integration.id
         );
-        costAmount = smsCalculation.usd;
+        const costUSD = smsCalculation.usd;
+        costAmount = costUSD * USD_TO_SEK;
+        costCurrency = 'SEK';
         finalDirection = smsCalculation.direction;
-        console.log(`📱 Twilio SMS: ${finalDirection} with ${numSegments} segments = $${costAmount.toFixed(4)} USD`);
+        console.log(`📱 Twilio SMS: ${finalDirection} with ${numSegments} segments = $${costUSD.toFixed(4)} USD (${costAmount.toFixed(2)} SEK)`);
       }
 
       // Try to find related Vapi/Retell event first
@@ -1203,9 +1211,7 @@ serve(async (req) => {
           console.log('✅ Conditions met, saving to message_logs...');
           console.log(`   Direction: ${finalDirection}, From: ${fromNumber}, To: ${toNumber}`);
           
-          // Konvertera kostnad från USD till SEK (ca 10.5 SEK per USD)
-          const USD_TO_SEK = 10.5;
-          const costInSEK = costAmount ? costAmount * USD_TO_SEK : null;
+          // Kostnad är redan i SEK från beräkningarna ovan
           
           const messageLogData = {
             user_id: integration.user_id,
@@ -1228,7 +1234,7 @@ serve(async (req) => {
             delivered_at: (bodyData.SmsStatus === 'received' || bodyData.MessageStatus === 'delivered') 
               ? new Date().toISOString() 
               : null,
-            cost: costInSEK,  // ✅ Kostnad konverterad till SEK
+            cost: costAmount,  // ✅ Kostnad redan i SEK
             metadata: {
               from: fromNumber,     // ✅ Explicit from
               to: toNumber,         // ✅ Explicit to
@@ -1236,8 +1242,7 @@ serve(async (req) => {
               numSegments: bodyData.NumSegments ? parseInt(bodyData.NumSegments) : 1,
               provider_status: bodyData.SmsStatus || bodyData.MessageStatus,
               event_id: newEvent.id,
-              original_cost_usd: costAmount,  // Spara original USD-kostnad
-              cost_currency: 'SEK',
+              cost_currency: costCurrency,
             },
           };
 
