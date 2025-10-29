@@ -342,16 +342,30 @@ serve(async (req) => {
 
     if (contentType.includes('application/x-www-form-urlencoded')) {
       const formData = new URLSearchParams(body);
-      provider = formData.has('MessageSid') ? 'twilio' : 'unknown';
       bodyData = Object.fromEntries(formData);
+      
+      // Twilio form-encoded SMS/Voice
+      if (formData.has('MessageSid') || formData.has('SmsSid')) {
+        provider = 'twilio';
+      } else if (formData.has('CallSid')) {
+        provider = 'twilio';
+      } else {
+        provider = 'unknown';
+      }
     } else {
       try {
         bodyData = JSON.parse(body);
       } catch {
         bodyData = {};
       }
-      // Vapi: detect message wrapper or direct call/assistant data
-      if (
+      
+      // KORREKT ordning för JSON provider-detektion:
+      // 1. Twilio (kolla FÖRST för Twilio-specifika fält)
+      if (bodyData.MessageSid || bodyData.SmsSid || bodyData.CallSid) {
+        provider = 'twilio';
+      }
+      // 2. Vapi: detect message wrapper or direct call/assistant data
+      else if (
         bodyData.message?.type || 
         bodyData.message?.call || 
         bodyData.call?.assistantId || 
@@ -360,16 +374,23 @@ serve(async (req) => {
         bodyData.type === 'call-ended'
       ) {
         provider = 'vapi';
-      } else if (bodyData.event === 'call_ended' || bodyData.event === 'call_started') {
+      }
+      // 3. Retell
+      else if (bodyData.event === 'call_ended' || bodyData.event === 'call_started') {
         provider = 'retell';
-      } else if (bodyData.data?.event_type) {
+      }
+      // 4. Telnyx (SIST, för att inte fånga Twilio felaktigt)
+      else if (bodyData.data?.event_type) {
         provider = 'telnyx';
-      } else {
+      }
+      else {
         provider = 'unknown';
       }
     }
 
     console.log(`📥 Detected provider: ${provider}`);
+    console.log(`   Content-Type: ${contentType}`);
+    console.log(`   Body keys: ${Object.keys(bodyData).slice(0, 10).join(', ')}`);
 
     // Extract signature headers
     const twilioSignature = allHeaders['x-twilio-signature'] || null;
@@ -1180,6 +1201,8 @@ serve(async (req) => {
         console.log(`🔍 Checking SMS save conditions: eventType="${eventType}", newEvent=${!!newEvent}`);
         if (eventType === 'message' && newEvent) {
           console.log('✅ Conditions met, saving to message_logs...');
+          console.log(`   Direction: ${finalDirection}, From: ${fromNumber}, To: ${toNumber}`);
+          
           const messageLogData = {
             user_id: integration.user_id,
             integration_id: integration.id,
@@ -1190,7 +1213,7 @@ serve(async (req) => {
             provider_type: integration.provider_type,
             provider_message_id: bodyData.MessageSid || bodyData.SmsSid || externalCallId,
             direction: finalDirection,
-            message_source: finalDirection === 'outbound' ? 'webhook' : null,
+            message_source: 'webhook',  // ✅ Alla webhook SMS har source='webhook'
             message_type: finalDirection === 'inbound' ? 'general' : null,
             status: bodyData.SmsStatus === 'received' ? 'delivered' : 
                     bodyData.SmsStatus === 'sent' ? 'sent' :
@@ -1203,8 +1226,8 @@ serve(async (req) => {
               : null,
             cost: costAmount,
             metadata: {
-              from: fromNumber,
-              to: toNumber,
+              from: fromNumber,     // ✅ Explicit from
+              to: toNumber,         // ✅ Explicit to
               direction: finalDirection,
               numSegments: bodyData.NumSegments ? parseInt(bodyData.NumSegments) : 1,
               provider_status: bodyData.SmsStatus || bodyData.MessageStatus,
@@ -1220,14 +1243,14 @@ serve(async (req) => {
 
           if (messageLogError) {
             console.error('❌ Failed to insert message_log:', messageLogError);
+            console.error('   Message data:', messageLogData);
           } else {
-            console.log(`📨 Saved SMS to message_logs: ${messageLogData.provider_message_id}`);
+            console.log(`📨 SMS saved to message_logs: ID=${insertedLog.id}`);
             
-            // Om det är ett inkommande SMS, klassificera det med AI
+            // AI-klassificering för inkommande SMS
             if (finalDirection === 'inbound' && insertedLog) {
               console.log('🤖 Triggering AI classification for inbound SMS...');
               
-              // Anropa classify-sms edge function (fire-and-forget)
               fetch(`${Deno.env.get('SUPABASE_URL')}/functions/v1/classify-sms`, {
                 method: 'POST',
                 headers: {
