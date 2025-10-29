@@ -747,29 +747,62 @@ serve(async (req) => {
           const calculateTelnyxCost = async (
             durationSec: number, 
             directionFromPayload: string | null,
+            fromNumber: string,
             toNumber: string,
             integrationId: string
           ): Promise<{ usd: number; direction: string }> => {
-            const minutes = durationSec / 60; // Exact per-second billing
+            const minutes = durationSec / 60;
             
-            let finalDirection = directionFromPayload;
+            console.log(`📊 Telnyx cost calculation START:
+    - Duration: ${durationSec}s (${minutes.toFixed(4)} min)
+    - From: ${fromNumber}
+    - To: ${toNumber}
+    - Direction from payload: ${directionFromPayload || 'MISSING'}`);
             
-            // If direction missing, infer from phone_numbers table
-            if (!finalDirection) {
-              const { data: ownedNumber } = await supabase
-                .from('phone_numbers')
-                .select('id')
-                .eq('integration_id', integrationId)
-                .eq('phone_number', toNumber)
-                .maybeSingle();
-              
-              finalDirection = ownedNumber ? 'inbound' : 'outbound';
-              console.log(`🔍 Inferred direction: ${finalDirection} (to: ${toNumber}, owned: ${!!ownedNumber})`);
+            // ALWAYS verify direction against owned numbers (don't trust payload blindly)
+            const { data: toNumberOwned } = await supabase
+              .from('phone_numbers')
+              .select('phone_number, integration_id')
+              .eq('integration_id', integrationId)
+              .eq('phone_number', toNumber)
+              .maybeSingle();
+            
+            const { data: fromNumberOwned } = await supabase
+              .from('phone_numbers')
+              .select('phone_number, integration_id')
+              .eq('integration_id', integrationId)
+              .eq('phone_number', fromNumber)
+              .maybeSingle();
+            
+            console.log(`🔍 Ownership check:
+    - To (${toNumber}): ${toNumberOwned ? '✅ OWNED' : '❌ NOT OWNED'}
+    - From (${fromNumber}): ${fromNumberOwned ? '✅ OWNED' : '❌ NOT OWNED'}`);
+            
+            // Logic:
+            // - If toNumber is owned => INBOUND (someone called our number)
+            // - Else if fromNumber is owned => OUTBOUND (we called someone)
+            // - Else => use payload direction or default to 'outbound'
+            let finalDirection: string;
+            if (toNumberOwned) {
+              finalDirection = 'inbound';
+              if (directionFromPayload !== 'inbound') {
+                console.log(`⚠️ Direction mismatch! Payload says '${directionFromPayload}' but toNumber is owned → forcing 'inbound'`);
+              }
+            } else if (fromNumberOwned) {
+              finalDirection = 'outbound';
+              if (directionFromPayload !== 'outbound') {
+                console.log(`⚠️ Direction mismatch! Payload says '${directionFromPayload}' but fromNumber is owned → forcing 'outbound'`);
+              }
+            } else {
+              finalDirection = directionFromPayload || 'outbound';
+              console.log(`⚠️ Neither number is owned! Using payload direction: ${finalDirection}`);
             }
             
-            // Pricing: inbound $0.006/min, outbound $0.02/min
+            // Pricing: inbound $0.006/min, outbound $0.02/min (Swedish rates)
             const usdPerMin = finalDirection === 'inbound' ? 0.006 : 0.02;
             const usdCost = minutes * usdPerMin;
+            
+            console.log(`💵 Final calculation: ${minutes.toFixed(4)} min × $${usdPerMin}/min = $${usdCost.toFixed(6)} USD (${finalDirection})`);
             
             return { usd: usdCost, direction: finalDirection };
           };
@@ -777,6 +810,7 @@ serve(async (req) => {
           const { usd: costAmount, direction: finalDirection } = await calculateTelnyxCost(
             durationSeconds,
             direction,
+            fromNumber,
             toNumber,
             integration.id
           );

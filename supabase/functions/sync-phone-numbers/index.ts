@@ -137,7 +137,7 @@ async function syncTwilioNumbers(integration: any, credentials: any, supabase: a
       await supabase.from('phone_numbers').upsert({
         user_id: integration.user_id,
         integration_id: integration.id,
-        number: number.phone_number,
+        phone_number: number.phone_number,
         provider: 'twilio',
         capabilities: {
           voice: number.capabilities?.voice,
@@ -152,7 +152,7 @@ async function syncTwilioNumbers(integration: any, credentials: any, supabase: a
           emergency_status: number.emergency_status
         }
       }, {
-        onConflict: 'user_id,number'
+        onConflict: 'user_id,phone_number'
       });
     }
 
@@ -183,7 +183,7 @@ async function syncTelnyxNumbers(integration: any, credentials: any, supabase: a
       await supabase.from('phone_numbers').upsert({
         user_id: integration.user_id,
         integration_id: integration.id,
-        number: number.phone_number,
+        phone_number: number.phone_number,
         provider: 'telnyx',
         capabilities: {
           voice: true,
@@ -198,7 +198,7 @@ async function syncTelnyxNumbers(integration: any, credentials: any, supabase: a
           features: number.features
         }
       }, {
-        onConflict: 'user_id,number'
+        onConflict: 'user_id,phone_number'
       });
     }
 
