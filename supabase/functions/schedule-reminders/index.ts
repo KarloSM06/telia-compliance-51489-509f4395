@@ -348,12 +348,6 @@ async function generateMessage(supabaseClient: any, event: any, messageType: str
     subject = subject.replace(regex, value);
   });
 
-  // Add unsubscribe footer
-  if (unsubscribeToken) {
-    const unsubscribeUrl = `https://shskknkivuewuqonjdjc.supabase.co/unsubscribe?token=${unsubscribeToken}`;
-    message += `\n\n---\nVill du inte längre få dessa meddelanden? Klicka här: ${unsubscribeUrl}`;
-  }
-
   return { message, subject };
 }
 
