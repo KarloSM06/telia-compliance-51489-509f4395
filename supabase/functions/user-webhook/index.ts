@@ -328,6 +328,14 @@ serve(async (req) => {
       bodyData.data?.occurred_at || 
       new Date().toISOString();
 
+    // Extract account_id based on provider
+    const accountId = 
+      bodyData.message?.call?.orgId || // Vapi orgId
+      bodyData.call?.orgId || // Vapi orgId alt location
+      bodyData.AccountSid || // Twilio
+      bodyData.data?.account_id || // Telnyx
+      null;
+
     // Extract conversation data for Vapi
     const conversationData = bodyData.message?.conversation || null;
     const conversationMessages = bodyData.message?.messages || null;
@@ -346,6 +354,7 @@ serve(async (req) => {
       .upsert({
         integration_id: integration.id,
         user_id: integration.user_id,
+        account_id: accountId,
         provider: provider,
         event_type: eventType,
         direction: direction,

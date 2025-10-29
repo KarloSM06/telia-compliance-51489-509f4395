@@ -2742,7 +2742,7 @@ export type Database = {
       }
       telephony_events: {
         Row: {
-          account_id: string
+          account_id: string | null
           agent_id: string | null
           cost_amount: number | null
           cost_currency: string | null
@@ -2768,7 +2768,7 @@ export type Database = {
           webhook_received_at: string | null
         }
         Insert: {
-          account_id: string
+          account_id?: string | null
           agent_id?: string | null
           cost_amount?: number | null
           cost_currency?: string | null
@@ -2794,7 +2794,7 @@ export type Database = {
           webhook_received_at?: string | null
         }
         Update: {
-          account_id?: string
+          account_id?: string | null
           agent_id?: string | null
           cost_amount?: number | null
           cost_currency?: string | null
