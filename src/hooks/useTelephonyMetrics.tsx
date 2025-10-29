@@ -6,6 +6,7 @@ import { toast } from 'sonner';
 export const useTelephonyMetrics = (dateRange?: { from: Date; to: Date }) => {
   const { data: metrics, isLoading, refetch } = useQuery({
     queryKey: ['telephony-metrics', dateRange],
+    staleTime: 0,
     queryFn: async () => {
       // Get user's active telephony integrations
       const { data: { user } } = await supabase.auth.getUser();
@@ -114,17 +115,26 @@ export const useTelephonyMetrics = (dateRange?: { from: Date; to: Date }) => {
       .on(
         'postgres_changes',
         {
-          event: 'INSERT',
+          event: '*',
           schema: 'public',
           table: 'telephony_events',
         },
         (payload) => {
-          console.log('🔔 Ny telefoni-händelse:', payload.new);
+          console.log('🔔 Telefoni-händelse:', payload.eventType, payload.new || payload.old);
           refetch();
           
-          toast.success('📞 Ny händelse', {
-            description: `${payload.new.event_type} från ${payload.new.provider}`,
-          });
+          if (payload.eventType === 'INSERT') {
+            toast.success('📞 Nytt samtal', {
+              description: `${payload.new.event_type} från ${payload.new.provider}`,
+            });
+          } else if (payload.eventType === 'UPDATE') {
+            const normalized = payload.new?.normalized as any;
+            if (normalized?.endedAt) {
+              toast.info('✅ Samtal avslutat', {
+                description: `${payload.new.event_type} - ${normalized.endedReason || 'completed'}`,
+              });
+            }
+          }
         }
       )
       .subscribe();
