@@ -1,11 +1,10 @@
 import { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { FileText, Bell, BellRing, MessageSquare, BarChart } from "lucide-react";
+import { FileText, Bell, BellRing, MessageSquare } from "lucide-react";
 import MessageTemplates from "@/pages/MessageTemplates";
 import ReminderSettings from "@/pages/ReminderSettings";
 import NotificationSettings from "@/pages/NotificationSettings";
 import SMSProviderSettings from "@/pages/SMSProviderSettings";
-import MessageInsights from "@/pages/MessageInsights";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 export default function Notifications() {
@@ -59,14 +58,6 @@ export default function Notifications() {
               <MessageSquare className="h-5 w-5" />
               <span className="font-medium">SMS-leverantör</span>
             </TabsTrigger>
-            
-            <TabsTrigger 
-              value="insights" 
-              className="group relative gap-2 px-6 py-3 bg-card text-foreground border border-border rounded-full shadow-sm hover:shadow-md hover:bg-accent data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:border-primary data-[state=active]:shadow-md transition-all duration-200"
-            >
-              <BarChart className="h-5 w-5" />
-              <span className="font-medium">Insikter</span>
-            </TabsTrigger>
           </TabsList>
         </div>
 
@@ -101,12 +92,6 @@ export default function Notifications() {
                   SMS-leverantör
                 </div>
               </SelectItem>
-              <SelectItem value="insights">
-                <div className="flex items-center gap-2">
-                  <BarChart className="h-4 w-4" />
-                  Insikter
-                </div>
-              </SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -126,10 +111,6 @@ export default function Notifications() {
 
           <TabsContent value="sms-provider" className="animate-fade-in mt-0">
             <SMSProviderSettings />
-          </TabsContent>
-
-          <TabsContent value="insights" className="animate-fade-in mt-0">
-            <MessageInsights />
           </TabsContent>
         </div>
       </Tabs>
