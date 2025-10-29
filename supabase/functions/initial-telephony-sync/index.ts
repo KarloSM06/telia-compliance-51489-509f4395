@@ -5,6 +5,38 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
+// Inline AES-GCM decryption helper
+async function decryptCredentials(encryptedData: any): Promise<any> {
+  const ENCRYPTION_KEY = Deno.env.get('ENCRYPTION_KEY');
+  if (!ENCRYPTION_KEY) throw new Error('ENCRYPTION_KEY not configured');
+  
+  const keyData = new TextEncoder().encode(ENCRYPTION_KEY.padEnd(32, '0').slice(0, 32));
+  const cryptoKey = await crypto.subtle.importKey(
+    'raw',
+    keyData,
+    { name: 'AES-GCM' },
+    false,
+    ['decrypt']
+  );
+  
+  const encryptedString = typeof encryptedData === 'string' 
+    ? encryptedData 
+    : JSON.stringify(encryptedData);
+  const encryptedBytes = Uint8Array.from(atob(encryptedString), c => c.charCodeAt(0));
+  
+  const iv = encryptedBytes.slice(0, 12);
+  const ciphertext = encryptedBytes.slice(12);
+  
+  const decryptedBuffer = await crypto.subtle.decrypt(
+    { name: 'AES-GCM', iv },
+    cryptoKey,
+    ciphertext
+  );
+  
+  const decryptedString = new TextDecoder().decode(decryptedBuffer);
+  return JSON.parse(decryptedString);
+}
+
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
@@ -31,21 +63,8 @@ Deno.serve(async (req) => {
       throw new Error('Integration not found');
     }
 
-    // Decrypt credentials
-    const { data: decryptData, error: decryptError } = await supabase.functions.invoke(
-      'decrypt-data',
-      {
-        body: {
-          encrypted_data: integration.encrypted_credentials,
-        },
-      }
-    );
-
-    if (decryptError || !decryptData) {
-      throw new Error('Failed to decrypt credentials');
-    }
-
-    const credentials = decryptData;
+    // Decrypt credentials inline
+    const credentials = await decryptCredentials(integration.encrypted_credentials);
     const startDate = new Date();
     startDate.setDate(startDate.getDate() - daysBack);
 
@@ -230,7 +249,7 @@ async function syncRetellHistorical(integration: any, credentials: any, supabase
   const apiKey = credentials.apiKey;
   let totalCount = 0;
 
-  const response = await fetch('https://api.retellai.com/list-calls?limit=1000', {
+  const response = await fetch('https://api.retellai.com/v2/calls?limit=1000', {
     headers: { Authorization: `Bearer ${apiKey}` },
   });
 

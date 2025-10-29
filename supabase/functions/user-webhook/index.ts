@@ -7,6 +7,38 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
+// Inline AES-GCM decryption helper
+async function decryptCredentials(encryptedData: any): Promise<any> {
+  const ENCRYPTION_KEY = Deno.env.get('ENCRYPTION_KEY');
+  if (!ENCRYPTION_KEY) throw new Error('ENCRYPTION_KEY not configured');
+  
+  const keyData = new TextEncoder().encode(ENCRYPTION_KEY.padEnd(32, '0').slice(0, 32));
+  const cryptoKey = await crypto.subtle.importKey(
+    'raw',
+    keyData,
+    { name: 'AES-GCM' },
+    false,
+    ['decrypt']
+  );
+  
+  const encryptedString = typeof encryptedData === 'string' 
+    ? encryptedData 
+    : JSON.stringify(encryptedData);
+  const encryptedBytes = Uint8Array.from(atob(encryptedString), c => c.charCodeAt(0));
+  
+  const iv = encryptedBytes.slice(0, 12);
+  const ciphertext = encryptedBytes.slice(12);
+  
+  const decryptedBuffer = await crypto.subtle.decrypt(
+    { name: 'AES-GCM', iv },
+    cryptoKey,
+    ciphertext
+  );
+  
+  const decryptedString = new TextDecoder().decode(decryptedBuffer);
+  return JSON.parse(decryptedString);
+}
+
 serve(async (req) => {
   const startTime = Date.now();
 
@@ -92,12 +124,22 @@ serve(async (req) => {
       throw new Error(`No active ${provider} integration configured`);
     }
 
+    console.log('✅ Integration found:', integration?.provider);
+
+    // Decrypt credentials for signature verification
+    let credentials: any = {};
+    try {
+      credentials = await decryptCredentials(integration.encrypted_credentials);
+    } catch (error) {
+      console.error('⚠️ Failed to decrypt credentials:', error);
+      // Continue without verification if decryption fails
+    }
+
     // Verify webhook signature
     let signatureVerified = false;
     let verificationError: string | null = null;
 
     if (provider === 'twilio' && twilioSignature) {
-      const credentials = integration.encrypted_credentials as any;
       const authToken = credentials?.authToken;
       
       if (authToken) {
@@ -110,9 +152,10 @@ serve(async (req) => {
         if (!signatureVerified) {
           verificationError = 'Twilio signature verification failed';
         }
+      } else {
+        console.log('⚠️ No authToken found, accepting without verification');
       }
     } else if (provider === 'telnyx' && telnyxSignature && telnyxTimestamp) {
-      const credentials = integration.encrypted_credentials as any;
       const publicKey = credentials?.webhookPublicKey;
       
       if (publicKey) {
@@ -125,9 +168,10 @@ serve(async (req) => {
         if (!signatureVerified) {
           verificationError = 'Telnyx signature verification failed';
         }
+      } else {
+        console.log('⚠️ No webhookPublicKey found, accepting without verification');
       }
     } else if (provider === 'vapi' && vapiSignature) {
-      const credentials = integration.encrypted_credentials as any;
       const webhookSecret = credentials?.webhookSecret;
       
       if (webhookSecret) {
@@ -139,9 +183,10 @@ serve(async (req) => {
         if (!signatureVerified) {
           verificationError = 'Vapi signature verification failed';
         }
+      } else {
+        console.log('⚠️ No webhookSecret found, accepting without verification');
       }
     } else if (provider === 'retell' && retellSignature) {
-      const credentials = integration.encrypted_credentials as any;
       const webhookKey = credentials?.webhookKey;
       
       if (webhookKey) {
@@ -153,6 +198,8 @@ serve(async (req) => {
         if (!signatureVerified) {
           verificationError = 'Retell signature verification failed';
         }
+      } else {
+        console.log('⚠️ No webhookKey found, accepting without verification');
       }
     } else {
       // No signature to verify or provider doesn't require it

@@ -6,6 +6,38 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
+// Inline AES-GCM decryption helper
+async function decryptCredentials(encryptedData: any): Promise<any> {
+  const ENCRYPTION_KEY = Deno.env.get('ENCRYPTION_KEY');
+  if (!ENCRYPTION_KEY) throw new Error('ENCRYPTION_KEY not configured');
+  
+  const keyData = new TextEncoder().encode(ENCRYPTION_KEY.padEnd(32, '0').slice(0, 32));
+  const cryptoKey = await crypto.subtle.importKey(
+    'raw',
+    keyData,
+    { name: 'AES-GCM' },
+    false,
+    ['decrypt']
+  );
+  
+  const encryptedString = typeof encryptedData === 'string' 
+    ? encryptedData 
+    : JSON.stringify(encryptedData);
+  const encryptedBytes = Uint8Array.from(atob(encryptedString), c => c.charCodeAt(0));
+  
+  const iv = encryptedBytes.slice(0, 12);
+  const ciphertext = encryptedBytes.slice(12);
+  
+  const decryptedBuffer = await crypto.subtle.decrypt(
+    { name: 'AES-GCM', iv },
+    cryptoKey,
+    ciphertext
+  );
+  
+  const decryptedString = new TextDecoder().decode(decryptedBuffer);
+  return JSON.parse(decryptedString);
+}
+
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
@@ -95,15 +127,30 @@ serve(async (req) => {
 });
 
 async function testWebhook(integration: any) {
-  // Get webhook URL from integration or user profile
-  const webhookUrl = integration.webhook_url;
+  const supabase = createClient(
+    Deno.env.get('SUPABASE_URL') ?? '',
+    Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
+  );
   
+  let webhookUrl = integration.webhook_url;
+  
+  // Fallback to user-webhook if no custom webhook configured
   if (!webhookUrl) {
-    return {
-      success: false,
-      message: 'Ingen webhook URL konfigurerad',
-      details: {},
-    };
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('telephony_webhook_token')
+      .eq('id', integration.user_id)
+      .single();
+    
+    if (profile?.telephony_webhook_token) {
+      webhookUrl = `https://shskknkivuewuqonjdjc.supabase.co/functions/v1/user-webhook?token=${profile.telephony_webhook_token}`;
+    } else {
+      return {
+        success: false,
+        message: 'Ingen webhook URL konfigurerad',
+        details: {},
+      };
+    }
   }
 
   // Create mock data based on provider
@@ -143,23 +190,8 @@ async function testApiConnection(integration: any) {
   const provider = integration.provider;
 
   try {
-    // Decrypt credentials
-    const supabase = createClient(
-      Deno.env.get('SUPABASE_URL') ?? '',
-      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
-    );
-
-    const { data: decrypted } = await supabase.functions.invoke('decrypt-data', {
-      body: {
-        encrypted_data: integration.encrypted_credentials,
-      },
-    });
-
-    if (!decrypted?.decrypted) {
-      throw new Error('Could not decrypt credentials');
-    }
-
-    const credentials = JSON.parse(decrypted.decrypted);
+    // Decrypt credentials inline
+    const credentials = await decryptCredentials(integration.encrypted_credentials);
 
     // Test API based on provider
     switch (provider) {
@@ -199,10 +231,10 @@ async function testSync(integration: any) {
 
 // Provider-specific API tests
 async function testVapiApi(credentials: any) {
-  const response = await fetch('https://api.vapi.ai/call', {
+  const response = await fetch('https://api.vapi.ai/calls', {
     method: 'GET',
     headers: {
-      'Authorization': `Bearer ${credentials.api_key}`,
+      'Authorization': `Bearer ${credentials.apiKey}`,
       'Content-Type': 'application/json',
     },
   });
@@ -217,10 +249,10 @@ async function testVapiApi(credentials: any) {
 }
 
 async function testRetellApi(credentials: any) {
-  const response = await fetch('https://api.retellai.com/v2/list-calls', {
+  const response = await fetch('https://api.retellai.com/v2/calls', {
     method: 'GET',
     headers: {
-      'Authorization': `Bearer ${credentials.api_key}`,
+      'Authorization': `Bearer ${credentials.apiKey}`,
       'Content-Type': 'application/json',
     },
   });
@@ -235,8 +267,8 @@ async function testRetellApi(credentials: any) {
 }
 
 async function testTwilioApi(credentials: any) {
-  const accountSid = credentials.account_sid;
-  const authToken = credentials.auth_token;
+  const accountSid = credentials.accountSid;
+  const authToken = credentials.authToken;
   const auth = btoa(`${accountSid}:${authToken}`);
 
   const response = await fetch(`https://api.twilio.com/2010-04-01/Accounts/${accountSid}.json`, {
@@ -259,7 +291,7 @@ async function testTelnyxApi(credentials: any) {
   const response = await fetch('https://api.telnyx.com/v2/phone_numbers', {
     method: 'GET',
     headers: {
-      'Authorization': `Bearer ${credentials.api_key}`,
+      'Authorization': `Bearer ${credentials.apiKey}`,
       'Content-Type': 'application/json',
     },
   });

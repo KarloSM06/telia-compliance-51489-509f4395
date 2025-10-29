@@ -5,6 +5,38 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
+// Inline AES-GCM decryption helper
+async function decryptCredentials(encryptedData: any): Promise<any> {
+  const ENCRYPTION_KEY = Deno.env.get('ENCRYPTION_KEY');
+  if (!ENCRYPTION_KEY) throw new Error('ENCRYPTION_KEY not configured');
+  
+  const keyData = new TextEncoder().encode(ENCRYPTION_KEY.padEnd(32, '0').slice(0, 32));
+  const cryptoKey = await crypto.subtle.importKey(
+    'raw',
+    keyData,
+    { name: 'AES-GCM' },
+    false,
+    ['decrypt']
+  );
+  
+  const encryptedString = typeof encryptedData === 'string' 
+    ? encryptedData 
+    : JSON.stringify(encryptedData);
+  const encryptedBytes = Uint8Array.from(atob(encryptedString), c => c.charCodeAt(0));
+  
+  const iv = encryptedBytes.slice(0, 12);
+  const ciphertext = encryptedBytes.slice(12);
+  
+  const decryptedBuffer = await crypto.subtle.decrypt(
+    { name: 'AES-GCM', iv },
+    cryptoKey,
+    ciphertext
+  );
+  
+  const decryptedString = new TextDecoder().decode(decryptedBuffer);
+  return JSON.parse(decryptedString);
+}
+
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
@@ -74,32 +106,8 @@ Deno.serve(async (req) => {
           .select()
           .single();
 
-        // Decrypt credentials
-        const { data: decryptData, error: decryptError } = await supabase.functions.invoke(
-          'decrypt-telephony-credentials',
-          {
-            body: {
-              encrypted: integration.encrypted_credentials,
-            },
-          }
-        );
-
-        if (decryptError || !decryptData?.credentials) {
-          console.error('❌ Error decrypting credentials:', decryptError);
-          if (syncJob) {
-            await supabase
-              .from('telephony_sync_jobs')
-              .update({
-                status: 'failed',
-                error_message: 'Failed to decrypt credentials',
-                completed_at: new Date().toISOString(),
-              })
-              .eq('id', syncJob.id);
-          }
-          continue;
-        }
-
-        const credentials = decryptData.credentials;
+        // Decrypt credentials inline
+        const credentials = await decryptCredentials(integration.encrypted_credentials);
         let syncResult;
 
         // Call provider-specific sync function with cursor
