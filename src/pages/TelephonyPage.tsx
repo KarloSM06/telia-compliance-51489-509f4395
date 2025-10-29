@@ -94,7 +94,7 @@ export default function TelephonyPage() {
     toast.loading('Uppdaterar data...');
     await refetch();
     toast.dismiss();
-    toast.success('Data uppdaterad!');
+    toast.success('Data uppdaterad');
   };
 
   const handleExport = () => {
@@ -122,7 +122,7 @@ export default function TelephonyPage() {
     a.download = `telephony-events-${new Date().toISOString().split('T')[0]}.csv`;
     a.click();
     window.URL.revokeObjectURL(url);
-    toast.success('Export klar!');
+    toast.success('Export klar');
   };
 
   const handleRefreshProvider = async (id: string) => {
@@ -144,7 +144,7 @@ export default function TelephonyPage() {
       if (!response.ok) throw new Error('Synkning misslyckades');
       
       toast.dismiss();
-      toast.success('Synkning startad!');
+      toast.success('Synkning startad');
       setTimeout(() => refetch(), 2000);
     } catch (error) {
       toast.dismiss();
@@ -159,7 +159,7 @@ export default function TelephonyPage() {
       const { error } = await supabase.from('integrations').delete().eq('id', id);
       if (error) throw error;
 
-      toast.success('Provider borttagen!');
+      toast.success('Provider borttagen');
       refetch();
     } catch (error) {
       toast.error('Kunde inte ta bort provider');
@@ -171,7 +171,7 @@ export default function TelephonyPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold">📞 Telefoni</h1>
+          <h1 className="text-3xl font-bold">Telefoni</h1>
           <p className="text-muted-foreground">
             Realtidsövervakning av alla dina samtal och meddelanden
           </p>

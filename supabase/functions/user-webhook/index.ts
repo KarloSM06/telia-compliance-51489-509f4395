@@ -96,13 +96,14 @@ serve(async (req) => {
       } catch {
         bodyData = {};
       }
-      // Vapi: detect any server message or call event
-      // Vapi always has either message.type, message.call, call.assistantId, or assistant.id
+      // Vapi: detect message wrapper or direct call/assistant data
       if (
         bodyData.message?.type || 
         bodyData.message?.call || 
         bodyData.call?.assistantId || 
-        bodyData.assistant?.id
+        bodyData.assistant?.id ||
+        bodyData.type === 'call-started' ||
+        bodyData.type === 'call-ended'
       ) {
         provider = 'vapi';
       } else if (bodyData.event === 'call_ended' || bodyData.event === 'call_started') {
@@ -254,7 +255,7 @@ serve(async (req) => {
       bodyData.call?.id ||
       bodyData.MessageSid || 
       bodyData.data?.id || 
-      `${provider}-${Date.now()}`;
+      `${provider}-${bodyData.message?.timestamp || Date.now()}`;
     const idempotencyKey = `${provider}:${providerEventId}`;
 
     // Check if already processed
@@ -282,6 +283,7 @@ serve(async (req) => {
       bodyData.message?.type === 'conversation-update' ? 'conversation.update' :
       bodyData.message?.type === 'transcript' ? 'transcript' :
       bodyData.message?.type === 'status-update' ? 'status.update' :
+      bodyData.message?.type === 'end-of-call-report' ? 'call.end' :
       bodyData.message?.type === 'tool-calls' ? 'tool.calls' :
       bodyData.message?.type === 'assistant-request' ? 'assistant.request' :
       // Twilio
@@ -298,6 +300,8 @@ serve(async (req) => {
 
     const direction = 
       bodyData.call?.direction || 
+      bodyData.message?.call?.type === 'inboundPhoneCall' ? 'inbound' :
+      bodyData.message?.call?.type === 'outboundPhoneCall' ? 'outbound' :
       bodyData.Direction || 
       bodyData.direction ||
       (bodyData.data?.direction === 'incoming' ? 'inbound' : 'outbound') ||
@@ -305,33 +309,51 @@ serve(async (req) => {
 
     const fromNumber = 
       bodyData.call?.customer?.number || 
+      bodyData.message?.customer?.number ||
       bodyData.From || 
       bodyData.from || 
       bodyData.data?.from?.phone_number;
 
     const toNumber = 
       bodyData.call?.phoneNumber?.number || 
+      bodyData.message?.phoneNumber?.name ||
       bodyData.To || 
       bodyData.to || 
       bodyData.data?.to?.[0]?.phone_number;
 
     const status = 
       bodyData.call?.status || 
+      bodyData.message?.call?.status ||
       bodyData.CallStatus || 
       bodyData.MessageStatus || 
       bodyData.status ||
       bodyData.data?.status ||
+      bodyData.message?.endedReason ||
       'received';
 
     const eventTimestamp = 
       bodyData.timestamp || 
+      bodyData.message?.timestamp ||
+      bodyData.message?.startedAt ||
       bodyData.data?.occurred_at || 
       new Date().toISOString();
 
-    // Extract conversation data for Vapi
-    const conversationData = bodyData.message?.conversation || null;
+    // Extract comprehensive Vapi data
+    const conversationData = bodyData.message?.artifact?.messages || bodyData.message?.conversation || null;
     const conversationMessages = bodyData.message?.messages || null;
     const assistantData = bodyData.assistant || bodyData.message?.assistant || null;
+    const analysisData = bodyData.message?.analysis || null;
+    const costData = bodyData.message?.cost || bodyData.message?.costBreakdown || null;
+    const durationData = {
+      ms: bodyData.message?.durationMs,
+      seconds: bodyData.message?.durationSeconds,
+      minutes: bodyData.message?.durationMinutes
+    };
+    const recordingUrls = {
+      mono: bodyData.message?.recordingUrl,
+      stereo: bodyData.message?.stereoRecordingUrl
+    };
+    const transcript = bodyData.message?.transcript || null;
 
     // Merge into normalized field
     const normalized = {
@@ -339,6 +361,11 @@ serve(async (req) => {
       conversation: conversationData,
       messages: conversationMessages,
       assistant: assistantData,
+      analysis: analysisData,
+      cost: costData,
+      duration: durationData,
+      recordings: recordingUrls,
+      transcript: transcript,
     };
 
     const { error: eventError } = await supabase

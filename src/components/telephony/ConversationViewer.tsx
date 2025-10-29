@@ -31,21 +31,23 @@ export const ConversationViewer = ({ event }: ConversationViewerProps) => {
                 }`}
               >
                 <Badge
-                  variant={msg.role === 'assistant' ? 'default' : 'secondary'}
+                  variant={msg.role === 'assistant' || msg.role === 'bot' || msg.role === 'system' ? 'default' : 'secondary'}
                   className="h-fit"
                 >
-                  {msg.role === 'assistant' ? 'AI' : msg.role === 'user' ? 'Användare' : msg.role}
+                  {msg.role === 'assistant' || msg.role === 'bot' ? 'AI' : 
+                   msg.role === 'user' ? 'Användare' : 
+                   msg.role === 'system' ? 'System' : msg.role}
                 </Badge>
                 <div
                   className={`flex-1 rounded-lg p-3 ${
-                    msg.role === 'assistant'
+                    msg.role === 'assistant' || msg.role === 'bot'
                       ? 'bg-primary/10 text-primary-foreground'
                       : msg.role === 'user'
                       ? 'bg-secondary text-secondary-foreground'
                       : 'bg-muted'
                   }`}
                 >
-                  <p className="text-sm whitespace-pre-wrap">{msg.content}</p>
+                  <p className="text-sm whitespace-pre-wrap">{msg.message || msg.content}</p>
                 </div>
               </div>
             ))}

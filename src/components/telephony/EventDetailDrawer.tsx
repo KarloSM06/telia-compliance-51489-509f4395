@@ -1,12 +1,14 @@
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Copy, Phone, Clock, DollarSign, User, MessageSquare, FileJson } from 'lucide-react';
+import { Label } from '@/components/ui/label';
+import { Copy, Phone, Clock, DollarSign, User, MessageSquare, FileJson, FileText, ExternalLink } from 'lucide-react';
 import { toast } from 'sonner';
 import { formatDuration, formatCost, formatFullTimestamp, getProviderDisplayName, getDirectionLabel } from '@/lib/telephonyFormatters';
 import { useState } from 'react';
+import { ConversationViewer } from './ConversationViewer';
 
 interface EventDetailDrawerProps {
   event: any;
@@ -21,11 +23,10 @@ export const EventDetailDrawer = ({ event, open, onClose }: EventDetailDrawerPro
 
   const copyToClipboard = (text: string, label: string) => {
     navigator.clipboard.writeText(text);
-    toast.success(`${label} kopierad!`);
+    toast.success(`${label} kopierad`);
   };
 
-  const conversation = event.normalized?.conversation || [];
-  const messages = event.normalized?.messages || [];
+  const conversation = event.normalized?.conversation || event.normalized?.messages || [];
 
   return (
     <Sheet open={open} onOpenChange={onClose}>
@@ -139,6 +140,113 @@ export const EventDetailDrawer = ({ event, open, onClose }: EventDetailDrawerPro
               </CardContent>
             </Card>
 
+            {/* Analysis Summary */}
+            {event.normalized?.analysis && (
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-lg flex items-center gap-2">
+                    <MessageSquare className="h-5 w-5" />
+                    Call Analysis
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div>
+                    <Label className="text-sm font-medium">Summary</Label>
+                    <p className="text-sm text-muted-foreground mt-1">
+                      {event.normalized.analysis.summary}
+                    </p>
+                  </div>
+                  {event.normalized.analysis.successEvaluation && (
+                    <div>
+                      <Label className="text-sm font-medium">Success</Label>
+                      <Badge variant={event.normalized.analysis.successEvaluation === 'true' ? 'default' : 'secondary'} className="ml-2">
+                        {event.normalized.analysis.successEvaluation}
+                      </Badge>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            )}
+
+            {/* Transcript */}
+            {event.normalized?.transcript && (
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-lg flex items-center gap-2">
+                    <FileText className="h-5 w-5" />
+                    Transcript
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <pre className="text-sm whitespace-pre-wrap text-muted-foreground">
+                    {event.normalized.transcript}
+                  </pre>
+                </CardContent>
+              </Card>
+            )}
+
+            {/* Duration & Cost from normalized data */}
+            {(event.normalized?.duration || event.normalized?.cost) && (
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-lg flex items-center gap-2">
+                    <Clock className="h-5 w-5" />
+                    Call Metrics
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-2">
+                  {event.normalized.duration?.minutes && (
+                    <div className="flex justify-between">
+                      <span className="text-sm">Duration:</span>
+                      <span className="text-sm font-medium">{event.normalized.duration.minutes.toFixed(2)} min</span>
+                    </div>
+                  )}
+                  {event.normalized.cost?.total && (
+                    <div className="flex justify-between">
+                      <span className="text-sm">Cost:</span>
+                      <span className="text-sm font-medium">${event.normalized.cost.total.toFixed(4)}</span>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            )}
+
+            {/* Recordings */}
+            {event.normalized?.recordings && (event.normalized.recordings.mono || event.normalized.recordings.stereo) && (
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-lg flex items-center gap-2">
+                    <Phone className="h-5 w-5" />
+                    Recordings
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-2">
+                  {event.normalized.recordings.mono && (
+                    <a 
+                      href={event.normalized.recordings.mono} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-2 text-sm text-primary hover:underline"
+                    >
+                      <ExternalLink className="h-4 w-4" />
+                      Mono Recording
+                    </a>
+                  )}
+                  {event.normalized.recordings.stereo && (
+                    <a 
+                      href={event.normalized.recordings.stereo} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-2 text-sm text-primary hover:underline"
+                    >
+                      <ExternalLink className="h-4 w-4" />
+                      Stereo Recording
+                    </a>
+                  )}
+                </CardContent>
+              </Card>
+            )}
+
             {/* Agent Info */}
             {event.agent_id && (
               <Card>
@@ -155,45 +263,7 @@ export const EventDetailDrawer = ({ event, open, onClose }: EventDetailDrawerPro
             )}
 
             {/* Conversation */}
-            {conversation.length > 0 && (
-              <Card>
-                <CardContent className="p-4">
-                  <div className="flex items-center gap-2 mb-3">
-                    <MessageSquare className="h-4 w-4" />
-                    <h3 className="font-semibold">Konversation</h3>
-                  </div>
-                  <ScrollArea className="h-[300px]">
-                    <div className="space-y-3">
-                      {conversation.map((msg: any, i: number) => (
-                        <div
-                          key={i}
-                          className={`flex gap-2 ${
-                            msg.role === 'assistant' ? 'justify-start' : 'justify-end'
-                          }`}
-                        >
-                          <div
-                            className={`flex-1 max-w-[85%] rounded-lg p-3 ${
-                              msg.role === 'assistant'
-                                ? 'bg-primary/10 text-primary-foreground'
-                                : msg.role === 'user'
-                                ? 'bg-secondary text-secondary-foreground'
-                                : 'bg-muted'
-                            }`}
-                          >
-                            <div className="flex items-center gap-2 mb-1">
-                              <Badge variant={msg.role === 'assistant' ? 'default' : 'secondary'} className="text-xs">
-                                {msg.role === 'assistant' ? '🤖 Bot' : '👤 User'}
-                              </Badge>
-                            </div>
-                            <p className="text-sm whitespace-pre-wrap">{msg.content}</p>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </ScrollArea>
-                </CardContent>
-              </Card>
-            )}
+            {conversation.length > 0 && <ConversationViewer event={event} />}
 
             {/* Recording URL */}
             {event.recording_url && (
