@@ -1,5 +1,5 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.75.0';
-import { verifyTelnyxSignature } from '../user-webhook/_signature-verification.ts';
+import { verifyTelnyxSignature } from '../_shared/signature-verification.ts';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
