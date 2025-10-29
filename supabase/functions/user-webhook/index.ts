@@ -1,6 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.75.0';
-import { verifyTwilioSignature, verifyTelnyxSignature } from './_signature-verification.ts';
+import { verifyTwilioSignature, verifyTelnyxSignature, verifyVapiSignature, verifyRetellSignature } from '../_shared/signature-verification.ts';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -124,6 +124,34 @@ serve(async (req) => {
         );
         if (!signatureVerified) {
           verificationError = 'Telnyx signature verification failed';
+        }
+      }
+    } else if (provider === 'vapi' && vapiSignature) {
+      const credentials = integration.encrypted_credentials as any;
+      const webhookSecret = credentials?.webhookSecret;
+      
+      if (webhookSecret) {
+        signatureVerified = await verifyVapiSignature(
+          vapiSignature,
+          body,
+          webhookSecret
+        );
+        if (!signatureVerified) {
+          verificationError = 'Vapi signature verification failed';
+        }
+      }
+    } else if (provider === 'retell' && retellSignature) {
+      const credentials = integration.encrypted_credentials as any;
+      const webhookKey = credentials?.webhookKey;
+      
+      if (webhookKey) {
+        signatureVerified = await verifyRetellSignature(
+          retellSignature,
+          body,
+          webhookKey
+        );
+        if (!signatureVerified) {
+          verificationError = 'Retell signature verification failed';
         }
       }
     } else {

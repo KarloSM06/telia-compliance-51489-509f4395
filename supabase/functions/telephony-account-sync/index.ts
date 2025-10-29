@@ -76,15 +76,15 @@ Deno.serve(async (req) => {
 
         // Decrypt credentials
         const { data: decryptData, error: decryptError } = await supabase.functions.invoke(
-          'decrypt-data',
+          'decrypt-telephony-credentials',
           {
             body: {
-              encrypted_data: integration.encrypted_credentials,
+              encrypted: integration.encrypted_credentials,
             },
           }
         );
 
-        if (decryptError || !decryptData) {
+        if (decryptError || !decryptData?.credentials) {
           console.error('❌ Error decrypting credentials:', decryptError);
           if (syncJob) {
             await supabase
@@ -99,7 +99,7 @@ Deno.serve(async (req) => {
           continue;
         }
 
-        const credentials = decryptData;
+        const credentials = decryptData.credentials;
         let syncResult;
 
         // Call provider-specific sync function with cursor
