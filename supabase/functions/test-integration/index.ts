@@ -35,15 +35,19 @@ serve(async (req) => {
 
     console.log('🧪 Testing integration:', integration_id, 'Type:', test_type);
 
-    // Fetch integration
+    // Fetch integration (service role bypasses RLS); validate ownership in code
     const { data: integration, error: integrationError } = await supabase
       .from('integrations')
-      .select('*')
+      .select('id,user_id,provider,webhook_url,encrypted_credentials,is_active')
       .eq('id', integration_id)
-      .eq('user_id', user.id)
-      .single();
+      .maybeSingle();
 
-    if (integrationError || !integration) {
+    if (integrationError) {
+      console.error('❌ Integration fetch error:', integrationError);
+      throw new Error('Integration lookup failed');
+    }
+
+    if (!integration || integration.user_id !== user.id) {
       throw new Error('Integration not found');
     }
 
