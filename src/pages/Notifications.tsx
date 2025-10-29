@@ -8,7 +8,7 @@ import SMSProviderSettings from "@/pages/SMSProviderSettings";
 import MessageInsights from "@/pages/MessageInsights";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
-export default function Communications() {
+export default function Notifications() {
   const [activeTab, setActiveTab] = useState("templates");
 
   return (
@@ -17,9 +17,9 @@ export default function Communications() {
         {/* Premium Hero Section */}
         <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-blue-600 via-purple-600 to-pink-600 p-8 text-white mb-8">
           <div className="relative z-10">
-            <h1 className="text-4xl font-bold mb-2">Kommunikation</h1>
+            <h1 className="text-4xl font-bold mb-2">Notifikationer</h1>
             <p className="text-lg opacity-90 mb-6">
-              Styr all kundkommunikation från en plats
+              Hantera notifikationer, påminnelser och ägaraviseringar
             </p>
           </div>
           <div className="absolute inset-0 bg-grid-white/[0.05] bg-[length:20px_20px]" />

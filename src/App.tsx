@@ -31,7 +31,8 @@ const LeadPage = lazy(() => import("./pages/LeadPage"));
 const ThorPage = lazy(() => import("./pages/ThorPage"));
 const EkoPage = lazy(() => import("./pages/EkoPage"));
 const CalendarPage = lazy(() => import("./pages/CalendarPage"));
-const Communications = lazy(() => import("./pages/Communications"));
+const Notifications = lazy(() => import("./pages/Notifications"));
+const MessagesPage = lazy(() => import("./pages/MessagesPage"));
 const CompanyProfile = lazy(() => import("./pages/CompanyProfile"));
 const ReviewDashboard = lazy(() => import("./pages/ReviewDashboard"));
 const Unsubscribe = lazy(() => import("./pages/Unsubscribe"));
@@ -88,7 +89,8 @@ const App = () => {
               <Route path="/dashboard/thor" element={<DashboardLayout><ThorPage /></DashboardLayout>} />
               <Route path="/dashboard/eko" element={<DashboardLayout><EkoPage /></DashboardLayout>} />
               <Route path="/dashboard/calendar" element={<DashboardLayout><CalendarPage /></DashboardLayout>} />
-              <Route path="/dashboard/communications" element={<DashboardLayout><Communications /></DashboardLayout>} />
+            <Route path="/dashboard/notifications" element={<DashboardLayout><Notifications /></DashboardLayout>} />
+            <Route path="/dashboard/messages" element={<DashboardLayout><MessagesPage /></DashboardLayout>} />
               <Route path="/dashboard/company" element={<DashboardLayout><CompanyProfile /></DashboardLayout>} />
               <Route path="/dashboard/reviews" element={<DashboardLayout><ReviewDashboard /></DashboardLayout>} />
               <Route path="/dashboard/telephony" element={<DashboardLayout><TelephonyPage /></DashboardLayout>} />
