@@ -38,7 +38,30 @@ Deno.serve(async (req) => {
       console.log(`\n🔄 Syncing ${integration.provider} (${integration.id})...`);
 
       try {
+        // Get or create sync status
+        let { data: syncStatus } = await supabase
+          .from('provider_sync_status')
+          .select('*')
+          .eq('integration_id', integration.id)
+          .single();
+
+        if (!syncStatus) {
+          const { data: newStatus } = await supabase
+            .from('provider_sync_status')
+            .insert({
+              integration_id: integration.id,
+              user_id: integration.user_id,
+              sync_method: integration.webhook_enabled ? 'webhook' : 'polling',
+              webhook_enabled: integration.webhook_enabled || false,
+              polling_enabled: integration.polling_enabled || false,
+            })
+            .select()
+            .single();
+          syncStatus = newStatus;
+        }
+
         // Create sync job record
+        const syncStartTime = Date.now();
         const { data: syncJob } = await supabase
           .from('telephony_sync_jobs')
           .insert({
@@ -79,24 +102,29 @@ Deno.serve(async (req) => {
         const credentials = decryptData;
         let syncResult;
 
-        // Call provider-specific sync function
+        // Call provider-specific sync function with cursor
+        const lastSyncedTimestamp = syncStatus?.last_synced_timestamp;
+        console.log(`📅 Last synced: ${lastSyncedTimestamp || 'never'}`);
+
         switch (integration.provider) {
           case 'twilio':
-            syncResult = await syncTwilio(integration, credentials, supabase);
+            syncResult = await syncTwilio(integration, credentials, supabase, lastSyncedTimestamp);
             break;
           case 'telnyx':
-            syncResult = await syncTelnyx(integration, credentials, supabase);
+            syncResult = await syncTelnyx(integration, credentials, supabase, lastSyncedTimestamp);
             break;
           case 'vapi':
-            syncResult = await syncVapi(integration, credentials, supabase);
+            syncResult = await syncVapi(integration, credentials, supabase, lastSyncedTimestamp);
             break;
           case 'retell':
-            syncResult = await syncRetell(integration, credentials, supabase);
+            syncResult = await syncRetell(integration, credentials, supabase, lastSyncedTimestamp);
             break;
           default:
             console.warn(`⚠️ Unknown provider: ${integration.provider}`);
             syncResult = { success: false, count: 0, error: 'Unknown provider' };
         }
+
+        const syncDuration = Date.now() - syncStartTime;
 
         // Update integration last_synced_at
         await supabase
@@ -107,6 +135,27 @@ Deno.serve(async (req) => {
             error_message: syncResult.error || null,
           })
           .eq('id', integration.id);
+
+        // Update provider_sync_status
+        if (syncStatus) {
+          await supabase
+            .from('provider_sync_status')
+            .update({
+              last_poll_at: new Date().toISOString(),
+              last_successful_poll_at: syncResult.success ? new Date().toISOString() : syncStatus.last_successful_poll_at,
+              last_synced_timestamp: syncResult.lastEventTimestamp || new Date().toISOString(),
+              last_synced_event_id: syncResult.lastEventId || null,
+              polling_failure_count: syncResult.success ? 0 : (syncStatus.polling_failure_count || 0) + 1,
+              polling_health_status: syncResult.success ? 'healthy' : 'failing',
+              consecutive_error_count: syncResult.success ? 0 : (syncStatus.consecutive_error_count || 0) + 1,
+              last_error_message: syncResult.error || null,
+              last_error_at: syncResult.success ? syncStatus.last_error_at : new Date().toISOString(),
+              total_events_synced: (syncStatus.total_events_synced || 0) + (syncResult.count || 0),
+              last_sync_duration_ms: syncDuration,
+              updated_at: new Date().toISOString(),
+            })
+            .eq('id', syncStatus.id);
+        }
 
         // Update sync job
         if (syncJob) {
@@ -164,7 +213,7 @@ Deno.serve(async (req) => {
 });
 
 // Provider-specific sync functions
-async function syncTwilio(integration: any, credentials: any, supabase: any) {
+async function syncTwilio(integration: any, credentials: any, supabase: any, lastSyncedTimestamp?: string) {
   try {
     const accountSid = credentials.accountSid;
     const authToken = credentials.authToken;
@@ -175,15 +224,18 @@ async function syncTwilio(integration: any, credentials: any, supabase: any) {
 
     const auth = btoa(`${accountSid}:${authToken}`);
     
+    // Build URL with cursor for incremental sync
+    let callsUrl = `https://api.twilio.com/2010-04-01/Accounts/${accountSid}/Calls.json?PageSize=100`;
+    if (lastSyncedTimestamp) {
+      callsUrl += `&StartTime>=${new Date(lastSyncedTimestamp).toISOString()}`;
+    }
+    
     // Fetch calls
-    const callsResponse = await fetch(
-      `https://api.twilio.com/2010-04-01/Accounts/${accountSid}/Calls.json?PageSize=100`,
-      {
-        headers: {
-          Authorization: `Basic ${auth}`,
-        },
-      }
-    );
+    const callsResponse = await fetch(callsUrl, {
+      headers: {
+        Authorization: `Basic ${auth}`,
+      },
+    });
 
     if (!callsResponse.ok) {
       return { success: false, count: 0, error: 'Twilio API error' };
@@ -192,15 +244,18 @@ async function syncTwilio(integration: any, credentials: any, supabase: any) {
     const callsData = await callsResponse.json();
     const calls = callsData.calls || [];
 
+    // Build messages URL with cursor
+    let messagesUrl = `https://api.twilio.com/2010-04-01/Accounts/${accountSid}/Messages.json?PageSize=100`;
+    if (lastSyncedTimestamp) {
+      messagesUrl += `&DateSent>=${new Date(lastSyncedTimestamp).toISOString()}`;
+    }
+
     // Fetch messages
-    const messagesResponse = await fetch(
-      `https://api.twilio.com/2010-04-01/Accounts/${accountSid}/Messages.json?PageSize=100`,
-      {
-        headers: {
-          Authorization: `Basic ${auth}`,
-        },
-      }
-    );
+    const messagesResponse = await fetch(messagesUrl, {
+      headers: {
+        Authorization: `Basic ${auth}`,
+      },
+    });
 
     const messagesData = messagesResponse.ok ? await messagesResponse.json() : { messages: [] };
     const messages = messagesData.messages || [];
@@ -265,14 +320,26 @@ async function syncTwilio(integration: any, credentials: any, supabase: any) {
       });
     }
 
-    return { success: true, count: calls.length + messages.length };
+    // Track last event timestamp
+    const allEvents = [...calls, ...messages];
+    const lastEventTimestamp = allEvents.length > 0
+      ? new Date(Math.max(...allEvents.map((e: any) => new Date(e.date_created || e.date_sent).getTime()))).toISOString()
+      : undefined;
+    const lastEventId = allEvents.length > 0 ? allEvents[allEvents.length - 1].sid : undefined;
+
+    return { 
+      success: true, 
+      count: calls.length + messages.length,
+      lastEventTimestamp,
+      lastEventId
+    };
   } catch (error) {
     console.error('Twilio sync error:', error);
     return { success: false, count: 0, error: error.message };
   }
 }
 
-async function syncTelnyx(integration: any, credentials: any, supabase: any) {
+async function syncTelnyx(integration: any, credentials: any, supabase: any, lastSyncedTimestamp?: string) {
   try {
     const apiKey = credentials.apiKey;
 
@@ -280,8 +347,14 @@ async function syncTelnyx(integration: any, credentials: any, supabase: any) {
       return { success: false, count: 0, error: 'Missing API key' };
     }
 
+    // Build URL with filter for incremental sync
+    let callsUrl = 'https://api.telnyx.com/v2/calls?page[size]=100';
+    if (lastSyncedTimestamp) {
+      callsUrl += `&filter[created_at][gt]=${lastSyncedTimestamp}`;
+    }
+
     // Fetch calls
-    const callsResponse = await fetch('https://api.telnyx.com/v2/calls?page[size]=100', {
+    const callsResponse = await fetch(callsUrl, {
       headers: {
         Authorization: `Bearer ${apiKey}`,
         'Content-Type': 'application/json',
@@ -295,8 +368,14 @@ async function syncTelnyx(integration: any, credentials: any, supabase: any) {
     const callsData = await callsResponse.json();
     const calls = callsData.data || [];
 
+    // Build messages URL with filter
+    let messagesUrl = 'https://api.telnyx.com/v2/messages?page[size]=100';
+    if (lastSyncedTimestamp) {
+      messagesUrl += `&filter[created_at][gt]=${lastSyncedTimestamp}`;
+    }
+
     // Fetch messages
-    const messagesResponse = await fetch('https://api.telnyx.com/v2/messages?page[size]=100', {
+    const messagesResponse = await fetch(messagesUrl, {
       headers: {
         Authorization: `Bearer ${apiKey}`,
         'Content-Type': 'application/json',
@@ -363,14 +442,26 @@ async function syncTelnyx(integration: any, credentials: any, supabase: any) {
       });
     }
 
-    return { success: true, count: calls.length + messages.length };
+    // Track last event timestamp
+    const allEvents = [...calls, ...messages];
+    const lastEventTimestamp = allEvents.length > 0
+      ? new Date(Math.max(...allEvents.map((e: any) => new Date(e.created_at).getTime()))).toISOString()
+      : undefined;
+    const lastEventId = allEvents.length > 0 ? (allEvents[allEvents.length - 1].id || allEvents[allEvents.length - 1].call_control_id) : undefined;
+
+    return { 
+      success: true, 
+      count: calls.length + messages.length,
+      lastEventTimestamp,
+      lastEventId
+    };
   } catch (error) {
     console.error('Telnyx sync error:', error);
     return { success: false, count: 0, error: error.message };
   }
 }
 
-async function syncVapi(integration: any, credentials: any, supabase: any) {
+async function syncVapi(integration: any, credentials: any, supabase: any, lastSyncedTimestamp?: string) {
   try {
     const apiKey = credentials.apiKey;
 
@@ -378,7 +469,13 @@ async function syncVapi(integration: any, credentials: any, supabase: any) {
       return { success: false, count: 0, error: 'Missing API key' };
     }
 
-    const response = await fetch('https://api.vapi.ai/call?limit=100', {
+    // Build URL with createdAtGt for incremental sync
+    let url = 'https://api.vapi.ai/call?limit=100';
+    if (lastSyncedTimestamp) {
+      url += `&createdAtGt=${encodeURIComponent(lastSyncedTimestamp)}`;
+    }
+
+    const response = await fetch(url, {
       headers: {
         Authorization: `Bearer ${apiKey}`,
       },
@@ -427,14 +524,25 @@ async function syncVapi(integration: any, credentials: any, supabase: any) {
       });
     }
 
-    return { success: true, count: calls.length };
+    // Track last event timestamp
+    const lastEventTimestamp = calls.length > 0
+      ? new Date(Math.max(...calls.map((c: any) => new Date(c.createdAt).getTime()))).toISOString()
+      : undefined;
+    const lastEventId = calls.length > 0 ? calls[calls.length - 1].id : undefined;
+
+    return { 
+      success: true, 
+      count: calls.length,
+      lastEventTimestamp,
+      lastEventId
+    };
   } catch (error) {
     console.error('VAPI sync error:', error);
     return { success: false, count: 0, error: error.message };
   }
 }
 
-async function syncRetell(integration: any, credentials: any, supabase: any) {
+async function syncRetell(integration: any, credentials: any, supabase: any, lastSyncedTimestamp?: string) {
   try {
     const apiKey = credentials.apiKey;
 
@@ -442,7 +550,13 @@ async function syncRetell(integration: any, credentials: any, supabase: any) {
       return { success: false, count: 0, error: 'Missing API key' };
     }
 
-    const response = await fetch('https://api.retellai.com/list-calls?limit=100', {
+    // Build URL with start_timestamp for incremental sync
+    let url = 'https://api.retellai.com/list-calls?limit=100';
+    if (lastSyncedTimestamp) {
+      url += `&start_timestamp_gt=${Math.floor(new Date(lastSyncedTimestamp).getTime())}`;
+    }
+
+    const response = await fetch(url, {
       headers: {
         Authorization: `Bearer ${apiKey}`,
       },
@@ -494,7 +608,18 @@ async function syncRetell(integration: any, credentials: any, supabase: any) {
       });
     }
 
-    return { success: true, count: calls.length };
+    // Track last event timestamp
+    const lastEventTimestamp = calls.length > 0
+      ? new Date(Math.max(...calls.map((c: any) => c.start_timestamp))).toISOString()
+      : undefined;
+    const lastEventId = calls.length > 0 ? calls[calls.length - 1].call_id : undefined;
+
+    return { 
+      success: true, 
+      count: calls.length,
+      lastEventTimestamp,
+      lastEventId
+    };
   } catch (error) {
     console.error('Retell sync error:', error);
     return { success: false, count: 0, error: error.message };

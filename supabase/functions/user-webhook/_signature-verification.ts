@@ -93,8 +93,8 @@ export async function verifyTelnyxSignature(
 }
 
 /**
- * Vapi Signature Verification
- * (Implementation depends on Vapi's webhook security docs)
+ * Vapi Signature Verification (HMAC-SHA256)
+ * https://docs.vapi.ai/webhooks#verifying-webhook-signatures
  */
 export async function verifyVapiSignature(
   signature: string,
@@ -102,8 +102,6 @@ export async function verifyVapiSignature(
   webhookSecret: string
 ): Promise<boolean> {
   try {
-    // Placeholder - implement according to Vapi docs
-    // Typically HMAC-SHA256
     const encoder = new TextEncoder();
     const keyData = encoder.encode(webhookSecret);
     const dataToSign = encoder.encode(body);
@@ -120,7 +118,7 @@ export async function verifyVapiSignature(
     const signatureArray = Array.from(new Uint8Array(signatureBuffer));
     const expectedSignature = signatureArray.map(b => b.toString(16).padStart(2, '0')).join('');
 
-    return signature === expectedSignature;
+    return signature.toLowerCase() === expectedSignature.toLowerCase();
   } catch (error) {
     console.error('[Vapi Signature] Verification error:', error);
     return false;
@@ -128,8 +126,8 @@ export async function verifyVapiSignature(
 }
 
 /**
- * Retell Signature Verification
- * (Implementation depends on Retell's webhook security docs)
+ * Retell Signature Verification (HMAC-SHA256)
+ * https://docs.retellai.com/api-references/webhook
  */
 export async function verifyRetellSignature(
   signature: string,
@@ -137,7 +135,6 @@ export async function verifyRetellSignature(
   webhookKey: string
 ): Promise<boolean> {
   try {
-    // Placeholder - implement according to Retell docs
     const encoder = new TextEncoder();
     const keyData = encoder.encode(webhookKey);
     const dataToSign = encoder.encode(body);
@@ -154,7 +151,7 @@ export async function verifyRetellSignature(
     const signatureArray = Array.from(new Uint8Array(signatureBuffer));
     const expectedSignature = signatureArray.map(b => b.toString(16).padStart(2, '0')).join('');
 
-    return signature === expectedSignature;
+    return signature.toLowerCase() === expectedSignature.toLowerCase();
   } catch (error) {
     console.error('[Retell Signature] Verification error:', error);
     return false;

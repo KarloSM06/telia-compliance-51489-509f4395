@@ -3247,6 +3247,54 @@ export type Database = {
           },
         ]
       }
+      webhooks_received: {
+        Row: {
+          event_type: string | null
+          headers: Json | null
+          id: string
+          idempotency_key: string | null
+          processed: boolean | null
+          processed_at: string | null
+          processing_error: string | null
+          provider: string
+          provider_event_id: string | null
+          raw_payload: Json
+          received_at: string | null
+          signature_verified: boolean | null
+          user_id: string | null
+        }
+        Insert: {
+          event_type?: string | null
+          headers?: Json | null
+          id?: string
+          idempotency_key?: string | null
+          processed?: boolean | null
+          processed_at?: string | null
+          processing_error?: string | null
+          provider: string
+          provider_event_id?: string | null
+          raw_payload: Json
+          received_at?: string | null
+          signature_verified?: boolean | null
+          user_id?: string | null
+        }
+        Update: {
+          event_type?: string | null
+          headers?: Json | null
+          id?: string
+          idempotency_key?: string | null
+          processed?: boolean | null
+          processed_at?: string | null
+          processing_error?: string | null
+          provider?: string
+          provider_event_id?: string | null
+          raw_payload?: Json
+          received_at?: string | null
+          signature_verified?: boolean | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       widget_templates: {
         Row: {
           category: string | null
