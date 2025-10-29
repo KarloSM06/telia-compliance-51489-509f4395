@@ -18,6 +18,40 @@ function convertTimestamp(timestamp?: number | string): string {
   return new Date(timestamp).toISOString();
 }
 
+// Helper to format phone numbers to E.164 format
+function formatPhone(value?: string): string | null {
+  if (!value) return null;
+  
+  const trimmed = value.trim();
+  if (!trimmed) return null;
+  
+  // Already in E.164 format
+  if (trimmed.startsWith('+')) return trimmed;
+  
+  // International format with 00 prefix
+  if (trimmed.startsWith('00')) {
+    return '+' + trimmed.slice(2);
+  }
+  
+  // Swedish number starting with 0
+  if (trimmed.startsWith('0')) {
+    return '+46' + trimmed.slice(1);
+  }
+  
+  // Return as-is if unknown format
+  return trimmed;
+}
+
+// Helper to parse phone number from SIP header
+function parseNumberFromHeader(header?: string): string | null {
+  if (!header) return null;
+  
+  // Extract number from SIP URI or header format
+  // Examples: "sip:+46702312271@...", "<sip:0702312271@...>", "\"0702312271\" <sip:...>"
+  const match = header.match(/["\s<]*(?:sip:)?(\+?\d+)[@>\s]/);
+  return match ? match[1] : null;
+}
+
 // Inline AES-GCM decryption helper
 async function decryptCredentials(encryptedData: any): Promise<any> {
   const ENCRYPTION_KEY = Deno.env.get('ENCRYPTION_KEY');
@@ -292,9 +326,18 @@ serve(async (req) => {
         const callData = bodyData.message?.call || {};
         const direction = callData.type === 'inboundPhoneCall' ? 'inbound' : 'outbound';
         
-        // Extract phone numbers from customer and phoneNumber
-        const fromNumber = callData.customer?.number || bodyData.message?.customer?.number;
-        const toNumber = callData.phoneNumber?.name || bodyData.message?.phoneNumber?.name;
+        // Extract phone numbers with multiple fallbacks
+        const fromRaw = callData.customer?.number || 
+                        bodyData.message?.customer?.number || 
+                        parseNumberFromHeader(callData.phoneCallProviderDetails?.sip?.headers?.['p-asserted-identity']);
+        const toRaw = bodyData.message?.phoneNumber?.name || 
+                      callData.phoneNumber?.name || 
+                      parseNumberFromHeader(callData.phoneCallProviderDetails?.sip?.headers?.to);
+        
+        const fromNumber = formatPhone(fromRaw);
+        const toNumber = formatPhone(toRaw);
+        
+        console.log('📞 Phone numbers:', { fromRaw, toRaw, from: fromNumber, to: toNumber });
 
         // Store initial call data
         const { error: createError } = await supabase
@@ -345,8 +388,18 @@ serve(async (req) => {
           // Fallback: Create new event with full data
           const callData = bodyData.message?.call || {};
           const direction = callData.type === 'inboundPhoneCall' ? 'inbound' : 'outbound';
-          const fromNumber = callData.customer?.number || bodyData.message?.customer?.number;
-          const toNumber = callData.phoneNumber?.name || bodyData.message?.phoneNumber?.name;
+          
+          const fromRaw = callData.customer?.number || 
+                          bodyData.message?.customer?.number || 
+                          parseNumberFromHeader(callData.phoneCallProviderDetails?.sip?.headers?.['p-asserted-identity']);
+          const toRaw = bodyData.message?.phoneNumber?.name || 
+                        callData.phoneNumber?.name || 
+                        parseNumberFromHeader(callData.phoneCallProviderDetails?.sip?.headers?.to);
+          
+          const fromNumber = formatPhone(fromRaw);
+          const toNumber = formatPhone(toRaw);
+          
+          console.log('📞 Phone numbers (fallback):', { fromRaw, toRaw, from: fromNumber, to: toNumber });
 
           await supabase
             .from('telephony_events')
@@ -381,8 +434,8 @@ serve(async (req) => {
                 call: bodyData.message?.call,
                 analysis: bodyData.message?.analysis
               },
-              duration_seconds: bodyData.message?.durationSeconds || 0,
-              cost_amount: bodyData.message?.cost || 0,
+              duration_seconds: Math.round(Number(bodyData.message?.durationSeconds) || 0),
+              cost_amount: Number(bodyData.message?.cost ?? bodyData.message?.costBreakdown?.total ?? 0),
               cost_currency: 'USD',
               event_timestamp: convertTimestamp(bodyData.message?.endedAt),
               idempotency_key: idempotencyKey,
@@ -410,21 +463,32 @@ serve(async (req) => {
             costs: bodyData.message?.costs
           };
 
+          const durationSeconds = Math.round(Number(bodyData.message?.durationSeconds) || 0);
+          const costAmount = Number(bodyData.message?.cost ?? bodyData.message?.costBreakdown?.total ?? 0);
+          
           const { error: updateError } = await supabase
             .from('telephony_events')
             .update({
               event_type: 'call.end',
               status: bodyData.message?.endedReason || 'completed',
               normalized: updatedNormalized,
-              duration_seconds: bodyData.message?.durationSeconds || 0,
-              cost_amount: bodyData.message?.cost || 0,
+              duration_seconds: durationSeconds,
+              cost_amount: costAmount,
               cost_currency: 'USD',
+              event_timestamp: convertTimestamp(bodyData.message?.endedAt),
               provider_payload: bodyData
             })
             .eq('id', existingEvent.id);
 
           if (updateError) {
             console.error('❌ Error updating Vapi call event:', updateError);
+            console.error('Update details:', { 
+              callId, 
+              durationRaw: bodyData.message?.durationSeconds, 
+              durationParsed: durationSeconds,
+              costRaw: bodyData.message?.cost,
+              costParsed: costAmount
+            });
           } else {
             console.log('✅ Vapi call updated:', existingEvent.id);
           }
