@@ -116,25 +116,54 @@ export const SMSDetailDrawer = ({ message, open, onClose }: SMSDetailDrawerProps
               </div>
             </div>
 
-            {/* Phone Number */}
+            {/* Phone Numbers - FROM and TO */}
             <Card>
               <CardContent className="p-4">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <Phone className="h-4 w-4 text-muted-foreground" />
-                    <span className="text-sm font-medium">
-                      {message.direction === 'inbound' ? 'Från:' : 'Till:'}
-                    </span>
-                    <span className="font-mono text-sm">{message.recipient}</span>
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <Phone className="h-4 w-4 text-muted-foreground" />
+                      <span className="text-sm text-muted-foreground">Från:</span>
+                    </div>
+                    <div className="flex gap-2 items-center">
+                      <code className="text-sm font-mono bg-muted px-2 py-1 rounded">
+                        {message.metadata?.from || message.recipient || '-'}
+                      </code>
+                      {(message.metadata?.from || message.recipient) && (
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => copyToClipboard(message.metadata?.from || message.recipient, 'Från-nummer')}
+                        >
+                          <Copy className="h-3 w-3" />
+                        </Button>
+                      )}
+                    </div>
                   </div>
-                  {message.recipient && (
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => copyToClipboard(message.recipient, 'Telefonnummer')}
-                    >
-                      <Copy className="h-3 w-3" />
-                    </Button>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <Phone className="h-4 w-4 text-muted-foreground" />
+                      <span className="text-sm text-muted-foreground">Till:</span>
+                    </div>
+                    <div className="flex gap-2 items-center">
+                      <code className="text-sm font-mono bg-muted px-2 py-1 rounded">
+                        {message.metadata?.to || '-'}
+                      </code>
+                      {message.metadata?.to && (
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => copyToClipboard(message.metadata?.to, 'Till-nummer')}
+                        >
+                          <Copy className="h-3 w-3" />
+                        </Button>
+                      )}
+                    </div>
+                  </div>
+                  {message.direction === 'inbound' && message.metadata?.to && (
+                    <p className="text-xs text-muted-foreground pt-2 border-t">
+                      ℹ️ Detta är ett inkommande SMS till ditt nummer ({message.metadata.to})
+                    </p>
                   )}
                 </div>
               </CardContent>

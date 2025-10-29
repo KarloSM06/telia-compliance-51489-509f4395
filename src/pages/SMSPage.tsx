@@ -1,10 +1,13 @@
 import { useState, useMemo } from "react";
 import { Button } from '@/components/ui/button';
-import { RefreshCw, Download, Settings } from 'lucide-react';
+import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
+import { RefreshCw, Download, Settings, AlertCircle } from 'lucide-react';
 import { toast } from 'sonner';
 import { useQueryClient } from '@tanstack/react-query';
+import { Link } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import { useMessageLogs } from "@/hooks/useMessageLogs";
+import { usePhoneNumbers } from "@/hooks/usePhoneNumbers";
 import { SMSStatsCards } from "@/components/messages/SMSStatsCards";
 import { SMSTable } from "@/components/messages/SMSTable";
 import { SMSFilters, SMSFilterValues } from "@/components/messages/SMSFilters";
@@ -14,6 +17,7 @@ import { MessageProvidersDialog } from "@/components/messages/MessageProvidersDi
 export default function SMSPage() {
   const { user } = useAuth();
   const queryClient = useQueryClient();
+  const { phoneNumbers, isLoading: isLoadingNumbers } = usePhoneNumbers();
   const [selectedMessage, setSelectedMessage] = useState<any>(null);
   const [showProvidersDialog, setShowProvidersDialog] = useState(false);
   const [filters, setFilters] = useState<SMSFilterValues>({
@@ -119,6 +123,22 @@ export default function SMSPage() {
           </Button>
         </div>
       </div>
+
+      {/* Warning if no phone numbers synced */}
+      {!isLoadingNumbers && (!phoneNumbers || phoneNumbers.length === 0) && (
+        <Alert className="border-amber-500/50 bg-amber-500/10">
+          <AlertCircle className="h-4 w-4 text-amber-600" />
+          <AlertTitle className="text-amber-900">Inga telefonnummer synkade</AlertTitle>
+          <AlertDescription className="text-amber-800">
+            För att korrekt klassificera inkommande/utgående SMS måste du synka dina telefonnummer.{' '}
+            <Button variant="link" className="px-0 h-auto text-amber-900 underline font-semibold" asChild>
+              <Link to="/dashboard/telephony">
+                Gå till Telefoni → Synka nummer
+              </Link>
+            </Button>
+          </AlertDescription>
+        </Alert>
+      )}
 
       {/* Stats Cards */}
         <SMSStatsCards

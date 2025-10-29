@@ -1040,6 +1040,27 @@ serve(async (req) => {
       // Special handling for Twilio SMS (no price field in webhook)
       if (provider === 'twilio' && (bodyData.SmsStatus || bodyData.MessageStatus)) {
         const numSegments = parseInt(bodyData.NumSegments || '1');
+        
+        // Check if phone numbers are synced for this integration
+        const { count: phoneCount } = await supabase
+          .from('phone_numbers')
+          .select('*', { count: 'exact', head: true })
+          .eq('integration_id', integration.id);
+
+        if (phoneCount === 0) {
+          console.log('⚠️ No phone numbers synced for this Twilio integration, triggering automatic sync...');
+          
+          // Fire-and-forget sync trigger (don't wait for response)
+          fetch(`${Deno.env.get('SUPABASE_URL')}/functions/v1/sync-phone-numbers`, {
+            method: 'POST',
+            headers: {
+              'Authorization': `Bearer ${Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')}`,
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ integration_id: integration.id })
+          }).catch(err => console.error('Failed to trigger phone sync:', err));
+        }
+        
         const smsCalculation = await calculateTwilioSmsCost(
           supabase,
           fromNumber,

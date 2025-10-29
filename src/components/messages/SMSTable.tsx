@@ -102,7 +102,8 @@ export const SMSTable = ({ messages, onViewDetails }: SMSTableProps) => {
         <TableHeader>
           <TableRow>
             <TableHead>Riktning</TableHead>
-            <TableHead>Mottagare/Avsändare</TableHead>
+            <TableHead>Från</TableHead>
+            <TableHead>Till</TableHead>
             <TableHead>Meddelande</TableHead>
             <TableHead>Typ/Källa</TableHead>
             <TableHead>Status</TableHead>
@@ -117,7 +118,14 @@ export const SMSTable = ({ messages, onViewDetails }: SMSTableProps) => {
             <TableRow key={message.id}>
               <TableCell>{getDirectionBadge(message.direction)}</TableCell>
               <TableCell>
-                <p className="text-sm font-medium">{message.recipient}</p>
+                <p className="text-sm font-medium font-mono">
+                  {message.metadata?.from || message.recipient}
+                </p>
+              </TableCell>
+              <TableCell>
+                <p className="text-sm font-medium font-mono">
+                  {message.metadata?.to || '-'}
+                </p>
               </TableCell>
               <TableCell className="max-w-xs">
                 <p className="truncate text-sm">
