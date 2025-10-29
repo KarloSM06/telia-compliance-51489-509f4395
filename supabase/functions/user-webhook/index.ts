@@ -7,6 +7,17 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
+// Helper to convert Unix milliseconds timestamp to ISO 8601 format
+function convertTimestamp(timestamp?: number | string): string {
+  if (!timestamp) return new Date().toISOString();
+  
+  // If already ISO string, return as is
+  if (typeof timestamp === 'string') return timestamp;
+  
+  // If Unix timestamp (milliseconds), convert to ISO
+  return new Date(timestamp).toISOString();
+}
+
 // Inline AES-GCM decryption helper
 async function decryptCredentials(encryptedData: any): Promise<any> {
   const ENCRYPTION_KEY = Deno.env.get('ENCRYPTION_KEY');
@@ -307,7 +318,7 @@ serve(async (req) => {
               assistant: bodyData.message?.assistant,
               timestamp: bodyData.message?.timestamp
             },
-            event_timestamp: bodyData.message?.startedAt || new Date().toISOString(),
+            event_timestamp: convertTimestamp(bodyData.message?.call?.createdAt || bodyData.message?.timestamp),
             idempotency_key: idempotencyKey,
             provider_payload: bodyData
           });
@@ -362,8 +373,8 @@ serve(async (req) => {
                 durationMinutes: bodyData.message?.durationMinutes,
                 recordingUrl: bodyData.message?.recordingUrl,
                 stereoRecordingUrl: bodyData.message?.stereoRecordingUrl,
-                startedAt: bodyData.message?.startedAt,
-                endedAt: bodyData.message?.endedAt,
+                startedAt: convertTimestamp(bodyData.message?.startedAt),
+                endedAt: convertTimestamp(bodyData.message?.endedAt),
                 endedReason: bodyData.message?.endedReason,
                 messages: bodyData.message?.artifact?.messages || bodyData.message?.messages,
                 assistant: bodyData.message?.assistant,
@@ -373,7 +384,7 @@ serve(async (req) => {
               duration_seconds: bodyData.message?.durationSeconds || 0,
               cost_amount: bodyData.message?.cost || 0,
               cost_currency: 'USD',
-              event_timestamp: bodyData.message?.endedAt || new Date().toISOString(),
+              event_timestamp: convertTimestamp(bodyData.message?.endedAt),
               idempotency_key: idempotencyKey,
               provider_payload: bodyData
             });
@@ -391,8 +402,8 @@ serve(async (req) => {
             durationMinutes: bodyData.message?.durationMinutes,
             recordingUrl: bodyData.message?.recordingUrl,
             stereoRecordingUrl: bodyData.message?.stereoRecordingUrl,
-            startedAt: bodyData.message?.startedAt,
-            endedAt: bodyData.message?.endedAt,
+            startedAt: convertTimestamp(bodyData.message?.startedAt),
+            endedAt: convertTimestamp(bodyData.message?.endedAt),
             endedReason: bodyData.message?.endedReason,
             messages: bodyData.message?.artifact?.messages || bodyData.message?.messages,
             analysis: bodyData.message?.analysis,
