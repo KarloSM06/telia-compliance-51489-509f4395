@@ -21,8 +21,22 @@ export const WebhookSettings = () => {
     toast.success('Webhook URL kopierad!');
   };
 
-  const getIntegrationWebhookUrl = (webhookToken: string) => {
-    return `https://shskknkivuewuqonjdjc.supabase.co/functions/v1/user-webhook?token=${webhookToken}`;
+  const getIntegrationWebhookUrl = (integration: any) => {
+    // Provider-specific webhook URLs
+    const baseUrl = 'https://shskknkivuewuqonjdjc.supabase.co/functions/v1';
+    
+    switch (integration.provider) {
+      case 'vapi':
+        return `${baseUrl}/vapi-webhook?token=${integration.webhook_token}`;
+      case 'retell':
+        return `${baseUrl}/retell-webhook?token=${integration.webhook_token}`;
+      case 'twilio':
+        return `${baseUrl}/twilio-webhook?token=${integration.webhook_token}`;
+      case 'telnyx':
+        return `${baseUrl}/telnyx-webhook?token=${integration.webhook_token}`;
+      default:
+        return `${baseUrl}/user-webhook?token=${integration.webhook_token}`;
+    }
   };
 
   const primaryApiKey = apiKeys?.[0];
@@ -135,7 +149,7 @@ export const WebhookSettings = () => {
             <div className="space-y-3">
               {telephonyIntegrations.map((integration) => {
                 const webhookUrl = integration.webhook_token 
-                  ? getIntegrationWebhookUrl(integration.webhook_token)
+                  ? getIntegrationWebhookUrl(integration)
                   : 'Webhook token saknas';
                 
                 return (

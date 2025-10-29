@@ -210,7 +210,7 @@ async function syncVapiHistorical(integration: any, credentials: any, supabase: 
   const apiKey = credentials.apiKey;
   let totalCount = 0;
 
-  const response = await fetch(`https://api.vapi.ai/call?limit=1000&createdAtGte=${startDate.toISOString()}`, {
+  const response = await fetch(`https://api.vapi.ai/calls?limit=1000&createdAtGte=${startDate.toISOString()}`, {
     headers: { Authorization: `Bearer ${apiKey}` },
   });
 

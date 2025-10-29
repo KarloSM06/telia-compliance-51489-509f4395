@@ -49,8 +49,21 @@ serve(async (req) => {
       .single();
 
     if (!integration) {
-      console.log('⚠️ No active Vapi integration found for this webhook token');
-      return new Response('Invalid webhook token', { status: 404, headers: corsHeaders });
+      console.error('❌ No active Vapi integration found for webhook token:', webhookToken);
+      console.log('📋 Debug info:', {
+        provider: 'vapi',
+        is_active: true,
+        message_type: body.message?.type || body.type,
+        hint: 'Verify that webhook_token matches the token in integrations table'
+      });
+      return new Response(JSON.stringify({ 
+        error: 'Invalid webhook token',
+        hint: 'Verify token matches integration.webhook_token in database',
+        provider: 'vapi'
+      }), { 
+        status: 404, 
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+      });
     }
 
     // Generate idempotency key

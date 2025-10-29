@@ -254,6 +254,75 @@ serve(async (req) => {
       });
     }
 
+    // Create telephony_event for UI visibility
+    console.log(`📝 Creating telephony_event with provider_event_id: ${providerEventId}`);
+    
+    const eventType = 
+      body.type === 'call.started' || bodyData.CallStatus === 'in-progress' ? 'call.start' :
+      body.type === 'call.ended' || bodyData.CallStatus === 'completed' ? 'call.end' :
+      bodyData.event === 'call_started' ? 'call.start' :
+      bodyData.event === 'call_ended' ? 'call.end' :
+      bodyData.MessageStatus ? 'message.status' :
+      bodyData.data?.event_type || 'event.other';
+
+    const direction = 
+      bodyData.call?.direction || 
+      bodyData.Direction || 
+      bodyData.direction ||
+      (bodyData.data?.direction === 'incoming' ? 'inbound' : 'outbound') ||
+      'unknown';
+
+    const fromNumber = 
+      bodyData.call?.customer?.number || 
+      bodyData.From || 
+      bodyData.from || 
+      bodyData.data?.from?.phone_number;
+
+    const toNumber = 
+      bodyData.call?.phoneNumber?.number || 
+      bodyData.To || 
+      bodyData.to || 
+      bodyData.data?.to?.[0]?.phone_number;
+
+    const status = 
+      bodyData.call?.status || 
+      bodyData.CallStatus || 
+      bodyData.MessageStatus || 
+      bodyData.status ||
+      bodyData.data?.status ||
+      'received';
+
+    const eventTimestamp = 
+      bodyData.timestamp || 
+      bodyData.data?.occurred_at || 
+      new Date().toISOString();
+
+    const { error: eventError } = await supabase
+      .from('telephony_events')
+      .upsert({
+        integration_id: integration.id,
+        user_id: integration.user_id,
+        provider: provider,
+        event_type: eventType,
+        direction: direction,
+        from_number: fromNumber,
+        to_number: toNumber,
+        status: status,
+        provider_event_id: providerEventId,
+        provider_payload: bodyData,
+        event_timestamp: eventTimestamp,
+        idempotency_key: idempotencyKey,
+      }, {
+        onConflict: 'provider_event_id',
+        ignoreDuplicates: false
+      });
+
+    if (eventError) {
+      console.error('❌ Failed to create telephony_event:', eventError);
+    } else {
+      console.log('✅ Telephony event created successfully');
+    }
+
     console.log(`✅ Webhook processed successfully in ${processingTime}ms`);
     return new Response(JSON.stringify({ success: true }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
