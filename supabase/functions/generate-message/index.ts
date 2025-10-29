@@ -9,9 +9,11 @@ const corsHeaders = {
 
 interface GenerateMessageRequest {
   templateId?: string;
-  calendarEventId: string;
-  messageType: 'booking_confirmation' | 'reminder' | 'review_request' | 'cancellation';
+  calendarEventId?: string;
+  eventId?: string; // For backward compatibility
+  messageType: 'booking_confirmation' | 'reminder' | 'review_request' | 'cancellation' | 'test';
   customVariables?: Record<string, string>;
+  testData?: Record<string, string>; // For test messages
 }
 
 serve(async (req) => {
@@ -30,16 +32,69 @@ serve(async (req) => {
       }
     );
 
-    const { templateId, calendarEventId, messageType, customVariables = {} }: GenerateMessageRequest = await req.json();
+    const { templateId, calendarEventId, eventId, messageType, customVariables = {}, testData }: GenerateMessageRequest = await req.json();
 
-    // Get calendar event data
-    const { data: event, error: eventError } = await supabaseClient
-      .from('calendar_events')
-      .select('*')
-      .eq('id', calendarEventId)
-      .single();
+    // Handle test mode with testData
+    let event;
+    let variables;
+    
+    if (testData) {
+      // Use provided test data instead of fetching from database
+      variables = {
+        customer_name: testData.customer_name || 'Test Kund',
+        date: testData.date || new Date().toLocaleDateString('sv-SE'),
+        time: testData.time || '10:00',
+        service: testData.service || 'Testbokat tjänst',
+        address: testData.address || '',
+        contact_person: testData.contact_person || 'Din kontaktperson',
+        title: testData.title || 'Test bokning',
+        description: testData.description || '',
+        ...customVariables,
+      };
+    } else {
+      // Get calendar event data for real messages
+      const eventIdToUse = calendarEventId || eventId;
+      if (!eventIdToUse) {
+        throw new Error('Either calendarEventId or testData must be provided');
+      }
 
-    if (eventError) throw new Error(`Failed to fetch event: ${eventError.message}`);
+      const { data: eventData, error: eventError } = await supabaseClient
+        .from('calendar_events')
+        .select('*')
+        .eq('id', eventIdToUse)
+        .single();
+
+      if (eventError) throw new Error(`Failed to fetch event: ${eventError.message}`);
+      event = eventData;
+
+      // Format date and time for real events
+      const timezone = event.timezone || 'Europe/Stockholm';
+      const formattedDate = formatInTimeZone(
+        event.start_time,
+        'EEEE d MMMM yyyy',
+        timezone,
+        { locale: sv }
+      );
+      const formattedTime = formatInTimeZone(
+        event.start_time,
+        'HH:mm',
+        timezone
+      );
+
+      variables = {
+        customer_name: event.contact_person || 'Kund',
+        date: formattedDate,
+        time: formattedTime,
+        service: event.event_type === 'meeting' ? 'Möte' : 
+                 event.event_type === 'call' ? 'Telefonsamtal' : 
+                 event.event_type === 'appointment' ? 'Bokning' : event.event_type,
+        address: event.address || '',
+        contact_person: event.contact_person || '',
+        title: event.title || '',
+        description: event.description || '',
+        ...customVariables,
+      };
+    }
 
     // Get template
     let template;
@@ -52,8 +107,8 @@ serve(async (req) => {
       
       if (error) throw new Error(`Failed to fetch template: ${error.message}`);
       template = data;
-    } else {
-      // Get default template for this message type
+    } else if (event) {
+      // Get default template for this message type (only for real events with user_id)
       const { data: settings } = await supabaseClient
         .from('reminder_settings')
         .select('*')
@@ -87,35 +142,6 @@ serve(async (req) => {
         subject: getDefaultSubject(messageType),
       };
     }
-
-    // Format date and time for Swedish locale using correct timezone
-    const timezone = event.timezone || 'Europe/Stockholm';
-    const formattedDate = formatInTimeZone(
-      event.start_time,
-      'EEEE d MMMM yyyy',
-      timezone,
-      { locale: sv }
-    );
-    const formattedTime = formatInTimeZone(
-      event.start_time,
-      'HH:mm',
-      timezone
-    );
-
-    // Prepare variables
-    const variables = {
-      customer_name: event.contact_person || 'Kund',
-      date: formattedDate,
-      time: formattedTime,
-      service: event.event_type === 'meeting' ? 'Möte' : 
-               event.event_type === 'call' ? 'Telefonsamtal' : 
-               event.event_type === 'appointment' ? 'Bokning' : event.event_type,
-      address: event.address || '',
-      contact_person: event.contact_person || '',
-      title: event.title || '',
-      description: event.description || '',
-      ...customVariables,
-    };
 
     // Replace variables in template
     let message = template.body_template;
