@@ -3,7 +3,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Copy, MessageSquare, Phone, DollarSign, FileJson } from 'lucide-react';
+import { Copy, MessageSquare, Phone, DollarSign, FileJson, Sparkles, ArrowDown, ArrowUp, Star, Calendar as CalendarIcon, HelpCircle, Bot, User, Zap } from 'lucide-react';
 import { toast } from 'sonner';
 import { format } from 'date-fns';
 import { sv } from 'date-fns/locale';
@@ -40,11 +40,57 @@ export const SMSDetailDrawer = ({ message, open, onClose }: SMSDetailDrawerProps
     }
   };
 
-  const getDirectionBadge = (direction: string) => {
+  const getDirectionBadge = (direction?: string) => {
+    if (!direction) return null;
     return direction === 'inbound' ? (
-      <Badge variant="outline">Inkommande</Badge>
+      <Badge variant="outline" className="gap-1 bg-blue-500/10 text-blue-700 border-blue-200">
+        <ArrowDown className="h-3 w-3" />
+        Inkommande
+      </Badge>
     ) : (
-      <Badge variant="secondary">Utgående</Badge>
+      <Badge variant="outline" className="gap-1 bg-green-500/10 text-green-700 border-green-200">
+        <ArrowUp className="h-3 w-3" />
+        Utgående
+      </Badge>
+    );
+  };
+
+  const getMessageTypeBadge = (type?: string) => {
+    if (!type) return null;
+    const config = {
+      review: { label: "Omdöme", icon: Star, className: "bg-amber-500/10 text-amber-700 border-amber-200" },
+      booking_request: { label: "Bokning", icon: CalendarIcon, className: "bg-blue-500/10 text-blue-700 border-blue-200" },
+      question: { label: "Fråga", icon: HelpCircle, className: "bg-purple-500/10 text-purple-700 border-purple-200" },
+      general: { label: "Meddelande", icon: MessageSquare, className: "bg-gray-500/10 text-gray-700 border-gray-200" },
+    };
+    const item = config[type as keyof typeof config] || config.general;
+    const Icon = item.icon;
+    
+    return (
+      <Badge variant="outline" className={`gap-1 ${item.className}`}>
+        <Icon className="h-3 w-3" />
+        {item.label}
+      </Badge>
+    );
+  };
+
+  const getMessageSourceBadge = (source?: string) => {
+    if (!source) return null;
+    const config = {
+      calendar_notification: { label: "Kalender", icon: CalendarIcon, className: "bg-green-500/10 text-green-700 border-green-200" },
+      ai_agent: { label: "AI-Agent", icon: Bot, className: "bg-indigo-500/10 text-indigo-700 border-indigo-200" },
+      manual: { label: "Manuell", icon: User, className: "bg-gray-500/10 text-gray-700 border-gray-200" },
+      webhook: { label: "Webhook", icon: Zap, className: "bg-orange-500/10 text-orange-700 border-orange-200" },
+    };
+    const item = config[source as keyof typeof config];
+    if (!item) return null;
+    const Icon = item.icon;
+    
+    return (
+      <Badge variant="outline" className={`gap-1 ${item.className}`}>
+        <Icon className="h-3 w-3" />
+        {item.label}
+      </Badge>
     );
   };
 
@@ -62,7 +108,8 @@ export const SMSDetailDrawer = ({ message, open, onClose }: SMSDetailDrawerProps
           <div className="space-y-6 mt-6">
             {/* Header Info */}
             <div className="space-y-3">
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 flex-wrap">
+                {getDirectionBadge(message.direction)}
                 {getStatusBadge(message.status)}
                 {message.provider && <Badge variant="outline">{message.provider}</Badge>}
                 <Badge variant="outline">{message.channel}</Badge>
@@ -75,7 +122,9 @@ export const SMSDetailDrawer = ({ message, open, onClose }: SMSDetailDrawerProps
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <Phone className="h-4 w-4 text-muted-foreground" />
-                    <span className="text-sm font-medium">Till:</span>
+                    <span className="text-sm font-medium">
+                      {message.direction === 'inbound' ? 'Från:' : 'Till:'}
+                    </span>
                     <span className="font-mono text-sm">{message.recipient}</span>
                   </div>
                   {message.recipient && (
@@ -99,6 +148,75 @@ export const SMSDetailDrawer = ({ message, open, onClose }: SMSDetailDrawerProps
               </CardContent>
             </Card>
 
+            {/* AI Classification (för inkommande) */}
+            {message.direction === 'inbound' && message.ai_classification && (
+              <Card className="border-purple-200 bg-purple-50/50">
+                <CardContent className="p-4">
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-2">
+                      <Sparkles className="h-4 w-4 text-purple-500" />
+                      <span className="text-sm font-medium">AI-Klassificering</span>
+                    </div>
+                    <div className="space-y-2 text-sm">
+                      <div className="flex justify-between items-center">
+                        <span className="text-muted-foreground">Typ:</span>
+                        {getMessageTypeBadge(message.message_type)}
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-muted-foreground">Säkerhet:</span>
+                        <Badge variant="outline">
+                          {(message.ai_classification.confidence * 100).toFixed(0)}%
+                        </Badge>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-muted-foreground">Sentiment:</span>
+                        <Badge variant={
+                          message.ai_classification.sentiment === 'positive' ? 'default' :
+                          message.ai_classification.sentiment === 'negative' ? 'destructive' :
+                          'secondary'
+                        }>
+                          {message.ai_classification.sentiment === 'positive' ? '😊 Positiv' :
+                           message.ai_classification.sentiment === 'negative' ? '😞 Negativ' :
+                           '😐 Neutral'}
+                        </Badge>
+                      </div>
+                      {message.ai_classification.reasoning && (
+                        <div className="pt-2 border-t">
+                          <p className="text-xs text-muted-foreground italic">
+                            {message.ai_classification.reasoning}
+                          </p>
+                        </div>
+                      )}
+                      {message.ai_classification.keywords && message.ai_classification.keywords.length > 0 && (
+                        <div className="pt-2 border-t">
+                          <span className="text-xs text-muted-foreground">Nyckelord:</span>
+                          <div className="flex flex-wrap gap-1 mt-1">
+                            {message.ai_classification.keywords.map((keyword: string, i: number) => (
+                              <Badge key={i} variant="outline" className="text-xs">
+                                {keyword}
+                              </Badge>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
+            {/* Message Source (för utgående) */}
+            {message.direction === 'outbound' && message.message_source && (
+              <Card>
+                <CardContent className="p-4">
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm text-muted-foreground">Källa:</span>
+                    {getMessageSourceBadge(message.message_source)}
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
             {/* Cost */}
             {message.cost && (
               <Card>
@@ -107,7 +225,7 @@ export const SMSDetailDrawer = ({ message, open, onClose }: SMSDetailDrawerProps
                     <DollarSign className="h-4 w-4 text-muted-foreground" />
                     <div>
                       <p className="text-xs text-muted-foreground">Kostnad</p>
-                      <p className="text-lg font-semibold">{message.cost.toFixed(2)} SEK</p>
+                      <p className="text-lg font-semibold">{message.cost.toFixed(3)} SEK</p>
                     </div>
                   </div>
                 </CardContent>

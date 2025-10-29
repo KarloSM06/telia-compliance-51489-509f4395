@@ -1129,8 +1129,11 @@ serve(async (req) => {
             recipient: finalDirection === 'outbound' ? toNumber : fromNumber,
             message_body: bodyData.Body || bodyData.text || '',
             provider: provider,
-            provider_type: integration.provider_type, // Fixed: use integration.provider_type
+            provider_type: integration.provider_type,
             provider_message_id: bodyData.MessageSid || bodyData.SmsSid || externalCallId,
+            direction: finalDirection,
+            message_source: finalDirection === 'outbound' ? 'webhook' : null,
+            message_type: finalDirection === 'inbound' ? 'general' : null,
             status: bodyData.SmsStatus === 'received' ? 'delivered' : 
                     bodyData.SmsStatus === 'sent' ? 'sent' :
                     bodyData.MessageStatus === 'delivered' ? 'delivered' :
@@ -1151,14 +1154,34 @@ serve(async (req) => {
             },
           };
 
-          const { error: messageLogError } = await supabase
+          const { data: insertedLog, error: messageLogError } = await supabase
             .from('message_logs')
-            .insert(messageLogData);
+            .insert(messageLogData)
+            .select()
+            .single();
 
           if (messageLogError) {
             console.error('❌ Failed to insert message_log:', messageLogError);
           } else {
             console.log(`📨 Saved SMS to message_logs: ${messageLogData.provider_message_id}`);
+            
+            // Om det är ett inkommande SMS, klassificera det med AI
+            if (finalDirection === 'inbound' && insertedLog) {
+              console.log('🤖 Triggering AI classification for inbound SMS...');
+              
+              // Anropa classify-sms edge function (fire-and-forget)
+              fetch(`${Deno.env.get('SUPABASE_URL')}/functions/v1/classify-sms`, {
+                method: 'POST',
+                headers: {
+                  'Authorization': `Bearer ${Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')}`,
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                  messageBody: bodyData.Body || bodyData.text || '',
+                  messageLogId: insertedLog.id,
+                }),
+              }).catch(err => console.error('Failed to trigger classification:', err));
+            }
           }
         }
       }

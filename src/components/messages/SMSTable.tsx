@@ -1,7 +1,7 @@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Eye, CheckCircle, XCircle, Clock } from "lucide-react";
+import { Eye, CheckCircle, XCircle, Clock, ArrowDown, ArrowUp, Star, Calendar, HelpCircle, MessageSquare, Bot, User, Zap } from "lucide-react";
 import { format } from "date-fns";
 import { sv } from "date-fns/locale";
 import { MessageLog } from "@/hooks/useMessageLogs";
@@ -33,6 +33,60 @@ const getStatusBadge = (status: string) => {
   );
 };
 
+const getDirectionBadge = (direction?: string) => {
+  if (!direction) return null;
+  return direction === 'inbound' ? (
+    <Badge variant="outline" className="gap-1 bg-blue-500/10 text-blue-700 border-blue-200">
+      <ArrowDown className="h-3 w-3" />
+      Inkommande
+    </Badge>
+  ) : (
+    <Badge variant="outline" className="gap-1 bg-green-500/10 text-green-700 border-green-200">
+      <ArrowUp className="h-3 w-3" />
+      Utgående
+    </Badge>
+  );
+};
+
+const getMessageTypeBadge = (type?: string) => {
+  if (!type) return null;
+  const config = {
+    review: { label: "Omdöme", icon: Star, className: "bg-amber-500/10 text-amber-700 border-amber-200" },
+    booking_request: { label: "Bokning", icon: Calendar, className: "bg-blue-500/10 text-blue-700 border-blue-200" },
+    question: { label: "Fråga", icon: HelpCircle, className: "bg-purple-500/10 text-purple-700 border-purple-200" },
+    general: { label: "Meddelande", icon: MessageSquare, className: "bg-gray-500/10 text-gray-700 border-gray-200" },
+  };
+  const item = config[type as keyof typeof config] || config.general;
+  const Icon = item.icon;
+  
+  return (
+    <Badge variant="outline" className={`gap-1 ${item.className}`}>
+      <Icon className="h-3 w-3" />
+      {item.label}
+    </Badge>
+  );
+};
+
+const getMessageSourceBadge = (source?: string) => {
+  if (!source) return null;
+  const config = {
+    calendar_notification: { label: "Kalender", icon: Calendar, className: "bg-green-500/10 text-green-700 border-green-200" },
+    ai_agent: { label: "AI-Agent", icon: Bot, className: "bg-indigo-500/10 text-indigo-700 border-indigo-200" },
+    manual: { label: "Manuell", icon: User, className: "bg-gray-500/10 text-gray-700 border-gray-200" },
+    webhook: { label: "Webhook", icon: Zap, className: "bg-orange-500/10 text-orange-700 border-orange-200" },
+  };
+  const item = config[source as keyof typeof config];
+  if (!item) return null;
+  const Icon = item.icon;
+  
+  return (
+    <Badge variant="outline" className={`gap-1 ${item.className}`}>
+      <Icon className="h-3 w-3" />
+      {item.label}
+    </Badge>
+  );
+};
+
 export const SMSTable = ({ messages, onViewDetails }: SMSTableProps) => {
   if (messages.length === 0) {
     return (
@@ -47,8 +101,10 @@ export const SMSTable = ({ messages, onViewDetails }: SMSTableProps) => {
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>Mottagare</TableHead>
+            <TableHead>Riktning</TableHead>
+            <TableHead>Mottagare/Avsändare</TableHead>
             <TableHead>Meddelande</TableHead>
+            <TableHead>Typ/Källa</TableHead>
             <TableHead>Status</TableHead>
             <TableHead>Skickat</TableHead>
             <TableHead>Levererat</TableHead>
@@ -59,6 +115,7 @@ export const SMSTable = ({ messages, onViewDetails }: SMSTableProps) => {
         <TableBody>
           {messages.map((message) => (
             <TableRow key={message.id}>
+              <TableCell>{getDirectionBadge(message.direction)}</TableCell>
               <TableCell>
                 <p className="text-sm font-medium">{message.recipient}</p>
               </TableCell>
@@ -67,6 +124,12 @@ export const SMSTable = ({ messages, onViewDetails }: SMSTableProps) => {
                   {message.message_body.substring(0, 50)}
                   {message.message_body.length > 50 ? '...' : ''}
                 </p>
+              </TableCell>
+              <TableCell>
+                <div className="flex flex-col gap-1">
+                  {message.direction === 'inbound' && getMessageTypeBadge(message.message_type)}
+                  {message.direction === 'outbound' && getMessageSourceBadge(message.message_source)}
+                </div>
               </TableCell>
               <TableCell>{getStatusBadge(message.status)}</TableCell>
               <TableCell>
@@ -84,7 +147,7 @@ export const SMSTable = ({ messages, onViewDetails }: SMSTableProps) => {
               </TableCell>
               <TableCell>
                 <p className="text-sm">
-                  {message.cost ? `${message.cost} SEK` : '-'}
+                  {message.cost ? `${message.cost.toFixed(3)} SEK` : '-'}
                 </p>
               </TableCell>
               <TableCell className="text-right">

@@ -1513,16 +1513,20 @@ export type Database = {
       }
       message_logs: {
         Row: {
+          ai_classification: Json | null
           calendar_event_id: string | null
           channel: string
           clicked_at: string | null
           cost: number | null
           created_at: string
           delivered_at: string | null
+          direction: string | null
           error_message: string | null
           id: string
           integration_id: string | null
           message_body: string
+          message_source: string | null
+          message_type: string | null
           metadata: Json | null
           opened_at: string | null
           provider: string
@@ -1537,16 +1541,20 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          ai_classification?: Json | null
           calendar_event_id?: string | null
           channel: string
           clicked_at?: string | null
           cost?: number | null
           created_at?: string
           delivered_at?: string | null
+          direction?: string | null
           error_message?: string | null
           id?: string
           integration_id?: string | null
           message_body: string
+          message_source?: string | null
+          message_type?: string | null
           metadata?: Json | null
           opened_at?: string | null
           provider: string
@@ -1561,16 +1569,20 @@ export type Database = {
           user_id: string
         }
         Update: {
+          ai_classification?: Json | null
           calendar_event_id?: string | null
           channel?: string
           clicked_at?: string | null
           cost?: number | null
           created_at?: string
           delivered_at?: string | null
+          direction?: string | null
           error_message?: string | null
           id?: string
           integration_id?: string | null
           message_body?: string
+          message_source?: string | null
+          message_type?: string | null
           metadata?: Json | null
           opened_at?: string | null
           provider?: string

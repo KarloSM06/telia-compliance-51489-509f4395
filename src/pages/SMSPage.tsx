@@ -121,13 +121,16 @@ export default function SMSPage() {
       </div>
 
       {/* Stats Cards */}
-      <SMSStatsCards
-        total={stats.total}
-        sent={stats.sent}
-        pending={stats.pending}
-        failed={stats.failed}
-        cost={stats.smsCost}
-      />
+        <SMSStatsCards
+          total={stats.total}
+          sent={stats.sent}
+          pending={stats.pending}
+          failed={stats.failed}
+          cost={stats.smsCost}
+          inbound={stats.inbound}
+          outbound={stats.outbound}
+          reviews={stats.reviews}
+        />
 
       {/* Filters */}
       <SMSFilters onFilterChange={setFilters} />

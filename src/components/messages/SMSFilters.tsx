@@ -12,6 +12,8 @@ export interface SMSFilterValues {
   search: string;
   status: string;
   direction: string;
+  messageType?: string;
+  messageSource?: string;
   dateFrom?: Date;
   dateTo?: Date;
 }
@@ -76,6 +78,36 @@ export const SMSFilters = ({ onFilterChange }: SMSFiltersProps) => {
             <SelectItem value="outbound">Utgående</SelectItem>
           </SelectContent>
         </Select>
+
+        {filters.direction === 'inbound' && (
+          <Select value={filters.messageType || 'all'} onValueChange={(v) => handleFilterChange('messageType', v === 'all' ? undefined : v)}>
+            <SelectTrigger className="w-[160px]">
+              <SelectValue placeholder="Meddelandetyp" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">Alla typer</SelectItem>
+              <SelectItem value="review">Omdömen</SelectItem>
+              <SelectItem value="booking_request">Bokningar</SelectItem>
+              <SelectItem value="question">Frågor</SelectItem>
+              <SelectItem value="general">Generella</SelectItem>
+            </SelectContent>
+          </Select>
+        )}
+
+        {filters.direction === 'outbound' && (
+          <Select value={filters.messageSource || 'all'} onValueChange={(v) => handleFilterChange('messageSource', v === 'all' ? undefined : v)}>
+            <SelectTrigger className="w-[160px]">
+              <SelectValue placeholder="Källa" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">Alla källor</SelectItem>
+              <SelectItem value="calendar_notification">Kalender</SelectItem>
+              <SelectItem value="ai_agent">AI-Agent</SelectItem>
+              <SelectItem value="manual">Manuell</SelectItem>
+              <SelectItem value="webhook">Webhook</SelectItem>
+            </SelectContent>
+          </Select>
+        )}
 
         <Popover>
           <PopoverTrigger asChild>

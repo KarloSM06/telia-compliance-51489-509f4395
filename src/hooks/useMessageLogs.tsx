@@ -16,6 +16,10 @@ export interface MessageLog {
   provider_type?: string;
   provider_message_id?: string;
   status: 'sent' | 'delivered' | 'failed' | 'bounced';
+  direction?: 'inbound' | 'outbound';
+  message_source?: 'calendar_notification' | 'ai_agent' | 'manual' | 'webhook';
+  message_type?: 'review' | 'general' | 'booking_request' | 'question';
+  ai_classification?: any;
   sent_at: string;
   delivered_at?: string;
   opened_at?: string;
@@ -99,6 +103,11 @@ export const useMessageLogs = (filters?: MessageLogFilters) => {
     sent: logs.filter(l => l.status === 'sent' || l.status === 'delivered').length,
     pending: logs.filter(l => l.status === 'sent' && !l.delivered_at).length,
     failed: logs.filter(l => l.status === 'failed').length,
+    inbound: logs.filter(l => l.direction === 'inbound').length,
+    outbound: logs.filter(l => l.direction === 'outbound').length,
+    reviews: logs.filter(l => l.message_type === 'review').length,
+    fromCalendar: logs.filter(l => l.message_source === 'calendar_notification').length,
+    fromAI: logs.filter(l => l.message_source === 'ai_agent').length,
     totalCost: logs.reduce((sum, l) => sum + (l.cost || 0), 0),
     smsCost: logs.filter(l => l.channel === 'sms').reduce((sum, l) => sum + (l.cost || 0), 0),
     emailCost: logs.filter(l => l.channel === 'email').reduce((sum, l) => sum + (l.cost || 0), 0),

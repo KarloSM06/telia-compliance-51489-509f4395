@@ -149,3 +149,6 @@ verify_jwt = false
 
 [functions.match-orphan-events.schedule]
 cron = "*/5 * * * *"
+
+[functions.classify-sms]
+verify_jwt = false
