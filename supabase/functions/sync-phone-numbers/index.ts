@@ -134,11 +134,18 @@ async function syncTwilioNumbers(integration: any, credentials: any, supabase: a
     console.log(`📋 Found ${numbers.length} Twilio phone numbers`);
 
     for (const number of numbers) {
-      await supabase.from('phone_numbers').upsert({
+      // Check if number already exists for this integration
+      const { data: existing } = await supabase
+        .from('phone_numbers')
+        .select('id')
+        .eq('integration_id', integration.id)
+        .eq('phone_number', number.phone_number)
+        .maybeSingle();
+      
+      const phoneData = {
         user_id: integration.user_id,
         integration_id: integration.id,
         phone_number: number.phone_number,
-        provider: 'twilio',
         capabilities: {
           voice: number.capabilities?.voice,
           sms: number.capabilities?.sms,
@@ -151,9 +158,25 @@ async function syncTwilioNumbers(integration: any, credentials: any, supabase: a
           address_requirements: number.address_requirements,
           emergency_status: number.emergency_status
         }
-      }, {
-        onConflict: 'user_id,phone_number'
-      });
+      };
+      
+      let result;
+      if (existing) {
+        result = await supabase
+          .from('phone_numbers')
+          .update(phoneData)
+          .eq('id', existing.id);
+      } else {
+        result = await supabase
+          .from('phone_numbers')
+          .insert(phoneData);
+      }
+      
+      if (result.error) {
+        console.error('❌ Twilio upsert error:', result.error);
+      } else {
+        console.log(`✅ Synced Twilio number: ${number.phone_number}`);
+      }
     }
 
     return { success: true, count: numbers.length };
@@ -180,11 +203,18 @@ async function syncTelnyxNumbers(integration: any, credentials: any, supabase: a
     console.log(`📋 Found ${numbers.length} Telnyx phone numbers`);
 
     for (const number of numbers) {
-      await supabase.from('phone_numbers').upsert({
+      // Check if number already exists for this integration
+      const { data: existing } = await supabase
+        .from('phone_numbers')
+        .select('id')
+        .eq('integration_id', integration.id)
+        .eq('phone_number', number.phone_number)
+        .maybeSingle();
+      
+      const phoneData = {
         user_id: integration.user_id,
         integration_id: integration.id,
         phone_number: number.phone_number,
-        provider: 'telnyx',
         capabilities: {
           voice: true,
           sms: number.features?.includes('sms'),
@@ -197,9 +227,25 @@ async function syncTelnyxNumbers(integration: any, credentials: any, supabase: a
           messaging_profile_id: number.messaging_profile_id,
           features: number.features
         }
-      }, {
-        onConflict: 'user_id,phone_number'
-      });
+      };
+      
+      let result;
+      if (existing) {
+        result = await supabase
+          .from('phone_numbers')
+          .update(phoneData)
+          .eq('id', existing.id);
+      } else {
+        result = await supabase
+          .from('phone_numbers')
+          .insert(phoneData);
+      }
+      
+      if (result.error) {
+        console.error('❌ Telnyx upsert error:', result.error);
+      } else {
+        console.log(`✅ Synced Telnyx number: ${number.phone_number}`);
+      }
     }
 
     return { success: true, count: numbers.length };
