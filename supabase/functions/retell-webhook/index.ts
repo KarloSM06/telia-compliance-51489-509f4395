@@ -61,11 +61,22 @@ serve(async (req) => {
     else if (body.event === 'call_ended') eventType = 'call.end';
     else if (body.event === 'call_analyzed') eventType = 'call.analyzed';
 
+    // Find agent
+    const { data: agent } = await supabase
+      .from('agents')
+      .select('id')
+      .eq('integration_id', integration.id)
+      .eq('provider', 'retell')
+      .eq('provider_agent_id', body.call?.agent_id)
+      .single();
+
     // Insert event
     const { data: event, error: eventError } = await supabase
       .from('telephony_events')
       .insert({
         integration_id: integration.id,
+        user_id: integration.user_id,
+        agent_id: agent?.id,
         provider: 'retell',
         event_type: eventType,
         direction: body.call?.call_type || 'outbound',

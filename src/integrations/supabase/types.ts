@@ -14,6 +14,56 @@ export type Database = {
   }
   public: {
     Tables: {
+      agents: {
+        Row: {
+          config: Json
+          created_at: string | null
+          id: string
+          integration_id: string
+          metadata: Json | null
+          name: string
+          provider: string
+          provider_agent_id: string | null
+          status: string | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          config?: Json
+          created_at?: string | null
+          id?: string
+          integration_id: string
+          metadata?: Json | null
+          name: string
+          provider: string
+          provider_agent_id?: string | null
+          status?: string | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          config?: Json
+          created_at?: string | null
+          id?: string
+          integration_id?: string
+          metadata?: Json | null
+          name?: string
+          provider?: string
+          provider_agent_id?: string | null
+          status?: string | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "agents_integration_id_fkey"
+            columns: ["integration_id"]
+            isOneToOne: false
+            referencedRelation: "integrations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       ai_consultations: {
         Row: {
           ai_goals: string[] | null
@@ -546,6 +596,50 @@ export type Database = {
             columns: ["user_id"]
             isOneToOne: false
             referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      call_events: {
+        Row: {
+          agent_id: string | null
+          audio_url: string | null
+          call_id: string
+          created_at: string | null
+          data: Json | null
+          event_type: string
+          id: string
+          text: string | null
+          timestamp: string
+        }
+        Insert: {
+          agent_id?: string | null
+          audio_url?: string | null
+          call_id: string
+          created_at?: string | null
+          data?: Json | null
+          event_type: string
+          id?: string
+          text?: string | null
+          timestamp: string
+        }
+        Update: {
+          agent_id?: string | null
+          audio_url?: string | null
+          call_id?: string
+          created_at?: string | null
+          data?: Json | null
+          event_type?: string
+          id?: string
+          text?: string | null
+          timestamp?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "call_events_agent_id_fkey"
+            columns: ["agent_id"]
+            isOneToOne: false
+            referencedRelation: "agents"
             referencedColumns: ["id"]
           },
         ]
@@ -1867,24 +1961,47 @@ export type Database = {
       }
       phone_numbers: {
         Row: {
+          capabilities: Json | null
           created_at: string
           id: string
+          integration_id: string | null
+          metadata: Json | null
           phone_number: string
+          status: string | null
+          updated_at: string | null
           user_id: string | null
         }
         Insert: {
+          capabilities?: Json | null
           created_at?: string
           id?: string
+          integration_id?: string | null
+          metadata?: Json | null
           phone_number: string
+          status?: string | null
+          updated_at?: string | null
           user_id?: string | null
         }
         Update: {
+          capabilities?: Json | null
           created_at?: string
           id?: string
+          integration_id?: string | null
+          metadata?: Json | null
           phone_number?: string
+          status?: string | null
+          updated_at?: string | null
           user_id?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "phone_numbers_integration_id_fkey"
+            columns: ["integration_id"]
+            isOneToOne: false
+            referencedRelation: "integrations"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       profiles: {
         Row: {
@@ -2525,6 +2642,7 @@ export type Database = {
       telephony_events: {
         Row: {
           account_id: string
+          agent_id: string | null
           cost_amount: number | null
           cost_currency: string | null
           created_at: string | null
@@ -2545,10 +2663,12 @@ export type Database = {
           resource_type: string | null
           status: string | null
           to_number: string | null
+          user_id: string | null
           webhook_received_at: string | null
         }
         Insert: {
           account_id: string
+          agent_id?: string | null
           cost_amount?: number | null
           cost_currency?: string | null
           created_at?: string | null
@@ -2569,10 +2689,12 @@ export type Database = {
           resource_type?: string | null
           status?: string | null
           to_number?: string | null
+          user_id?: string | null
           webhook_received_at?: string | null
         }
         Update: {
           account_id?: string
+          agent_id?: string | null
           cost_amount?: number | null
           cost_currency?: string | null
           created_at?: string | null
@@ -2593,6 +2715,7 @@ export type Database = {
           resource_type?: string | null
           status?: string | null
           to_number?: string | null
+          user_id?: string | null
           webhook_received_at?: string | null
         }
         Relationships: [
@@ -2601,6 +2724,13 @@ export type Database = {
             columns: ["account_id"]
             isOneToOne: false
             referencedRelation: "telephony_accounts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "telephony_events_agent_id_fkey"
+            columns: ["agent_id"]
+            isOneToOne: false
+            referencedRelation: "agents"
             referencedColumns: ["id"]
           },
           {

@@ -62,11 +62,22 @@ serve(async (req) => {
     else if (body.type === 'transcript') eventType = 'transcript.ready';
     else if (body.type === 'recording-available') eventType = 'recording.ready';
 
+    // Find agent
+    const { data: agent } = await supabase
+      .from('agents')
+      .select('id')
+      .eq('integration_id', integration.id)
+      .eq('provider', 'vapi')
+      .eq('provider_agent_id', body.call?.assistantId)
+      .single();
+
     // Insert event
     const { data: event, error: eventError } = await supabase
       .from('telephony_events')
       .insert({
         integration_id: integration.id,
+        user_id: integration.user_id,
+        agent_id: agent?.id,
         provider: 'vapi',
         event_type: eventType,
         direction: body.call?.direction || 'outbound',
@@ -89,6 +100,22 @@ serve(async (req) => {
     }
 
     console.log('✅ Vapi event created:', event.id);
+
+    // Save speech events to call_events
+    if (body.message?.type === 'speech-update' || body.message?.type === 'transcript') {
+      await supabase.from('call_events').insert({
+        call_id: event.id,
+        agent_id: agent?.id,
+        event_type: body.message.role === 'user' ? 'user_speech' : 'agent_response',
+        timestamp: body.timestamp || new Date().toISOString(),
+        text: body.message.transcript || body.message.text,
+        data: {
+          role: body.message.role,
+          duration: body.message.duration,
+          isFinal: body.message.isFinal
+        }
+      });
+    }
 
     // Handle recording/transcript
     if (normalized.recording_url || normalized.transcript) {

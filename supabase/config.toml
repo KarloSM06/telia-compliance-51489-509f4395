@@ -119,3 +119,15 @@ verify_jwt = false
 
 [functions.sync-vapi-calls]
 verify_jwt = true
+
+[functions.sync-telephony-agents]
+verify_jwt = false
+
+[functions.sync-telephony-agents.schedule]
+cron = "0 */6 * * *"
+
+[functions.sync-phone-numbers]
+verify_jwt = false
+
+[functions.sync-phone-numbers.schedule]
+cron = "0 4 * * *"

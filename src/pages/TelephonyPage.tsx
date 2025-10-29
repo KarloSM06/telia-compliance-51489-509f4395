@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Phone, BarChart3, List, Settings, Download, Key, Activity } from 'lucide-react';
+import { Phone, BarChart3, List, Settings, Download, Key, Activity, Bot } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ProviderAccountCard } from '@/components/telephony/ProviderAccountCard';
 import { TelephonyDashboard } from '@/components/telephony/TelephonyDashboard';
@@ -10,6 +10,7 @@ import { DetailedMetricsTable } from '@/components/telephony/DetailedMetricsTabl
 import { CostBreakdownChart } from '@/components/telephony/CostBreakdownChart';
 import { WebhookSettings } from '@/components/telephony/WebhookSettings';
 import { SyncStatusDashboard } from '@/components/integrations/SyncStatusDashboard';
+import { AgentManager } from '@/components/telephony/AgentManager';
 import { useIntegrations } from '@/hooks/useIntegrations';
 import { useTelephonyMetrics } from '@/hooks/useTelephonyMetrics';
 

@@ -34,6 +34,12 @@ export const useTelephonyMetrics = (dateRange?: { from: Date; to: Date }) => {
       const { data, error } = await query;
       if (error) throw error;
 
+      // Fetch agents for additional context
+      const { data: agents } = await supabase
+        .from('agents')
+        .select('*')
+        .eq('user_id', user.id);
+
       // Calculate aggregated statistics
       const totalCalls = data.filter(e => e.event_type.includes('call')).length;
       const totalSMS = data.filter(e => e.event_type.includes('sms')).length;
@@ -50,6 +56,7 @@ export const useTelephonyMetrics = (dateRange?: { from: Date; to: Date }) => {
             duration: 0,
             cost: 0,
             events: [],
+            agents: agents?.filter(a => a.provider === event.provider) || [],
           };
         }
         
@@ -61,6 +68,31 @@ export const useTelephonyMetrics = (dateRange?: { from: Date; to: Date }) => {
         p.events.push(event);
       });
 
+      // Group by agent
+      const byAgent: Record<string, any> = {};
+      data.forEach(event => {
+        if (event.agent_id) {
+          const agent = agents?.find(a => a.id === event.agent_id);
+          if (agent && !byAgent[event.agent_id]) {
+            byAgent[event.agent_id] = {
+              agent,
+              calls: 0,
+              duration: 0,
+              cost: 0,
+              events: [],
+            };
+          }
+          
+          if (byAgent[event.agent_id]) {
+            const a = byAgent[event.agent_id];
+            if (event.event_type.includes('call')) a.calls++;
+            a.duration += event.duration_seconds || 0;
+            a.cost += parseFloat(event.cost_amount as any) || 0;
+            a.events.push(event);
+          }
+        }
+      });
+
       return {
         totalCalls,
         totalSMS,
@@ -68,7 +100,9 @@ export const useTelephonyMetrics = (dateRange?: { from: Date; to: Date }) => {
         totalCost,
         totalEvents: data.length,
         byProvider,
+        byAgent,
         events: data,
+        agents: agents || [],
       };
     },
   });
@@ -108,7 +142,9 @@ export const useTelephonyMetrics = (dateRange?: { from: Date; to: Date }) => {
       totalCost: 0,
       totalEvents: 0,
       byProvider: {},
+      byAgent: {},
       events: [],
+      agents: [],
     },
     isLoading,
     refetch,

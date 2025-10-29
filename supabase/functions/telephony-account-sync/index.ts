@@ -205,10 +205,22 @@ async function syncTwilio(integration: any, credentials: any, supabase: any) {
     const messagesData = messagesResponse.ok ? await messagesResponse.json() : { messages: [] };
     const messages = messagesData.messages || [];
 
+    // Find agent for this integration
+    const { data: agent } = await supabase
+      .from('agents')
+      .select('id')
+      .eq('integration_id', integration.id)
+      .eq('provider', 'twilio')
+      .order('created_at', { ascending: false })
+      .limit(1)
+      .single();
+
     // Process calls
     for (const call of calls) {
       await supabase.from('telephony_events').upsert({
         integration_id: integration.id,
+        user_id: integration.user_id,
+        agent_id: agent?.id,
         provider: 'twilio',
         event_type: 'call',
         direction: call.direction,
@@ -219,8 +231,8 @@ async function syncTwilio(integration: any, credentials: any, supabase: any) {
         cost_amount: call.price ? Math.abs(parseFloat(call.price)) : null,
         cost_currency: call.price_unit || 'USD',
         provider_event_id: call.sid,
-        timestamp: new Date(call.date_created).toISOString(),
-        metadata: {
+        event_timestamp: new Date(call.date_created).toISOString(),
+        normalized: {
           direction: call.direction,
           answered_by: call.answered_by,
         },
@@ -233,6 +245,7 @@ async function syncTwilio(integration: any, credentials: any, supabase: any) {
     for (const message of messages) {
       await supabase.from('telephony_events').upsert({
         integration_id: integration.id,
+        user_id: integration.user_id,
         provider: 'twilio',
         event_type: 'message',
         direction: message.direction,
@@ -242,8 +255,8 @@ async function syncTwilio(integration: any, credentials: any, supabase: any) {
         cost_amount: message.price ? Math.abs(parseFloat(message.price)) : null,
         cost_currency: message.price_unit || 'USD',
         provider_event_id: message.sid,
-        timestamp: new Date(message.date_sent || message.date_created).toISOString(),
-        metadata: {
+        event_timestamp: new Date(message.date_sent || message.date_created).toISOString(),
+        normalized: {
           num_segments: message.num_segments,
           body: message.body,
         },
@@ -293,10 +306,22 @@ async function syncTelnyx(integration: any, credentials: any, supabase: any) {
     const messagesData = messagesResponse.ok ? await messagesResponse.json() : { data: [] };
     const messages = messagesData.data || [];
 
+    // Find agent
+    const { data: agent } = await supabase
+      .from('agents')
+      .select('id')
+      .eq('integration_id', integration.id)
+      .eq('provider', 'telnyx')
+      .order('created_at', { ascending: false })
+      .limit(1)
+      .single();
+
     // Process calls
     for (const call of calls) {
       await supabase.from('telephony_events').upsert({
         integration_id: integration.id,
+        user_id: integration.user_id,
+        agent_id: agent?.id,
         provider: 'telnyx',
         event_type: 'call',
         direction: call.direction,
@@ -307,8 +332,8 @@ async function syncTelnyx(integration: any, credentials: any, supabase: any) {
         cost_amount: call.cost ? parseFloat(call.cost) : null,
         cost_currency: 'USD',
         provider_event_id: call.call_control_id || call.id,
-        timestamp: new Date(call.created_at).toISOString(),
-        metadata: call,
+        event_timestamp: new Date(call.created_at).toISOString(),
+        normalized: call,
       }, {
         onConflict: 'provider_event_id',
       });
@@ -318,6 +343,7 @@ async function syncTelnyx(integration: any, credentials: any, supabase: any) {
     for (const message of messages) {
       await supabase.from('telephony_events').upsert({
         integration_id: integration.id,
+        user_id: integration.user_id,
         provider: 'telnyx',
         event_type: 'message',
         direction: message.direction,
@@ -327,8 +353,8 @@ async function syncTelnyx(integration: any, credentials: any, supabase: any) {
         cost_amount: message.cost?.amount ? parseFloat(message.cost.amount) : null,
         cost_currency: message.cost?.currency || 'USD',
         provider_event_id: message.id,
-        timestamp: new Date(message.created_at).toISOString(),
-        metadata: {
+        event_timestamp: new Date(message.created_at).toISOString(),
+        normalized: {
           text: message.text,
           media: message.media,
         },
@@ -365,8 +391,19 @@ async function syncVapi(integration: any, credentials: any, supabase: any) {
     const calls = await response.json();
 
     for (const call of calls) {
+      // Find agent by assistant_id
+      const { data: agent } = await supabase
+        .from('agents')
+        .select('id')
+        .eq('integration_id', integration.id)
+        .eq('provider', 'vapi')
+        .eq('provider_agent_id', call.assistantId)
+        .single();
+
       await supabase.from('telephony_events').upsert({
         integration_id: integration.id,
+        user_id: integration.user_id,
+        agent_id: agent?.id,
         provider: 'vapi',
         event_type: 'call',
         direction: call.type === 'inboundPhoneCall' ? 'inbound' : 'outbound',
@@ -379,8 +416,8 @@ async function syncVapi(integration: any, credentials: any, supabase: any) {
         cost_amount: call.cost ? parseFloat(call.cost) : null,
         cost_currency: 'USD',
         provider_event_id: call.id,
-        timestamp: new Date(call.createdAt).toISOString(),
-        metadata: {
+        event_timestamp: new Date(call.createdAt).toISOString(),
+        normalized: {
           transcript: call.transcript,
           recording_url: call.recordingUrl,
           assistant_id: call.assistantId,
@@ -423,8 +460,19 @@ async function syncRetell(integration: any, credentials: any, supabase: any) {
         ? Math.floor((call.end_timestamp - call.start_timestamp) / 1000)
         : 0;
 
+      // Find agent by agent_id
+      const { data: agent } = await supabase
+        .from('agents')
+        .select('id')
+        .eq('integration_id', integration.id)
+        .eq('provider', 'retell')
+        .eq('provider_agent_id', call.agent_id)
+        .single();
+
       await supabase.from('telephony_events').upsert({
         integration_id: integration.id,
+        user_id: integration.user_id,
+        agent_id: agent?.id,
         provider: 'retell',
         event_type: 'call',
         direction: call.call_type === 'inbound' ? 'inbound' : 'outbound',
@@ -435,8 +483,8 @@ async function syncRetell(integration: any, credentials: any, supabase: any) {
         cost_amount: call.cost ? parseFloat(call.cost) : null,
         cost_currency: 'USD',
         provider_event_id: call.call_id,
-        timestamp: new Date(call.start_timestamp).toISOString(),
-        metadata: {
+        event_timestamp: new Date(call.start_timestamp).toISOString(),
+        normalized: {
           transcript: call.transcript,
           recording_url: call.recording_url,
           agent_id: call.agent_id,
