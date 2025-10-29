@@ -76,13 +76,13 @@ export const SMSDetailDrawer = ({ message, open, onClose }: SMSDetailDrawerProps
                   <div className="flex items-center gap-2">
                     <Phone className="h-4 w-4 text-muted-foreground" />
                     <span className="text-sm font-medium">Till:</span>
-                    <span className="font-mono text-sm">{message.recipient_phone}</span>
+                    <span className="font-mono text-sm">{message.recipient}</span>
                   </div>
-                  {message.recipient_phone && (
+                  {message.recipient && (
                     <Button
                       variant="ghost"
                       size="sm"
-                      onClick={() => copyToClipboard(message.recipient_phone, 'Telefonnummer')}
+                      onClick={() => copyToClipboard(message.recipient, 'Telefonnummer')}
                     >
                       <Copy className="h-3 w-3" />
                     </Button>
@@ -95,7 +95,7 @@ export const SMSDetailDrawer = ({ message, open, onClose }: SMSDetailDrawerProps
             <Card>
               <CardContent className="p-4">
                 <p className="text-sm text-muted-foreground mb-2">Meddelande:</p>
-                <div className="text-sm whitespace-pre-wrap">{message.body}</div>
+                <div className="text-sm whitespace-pre-wrap">{message.message_body}</div>
               </CardContent>
             </Card>
 

@@ -67,13 +67,13 @@ export const EmailDetailDrawer = ({ message, open, onClose }: EmailDetailDrawerP
                   <div className="flex items-center gap-2">
                     <User className="h-4 w-4 text-muted-foreground" />
                     <span className="text-sm font-medium">Till:</span>
-                    <span className="text-sm">{message.recipient_email || message.recipient_phone}</span>
+                    <span className="text-sm">{message.recipient}</span>
                   </div>
-                  {(message.recipient_email || message.recipient_phone) && (
+                  {message.recipient && (
                     <Button
                       variant="ghost"
                       size="sm"
-                      onClick={() => copyToClipboard(message.recipient_email || message.recipient_phone, 'Mottagare')}
+                      onClick={() => copyToClipboard(message.recipient, 'Mottagare')}
                     >
                       <Copy className="h-3 w-3" />
                     </Button>
@@ -96,7 +96,7 @@ export const EmailDetailDrawer = ({ message, open, onClose }: EmailDetailDrawerP
             <Card>
               <CardContent className="p-4">
                 <p className="text-sm text-muted-foreground mb-2">Meddelande:</p>
-                <div className="text-sm whitespace-pre-wrap">{message.body}</div>
+                <div className="text-sm whitespace-pre-wrap">{message.message_body}</div>
               </CardContent>
             </Card>
 
