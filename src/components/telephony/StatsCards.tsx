@@ -1,7 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Phone, MessageSquare, Clock, DollarSign, TrendingUp, Loader2 } from 'lucide-react';
 import { formatDuration, formatCost } from '@/lib/telephonyFormatters';
-
 interface StatsCardsProps {
   metrics: {
     totalCalls: number;
@@ -11,73 +10,55 @@ interface StatsCardsProps {
     events: any[];
   };
 }
-
-export const StatsCards = ({ metrics }: StatsCardsProps) => {
+export const StatsCards = ({
+  metrics
+}: StatsCardsProps) => {
   // Calculate in-progress calls
-  const inProgressCalls = metrics.events?.filter(event => 
-    !event.normalized?.endedAt && !event.normalized?.endedReason
-  ).length || 0;
+  const inProgressCalls = metrics.events?.filter(event => !event.normalized?.endedAt && !event.normalized?.endedReason).length || 0;
 
   // Calculate completed calls for accurate averages
   const completedCalls = metrics.totalCalls - inProgressCalls;
-  const avgCallDuration = completedCalls > 0 
-    ? Math.round(metrics.totalDuration / completedCalls)
-    : 0;
-
-  const stats = [
-    {
-      title: 'Total Samtal',
-      value: metrics.totalCalls,
-      icon: Phone,
-      color: 'text-blue-600',
-      bgColor: 'bg-blue-500/10',
-      subtitle: metrics.totalCalls > 0 ? `${completedCalls} avslutade` : 'Inga samtal ännu',
-    },
-    {
-      title: 'Pågående',
-      value: inProgressCalls,
-      icon: Loader2,
-      color: 'text-green-600',
-      bgColor: 'bg-green-500/10',
-      subtitle: 'Aktiva samtal',
-      animate: true,
-    },
-    {
-      title: 'Total Tid',
-      value: formatDuration(metrics.totalDuration),
-      icon: Clock,
-      color: 'text-purple-600',
-      bgColor: 'bg-purple-500/10',
-      subtitle: completedCalls > 0 ? `⌀ ${formatDuration(avgCallDuration)} per samtal` : '-',
-    },
-    {
-      title: 'Total Kostnad',
-      value: formatCost(metrics.totalCost, 'SEK'),
-      icon: DollarSign,
-      color: 'text-orange-600',
-      bgColor: 'bg-orange-500/10',
-      subtitle: metrics.totalCalls + metrics.totalSMS > 0 
-        ? `⌀ ${(metrics.totalCost / (metrics.totalCalls + metrics.totalSMS)).toFixed(2)} SEK per event`
-        : '-',
-    },
-  ];
-
-  return (
-    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-      {stats.map((stat) => (
-        <Card key={stat.title}>
+  const avgCallDuration = completedCalls > 0 ? Math.round(metrics.totalDuration / completedCalls) : 0;
+  const stats = [{
+    title: 'Total Samtal',
+    value: metrics.totalCalls,
+    icon: Phone,
+    color: 'text-blue-600',
+    bgColor: 'bg-blue-500/10',
+    subtitle: metrics.totalCalls > 0 ? `${completedCalls} avslutade` : 'Inga samtal ännu'
+  }, {
+    title: 'Pågående',
+    value: inProgressCalls,
+    icon: Loader2,
+    color: 'text-green-600',
+    bgColor: 'bg-green-500/10',
+    subtitle: 'Aktiva samtal',
+    animate: true
+  }, {
+    title: 'Total Tid',
+    value: formatDuration(metrics.totalDuration),
+    icon: Clock,
+    color: 'text-purple-600',
+    bgColor: 'bg-purple-500/10',
+    subtitle: completedCalls > 0 ? `⌀ ${formatDuration(avgCallDuration)} per samtal` : '-'
+  }, {
+    title: 'Total Kostnad',
+    value: formatCost(metrics.totalCost, 'SEK'),
+    icon: DollarSign,
+    color: 'text-orange-600',
+    bgColor: 'bg-orange-500/10',
+    subtitle: metrics.totalCalls + metrics.totalSMS > 0 ? `⌀ ${(metrics.totalCost / (metrics.totalCalls + metrics.totalSMS)).toFixed(2)} SEK per event` : '-'
+  }];
+  return <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+      {stats.map(stat => <Card key={stat.title}>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">{stat.title}</CardTitle>
-            <div className={`${stat.bgColor} p-2 rounded-full`}>
-              <stat.icon className={`h-4 w-4 ${stat.color} ${stat.animate ? 'animate-spin' : ''}`} />
-            </div>
+            
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{stat.value}</div>
             <p className="text-xs text-muted-foreground mt-1">{stat.subtitle}</p>
           </CardContent>
-        </Card>
-      ))}
-    </div>
-  );
+        </Card>)}
+    </div>;
 };
