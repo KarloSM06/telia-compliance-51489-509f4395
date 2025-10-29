@@ -631,6 +631,145 @@ serve(async (req) => {
       }
     } else {
       // Non-Vapi providers: Use original logic
+      
+      // Special handling for Telnyx: only process call.hangup, ignore initiated/answered
+      if (provider === 'telnyx') {
+        const telnyxEventType = bodyData.data?.event_type;
+        const callSessionId = bodyData.data?.payload?.call_session_id || bodyData.data?.id;
+        
+        // Ignore call.initiated and call.answered - we only want call.hangup
+        if (telnyxEventType === 'call.initiated' || telnyxEventType === 'call.answered') {
+          console.log(`⏭️ Skipping Telnyx ${telnyxEventType} event - waiting for call.hangup`);
+          return new Response(JSON.stringify({ status: 'skipped', reason: 'waiting_for_hangup' }), {
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          });
+        }
+        
+        // Only process call.hangup
+        if (telnyxEventType === 'call.hangup') {
+          const idempotencyKey = `telnyx:${callSessionId}:hangup`;
+          
+          // Check if already processed
+          const { data: existing } = await supabase
+            .from('telephony_events')
+            .select('id')
+            .eq('idempotency_key', idempotencyKey)
+            .maybeSingle();
+
+          if (existing) {
+            console.log(`✅ Duplicate Telnyx call.hangup ignored: ${idempotencyKey}`);
+            return new Response(JSON.stringify({ status: 'duplicate' }), {
+              headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+            });
+          }
+          
+          // Extract call data
+          const payload = bodyData.data?.payload;
+          const fromNumber = payload?.from;
+          const toNumber = payload?.to;
+          const direction = payload?.direction === 'incoming' ? 'inbound' : 'outbound';
+          
+          // Calculate duration from start_time and end_time
+          let durationSeconds = 0;
+          if (payload?.start_time && payload?.end_time) {
+            const startTime = new Date(payload.start_time);
+            const endTime = new Date(payload.end_time);
+            durationSeconds = Math.round((endTime.getTime() - startTime.getTime()) / 1000);
+          }
+          
+          // Calculate cost based on duration using our cost calculator
+          const calculateCost = (durationSec: number): number => {
+            // Telnyx pricing: ~$0.013/min average (0.14 SEK/min)
+            return (durationSec / 60) * 0.14;
+          };
+          
+          const costAmount = calculateCost(durationSeconds);
+          const costCurrency = 'SEK';
+          
+          console.log(`📞 Processing Telnyx call.hangup: ${durationSeconds}s, cost: ${costAmount.toFixed(4)} ${costCurrency}`);
+          
+          // Try to find related Vapi/Retell event
+          const relatedAgentEvent = await findRelatedEvent(
+            supabase,
+            integration.user_id,
+            fromNumber,
+            toNumber,
+            payload?.end_time || new Date().toISOString(),
+            provider
+          );
+          
+          let parentEventId = null;
+          let providerLayer = 'standalone';
+          
+          if (relatedAgentEvent && ['vapi', 'retell'].includes(relatedAgentEvent.provider)) {
+            parentEventId = relatedAgentEvent.id;
+            providerLayer = 'telephony';
+            console.log(`🔗 Linking Telnyx call to ${relatedAgentEvent.provider} event ${parentEventId}`);
+          }
+          
+          // Create the aggregated Telnyx event
+          const { data: newEvent, error: eventError } = await supabase
+            .from('telephony_events')
+            .insert({
+              integration_id: integration.id,
+              user_id: integration.user_id,
+              provider: 'telnyx',
+              event_type: 'call.end',
+              direction: direction,
+              from_number: fromNumber,
+              to_number: toNumber,
+              status: payload?.hangup_cause || 'completed',
+              provider_event_id: callSessionId,
+              provider_payload: bodyData,
+              normalized: {
+                call_session_id: callSessionId,
+                start_time: payload?.start_time,
+                end_time: payload?.end_time,
+                duration_seconds: durationSeconds,
+                hangup_source: payload?.hangup_source,
+                hangup_cause: payload?.hangup_cause,
+                call_quality: payload?.call_quality_stats,
+                from: fromNumber,
+                to: toNumber,
+                direction: direction
+              },
+              duration_seconds: durationSeconds,
+              event_timestamp: payload?.end_time || new Date().toISOString(),
+              idempotency_key: idempotencyKey,
+              parent_event_id: parentEventId,
+              provider_layer: providerLayer,
+              cost_amount: costAmount,
+              cost_currency: costCurrency,
+              cost_breakdown: {
+                telnyx: {
+                  amount: costAmount,
+                  currency: costCurrency,
+                  layer: providerLayer
+                }
+              },
+              aggregate_cost_amount: costAmount,
+            })
+            .select()
+            .single();
+
+          if (eventError) {
+            console.error('❌ Failed to create Telnyx event:', eventError);
+          } else {
+            console.log('✅ Telnyx call.hangup event created successfully');
+            
+            // If we linked to a parent, aggregate costs
+            if (newEvent && parentEventId) {
+              await aggregateCosts(supabase, parentEventId, newEvent);
+            }
+          }
+          
+          return new Response(JSON.stringify({ success: true }), {
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          });
+        }
+      }
+      
+      // Original logic for other providers (Twilio, Retell standalone)
       const providerEventId = 
         bodyData.id || 
         bodyData.MessageSid || 
@@ -689,7 +828,7 @@ serve(async (req) => {
         bodyData.data?.occurred_at || 
         new Date().toISOString();
       
-      // Extract cost for Telnyx/Twilio
+      // Extract cost for Twilio/Retell
       const costAmount = bodyData.price ? Math.abs(Number(bodyData.price)) : 0;
       const costCurrency = bodyData.price_unit || 'USD';
 

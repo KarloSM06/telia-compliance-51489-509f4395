@@ -16,7 +16,9 @@ export const calculateCost = (
       
     case 'telnyx':
       if (eventType.includes('call')) {
-        return (durationSeconds / 60) * 0.04; // ~$0.004/min
+        // Swedish mobile outbound: ~$0.02/min, inbound to number: ~$0.006/min
+        // Using average of $0.013/min ≈ 0.14 SEK/min
+        return (durationSeconds / 60) * 0.14;
       }
       if (eventType.includes('sms')) {
         return 0.04; // ~$0.004 per SMS
