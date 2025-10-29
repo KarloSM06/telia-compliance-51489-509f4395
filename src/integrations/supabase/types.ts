@@ -2063,6 +2063,107 @@ export type Database = {
         }
         Relationships: []
       }
+      provider_sync_status: {
+        Row: {
+          average_sync_duration_ms: number | null
+          backoff_seconds: number | null
+          consecutive_error_count: number | null
+          created_at: string | null
+          id: string
+          integration_id: string
+          last_error_at: string | null
+          last_error_message: string | null
+          last_poll_at: string | null
+          last_successful_poll_at: string | null
+          last_sync_duration_ms: number | null
+          last_synced_event_id: string | null
+          last_synced_timestamp: string | null
+          last_webhook_received_at: string | null
+          next_retry_at: string | null
+          overall_health: string | null
+          polling_enabled: boolean | null
+          polling_failure_count: number | null
+          polling_health_status: string | null
+          retry_count: number | null
+          sync_confidence_percentage: number | null
+          sync_method: string
+          total_events_synced: number | null
+          updated_at: string | null
+          user_id: string
+          webhook_enabled: boolean | null
+          webhook_failure_count: number | null
+          webhook_health_status: string | null
+        }
+        Insert: {
+          average_sync_duration_ms?: number | null
+          backoff_seconds?: number | null
+          consecutive_error_count?: number | null
+          created_at?: string | null
+          id?: string
+          integration_id: string
+          last_error_at?: string | null
+          last_error_message?: string | null
+          last_poll_at?: string | null
+          last_successful_poll_at?: string | null
+          last_sync_duration_ms?: number | null
+          last_synced_event_id?: string | null
+          last_synced_timestamp?: string | null
+          last_webhook_received_at?: string | null
+          next_retry_at?: string | null
+          overall_health?: string | null
+          polling_enabled?: boolean | null
+          polling_failure_count?: number | null
+          polling_health_status?: string | null
+          retry_count?: number | null
+          sync_confidence_percentage?: number | null
+          sync_method?: string
+          total_events_synced?: number | null
+          updated_at?: string | null
+          user_id: string
+          webhook_enabled?: boolean | null
+          webhook_failure_count?: number | null
+          webhook_health_status?: string | null
+        }
+        Update: {
+          average_sync_duration_ms?: number | null
+          backoff_seconds?: number | null
+          consecutive_error_count?: number | null
+          created_at?: string | null
+          id?: string
+          integration_id?: string
+          last_error_at?: string | null
+          last_error_message?: string | null
+          last_poll_at?: string | null
+          last_successful_poll_at?: string | null
+          last_sync_duration_ms?: number | null
+          last_synced_event_id?: string | null
+          last_synced_timestamp?: string | null
+          last_webhook_received_at?: string | null
+          next_retry_at?: string | null
+          overall_health?: string | null
+          polling_enabled?: boolean | null
+          polling_failure_count?: number | null
+          polling_health_status?: string | null
+          retry_count?: number | null
+          sync_confidence_percentage?: number | null
+          sync_method?: string
+          total_events_synced?: number | null
+          updated_at?: string | null
+          user_id?: string
+          webhook_enabled?: boolean | null
+          webhook_failure_count?: number | null
+          webhook_health_status?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "provider_sync_status_integration_id_fkey"
+            columns: ["integration_id"]
+            isOneToOne: false
+            referencedRelation: "integrations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       reminder_settings: {
         Row: {
           booking_confirmation_channel: string[]
@@ -2919,6 +3020,8 @@ export type Database = {
           created_at: string | null
           error_message: string | null
           id: string
+          is_duplicate: boolean | null
+          processing_duration_ms: number | null
           processing_time_ms: number | null
           provider: string | null
           request_body: Json | null
@@ -2926,6 +3029,7 @@ export type Database = {
           request_method: string | null
           response_body: string | null
           response_status: number | null
+          should_trigger_sync: boolean | null
           signature_verified: boolean | null
           user_id: string | null
           verification_error: string | null
@@ -2935,6 +3039,8 @@ export type Database = {
           created_at?: string | null
           error_message?: string | null
           id?: string
+          is_duplicate?: boolean | null
+          processing_duration_ms?: number | null
           processing_time_ms?: number | null
           provider?: string | null
           request_body?: Json | null
@@ -2942,6 +3048,7 @@ export type Database = {
           request_method?: string | null
           response_body?: string | null
           response_status?: number | null
+          should_trigger_sync?: boolean | null
           signature_verified?: boolean | null
           user_id?: string | null
           verification_error?: string | null
@@ -2951,6 +3058,8 @@ export type Database = {
           created_at?: string | null
           error_message?: string | null
           id?: string
+          is_duplicate?: boolean | null
+          processing_duration_ms?: number | null
           processing_time_ms?: number | null
           provider?: string | null
           request_body?: Json | null
@@ -2958,6 +3067,7 @@ export type Database = {
           request_method?: string | null
           response_body?: string | null
           response_status?: number | null
+          should_trigger_sync?: boolean | null
           signature_verified?: boolean | null
           user_id?: string | null
           verification_error?: string | null

@@ -131,3 +131,15 @@ verify_jwt = false
 
 [functions.sync-phone-numbers.schedule]
 cron = "0 4 * * *"
+
+[functions.update-sync-health]
+verify_jwt = false
+
+[functions.update-sync-health.schedule]
+cron = "*/5 * * * *"
+
+[functions.sync-fallback-manager]
+verify_jwt = false
+
+[functions.sync-fallback-manager.schedule]
+cron = "*/10 * * * *"

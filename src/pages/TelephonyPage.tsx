@@ -1,19 +1,24 @@
 import { useState } from 'react';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Phone, BarChart3, List, DollarSign, Download, RefreshCw, Bot, Activity, Webhook, Database } from 'lucide-react';
+import { Phone, RefreshCw, Plus, Download, AlertTriangle, BarChart3, List, DollarSign, Bot, Activity, Webhook, Database } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { ProviderAccountCard } from '@/components/telephony/ProviderAccountCard';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Badge } from '@/components/ui/badge';
+import { useIntegrations } from '@/hooks/useIntegrations';
+import { useTelephonyMetrics } from '@/hooks/useTelephonyMetrics';
+import { useSyncStatus } from '@/hooks/useSyncStatus';
+import { supabase } from '@/integrations/supabase/client';
+import { useQueryClient } from '@tanstack/react-query';
 import { TelephonyDashboard } from '@/components/telephony/TelephonyDashboard';
+import { AgentManager } from '@/components/telephony/AgentManager';
 import { EventTimeline } from '@/components/telephony/EventTimeline';
 import { DetailedMetricsTable } from '@/components/telephony/DetailedMetricsTable';
 import { CostBreakdownChart } from '@/components/telephony/CostBreakdownChart';
 import { WebhookSettings } from '@/components/telephony/WebhookSettings';
 import { SyncStatusDashboard } from '@/components/integrations/SyncStatusDashboard';
-import { AgentManager } from '@/components/telephony/AgentManager';
-import { useIntegrations } from '@/hooks/useIntegrations';
-import { useTelephonyMetrics } from '@/hooks/useTelephonyMetrics';
 import { AddIntegrationModal } from '@/components/integrations/AddIntegrationModal';
+import { SyncConfidenceIndicator } from '@/components/telephony/SyncConfidenceIndicator';
+import { toast } from 'sonner';
 
 const exportAllData = (events: any[]) => {
   const csv = [
@@ -44,50 +49,101 @@ const exportAllData = (events: any[]) => {
 export default function TelephonyPage() {
   const [showAddModal, setShowAddModal] = useState(false);
   const { integrations, isLoading: integrationsLoading, getByCapability } = useIntegrations();
+  const { metrics, isLoading: metricsLoading, refetch: refetchMetrics } = useTelephonyMetrics();
+  const { data: syncStatuses } = useSyncStatus();
+  const queryClient = useQueryClient();
+
   const telephonyIntegrations = getByCapability('voice').concat(getByCapability('sms'));
-  const { metrics, isLoading: metricsLoading, refetch } = useTelephonyMetrics();
+
+  // Beräkna overall sync confidence
+  const overallConfidence = syncStatuses?.length 
+    ? Math.round(syncStatuses.reduce((sum, s) => sum + s.sync_confidence_percentage, 0) / syncStatuses.length)
+    : 0;
+
+  const overallHealth = 
+    overallConfidence >= 90 ? 'healthy' :
+    overallConfidence >= 60 ? 'warning' : 'error';
 
   const handleRefresh = () => {
-    refetch();
+    refetchMetrics();
+    queryClient.invalidateQueries({ queryKey: ['sync-status'] });
+    toast.success('📊 Uppdaterade telefoni-data');
+  };
+
+  const manualSync = async (integrationId: string) => {
+    const integration = integrations.find(i => i.id === integrationId);
+    toast.loading(`🔄 Startar synkronisering för ${integration?.provider}...`, { id: 'sync' });
+    
+    try {
+      const { error } = await supabase.functions.invoke('telephony-account-sync', {
+        body: { integration_id: integrationId }
+      });
+      
+      if (error) throw error;
+      
+      toast.success('✅ Synkronisering klar!', { id: 'sync' });
+      queryClient.invalidateQueries({ queryKey: ['telephony-metrics'] });
+      queryClient.invalidateQueries({ queryKey: ['sync-status'] });
+    } catch (error) {
+      console.error('Sync error:', error);
+      toast.error('❌ Synkronisering misslyckades', { id: 'sync' });
+    }
   };
 
   return (
     <div className="space-y-6 animate-fade-in p-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
+      {/* Header med Overall Sync Status */}
+      <div className="flex items-center justify-between gap-4">
+        <div className="flex-1">
           <h1 className="text-3xl font-bold flex items-center gap-2">
             <Phone className="h-8 w-8" />
             Telefoni Översikt
           </h1>
           <p className="text-muted-foreground mt-1">
-            Hantera samtal, meddelanden och AI-agents från alla dina providers
+            Realtidsövervakning av alla dina telefoni-providers med 100% synk-säkerhet
           </p>
         </div>
-        <div className="flex gap-2">
-          <Button 
-            variant="outline" 
-            onClick={handleRefresh}
-            disabled={metricsLoading}
-          >
-            <RefreshCw className={`h-4 w-4 mr-2 ${metricsLoading ? 'animate-spin' : ''}`} />
-            Uppdatera
-          </Button>
-          <Button 
-            variant="outline" 
-            onClick={() => exportAllData(metrics.events)}
-            disabled={metrics.events.length === 0}
-          >
-            <Download className="h-4 w-4 mr-2" />
-            Exportera CSV
-          </Button>
-          <Button onClick={() => setShowAddModal(true)}>
-            Lägg till Integration
-          </Button>
-        </div>
+        
+        {/* Overall Sync Confidence Card */}
+        {syncStatuses && syncStatuses.length > 0 && (
+          <Card className="w-96 border-2 shadow-lg">
+            <CardHeader className="pb-3">
+              <CardTitle className="text-sm font-medium flex items-center gap-2">
+                <AlertTriangle className="h-4 w-4" />
+                Total Synk-Status
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <SyncConfidenceIndicator 
+                confidence={overallConfidence}
+                overallHealth={overallHealth}
+                webhookHealth={syncStatuses[0]?.webhook_health_status || 'unknown'}
+                pollingHealth={syncStatuses[0]?.polling_health_status || 'unknown'}
+                lastWebhookReceived={syncStatuses[0]?.last_webhook_received_at}
+                lastPollAt={syncStatuses[0]?.last_poll_at}
+              />
+            </CardContent>
+          </Card>
+        )}
       </div>
 
-      {/* Connected Providers */}
+      {/* Action Buttons */}
+      <div className="flex gap-2">
+        <Button onClick={handleRefresh} variant="outline" disabled={metricsLoading}>
+          <RefreshCw className={`h-4 w-4 mr-2 ${metricsLoading ? 'animate-spin' : ''}`} />
+          Uppdatera
+        </Button>
+        <Button onClick={() => exportAllData(metrics.events)} variant="outline" disabled={metrics.events.length === 0}>
+          <Download className="h-4 w-4 mr-2" />
+          Exportera
+        </Button>
+        <Button onClick={() => setShowAddModal(true)}>
+          <Plus className="h-4 w-4 mr-2" />
+          Lägg till provider
+        </Button>
+      </div>
+
+      {/* Provider Cards med individuell Sync Status */}
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
@@ -95,7 +151,7 @@ export default function TelephonyPage() {
             Anslutna Providers
           </CardTitle>
           <CardDescription>
-            {telephonyIntegrations.length} aktiva telefoni-integrationer
+            {telephonyIntegrations.length} aktiva telefoni-integrationer med realtids synk-övervakning
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -111,12 +167,59 @@ export default function TelephonyPage() {
             </div>
           ) : (
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-              {telephonyIntegrations.map((integration) => (
-                <ProviderAccountCard
-                  key={integration.id}
-                  integration={integration}
-                />
-              ))}
+              {telephonyIntegrations.map((integration) => {
+                const syncStatus = syncStatuses?.find(s => s.integration_id === integration.id);
+                
+                return (
+                  <Card key={integration.id} className="relative border-2 hover:border-primary/50 transition-colors">
+                    {syncStatus && (
+                      <div className="absolute top-4 right-4">
+                        <Badge variant={
+                          syncStatus.overall_health === 'healthy' ? 'default' :
+                          syncStatus.overall_health === 'warning' ? 'outline' : 'destructive'
+                        }>
+                          {syncStatus.sync_confidence_percentage}%
+                        </Badge>
+                      </div>
+                    )}
+                    <CardHeader>
+                      <CardTitle className="flex items-center gap-2 text-lg">
+                        {integration.provider_display_name}
+                      </CardTitle>
+                      <CardDescription className="text-xs">
+                        {integration.provider}
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                      {syncStatus ? (
+                        <SyncConfidenceIndicator 
+                          confidence={syncStatus.sync_confidence_percentage}
+                          overallHealth={syncStatus.overall_health}
+                          webhookHealth={syncStatus.webhook_health_status}
+                          pollingHealth={syncStatus.polling_health_status}
+                          lastWebhookReceived={syncStatus.last_webhook_received_at}
+                          lastPollAt={syncStatus.last_poll_at}
+                        />
+                      ) : (
+                        <div className="text-sm text-muted-foreground">
+                          Ingen synk-status tillgänglig än
+                        </div>
+                      )}
+                      
+                      {/* Manual Sync Button */}
+                      <Button 
+                        size="sm" 
+                        variant="outline" 
+                        className="w-full"
+                        onClick={() => manualSync(integration.id)}
+                      >
+                        <RefreshCw className="h-4 w-4 mr-2" />
+                        Synka Nu
+                      </Button>
+                    </CardContent>
+                  </Card>
+                );
+              })}
             </div>
           )}
         </CardContent>
