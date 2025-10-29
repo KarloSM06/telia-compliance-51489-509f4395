@@ -950,8 +950,25 @@ serve(async (req) => {
             providerLayer = 'telephony';
             console.log(`🔗 Linking Telnyx call to ${relatedAgentEvent.provider} event ${parentEventId}`);
             
-            // Update parent event duration with Telnyx duration if greater
-            const currentNormalized = relatedAgentEvent.normalized as any || {};
+          // Update parent event cost breakdown with Telnyx cost
+          const currentCostBreakdown = relatedAgentEvent.cost_breakdown || {};
+          const updatedCostBreakdown = {
+            ...currentCostBreakdown,
+            telnyx: {
+              amount: costAmount,
+              currency: costCurrency,
+              layer: providerLayer
+            }
+          };
+          
+          // Recalculate aggregate cost
+          const aggregateCost = Object.values(updatedCostBreakdown).reduce(
+            (sum: number, item: any) => sum + (Number(item.amount) || 0), 
+            0
+          );
+          
+          // Update parent event duration with Telnyx duration if greater
+          const currentNormalized = relatedAgentEvent.normalized as any || {};
             const parentDuration = relatedAgentEvent.duration_seconds || 0;
             
             if (durationSeconds > parentDuration) {
@@ -962,11 +979,22 @@ serve(async (req) => {
                   normalized: {
                     ...currentNormalized,
                     telnyxDurationSeconds: durationSeconds,
-                  }
+                  },
+                  cost_breakdown: updatedCostBreakdown,
+                  aggregate_cost_amount: aggregateCost,
                 })
                 .eq('id', relatedAgentEvent.id);
               
               console.log(`⏱️ Updated parent duration: ${parentDuration}s → ${durationSeconds}s`);
+            } else {
+              // Update cost breakdown even if duration is not greater
+              await supabase
+                .from('telephony_events')
+                .update({
+                  cost_breakdown: updatedCostBreakdown,
+                  aggregate_cost_amount: aggregateCost,
+                })
+                .eq('id', relatedAgentEvent.id);
             }
           }
           
