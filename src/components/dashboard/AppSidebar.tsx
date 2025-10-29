@@ -1,4 +1,4 @@
-import { Home, Package, LayoutDashboard, Settings, BarChart3, LogOut, Phone, UtensilsCrossed, Users, Target, Award, Star, Calendar, Bell, FileText, MessageSquare, BarChart, Building2, Plug } from "lucide-react";
+import { Home, Package, LayoutDashboard, Settings, BarChart3, LogOut, Phone, UtensilsCrossed, Users, Target, Award, Star, Calendar, Bell, FileText, MessageSquare, Mail, BarChart, Building2, Plug } from "lucide-react";
 import { NavLink, useNavigate } from "react-router-dom";
 import {
   Sidebar,
@@ -31,7 +31,8 @@ const navigationItems = [
   { title: "Integrationer", url: "/dashboard/integrations", icon: Plug },
   { title: "Kalender", url: "/dashboard/calendar", icon: Calendar },
   { title: "Telefoni", url: "/dashboard/telephony", icon: Phone },
-  { title: "Meddelanden", url: "/dashboard/messages", icon: MessageSquare },
+  { title: "SMS", url: "/dashboard/sms", icon: MessageSquare },
+  { title: "Email", url: "/dashboard/email", icon: Mail },
   { title: "Recensioner", url: "/dashboard/reviews", icon: Star },
   { title: "Notifikationer", url: "/dashboard/notifications", icon: Bell },
   { title: "Företag", url: "/dashboard/company", icon: Building2 },
