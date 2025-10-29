@@ -1,6 +1,7 @@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Eye, CheckCircle, XCircle, Clock, ArrowDown, ArrowUp, Star, Calendar, HelpCircle, MessageSquare, Bot, User, Zap } from "lucide-react";
 import { format } from "date-fns";
 import { sv } from "date-fns/locale";
@@ -101,6 +102,7 @@ export const SMSTable = ({ messages, onViewDetails }: SMSTableProps) => {
       <Table>
         <TableHeader>
           <TableRow>
+            <TableHead>Provider</TableHead>
             <TableHead>Riktning</TableHead>
             <TableHead>Från</TableHead>
             <TableHead>Till</TableHead>
@@ -114,61 +116,86 @@ export const SMSTable = ({ messages, onViewDetails }: SMSTableProps) => {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {messages.map((message) => (
-            <TableRow key={message.id}>
-              <TableCell>{getDirectionBadge(message.direction)}</TableCell>
-              <TableCell>
-                <p className="text-sm font-medium font-mono">
-                  {message.metadata?.from || message.recipient}
-                </p>
-              </TableCell>
-              <TableCell>
-                <p className="text-sm font-medium font-mono">
-                  {message.metadata?.to || '-'}
-                </p>
-              </TableCell>
-              <TableCell className="max-w-xs">
-                <p className="truncate text-sm">
-                  {message.message_body.substring(0, 50)}
-                  {message.message_body.length > 50 ? '...' : ''}
-                </p>
-              </TableCell>
-              <TableCell>
-                <div className="flex flex-col gap-1">
-                  {message.direction === 'inbound' && getMessageTypeBadge(message.message_type)}
-                  {message.direction === 'outbound' && getMessageSourceBadge(message.message_source)}
-                </div>
-              </TableCell>
-              <TableCell>{getStatusBadge(message.status)}</TableCell>
-              <TableCell>
-                <p className="text-sm">
-                  {format(new Date(message.sent_at), "PPP HH:mm", { locale: sv })}
-                </p>
-              </TableCell>
-              <TableCell>
-                <p className="text-sm">
-                  {message.delivered_at 
-                    ? format(new Date(message.delivered_at), "PPP HH:mm", { locale: sv })
-                    : '-'
-                  }
-                </p>
-              </TableCell>
-              <TableCell>
-                <p className="text-sm">
-                  {message.cost ? `${message.cost.toFixed(3)} SEK` : '-'}
-                </p>
-              </TableCell>
-              <TableCell className="text-right">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => onViewDetails(message)}
-                >
-                  <Eye className="h-4 w-4" />
-                </Button>
-              </TableCell>
-            </TableRow>
-          ))}
+          {messages.map((message) => {
+            const providerLogo = message.provider === 'twilio' 
+              ? '/images/logos/twilio.png' 
+              : message.provider === 'telnyx'
+              ? '/images/logos/telnyx.png'
+              : null;
+            
+            const providerName = message.provider === 'twilio' 
+              ? 'Twilio' 
+              : message.provider === 'telnyx'
+              ? 'Telnyx'
+              : message.provider?.toUpperCase() || 'N/A';
+
+            return (
+              <TableRow key={message.id}>
+                <TableCell>
+                  <div className="flex items-center gap-2">
+                    <Avatar className="h-8 w-8">
+                      {providerLogo && <AvatarImage src={providerLogo} alt={providerName} />}
+                      <AvatarFallback className="text-xs">
+                        {providerName.substring(0, 2)}
+                      </AvatarFallback>
+                    </Avatar>
+                    <span className="text-xs text-muted-foreground">{providerName}</span>
+                  </div>
+                </TableCell>
+                <TableCell>{getDirectionBadge(message.direction)}</TableCell>
+                <TableCell>
+                  <p className="text-sm font-medium font-mono">
+                    {message.metadata?.from || message.recipient}
+                  </p>
+                </TableCell>
+                <TableCell>
+                  <p className="text-sm font-medium font-mono">
+                    {message.metadata?.to || '-'}
+                  </p>
+                </TableCell>
+                <TableCell className="max-w-xs">
+                  <p className="truncate text-sm">
+                    {message.message_body.substring(0, 50)}
+                    {message.message_body.length > 50 ? '...' : ''}
+                  </p>
+                </TableCell>
+                <TableCell>
+                  <div className="flex flex-col gap-1">
+                    {message.direction === 'inbound' && getMessageTypeBadge(message.message_type)}
+                    {message.direction === 'outbound' && getMessageSourceBadge(message.message_source)}
+                  </div>
+                </TableCell>
+                <TableCell>{getStatusBadge(message.status)}</TableCell>
+                <TableCell>
+                  <p className="text-sm">
+                    {format(new Date(message.sent_at), "d MMM HH:mm", { locale: sv })}
+                  </p>
+                </TableCell>
+                <TableCell>
+                  <p className="text-sm">
+                    {message.delivered_at 
+                      ? format(new Date(message.delivered_at), "d MMM HH:mm", { locale: sv })
+                      : '-'
+                    }
+                  </p>
+                </TableCell>
+                <TableCell>
+                  <p className="text-sm font-medium">
+                    {message.cost ? `${message.cost.toFixed(2)} kr` : '-'}
+                  </p>
+                </TableCell>
+                <TableCell className="text-right">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => onViewDetails(message)}
+                  >
+                    <Eye className="h-4 w-4" />
+                  </Button>
+                </TableCell>
+              </TableRow>
+            );
+          })}
         </TableBody>
       </Table>
     </div>
