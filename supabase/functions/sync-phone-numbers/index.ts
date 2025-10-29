@@ -58,16 +58,38 @@ serve(async (req) => {
 
     if (intError) throw intError;
 
-    console.log(`Found ${integrations?.length || 0} active integrations`);
+    if (!integrations || integrations.length === 0) {
+      console.log('ℹ️ No active Twilio or Telnyx integrations found');
+      return new Response(
+        JSON.stringify({ success: true, message: 'No integrations to sync', synced: 0 }),
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    console.log(`Found ${integrations.length} active integrations`);
 
     const results = [];
 
-    for (const integration of integrations || []) {
+    for (const integration of integrations) {
       console.log(`🔄 Syncing numbers for ${integration.provider}...`);
 
       try {
-        // Decrypt credentials inline
-        const credentials = await decryptCredentials(integration.encrypted_credentials);
+        // Try to decrypt credentials with better error handling
+        let credentials;
+        try {
+          credentials = await decryptCredentials(integration.encrypted_credentials);
+          console.log(`✅ Credentials decrypted for ${integration.provider}`);
+        } catch (decryptError) {
+          console.error(`❌ Failed to decrypt credentials for ${integration.provider}:`, decryptError);
+          results.push({
+            integration_id: integration.id,
+            provider: integration.provider,
+            success: false,
+            error: 'Credentials are corrupt or invalid. Please re-add this integration.'
+          });
+          continue;
+        }
+
         let syncResult;
 
         switch (integration.provider) {
@@ -82,22 +104,38 @@ serve(async (req) => {
         }
 
         results.push({
-          integration: integration.provider,
+          integration_id: integration.id,
+          provider: integration.provider,
           ...syncResult
         });
 
       } catch (error) {
         console.error(`❌ Error syncing ${integration.provider}:`, error);
         results.push({
-          integration: integration.provider,
+          integration_id: integration.id,
+          provider: integration.provider,
           success: false,
           error: error.message
         });
       }
     }
 
+    const totalSynced = results.filter(r => r.success).length;
+    const failedSyncs = results.filter(r => !r.success);
+
+    console.log(`✅ Sync completed: ${totalSynced}/${integrations.length} successful`);
+    if (failedSyncs.length > 0) {
+      console.log(`❌ Failed syncs:`, failedSyncs);
+    }
+
     return new Response(
-      JSON.stringify({ success: true, results }),
+      JSON.stringify({ 
+        success: totalSynced > 0,
+        synced: totalSynced,
+        total: integrations.length,
+        failed: failedSyncs.length,
+        results 
+      }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
 

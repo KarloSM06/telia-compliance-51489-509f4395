@@ -178,9 +178,26 @@ export const useIntegrations = () => {
       if (error) throw error;
       return data;
     },
-    onSuccess: () => {
+    onSuccess: async (data) => {
       queryClient.invalidateQueries({ queryKey: ['integrations'] });
       toast.success('Integration tillagd!');
+      
+      // Auto-sync phone numbers for telephony providers
+      if (data.provider === 'twilio' || data.provider === 'telnyx') {
+        console.log('🔄 Auto-syncing phone numbers after integration creation...');
+        try {
+          const { error: syncError } = await supabase.functions.invoke('sync-phone-numbers');
+          if (syncError) {
+            console.error('Phone number auto-sync failed:', syncError);
+            toast.info('Integration tillagd, men telefonnummersynk misslyckades. Försök manuellt.');
+          } else {
+            queryClient.invalidateQueries({ queryKey: ['phone-numbers'] });
+            toast.success('Telefonnummer synkade automatiskt!');
+          }
+        } catch (syncError) {
+          console.error('Phone number auto-sync error:', syncError);
+        }
+      }
     },
     onError: (error: Error) => {
       toast.error(`Fel: ${error.message}`);

@@ -1,49 +1,115 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { useSMSProviderSettings, SMSProvider, ProviderCredentials } from "@/hooks/useSMSProviderSettings";
+import { useIntegrations, PROVIDER_CREDENTIALS_SCHEMA } from "@/hooks/useIntegrations";
 import { CheckCircle2, AlertCircle, Loader2, Trash2, Info, MessageSquare, Shield, ExternalLink } from "lucide-react";
 import { format } from "date-fns";
 import { sv } from "date-fns/locale";
 import { StatCard } from "@/components/communications/StatCard";
 import { Badge } from "@/components/ui/badge";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
+
+type SMSProvider = 'twilio' | 'telnyx';
 
 export default function SMSProviderSettings() {
-  const { settings, isLoading, testProvider, isTestingProvider, saveSettings, isSavingSettings, deleteSettings } = useSMSProviderSettings();
+  const { 
+    integrations, 
+    isLoading, 
+    addIntegration, 
+    isAddingIntegration,
+    updateIntegration,
+    deleteIntegration,
+    isDeletingIntegration 
+  } = useIntegrations();
   
-  const [provider, setProvider] = useState<SMSProvider>(settings?.provider || 'twilio');
-  const [credentials, setCredentials] = useState<ProviderCredentials>({});
-  const [fromPhoneNumber, setFromPhoneNumber] = useState(settings?.from_phone_number || '');
+  // Find existing SMS integration (Twilio or Telnyx)
+  const smsIntegration = integrations.find(i => 
+    (i.provider === 'twilio' || i.provider === 'telnyx') && i.is_active
+  );
+  
+  const [provider, setProvider] = useState<SMSProvider>('twilio');
+  const [credentials, setCredentials] = useState<Record<string, string>>({});
+  const [fromPhoneNumber, setFromPhoneNumber] = useState('');
   const [testPhoneNumber, setTestPhoneNumber] = useState('');
   const [webhookOpen, setWebhookOpen] = useState(false);
+  const [isTesting, setIsTesting] = useState(false);
 
-  const handleTest = () => {
+  useEffect(() => {
+    if (smsIntegration) {
+      setProvider(smsIntegration.provider as SMSProvider);
+      setFromPhoneNumber(smsIntegration.config?.from_phone_number || '');
+    }
+  }, [smsIntegration]);
+
+  const handleTest = async () => {
     if (!testPhoneNumber) {
-      alert('Ange ett telefonnummer att skicka test-SMS till');
+      toast.error('Ange ett telefonnummer att skicka test-SMS till');
       return;
     }
-    testProvider({ provider, credentials, fromPhoneNumber, testPhoneNumber });
+    setIsTesting(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('test-sms-provider', {
+        body: { provider, credentials, fromPhoneNumber, testPhoneNumber },
+      });
+      
+      if (error) throw error;
+      if (!data.success) throw new Error(data.error || 'Test misslyckades');
+      
+      toast.success('Test-SMS skickat! Kontrollera din telefon.');
+    } catch (error: any) {
+      toast.error(`Test misslyckades: ${error.message}`);
+    } finally {
+      setIsTesting(false);
+    }
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (!fromPhoneNumber) {
-      alert('Ange från-nummer');
+      toast.error('Ange från-nummer');
       return;
     }
-    if (provider === 'twilio' && (!credentials.accountSid || !credentials.authToken)) {
-      alert('Ange Twilio Account SID och Auth Token');
+    
+    const requiredFields = PROVIDER_CREDENTIALS_SCHEMA[provider] || [];
+    const missingFields = requiredFields.filter(field => !credentials[field]);
+    
+    if (missingFields.length > 0) {
+      toast.error(`Saknas: ${missingFields.join(', ')}`);
       return;
     }
-    if (provider === 'telnyx' && !credentials.apiKey) {
-      alert('Ange Telnyx API Key');
-      return;
+
+    // Add from_phone_number to config
+    const config = { from_phone_number: fromPhoneNumber };
+    
+    if (smsIntegration) {
+      // Update existing integration
+      updateIntegration({
+        integrationId: smsIntegration.id,
+        updates: { config },
+      });
+    } else {
+      // Create new integration
+      addIntegration({
+        provider,
+        providerDisplayName: provider === 'twilio' ? 'Twilio' : 'Telnyx',
+        capabilities: provider === 'twilio' 
+          ? ['voice', 'sms', 'mms', 'video', 'fax']
+          : ['voice', 'sms', 'mms', 'fax', 'number_management'],
+        credentials,
+        config,
+      });
     }
-    saveSettings({ provider, credentials, fromPhoneNumber });
+  };
+
+  const handleDelete = () => {
+    if (smsIntegration) {
+      deleteIntegration(smsIntegration.id);
+    }
   };
 
   if (isLoading) {
@@ -57,37 +123,38 @@ export default function SMSProviderSettings() {
   return (
     <div className="space-y-6 max-w-5xl mx-auto pb-12">
       {/* Status Overview */}
-      {settings && (
+      {smsIntegration && (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <StatCard 
             title="Provider" 
-            value={settings.provider === 'twilio' ? 'Twilio' : 'Telnyx'} 
+            value={smsIntegration.provider === 'twilio' ? 'Twilio' : 'Telnyx'} 
             icon={MessageSquare}
           />
           <StatCard 
             title="Status" 
-            value={settings.is_verified ? 'Verifierad' : 'Ej verifierad'} 
-            icon={settings.is_verified ? CheckCircle2 : AlertCircle}
+            value={smsIntegration.is_active ? 'Aktiv' : 'Inaktiv'} 
+            icon={smsIntegration.is_active ? CheckCircle2 : AlertCircle}
           />
           <StatCard 
             title="Från-nummer" 
-            value={settings.from_phone_number || 'N/A'} 
+            value={smsIntegration.config?.from_phone_number || 'N/A'} 
             icon={MessageSquare}
           />
         </div>
       )}
 
       {/* Success Alert */}
-      {settings && (
+      {smsIntegration && (
         <Alert className="border-success/50 bg-success/5">
           <CheckCircle2 className="h-4 w-4 text-success" />
-          <AlertTitle>Konfiguration aktiv</AlertTitle>
+          <AlertTitle>Integration aktiv</AlertTitle>
           <AlertDescription>
             <div className="space-y-1 mt-2 text-sm">
-              {settings.test_message_sent_at && (
-                <div className="flex items-center gap-2">
+              Din SMS-integration är konfigurerad och redo att användas.
+              {smsIntegration.last_synced_at && (
+                <div className="flex items-center gap-2 mt-2">
                   <Badge variant="outline">
-                    Test skickat: {format(new Date(settings.test_message_sent_at), 'PPP HH:mm', { locale: sv })}
+                    Senast synkad: {format(new Date(smsIntegration.last_synced_at), 'PPP HH:mm', { locale: sv })}
                   </Badge>
                 </div>
               )}
@@ -97,7 +164,7 @@ export default function SMSProviderSettings() {
       )}
 
       {/* Webhook Info - Collapsible */}
-      {settings && (
+      {smsIntegration && (
         <Collapsible open={webhookOpen} onOpenChange={setWebhookOpen}>
           <Card>
             <CollapsibleTrigger className="w-full">
@@ -114,21 +181,21 @@ export default function SMSProviderSettings() {
             <CollapsibleContent>
               <CardContent className="space-y-3">
                 <p className="text-sm text-muted-foreground">
-                  Konfigurera följande webhook URL i din {settings.provider === 'twilio' ? 'Twilio' : 'Telnyx'} dashboard
+                  Konfigurera följande webhook URL i din {smsIntegration.provider === 'twilio' ? 'Twilio' : 'Telnyx'} dashboard
                   för att få realtidsuppdateringar om meddelandestatus:
                 </p>
                 <div className="p-3 bg-muted rounded-lg">
                   <code className="text-xs break-all">
-                    https://shskknkivuewuqonjdjc.supabase.co/functions/v1/{settings.provider}-webhook
+                    https://shskknkivuewuqonjdjc.supabase.co/functions/v1/{smsIntegration.provider}-webhook
                   </code>
                 </div>
-                {settings.provider === 'twilio' && (
+                {smsIntegration.provider === 'twilio' && (
                   <p className="text-xs text-muted-foreground">
                     I Twilio Console: Phone Numbers → Din nummer → Messaging Configuration → 
                     "A MESSAGE COMES IN" webhook
                   </p>
                 )}
-                {settings.provider === 'telnyx' && (
+                {smsIntegration.provider === 'telnyx' && (
                   <p className="text-xs text-muted-foreground">
                     I Telnyx Portal: Messaging → Messaging Profiles → Din profil → 
                     Webhooks → Add webhook URL
@@ -148,7 +215,7 @@ export default function SMSProviderSettings() {
             Provider-konfiguration
           </CardTitle>
           <CardDescription>
-            {settings ? 'Uppdatera' : 'Konfigurera'} ditt SMS-providerkonto
+            {smsIntegration ? 'Uppdatera' : 'Konfigurera'} ditt SMS-providerkonto
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
@@ -269,16 +336,16 @@ export default function SMSProviderSettings() {
 
           {/* Action Buttons */}
           <div className="flex flex-wrap gap-3 pt-4 border-t">
-            <Button onClick={handleTest} disabled={isTestingProvider} variant="outline">
-              {isTestingProvider && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+            <Button onClick={handleTest} disabled={isTesting} variant="outline">
+              {isTesting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               Testa konfiguration
             </Button>
-            <Button onClick={handleSave} disabled={isSavingSettings} size="lg">
-              {isSavingSettings && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              Spara inställningar
+            <Button onClick={handleSave} disabled={isAddingIntegration} size="lg">
+              {isAddingIntegration && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              {smsIntegration ? 'Uppdatera inställningar' : 'Spara inställningar'}
             </Button>
-            {settings && (
-              <Button onClick={() => deleteSettings()} variant="destructive" className="ml-auto">
+            {smsIntegration && (
+              <Button onClick={handleDelete} disabled={isDeletingIntegration} variant="destructive" className="ml-auto">
                 <Trash2 className="mr-2 h-4 w-4" />
                 Ta bort
               </Button>
