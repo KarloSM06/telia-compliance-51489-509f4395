@@ -1,25 +1,25 @@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { ScheduledMessage } from "@/hooks/useScheduledMessages";
-import { Mail, Phone, Eye, Clock, CheckCircle, XCircle } from "lucide-react";
+import { ArrowDown, ArrowUp, Eye, CheckCircle, XCircle, Clock } from "lucide-react";
 import { format } from "date-fns";
 import { sv } from "date-fns/locale";
+import { formatPhoneNumber } from "@/lib/telephonyFormatters";
 
 interface MessagesTableProps {
-  messages: ScheduledMessage[];
-  onViewDetails: (message: ScheduledMessage) => void;
+  messages: any[];
+  onViewDetails: (message: any) => void;
 }
 
 const getStatusBadge = (status: string) => {
   const statusConfig = {
-    pending: { label: "Väntande", variant: "secondary" as const, icon: Clock },
-    sent: { label: "Skickad", variant: "default" as const, icon: CheckCircle },
+    delivered: { label: "Levererad", variant: "default" as const, icon: CheckCircle },
+    sent: { label: "Skickad", variant: "secondary" as const, icon: Clock },
     failed: { label: "Misslyckad", variant: "destructive" as const, icon: XCircle },
-    cancelled: { label: "Avbruten", variant: "outline" as const, icon: XCircle },
+    undelivered: { label: "Ej levererad", variant: "destructive" as const, icon: XCircle },
   };
 
-  const config = statusConfig[status as keyof typeof statusConfig] || statusConfig.pending;
+  const config = statusConfig[status as keyof typeof statusConfig] || { label: status, variant: "secondary" as const, icon: Clock };
   const Icon = config.icon;
 
   return (
@@ -30,32 +30,28 @@ const getStatusBadge = (status: string) => {
   );
 };
 
-const getChannelIcon = (channel: string) => {
-  if (channel === 'sms') return <Phone className="h-3 w-3" />;
-  if (channel === 'email') return <Mail className="h-3 w-3" />;
+const getDirectionBadge = (direction: string) => {
+  if (direction === 'inbound') {
+    return (
+      <Badge variant="default" className="gap-1">
+        <ArrowDown className="h-3 w-3" />
+        Inkommande
+      </Badge>
+    );
+  }
   return (
-    <div className="flex gap-1">
-      <Phone className="h-3 w-3" />
-      <Mail className="h-3 w-3" />
-    </div>
+    <Badge variant="secondary" className="gap-1">
+      <ArrowUp className="h-3 w-3" />
+      Utgående
+    </Badge>
   );
-};
-
-const getMessageTypeLabel = (type: string) => {
-  const types = {
-    booking_confirmation: "Bekräftelse",
-    reminder: "Påminnelse",
-    review_request: "Recension",
-    cancellation: "Avbokning",
-  };
-  return types[type as keyof typeof types] || type;
 };
 
 export const MessagesTable = ({ messages, onViewDetails }: MessagesTableProps) => {
   if (messages.length === 0) {
     return (
       <div className="text-center py-12 text-muted-foreground">
-        <p>Inga meddelanden att visa</p>
+        <p>Inga SMS-meddelanden att visa</p>
       </div>
     );
   }
@@ -65,62 +61,58 @@ export const MessagesTable = ({ messages, onViewDetails }: MessagesTableProps) =
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>Typ</TableHead>
-            <TableHead>Kanal</TableHead>
-            <TableHead>Mottagare</TableHead>
+            <TableHead>Riktning</TableHead>
+            <TableHead>Från</TableHead>
+            <TableHead>Till</TableHead>
             <TableHead>Meddelande</TableHead>
+            <TableHead>Segment</TableHead>
             <TableHead>Status</TableHead>
-            <TableHead>Schemalagt för</TableHead>
-            <TableHead>Skickat</TableHead>
+            <TableHead>Kostnad</TableHead>
+            <TableHead>Tidpunkt</TableHead>
             <TableHead className="text-right">Åtgärder</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
-          {messages.map((message) => (
-            <TableRow key={message.id}>
-              <TableCell className="font-medium">
-                {getMessageTypeLabel(message.message_type)}
-              </TableCell>
-              <TableCell>
-                <div className="flex items-center gap-1">
-                  {getChannelIcon(message.channel)}
-                </div>
-              </TableCell>
-              <TableCell>
-                <div>
-                  <p className="font-medium">{message.recipient_name}</p>
-                  <p className="text-sm text-muted-foreground">
-                    {message.recipient_phone || message.recipient_email}
+          {messages.map((message) => {
+            const normalized = message.normalized as any;
+            return (
+              <TableRow key={message.id}>
+                <TableCell>
+                  {getDirectionBadge(normalized?.direction || 'unknown')}
+                </TableCell>
+                <TableCell>
+                  <p className="text-sm">{formatPhoneNumber(normalized?.from)}</p>
+                </TableCell>
+                <TableCell>
+                  <p className="text-sm">{formatPhoneNumber(normalized?.to)}</p>
+                </TableCell>
+                <TableCell className="max-w-xs">
+                  <p className="truncate text-sm">
+                    {normalized?.body ? normalized.body.substring(0, 50) + (normalized.body.length > 50 ? '...' : '') : '-'}
                   </p>
-                </div>
-              </TableCell>
-              <TableCell className="max-w-xs">
-                <p className="truncate text-sm">
-                  {message.generated_message.substring(0, 50)}...
-                </p>
-              </TableCell>
-              <TableCell>{getStatusBadge(message.status)}</TableCell>
-              <TableCell>
-                {format(new Date(message.scheduled_for), "PPP HH:mm", { locale: sv })}
-              </TableCell>
-              <TableCell>
-                {message.sent_at ? (
-                  format(new Date(message.sent_at), "PPP HH:mm", { locale: sv })
-                ) : (
-                  <span className="text-muted-foreground">-</span>
-                )}
-              </TableCell>
-              <TableCell className="text-right">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => onViewDetails(message)}
-                >
-                  <Eye className="h-4 w-4" />
-                </Button>
-              </TableCell>
-            </TableRow>
-          ))}
+                </TableCell>
+                <TableCell>
+                  <Badge variant="outline">{normalized?.numSegments || 1}</Badge>
+                </TableCell>
+                <TableCell>{getStatusBadge(normalized?.status || 'unknown')}</TableCell>
+                <TableCell>
+                  <p className="text-sm">{message.cost_amount ? `${parseFloat(message.cost_amount).toFixed(2)} ${message.cost_currency}` : '-'}</p>
+                </TableCell>
+                <TableCell>
+                  {format(new Date(message.event_timestamp), "PPP HH:mm", { locale: sv })}
+                </TableCell>
+                <TableCell className="text-right">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => onViewDetails(message)}
+                  >
+                    <Eye className="h-4 w-4" />
+                  </Button>
+                </TableCell>
+              </TableRow>
+            );
+          })}
         </TableBody>
       </Table>
     </div>

@@ -1,28 +1,27 @@
 import { useState, useMemo } from "react";
-import { useScheduledMessages, ScheduledMessage } from "@/hooks/useScheduledMessages";
+import { useTelephonyMessages } from "@/hooks/useTelephonyMessages";
 import { MessageStatsCards } from "@/components/messages/MessageStatsCards";
 import { MessageFilters } from "@/components/messages/MessageFilters";
 import { MessagesTable } from "@/components/messages/MessagesTable";
 import { MessageDetailModal } from "@/components/messages/MessageDetailModal";
 
 export default function MessagesPage() {
-  const [selectedMessage, setSelectedMessage] = useState<ScheduledMessage | null>(null);
+  const [selectedMessage, setSelectedMessage] = useState<any | null>(null);
   const [filters, setFilters] = useState({
+    direction: 'all',
     status: 'all',
-    channel: 'all',
-    messageType: 'all',
   });
 
-  const { messages, pendingMessages, sentMessages, failedMessages, isLoading } = useScheduledMessages();
+  const { metrics, isLoading } = useTelephonyMessages();
 
   const filteredMessages = useMemo(() => {
-    return messages.filter(msg => {
-      if (filters.status !== 'all' && msg.status !== filters.status) return false;
-      if (filters.channel !== 'all' && msg.channel !== filters.channel) return false;
-      if (filters.messageType !== 'all' && msg.message_type !== filters.messageType) return false;
+    return metrics.messages.filter((msg: any) => {
+      const normalized = msg.normalized as any;
+      if (filters.direction !== 'all' && normalized?.direction !== filters.direction) return false;
+      if (filters.status !== 'all' && normalized?.status !== filters.status) return false;
       return true;
     });
-  }, [messages, filters]);
+  }, [metrics.messages, filters]);
 
   return (
     <div className="p-6 space-y-6">
@@ -42,10 +41,11 @@ export default function MessagesPage() {
       ) : (
         <>
           <MessageStatsCards 
-            total={messages.length}
-            pending={pendingMessages.length}
-            sent={sentMessages.length}
-            failed={failedMessages.length}
+            total={metrics.totalMessages}
+            inbound={metrics.inboundCount}
+            outbound={metrics.outboundCount}
+            failed={metrics.failedCount}
+            cost={metrics.totalCost}
           />
 
           <MessageFilters onFilterChange={setFilters} />
