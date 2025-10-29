@@ -95,10 +95,10 @@ export const getProviderLogo = (provider: string): string => {
   const logos: Record<string, string> = {
     'twilio': '/images/logos/twilio.png',
     'telnyx': '/images/logos/telnyx.png',
-    'vapi': '/images/logos/vapi.png',
+    'vapi': '/images/logos/vapi-new.png',
     'retell': '/images/logos/retell.png',
   };
-  return logos[provider] || '/images/logos/phone.png';
+  return logos[provider.toLowerCase()] || '/images/logos/phone.png';
 };
 
 export const getProviderDisplayName = (provider: string): string => {

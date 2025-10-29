@@ -3,7 +3,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { ArrowUpDown, Eye, ArrowDown, ArrowUp, Loader2, CheckCircle2 } from 'lucide-react';
-import { formatDuration, formatCost, formatRelativeTime, formatFullTimestamp, getProviderDisplayName, formatCostInSEK } from '@/lib/telephonyFormatters';
+import { formatDuration, formatCost, formatRelativeTime, formatFullTimestamp, getProviderDisplayName, formatCostInSEK, getProviderLogo } from '@/lib/telephonyFormatters';
 
 interface EventsTableProps {
   events: any[];
@@ -141,9 +141,13 @@ export const EventsTable = ({ events, onViewDetails }: EventsTableProps) => {
             return (
               <TableRow key={event.id} className="hover:bg-muted/50">
                 <TableCell>
-                  <Badge className={getProviderColor(event.provider)}>
-                    {getProviderDisplayName(event.provider)}
-                  </Badge>
+                  <div className="flex items-center gap-2">
+                    <img 
+                      src={getProviderLogo(event.provider)} 
+                      alt={getProviderDisplayName(event.provider)}
+                      className="h-6 w-auto object-contain"
+                    />
+                  </div>
                 </TableCell>
                 <TableCell>
                   <Badge variant={getEventTypeColor(event.event_type)}>
