@@ -11,8 +11,9 @@ import { DateRangePicker, DateRange } from "@/components/dashboard/filters/DateR
 import { ProductSelector, ProductType } from "@/components/dashboard/filters/ProductSelector";
 import { useAnalytics } from "@/hooks/useAnalytics";
 import { Button } from "@/components/ui/button";
-import { Download, Phone, Calendar, MessageSquare, TrendingUp, Target, Award, Users, Clock } from "lucide-react";
+import { Download, Phone, Calendar, MessageSquare, TrendingUp, Target, Award, Users, Clock, DollarSign, Smartphone } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
+import { TelephonyDebugPanel } from "@/components/telephony/TelephonyDebugPanel";
 
 const DashboardAnalytics = () => {
   const [dateRange, setDateRange] = useState<DateRange | undefined>();
@@ -147,6 +148,46 @@ const DashboardAnalytics = () => {
           />
         </div>
 
+        {/* Telephony Stats */}
+        {data?.telephony && data.telephony.totalCalls > 0 && (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <StatCard
+              title="Telefonisamtal (Twilio/Telnyx/VAPI/Retell)"
+              value={data.telephony.totalCalls}
+              change={15}
+              changeLabel="vs förra perioden"
+              trend="up"
+              icon={<Phone className="h-5 w-5" />}
+              sparklineData={data.telephony.byDay.slice(-7).map(d => ({ value: d.calls })) || []}
+            />
+            <StatCard
+              title="SMS/MMS Skickade"
+              value={data.telephony.totalSMS}
+              change={8}
+              changeLabel="vs förra perioden"
+              trend="up"
+              icon={<Smartphone className="h-5 w-5" />}
+              sparklineData={data.telephony.byDay.slice(-7).map(d => ({ value: d.sms })) || []}
+            />
+            <StatCard
+              title="Telefonikostnad"
+              value={`${data.telephony.totalCost.toFixed(2)} SEK`}
+              change={-5}
+              changeLabel="vs förra perioden"
+              trend="down"
+              icon={<DollarSign className="h-5 w-5" />}
+            />
+            <StatCard
+              title="Total samtalstid"
+              value={`${Math.round(data.telephony.totalDuration / 60)} min`}
+              change={12}
+              changeLabel="vs förra perioden"
+              trend="up"
+              icon={<Clock className="h-5 w-5" />}
+            />
+          </div>
+        )}
+
         {/* Large Trend Analysis Charts - 2 columns */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Left: Multi-metric Area Chart */}
@@ -214,6 +255,36 @@ const DashboardAnalytics = () => {
             innerRadius={50}
           />
         </div>
+
+        {/* Telephony Provider Breakdown */}
+        {data?.telephony && data.telephony.byProvider.length > 0 && (
+          <div className="space-y-4">
+            <div className="flex items-center gap-2 mb-2">
+              <Phone className="h-5 w-5 text-primary" />
+              <h2 className="text-xl font-bold">Telefonileverantörer - Översikt</h2>
+            </div>
+            <BarChartComponent
+              title="Samtal & SMS per Leverantör"
+              data={data.telephony.byProvider.map(p => ({
+                name: p.provider.toUpperCase(),
+                Samtal: p.calls,
+                SMS: p.sms,
+                Kostnad: p.cost,
+              })) || []}
+              dataKeys={[
+                { key: "Samtal", color: "hsl(43, 96%, 56%)", name: "Samtal" },
+                { key: "SMS", color: "hsl(142, 76%, 36%)", name: "SMS" },
+              ]}
+              xAxisKey="name"
+              height={350}
+            />
+          </div>
+        )}
+
+        {/* Telephony Debug Panel */}
+        {data?.telephony && data.telephony.totalEvents > 0 && (
+          <TelephonyDebugPanel />
+        )}
 
         {/* Product Deep Dive - Thor/Krono/Gastro Specific - 2 columns */}
         {selectedProduct === "all" || selectedProduct === "thor" ? (

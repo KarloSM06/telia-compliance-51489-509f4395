@@ -97,6 +97,12 @@ verify_jwt = false
 verify_jwt = false
 
 [functions.telephony-account-sync]
+verify_jwt = false
+
+[functions.telephony-account-sync.schedule]
+cron = "*/15 * * * *"
+
+[functions.initial-telephony-sync]
 verify_jwt = true
 
 [functions.encrypt-telephony-credentials]

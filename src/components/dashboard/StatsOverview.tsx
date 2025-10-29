@@ -36,10 +36,10 @@ export const StatsOverview = () => {
       color: "text-green-500",
     },
     {
-      title: "Samtal",
-      value: data?.calls.total || 0,
+      title: "Samtal (Alla källor)",
+      value: (data?.calls.total || 0) + (data?.telephony?.totalCalls || 0),
       icon: Phone,
-      description: "Totalt antal samtal",
+      description: `Thor: ${data?.calls.total || 0} | Telefoni: ${data?.telephony?.totalCalls || 0}`,
       color: "text-purple-500",
     },
     {
