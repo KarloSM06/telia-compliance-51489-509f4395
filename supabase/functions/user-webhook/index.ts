@@ -1119,7 +1119,9 @@ serve(async (req) => {
         }
 
         // If this is an SMS, also save to message_logs for SMS-specific tracking
+        console.log(`🔍 Checking SMS save conditions: eventType="${eventType}", newEvent=${!!newEvent}`);
         if (eventType === 'message' && newEvent) {
+          console.log('✅ Conditions met, saving to message_logs...');
           const messageLogData = {
             user_id: integration.user_id,
             integration_id: integration.id,
