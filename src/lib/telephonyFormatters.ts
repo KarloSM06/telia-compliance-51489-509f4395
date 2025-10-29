@@ -22,9 +22,32 @@ export const formatPhoneNumber = (number: string | null): string => {
   return number;
 };
 
+const USD_TO_SEK = 10.5;
+
 export const formatCost = (amount: number | null, currency: string = 'SEK'): string => {
   if (amount === null || amount === undefined) return '-';
   return `${amount.toFixed(2)} ${currency}`;
+};
+
+export const formatAggregateCost = (
+  aggregateCostAmount: number | null, 
+  costAmount: number | null, 
+  currency: string = 'USD'
+): string => {
+  if (aggregateCostAmount === null && costAmount === null) return '-';
+  
+  const usdAmount = aggregateCostAmount || costAmount || 0;
+  const sekAmount = usdAmount * USD_TO_SEK;
+  
+  return `$${usdAmount.toFixed(4)} USD (≈ ${sekAmount.toFixed(2)} SEK)`;
+};
+
+export const formatCostInSEK = (
+  usdAmount: number | null
+): string => {
+  if (usdAmount === null || usdAmount === undefined) return '-';
+  const sekAmount = usdAmount * USD_TO_SEK;
+  return `${sekAmount.toFixed(2)} SEK`;
 };
 
 export const formatFullTimestamp = (timestamp: string): string => {

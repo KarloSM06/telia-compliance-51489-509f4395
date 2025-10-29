@@ -11,6 +11,7 @@ import {
   getDirectionLabel,
   getStatusLabel,
   getStatusVariant,
+  formatAggregateCost,
 } from '@/lib/telephonyFormatters';
 import { Separator } from '@/components/ui/separator';
 import { useQuery } from '@tanstack/react-query';
@@ -123,7 +124,22 @@ export const EventDetailModal = ({ event, open, onClose }: EventDetailModalProps
             </div>
             <div>
               <p className="text-sm text-muted-foreground">Kostnad</p>
-              <p className="font-medium">{formatCost(event.cost_amount, event.cost_currency)}</p>
+              <p className="font-medium">
+                {formatAggregateCost(event.aggregate_cost_amount, event.cost_amount, event.cost_currency)}
+              </p>
+              
+              {/* Visa cost breakdown om det finns */}
+              {event.cost_breakdown && Object.keys(event.cost_breakdown).length > 0 && (
+                <div className="mt-2 space-y-1">
+                  <p className="text-xs text-muted-foreground">Kostnaduppdelning:</p>
+                  {Object.entries(event.cost_breakdown).map(([provider, data]: [string, any]) => (
+                    <div key={provider} className="text-xs flex justify-between">
+                      <span>{provider}:</span>
+                      <span>${data.amount.toFixed(4)} USD</span>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
             <div className="col-span-2">
               <p className="text-sm text-muted-foreground">Tidpunkt</p>

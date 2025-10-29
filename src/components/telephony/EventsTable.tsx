@@ -3,7 +3,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { ArrowUpDown, Eye, ArrowDown, ArrowUp, Loader2, CheckCircle2 } from 'lucide-react';
-import { formatDuration, formatCost, formatRelativeTime, formatFullTimestamp, getProviderDisplayName } from '@/lib/telephonyFormatters';
+import { formatDuration, formatCost, formatRelativeTime, formatFullTimestamp, getProviderDisplayName, formatCostInSEK } from '@/lib/telephonyFormatters';
 
 interface EventsTableProps {
   events: any[];
@@ -190,11 +190,7 @@ export const EventsTable = ({ events, onViewDetails }: EventsTableProps) => {
                 </TableCell>
                 <TableCell>
                   <span className="text-sm font-medium">
-                    {isInProgress ? '-' : (
-                      event.aggregate_cost_amount 
-                        ? `${parseFloat(event.aggregate_cost_amount).toFixed(2)} SEK`
-                        : formatCost(event.cost_amount, event.cost_currency)
-                    )}
+                    {isInProgress ? '-' : formatCostInSEK(event.aggregate_cost_amount || event.cost_amount)}
                   </span>
                 </TableCell>
                 <TableCell>

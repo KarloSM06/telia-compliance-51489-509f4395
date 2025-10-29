@@ -75,7 +75,8 @@ export const useTelephonyMetrics = (dateRange?: { from: Date; to: Date }) => {
         if (event.event_type.includes('call')) p.calls++;
         if (event.event_type.includes('sms')) p.sms++;
         p.duration += event.duration_seconds || 0;
-        p.cost += parseFloat(event.cost_amount as any) || 0;
+        // Use aggregate_cost_amount if available (total cost), otherwise fall back to cost_amount
+        p.cost += event.aggregate_cost_amount || parseFloat(event.cost_amount as any) || 0;
         p.events.push(event);
       });
 
@@ -98,7 +99,8 @@ export const useTelephonyMetrics = (dateRange?: { from: Date; to: Date }) => {
             const a = byAgent[event.agent_id];
             if (event.event_type.includes('call')) a.calls++;
             a.duration += event.duration_seconds || 0;
-            a.cost += parseFloat(event.cost_amount as any) || 0;
+            // Use aggregate_cost_amount if available (total cost), otherwise fall back to cost_amount
+            a.cost += event.aggregate_cost_amount || parseFloat(event.cost_amount as any) || 0;
             a.events.push(event);
           }
         }

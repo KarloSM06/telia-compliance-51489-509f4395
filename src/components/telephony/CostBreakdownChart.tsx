@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip, BarChart, Bar, XAxis, YAxis } from 'recharts';
-import { formatCost, getProviderDisplayName } from '@/lib/telephonyFormatters';
+import { formatCost, getProviderDisplayName, formatCostInSEK } from '@/lib/telephonyFormatters';
 
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884D8'];
 
@@ -15,11 +15,15 @@ export const CostBreakdownChart = ({ metrics }: { metrics: any }) => {
 
   // Prepare data for bar chart - top 10 most expensive calls
   const topExpensiveCalls = [...metrics.events]
-    .sort((a, b) => (parseFloat(b.cost_amount as any) || 0) - (parseFloat(a.cost_amount as any) || 0))
+    .sort((a, b) => {
+      const aCost = a.aggregate_cost_amount || parseFloat(a.cost_amount as any) || 0;
+      const bCost = b.aggregate_cost_amount || parseFloat(b.cost_amount as any) || 0;
+      return bCost - aCost;
+    })
     .slice(0, 10)
     .map((event, index) => ({
       name: `Samtal ${index + 1}`,
-      cost: parseFloat(event.cost_amount as any) || 0,
+      cost: event.aggregate_cost_amount || parseFloat(event.cost_amount as any) || 0,
       duration: event.duration_seconds || 0,
       provider: getProviderDisplayName(event.provider),
     }));
@@ -50,7 +54,7 @@ export const CostBreakdownChart = ({ metrics }: { metrics: any }) => {
                   ))}
                 </Pie>
                 <Tooltip 
-                  formatter={(value: number) => formatCost(value, 'SEK')}
+                  formatter={(value: number) => formatCostInSEK(value)}
                 />
                 <Legend />
               </PieChart>
@@ -73,7 +77,7 @@ export const CostBreakdownChart = ({ metrics }: { metrics: any }) => {
                 <XAxis dataKey="name" />
                 <YAxis />
                 <Tooltip 
-                  formatter={(value: number) => formatCost(value, 'SEK')}
+                  formatter={(value: number) => formatCostInSEK(value)}
                 />
                 <Bar dataKey="cost" fill="#8884d8" />
               </BarChart>
@@ -95,7 +99,7 @@ export const CostBreakdownChart = ({ metrics }: { metrics: any }) => {
               <div key={provider} className="border rounded-lg p-4">
                 <div className="flex justify-between items-start mb-2">
                   <h4 className="font-semibold">{getProviderDisplayName(provider)}</h4>
-                  <span className="text-lg font-bold">{formatCost(data.cost, 'SEK')}</span>
+                  <span className="text-lg font-bold">{formatCostInSEK(data.cost)}</span>
                 </div>
                 <div className="grid grid-cols-3 gap-2 text-sm text-muted-foreground">
                   <div>

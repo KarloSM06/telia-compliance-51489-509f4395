@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Phone, MessageSquare, Clock, DollarSign, TrendingUp, Loader2 } from 'lucide-react';
-import { formatDuration, formatCost } from '@/lib/telephonyFormatters';
+import { formatDuration, formatCost, formatCostInSEK } from '@/lib/telephonyFormatters';
 interface StatsCardsProps {
   metrics: {
     totalCalls: number;
@@ -48,11 +48,11 @@ export const StatsCards = ({
     subtitle: completedCalls > 0 ? `⌀ ${formatDuration(avgCallDuration)} per samtal` : '-'
   }, {
     title: 'Total Kostnad',
-    value: formatCost(metrics.totalCost, 'SEK'),
+    value: formatCostInSEK(metrics.totalCost),
     icon: DollarSign,
     color: 'text-orange-600',
     bgColor: 'bg-orange-500/10',
-    subtitle: metrics.totalCalls + metrics.totalSMS > 0 ? `⌀ ${(metrics.totalCost / (metrics.totalCalls + metrics.totalSMS)).toFixed(2)} SEK per event` : '-'
+    subtitle: `≈ $${metrics.totalCost.toFixed(4)} USD`
   }];
   return <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
       {stats.map(stat => <Card key={stat.title}>
