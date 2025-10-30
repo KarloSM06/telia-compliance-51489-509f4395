@@ -133,9 +133,16 @@ export const useMessageLogs = (filters?: MessageLogFilters) => {
     reviews: logs.filter(l => l.message_type === 'review').length,
     fromCalendar: logs.filter(l => l.message_source === 'calendar_notification').length,
     fromAI: logs.filter(l => l.message_source === 'ai_agent').length,
+    
+    // SEK-kostnader (konverterade)
     totalCost: logs.reduce((sum, l) => sum + calculateCostInSEK(l), 0),
     smsCost: logs.filter(l => l.channel === 'sms').reduce((sum, l) => sum + calculateCostInSEK(l), 0),
     emailCost: logs.filter(l => l.channel === 'email').reduce((sum, l) => sum + calculateCostInSEK(l), 0),
+    
+    // USD-kostnader (original)
+    totalCostUSD: logs.reduce((sum, l) => sum + (l.cost || 0), 0),
+    smsCostUSD: logs.filter(l => l.channel === 'sms').reduce((sum, l) => sum + (l.cost || 0), 0),
+    emailCostUSD: logs.filter(l => l.channel === 'email').reduce((sum, l) => sum + (l.cost || 0), 0),
   };
 
   return { logs, stats, isLoading };

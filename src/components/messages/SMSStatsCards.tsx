@@ -6,14 +6,15 @@ interface SMSStatsCardsProps {
   sent: number;
   pending: number;
   failed: number;
-  cost: number;
+  costSEK: number;
+  costUSD: number;
   inbound: number;
   outbound: number;
   reviews: number;
 }
 
 export const SMSStatsCards = ({ 
-  total, sent, pending, failed, cost, inbound, outbound, reviews 
+  total, sent, pending, failed, costSEK, costUSD, inbound, outbound, reviews 
 }: SMSStatsCardsProps) => {
   const stats = [
     {
@@ -60,9 +61,10 @@ export const SMSStatsCards = ({
     },
     {
       title: "Kostnad",
-      value: `${cost.toFixed(2)} SEK`,
+      value: `${costSEK.toFixed(2)} SEK`,
       icon: DollarSign,
       className: "text-purple-600",
+      subtitle: `≈ $${costUSD.toFixed(4)} USD`,
     },
   ];
 
@@ -75,6 +77,9 @@ export const SMSStatsCards = ({
               <stat.icon className={`h-6 w-6 mb-2 ${stat.className}`} />
               <p className="text-xs font-medium text-muted-foreground mb-1">{stat.title}</p>
               <p className="text-xl font-bold">{stat.value}</p>
+              {stat.subtitle && (
+                <p className="text-xs text-muted-foreground mt-1">{stat.subtitle}</p>
+              )}
             </div>
           </CardContent>
         </Card>

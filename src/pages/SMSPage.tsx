@@ -146,7 +146,8 @@ export default function SMSPage() {
           sent={stats.sent}
           pending={stats.pending}
           failed={stats.failed}
-          cost={stats.smsCost}
+          costSEK={stats.smsCost}
+          costUSD={stats.smsCostUSD}
           inbound={stats.inbound}
           outbound={stats.outbound}
           reviews={stats.reviews}
