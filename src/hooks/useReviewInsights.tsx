@@ -108,6 +108,41 @@ export const useReviewInsights = (dateRange?: { from: Date; to: Date }) => {
     refetchInterval: 10000 // Polla var 10:e sekund
   });
 
+  // Count new interactions since last analysis
+  const { data: newInteractionsCount } = useQuery({
+    queryKey: ['new-interactions-count', user?.id, insights?.analysis_period_end],
+    queryFn: async () => {
+      if (!user || !insights) return 0;
+      
+      const lastAnalysis = new Date(insights.analysis_period_end);
+      
+      // Count new reviews
+      const { count: reviewCount } = await supabase
+        .from('reviews')
+        .select('*', { count: 'exact', head: true })
+        .eq('user_id', user.id)
+        .gt('created_at', lastAnalysis.toISOString());
+      
+      // Count new SMS/Email
+      const { count: messageCount } = await supabase
+        .from('message_logs')
+        .select('*', { count: 'exact', head: true })
+        .eq('user_id', user.id)
+        .gt('created_at', lastAnalysis.toISOString());
+      
+      // Count new calls
+      const { count: callCount } = await supabase
+        .from('telephony_events')
+        .select('*', { count: 'exact', head: true })
+        .eq('user_id', user.id)
+        .gt('created_at', lastAnalysis.toISOString());
+      
+      return (reviewCount || 0) + (messageCount || 0) + (callCount || 0);
+    },
+    enabled: !!user && !!insights,
+    refetchInterval: 30000 // Check every 30 seconds
+  });
+
   // Check if insights are outdated (older than 24 hours)
   const isOutdated = insights 
     ? new Date().getTime() - new Date(insights.updated_at).getTime() > 24 * 60 * 60 * 1000
@@ -167,14 +202,21 @@ export const useReviewInsights = (dateRange?: { from: Date; to: Date }) => {
     };
   }, [user?.id, queryClient]);
 
-  // Auto-trigger analys om data är föråldrad
+  // Auto-trigger analys om data är föråldrad eller ny data finns
   useEffect(() => {
     if (!user || isLoading) return;
     
-    const shouldAutoTrigger = !insights || isOutdated;
+    const hasNewData = (newInteractionsCount || 0) >= 3;
+    const shouldAutoTrigger = !insights || isOutdated || hasNewData;
     
     if (shouldAutoTrigger && !queueStatus) {
-      console.log('Auto-triggering analysis in background...');
+      console.log('Auto-triggering analysis...', {
+        noInsights: !insights,
+        isOutdated,
+        hasNewData,
+        newCount: newInteractionsCount
+      });
+      
       supabase.functions.invoke('analyze-reviews', {
         body: { 
           auto_triggered: true,
@@ -186,13 +228,18 @@ export const useReviewInsights = (dateRange?: { from: Date; to: Date }) => {
           toast.error('AI-analys misslyckades: ' + error.message);
         } else {
           console.log('Auto-trigger succeeded:', data);
+          if (hasNewData) {
+            toast.success('AI-insikter uppdaterade!', {
+              icon: <Sparkles className="h-4 w-4" />
+            });
+          }
         }
       }).catch(error => {
         console.error('Auto-trigger network error:', error);
-        toast.error('Kunde inte starta AI-analys. Kontrollera din internetanslutning.');
+        toast.error('Kunde inte starta AI-analys.');
       });
     }
-  }, [user, insights, isOutdated, isLoading, queueStatus]);
+  }, [user, insights, isOutdated, isLoading, queueStatus, newInteractionsCount]);
 
   // Trigger new analysis (manual trigger - not used in UI anymore but kept for compatibility)
   const analyzeMutation = useMutation({
@@ -227,6 +274,7 @@ export const useReviewInsights = (dateRange?: { from: Date; to: Date }) => {
     error,
     isOutdated,
     queueStatus,
+    newInteractionsCount,
     triggerAnalysis: analyzeMutation.mutate,
     isAnalyzing: analyzeMutation.isPending,
   };

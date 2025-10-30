@@ -45,6 +45,7 @@ export default function ReviewDashboard() {
         },
         () => {
           queryClient.invalidateQueries({ queryKey: ['unified-reviews'] });
+          queryClient.invalidateQueries({ queryKey: ['review-insights'] });
           toast.success('Ny recension från kalender mottagen');
         }
       )
@@ -65,6 +66,7 @@ export default function ReviewDashboard() {
           const newMsg = payload.new as any;
           if (newMsg?.ai_classification?.type === 'review' || newMsg?.message_type === 'review') {
             queryClient.invalidateQueries({ queryKey: ['unified-reviews'] });
+            queryClient.invalidateQueries({ queryKey: ['review-insights'] });
             const source = newMsg.channel === 'sms' ? 'SMS' : 'Email';
             toast.success(`Ny recension från ${source} mottagen`);
           }
@@ -87,6 +89,7 @@ export default function ReviewDashboard() {
           // Check if it has sentiment (indicates review-worthy content)
           if (newEvent?.normalized?.sentiment) {
             queryClient.invalidateQueries({ queryKey: ['unified-reviews'] });
+            queryClient.invalidateQueries({ queryKey: ['review-insights'] });
             toast.success('Ny recension från samtal mottagen');
           }
         }

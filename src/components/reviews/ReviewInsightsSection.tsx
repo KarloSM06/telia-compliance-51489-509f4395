@@ -1,6 +1,7 @@
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Sparkles, Clock, Zap, Loader2 } from "lucide-react";
+import { Sparkles, Clock, Zap, Loader2, RefreshCw } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { useReviewInsights } from "@/hooks/useReviewInsights";
 import { ImprovementSuggestions } from "./ImprovementSuggestions";
 import { SentimentTrend } from "./SentimentTrend";
@@ -15,7 +16,7 @@ interface ReviewInsightsSectionProps {
 }
 
 export const ReviewInsightsSection = ({ dateRange }: ReviewInsightsSectionProps) => {
-  const { insights, isLoading, queueStatus } = useReviewInsights(dateRange);
+  const { insights, isLoading, queueStatus, triggerAnalysis, isAnalyzing, newInteractionsCount } = useReviewInsights(dateRange);
 
   const getStatusBadge = () => {
     if (queueStatus?.status === 'processing') {
@@ -90,8 +91,31 @@ export const ReviewInsightsSection = ({ dateRange }: ReviewInsightsSectionProps)
             <span>
               Senast analyserad: {formatDistanceToNow(new Date(insights.created_at), { addSuffix: true, locale: sv })}
             </span>
+            {newInteractionsCount !== undefined && newInteractionsCount > 0 && (
+              <Badge variant="outline" className="ml-2">
+                {newInteractionsCount} nya interaktioner
+              </Badge>
+            )}
           </div>
         </div>
+        <Button
+          onClick={() => triggerAnalysis()}
+          disabled={isAnalyzing || queueStatus?.status === 'processing'}
+          variant="outline"
+          size="sm"
+        >
+          {isAnalyzing || queueStatus?.status === 'processing' ? (
+            <>
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              Analyserar...
+            </>
+          ) : (
+            <>
+              <RefreshCw className="mr-2 h-4 w-4" />
+              Uppdatera analys
+            </>
+          )}
+        </Button>
       </div>
 
       {/* Sentiment Trend and Topic Distribution */}
