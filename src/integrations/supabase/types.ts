@@ -2315,6 +2315,42 @@ export type Database = {
           },
         ]
       }
+      review_analysis_queue: {
+        Row: {
+          completed_at: string | null
+          created_at: string | null
+          error_message: string | null
+          id: string
+          scheduled_for: string | null
+          started_at: string | null
+          status: string | null
+          trigger_source: string | null
+          user_id: string
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string | null
+          error_message?: string | null
+          id?: string
+          scheduled_for?: string | null
+          started_at?: string | null
+          status?: string | null
+          trigger_source?: string | null
+          user_id: string
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string | null
+          error_message?: string | null
+          id?: string
+          scheduled_for?: string | null
+          started_at?: string | null
+          status?: string | null
+          trigger_source?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       review_insights: {
         Row: {
           ai_model: string | null

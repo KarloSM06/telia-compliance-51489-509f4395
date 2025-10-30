@@ -20,31 +20,58 @@ serve(async (req) => {
   }
 
   try {
-    const authHeader = req.headers.get('Authorization');
-    if (!authHeader) {
-      throw new Error('Missing authorization header');
-    }
-
-    const supabase = createClient(
+    const supabaseClient = createClient(
       Deno.env.get('SUPABASE_URL') ?? '',
-      Deno.env.get('SUPABASE_ANON_KEY') ?? '',
-      { global: { headers: { Authorization: authHeader } } }
+      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
     );
 
-    // Get authenticated user
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
-    if (authError || !user) {
-      throw new Error('Unauthorized');
+    // Get request body
+    const body = await req.json();
+    const autoTriggered = body.auto_triggered || false;
+    const triggerSource = body.trigger_source || 'manual';
+
+    // Authenticate user (allow service role for auto-triggered)
+    let userId: string;
+    if (autoTriggered && body.user_id) {
+      userId = body.user_id;
+      console.log('Auto-triggered analysis for user:', userId);
+    } else {
+      const authHeader = req.headers.get('Authorization')!;
+      const token = authHeader.replace('Bearer ', '');
+      const { data: { user }, error: authError } = await supabaseClient.auth.getUser(token);
+
+      if (authError || !user) {
+        return new Response(
+          JSON.stringify({ error: 'Unauthorized' }),
+          { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      }
+      userId = user.id;
     }
 
-    const { dateRange } = await req.json();
-    const startDate = dateRange?.from || new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString();
-    const endDate = dateRange?.to || new Date().toISOString();
+    // Check if analysis is already running
+    const { data: runningAnalysis } = await supabaseClient
+      .from('review_insights')
+      .select('id')
+      .eq('user_id', userId)
+      .eq('ai_model', 'analyzing')
+      .maybeSingle();
+      
+    if (runningAnalysis) {
+      return new Response(
+        JSON.stringify({ message: 'Analysis already in progress' }),
+        { status: 429, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
 
-    console.log(`Analyzing data for user ${user.id} from ${startDate} to ${endDate}`);
+    // Parse date range
+    const startDate = body.dateRange?.from || new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString();
+    const endDate = body.dateRange?.to || new Date().toISOString();
+
+    console.log(`Analyzing data for user ${userId} from ${startDate} to ${endDate}`);
 
     // 1. Aggregate data from all sources
-    const interactions = await aggregateDataSources(supabase, user.id, startDate, endDate);
+    const interactions = await aggregateDataSources(supabaseClient, userId, startDate, endDate);
     
     if (interactions.length === 0) {
       return new Response(
@@ -66,10 +93,10 @@ serve(async (req) => {
     const avgSentiment = interactions.reduce((sum, i) => sum + (i.sentiment || 0), 0) / interactions.length;
 
     // 4. Store insights in database
-    const { data: storedInsight, error: insertError } = await supabase
+    const { data: storedInsight, error: insertError } = await supabaseClient
       .from('review_insights')
       .insert({
-        user_id: user.id,
+        user_id: userId,
         analysis_period_start: startDate,
         analysis_period_end: endDate,
         total_reviews: totalReviews,

@@ -1,12 +1,15 @@
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
-import { Sparkles, RefreshCw } from "lucide-react";
+import { Sparkles, RefreshCw, Clock, Zap } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 import { useReviewInsights } from "@/hooks/useReviewInsights";
 import { ImprovementSuggestions } from "./ImprovementSuggestions";
 import { SentimentTrend } from "./SentimentTrend";
 import { TopDrivers } from "./TopDrivers";
 import { TopicDistribution } from "./TopicDistribution";
 import { Skeleton } from "@/components/ui/skeleton";
+import { formatDistanceToNow } from "date-fns";
+import { sv } from "date-fns/locale";
 
 interface ReviewInsightsSectionProps {
   dateRange?: { from: Date; to: Date };
@@ -59,14 +62,26 @@ export const ReviewInsightsSection = ({ dateRange }: ReviewInsightsSectionProps)
     <div className="space-y-6">
       {/* Header with refresh button */}
       <div className="flex items-center justify-between">
-        <div>
-          <h2 className="text-2xl font-bold flex items-center gap-2">
-            <Sparkles className="h-6 w-6 text-primary" />
-            Insikter & Förbättringar
-          </h2>
+        <div className="space-y-2">
+          <div className="flex items-center gap-2">
+            <h2 className="text-2xl font-bold flex items-center gap-2">
+              <Sparkles className="h-6 w-6 text-primary" />
+              Insikter & Förbättringar
+            </h2>
+            <Badge variant="outline" className="bg-green-500/10 text-green-600">
+              <Zap className="h-3 w-3 mr-1" />
+              Auto-analys aktiv
+            </Badge>
+          </div>
           <p className="text-muted-foreground">
             AI-genererade rekommendationer baserat på {insights.total_interactions} interaktioner
           </p>
+          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+            <Clock className="h-4 w-4" />
+            <span>
+              Senast analyserad: {formatDistanceToNow(new Date(insights.created_at), { addSuffix: true, locale: sv })}
+            </span>
+          </div>
         </div>
         <Button
           onClick={() => triggerAnalysis()}
