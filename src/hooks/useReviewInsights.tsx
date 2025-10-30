@@ -206,14 +206,30 @@ export const useReviewInsights = (dateRange?: { from: Date; to: Date }) => {
   useEffect(() => {
     if (!user || isLoading) return;
     
-    const hasNewData = (newInteractionsCount || 0) >= 3;
-    const shouldAutoTrigger = !insights || isOutdated || hasNewData;
+    // Beräkna tid sedan senaste analys
+    const minutesSinceLastAnalysis = insights 
+      ? (new Date().getTime() - new Date(insights.created_at).getTime()) / (1000 * 60)
+      : Infinity;
+    
+    // Smart triggering-logik:
+    const hasNewData = (newInteractionsCount || 0) >= 1; // Sänkt från 3 till 1
+    const enoughTimePassed = minutesSinceLastAnalysis >= 5; // Minst 5 min mellan analyser
+    const hasSignificantNewData = (newInteractionsCount || 0) >= 3; // Mycket ny data = trigga direkt
+    
+    const shouldAutoTrigger = 
+      !insights ||                                    // Ingen tidigare analys
+      isOutdated ||                                   // Äldre än 24h
+      hasSignificantNewData ||                        // Minst 3 nya interaktioner = trigga direkt
+      (hasNewData && enoughTimePassed);               // 1+ ny interaktion OCH 5+ minuter sedan senast
     
     if (shouldAutoTrigger && !queueStatus) {
       console.log('Auto-triggering analysis...', {
         noInsights: !insights,
         isOutdated,
         hasNewData,
+        hasSignificantNewData,
+        enoughTimePassed,
+        minutesSinceLastAnalysis: minutesSinceLastAnalysis.toFixed(1),
         newCount: newInteractionsCount
       });
       
