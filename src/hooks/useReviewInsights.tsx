@@ -176,9 +176,20 @@ export const useReviewInsights = (dateRange?: { from: Date; to: Date }) => {
     if (shouldAutoTrigger && !queueStatus) {
       console.log('Auto-triggering analysis in background...');
       supabase.functions.invoke('analyze-reviews', {
-        body: { auto_triggered: true }
+        body: { 
+          auto_triggered: true,
+          user_id: user.id
+        }
+      }).then(({ data, error }) => {
+        if (error) {
+          console.error('Auto-trigger failed:', error);
+          toast.error('AI-analys misslyckades: ' + error.message);
+        } else {
+          console.log('Auto-trigger succeeded:', data);
+        }
       }).catch(error => {
-        console.error('Auto-trigger failed:', error);
+        console.error('Auto-trigger network error:', error);
+        toast.error('Kunde inte starta AI-analys. Kontrollera din internetanslutning.');
       });
     }
   }, [user, insights, isOutdated, isLoading, queueStatus]);

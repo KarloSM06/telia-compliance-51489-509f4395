@@ -84,13 +84,67 @@ serve(async (req) => {
 
     console.log(`Found ${interactions.length} interactions to analyze`);
 
+    // Check if we have enough data for analysis
+    if (interactions.length < 3) {
+      console.log('Too few interactions for meaningful analysis, saving placeholder');
+      
+      const { data: placeholderInsight } = await supabaseClient
+        .from('review_insights')
+        .insert({
+          user_id: userId,
+          analysis_period_start: startDate,
+          analysis_period_end: endDate,
+          total_reviews: interactions.filter(i => i.source === 'review').length,
+          total_interactions: interactions.length,
+          average_sentiment: 0,
+          sentiment_trend: 'stable',
+          improvement_suggestions: [{
+            title: 'Samla in mer kunddata',
+            description: 'Vi behöver minst 3 kundinteraktioner för att kunna generera meningsfulla AI-insikter.',
+            priority: 'medium',
+            impact: 'Mer data ger bättre och mer träffsäkra rekommendationer för att förbättra din kundupplevelse.',
+            actionable_steps: [
+              'Skicka ut en kundundersökning via SMS eller email',
+              'Be om feedback direkt efter samtal',
+              'Aktivera automatiska recensionsförfrågningar'
+            ]
+          }],
+          positive_drivers: [],
+          negative_drivers: [],
+          topic_distribution: { categories: [] },
+          ai_model: 'placeholder',
+          confidence_score: 0.0,
+        })
+        .select()
+        .single();
+
+      return new Response(
+        JSON.stringify({ 
+          success: true, 
+          insights: placeholderInsight,
+          message: 'För lite data för AI-analys. Samla in mer kunddata först.',
+          needsMoreData: true
+        }),
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
     // 2. Analyze with Lovable AI
     const insights = await analyzeWithAI(interactions);
 
-    // 3. Calculate metrics
+    // 3. Calculate metrics with NaN protection
     const totalReviews = interactions.filter(i => i.source === 'review').length;
     const totalInteractions = interactions.length;
-    const avgSentiment = interactions.reduce((sum, i) => sum + (i.sentiment || 0), 0) / interactions.length;
+    
+    const sentimentSum = interactions.reduce((sum, i) => sum + (i.sentiment || 0), 0);
+    const avgSentiment = interactions.length > 0 ? sentimentSum / interactions.length : 0;
+    const validAvgSentiment = isNaN(avgSentiment) ? 0 : avgSentiment;
+
+    console.log('Calculated metrics:', {
+      totalReviews,
+      totalInteractions,
+      avgSentiment: validAvgSentiment.toFixed(2)
+    });
 
     // 4. Store insights in database
     const { data: storedInsight, error: insertError } = await supabaseClient
@@ -101,7 +155,7 @@ serve(async (req) => {
         analysis_period_end: endDate,
         total_reviews: totalReviews,
         total_interactions: totalInteractions,
-        average_sentiment: avgSentiment.toFixed(2),
+        average_sentiment: validAvgSentiment.toFixed(2),
         sentiment_trend: insights.sentiment_trend,
         improvement_suggestions: insights.improvement_suggestions,
         positive_drivers: insights.positive_drivers,
@@ -203,12 +257,24 @@ async function aggregateDataSources(
 
   if (messages) {
     messages.forEach((m: any) => {
+      // Convert text sentiment to number
+      const sentimentText = m.ai_classification?.sentiment;
+      let sentimentScore: number | undefined;
+      
+      if (sentimentText === 'positive') sentimentScore = 0.8;
+      else if (sentimentText === 'neutral') sentimentScore = 0.0;
+      else if (sentimentText === 'negative') sentimentScore = -0.8;
+      
       interactions.push({
         source: m.channel === 'email' ? 'email' : 'sms',
         content: m.message_body,
-        sentiment: m.ai_classification?.sentiment,
+        sentiment: sentimentScore,
         timestamp: m.created_at,
-        metadata: { channel: m.channel, direction: m.direction }
+        metadata: { 
+          channel: m.channel, 
+          direction: m.direction,
+          original_sentiment: sentimentText
+        }
       });
     });
   }
@@ -238,11 +304,28 @@ Format dina svar så att även icke-tekniska användare förstår dem. Var konkr
 
   const userPrompt = `Analysera följande ${interactions.length} kundinteraktioner och generera insikter:
 
+KÄLLOR:
+- ${interactions.filter(i => i.source === 'review').length} kalenderrecensioner
+- ${interactions.filter(i => i.source === 'sms').length} SMS-meddelanden
+- ${interactions.filter(i => i.source === 'email').length} Email-meddelanden  
+- ${interactions.filter(i => i.source === 'telephony').length} samtalstranskript
+
+INTERAKTIONER:
 ${interactionsText}
 
-Genomsnittlig sentiment: ${(interactions.reduce((sum, i) => sum + (i.sentiment || 0), 0) / interactions.length).toFixed(2)}
+STATISTIK:
+- Genomsnittlig sentiment: ${(interactions.reduce((sum, i) => sum + (i.sentiment || 0), 0) / interactions.length).toFixed(2)}
+- Positiva: ${interactions.filter(i => (i.sentiment || 0) > 0.3).length}
+- Neutrala: ${interactions.filter(i => Math.abs(i.sentiment || 0) <= 0.3).length}
+- Negativa: ${interactions.filter(i => (i.sentiment || 0) < -0.3).length}
 
-Analysera och returnera strukturerade insikter.`;
+VIKTIGT: 
+- Ge minst 3-5 konkreta förbättringsförslag
+- Identifiera tydliga positiva och negativa drivers
+- Gruppera interaktioner i relevanta ämnen (t.ex. "Service", "Produktkvalitet", "Leverans", etc.)
+- Även med få interaktioner, ge actionable insights baserat på mönster du ser
+
+Analysera och returnera strukturerade insikter PÅ SVENSKA.`;
 
   const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
     method: 'POST',
@@ -363,18 +446,47 @@ Analysera och returnera strukturerade insikter.`;
   }
 
   const aiResponse = await response.json();
+  console.log('AI Response:', JSON.stringify(aiResponse, null, 2));
   
   // Extract tool call result
   const toolCall = aiResponse.choices?.[0]?.message?.tool_calls?.[0];
-  if (!toolCall || toolCall.function.name !== 'generate_insights') {
-    throw new Error('Unexpected AI response format');
+  if (!toolCall) {
+    console.error('No tool call in response:', aiResponse);
+    throw new Error('AI svarade inte med strukturerad data');
+  }
+
+  if (toolCall.function.name !== 'generate_insights') {
+    console.error('Wrong function called:', toolCall.function.name);
+    throw new Error('AI anropade fel funktion');
   }
 
   const insights = JSON.parse(toolCall.function.arguments);
+
+  // Validate that we got data
+  const validationWarnings = [];
+  if (!insights.improvement_suggestions || insights.improvement_suggestions.length === 0) {
+    validationWarnings.push('No improvement suggestions');
+  }
+  if (!insights.positive_drivers || insights.positive_drivers.length === 0) {
+    validationWarnings.push('No positive drivers');
+  }
+  if (!insights.negative_drivers || insights.negative_drivers.length === 0) {
+    validationWarnings.push('No negative drivers');
+  }
+  if (!insights.topic_distribution?.categories || insights.topic_distribution.categories.length === 0) {
+    validationWarnings.push('No topic distribution');
+  }
+
+  if (validationWarnings.length > 0) {
+    console.warn('AI returned incomplete data:', validationWarnings.join(', '));
+  }
+
   console.log('AI analysis complete:', {
     suggestions: insights.improvement_suggestions?.length || 0,
     positive: insights.positive_drivers?.length || 0,
-    negative: insights.negative_drivers?.length || 0
+    negative: insights.negative_drivers?.length || 0,
+    topics: insights.topic_distribution?.categories?.length || 0,
+    warnings: validationWarnings.length
   });
 
   return insights;
