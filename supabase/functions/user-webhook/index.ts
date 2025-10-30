@@ -1129,47 +1129,64 @@ serve(async (req) => {
       let costCurrency = 'SEK';
       let finalDirection = direction;
 
-      // Special handling for Twilio SMS (no price field in webhook)
+      // Special handling for Twilio SMS
       if (provider === 'twilio' && (bodyData.SmsStatus || bodyData.MessageStatus)) {
         const numSegments = parseInt(bodyData.NumSegments || '1');
         
-        // Check if phone numbers are synced for this integration
-        const { count: phoneCount } = await supabase
-          .from('phone_numbers_duplicate')
-          .select('*', { count: 'exact', head: true })
-          .eq('integration_id', integration.id);
-
-        if (phoneCount === 0) {
-          console.log('⚠️ No phone numbers synced for this Twilio integration, triggering automatic sync...');
+        // If Twilio provides actual price in webhook, use it (inbound SMS has price)
+        if (costAmountUSD > 0) {
+          // Use actual price from Twilio webhook
+          costAmount = costAmountUSD * USD_TO_SEK;
+          costCurrency = 'SEK';
           
-          // Fire-and-forget sync trigger (don't wait for response)
-          fetch(`${Deno.env.get('SUPABASE_URL')}/functions/v1/sync-phone-numbers`, {
-            method: 'POST',
-            headers: {
-              'Authorization': `Bearer ${Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')}`,
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ integration_id: integration.id })
-          }).catch(err => console.error('Failed to trigger phone sync:', err));
+          // Determine direction
+          const { data: toNumberOwned } = await supabase
+            .from('phone_numbers_duplicate')
+            .select('phone_number')
+            .eq('integration_id', integration.id)
+            .eq('phone_number', toNumber)
+            .maybeSingle();
+          
+          finalDirection = toNumberOwned ? 'inbound' : 'outbound';
+          console.log(`📱 Twilio SMS: ${finalDirection} with ${numSegments} segments = $${costAmountUSD.toFixed(4)} USD → ${costAmount.toFixed(2)} SEK (from webhook)`);
+        } else {
+          // No price in webhook (outbound SMS), calculate it
+          const { count: phoneCount } = await supabase
+            .from('phone_numbers_duplicate')
+            .select('*', { count: 'exact', head: true })
+            .eq('integration_id', integration.id);
+
+          if (phoneCount === 0) {
+            console.log('⚠️ No phone numbers synced for this Twilio integration, triggering automatic sync...');
+            
+            fetch(`${Deno.env.get('SUPABASE_URL')}/functions/v1/sync-phone-numbers`, {
+              method: 'POST',
+              headers: {
+                'Authorization': `Bearer ${Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')}`,
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({ integration_id: integration.id })
+            }).catch(err => console.error('Failed to trigger phone sync:', err));
+          }
+          
+          const smsCalculation = await calculateTwilioSmsCost(
+            supabase,
+            fromNumber,
+            toNumber,
+            numSegments,
+            integration.id
+          );
+          const costUSD = smsCalculation.usd;
+          costAmount = costUSD * USD_TO_SEK;
+          costCurrency = 'SEK';
+          finalDirection = smsCalculation.direction;
+          console.log(`📱 Twilio SMS: ${finalDirection} with ${numSegments} segments = $${costUSD.toFixed(4)} USD → ${costAmount.toFixed(2)} SEK (calculated)`);
         }
-        
-        const smsCalculation = await calculateTwilioSmsCost(
-          supabase,
-          fromNumber,
-          toNumber,
-          numSegments,
-          integration.id
-        );
-        const costUSD = smsCalculation.usd;
-        costAmount = costUSD * USD_TO_SEK;
-        costCurrency = 'SEK';
-        finalDirection = smsCalculation.direction;
-        console.log(`📱 Twilio SMS: ${finalDirection} with ${numSegments} segments = $${costUSD.toFixed(4)} USD (${costAmount.toFixed(2)} SEK)`);
       } else if (eventType === 'message' && costAmountUSD > 0) {
         // For all other SMS providers (Telnyx, etc.), convert USD to SEK
         costAmount = costAmountUSD * USD_TO_SEK;
         costCurrency = 'SEK';
-        console.log(`📱 ${provider} SMS: ${finalDirection} = $${costAmountUSD.toFixed(4)} USD (${costAmount.toFixed(2)} SEK)`);
+        console.log(`📱 ${provider} SMS: ${finalDirection} = $${costAmountUSD.toFixed(4)} USD → ${costAmount.toFixed(2)} SEK`);
       } else {
         // For non-SMS events, keep original cost
         costAmount = costAmountUSD;
