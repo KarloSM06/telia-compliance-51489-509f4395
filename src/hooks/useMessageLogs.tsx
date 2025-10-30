@@ -104,6 +104,24 @@ export const useMessageLogs = (filters?: MessageLogFilters) => {
     };
   }, [user, queryClient]);
 
+  // Helper function to calculate cost in SEK
+  const USD_TO_SEK = 10.5;
+  
+  const calculateCostInSEK = (log: MessageLog): number => {
+    // Prioritera cost_sek om det finns
+    if (log.metadata?.cost_sek !== undefined) {
+      return log.metadata.cost_sek;
+    }
+    
+    // Om cost_currency är USD eller saknas men cost finns, konvertera
+    if (log.metadata?.cost_currency === 'USD' || log.cost) {
+      return (log.cost || 0) * USD_TO_SEK;
+    }
+    
+    // Legacy data (redan i SEK)
+    return log.cost || 0;
+  };
+
   // Beräkna statistik
   const stats = {
     total: logs.length,
@@ -115,9 +133,9 @@ export const useMessageLogs = (filters?: MessageLogFilters) => {
     reviews: logs.filter(l => l.message_type === 'review').length,
     fromCalendar: logs.filter(l => l.message_source === 'calendar_notification').length,
     fromAI: logs.filter(l => l.message_source === 'ai_agent').length,
-    totalCost: logs.reduce((sum, l) => sum + (l.cost || 0), 0),
-    smsCost: logs.filter(l => l.channel === 'sms').reduce((sum, l) => sum + (l.cost || 0), 0),
-    emailCost: logs.filter(l => l.channel === 'email').reduce((sum, l) => sum + (l.cost || 0), 0),
+    totalCost: logs.reduce((sum, l) => sum + calculateCostInSEK(l), 0),
+    smsCost: logs.filter(l => l.channel === 'sms').reduce((sum, l) => sum + calculateCostInSEK(l), 0),
+    emailCost: logs.filter(l => l.channel === 'email').reduce((sum, l) => sum + calculateCostInSEK(l), 0),
   };
 
   return { logs, stats, isLoading };
