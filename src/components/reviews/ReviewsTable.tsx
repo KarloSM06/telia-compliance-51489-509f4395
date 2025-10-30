@@ -10,11 +10,12 @@ interface Review {
   id: string;
   customer_name: string;
   customer_email: string | null;
+  customer_phone?: string | null;
   rating: number | null;
   comment: string | null;
   sentiment_score?: number | null;
   topics?: string[] | null;
-  source?: string;
+  source: 'calendar' | 'sms' | 'email' | 'telephony' | 'manual';
   submitted_at: string | null;
   created_at: string;
 }
@@ -92,9 +93,20 @@ export const ReviewsTable = ({ reviews, onViewDetails }: ReviewsTableProps) => {
     return <Badge variant="outline">Neutral</Badge>;
   };
 
-  const getSourceBadge = (source: string | undefined) => {
-    if (!source || source === 'internal') return <Badge variant="secondary">Manuell</Badge>;
-    return <Badge variant="outline">{source}</Badge>;
+  const getSourceBadge = (source: Review['source']) => {
+    switch (source) {
+      case 'calendar':
+        return <Badge variant="secondary">📅 Kalender</Badge>;
+      case 'sms':
+        return <Badge variant="outline" className="bg-blue-500/10 text-blue-600 border-blue-500/20">💬 SMS</Badge>;
+      case 'email':
+        return <Badge variant="outline" className="bg-purple-500/10 text-purple-600 border-purple-500/20">📧 Email</Badge>;
+      case 'telephony':
+        return <Badge variant="outline" className="bg-emerald-500/10 text-emerald-600 border-emerald-500/20">📞 Samtal</Badge>;
+      case 'manual':
+      default:
+        return <Badge variant="secondary">✍️ Manuell</Badge>;
+    }
   };
 
   if (sortedReviews.length === 0) {
@@ -152,6 +164,11 @@ export const ReviewsTable = ({ reviews, onViewDetails }: ReviewsTableProps) => {
                   {review.customer_email && (
                     <span className="text-xs text-muted-foreground truncate">
                       {review.customer_email}
+                    </span>
+                  )}
+                  {review.customer_phone && (
+                    <span className="text-xs text-muted-foreground truncate">
+                      {review.customer_phone}
                     </span>
                   )}
                 </div>

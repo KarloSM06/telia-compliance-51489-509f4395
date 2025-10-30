@@ -25,31 +25,75 @@ export default function ReviewDashboard() {
 
   const { reviews, allReviews, stats, isLoading, exportToCSV } = useReviews(undefined, filters);
 
-  // Realtime subscription för nya recensioner
+  // Realtime subscriptions för alla review-källor
   useEffect(() => {
-    if (!user) return;
-    
-    const channel = supabase
-      .channel('new-reviews')
+    if (!user?.id) return;
+
+    // Subscribe to reviews table
+    const reviewsChannel = supabase
+      .channel('reviews-changes')
       .on(
         'postgres_changes',
         {
           event: 'INSERT',
           schema: 'public',
           table: 'reviews',
-          filter: `user_id=eq.${user.id}`
+          filter: `user_id=eq.${user.id}`,
         },
         () => {
-          toast.info('Ny recension mottagen - analyserar...', {
-            duration: 3000
-          });
-          queryClient.invalidateQueries({ queryKey: ['reviews'] });
+          queryClient.invalidateQueries({ queryKey: ['unified-reviews'] });
+          toast.success('Ny recension från kalender mottagen');
+        }
+      )
+      .subscribe();
+
+    // Subscribe to message_logs for review classifications
+    const messagesChannel = supabase
+      .channel('message-reviews-changes')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'message_logs',
+          filter: `user_id=eq.${user.id}`,
+        },
+        (payload) => {
+          const newMsg = payload.new as any;
+          if (newMsg?.ai_classification?.type === 'review' || newMsg?.message_type === 'review') {
+            queryClient.invalidateQueries({ queryKey: ['unified-reviews'] });
+            const source = newMsg.channel === 'sms' ? 'SMS' : 'Email';
+            toast.success(`Ny recension från ${source} mottagen`);
+          }
+        }
+      )
+      .subscribe();
+
+    // Subscribe to telephony_events for sentiment analysis
+    const telephonyChannel = supabase
+      .channel('telephony-reviews-changes')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'telephony_events',
+        },
+        (payload) => {
+          const newEvent = payload.new as any;
+          // Check if it has sentiment (indicates review-worthy content)
+          if (newEvent?.normalized?.sentiment) {
+            queryClient.invalidateQueries({ queryKey: ['unified-reviews'] });
+            toast.success('Ny recension från samtal mottagen');
+          }
         }
       )
       .subscribe();
 
     return () => {
-      supabase.removeChannel(channel);
+      supabase.removeChannel(reviewsChannel);
+      supabase.removeChannel(messagesChannel);
+      supabase.removeChannel(telephonyChannel);
     };
   }, [user?.id, queryClient]);
 
