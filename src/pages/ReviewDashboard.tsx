@@ -2,13 +2,15 @@ import { useState } from "react";
 import { useReviews } from "@/hooks/useReviews";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Star, Download, MessageCircle, TrendingUp } from "lucide-react";
+import { Star, Download, MessageCircle, TrendingUp, Sparkles } from "lucide-react";
 import { format, parseISO, subDays } from "date-fns";
 import { sv } from "date-fns/locale";
 import { DateRangePicker } from "@/components/dashboard/filters/DateRangePicker";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { ReviewInsightsSection } from "@/components/reviews/ReviewInsightsSection";
 
 const ReviewDashboard = () => {
   const [dateRange, setDateRange] = useState<{ from: Date; to: Date }>({
@@ -61,9 +63,9 @@ const ReviewDashboard = () => {
         <div className="flex items-center gap-3">
           <Star className="h-8 w-8 text-primary fill-primary" />
           <div>
-            <h1 className="text-3xl font-bold">Recensioner</h1>
+            <h1 className="text-3xl font-bold">Recensioner & Insikter</h1>
             <p className="text-muted-foreground">
-              Analysera kundrecensioner och feedback
+              Kundrecensioner med AI-driven analys och förbättringsförslag
             </p>
           </div>
         </div>
@@ -81,6 +83,18 @@ const ReviewDashboard = () => {
           </Button>
         </div>
       </div>
+
+      {/* Tabs */}
+      <Tabs defaultValue="overview" className="space-y-6">
+        <TabsList>
+          <TabsTrigger value="overview">Översikt</TabsTrigger>
+          <TabsTrigger value="insights" className="flex items-center gap-2">
+            <Sparkles className="h-4 w-4" />
+            Insikter & Förbättringar
+          </TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="overview" className="space-y-6">
 
       {/* Stats Cards */}
       <div className="grid gap-4 md:grid-cols-3">
@@ -158,63 +172,69 @@ const ReviewDashboard = () => {
         </CardContent>
       </Card>
 
-      {/* Reviews List */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Senaste recensioner</CardTitle>
-          <CardDescription>
-            {reviews.length} recensioner totalt
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          {reviews.length === 0 ? (
-            <div className="text-center py-12">
-              <Star className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-              <p className="text-muted-foreground">
-                Inga recensioner ännu för vald period
-              </p>
-            </div>
-          ) : (
-            <div className="space-y-4">
-              {reviews.map((review) => (
-                <div
-                  key={review.id}
-                  className="p-4 rounded-lg border hover:bg-accent transition-colors"
-                >
-                  <div className="flex items-start justify-between gap-4">
-                    <div className="flex-1">
-                      <div className="flex items-center gap-3 mb-2">
-                        <p className="font-semibold">{review.customer_name}</p>
-                        {review.rating && renderStars(review.rating)}
-                      </div>
-                      {review.comment && (
-                        <div className="flex items-start gap-2 mt-2">
-                          <MessageCircle className="h-4 w-4 text-muted-foreground flex-shrink-0 mt-1" />
-                          <p className="text-sm text-muted-foreground">
-                            {review.comment}
-                          </p>
+        {/* Reviews List */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Senaste recensioner</CardTitle>
+            <CardDescription>
+              {reviews.length} recensioner totalt
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            {reviews.length === 0 ? (
+              <div className="text-center py-12">
+                <Star className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+                <p className="text-muted-foreground">
+                  Inga recensioner ännu för vald period
+                </p>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                {reviews.map((review) => (
+                  <div
+                    key={review.id}
+                    className="p-4 rounded-lg border hover:bg-accent transition-colors"
+                  >
+                    <div className="flex items-start justify-between gap-4">
+                      <div className="flex-1">
+                        <div className="flex items-center gap-3 mb-2">
+                          <p className="font-semibold">{review.customer_name}</p>
+                          {review.rating && renderStars(review.rating)}
                         </div>
-                      )}
-                      {review.customer_email && (
-                        <p className="text-xs text-muted-foreground mt-2">
-                          {review.customer_email}
-                        </p>
-                      )}
-                    </div>
-                    <div className="text-right">
-                      <Badge variant="secondary">
-                        {review.submitted_at
-                          ? format(parseISO(review.submitted_at), "d MMM yyyy", { locale: sv })
-                          : format(parseISO(review.created_at), "d MMM yyyy", { locale: sv })}
-                      </Badge>
+                        {review.comment && (
+                          <div className="flex items-start gap-2 mt-2">
+                            <MessageCircle className="h-4 w-4 text-muted-foreground flex-shrink-0 mt-1" />
+                            <p className="text-sm text-muted-foreground">
+                              {review.comment}
+                            </p>
+                          </div>
+                        )}
+                        {review.customer_email && (
+                          <p className="text-xs text-muted-foreground mt-2">
+                            {review.customer_email}
+                          </p>
+                        )}
+                      </div>
+                      <div className="text-right">
+                        <Badge variant="secondary">
+                          {review.submitted_at
+                            ? format(parseISO(review.submitted_at), "d MMM yyyy", { locale: sv })
+                            : format(parseISO(review.created_at), "d MMM yyyy", { locale: sv })}
+                        </Badge>
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
-            </div>
-          )}
-        </CardContent>
-      </Card>
+                ))}
+              </div>
+            )}
+          </CardContent>
+        </Card>
+        </TabsContent>
+
+        <TabsContent value="insights">
+          <ReviewInsightsSection dateRange={dateRange} />
+        </TabsContent>
+      </Tabs>
     </div>
   );
 };

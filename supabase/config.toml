@@ -152,3 +152,6 @@ cron = "*/5 * * * *"
 
 [functions.classify-sms]
 verify_jwt = false
+
+[functions.analyze-reviews]
+verify_jwt = true
