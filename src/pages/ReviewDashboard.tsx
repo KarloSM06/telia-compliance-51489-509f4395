@@ -8,13 +8,16 @@ import { useAuth } from '@/hooks/useAuth';
 import { useQueryClient } from '@tanstack/react-query';
 import { ReviewStatsCards } from '@/components/reviews/ReviewStatsCards';
 import { ReviewFilters } from '@/components/reviews/ReviewFilters';
-import { ReviewsTable } from '@/components/reviews/ReviewsTable';
+import { ReviewCardList } from '@/components/reviews/ReviewCardList';
 import { ReviewDetailDrawer } from '@/components/reviews/ReviewDetailDrawer';
 import { ReviewInsightsSection } from '@/components/reviews/ReviewInsightsSection';
+import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/components/ui/resizable';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 export default function ReviewDashboard() {
   const { user } = useAuth();
   const queryClient = useQueryClient();
+  const isMobile = useIsMobile();
   const [selectedReview, setSelectedReview] = useState<any>(null);
   const [filters, setFilters] = useState<ReviewFilterValues>({
     search: '',
@@ -108,52 +111,75 @@ export default function ReviewDashboard() {
   };
 
   return (
-    <div className="p-6 space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold">Recensioner</h1>
-          <p className="text-muted-foreground">
-            AI-driven analys av kundrecensioner och feedback
-          </p>
-        </div>
-        <div className="flex gap-2">
-          <Button variant="outline" size="sm" onClick={handleRefresh}>
-            <RefreshCw className="h-4 w-4 mr-2" />
-            Uppdatera
-          </Button>
-          <Button variant="outline" size="sm" onClick={handleExport}>
-            <Download className="h-4 w-4 mr-2" />
-            Export
-          </Button>
-        </div>
-      </div>
-
-      {/* Stats Cards */}
-      <ReviewStatsCards stats={stats} insights={undefined} />
-
-      {/* Filters */}
-      <ReviewFilters onFilterChange={setFilters} />
-
-      {/* AI Insights Section */}
-      <ReviewInsightsSection />
-
-      {/* Reviews Table */}
-      <div className="space-y-2">
+    <div className="h-screen flex flex-col">
+      {/* Fixed Header */}
+      <div className="p-6 border-b bg-background">
         <div className="flex items-center justify-between">
-          <h2 className="text-xl font-semibold">Recensioner</h2>
-          <p className="text-sm text-muted-foreground">
-            Visar {reviews.length} av {allReviews.length} recensioner
-          </p>
-        </div>
-        {isLoading ? (
-          <div className="flex items-center justify-center py-12">
-            <RefreshCw className="h-8 w-8 animate-spin text-muted-foreground" />
+          <div>
+            <h1 className="text-3xl font-bold">Recensioner</h1>
+            <p className="text-muted-foreground">
+              AI-driven analys av kundrecensioner och feedback
+            </p>
           </div>
-        ) : (
-          <ReviewsTable reviews={reviews} onViewDetails={setSelectedReview} />
-        )}
+          <div className="flex gap-2">
+            <Button variant="outline" size="sm" onClick={handleRefresh}>
+              <RefreshCw className="h-4 w-4 mr-2" />
+              Uppdatera
+            </Button>
+            <Button variant="outline" size="sm" onClick={handleExport}>
+              <Download className="h-4 w-4 mr-2" />
+              Export
+            </Button>
+          </div>
+        </div>
       </div>
+
+      {/* Resizable Split Layout */}
+      <ResizablePanelGroup 
+        direction={isMobile ? "vertical" : "horizontal"} 
+        className="flex-1"
+      >
+        {/* LEFT PANEL - Review List */}
+        <ResizablePanel defaultSize={50} minSize={30}>
+          <div className="h-full overflow-y-auto p-6 space-y-6">
+            {/* Stats Cards */}
+            <ReviewStatsCards stats={stats} insights={undefined} />
+            
+            {/* Filters */}
+            <ReviewFilters onFilterChange={setFilters} />
+            
+            {/* Review List Header */}
+            <div className="flex items-center justify-between">
+              <h2 className="text-xl font-semibold">Recensioner</h2>
+              <p className="text-sm text-muted-foreground">
+                Visar {reviews.length} av {allReviews.length}
+              </p>
+            </div>
+            
+            {/* Card-based Review List */}
+            {isLoading ? (
+              <div className="flex items-center justify-center py-12">
+                <RefreshCw className="h-8 w-8 animate-spin text-muted-foreground" />
+              </div>
+            ) : (
+              <ReviewCardList 
+                reviews={reviews} 
+                onViewDetails={setSelectedReview} 
+              />
+            )}
+          </div>
+        </ResizablePanel>
+
+        {/* Resize Handle */}
+        <ResizableHandle withHandle />
+
+        {/* RIGHT PANEL - AI Insights */}
+        <ResizablePanel defaultSize={50} minSize={30}>
+          <div className="h-full overflow-y-auto p-6">
+            <ReviewInsightsSection />
+          </div>
+        </ResizablePanel>
+      </ResizablePanelGroup>
 
       {/* Review Detail Drawer */}
       <ReviewDetailDrawer
