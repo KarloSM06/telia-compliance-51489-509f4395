@@ -181,7 +181,9 @@ export const SMSTable = ({ messages, onViewDetails }: SMSTableProps) => {
                 </TableCell>
                 <TableCell>
                   <p className="text-sm font-medium">
-                    {message.cost ? `${message.cost.toFixed(2)} kr` : '-'}
+                    {typeof message.cost === 'number'
+                      ? `${(((message.metadata?.cost_currency || 'SEK').toUpperCase() === 'USD') ? (message.cost * 10.5) : message.cost).toFixed(2)} kr`
+                      : '-'}
                   </p>
                 </TableCell>
                 <TableCell className="text-right">

@@ -1124,7 +1124,8 @@ serve(async (req) => {
       
       // Extract cost - ALL webhooks send price in USD
       const USD_TO_SEK = 10.5;
-      let costAmountUSD = bodyData.price ? Math.abs(Number(bodyData.price)) : 0;
+      const rawPrice = bodyData.Price ?? bodyData.price ?? bodyData.data?.price;
+      let costAmountUSD = rawPrice !== undefined && rawPrice !== null ? Math.abs(Number(rawPrice)) : 0;
       let costAmount = 0;
       let costCurrency = 'SEK';
       let finalDirection = direction;

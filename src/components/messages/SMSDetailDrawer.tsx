@@ -20,6 +20,9 @@ export const SMSDetailDrawer = ({ message, open, onClose }: SMSDetailDrawerProps
 
   if (!message) return null;
 
+  const currency = (message.metadata?.cost_currency || 'SEK').toUpperCase();
+  const displaySek = typeof message.cost === 'number' ? (currency === 'USD' ? message.cost * 10.5 : message.cost) : null;
+
   const copyToClipboard = (text: string, label: string) => {
     navigator.clipboard.writeText(text);
     toast.success(`${label} kopierad`);
@@ -247,14 +250,17 @@ export const SMSDetailDrawer = ({ message, open, onClose }: SMSDetailDrawerProps
             )}
 
             {/* Cost */}
-            {message.cost && (
+            {typeof message.cost === 'number' && (
               <Card>
                 <CardContent className="p-4">
                   <div className="flex items-center gap-2">
                     <DollarSign className="h-4 w-4 text-muted-foreground" />
                     <div>
                       <p className="text-xs text-muted-foreground">Kostnad</p>
-                      <p className="text-lg font-semibold">{message.cost.toFixed(3)} SEK</p>
+                      <p className="text-lg font-semibold">{displaySek?.toFixed(3)} SEK</p>
+                      {currency === 'USD' && (
+                        <p className="text-xs text-muted-foreground">({message.cost.toFixed(4)} USD)</p>
+                      )}
                     </div>
                   </div>
                 </CardContent>
