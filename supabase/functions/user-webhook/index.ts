@@ -1122,12 +1122,12 @@ serve(async (req) => {
         bodyData.data?.occurred_at || 
         new Date().toISOString();
       
-      // Extract cost for Twilio/Retell
-      let costAmount = bodyData.price ? Math.abs(Number(bodyData.price)) : 0;
-      let costCurrency = bodyData.price_unit || 'USD';
-      let finalDirection = direction;
-      
+      // Extract cost - ALL webhooks send price in USD
       const USD_TO_SEK = 10.5;
+      let costAmountUSD = bodyData.price ? Math.abs(Number(bodyData.price)) : 0;
+      let costAmount = 0;
+      let costCurrency = 'SEK';
+      let finalDirection = direction;
 
       // Special handling for Twilio SMS (no price field in webhook)
       if (provider === 'twilio' && (bodyData.SmsStatus || bodyData.MessageStatus)) {
@@ -1165,6 +1165,15 @@ serve(async (req) => {
         costCurrency = 'SEK';
         finalDirection = smsCalculation.direction;
         console.log(`📱 Twilio SMS: ${finalDirection} with ${numSegments} segments = $${costUSD.toFixed(4)} USD (${costAmount.toFixed(2)} SEK)`);
+      } else if (eventType === 'message' && costAmountUSD > 0) {
+        // For all other SMS providers (Telnyx, etc.), convert USD to SEK
+        costAmount = costAmountUSD * USD_TO_SEK;
+        costCurrency = 'SEK';
+        console.log(`📱 ${provider} SMS: ${finalDirection} = $${costAmountUSD.toFixed(4)} USD (${costAmount.toFixed(2)} SEK)`);
+      } else {
+        // For non-SMS events, keep original cost
+        costAmount = costAmountUSD;
+        costCurrency = bodyData.price_unit || 'USD';
       }
 
       // Try to find related Vapi/Retell event first
