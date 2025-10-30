@@ -2315,8 +2315,66 @@ export type Database = {
           },
         ]
       }
+      review_insights: {
+        Row: {
+          ai_model: string | null
+          analysis_period_end: string
+          analysis_period_start: string
+          average_sentiment: number | null
+          confidence_score: number | null
+          created_at: string | null
+          id: string
+          improvement_suggestions: Json | null
+          negative_drivers: Json | null
+          positive_drivers: Json | null
+          sentiment_trend: string | null
+          topic_distribution: Json | null
+          total_interactions: number | null
+          total_reviews: number | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          ai_model?: string | null
+          analysis_period_end: string
+          analysis_period_start: string
+          average_sentiment?: number | null
+          confidence_score?: number | null
+          created_at?: string | null
+          id?: string
+          improvement_suggestions?: Json | null
+          negative_drivers?: Json | null
+          positive_drivers?: Json | null
+          sentiment_trend?: string | null
+          topic_distribution?: Json | null
+          total_interactions?: number | null
+          total_reviews?: number | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          ai_model?: string | null
+          analysis_period_end?: string
+          analysis_period_start?: string
+          average_sentiment?: number | null
+          confidence_score?: number | null
+          created_at?: string | null
+          id?: string
+          improvement_suggestions?: Json | null
+          negative_drivers?: Json | null
+          positive_drivers?: Json | null
+          sentiment_trend?: string | null
+          topic_distribution?: Json | null
+          total_interactions?: number | null
+          total_reviews?: number | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       reviews: {
         Row: {
+          ai_analysis: Json | null
           calendar_event_id: string
           comment: string | null
           created_at: string
@@ -2325,11 +2383,14 @@ export type Database = {
           id: string
           rating: number | null
           review_link: string | null
+          sentiment_score: number | null
           submitted_at: string | null
+          topics: string[] | null
           updated_at: string
           user_id: string
         }
         Insert: {
+          ai_analysis?: Json | null
           calendar_event_id: string
           comment?: string | null
           created_at?: string
@@ -2338,11 +2399,14 @@ export type Database = {
           id?: string
           rating?: number | null
           review_link?: string | null
+          sentiment_score?: number | null
           submitted_at?: string | null
+          topics?: string[] | null
           updated_at?: string
           user_id: string
         }
         Update: {
+          ai_analysis?: Json | null
           calendar_event_id?: string
           comment?: string | null
           created_at?: string
@@ -2351,7 +2415,9 @@ export type Database = {
           id?: string
           rating?: number | null
           review_link?: string | null
+          sentiment_score?: number | null
           submitted_at?: string | null
+          topics?: string[] | null
           updated_at?: string
           user_id?: string
         }

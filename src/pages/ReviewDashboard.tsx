@@ -2,13 +2,15 @@ import { useState } from "react";
 import { useReviews } from "@/hooks/useReviews";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Star, Download, MessageCircle, TrendingUp } from "lucide-react";
+import { Star, Download, MessageCircle, TrendingUp, Sparkles } from "lucide-react";
 import { format, parseISO, subDays } from "date-fns";
 import { sv } from "date-fns/locale";
 import { DateRangePicker } from "@/components/dashboard/filters/DateRangePicker";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
+import { ReviewInsightsSection } from "@/components/reviews/ReviewInsightsSection";
+import { Separator } from "@/components/ui/separator";
 
 const ReviewDashboard = () => {
   const [dateRange, setDateRange] = useState<{ from: Date; to: Date }>({
@@ -136,6 +138,11 @@ const ReviewDashboard = () => {
           </CardContent>
         </Card>
       </div>
+
+      {/* AI Insights Section */}
+      <ReviewInsightsSection dateRange={dateRange} />
+
+      <Separator className="my-8" />
 
       {/* Rating Distribution Chart */}
       <Card>
