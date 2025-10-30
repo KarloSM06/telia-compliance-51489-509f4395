@@ -25,7 +25,14 @@ export interface MessageLog {
   opened_at?: string;
   clicked_at?: string;
   error_message?: string;
-  metadata: any;
+  metadata: {
+    cost_currency?: 'USD' | 'SEK';
+    cost_sek?: number;
+    original_cost_usd?: number;
+    fx_rate?: number;
+    estimated?: boolean;
+    [key: string]: any;
+  };
   cost?: number;
   created_at: string;
 }

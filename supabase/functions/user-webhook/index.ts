@@ -1126,21 +1126,19 @@ serve(async (req) => {
       const USD_TO_SEK = 10.5;
       const rawPrice = bodyData.Price ?? bodyData.price ?? bodyData.data?.price;
       let costAmountUSD = rawPrice !== undefined && rawPrice !== null ? Math.abs(Number(rawPrice)) : 0;
-      let costAmount = 0;
-      let costCurrency = 'SEK';
+      let costPriceSource = rawPrice !== undefined && rawPrice !== null ? 'webhook' : 'none';
+      let isEstimated = false;
       let finalDirection = direction;
 
       // Special handling for Twilio SMS
       if (provider === 'twilio' && (bodyData.SmsStatus || bodyData.MessageStatus)) {
         const numSegments = parseInt(bodyData.NumSegments || '1');
         
-        // If Twilio provides actual price in webhook, use it (inbound SMS has price)
+        // Step 1: Try to get price from webhook
         if (costAmountUSD > 0) {
-          // Use actual price from Twilio webhook
-          costAmount = costAmountUSD * USD_TO_SEK;
-          costCurrency = 'SEK';
+          console.log(`✅ Using webhook price: $${costAmountUSD.toFixed(4)} USD`);
           
-          // Determine direction
+          // Determine direction based on phone ownership
           const { data: toNumberOwned } = await supabase
             .from('phone_numbers_duplicate')
             .select('phone_number')
@@ -1149,9 +1147,52 @@ serve(async (req) => {
             .maybeSingle();
           
           finalDirection = toNumberOwned ? 'inbound' : 'outbound';
-          console.log(`📱 Twilio SMS: ${finalDirection} with ${numSegments} segments = $${costAmountUSD.toFixed(4)} USD → ${costAmount.toFixed(2)} SEK (from webhook)`);
-        } else {
-          // No price in webhook (outbound SMS), calculate it
+        } else if (bodyData.MessageSid && integration.encrypted_credentials) {
+          // Step 2: Try to fetch price from Twilio API
+          try {
+            console.log(`🔍 Webhook missing price, fetching from Twilio API for MessageSid: ${bodyData.MessageSid}`);
+            const credentials = await decryptCredentials(integration.encrypted_credentials);
+            const accountSid = credentials.accountSid || credentials.account_sid;
+            const authToken = credentials.authToken || credentials.auth_token;
+            
+            if (accountSid && authToken) {
+              const twilioApiUrl = `https://api.twilio.com/2010-04-01/Accounts/${accountSid}/Messages/${bodyData.MessageSid}.json`;
+              const authHeader = 'Basic ' + btoa(`${accountSid}:${authToken}`);
+              
+              const response = await fetch(twilioApiUrl, {
+                headers: { 'Authorization': authHeader }
+              });
+              
+              if (response.ok) {
+                const messageData = await response.json();
+                if (messageData.price && messageData.price !== null) {
+                  costAmountUSD = Math.abs(Number(messageData.price));
+                  costPriceSource = 'api';
+                  console.log(`✅ Fetched provider price: $${costAmountUSD.toFixed(4)} USD`);
+                  
+                  // Determine direction
+                  const { data: toNumberOwned } = await supabase
+                    .from('phone_numbers_duplicate')
+                    .select('phone_number')
+                    .eq('integration_id', integration.id)
+                    .eq('phone_number', toNumber)
+                    .maybeSingle();
+                  
+                  finalDirection = toNumberOwned ? 'inbound' : 'outbound';
+                } else {
+                  console.log('⚠️ API response has no price, using fallback calculation');
+                }
+              } else {
+                console.log(`⚠️ Twilio API request failed: ${response.status}`);
+              }
+            }
+          } catch (apiError) {
+            console.error('❌ Failed to fetch price from Twilio API:', apiError);
+          }
+        }
+        
+        // Step 3: Fallback to calculation if still no price
+        if (costAmountUSD === 0) {
           const { count: phoneCount } = await supabase
             .from('phone_numbers_duplicate')
             .select('*', { count: 'exact', head: true })
@@ -1177,21 +1218,17 @@ serve(async (req) => {
             numSegments,
             integration.id
           );
-          const costUSD = smsCalculation.usd;
-          costAmount = costUSD * USD_TO_SEK;
-          costCurrency = 'SEK';
+          costAmountUSD = smsCalculation.usd;
           finalDirection = smsCalculation.direction;
-          console.log(`📱 Twilio SMS: ${finalDirection} with ${numSegments} segments = $${costUSD.toFixed(4)} USD → ${costAmount.toFixed(2)} SEK (calculated)`);
+          costPriceSource = 'estimated';
+          isEstimated = true;
+          console.log(`📊 Estimated price: $${costAmountUSD.toFixed(4)} USD`);
         }
+        
+        console.log(`📱 Twilio SMS: ${finalDirection} with ${numSegments} segments = $${costAmountUSD.toFixed(4)} USD (${costPriceSource})`);
       } else if (eventType === 'message' && costAmountUSD > 0) {
-        // For all other SMS providers (Telnyx, etc.), convert USD to SEK
-        costAmount = costAmountUSD * USD_TO_SEK;
-        costCurrency = 'SEK';
-        console.log(`📱 ${provider} SMS: ${finalDirection} = $${costAmountUSD.toFixed(4)} USD → ${costAmount.toFixed(2)} SEK`);
-      } else {
-        // For non-SMS events, keep original cost
-        costAmount = costAmountUSD;
-        costCurrency = bodyData.price_unit || 'USD';
+        // For all other SMS providers (Telnyx, etc.)
+        console.log(`📱 ${provider} SMS: ${finalDirection} = $${costAmountUSD.toFixed(4)} USD (${costPriceSource})`);
       }
 
       // Try to find related Vapi/Retell event first
@@ -1236,16 +1273,16 @@ serve(async (req) => {
           idempotency_key: idempotencyKey,
           parent_event_id: parentEventId,
           provider_layer: providerLayer,
-          cost_amount: costAmount,
-          cost_currency: costCurrency,
+          cost_amount: costAmountUSD * USD_TO_SEK,
+          cost_currency: 'SEK',
           cost_breakdown: {
             [provider]: {
-              amount: costAmount,
-              currency: costCurrency,
+              amount: costAmountUSD * USD_TO_SEK,
+              currency: 'SEK',
               layer: providerLayer
             }
           },
-          aggregate_cost_amount: costAmount,
+          aggregate_cost_amount: costAmountUSD * USD_TO_SEK,
         })
         .select()
         .single();
@@ -1266,7 +1303,10 @@ serve(async (req) => {
           console.log('✅ Conditions met, saving to message_logs...');
           console.log(`   Direction: ${finalDirection}, From: ${fromNumber}, To: ${toNumber}`);
           
-          // Kostnad är redan i SEK från beräkningarna ovan
+          // Calculate SEK cost for display
+          const costSek = Math.round(costAmountUSD * USD_TO_SEK * 10000) / 10000;
+          
+          console.log(`💰 Cost breakdown for message_logs: USD=${costAmountUSD.toFixed(4)}, SEK=${costSek.toFixed(4)}, FX=${USD_TO_SEK}, Source=${costPriceSource}, Estimated=${isEstimated}`);
           
           const messageLogData = {
             user_id: integration.user_id,
@@ -1289,7 +1329,7 @@ serve(async (req) => {
             delivered_at: (bodyData.SmsStatus === 'received' || bodyData.MessageStatus === 'delivered') 
               ? new Date().toISOString() 
               : null,
-            cost: costAmount,  // ✅ Kostnad redan i SEK
+            cost: costAmountUSD,  // ✅ Store USD as base
             metadata: {
               from: fromNumber,     // ✅ Explicit from
               to: toNumber,         // ✅ Explicit to
@@ -1297,7 +1337,12 @@ serve(async (req) => {
               numSegments: bodyData.NumSegments ? parseInt(bodyData.NumSegments) : 1,
               provider_status: bodyData.SmsStatus || bodyData.MessageStatus,
               event_id: newEvent.id,
-              cost_currency: costCurrency,
+              cost_currency: 'USD',
+              original_cost_usd: costAmountUSD,
+              cost_sek: costSek,
+              fx_rate: USD_TO_SEK,
+              estimated: isEstimated,
+              cost_source: costPriceSource,
             },
           };
 

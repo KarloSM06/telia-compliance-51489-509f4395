@@ -20,8 +20,11 @@ export const SMSDetailDrawer = ({ message, open, onClose }: SMSDetailDrawerProps
 
   if (!message) return null;
 
-  const currency = (message.metadata?.cost_currency || 'SEK').toUpperCase();
-  const displaySek = typeof message.cost === 'number' ? (currency === 'USD' ? message.cost * 10.5 : message.cost) : null;
+  const costCurrency = message.metadata?.cost_currency ?? 'SEK';
+  const displaySek = typeof message.cost === 'number' 
+    ? (message.metadata?.cost_sek ?? (costCurrency === 'USD' ? message.cost * (message.metadata?.fx_rate ?? 10.5) : message.cost))
+    : null;
+  const isEstimated = message.metadata?.estimated === true;
 
   const copyToClipboard = (text: string, label: string) => {
     navigator.clipboard.writeText(text);
@@ -250,16 +253,21 @@ export const SMSDetailDrawer = ({ message, open, onClose }: SMSDetailDrawerProps
             )}
 
             {/* Cost */}
-            {typeof message.cost === 'number' && (
+            {typeof message.cost === 'number' && displaySek !== null && (
               <Card>
                 <CardContent className="p-4">
                   <div className="flex items-center gap-2">
                     <DollarSign className="h-4 w-4 text-muted-foreground" />
                     <div>
                       <p className="text-xs text-muted-foreground">Kostnad</p>
-                      <p className="text-lg font-semibold">{displaySek?.toFixed(3)} SEK</p>
-                      {currency === 'USD' && (
-                        <p className="text-xs text-muted-foreground">({message.cost.toFixed(4)} USD)</p>
+                      <p className="text-lg font-semibold">
+                        {displaySek.toFixed(3)} SEK
+                        {isEstimated && <span className="text-xs text-muted-foreground ml-1">(uppskattad)</span>}
+                      </p>
+                      {costCurrency === 'USD' && (
+                        <p className="text-xs text-muted-foreground">
+                          (${message.cost.toFixed(4)} USD)
+                        </p>
                       )}
                     </div>
                   </div>
