@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.75.0';
+import { encode as base64Encode } from "https://deno.land/std@0.168.0/encoding/base64.ts";
 import { verifyTwilioSignature, verifyTelnyxSignature, verifyVapiSignature, verifyRetellSignature } from '../_shared/signature-verification.ts';
 
 const corsHeaders = {
@@ -1157,7 +1158,8 @@ serve(async (req) => {
             
             if (accountSid && authToken) {
               const twilioApiUrl = `https://api.twilio.com/2010-04-01/Accounts/${accountSid}/Messages/${bodyData.MessageSid}.json`;
-              const authHeader = 'Basic ' + btoa(`${accountSid}:${authToken}`);
+              const credentials = `${accountSid}:${authToken}`;
+              const authHeader = 'Basic ' + base64Encode(new TextEncoder().encode(credentials));
               
               const response = await fetch(twilioApiUrl, {
                 headers: { 'Authorization': authHeader }
