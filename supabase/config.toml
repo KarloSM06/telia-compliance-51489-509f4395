@@ -160,4 +160,4 @@ verify_jwt = true
 verify_jwt = false
 
 [[functions.process-analysis-queue.schedule]]
-schedule = "*/15 * * * *"
+schedule = "*/5 * * * *"

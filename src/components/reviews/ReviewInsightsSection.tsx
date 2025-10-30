@@ -1,6 +1,5 @@
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Button } from "@/components/ui/button";
-import { Sparkles, RefreshCw, Clock, Zap } from "lucide-react";
+import { Sparkles, Clock, Zap, Loader2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { useReviewInsights } from "@/hooks/useReviewInsights";
 import { ImprovementSuggestions } from "./ImprovementSuggestions";
@@ -16,7 +15,34 @@ interface ReviewInsightsSectionProps {
 }
 
 export const ReviewInsightsSection = ({ dateRange }: ReviewInsightsSectionProps) => {
-  const { insights, isLoading, isOutdated, triggerAnalysis, isAnalyzing } = useReviewInsights(dateRange);
+  const { insights, isLoading, queueStatus } = useReviewInsights(dateRange);
+
+  const getStatusBadge = () => {
+    if (queueStatus?.status === 'processing') {
+      return (
+        <Badge variant="outline" className="bg-blue-500/10 text-blue-600 animate-pulse">
+          <Loader2 className="h-3 w-3 mr-1 animate-spin" />
+          Analyserar just nu...
+        </Badge>
+      );
+    }
+    
+    if (queueStatus?.status === 'pending') {
+      return (
+        <Badge variant="outline" className="bg-yellow-500/10 text-yellow-600">
+          <Clock className="h-3 w-3 mr-1" />
+          I kö för analys
+        </Badge>
+      );
+    }
+    
+    return (
+      <Badge variant="outline" className="bg-green-500/10 text-green-600">
+        <Zap className="h-3 w-3 mr-1" />
+        Auto-analys aktiv
+      </Badge>
+    );
+  };
 
   if (isLoading) {
     return (
@@ -35,24 +61,10 @@ export const ReviewInsightsSection = ({ dateRange }: ReviewInsightsSectionProps)
       <Alert>
         <Sparkles className="h-4 w-4" />
         <AlertDescription className="flex items-center justify-between">
-          <span>Ingen AI-analys tillgänglig ännu. Kör en analys för att få insikter.</span>
-          <Button
-            onClick={() => triggerAnalysis()}
-            disabled={isAnalyzing}
-            size="sm"
-          >
-            {isAnalyzing ? (
-              <>
-                <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
-                Analyserar...
-              </>
-            ) : (
-              <>
-                <Sparkles className="h-4 w-4 mr-2" />
-                Kör Analys
-              </>
-            )}
-          </Button>
+          <div className="flex items-center gap-2">
+            <span>AI-analys initialiseras automatiskt...</span>
+            {getStatusBadge()}
+          </div>
         </AlertDescription>
       </Alert>
     );
@@ -60,7 +72,7 @@ export const ReviewInsightsSection = ({ dateRange }: ReviewInsightsSectionProps)
 
   return (
     <div className="space-y-6">
-      {/* Header with refresh button */}
+      {/* Header with status */}
       <div className="flex items-center justify-between">
         <div className="space-y-2">
           <div className="flex items-center gap-2">
@@ -68,10 +80,7 @@ export const ReviewInsightsSection = ({ dateRange }: ReviewInsightsSectionProps)
               <Sparkles className="h-6 w-6 text-primary" />
               Insikter & Förbättringar
             </h2>
-            <Badge variant="outline" className="bg-green-500/10 text-green-600">
-              <Zap className="h-3 w-3 mr-1" />
-              Auto-analys aktiv
-            </Badge>
+            {getStatusBadge()}
           </div>
           <p className="text-muted-foreground">
             AI-genererade rekommendationer baserat på {insights.total_interactions} interaktioner
@@ -83,33 +92,7 @@ export const ReviewInsightsSection = ({ dateRange }: ReviewInsightsSectionProps)
             </span>
           </div>
         </div>
-        <Button
-          onClick={() => triggerAnalysis()}
-          disabled={isAnalyzing}
-          variant={isOutdated ? "default" : "outline"}
-          size="sm"
-        >
-          {isAnalyzing ? (
-            <>
-              <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
-              Analyserar...
-            </>
-          ) : (
-            <>
-              <RefreshCw className="h-4 w-4 mr-2" />
-              {isOutdated ? 'Uppdatera Analys' : 'Analysera På Nytt'}
-            </>
-          )}
-        </Button>
       </div>
-
-      {isOutdated && (
-        <Alert>
-          <AlertDescription>
-            Denna analys är äldre än 24 timmar. Klicka på "Uppdatera Analys" för senaste insikter.
-          </AlertDescription>
-        </Alert>
-      )}
 
       {/* Sentiment Trend and Topic Distribution */}
       <div className="grid gap-4 md:grid-cols-2">

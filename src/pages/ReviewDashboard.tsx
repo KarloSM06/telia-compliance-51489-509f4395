@@ -1,9 +1,11 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
-import { RefreshCw, Download, Sparkles } from 'lucide-react';
+import { RefreshCw, Download } from 'lucide-react';
 import { toast } from 'sonner';
 import { useReviews, ReviewFilterValues } from '@/hooks/useReviews';
-import { useReviewInsights } from '@/hooks/useReviewInsights';
+import { supabase } from '@/integrations/supabase/client';
+import { useAuth } from '@/hooks/useAuth';
+import { useQueryClient } from '@tanstack/react-query';
 import { ReviewStatsCards } from '@/components/reviews/ReviewStatsCards';
 import { ReviewFilters } from '@/components/reviews/ReviewFilters';
 import { ReviewsTable } from '@/components/reviews/ReviewsTable';
@@ -11,6 +13,8 @@ import { ReviewDetailDrawer } from '@/components/reviews/ReviewDetailDrawer';
 import { ReviewInsightsSection } from '@/components/reviews/ReviewInsightsSection';
 
 export default function ReviewDashboard() {
+  const { user } = useAuth();
+  const queryClient = useQueryClient();
   const [selectedReview, setSelectedReview] = useState<any>(null);
   const [filters, setFilters] = useState<ReviewFilterValues>({
     search: '',
@@ -20,7 +24,34 @@ export default function ReviewDashboard() {
   });
 
   const { reviews, allReviews, stats, isLoading, exportToCSV } = useReviews(undefined, filters);
-  const { insights, triggerAnalysis, isAnalyzing } = useReviewInsights();
+
+  // Realtime subscription för nya recensioner
+  useEffect(() => {
+    if (!user) return;
+    
+    const channel = supabase
+      .channel('new-reviews')
+      .on(
+        'postgres_changes',
+        {
+          event: 'INSERT',
+          schema: 'public',
+          table: 'reviews',
+          filter: `user_id=eq.${user.id}`
+        },
+        () => {
+          toast.info('Ny recension mottagen - analyserar...', {
+            duration: 3000
+          });
+          queryClient.invalidateQueries({ queryKey: ['reviews'] });
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [user?.id, queryClient]);
 
   const handleRefresh = () => {
     toast.success('Data uppdaterad');
@@ -30,10 +61,6 @@ export default function ReviewDashboard() {
   const handleExport = () => {
     exportToCSV(`reviews-${new Date().toISOString().split('T')[0]}.csv`);
     toast.success('Export klar');
-  };
-
-  const handleAnalyze = async () => {
-    await triggerAnalysis();
   };
 
   return (
@@ -47,15 +74,6 @@ export default function ReviewDashboard() {
           </p>
         </div>
         <div className="flex gap-2">
-          <Button 
-            variant="outline" 
-            size="sm" 
-            onClick={handleAnalyze}
-            disabled={isAnalyzing}
-          >
-            <Sparkles className={`h-4 w-4 mr-2 ${isAnalyzing ? 'animate-spin' : ''}`} />
-            Analysera Nu
-          </Button>
           <Button variant="outline" size="sm" onClick={handleRefresh}>
             <RefreshCw className="h-4 w-4 mr-2" />
             Uppdatera
@@ -68,7 +86,7 @@ export default function ReviewDashboard() {
       </div>
 
       {/* Stats Cards */}
-      <ReviewStatsCards stats={stats} insights={insights} />
+      <ReviewStatsCards stats={stats} insights={undefined} />
 
       {/* Filters */}
       <ReviewFilters onFilterChange={setFilters} />
