@@ -72,7 +72,7 @@ export const ReviewsTable = ({ reviews, onViewDetails }: ReviewsTableProps) => {
     return (
       <div className="flex gap-0.5">
         {[1, 2, 3, 4, 5].map((star) => (
-          <span key={star} className={star <= rating ? 'text-yellow-500' : 'text-gray-300'}>
+          <span key={star} className={star <= rating ? 'text-primary' : 'text-muted-foreground/30'}>
             ⭐
           </span>
         ))}
