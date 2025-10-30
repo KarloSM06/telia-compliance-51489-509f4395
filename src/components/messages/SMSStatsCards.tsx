@@ -1,20 +1,20 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { MessageSquare, Check, Clock, XCircle, DollarSign, ArrowDown, ArrowUp, Star } from "lucide-react";
+import { formatCostInSEK } from "@/lib/telephonyFormatters";
 
 interface SMSStatsCardsProps {
   total: number;
   sent: number;
   pending: number;
   failed: number;
-  costSEK: number;
-  costUSD: number;
+  cost: number; // USD-värde (samma som telephony)
   inbound: number;
   outbound: number;
   reviews: number;
 }
 
 export const SMSStatsCards = ({ 
-  total, sent, pending, failed, costSEK, costUSD, inbound, outbound, reviews 
+  total, sent, pending, failed, cost, inbound, outbound, reviews 
 }: SMSStatsCardsProps) => {
   const stats = [
     {
@@ -61,10 +61,10 @@ export const SMSStatsCards = ({
     },
     {
       title: "Kostnad",
-      value: `${costSEK.toFixed(2)} SEK`,
+      value: formatCostInSEK(cost), // Konvertera USD → SEK (samma som telephony)
       icon: DollarSign,
       className: "text-purple-600",
-      subtitle: `≈ $${costUSD.toFixed(4)} USD`,
+      subtitle: `≈ $${cost.toFixed(4)} USD`, // Visa original USD
     },
   ];
 
