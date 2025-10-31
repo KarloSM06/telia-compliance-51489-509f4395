@@ -79,7 +79,7 @@ export const ROIHeroSection = ({
             </div>
 
             {/* Title */}
-            <p className="text-sm text-muted-foreground mb-1">{metric.title}</p>
+            <p className="text-muted-foreground mb-1 text-2xl">{metric.title}</p>
 
             {/* Value */}
             <p className="text-3xl font-bold mb-1">{metric.value}</p>
