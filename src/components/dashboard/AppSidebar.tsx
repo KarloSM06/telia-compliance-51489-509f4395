@@ -1,4 +1,4 @@
-import { Home, Package, LayoutDashboard, Settings, BarChart3, LogOut, Phone, UtensilsCrossed, Users, Target, Award, Star, Calendar, Bell, FileText, MessageSquare, Mail, BarChart, Building2, Plug } from "lucide-react";
+import { Home, LayoutDashboard, Settings, BarChart3, LogOut, Phone, Users, Target, Star, Calendar, Bell, MessageSquare, Mail, Building2, Plug } from "lucide-react";
 import { NavLink, useNavigate } from "react-router-dom";
 import {
   Sidebar,
@@ -25,37 +25,38 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-const navigationItems = [
+// 4-grupps struktur för optimal användarupplevelse
+const overviewItems = [
   { title: "Dashboard", url: "/dashboard", icon: Home },
   { title: "Analytics", url: "/dashboard/analytics", icon: BarChart3 },
+  { title: "Custom Dashboard", url: "/dashboard/custom", icon: LayoutDashboard },
+];
+
+const businessToolsItems = [
+  { title: "Prospektering", url: "/dashboard/lead", icon: Target },
+  { title: "Rekrytering", url: "/dashboard/talent", icon: Users },
   { title: "Integrationer", url: "/dashboard/integrations", icon: Plug },
   { title: "Kalender", url: "/dashboard/calendar", icon: Calendar },
+];
+
+const communicationItems = [
   { title: "Telefoni", url: "/dashboard/telephony", icon: Phone },
   { title: "SMS", url: "/dashboard/sms", icon: MessageSquare },
   { title: "Email", url: "/dashboard/email", icon: Mail },
   { title: "Recensioner", url: "/dashboard/reviews", icon: Star },
   { title: "Notifikationer", url: "/dashboard/notifications", icon: Bell },
+];
+
+const systemItems = [
   { title: "Företag", url: "/dashboard/company", icon: Building2 },
-  { title: "Produkter / Paket", url: "/dashboard/packages", icon: Package },
-  { title: "Custom Dashboard", url: "/dashboard/custom", icon: LayoutDashboard },
   { title: "Inställningar", url: "/dashboard/settings", icon: Settings },
 ];
 
 export function AppSidebar() {
   const { user, signOut } = useAuth();
-  const { products } = useUserProducts();
   const { state } = useSidebar();
   const navigate = useNavigate();
   const isCollapsed = state === "collapsed";
-
-  const productNavigationItems = [
-    { title: "AI Receptionist", url: "/dashboard/krono", icon: Phone, productId: "krono" },
-    { title: "Restaurang & Café", url: "/dashboard/gastro", icon: UtensilsCrossed, productId: "gastro" },
-    { title: "AI Rekrytering", url: "/dashboard/talent", icon: Users, productId: "talent" },
-    { title: "AI Prospektering", url: "/dashboard/lead", icon: Target, productId: "lead" },
-    { title: "AI Compliance", url: "/dashboard/thor", icon: Award, productId: "thor" },
-    { title: "AI Omdömen", url: "/dashboard/eko", icon: Star, productId: "eko" },
-  ].filter(item => products.includes(item.productId));
 
   const getInitials = (email: string) => {
     return email.charAt(0).toUpperCase();
@@ -112,11 +113,12 @@ export function AppSidebar() {
       </SidebarHeader>
 
       <SidebarContent>
+        {/* ÖVERSIKT */}
         <SidebarGroup>
-          <SidebarGroupLabel>Navigation</SidebarGroupLabel>
+          <SidebarGroupLabel>Översikt</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {navigationItems.map((item) => (
+              {overviewItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild tooltip={item.title}>
                     <NavLink
@@ -139,34 +141,89 @@ export function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
 
-        {productNavigationItems.length > 0 && (
-          <SidebarGroup>
-            <SidebarGroupLabel>Mina Produkter</SidebarGroupLabel>
-            <SidebarGroupContent>
-              <SidebarMenu>
-                {productNavigationItems.map((item) => (
-                  <SidebarMenuItem key={item.title}>
-                    <SidebarMenuButton asChild tooltip={item.title}>
-                      <NavLink
-                        to={item.url}
-                        className={({ isActive }) =>
-                          `flex items-center gap-3 transition-all ${
-                            isActive
-                              ? "bg-sidebar-accent text-sidebar-accent-foreground font-medium"
-                              : "hover:bg-sidebar-accent/50"
-                          }`
-                        }
-                      >
-                        <item.icon className="h-5 w-5" />
-                        <span>{item.title}</span>
-                      </NavLink>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                ))}
-              </SidebarMenu>
-            </SidebarGroupContent>
-          </SidebarGroup>
-        )}
+        {/* AFFÄRSVERKTYG */}
+        <SidebarGroup>
+          <SidebarGroupLabel>Affärsverktyg</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {businessToolsItems.map((item) => (
+                <SidebarMenuItem key={item.title}>
+                  <SidebarMenuButton asChild tooltip={item.title}>
+                    <NavLink
+                      to={item.url}
+                      className={({ isActive }) =>
+                        `flex items-center gap-3 transition-all ${
+                          isActive
+                            ? "bg-sidebar-accent text-sidebar-accent-foreground font-medium"
+                            : "hover:bg-sidebar-accent/50"
+                        }`
+                      }
+                    >
+                      <item.icon className="h-5 w-5" />
+                      <span>{item.title}</span>
+                    </NavLink>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+
+        {/* KOMMUNIKATION */}
+        <SidebarGroup>
+          <SidebarGroupLabel>Kommunikation</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {communicationItems.map((item) => (
+                <SidebarMenuItem key={item.title}>
+                  <SidebarMenuButton asChild tooltip={item.title}>
+                    <NavLink
+                      to={item.url}
+                      className={({ isActive }) =>
+                        `flex items-center gap-3 transition-all ${
+                          isActive
+                            ? "bg-sidebar-accent text-sidebar-accent-foreground font-medium"
+                            : "hover:bg-sidebar-accent/50"
+                        }`
+                      }
+                    >
+                      <item.icon className="h-5 w-5" />
+                      <span>{item.title}</span>
+                    </NavLink>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+
+        {/* SYSTEM & INSTÄLLNINGAR */}
+        <SidebarGroup>
+          <SidebarGroupLabel>System</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {systemItems.map((item) => (
+                <SidebarMenuItem key={item.title}>
+                  <SidebarMenuButton asChild tooltip={item.title}>
+                    <NavLink
+                      to={item.url}
+                      className={({ isActive }) =>
+                        `flex items-center gap-3 transition-all ${
+                          isActive
+                            ? "bg-sidebar-accent text-sidebar-accent-foreground font-medium"
+                            : "hover:bg-sidebar-accent/50"
+                        }`
+                      }
+                    >
+                      <item.icon className="h-5 w-5" />
+                      <span>{item.title}</span>
+                    </NavLink>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
       </SidebarContent>
 
       <SidebarFooter className="border-t border-sidebar-border p-4">
