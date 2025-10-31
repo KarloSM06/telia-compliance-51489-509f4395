@@ -1,4 +1,5 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import { Button } from '@/components/ui/button';
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
 import { RefreshCw, Download, Settings, AlertCircle } from 'lucide-react';
@@ -15,6 +16,7 @@ import { SMSDetailDrawer } from "@/components/messages/SMSDetailDrawer";
 import { MessageProvidersDialog } from "@/components/messages/MessageProvidersDialog";
 
 export default function SMSPage() {
+  const location = useLocation();
   const { user } = useAuth();
   const queryClient = useQueryClient();
   const { phoneNumbers, isLoading: isLoadingNumbers } = usePhoneNumbers();
@@ -32,6 +34,19 @@ export default function SMSPage() {
     dateFrom: filters.dateFrom?.toISOString().split('T')[0],
     dateTo: filters.dateTo?.toISOString().split('T')[0],
   });
+
+  // Listen for location state to open specific message
+  useEffect(() => {
+    if (location.state?.openMessageId) {
+      const message = logs.find(m => m.id === location.state.openMessageId);
+      if (message) {
+        setSelectedMessage(message);
+      }
+      
+      // Clear state
+      window.history.replaceState({}, document.title);
+    }
+  }, [location.state, logs]);
 
   // Calculate provider statistics
   const providerStats = useMemo(() => {

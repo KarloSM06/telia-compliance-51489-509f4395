@@ -1,4 +1,5 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { RefreshCw, Settings, Download, Phone } from 'lucide-react';
 import { toast } from 'sonner';
@@ -14,6 +15,7 @@ import { AddIntegrationModal } from '@/components/integrations/AddIntegrationMod
 import { supabase } from '@/integrations/supabase/client';
 
 export default function TelephonyPage() {
+  const location = useLocation();
   const [showProviderDialog, setShowProviderDialog] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState<any>(null);
@@ -31,6 +33,27 @@ export default function TelephonyPage() {
   const { syncNumbers, isSyncing } = usePhoneNumbers();
 
   const telephonyProviders = getByCapability('voice').concat(getByCapability('sms'));
+
+  // Listen for location state to open specific event
+  useEffect(() => {
+    if (location.state?.openEventId) {
+      const event = metrics.events.find(e => e.id === location.state.openEventId);
+      if (event) {
+        setSelectedEvent(event);
+        
+        // Scroll to event if requested
+        if (location.state.scrollToEvent) {
+          setTimeout(() => {
+            const element = document.getElementById(`event-${event.id}`);
+            element?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }, 100);
+        }
+      }
+      
+      // Clear state
+      window.history.replaceState({}, document.title);
+    }
+  }, [location.state, metrics.events]);
 
   // Filter events based on filters
   const filteredEvents = useMemo(() => {

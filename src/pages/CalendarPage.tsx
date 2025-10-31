@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -21,6 +22,7 @@ import { toast } from "sonner";
 import { useUserTimezone } from "@/hooks/useUserTimezone";
 
 const CalendarPage = () => {
+  const location = useLocation();
   const { timezone } = useUserTimezone();
   const { events, loading, createEvent, updateEvent, deleteEvent } = useCalendarEvents();
   const { integrations, createIntegration, updateIntegration, deleteIntegration, triggerSync } = useBookingIntegrations();
@@ -31,6 +33,26 @@ const CalendarPage = () => {
   const [showIntegrationModal, setShowIntegrationModal] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState<CalendarEvent | null>(null);
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+
+  // Listen for location state to open specific event
+  useEffect(() => {
+    if (location.state?.openEventId) {
+      const event = events.find(e => e.id === location.state.openEventId);
+      if (event) {
+        setSelectedEvent(event);
+        setShowEventModal(true);
+        
+        // Switch to appropriate view if date provided
+        if (location.state.date) {
+          setSelectedDay(new Date(location.state.date));
+          setCurrentView('day');
+        }
+      }
+      
+      // Clear state
+      window.history.replaceState({}, document.title);
+    }
+  }, [location.state, events]);
 
   const handleEventClick = (event: CalendarEvent) => {
     setSelectedEvent(event);

@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { RefreshCw, Download } from 'lucide-react';
 import { toast } from 'sonner';
@@ -15,6 +16,7 @@ import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/componen
 import { useIsMobile } from '@/hooks/use-mobile';
 
 export default function ReviewDashboard() {
+  const location = useLocation();
   const { user } = useAuth();
   const queryClient = useQueryClient();
   const isMobile = useIsMobile();
@@ -27,6 +29,19 @@ export default function ReviewDashboard() {
   });
 
   const { reviews, allReviews, stats, isLoading, exportToCSV } = useReviews(undefined, filters);
+
+  // Listen for location state to open specific review
+  useEffect(() => {
+    if (location.state?.openReviewId) {
+      const review = allReviews.find(r => r.id === location.state.openReviewId);
+      if (review) {
+        setSelectedReview(review);
+      }
+      
+      // Clear state
+      window.history.replaceState({}, document.title);
+    }
+  }, [location.state, allReviews]);
 
   // Realtime subscriptions för alla review-källor
   useEffect(() => {
