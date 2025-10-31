@@ -29,7 +29,8 @@ import {
 const overviewItems = [
   { title: "Dashboard", url: "/dashboard", icon: Home },
   { title: "Analytics", url: "/dashboard/analytics", icon: BarChart3 },
-  { title: "Custom Dashboard", url: "/dashboard/custom", icon: LayoutDashboard },
+  // Custom Dashboard - gömmer från navigation (kommer i framtiden)
+  // { title: "Custom Dashboard", url: "/dashboard/custom", icon: LayoutDashboard },
 ];
 
 const businessToolsItems = [
