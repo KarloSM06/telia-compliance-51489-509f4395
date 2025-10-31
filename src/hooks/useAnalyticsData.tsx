@@ -12,6 +12,8 @@ import {
 } from "@/lib/roiCalculations";
 import { format, startOfDay, endOfDay, subDays } from "date-fns";
 
+const USD_TO_SEK = 10.5;
+
 export interface AnalyticsData {
   bookings: any[];
   messages: any[];
@@ -128,7 +130,10 @@ export const useAnalyticsData = (dateRange?: { from: Date; to: Date }) => {
             dailyMap.set(day, { date: day, bookings: 0, revenue: 0, costs: 0 });
           }
           const dayData = dailyMap.get(day);
-          dayData.costs += parseFloat(String(m.cost || 0));
+          // Use cost_sek from metadata if available, otherwise convert USD to SEK
+          const metadata = m.metadata as any;
+          const costSEK = metadata?.cost_sek || (parseFloat(String(m.cost || 0)) * USD_TO_SEK);
+          dayData.costs += costSEK;
         });
 
         telephony.forEach(t => {
@@ -137,7 +142,9 @@ export const useAnalyticsData = (dateRange?: { from: Date; to: Date }) => {
             dailyMap.set(day, { date: day, bookings: 0, revenue: 0, costs: 0 });
           }
           const dayData = dailyMap.get(day);
-          dayData.costs += parseFloat(String(t.cost_amount || 0));
+          // Use aggregate_cost_amount (SEK) if available, otherwise convert cost_amount (USD) to SEK
+          const costSEK = t.aggregate_cost_amount || (parseFloat(String(t.cost_amount || 0)) * USD_TO_SEK);
+          dayData.costs += costSEK;
         });
 
         const dailyData = Array.from(dailyMap.values()).map(d => ({

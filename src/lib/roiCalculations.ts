@@ -1,5 +1,7 @@
 import { BusinessMetrics, ServicePricing } from "@/hooks/useBusinessMetrics";
 
+const USD_TO_SEK = 10.5;
+
 export interface BookingRevenue {
   bookingId: string;
   estimatedRevenue: number;
@@ -93,19 +95,27 @@ export function calculateOperationalCosts(
   telephonyEvents: any[],
   messageLogs: any[]
 ): OperationalCosts {
-  // Use aggregate_cost_amount if available, otherwise use cost_amount (no conversion here)
+  // Use aggregate_cost_amount (already in SEK) if available, otherwise convert cost_amount from USD to SEK
   const telephonyCost = telephonyEvents.reduce((sum, e) => {
-    const cost = e.aggregate_cost_amount || parseFloat(e.cost_amount) || 0;
-    return sum + cost;
+    const costSEK = e.aggregate_cost_amount || (parseFloat(e.cost_amount) || 0) * USD_TO_SEK;
+    return sum + costSEK;
   }, 0);
   
   const smsCost = messageLogs
     .filter(m => m.channel === 'sms')
-    .reduce((sum, m) => sum + (parseFloat(m.cost) || 0), 0);
+    .reduce((sum, m) => {
+      // Try to use cost_sek from metadata first, otherwise convert USD to SEK
+      const costSEK = m.metadata?.cost_sek || (parseFloat(m.cost) || 0) * USD_TO_SEK;
+      return sum + costSEK;
+    }, 0);
   
   const emailCost = messageLogs
     .filter(m => m.channel === 'email')
-    .reduce((sum, m) => sum + (parseFloat(m.cost) || 0), 0);
+    .reduce((sum, m) => {
+      // Try to use cost_sek from metadata first, otherwise convert USD to SEK
+      const costSEK = m.metadata?.cost_sek || (parseFloat(m.cost) || 0) * USD_TO_SEK;
+      return sum + costSEK;
+    }, 0);
   
   return {
     telephonyCost,
