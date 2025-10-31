@@ -30,6 +30,39 @@ export interface ROIMetrics {
   profitMargin: number;
 }
 
+export interface TrendMetrics {
+  revenueChange: number;
+  revenueChangeIsPositive: boolean;
+  costChange: number;
+  costChangeIsPositive: boolean;
+  profitChange: number;
+  profitChangeIsPositive: boolean;
+  roiChange: number;
+  roiChangeIsPositive: boolean;
+  bookingsChange: number;
+  bookingsChangeIsPositive: boolean;
+}
+
+export interface CumulativeROIMetrics {
+  initialInvestment: number;
+  monthsSinceStart: number;
+  totalRevenueToDate: number;
+  totalCostsToDate: number;
+  cumulativeProfit: number;
+  breakEvenDate: Date | null;
+  isBreakEven: boolean;
+  monthlyAverageRevenue: number;
+  monthlyAverageCost: number;
+  projectedBreakEvenMonths: number | null;
+  dailyCumulativeData: Array<{
+    date: string;
+    cumulativeRevenue: number;
+    cumulativeCost: number;
+    cumulativeProfit: number;
+    isBreakEven: boolean;
+  }>;
+}
+
 // Match booking title to service pricing
 function matchServiceType(
   booking: any,
@@ -179,5 +212,106 @@ export function calculateROI(
     revenuePerBooking: totalRevenue / bookingCount,
     costPerBooking: totalCosts / bookingCount,
     profitMargin: totalRevenue > 0 ? (netProfit / totalRevenue) * 100 : 0
+  };
+}
+
+// Calculate trends by comparing current vs previous period
+export function calculateTrends(
+  current: ROIMetrics & { bookingCount: number },
+  previous: ROIMetrics & { bookingCount: number }
+): TrendMetrics {
+  const safePercentChange = (curr: number, prev: number): number => {
+    if (prev === 0) return curr > 0 ? 100 : 0;
+    return ((curr - prev) / Math.abs(prev)) * 100;
+  };
+
+  const revenueChange = safePercentChange(current.totalRevenue, previous.totalRevenue);
+  const costChange = safePercentChange(current.totalCosts, previous.totalCosts);
+  const profitChange = safePercentChange(current.netProfit, previous.netProfit);
+  const roiChange = safePercentChange(current.roi, previous.roi);
+  const bookingsChange = safePercentChange(current.bookingCount, previous.bookingCount);
+
+  return {
+    revenueChange: Math.abs(revenueChange),
+    revenueChangeIsPositive: revenueChange >= 0,
+    costChange: Math.abs(costChange),
+    costChangeIsPositive: costChange <= 0, // Lower cost is positive
+    profitChange: Math.abs(profitChange),
+    profitChangeIsPositive: profitChange >= 0,
+    roiChange: Math.abs(roiChange),
+    roiChangeIsPositive: roiChange >= 0,
+    bookingsChange: Math.abs(bookingsChange),
+    bookingsChangeIsPositive: bookingsChange >= 0,
+  };
+}
+
+// Calculate cumulative ROI from integration start date
+export function calculateCumulativeROI(
+  dailyData: Array<{ date: string; revenue: number; costs: number }>,
+  integrationCost: number,
+  integrationStartDate: Date
+): CumulativeROIMetrics {
+  const startDate = new Date(integrationStartDate);
+  const today = new Date();
+  
+  // Calculate months since start
+  const monthsSinceStart = Math.max(1, 
+    (today.getFullYear() - startDate.getFullYear()) * 12 + 
+    (today.getMonth() - startDate.getMonth())
+  );
+
+  // Build cumulative data starting from integration date
+  let cumulativeRevenue = 0;
+  let cumulativeCost = integrationCost; // Start with initial investment
+  let breakEvenDate: Date | null = null;
+  
+  const dailyCumulativeData = dailyData.map(day => {
+    cumulativeRevenue += day.revenue;
+    cumulativeCost += day.costs;
+    const cumulativeProfit = cumulativeRevenue - cumulativeCost;
+    const isBreakEven = cumulativeProfit >= 0;
+    
+    // Mark break-even date
+    if (isBreakEven && !breakEvenDate) {
+      breakEvenDate = new Date(day.date);
+    }
+    
+    return {
+      date: day.date,
+      cumulativeRevenue,
+      cumulativeCost,
+      cumulativeProfit,
+      isBreakEven
+    };
+  });
+
+  const totalRevenueToDate = cumulativeRevenue;
+  const totalCostsToDate = cumulativeCost;
+  const cumulativeProfit = totalRevenueToDate - totalCostsToDate;
+  const isBreakEven = cumulativeProfit >= 0;
+  
+  const monthlyAverageRevenue = totalRevenueToDate / monthsSinceStart;
+  const monthlyAverageCost = (totalCostsToDate - integrationCost) / monthsSinceStart;
+  
+  // Project break-even if not yet achieved
+  let projectedBreakEvenMonths: number | null = null;
+  if (!isBreakEven && monthlyAverageRevenue > monthlyAverageCost) {
+    const monthlyProfit = monthlyAverageRevenue - monthlyAverageCost;
+    const remainingDebt = Math.abs(cumulativeProfit);
+    projectedBreakEvenMonths = Math.ceil(remainingDebt / monthlyProfit);
+  }
+
+  return {
+    initialInvestment: integrationCost,
+    monthsSinceStart,
+    totalRevenueToDate,
+    totalCostsToDate,
+    cumulativeProfit,
+    breakEvenDate,
+    isBreakEven,
+    monthlyAverageRevenue,
+    monthlyAverageCost,
+    projectedBreakEvenMonths,
+    dailyCumulativeData
   };
 }
