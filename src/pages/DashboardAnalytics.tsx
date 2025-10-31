@@ -33,8 +33,6 @@ import { AreaChartComponent } from "@/components/dashboard/charts/AreaChartCompo
 import { LineChartComponent } from "@/components/dashboard/charts/LineChartComponent";
 import { BarChartComponent } from "@/components/dashboard/charts/BarChartComponent";
 import { PieChartComponent } from "@/components/dashboard/charts/PieChartComponent";
-import { IntegrationROICard } from "@/components/dashboard/IntegrationROICard";
-import { CumulativeProfitTimeline } from "@/components/dashboard/CumulativeProfitTimeline";
 
 const DashboardAnalytics = () => {
   const [dateRange, setDateRange] = useState<DateRange | undefined>();
@@ -203,51 +201,31 @@ const DashboardAnalytics = () => {
         </Alert>
       )}
 
-      {/* Integration ROI Card - if applicable */}
-      {data.cumulativeROI && (
-        <>
-          <IntegrationROICard data={data.cumulativeROI} />
-          <CumulativeProfitTimeline data={data.cumulativeROI} />
-        </>
-      )}
-
       {/* Section 1: ROI Hero Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <StatCard
           title="Total Intäkt (Est.)"
           value={`${data.roi.totalRevenue.toLocaleString('sv-SE', { maximumFractionDigits: 0 })} SEK`}
           icon={TrendingUp}
-          trend={data.trends ? { 
-            value: data.trends.revenueChange, 
-            isPositive: data.trends.revenueChangeIsPositive 
-          } : undefined}
+          trend={{ value: 12, isPositive: true }}
         />
         <StatCard
           title="Driftkostnader"
           value={`${data.costs.totalOperatingCost.toLocaleString('sv-SE', { maximumFractionDigits: 2 })} SEK`}
           icon={DollarSign}
-          trend={data.trends ? { 
-            value: data.trends.costChange, 
-            isPositive: data.trends.costChangeIsPositive 
-          } : undefined}
+          trend={{ value: -5, isPositive: true }}
         />
         <StatCard
           title="Nettovinst"
           value={`${data.roi.netProfit.toLocaleString('sv-SE', { maximumFractionDigits: 0 })} SEK`}
           icon={Award}
-          trend={data.trends ? { 
-            value: data.trends.profitChange, 
-            isPositive: data.trends.profitChangeIsPositive 
-          } : undefined}
+          trend={{ value: 18, isPositive: true }}
         />
         <StatCard
           title="ROI"
           value={`${data.roi.roi.toFixed(1)}%`}
           icon={Target}
-          trend={data.trends ? { 
-            value: data.trends.roiChange, 
-            isPositive: data.trends.roiChangeIsPositive 
-          } : undefined}
+          trend={{ value: 8, isPositive: true }}
         />
       </div>
 
@@ -258,10 +236,6 @@ const DashboardAnalytics = () => {
           title="Totala Bokningar"
           value={data.bookings.length}
           icon={Calendar}
-          trend={data.trends ? { 
-            value: data.trends.bookingsChange, 
-            isPositive: data.trends.bookingsChangeIsPositive 
-          } : undefined}
         />
         <StatCard
           title="Genomsnittligt Värde"
