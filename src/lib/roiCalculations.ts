@@ -84,6 +84,15 @@ function calculateAveragePrice(servicePricing: ServicePricing[]): number {
   return total / servicePricing.length;
 }
 
+export interface ServiceMetrics {
+  serviceName: string;
+  revenue: number;
+  cost: number;
+  profit: number;
+  roi: number;
+  bookingCount: number;
+}
+
 // Calculate estimated revenue for a booking
 export function calculateBookingRevenue(
   booking: any,
@@ -312,4 +321,47 @@ export function projectROI(
     breakEvenMonth: breakEven.breakEvenMonth,
     cumulativeData
   };
+}
+
+// Calculate service-specific ROI
+export function calculateServiceROI(
+  bookings: any[],
+  costs: OperationalCosts,
+  businessMetrics: BusinessMetrics
+): ServiceMetrics[] {
+  const serviceMap = new Map<string, ServiceMetrics>();
+
+  bookings.forEach(booking => {
+    const serviceType = booking.service_type || 'Okänd tjänst';
+    const revenue = calculateBookingRevenue(booking, businessMetrics);
+    
+    if (!serviceMap.has(serviceType)) {
+      serviceMap.set(serviceType, {
+        serviceName: serviceType,
+        revenue: 0,
+        cost: 0,
+        profit: 0,
+        roi: 0,
+        bookingCount: 0
+      });
+    }
+
+    const service = serviceMap.get(serviceType)!;
+    service.revenue += revenue.estimatedRevenue;
+    service.bookingCount += 1;
+  });
+
+  // Distribute costs proportionally across services
+  const totalRevenue = Array.from(serviceMap.values()).reduce((sum, s) => sum + s.revenue, 0);
+  
+  serviceMap.forEach(service => {
+    if (totalRevenue > 0) {
+      const costRatio = service.revenue / totalRevenue;
+      service.cost = costs.totalCost * costRatio;
+      service.profit = service.revenue - service.cost;
+      service.roi = service.cost > 0 ? ((service.profit / service.cost) * 100) : 0;
+    }
+  });
+
+  return Array.from(serviceMap.values()).sort((a, b) => b.revenue - a.revenue);
 }

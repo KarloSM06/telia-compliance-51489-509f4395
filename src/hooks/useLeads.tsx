@@ -54,6 +54,13 @@ export interface Lead {
   job_seniority_level?: string;
   job_title?: string;
   business_id?: string;
+  
+  // Conversion funnel tracking
+  first_call_at?: string | null;
+  first_meeting_at?: string | null;
+  deal_closed_at?: string | null;
+  deal_value?: number | null;
+  conversion_stage?: 'new' | 'contacted' | 'meeting_scheduled' | 'meeting_held' | 'deal_closed' | 'lost';
 }
 
 export interface LeadActivity {

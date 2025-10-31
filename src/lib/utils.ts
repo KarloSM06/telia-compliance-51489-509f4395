@@ -36,3 +36,7 @@ export function formatJobTitle(title: string | string[] | undefined): string {
   // Return cleaned title
   return titleStr.trim();
 }
+
+export function formatCurrency(value: number, currency: string = 'SEK'): string {
+  return `${value.toLocaleString('sv-SE', { maximumFractionDigits: 0 })} ${currency}`;
+}

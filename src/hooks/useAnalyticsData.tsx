@@ -8,11 +8,13 @@ import {
   calculateROI,
   calculateBreakEven,
   projectROI,
+  calculateServiceROI,
   type BookingRevenue,
   type OperationalCosts,
   type ROIMetrics,
   type BreakEvenMetrics,
-  type ProjectionMetrics
+  type ProjectionMetrics,
+  type ServiceMetrics
 } from "@/lib/roiCalculations";
 import { format, startOfDay, endOfDay, subDays } from "date-fns";
 
@@ -32,6 +34,7 @@ export interface AnalyticsData {
   projection12: ProjectionMetrics;
   projection24: ProjectionMetrics;
   projection36: ProjectionMetrics;
+  serviceMetrics: ServiceMetrics[];
 }
 
 export const useAnalyticsData = (dateRange?: { from: Date; to: Date }) => {
@@ -170,6 +173,9 @@ export const useAnalyticsData = (dateRange?: { from: Date; to: Date }) => {
         const projection24 = projectROI(24, businessMetrics, historicalRevenue, historicalDays);
         const projection36 = projectROI(36, businessMetrics, historicalRevenue, historicalDays);
 
+        // Calculate service-specific ROI
+        const serviceMetrics = calculateServiceROI(bookings, costs, businessMetrics);
+
         setData({
           bookings,
           messages,
@@ -183,7 +189,8 @@ export const useAnalyticsData = (dateRange?: { from: Date; to: Date }) => {
           breakEven,
           projection12,
           projection24,
-          projection36
+          projection36,
+          serviceMetrics
         });
       } catch (error) {
         console.error("Error fetching analytics data:", error);

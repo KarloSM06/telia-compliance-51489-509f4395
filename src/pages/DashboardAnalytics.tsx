@@ -35,11 +35,18 @@ import { BarChartComponent } from "@/components/dashboard/charts/BarChartCompone
 import { PieChartComponent } from "@/components/dashboard/charts/PieChartComponent";
 import { BreakEvenCard } from "@/components/dashboard/BreakEvenCard";
 import { ProjectionTabs } from "@/components/dashboard/ProjectionTabs";
+import { ServiceROIBreakdown } from "@/components/dashboard/ServiceROIBreakdown";
+import { ConversionFunnelChart } from "@/components/dashboard/ConversionFunnelChart";
+import { useConversionFunnel } from "@/hooks/useConversionFunnel";
 
 const DashboardAnalytics = () => {
   const [dateRange, setDateRange] = useState<DateRange | undefined>();
   const { data, loading } = useAnalyticsData(dateRange);
   const { metrics: businessMetrics } = useBusinessMetrics();
+  const { metrics: funnelMetrics } = useConversionFunnel(dateRange || {
+    from: new Date(new Date().setMonth(new Date().getMonth() - 1)),
+    to: new Date()
+  });
 
   const handleRefresh = () => {
     window.location.reload();
@@ -478,6 +485,32 @@ const DashboardAnalytics = () => {
           projection36={data.projection36}
         />
       </div>
+
+      {/* Conversion Funnel */}
+      {funnelMetrics && (
+        <div className="space-y-4">
+          <div>
+            <h2 className="text-2xl font-bold mb-2">Konverteringstratt</h2>
+            <p className="text-muted-foreground">
+              Spåra hela kundresan från lead till stängd affär
+            </p>
+          </div>
+          <ConversionFunnelChart metrics={funnelMetrics} />
+        </div>
+      )}
+
+      {/* Service-Based ROI */}
+      {data.serviceMetrics && data.serviceMetrics.length > 0 && (
+        <div className="space-y-4">
+          <div>
+            <h2 className="text-2xl font-bold mb-2">Tjänstebaserad ROI</h2>
+            <p className="text-muted-foreground">
+              Lönsamhetsanalys per tjänstekategori
+            </p>
+          </div>
+          <ServiceROIBreakdown services={data.serviceMetrics} />
+        </div>
+      )}
 
       {/* Section 5: Message Statistics */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">

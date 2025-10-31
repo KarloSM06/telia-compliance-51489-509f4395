@@ -502,6 +502,7 @@ export type Database = {
       }
       calendar_events: {
         Row: {
+          actual_revenue: number | null
           address: string | null
           all_day: boolean | null
           attendees: Json | null
@@ -514,6 +515,7 @@ export type Database = {
           description: string | null
           end_time: string
           event_type: string
+          expected_revenue: number | null
           external_id: string | null
           external_resource: Json | null
           id: string
@@ -526,6 +528,8 @@ export type Database = {
           organization_id: string | null
           outcome: string | null
           reminders: Json | null
+          revenue_recognized_at: string | null
+          service_type: string | null
           source: string | null
           start_time: string
           status: string | null
@@ -538,6 +542,7 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          actual_revenue?: number | null
           address?: string | null
           all_day?: boolean | null
           attendees?: Json | null
@@ -550,6 +555,7 @@ export type Database = {
           description?: string | null
           end_time: string
           event_type?: string
+          expected_revenue?: number | null
           external_id?: string | null
           external_resource?: Json | null
           id?: string
@@ -562,6 +568,8 @@ export type Database = {
           organization_id?: string | null
           outcome?: string | null
           reminders?: Json | null
+          revenue_recognized_at?: string | null
+          service_type?: string | null
           source?: string | null
           start_time: string
           status?: string | null
@@ -574,6 +582,7 @@ export type Database = {
           user_id: string
         }
         Update: {
+          actual_revenue?: number | null
           address?: string | null
           all_day?: boolean | null
           attendees?: Json | null
@@ -586,6 +595,7 @@ export type Database = {
           description?: string | null
           end_time?: string
           event_type?: string
+          expected_revenue?: number | null
           external_id?: string | null
           external_resource?: Json | null
           id?: string
@@ -598,6 +608,8 @@ export type Database = {
           organization_id?: string | null
           outcome?: string | null
           reminders?: Json | null
+          revenue_recognized_at?: string | null
+          service_type?: string | null
           source?: string | null
           start_time?: string
           status?: string | null
@@ -804,6 +816,83 @@ export type Database = {
             columns: ["user_id"]
             isOneToOne: false
             referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      conversion_funnel_metrics: {
+        Row: {
+          avg_deal_size: number | null
+          call_to_meeting_rate: number | null
+          calls_made: number | null
+          contact_to_call_rate: number | null
+          created_at: string | null
+          deals_closed: number | null
+          id: string
+          lead_to_contact_rate: number | null
+          leads_contacted: number | null
+          leads_generated: number | null
+          meeting_to_deal_rate: number | null
+          meetings_held: number | null
+          meetings_scheduled: number | null
+          organization_id: string | null
+          overall_conversion_rate: number | null
+          period_end: string
+          period_start: string
+          total_revenue: number | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          avg_deal_size?: number | null
+          call_to_meeting_rate?: number | null
+          calls_made?: number | null
+          contact_to_call_rate?: number | null
+          created_at?: string | null
+          deals_closed?: number | null
+          id?: string
+          lead_to_contact_rate?: number | null
+          leads_contacted?: number | null
+          leads_generated?: number | null
+          meeting_to_deal_rate?: number | null
+          meetings_held?: number | null
+          meetings_scheduled?: number | null
+          organization_id?: string | null
+          overall_conversion_rate?: number | null
+          period_end: string
+          period_start: string
+          total_revenue?: number | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          avg_deal_size?: number | null
+          call_to_meeting_rate?: number | null
+          calls_made?: number | null
+          contact_to_call_rate?: number | null
+          created_at?: string | null
+          deals_closed?: number | null
+          id?: string
+          lead_to_contact_rate?: number | null
+          leads_contacted?: number | null
+          leads_generated?: number | null
+          meeting_to_deal_rate?: number | null
+          meetings_held?: number | null
+          meetings_scheduled?: number | null
+          organization_id?: string | null
+          overall_conversion_rate?: number | null
+          period_end?: string
+          period_start?: string
+          total_revenue?: number | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "conversion_funnel_metrics_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
             referencedColumns: ["id"]
           },
         ]
@@ -1381,14 +1470,19 @@ export type Database = {
           construction_year: number | null
           contact_person: string | null
           contacted_at: string | null
+          conversion_stage: string | null
           converted_at: string | null
           country_name: string | null
           created_at: string
+          deal_closed_at: string | null
+          deal_value: number | null
           description: string | null
           email: string | null
           employee_count: number | null
           experience: Json | null
           Facebook: string | null
+          first_call_at: string | null
+          first_meeting_at: string | null
           first_name: string | null
           full_name: string | null
           id: string
@@ -1441,14 +1535,19 @@ export type Database = {
           construction_year?: number | null
           contact_person?: string | null
           contacted_at?: string | null
+          conversion_stage?: string | null
           converted_at?: string | null
           country_name?: string | null
           created_at?: string
+          deal_closed_at?: string | null
+          deal_value?: number | null
           description?: string | null
           email?: string | null
           employee_count?: number | null
           experience?: Json | null
           Facebook?: string | null
+          first_call_at?: string | null
+          first_meeting_at?: string | null
           first_name?: string | null
           full_name?: string | null
           id?: string
@@ -1501,14 +1600,19 @@ export type Database = {
           construction_year?: number | null
           contact_person?: string | null
           contacted_at?: string | null
+          conversion_stage?: string | null
           converted_at?: string | null
           country_name?: string | null
           created_at?: string
+          deal_closed_at?: string | null
+          deal_value?: number | null
           description?: string | null
           email?: string | null
           employee_count?: number | null
           experience?: Json | null
           Facebook?: string | null
+          first_call_at?: string | null
+          first_meeting_at?: string | null
           first_name?: string | null
           full_name?: string | null
           id?: string
@@ -2968,6 +3072,7 @@ export type Database = {
           id: string
           idempotency_key: string | null
           integration_id: string | null
+          lead_id: string | null
           normalized: Json | null
           parent_event_id: string | null
           processing_status: string | null
@@ -2999,6 +3104,7 @@ export type Database = {
           id?: string
           idempotency_key?: string | null
           integration_id?: string | null
+          lead_id?: string | null
           normalized?: Json | null
           parent_event_id?: string | null
           processing_status?: string | null
@@ -3030,6 +3136,7 @@ export type Database = {
           id?: string
           idempotency_key?: string | null
           integration_id?: string | null
+          lead_id?: string | null
           normalized?: Json | null
           parent_event_id?: string | null
           processing_status?: string | null
@@ -3059,6 +3166,13 @@ export type Database = {
             columns: ["integration_id"]
             isOneToOne: false
             referencedRelation: "integrations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "telephony_events_lead_id_fkey"
+            columns: ["lead_id"]
+            isOneToOne: false
+            referencedRelation: "leads"
             referencedColumns: ["id"]
           },
           {

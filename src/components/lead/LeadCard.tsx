@@ -6,6 +6,8 @@ import { Building2, MapPin, User, Sparkles, Home, Briefcase } from "lucide-react
 import { Lead } from "@/hooks/useLeads";
 import { ContactLinkGroup } from "./ContactLinkGroup";
 import { QuickContactButtons } from "./QuickContactButtons";
+import { LeadStageUpdater } from "./LeadStageUpdater";
+import { useConversionFunnel } from "@/hooks/useConversionFunnel";
 import { translateSeniorityLevel, formatJobTitle } from "@/lib/utils";
 
 interface LeadCardProps {
@@ -15,6 +17,11 @@ interface LeadCardProps {
 }
 
 export function LeadCard({ lead, onViewDetails, viewMode = 'organizations' }: LeadCardProps) {
+  const { updateLeadStage, isUpdating } = useConversionFunnel({
+    from: new Date(new Date().setMonth(new Date().getMonth() - 1)),
+    to: new Date()
+  });
+
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'new': return 'bg-blue-500/10 text-blue-700 border-blue-200';
@@ -138,6 +145,14 @@ export function LeadCard({ lead, onViewDetails, viewMode = 'organizations' }: Le
             {lead.priority === 'medium' && 'Medel prioritet'}
             {lead.priority === 'low' && 'Låg prioritet'}
           </Badge>
+          {lead.conversion_stage && (
+            <LeadStageUpdater
+              leadId={lead.id}
+              currentStage={lead.conversion_stage}
+              onUpdate={(stage, dealValue) => updateLeadStage({ leadId: lead.id, stage, dealValue })}
+              isUpdating={isUpdating}
+            />
+          )}
         </div>
 
         {viewMode === 'contacts' ? (
