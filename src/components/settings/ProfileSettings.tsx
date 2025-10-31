@@ -1,4 +1,4 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { PremiumCard, PremiumCardContent, PremiumCardDescription, PremiumCardHeader, PremiumCardTitle } from "@/components/ui/premium-card";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -84,21 +84,21 @@ export function ProfileSettings() {
 
   return (
     <div className="space-y-6 animate-fade-in">
-      <Card className="hover-scale transition-all">
-        <CardHeader className="animate-scale-in">
+      <PremiumCard className="hover-scale transition-all">
+        <PremiumCardHeader className="animate-scale-in">
           <div className="flex items-center gap-3">
             <div className="p-2 bg-primary/10 rounded-lg">
               <User className="h-5 w-5 text-primary" />
             </div>
             <div>
-              <CardTitle>Personlig Information</CardTitle>
-              <CardDescription>
+              <PremiumCardTitle>Personlig Information</PremiumCardTitle>
+              <PremiumCardDescription>
                 Hantera din profilinformation och kontaktuppgifter
-              </CardDescription>
+              </PremiumCardDescription>
             </div>
           </div>
-        </CardHeader>
-        <CardContent className="space-y-4">
+        </PremiumCardHeader>
+        <PremiumCardContent className="space-y-4">
           <div className="grid gap-4 md:grid-cols-2">
             <div className="space-y-2">
               <Label htmlFor="fullName">Fullständigt Namn</Label>
@@ -158,24 +158,24 @@ export function ProfileSettings() {
           <div className="pt-4">
             <Button>Spara Ändringar</Button>
           </div>
-        </CardContent>
-      </Card>
+        </PremiumCardContent>
+      </PremiumCard>
 
-      <Card className="hover-scale transition-all" style={{ animationDelay: '100ms' }}>
-        <CardHeader className="animate-scale-in">
+      <PremiumCard className="hover-scale transition-all" style={{ animationDelay: '100ms' }}>
+        <PremiumCardHeader className="animate-scale-in">
           <div className="flex items-center gap-3">
             <div className="p-2 bg-primary/10 rounded-lg">
               <Globe className="h-5 w-5 text-primary" />
             </div>
             <div>
-              <CardTitle>Språk & Region</CardTitle>
-              <CardDescription>
+              <PremiumCardTitle>Språk & Region</PremiumCardTitle>
+              <PremiumCardDescription>
                 Anpassa språk, tidszon och regionala inställningar
-              </CardDescription>
+              </PremiumCardDescription>
             </div>
           </div>
-        </CardHeader>
-        <CardContent className="space-y-4">
+        </PremiumCardHeader>
+        <PremiumCardContent className="space-y-4">
           <div className="grid gap-4 md:grid-cols-2">
             <div className="space-y-2">
               <Label htmlFor="language" className="flex items-center gap-2">
@@ -251,8 +251,8 @@ export function ProfileSettings() {
               {saving ? "Sparar..." : "Spara Ändringar"}
             </Button>
           </div>
-        </CardContent>
-      </Card>
+        </PremiumCardContent>
+      </PremiumCard>
     </div>
   );
 }

@@ -1,4 +1,4 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { PremiumCard, PremiumCardContent, PremiumCardDescription, PremiumCardHeader, PremiumCardTitle } from "@/components/ui/premium-card";
 import { Badge } from "@/components/ui/badge";
 import { Package, Calendar, CheckCircle2, XCircle } from "lucide-react";
 import { useUserProducts } from "@/hooks/useUserProducts";
@@ -17,21 +17,21 @@ export function ProductsSettings() {
 
   return (
     <div className="space-y-6 animate-fade-in">
-      <Card className="hover-scale transition-all">
-        <CardHeader>
+      <PremiumCard className="hover-scale transition-all">
+        <PremiumCardHeader>
           <div className="flex items-center gap-3">
             <div className="p-2 bg-primary/10 rounded-lg">
               <Package className="h-5 w-5 text-primary" />
             </div>
             <div>
-              <CardTitle>Mina Produkter</CardTitle>
-              <CardDescription>
+              <PremiumCardTitle>Mina Produkter</PremiumCardTitle>
+              <PremiumCardDescription>
                 Översikt över dina aktiva produkter och prenumerationer
-              </CardDescription>
+              </PremiumCardDescription>
             </div>
           </div>
-        </CardHeader>
-        <CardContent>
+        </PremiumCardHeader>
+        <PremiumCardContent>
           {productDetails.length === 0 ? (
             <div className="text-center py-12">
               <Package className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
@@ -107,8 +107,8 @@ export function ProductsSettings() {
               })}
             </div>
           )}
-        </CardContent>
-      </Card>
+        </PremiumCardContent>
+      </PremiumCard>
     </div>
   );
 }

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { PremiumCard, PremiumCardContent, PremiumCardDescription, PremiumCardHeader, PremiumCardTitle } from "@/components/ui/premium-card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -132,15 +132,15 @@ export function TeamSettings() {
 
   if (!organizationId) {
     return (
-      <Card>
-        <CardContent className="text-center py-12">
+      <PremiumCard>
+        <PremiumCardContent className="text-center py-12">
           <Users className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
           <p className="text-muted-foreground mb-2">Ingen organisation</p>
           <p className="text-sm text-muted-foreground">
             Du behöver vara del av en organisation för att hantera team
           </p>
-        </CardContent>
-      </Card>
+        </PremiumCardContent>
+      </PremiumCard>
     );
   }
 
@@ -155,21 +155,21 @@ export function TeamSettings() {
   return (
     <div className="space-y-6 animate-fade-in">
       {canManageTeam && (
-        <Card className="hover-scale transition-all">
-          <CardHeader>
+        <PremiumCard className="hover-scale transition-all">
+          <PremiumCardHeader>
             <div className="flex items-center gap-3">
               <div className="p-2 bg-primary/10 rounded-lg">
                 <UserPlus className="h-5 w-5 text-primary" />
               </div>
               <div>
-                <CardTitle>Bjud in Teammedlem</CardTitle>
-                <CardDescription>
+                <PremiumCardTitle>Bjud in Teammedlem</PremiumCardTitle>
+                <PremiumCardDescription>
                   Lägg till nya medlemmar till din organisation
-                </CardDescription>
+                </PremiumCardDescription>
               </div>
             </div>
-          </CardHeader>
-          <CardContent>
+          </PremiumCardHeader>
+          <PremiumCardContent>
             <div className="grid gap-4 md:grid-cols-3">
               <div className="md:col-span-2 space-y-2">
                 <Label htmlFor="invite-email">E-postadress</Label>
@@ -199,25 +199,25 @@ export function TeamSettings() {
               <UserPlus className="h-4 w-4 mr-2" />
               Skicka Inbjudan
             </Button>
-          </CardContent>
-        </Card>
+          </PremiumCardContent>
+        </PremiumCard>
       )}
 
-      <Card className="hover-scale transition-all" style={{ animationDelay: canManageTeam ? '100ms' : '0ms' }}>
-        <CardHeader className="animate-scale-in">
+      <PremiumCard className="hover-scale transition-all" style={{ animationDelay: canManageTeam ? '100ms' : '0ms' }}>
+        <PremiumCardHeader className="animate-scale-in">
           <div className="flex items-center gap-3">
             <div className="p-2 bg-primary/10 rounded-lg">
-              <Users className="h-5 w-5 text-primary" />
+                <Users className="h-5 w-5 text-primary" />
+              </div>
+              <div>
+                <PremiumCardTitle>Teammedlemmar</PremiumCardTitle>
+                <PremiumCardDescription>
+                  {members.length} {members.length === 1 ? "medlem" : "medlemmar"} i din organisation
+                </PremiumCardDescription>
+              </div>
             </div>
-            <div>
-              <CardTitle>Teammedlemmar</CardTitle>
-              <CardDescription>
-                {members.length} {members.length === 1 ? "medlem" : "medlemmar"} i din organisation
-              </CardDescription>
-            </div>
-          </div>
-        </CardHeader>
-        <CardContent>
+          </PremiumCardHeader>
+          <PremiumCardContent>
           <div className="space-y-3">
             {members.map((member) => (
               <div
@@ -257,10 +257,10 @@ export function TeamSettings() {
                   )}
                 </div>
               </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
-    </div>
-  );
-}
+              ))}
+            </div>
+          </PremiumCardContent>
+        </PremiumCard>
+      </div>
+    );
+  }

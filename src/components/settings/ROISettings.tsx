@@ -1,11 +1,11 @@
 import { useState } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { PremiumCard, PremiumCardContent, PremiumCardDescription, PremiumCardHeader, PremiumCardTitle } from "@/components/ui/premium-card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Plus, Trash2, Upload, FileText } from "lucide-react";
+import { Plus, Trash2, Upload, FileText, DollarSign, Package, Save } from "lucide-react";
 import { useBusinessMetrics, ServicePricing } from "@/hooks/useBusinessMetrics";
 import { toast } from "sonner";
 
@@ -54,15 +54,21 @@ export function ROISettings() {
 
   return (
     <div className="space-y-6">
-      {/* Basic Business Information */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Affärsinformation</CardTitle>
-          <CardDescription>
-            Ange din verksamhets ekonomiska data för ROI-beräkningar
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
+      <PremiumCard className="animate-scale-in">
+        <PremiumCardHeader>
+          <div className="flex items-center gap-3">
+            <div className="p-2 bg-primary/10 rounded-lg">
+              <DollarSign className="h-5 w-5 text-primary" />
+            </div>
+            <div>
+              <PremiumCardTitle>Affärsinformation</PremiumCardTitle>
+              <PremiumCardDescription>
+                Ange din verksamhets ekonomiska data för ROI-beräkningar
+              </PremiumCardDescription>
+            </div>
+          </div>
+        </PremiumCardHeader>
+        <PremiumCardContent className="space-y-4">
           <div className="grid gap-4 md:grid-cols-2">
             <div className="space-y-2">
               <Label htmlFor="annual-revenue">Förra årets omsättning (SEK)</Label>
@@ -101,18 +107,24 @@ export function ROISettings() {
               Baserat på din historiska data, hur stor är chansen att ett bokat möte blir en betalande kund?
             </p>
           </div>
-        </CardContent>
-      </Card>
+        </PremiumCardContent>
+      </PremiumCard>
 
-      {/* Service Pricing */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Tjänstepriser</CardTitle>
-          <CardDescription>
-            Definiera priser för dina olika tjänster. AI kommer använda detta för att estimera intäkter från bokningar.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
+      <PremiumCard className="animate-scale-in" style={{ animationDelay: '100ms' }}>
+        <PremiumCardHeader>
+          <div className="flex items-center gap-3">
+            <div className="p-2 bg-primary/10 rounded-lg">
+              <Package className="h-5 w-5 text-primary" />
+            </div>
+            <div>
+              <PremiumCardTitle>Tjänstepriser</PremiumCardTitle>
+              <PremiumCardDescription>
+                Definiera priser för dina olika tjänster. AI kommer använda detta för att estimera intäkter från bokningar.
+              </PremiumCardDescription>
+            </div>
+          </div>
+        </PremiumCardHeader>
+        <PremiumCardContent>
           <div className="space-y-4">
             {services.map((service, index) => (
               <div
@@ -172,18 +184,24 @@ export function ROISettings() {
               Lägg till tjänst
             </Button>
           </div>
-        </CardContent>
-      </Card>
+        </PremiumCardContent>
+      </PremiumCard>
 
-      {/* Document Uploads - Placeholder */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Historiska Dokument</CardTitle>
-          <CardDescription>
-            Ladda upp tidigare offerter och fakturor för mer exakt AI-analys (kommer snart)
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
+      <PremiumCard className="animate-scale-in" style={{ animationDelay: '200ms' }}>
+        <PremiumCardHeader>
+          <div className="flex items-center gap-3">
+            <div className="p-2 bg-primary/10 rounded-lg">
+              <Upload className="h-5 w-5 text-primary" />
+            </div>
+            <div>
+              <PremiumCardTitle>Historiska Dokument</PremiumCardTitle>
+              <PremiumCardDescription>
+                Ladda upp tidigare offerter och fakturor för mer exakt AI-analys (kommer snart)
+              </PremiumCardDescription>
+            </div>
+          </div>
+        </PremiumCardHeader>
+        <PremiumCardContent>
           <Tabs defaultValue="quotes">
             <TabsList>
               <TabsTrigger value="quotes">Offerter</TabsTrigger>
@@ -212,12 +230,12 @@ export function ROISettings() {
               </div>
             </TabsContent>
           </Tabs>
-        </CardContent>
-      </Card>
+        </PremiumCardContent>
+      </PremiumCard>
 
-      {/* Save Button */}
-      <div className="flex justify-end">
-        <Button onClick={handleSave} disabled={isLoading}>
+      <div className="flex justify-end animate-fade-in" style={{ animationDelay: '300ms' }}>
+        <Button onClick={handleSave} disabled={isLoading} size="lg">
+          <Save className="h-4 w-4 mr-2" />
           Spara ROI-inställningar
         </Button>
       </div>

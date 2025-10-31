@@ -1,4 +1,4 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { PremiumCard, PremiumCardContent, PremiumCardDescription, PremiumCardHeader, PremiumCardTitle } from "@/components/ui/premium-card";
 import { Button } from "@/components/ui/button";
 import { Shield, Key, Smartphone, Activity, Database } from "lucide-react";
 import { GDPRDashboard } from "@/components/GDPRDashboard";
@@ -7,21 +7,21 @@ import { APISettings } from "./APISettings";
 export function SecuritySettings() {
   return (
     <div className="space-y-6 animate-fade-in">
-      <Card className="hover-scale transition-all">
-        <CardHeader>
+      <PremiumCard className="hover-scale transition-all">
+        <PremiumCardHeader>
           <div className="flex items-center gap-3">
             <div className="p-2 bg-primary/10 rounded-lg">
               <Key className="h-5 w-5 text-primary" />
             </div>
             <div>
-              <CardTitle>Autentisering</CardTitle>
-              <CardDescription>
+              <PremiumCardTitle>Autentisering</PremiumCardTitle>
+              <PremiumCardDescription>
                 Hantera lösenord och tvåfaktorsautentisering
-              </CardDescription>
+              </PremiumCardDescription>
             </div>
           </div>
-        </CardHeader>
-        <CardContent className="space-y-4">
+        </PremiumCardHeader>
+        <PremiumCardContent className="space-y-4">
           <div className="flex items-center justify-between p-4 border rounded-lg">
             <div>
               <p className="font-medium">Lösenord</p>
@@ -44,24 +44,24 @@ export function SecuritySettings() {
             </div>
             <Button variant="outline">Aktivera 2FA</Button>
           </div>
-        </CardContent>
-      </Card>
+        </PremiumCardContent>
+      </PremiumCard>
 
-      <Card className="hover-scale transition-all" style={{ animationDelay: '100ms' }}>
-        <CardHeader className="animate-scale-in">
+      <PremiumCard className="hover-scale transition-all" style={{ animationDelay: '100ms' }}>
+        <PremiumCardHeader className="animate-scale-in">
           <div className="flex items-center gap-3">
             <div className="p-2 bg-primary/10 rounded-lg">
               <Activity className="h-5 w-5 text-primary" />
             </div>
             <div>
-              <CardTitle>Aktiva Sessioner</CardTitle>
-              <CardDescription>
+              <PremiumCardTitle>Aktiva Sessioner</PremiumCardTitle>
+              <PremiumCardDescription>
                 Enheter som är inloggade på ditt konto
-              </CardDescription>
+              </PremiumCardDescription>
             </div>
           </div>
-        </CardHeader>
-        <CardContent className="space-y-3">
+        </PremiumCardHeader>
+        <PremiumCardContent className="space-y-3">
           <div className="flex items-center justify-between p-4 border rounded-lg bg-primary/5">
             <div>
               <p className="font-medium">🖥️ Chrome på Windows</p>
@@ -73,24 +73,24 @@ export function SecuritySettings() {
               Nuvarande session
             </span>
           </div>
-        </CardContent>
-      </Card>
+        </PremiumCardContent>
+      </PremiumCard>
 
-      <Card className="hover-scale transition-all" style={{ animationDelay: '200ms' }}>
-        <CardHeader className="animate-scale-in">
+      <PremiumCard className="hover-scale transition-all" style={{ animationDelay: '200ms' }}>
+        <PremiumCardHeader className="animate-scale-in">
           <div className="flex items-center gap-3">
             <div className="p-2 bg-primary/10 rounded-lg">
               <Database className="h-5 w-5 text-primary" />
             </div>
             <div>
-              <CardTitle>Dataskydd & GDPR</CardTitle>
-              <CardDescription>
+              <PremiumCardTitle>Dataskydd & GDPR</PremiumCardTitle>
+              <PremiumCardDescription>
                 Hantera dina data och integritetsinställningar
-              </CardDescription>
+              </PremiumCardDescription>
             </div>
           </div>
-        </CardHeader>
-        <CardContent>
+        </PremiumCardHeader>
+        <PremiumCardContent>
           <div className="text-center py-8 text-muted-foreground">
             <p className="mb-4">GDPR-inställningar kommer att integreras här</p>
             <p className="text-sm">
@@ -101,10 +101,12 @@ export function SecuritySettings() {
               för att hantera dina data.
             </p>
           </div>
-        </CardContent>
-      </Card>
+        </PremiumCardContent>
+      </PremiumCard>
 
-      <APISettings />
+      <div style={{ animationDelay: '300ms' }} className="animate-fade-in">
+        <APISettings />
+      </div>
     </div>
   );
 }
