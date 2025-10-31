@@ -15,8 +15,8 @@ export interface OperationalCosts {
   emailCost: number;
   hiemsSupportCost: number;
   integrationCost: number;
+  totalOperatingCost: number;
   totalCost: number;
-  totalRecurringCost: number; // Excluding one-time integration cost
   isIntegrationCostIncluded: boolean;
 }
 
@@ -132,9 +132,21 @@ export function calculateOperationalCosts(
   const monthlyProration = (daysInRange >= 28 && daysInRange <= 32) ? 1 : daysInRange / 30;
   
   const hiemsSupportCost = (businessMetrics.hiems_monthly_support_cost || 0) * monthlyProration;
-  const integrationCost = (businessMetrics.integration_cost || 0) * monthlyProration;
   
-  const totalRecurringCost = telephonyCost + smsCost + emailCost + hiemsSupportCost + integrationCost;
+  // Integration cost is a one-time startup cost
+  let integrationCost = 0;
+  let isIntegrationCostIncluded = false;
+  
+  if (businessMetrics.integration_cost && businessMetrics.integration_start_date) {
+    const integrationDate = new Date(businessMetrics.integration_start_date);
+    // Include one-time cost only if the date range includes the integration start date
+    if (integrationDate >= dateRange.from && integrationDate <= dateRange.to) {
+      integrationCost = businessMetrics.integration_cost;
+      isIntegrationCostIncluded = true;
+    }
+  }
+  
+  const totalOperatingCost = telephonyCost + smsCost + emailCost + hiemsSupportCost;
   
   return {
     telephonyCost,
@@ -142,9 +154,9 @@ export function calculateOperationalCosts(
     emailCost,
     hiemsSupportCost,
     integrationCost,
-    totalCost: totalRecurringCost,
-    totalRecurringCost,
-    isIntegrationCostIncluded: false
+    totalOperatingCost,
+    totalCost: totalOperatingCost + integrationCost,
+    isIntegrationCostIncluded
   };
 }
 

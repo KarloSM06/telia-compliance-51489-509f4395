@@ -27,7 +27,8 @@ const Dashboard = () => {
     const csvContent = [
       ['Metric', 'Value'].join(','),
       ['Total Intäkt', `${data.roi.totalRevenue} SEK`].join(','),
-      ['Operationella Kostnader', `${data.roi.totalCosts} SEK`].join(','),
+      ['Driftkostnader', `${data.costs.totalOperatingCost} SEK`].join(','),
+      ['Total Kostnader (inkl. startup)', `${data.roi.totalCosts} SEK`].join(','),
       ['Nettovinst', `${data.roi.netProfit} SEK`].join(','),
       ['ROI', `${data.roi.roi.toFixed(1)}%`].join(','),
       ['Vinstmarginal', `${data.roi.profitMargin.toFixed(1)}%`].join(','),

@@ -21,11 +21,11 @@ export const ROIHeroSection = ({
     bgColor: 'bg-green-500/10',
     sparkline: data.dailyData.map((d: any) => d.revenue)
   }, {
-    title: 'Operationella Kostnader',
-    value: `${data.roi.totalCosts.toLocaleString('sv-SE', {
+    title: 'Driftkostnader',
+    value: `${data.costs.totalOperatingCost.toLocaleString('sv-SE', {
       maximumFractionDigits: 2
     })} SEK`,
-    subtitle: 'Telefoni, SMS, Email, Plattform',
+    subtitle: 'Telefoni, SMS, Email, Hiems',
     trend: {
       value: -5.2,
       isPositive: true

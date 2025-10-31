@@ -210,8 +210,8 @@ const DashboardAnalytics = () => {
           trend={{ value: 12, isPositive: true }}
         />
         <StatCard
-          title="Operationella Kostnader"
-          value={`${data.roi.totalCosts.toLocaleString('sv-SE', { maximumFractionDigits: 2 })} SEK`}
+          title="Driftkostnader"
+          value={`${data.costs.totalOperatingCost.toLocaleString('sv-SE', { maximumFractionDigits: 2 })} SEK`}
           icon={DollarSign}
           trend={{ value: -5, isPositive: true }}
         />
@@ -262,8 +262,9 @@ const DashboardAnalytics = () => {
                 </TooltipTrigger>
                 <TooltipContent className="max-w-xs">
                   <p className="text-sm">
-                    Fasta kostnader (Hiems Support & Integrationer) prorateras baserat på vald period. 
-                    Perioder på 28-32 dagar räknas som en hel månad.
+                    Variabla kostnader (Telefoni, SMS, Email) baseras på faktisk användning. 
+                    Hiems Plattform är en fast månadskostnad. 
+                    Integration är en engångsbetalning vid start.
                   </p>
                 </TooltipContent>
               </Tooltip>
@@ -272,62 +273,102 @@ const DashboardAnalytics = () => {
         </PremiumCardHeader>
         <PremiumCardContent>
           <div className="space-y-3">
-            <div className="flex justify-between items-center">
-              <div className="flex items-center gap-2">
-                <Phone className="h-4 w-4 text-muted-foreground" />
-                <span className="text-sm text-muted-foreground">Telefoni</span>
+            {/* Variable Costs */}
+            <div className="space-y-2">
+              <p className="text-xs font-semibold text-muted-foreground uppercase">Variabla Kostnader</p>
+              <div className="flex justify-between items-center">
+                <div className="flex items-center gap-2">
+                  <Phone className="h-4 w-4 text-muted-foreground" />
+                  <span className="text-sm text-muted-foreground">Telefoni</span>
+                </div>
+                <span className="font-semibold">
+                  {data.costs.telephonyCost.toLocaleString('sv-SE', { maximumFractionDigits: 2 })} SEK
+                </span>
               </div>
-              <span className="font-semibold">
-                {data.costs.telephonyCost.toLocaleString('sv-SE', { maximumFractionDigits: 2 })} SEK
-              </span>
-            </div>
-            <div className="flex justify-between items-center">
-              <div className="flex items-center gap-2">
-                <Smartphone className="h-4 w-4 text-muted-foreground" />
-                <span className="text-sm text-muted-foreground">SMS</span>
+              <div className="flex justify-between items-center">
+                <div className="flex items-center gap-2">
+                  <Smartphone className="h-4 w-4 text-muted-foreground" />
+                  <span className="text-sm text-muted-foreground">SMS</span>
+                </div>
+                <span className="font-semibold">
+                  {data.costs.smsCost.toLocaleString('sv-SE', { maximumFractionDigits: 2 })} SEK
+                </span>
               </div>
-              <span className="font-semibold">
-                {data.costs.smsCost.toLocaleString('sv-SE', { maximumFractionDigits: 2 })} SEK
-              </span>
-            </div>
-            <div className="flex justify-between items-center">
-              <div className="flex items-center gap-2">
-                <Mail className="h-4 w-4 text-muted-foreground" />
-                <span className="text-sm text-muted-foreground">Email</span>
+              <div className="flex justify-between items-center">
+                <div className="flex items-center gap-2">
+                  <Mail className="h-4 w-4 text-muted-foreground" />
+                  <span className="text-sm text-muted-foreground">Email</span>
+                </div>
+                <span className="font-semibold">
+                  {data.costs.emailCost.toLocaleString('sv-SE', { maximumFractionDigits: 2 })} SEK
+                </span>
               </div>
-              <span className="font-semibold">
-                {data.costs.emailCost.toLocaleString('sv-SE', { maximumFractionDigits: 2 })} SEK
-              </span>
             </div>
+            
             <Separator />
-            <div className="flex justify-between items-center">
-              <div className="flex items-center gap-2">
-                <CheckCircle className="h-4 w-4 text-orange-600" />
-                <span className="text-sm text-muted-foreground">Hiems Plattform</span>
+            
+            {/* Operating Costs */}
+            <div className="space-y-2">
+              <p className="text-xs font-semibold text-muted-foreground uppercase">Driftkostnad</p>
+              <div className="flex justify-between items-center">
+                <div className="flex items-center gap-2">
+                  <CheckCircle className="h-4 w-4 text-green-600" />
+                  <span className="text-sm text-muted-foreground">Hiems Plattform</span>
+                </div>
+                <span className="font-semibold text-green-600">
+                  {data.costs.hiemsSupportCost.toLocaleString('sv-SE', { maximumFractionDigits: 2 })} SEK
+                </span>
               </div>
-              <span className="font-semibold text-orange-600">
-                {data.costs.hiemsSupportCost.toLocaleString('sv-SE', { maximumFractionDigits: 2 })} SEK
-              </span>
             </div>
-            <div className="flex justify-between items-center">
-              <div className="flex items-center gap-2">
-                <Settings className="h-4 w-4 text-orange-600" />
-                <span className="text-sm text-muted-foreground">Integrationer</span>
-              </div>
-              <span className="font-semibold text-orange-600">
-                {data.costs.integrationCost.toLocaleString('sv-SE', { maximumFractionDigits: 2 })} SEK
-              </span>
-            </div>
+            
+            {data.costs.isIntegrationCostIncluded && data.costs.integrationCost > 0 && (
+              <>
+                <Separator />
+                <div className="space-y-2">
+                  <p className="text-xs font-semibold text-muted-foreground uppercase">Startkostnad (Engång)</p>
+                  <div className="flex justify-between items-center">
+                    <div className="flex items-center gap-2">
+                      <Settings className="h-4 w-4 text-blue-600" />
+                      <span className="text-sm text-muted-foreground">Integration</span>
+                    </div>
+                    <span className="font-semibold text-blue-600">
+                      {data.costs.integrationCost.toLocaleString('sv-SE', { maximumFractionDigits: 2 })} SEK
+                    </span>
+                  </div>
+                  <p className="text-xs text-muted-foreground bg-blue-50 dark:bg-blue-950 p-2 rounded">
+                    * Engångsbetalning inkluderad i denna period
+                  </p>
+                </div>
+              </>
+            )}
+            
             <Separator className="my-2" />
-            <div className="flex justify-between items-center text-lg font-bold">
-              <span>Total</span>
-              <span className="text-primary">
-                {data.costs.totalCost.toLocaleString('sv-SE', { maximumFractionDigits: 2 })} SEK
-              </span>
+            
+            {/* Totals */}
+            <div className="space-y-2">
+              <div className="flex justify-between items-center">
+                <span className="text-sm font-medium">Totala Driftkostnader</span>
+                <span className="font-semibold">
+                  {data.costs.totalOperatingCost.toLocaleString('sv-SE', { maximumFractionDigits: 2 })} SEK
+                </span>
+              </div>
+              {data.costs.isIntegrationCostIncluded && (
+                <div className="flex justify-between items-center text-lg font-bold pt-2 border-t">
+                  <span>Total (inkl. startkostnad)</span>
+                  <span className="text-primary">
+                    {data.costs.totalCost.toLocaleString('sv-SE', { maximumFractionDigits: 2 })} SEK
+                  </span>
+                </div>
+              )}
+              {!data.costs.isIntegrationCostIncluded && (
+                <div className="flex justify-between items-center text-lg font-bold pt-2 border-t">
+                  <span>Total</span>
+                  <span className="text-primary">
+                    {data.costs.totalCost.toLocaleString('sv-SE', { maximumFractionDigits: 2 })} SEK
+                  </span>
+                </div>
+              )}
             </div>
-            <p className="text-xs text-muted-foreground mt-2">
-              * Fasta kostnader (Hiems + Integrationer) är proraterade baserat på vald tidsperiod
-            </p>
           </div>
         </PremiumCardContent>
       </PremiumCard>
