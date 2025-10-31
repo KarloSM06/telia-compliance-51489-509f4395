@@ -175,28 +175,3 @@ All colors MUST be HSL.
     @apply font-display;
   }
 }
-
-@layer utilities {
-  /* Glassmorphism */
-  .glass-card {
-    @apply bg-white/5 backdrop-blur-md border border-white/10;
-  }
-
-  .glass-card-dark {
-    @apply bg-black/20 backdrop-blur-md border border-white/5;
-  }
-
-  /* Gradients */
-  .gold-gradient {
-    @apply bg-gradient-to-br from-gold-400 via-gold-500 to-gold-600;
-  }
-
-  .navy-gradient {
-    @apply bg-gradient-to-br from-navy-900 via-navy-800 to-navy-950;
-  }
-
-  /* Hover effects */
-  .activity-row {
-    @apply hover:bg-muted/50 cursor-pointer transition-all duration-200 hover:shadow-md;
-  }
-}
