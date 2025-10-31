@@ -10,10 +10,10 @@ export const ROIHeroSection = ({
   if (!data) return null;
   const roiMetrics = [{
     title: 'Total Intäkt (Est.)',
-    value: `${data.roi.totalRevenue.toLocaleString('sv-SE')} SEK`,
+    value: `${data.roi.totalRevenue.toLocaleString('sv-SE', { maximumFractionDigits: 0 })} SEK`,
     subtitle: `${data.bookings.length} bokningar`,
     trend: {
-      value: 12.5,
+      value: 12,
       isPositive: true
     },
     icon: TrendingUp,
@@ -27,7 +27,7 @@ export const ROIHeroSection = ({
     })} SEK`,
     subtitle: 'Telefoni, SMS, Email, Hiems',
     trend: {
-      value: -5.2,
+      value: -5,
       isPositive: true
     },
     icon: DollarSign,
@@ -36,10 +36,10 @@ export const ROIHeroSection = ({
     sparkline: data.dailyData.map((d: any) => d.costs)
   }, {
     title: 'Nettovinst',
-    value: `${data.roi.netProfit.toLocaleString('sv-SE')} SEK`,
+    value: `${data.roi.netProfit.toLocaleString('sv-SE', { maximumFractionDigits: 0 })} SEK`,
     subtitle: `Marginal: ${data.roi.profitMargin.toFixed(1)}%`,
     trend: {
-      value: 18.7,
+      value: 18,
       isPositive: true
     },
     icon: Award,
@@ -51,7 +51,7 @@ export const ROIHeroSection = ({
     value: `${data.roi.roi.toFixed(1)}%`,
     subtitle: 'Return on Investment',
     trend: {
-      value: 25.3,
+      value: 8,
       isPositive: true
     },
     icon: Target,
