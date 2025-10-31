@@ -24,19 +24,6 @@ export interface AnalyticsData {
   roi: ROIMetrics;
   dailyData: any[];
   weeklyData: any[];
-  hourlyHeatmap: { day: number; hour: number; value: number }[];
-  funnelData: { name: string; value: number; dropoff?: number }[];
-  callDurations: { range: string; count: number }[];
-  channelPerformance: { channel: string; cost: number; conversions: number; revenue: number; roi: number }[];
-  topHours: { hour: number; bookings: number }[];
-  customerMetrics: {
-    newCustomers: number;
-    repeatRate: number;
-    avgLTV: number;
-    responseTime: number;
-    satisfactionScore: number;
-  };
-  sentimentTrends: { date: string; positive: number; neutral: number; negative: number }[];
 }
 
 export const useAnalyticsData = (dateRange?: { from: Date; to: Date }) => {
@@ -61,21 +48,15 @@ export const useAnalyticsData = (dateRange?: { from: Date; to: Date }) => {
       const toStr = endOfDay(to).toISOString();
 
       try {
-        // Fetch telephony integrations with fallback logic
+        // First fetch active telephony integrations
         const { data: integrations } = await supabase
           .from('integrations')
-          .select('id, capabilities, provider')
+          .select('id')
           .eq('user_id', user.id)
-          .eq('is_active', true);
+          .eq('is_active', true)
+          .or('capabilities.cs.{voice},capabilities.cs.{sms}');
 
-        // Filter telephony integrations in JavaScript to ensure compatibility
-        const integrationIds = integrations
-          ?.filter(i => {
-            const caps = i.capabilities || [];
-            const isTelephonyProvider = ['vapi', 'retell', 'telnyx', 'twilio'].includes(i.provider);
-            return caps.includes('voice') || caps.includes('sms') || isTelephonyProvider;
-          })
-          .map(i => i.id) || [];
+        const integrationIds = integrations?.map(i => i.id) || [];
 
         // Fetch all data in parallel
         const [bookingsRes, messagesRes, telephonyRes, reviewsRes] = await Promise.all([
@@ -172,112 +153,6 @@ export const useAnalyticsData = (dateRange?: { from: Date; to: Date }) => {
           roi: d.costs > 0 ? ((d.revenue - d.costs) / d.costs) * 100 : 0
         }));
 
-        // Calculate hourly heatmap
-        const hourlyHeatmap = [];
-        for (let day = 0; day < 7; day++) {
-          for (let hour = 0; hour < 24; hour++) {
-            const count = bookings.filter(b => {
-              const d = new Date(b.start_time);
-              return d.getDay() === day && d.getHours() === hour;
-            }).length;
-            hourlyHeatmap.push({ day, hour, value: count });
-          }
-        }
-
-        // Calculate conversion funnel
-        const totalLeads = bookings.length * 2; // Assume 2x leads to bookings
-        const contacted = Math.floor(totalLeads * 0.65);
-        const meetings = bookings.length;
-        const quotes = Math.floor(meetings * 0.56);
-        const customers = Math.floor(quotes * 0.53);
-        
-        const funnelData = [
-          { name: 'Leads', value: totalLeads },
-          { name: 'Kontaktade', value: contacted, dropoff: 35 },
-          { name: 'Möten', value: meetings, dropoff: Math.round((1 - meetings/contacted) * 100) },
-          { name: 'Offerter', value: quotes, dropoff: Math.round((1 - quotes/meetings) * 100) },
-          { name: 'Kunder', value: customers, dropoff: Math.round((1 - customers/quotes) * 100) }
-        ];
-
-        // Calculate call duration distribution
-        const callDurations = [
-          { range: '0-1 min', count: 0 },
-          { range: '1-3 min', count: 0 },
-          { range: '3-5 min', count: 0 },
-          { range: '5-10 min', count: 0 },
-          { range: '10+ min', count: 0 }
-        ];
-        
-        telephony.forEach(t => {
-          const duration = t.duration_seconds || 0;
-          if (duration < 60) callDurations[0].count++;
-          else if (duration < 180) callDurations[1].count++;
-          else if (duration < 300) callDurations[2].count++;
-          else if (duration < 600) callDurations[3].count++;
-          else callDurations[4].count++;
-        });
-
-        // Calculate channel performance
-        const smsMessages = messages.filter(m => m.channel === 'sms');
-        const emailMessages = messages.filter(m => m.channel === 'email');
-        const smsConversions = Math.floor(smsMessages.length * 0.12);
-        const emailConversions = Math.floor(emailMessages.length * 0.08);
-        
-        const channelPerformance = [
-          {
-            channel: 'SMS',
-            cost: costs.smsCost,
-            conversions: smsConversions,
-            revenue: smsConversions * (roi.revenuePerBooking || 1000),
-            roi: costs.smsCost > 0 ? ((smsConversions * (roi.revenuePerBooking || 1000) - costs.smsCost) / costs.smsCost) * 100 : 0
-          },
-          {
-            channel: 'Email',
-            cost: costs.emailCost,
-            conversions: emailConversions,
-            revenue: emailConversions * (roi.revenuePerBooking || 1000),
-            roi: costs.emailCost > 0 ? ((emailConversions * (roi.revenuePerBooking || 1000) - costs.emailCost) / costs.emailCost) * 100 : 0
-          },
-          {
-            channel: 'Telefoni',
-            cost: costs.telephonyCost,
-            conversions: Math.floor(telephony.length * 0.15),
-            revenue: Math.floor(telephony.length * 0.15) * (roi.revenuePerBooking || 1000),
-            roi: costs.telephonyCost > 0 ? ((Math.floor(telephony.length * 0.15) * (roi.revenuePerBooking || 1000) - costs.telephonyCost) / costs.telephonyCost) * 100 : 0
-          }
-        ];
-
-        // Calculate top performing hours
-        const topHours = Array.from({ length: 24 }, (_, h) => ({
-          hour: h,
-          bookings: bookings.filter(b => new Date(b.start_time).getHours() === h).length
-        })).sort((a, b) => b.bookings - a.bookings).slice(0, 5);
-
-        // Calculate customer metrics
-        const uniqueContacts = new Set(bookings.map(b => b.contact_email || b.contact_phone).filter(Boolean));
-        const repeatCustomers = bookings.length - uniqueContacts.size;
-        
-        const customerMetrics = {
-          newCustomers: uniqueContacts.size,
-          repeatRate: uniqueContacts.size > 0 ? (repeatCustomers / bookings.length) * 100 : 0,
-          avgLTV: roi.revenuePerBooking * 1.5, // Estimate LTV as 1.5x avg booking
-          responseTime: 2.3, // Hours - placeholder
-          satisfactionScore: reviews.length > 0 ? reviews.reduce((sum, r) => sum + (r.rating || 0), 0) / reviews.length : 4.2
-        };
-
-        // Calculate sentiment trends (based on sentiment_score)
-        const sentimentTrends = dailyData.map(d => {
-          const dayReviews = reviews.filter(r => 
-            format(new Date(r.created_at), 'yyyy-MM-dd') === d.date
-          );
-          return {
-            date: d.date,
-            positive: dayReviews.filter(r => r.sentiment_score >= 0.3).length,
-            neutral: dayReviews.filter(r => r.sentiment_score > -0.3 && r.sentiment_score < 0.3).length,
-            negative: dayReviews.filter(r => r.sentiment_score <= -0.3).length
-          };
-        });
-
         setData({
           bookings,
           messages,
@@ -287,14 +162,7 @@ export const useAnalyticsData = (dateRange?: { from: Date; to: Date }) => {
           costs,
           roi,
           dailyData,
-          weeklyData: [],
-          hourlyHeatmap,
-          funnelData,
-          callDurations,
-          channelPerformance,
-          topHours,
-          customerMetrics,
-          sentimentTrends
+          weeklyData: [] // TODO: Implement weekly aggregation if needed
         });
       } catch (error) {
         console.error("Error fetching analytics data:", error);
