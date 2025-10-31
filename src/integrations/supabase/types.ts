@@ -446,6 +446,51 @@ export type Database = {
         }
         Relationships: []
       }
+      business_metrics: {
+        Row: {
+          annual_revenue: number | null
+          avg_project_cost: number | null
+          created_at: string | null
+          currency: string | null
+          fiscal_year: number | null
+          id: string
+          meeting_to_payment_probability: number | null
+          service_pricing: Json | null
+          updated_at: string | null
+          uploaded_invoices: Json | null
+          uploaded_quotes: Json | null
+          user_id: string
+        }
+        Insert: {
+          annual_revenue?: number | null
+          avg_project_cost?: number | null
+          created_at?: string | null
+          currency?: string | null
+          fiscal_year?: number | null
+          id?: string
+          meeting_to_payment_probability?: number | null
+          service_pricing?: Json | null
+          updated_at?: string | null
+          uploaded_invoices?: Json | null
+          uploaded_quotes?: Json | null
+          user_id: string
+        }
+        Update: {
+          annual_revenue?: number | null
+          avg_project_cost?: number | null
+          created_at?: string | null
+          currency?: string | null
+          fiscal_year?: number | null
+          id?: string
+          meeting_to_payment_probability?: number | null
+          service_pricing?: Json | null
+          updated_at?: string | null
+          uploaded_invoices?: Json | null
+          uploaded_quotes?: Json | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       calendar_events: {
         Row: {
           address: string | null

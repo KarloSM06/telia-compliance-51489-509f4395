@@ -1,0 +1,226 @@
+import { useState } from "react";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Slider } from "@/components/ui/slider";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Plus, Trash2, Upload, FileText } from "lucide-react";
+import { useBusinessMetrics, ServicePricing } from "@/hooks/useBusinessMetrics";
+import { toast } from "sonner";
+
+export function ROISettings() {
+  const { metrics, updateMetrics, isLoading } = useBusinessMetrics();
+  
+  const [annualRevenue, setAnnualRevenue] = useState(metrics?.annual_revenue || 0);
+  const [avgProjectCost, setAvgProjectCost] = useState(metrics?.avg_project_cost || 0);
+  const [meetingProbability, setMeetingProbability] = useState(
+    metrics?.meeting_to_payment_probability || 50
+  );
+  const [services, setServices] = useState<ServicePricing[]>(
+    metrics?.service_pricing || []
+  );
+
+  const handleSave = () => {
+    updateMetrics({
+      annual_revenue: annualRevenue,
+      avg_project_cost: avgProjectCost,
+      meeting_to_payment_probability: meetingProbability,
+      service_pricing: services,
+    });
+  };
+
+  const addService = () => {
+    setServices([
+      ...services,
+      {
+        service_name: "",
+        avg_price: 0,
+        min_price: 0,
+        max_price: 0,
+      },
+    ]);
+  };
+
+  const updateService = (index: number, field: keyof ServicePricing, value: any) => {
+    const updated = [...services];
+    updated[index] = { ...updated[index], [field]: value };
+    setServices(updated);
+  };
+
+  const removeService = (index: number) => {
+    setServices(services.filter((_, i) => i !== index));
+  };
+
+  return (
+    <div className="space-y-6">
+      {/* Basic Business Information */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Affärsinformation</CardTitle>
+          <CardDescription>
+            Ange din verksamhets ekonomiska data för ROI-beräkningar
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="grid gap-4 md:grid-cols-2">
+            <div className="space-y-2">
+              <Label htmlFor="annual-revenue">Förra årets omsättning (SEK)</Label>
+              <Input
+                id="annual-revenue"
+                type="number"
+                value={annualRevenue || ""}
+                onChange={(e) => setAnnualRevenue(parseFloat(e.target.value) || 0)}
+                placeholder="1500000"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="avg-cost">Genomsnittlig projektkostnad (SEK)</Label>
+              <Input
+                id="avg-cost"
+                type="number"
+                value={avgProjectCost || ""}
+                onChange={(e) => setAvgProjectCost(parseFloat(e.target.value) || 0)}
+                placeholder="25000"
+              />
+            </div>
+          </div>
+          
+          <div className="space-y-2">
+            <Label>
+              Sannolikhet att möte leder till betalning: {meetingProbability}%
+            </Label>
+            <Slider
+              value={[meetingProbability]}
+              onValueChange={(value) => setMeetingProbability(value[0])}
+              max={100}
+              step={5}
+              className="w-full"
+            />
+            <p className="text-xs text-muted-foreground">
+              Baserat på din historiska data, hur stor är chansen att ett bokat möte blir en betalande kund?
+            </p>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Service Pricing */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Tjänstepriser</CardTitle>
+          <CardDescription>
+            Definiera priser för dina olika tjänster. AI kommer använda detta för att estimera intäkter från bokningar.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-4">
+            {services.map((service, index) => (
+              <div
+                key={index}
+                className="grid gap-4 md:grid-cols-5 items-end border p-4 rounded-lg"
+              >
+                <div className="space-y-2">
+                  <Label>Tjänst</Label>
+                  <Input
+                    value={service.service_name}
+                    onChange={(e) => updateService(index, "service_name", e.target.value)}
+                    placeholder="T.ex. Konsultation"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>Min-pris (SEK)</Label>
+                  <Input
+                    type="number"
+                    value={service.min_price || ""}
+                    onChange={(e) =>
+                      updateService(index, "min_price", parseFloat(e.target.value) || 0)
+                    }
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>Genomsnitt (SEK)</Label>
+                  <Input
+                    type="number"
+                    value={service.avg_price || ""}
+                    onChange={(e) =>
+                      updateService(index, "avg_price", parseFloat(e.target.value) || 0)
+                    }
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>Max-pris (SEK)</Label>
+                  <Input
+                    type="number"
+                    value={service.max_price || ""}
+                    onChange={(e) =>
+                      updateService(index, "max_price", parseFloat(e.target.value) || 0)
+                    }
+                  />
+                </div>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => removeService(index)}
+                  className="text-destructive hover:text-destructive"
+                >
+                  <Trash2 className="h-4 w-4" />
+                </Button>
+              </div>
+            ))}
+            <Button variant="outline" size="sm" onClick={addService}>
+              <Plus className="h-4 w-4 mr-2" />
+              Lägg till tjänst
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Document Uploads - Placeholder */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Historiska Dokument</CardTitle>
+          <CardDescription>
+            Ladda upp tidigare offerter och fakturor för mer exakt AI-analys (kommer snart)
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Tabs defaultValue="quotes">
+            <TabsList>
+              <TabsTrigger value="quotes">Offerter</TabsTrigger>
+              <TabsTrigger value="invoices">Fakturor</TabsTrigger>
+            </TabsList>
+            <TabsContent value="quotes" className="space-y-4">
+              <div className="border-2 border-dashed rounded-lg p-8 text-center bg-muted/30">
+                <Upload className="h-8 w-8 mx-auto mb-2 text-muted-foreground" />
+                <p className="text-sm text-muted-foreground mb-2">
+                  Dokumentuppladdning kommer i nästa version
+                </p>
+                <Button variant="outline" size="sm" disabled>
+                  Välj filer
+                </Button>
+              </div>
+            </TabsContent>
+            <TabsContent value="invoices">
+              <div className="border-2 border-dashed rounded-lg p-8 text-center bg-muted/30">
+                <FileText className="h-8 w-8 mx-auto mb-2 text-muted-foreground" />
+                <p className="text-sm text-muted-foreground mb-2">
+                  Dokumentuppladdning kommer i nästa version
+                </p>
+                <Button variant="outline" size="sm" disabled>
+                  Välj filer
+                </Button>
+              </div>
+            </TabsContent>
+          </Tabs>
+        </CardContent>
+      </Card>
+
+      {/* Save Button */}
+      <div className="flex justify-end">
+        <Button onClick={handleSave} disabled={isLoading}>
+          Spara ROI-inställningar
+        </Button>
+      </div>
+    </div>
+  );
+}

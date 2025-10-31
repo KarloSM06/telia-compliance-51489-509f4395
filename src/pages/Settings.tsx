@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { User, Shield, Package, Users, ShieldCheck } from "lucide-react";
+import { User, Shield, Package, Users, ShieldCheck, DollarSign } from "lucide-react";
 import { useHiemsAdmin } from "@/hooks/useHiemsAdmin";
 import { useOrganizationRole } from "@/hooks/useOrganizationRole";
 import { ProfileSettings } from "@/components/settings/ProfileSettings";
@@ -8,6 +8,7 @@ import { SecuritySettings } from "@/components/settings/SecuritySettings";
 import { ProductsSettings } from "@/components/settings/ProductsSettings";
 import { TeamSettings } from "@/components/settings/TeamSettings";
 import { HiemsAdminPanel } from "@/components/settings/HiemsAdminPanel";
+import { ROISettings } from "@/components/settings/ROISettings";
 
 export default function Settings() {
   const { isHiemsAdmin } = useHiemsAdmin();
@@ -27,7 +28,7 @@ export default function Settings() {
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-        <TabsList className="grid grid-cols-2 lg:grid-cols-4 gap-2 h-auto p-1 animate-slide-in-right">
+        <TabsList className="grid grid-cols-2 lg:grid-cols-5 gap-2 h-auto p-1 animate-slide-in-right">
           <TabsTrigger value="profile" className="gap-2 hover-scale">
             <User className="h-4 w-4" />
             <span className="hidden sm:inline">Profil</span>
@@ -39,6 +40,10 @@ export default function Settings() {
           <TabsTrigger value="products" className="gap-2 hover-scale">
             <Package className="h-4 w-4" />
             <span className="hidden sm:inline">Produkter</span>
+          </TabsTrigger>
+          <TabsTrigger value="roi" className="gap-2 hover-scale">
+            <DollarSign className="h-4 w-4" />
+            <span className="hidden sm:inline">ROI</span>
           </TabsTrigger>
           {showTeamTab && (
             <TabsTrigger value="team" className="gap-2 hover-scale">
@@ -64,6 +69,10 @@ export default function Settings() {
 
         <TabsContent value="products" className="space-y-6 animate-enter">
           <ProductsSettings />
+        </TabsContent>
+
+        <TabsContent value="roi" className="space-y-6 animate-enter">
+          <ROISettings />
         </TabsContent>
 
         {showTeamTab && (

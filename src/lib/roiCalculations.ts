@@ -1,0 +1,137 @@
+import { BusinessMetrics, ServicePricing } from "@/hooks/useBusinessMetrics";
+
+export interface BookingRevenue {
+  bookingId: string;
+  estimatedRevenue: number;
+  confidence: number;
+  reasoning: string;
+}
+
+export interface OperationalCosts {
+  telephonyCost: number;
+  smsCost: number;
+  emailCost: number;
+  totalCost: number;
+}
+
+export interface ROIMetrics {
+  totalRevenue: number;
+  totalCosts: number;
+  netProfit: number;
+  roi: number;
+  revenuePerBooking: number;
+  costPerBooking: number;
+  profitMargin: number;
+}
+
+// Match booking title to service pricing
+function matchServiceType(
+  booking: any,
+  servicePricing: ServicePricing[]
+): ServicePricing | null {
+  if (!booking.title || servicePricing.length === 0) return null;
+
+  const title = booking.title.toLowerCase();
+  
+  for (const service of servicePricing) {
+    if (title.includes(service.service_name.toLowerCase())) {
+      return service;
+    }
+  }
+  
+  return null;
+}
+
+// Calculate average from service pricing
+function calculateAveragePrice(servicePricing: ServicePricing[]): number {
+  if (servicePricing.length === 0) return 0;
+  
+  const total = servicePricing.reduce((sum, s) => sum + s.avg_price, 0);
+  return total / servicePricing.length;
+}
+
+// Calculate estimated revenue for a booking
+export function calculateBookingRevenue(
+  booking: any,
+  businessMetrics: BusinessMetrics
+): BookingRevenue {
+  const serviceMatch = matchServiceType(booking, businessMetrics.service_pricing);
+  
+  let avgPrice: number;
+  let confidence: number;
+  let reasoning: string;
+  
+  if (serviceMatch) {
+    avgPrice = serviceMatch.avg_price;
+    confidence = 85;
+    reasoning = `Baserat på specifik tjänst "${serviceMatch.service_name}" (${avgPrice.toLocaleString('sv-SE')} SEK)`;
+  } else if (businessMetrics.avg_project_cost && businessMetrics.avg_project_cost > 0) {
+    avgPrice = businessMetrics.avg_project_cost;
+    confidence = 65;
+    reasoning = `Baserat på genomsnittlig projektkostnad (${avgPrice.toLocaleString('sv-SE')} SEK)`;
+  } else {
+    avgPrice = calculateAveragePrice(businessMetrics.service_pricing);
+    confidence = 50;
+    reasoning = avgPrice > 0 
+      ? `Baserat på genomsnitt av alla tjänster (${avgPrice.toLocaleString('sv-SE')} SEK)`
+      : "Ingen prisdata tillgänglig";
+  }
+  
+  const conversionProb = businessMetrics.meeting_to_payment_probability / 100;
+  const estimatedRevenue = avgPrice * conversionProb;
+  
+  return {
+    bookingId: booking.id,
+    estimatedRevenue,
+    confidence,
+    reasoning: `${reasoning} × ${(conversionProb * 100).toFixed(0)}% konvertering`
+  };
+}
+
+// Calculate operational costs
+export function calculateOperationalCosts(
+  telephonyEvents: any[],
+  messageLogs: any[]
+): OperationalCosts {
+  const telephonyCost = telephonyEvents.reduce(
+    (sum, e) => sum + (parseFloat(e.cost_amount) || 0), 
+    0
+  );
+  
+  const smsCost = messageLogs
+    .filter(m => m.channel === 'sms')
+    .reduce((sum, m) => sum + (parseFloat(m.cost) || 0), 0);
+  
+  const emailCost = messageLogs
+    .filter(m => m.channel === 'email')
+    .reduce((sum, m) => sum + (parseFloat(m.cost) || 0), 0);
+  
+  return {
+    telephonyCost,
+    smsCost,
+    emailCost,
+    totalCost: telephonyCost + smsCost + emailCost
+  };
+}
+
+// Calculate ROI metrics
+export function calculateROI(
+  bookingRevenues: BookingRevenue[],
+  operationalCosts: OperationalCosts
+): ROIMetrics {
+  const totalRevenue = bookingRevenues.reduce((sum, b) => sum + b.estimatedRevenue, 0);
+  const totalCosts = operationalCosts.totalCost;
+  const netProfit = totalRevenue - totalCosts;
+  const roi = totalCosts > 0 ? (netProfit / totalCosts) * 100 : 0;
+  const bookingCount = bookingRevenues.length || 1;
+  
+  return {
+    totalRevenue,
+    totalCosts,
+    netProfit,
+    roi,
+    revenuePerBooking: totalRevenue / bookingCount,
+    costPerBooking: totalCosts / bookingCount,
+    profitMargin: totalRevenue > 0 ? (netProfit / totalRevenue) * 100 : 0
+  };
+}
