@@ -16,26 +16,26 @@ export function CumulativeROIChart({ data, breakEvenMonth }: CumulativeROIChartP
   }));
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-3">
       <AreaChartComponent
         title={
           breakEvenMonth 
-            ? `Kumulativ Intäkt vs Kostnad (Break-even: Månad ${breakEvenMonth})` 
-            : "Kumulativ Intäkt vs Kostnad"
+            ? `Kumulativ ROI (Break-even: Månad ${breakEvenMonth})` 
+            : "Kumulativ ROI"
         }
         data={chartData}
         dataKeys={[
-          { key: "kostnader", color: "hsl(0, 84%, 60%)", name: "Totala Kostnader" },
-          { key: "intäkter", color: "hsl(142, 76%, 36%)", name: "Totala Intäkter" },
-          { key: "vinst", color: "hsl(43, 96%, 56%)", name: "Nettovinst" }
+          { key: "kostnader", color: "hsl(0, 84%, 60%)", name: "Kostnader" },
+          { key: "intäkter", color: "hsl(142, 76%, 36%)", name: "Intäkter" },
+          { key: "vinst", color: "hsl(43, 96%, 56%)", name: "Vinst" }
         ]}
-        height={400}
+        height={280}
       />
       
       {breakEvenMonth && breakEvenMonth <= data.length && (
-        <div className="bg-green-50 dark:bg-green-950 p-3 rounded border border-green-200 dark:border-green-800">
-          <p className="text-sm text-green-600 font-medium">
-            ✅ Break-even punkt: Månad {breakEvenMonth} - Linjerna korsas här
+        <div className="bg-green-50 dark:bg-green-950 p-2 rounded border border-green-200 dark:border-green-800">
+          <p className="text-xs text-green-600 font-medium">
+            ✅ Break-even: Månad {breakEvenMonth}
           </p>
         </div>
       )}

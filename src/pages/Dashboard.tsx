@@ -127,7 +127,7 @@ const Dashboard = () => {
 
       {/* BREAK-EVEN & PROJEKTION */}
       {data && (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           <BreakEvenCard breakEven={data.breakEven} />
           <CumulativeROIChart 
             data={data.projection12.cumulativeData} 
