@@ -46,6 +46,16 @@ export const useAnalyticsData = (dateRange?: { from: Date; to: Date }) => {
       const toStr = endOfDay(to).toISOString();
 
       try {
+        // First fetch active telephony integrations
+        const { data: integrations } = await supabase
+          .from('integrations')
+          .select('id')
+          .eq('user_id', user.id)
+          .eq('is_active', true)
+          .or('capabilities.cs.{voice},capabilities.cs.{sms}');
+
+        const integrationIds = integrations?.map(i => i.id) || [];
+
         // Fetch all data in parallel
         const [bookingsRes, messagesRes, telephonyRes, reviewsRes] = await Promise.all([
           supabase
@@ -63,12 +73,14 @@ export const useAnalyticsData = (dateRange?: { from: Date; to: Date }) => {
             .gte("created_at", fromStr)
             .lte("created_at", toStr),
           
-          supabase
-            .from("telephony_events")
-            .select("*")
-            .eq("user_id", user.id)
-            .gte("event_timestamp", fromStr)
-            .lte("event_timestamp", toStr),
+          integrationIds.length > 0
+            ? supabase
+                .from("telephony_events")
+                .select("*")
+                .in('integration_id', integrationIds)
+                .gte("event_timestamp", fromStr)
+                .lte("event_timestamp", toStr)
+            : Promise.resolve({ data: [] }),
           
           supabase
             .from("reviews")
@@ -80,8 +92,13 @@ export const useAnalyticsData = (dateRange?: { from: Date; to: Date }) => {
 
         const bookings = bookingsRes.data || [];
         const messages = messagesRes.data || [];
-        const telephony = telephonyRes.data || [];
+        const telephonyRaw = telephonyRes.data || [];
         const reviews = reviewsRes.data || [];
+
+        // Filter to only parent events (same logic as /telephony page)
+        const telephony = telephonyRaw.filter(e => 
+          !e.parent_event_id && (e.provider_layer === 'agent' || ['vapi', 'retell'].includes(e.provider))
+        );
 
         // Calculate ROI
         const bookingRevenues = bookings.map(b => 
