@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { RefreshCw, Download, Settings, TrendingUp } from 'lucide-react';
+import { RefreshCw, Download, Settings, TrendingUp, DollarSign, Award, Target } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useAnalyticsData } from '@/hooks/useAnalyticsData';
 import { useAuth } from '@/hooks/useAuth';
 import { toast } from 'sonner';
-import { ROIHeroSection } from '@/components/dashboard/ROIHeroSection';
+import { StatCard } from '@/components/communications/StatCard';
 import { RecentActivityCompact } from '@/components/dashboard/RecentActivityCompact';
 
 const Dashboard = () => {
@@ -89,8 +89,35 @@ const Dashboard = () => {
         </div>
       </div>
 
-      {/* ROI HERO SECTION - MAIN FOKUS */}
-      {data && <ROIHeroSection data={data} />}
+      {/* ROI ÖVERSIKT - Samma som /analytics */}
+      {data && (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <StatCard
+            title="Total Intäkt (Est.)"
+            value={`${data.roi.totalRevenue.toLocaleString('sv-SE', { maximumFractionDigits: 0 })} SEK`}
+            icon={TrendingUp}
+            trend={{ value: 12, isPositive: true }}
+          />
+          <StatCard
+            title="Driftkostnader"
+            value={`${data.costs.totalOperatingCost.toLocaleString('sv-SE', { maximumFractionDigits: 2 })} SEK`}
+            icon={DollarSign}
+            trend={{ value: -5, isPositive: true }}
+          />
+          <StatCard
+            title="Nettovinst"
+            value={`${data.roi.netProfit.toLocaleString('sv-SE', { maximumFractionDigits: 0 })} SEK`}
+            icon={Award}
+            trend={{ value: 18, isPositive: true }}
+          />
+          <StatCard
+            title="ROI"
+            value={`${data.roi.roi.toFixed(1)}%`}
+            icon={Target}
+            trend={{ value: 8, isPositive: true }}
+          />
+        </div>
+      )}
 
       {/* SENASTE HÄNDELSER - Kompakt vy */}
       {data && (
