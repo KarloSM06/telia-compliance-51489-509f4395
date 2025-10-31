@@ -455,7 +455,8 @@ export type Database = {
           fiscal_year: number | null
           hiems_monthly_support_cost: number | null
           id: string
-          integration_monthly_cost: number | null
+          integration_cost: number | null
+          integration_start_date: string | null
           meeting_to_payment_probability: number | null
           service_pricing: Json | null
           updated_at: string | null
@@ -471,7 +472,8 @@ export type Database = {
           fiscal_year?: number | null
           hiems_monthly_support_cost?: number | null
           id?: string
-          integration_monthly_cost?: number | null
+          integration_cost?: number | null
+          integration_start_date?: string | null
           meeting_to_payment_probability?: number | null
           service_pricing?: Json | null
           updated_at?: string | null
@@ -487,7 +489,8 @@ export type Database = {
           fiscal_year?: number | null
           hiems_monthly_support_cost?: number | null
           id?: string
-          integration_monthly_cost?: number | null
+          integration_cost?: number | null
+          integration_start_date?: string | null
           meeting_to_payment_probability?: number | null
           service_pricing?: Json | null
           updated_at?: string | null

@@ -21,7 +21,10 @@ export function ROISettings() {
     metrics?.hiems_monthly_support_cost || 0
   );
   const [integrationCost, setIntegrationCost] = useState(
-    metrics?.integration_monthly_cost || 0
+    metrics?.integration_cost || 0
+  );
+  const [integrationStartDate, setIntegrationStartDate] = useState(
+    metrics?.integration_start_date || ""
   );
   const [services, setServices] = useState<ServicePricing[]>(
     metrics?.service_pricing || []
@@ -34,7 +37,8 @@ export function ROISettings() {
       meeting_to_payment_probability: meetingProbability,
       service_pricing: services,
       hiems_monthly_support_cost: hiemsSupportCost,
-      integration_monthly_cost: integrationCost,
+      integration_cost: integrationCost,
+      integration_start_date: integrationStartDate || null,
     });
   };
 
@@ -134,39 +138,53 @@ export function ROISettings() {
           </div>
         </PremiumCardHeader>
         <PremiumCardContent className="space-y-4">
-          <div className="grid gap-4 md:grid-cols-2">
-            <div className="space-y-2">
-              <Label htmlFor="hiems-support">Hiems Support (månadspris SEK)</Label>
+          <div className="space-y-4">
+            <div>
+              <Label htmlFor="hiems-support">Hiems Månadskostnad (SEK)</Label>
               <Input
                 id="hiems-support"
                 type="number"
                 value={hiemsSupportCost || ""}
                 onChange={(e) => setHiemsSupportCost(parseFloat(e.target.value) || 0)}
-                placeholder="2990"
+                placeholder="4000"
               />
               <p className="text-xs text-muted-foreground">
-                Din månadskostnad för Hiems-plattformen
+                Din månatliga kostnad för Hiems plattformen
               </p>
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="integration-cost">Integrationskostnader (månadspris SEK)</Label>
+
+            <div>
+              <Label htmlFor="integration-cost">Integrationskostnad (SEK)</Label>
               <Input
                 id="integration-cost"
                 type="number"
                 value={integrationCost || ""}
                 onChange={(e) => setIntegrationCost(parseFloat(e.target.value) || 0)}
-                placeholder="500"
+                placeholder="15000"
               />
               <p className="text-xs text-muted-foreground">
-                Summa av alla externa integrationer (Vapi, Retell, etc.)
+                <strong>Engångsbetalning</strong> för initial integration och uppsättning
+              </p>
+            </div>
+
+            <div>
+              <Label htmlFor="integration-date">Datum för Integrationskostnad</Label>
+              <Input
+                id="integration-date"
+                type="date"
+                value={integrationStartDate}
+                onChange={(e) => setIntegrationStartDate(e.target.value)}
+              />
+              <p className="text-xs text-muted-foreground">
+                När betalades engångskostnaden? (används för ROI-beräkningar)
               </p>
             </div>
           </div>
           
           <div className="border-l-4 border-primary/50 bg-primary/5 p-4 rounded-r-lg">
             <p className="text-sm text-muted-foreground">
-              <strong>Tips:</strong> Dessa fasta kostnader kommer automatiskt att prorateras baserat på tidsperioden 
-              i analytics-vyn. För 30 dagar visas hela månadskostnaden, för 15 dagar visas hälften, etc.
+              <strong>Tips:</strong> Hiems månadskostnad prorateras automatiskt baserat på tidsperioden. 
+              Engångskostnaden visas endast om den valda perioden inkluderar betalningsdatumet.
             </p>
           </div>
         </PremiumCardContent>

@@ -33,6 +33,9 @@ import { AreaChartComponent } from "@/components/dashboard/charts/AreaChartCompo
 import { LineChartComponent } from "@/components/dashboard/charts/LineChartComponent";
 import { BarChartComponent } from "@/components/dashboard/charts/BarChartComponent";
 import { PieChartComponent } from "@/components/dashboard/charts/PieChartComponent";
+import { PaybackStatusCard } from "@/components/dashboard/PaybackStatusCard";
+import { BreakEvenTimeline } from "@/components/dashboard/BreakEvenTimeline";
+import { CostBreakdownEnhanced } from "@/components/dashboard/CostBreakdownEnhanced";
 
 const DashboardAnalytics = () => {
   const [dateRange, setDateRange] = useState<DateRange | undefined>();
@@ -228,6 +231,23 @@ const DashboardAnalytics = () => {
           trend={{ value: 8, isPositive: true }}
         />
       </div>
+
+      {/* Payback Period Section */}
+      {data.payback.initialInvestment > 0 && (
+        <>
+          <Separator className="my-8" />
+          <div>
+            <h2 className="text-2xl font-bold mb-4">Återbetalning & Break-Even</h2>
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              <PaybackStatusCard metrics={data.payback} />
+              <div className="lg:col-span-2">
+                <BreakEvenTimeline metrics={data.payback} />
+              </div>
+            </div>
+          </div>
+          <Separator className="my-8" />
+        </>
+      )}
 
       {/* Section 2: Booking Overview */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
