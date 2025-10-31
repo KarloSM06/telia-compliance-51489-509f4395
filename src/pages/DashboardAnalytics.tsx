@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { PremiumCard, PremiumCardContent, PremiumCardHeader, PremiumCardTitle } from "@/components/ui/premium-card";
+import { Separator } from "@/components/ui/separator";
 import { formatCostInSEK } from "@/lib/telephonyFormatters";
 import { 
   Download, 
@@ -243,6 +245,76 @@ const DashboardAnalytics = () => {
           icon={TrendingUp}
         />
       </div>
+
+      {/* Section 2.5: Cost Breakdown Card */}
+      <PremiumCard>
+        <PremiumCardHeader>
+          <PremiumCardTitle className="flex items-center gap-2">
+            <DollarSign className="h-5 w-5 text-primary" />
+            Kostnadsfördelning
+          </PremiumCardTitle>
+        </PremiumCardHeader>
+        <PremiumCardContent>
+          <div className="space-y-3">
+            <div className="flex justify-between items-center">
+              <div className="flex items-center gap-2">
+                <Phone className="h-4 w-4 text-muted-foreground" />
+                <span className="text-sm text-muted-foreground">Telefoni</span>
+              </div>
+              <span className="font-semibold">
+                {data.costs.telephonyCost.toLocaleString('sv-SE', { maximumFractionDigits: 2 })} SEK
+              </span>
+            </div>
+            <div className="flex justify-between items-center">
+              <div className="flex items-center gap-2">
+                <Smartphone className="h-4 w-4 text-muted-foreground" />
+                <span className="text-sm text-muted-foreground">SMS</span>
+              </div>
+              <span className="font-semibold">
+                {data.costs.smsCost.toLocaleString('sv-SE', { maximumFractionDigits: 2 })} SEK
+              </span>
+            </div>
+            <div className="flex justify-between items-center">
+              <div className="flex items-center gap-2">
+                <Mail className="h-4 w-4 text-muted-foreground" />
+                <span className="text-sm text-muted-foreground">Email</span>
+              </div>
+              <span className="font-semibold">
+                {data.costs.emailCost.toLocaleString('sv-SE', { maximumFractionDigits: 2 })} SEK
+              </span>
+            </div>
+            <Separator />
+            <div className="flex justify-between items-center">
+              <div className="flex items-center gap-2">
+                <CheckCircle className="h-4 w-4 text-orange-600" />
+                <span className="text-sm text-muted-foreground">Hiems Plattform</span>
+              </div>
+              <span className="font-semibold text-orange-600">
+                {data.costs.hiemsSupportCost.toLocaleString('sv-SE', { maximumFractionDigits: 2 })} SEK
+              </span>
+            </div>
+            <div className="flex justify-between items-center">
+              <div className="flex items-center gap-2">
+                <Settings className="h-4 w-4 text-orange-600" />
+                <span className="text-sm text-muted-foreground">Integrationer</span>
+              </div>
+              <span className="font-semibold text-orange-600">
+                {data.costs.integrationCost.toLocaleString('sv-SE', { maximumFractionDigits: 2 })} SEK
+              </span>
+            </div>
+            <Separator className="my-2" />
+            <div className="flex justify-between items-center text-lg font-bold">
+              <span>Total</span>
+              <span className="text-primary">
+                {data.costs.totalCost.toLocaleString('sv-SE', { maximumFractionDigits: 2 })} SEK
+              </span>
+            </div>
+            <p className="text-xs text-muted-foreground mt-2">
+              * Fasta kostnader (Hiems + Integrationer) är proraterade baserat på vald tidsperiod
+            </p>
+          </div>
+        </PremiumCardContent>
+      </PremiumCard>
 
       {/* Section 3: Main Graphs */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">

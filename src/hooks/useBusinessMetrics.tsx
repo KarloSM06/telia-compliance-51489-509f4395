@@ -30,6 +30,8 @@ export interface BusinessMetrics {
   uploaded_invoices: DocumentUpload[];
   meeting_to_payment_probability: number;
   avg_project_cost?: number;
+  hiems_monthly_support_cost?: number;
+  integration_monthly_cost?: number;
   created_at?: string;
   updated_at?: string;
 }

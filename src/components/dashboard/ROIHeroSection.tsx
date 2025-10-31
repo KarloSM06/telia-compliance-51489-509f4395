@@ -25,7 +25,7 @@ export const ROIHeroSection = ({
     value: `${data.roi.totalCosts.toLocaleString('sv-SE', {
       maximumFractionDigits: 2
     })} SEK`,
-    subtitle: 'Telefoni, SMS, Email',
+    subtitle: 'Telefoni, SMS, Email, Plattform',
     trend: {
       value: -5.2,
       isPositive: true

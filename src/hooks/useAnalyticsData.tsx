@@ -107,7 +107,7 @@ export const useAnalyticsData = (dateRange?: { from: Date; to: Date }) => {
           calculateBookingRevenue(b, businessMetrics)
         );
         
-        const costs = calculateOperationalCosts(telephony, messages);
+        const costs = calculateOperationalCosts(telephony, messages, businessMetrics, { from, to });
         const roi = calculateROI(bookingRevenues, costs);
 
         // Aggregate daily data

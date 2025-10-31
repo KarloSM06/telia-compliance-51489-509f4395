@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Plus, Trash2, Upload, FileText, DollarSign, Package, Save } from "lucide-react";
+import { Plus, Trash2, Upload, FileText, DollarSign, Package, Save, Server } from "lucide-react";
 import { useBusinessMetrics, ServicePricing } from "@/hooks/useBusinessMetrics";
 import { toast } from "sonner";
 
@@ -17,6 +17,12 @@ export function ROISettings() {
   const [meetingProbability, setMeetingProbability] = useState(
     metrics?.meeting_to_payment_probability || 50
   );
+  const [hiemsSupportCost, setHiemsSupportCost] = useState(
+    metrics?.hiems_monthly_support_cost || 0
+  );
+  const [integrationCost, setIntegrationCost] = useState(
+    metrics?.integration_monthly_cost || 0
+  );
   const [services, setServices] = useState<ServicePricing[]>(
     metrics?.service_pricing || []
   );
@@ -27,6 +33,8 @@ export function ROISettings() {
       avg_project_cost: avgProjectCost,
       meeting_to_payment_probability: meetingProbability,
       service_pricing: services,
+      hiems_monthly_support_cost: hiemsSupportCost,
+      integration_monthly_cost: integrationCost,
     });
   };
 
@@ -105,6 +113,60 @@ export function ROISettings() {
             />
             <p className="text-xs text-muted-foreground">
               Baserat på din historiska data, hur stor är chansen att ett bokat möte blir en betalande kund?
+            </p>
+          </div>
+        </PremiumCardContent>
+      </PremiumCard>
+
+      {/* Hiems Platform Costs */}
+      <PremiumCard className="animate-scale-in" style={{ animationDelay: '50ms' }}>
+        <PremiumCardHeader>
+          <div className="flex items-center gap-3">
+            <div className="p-2 bg-orange-500/10 rounded-lg">
+              <Server className="h-5 w-5 text-orange-600" />
+            </div>
+            <div>
+              <PremiumCardTitle>Hiems Plattformskostnader</PremiumCardTitle>
+              <PremiumCardDescription>
+                Ange fasta månadskostnader för Hiems-plattformen och integrationer
+              </PremiumCardDescription>
+            </div>
+          </div>
+        </PremiumCardHeader>
+        <PremiumCardContent className="space-y-4">
+          <div className="grid gap-4 md:grid-cols-2">
+            <div className="space-y-2">
+              <Label htmlFor="hiems-support">Hiems Support (månadspris SEK)</Label>
+              <Input
+                id="hiems-support"
+                type="number"
+                value={hiemsSupportCost || ""}
+                onChange={(e) => setHiemsSupportCost(parseFloat(e.target.value) || 0)}
+                placeholder="2990"
+              />
+              <p className="text-xs text-muted-foreground">
+                Din månadskostnad för Hiems-plattformen
+              </p>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="integration-cost">Integrationskostnader (månadspris SEK)</Label>
+              <Input
+                id="integration-cost"
+                type="number"
+                value={integrationCost || ""}
+                onChange={(e) => setIntegrationCost(parseFloat(e.target.value) || 0)}
+                placeholder="500"
+              />
+              <p className="text-xs text-muted-foreground">
+                Summa av alla externa integrationer (Vapi, Retell, etc.)
+              </p>
+            </div>
+          </div>
+          
+          <div className="border-l-4 border-primary/50 bg-primary/5 p-4 rounded-r-lg">
+            <p className="text-sm text-muted-foreground">
+              <strong>Tips:</strong> Dessa fasta kostnader kommer automatiskt att prorateras baserat på tidsperioden 
+              i analytics-vyn. För 30 dagar visas hela månadskostnaden, för 15 dagar visas hälften, etc.
             </p>
           </div>
         </PremiumCardContent>

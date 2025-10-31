@@ -13,6 +13,8 @@ export interface OperationalCosts {
   telephonyCost: number;
   smsCost: number;
   emailCost: number;
+  hiemsSupportCost: number;
+  integrationCost: number;
   totalCost: number;
 }
 
@@ -93,7 +95,9 @@ export function calculateBookingRevenue(
 // Calculate operational costs
 export function calculateOperationalCosts(
   telephonyEvents: any[],
-  messageLogs: any[]
+  messageLogs: any[],
+  businessMetrics: BusinessMetrics,
+  dateRange: { from: Date; to: Date }
 ): OperationalCosts {
   // Use aggregate_cost_amount (already in SEK) if available, otherwise convert cost_amount from USD to SEK
   const telephonyCost = telephonyEvents.reduce((sum, e) => {
@@ -117,11 +121,22 @@ export function calculateOperationalCosts(
       return sum + costSEK;
     }, 0);
   
+  // Calculate prorated fixed costs based on date range
+  const daysInRange = Math.max(1, Math.ceil(
+    (dateRange.to.getTime() - dateRange.from.getTime()) / (1000 * 60 * 60 * 24)
+  ));
+  const monthlyProration = daysInRange / 30; // Assume 30 days per month
+  
+  const hiemsSupportCost = (businessMetrics.hiems_monthly_support_cost || 0) * monthlyProration;
+  const integrationCost = (businessMetrics.integration_monthly_cost || 0) * monthlyProration;
+  
   return {
     telephonyCost,
     smsCost,
     emailCost,
-    totalCost: telephonyCost + smsCost + emailCost
+    hiemsSupportCost,
+    integrationCost,
+    totalCost: telephonyCost + smsCost + emailCost + hiemsSupportCost + integrationCost
   };
 }
 
