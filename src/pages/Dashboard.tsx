@@ -8,6 +8,8 @@ import { toast } from 'sonner';
 import { StatCard } from '@/components/communications/StatCard';
 import { RecentActivityCompact } from '@/components/dashboard/RecentActivityCompact';
 import { DateRangePicker, DateRange } from "@/components/dashboard/filters/DateRangePicker";
+import { BreakEvenCard } from '@/components/dashboard/BreakEvenCard';
+import { CumulativeROIChart } from '@/components/dashboard/CumulativeROIChart';
 
 const Dashboard = () => {
   const { user } = useAuth();
@@ -119,6 +121,17 @@ const Dashboard = () => {
             value={`${data.roi.roi.toFixed(1)}%`}
             icon={Target}
             trend={{ value: 8, isPositive: true }}
+          />
+        </div>
+      )}
+
+      {/* BREAK-EVEN & PROJEKTION */}
+      {data && (
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <BreakEvenCard breakEven={data.breakEven} />
+          <CumulativeROIChart 
+            data={data.projection12.cumulativeData} 
+            breakEvenMonth={data.breakEven.breakEvenMonth}
           />
         </div>
       )}

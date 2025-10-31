@@ -6,9 +6,13 @@ import {
   calculateBookingRevenue, 
   calculateOperationalCosts, 
   calculateROI,
+  calculateBreakEven,
+  projectROI,
   type BookingRevenue,
   type OperationalCosts,
-  type ROIMetrics
+  type ROIMetrics,
+  type BreakEvenMetrics,
+  type ProjectionMetrics
 } from "@/lib/roiCalculations";
 import { format, startOfDay, endOfDay, subDays } from "date-fns";
 
@@ -24,6 +28,10 @@ export interface AnalyticsData {
   roi: ROIMetrics;
   dailyData: any[];
   weeklyData: any[];
+  breakEven: BreakEvenMetrics;
+  projection12: ProjectionMetrics;
+  projection24: ProjectionMetrics;
+  projection36: ProjectionMetrics;
 }
 
 export const useAnalyticsData = (dateRange?: { from: Date; to: Date }) => {
@@ -153,6 +161,15 @@ export const useAnalyticsData = (dateRange?: { from: Date; to: Date }) => {
           roi: d.costs > 0 ? ((d.revenue - d.costs) / d.costs) * 100 : 0
         }));
 
+        // Calculate break-even and projections
+        const historicalDays = Math.max(1, Math.ceil((to.getTime() - from.getTime()) / (1000 * 60 * 60 * 24)));
+        const historicalRevenue = roi.totalRevenue;
+        
+        const breakEven = calculateBreakEven(businessMetrics, historicalRevenue, historicalDays);
+        const projection12 = projectROI(12, businessMetrics, historicalRevenue, historicalDays);
+        const projection24 = projectROI(24, businessMetrics, historicalRevenue, historicalDays);
+        const projection36 = projectROI(36, businessMetrics, historicalRevenue, historicalDays);
+
         setData({
           bookings,
           messages,
@@ -162,7 +179,11 @@ export const useAnalyticsData = (dateRange?: { from: Date; to: Date }) => {
           costs,
           roi,
           dailyData,
-          weeklyData: []
+          weeklyData: [],
+          breakEven,
+          projection12,
+          projection24,
+          projection36
         });
       } catch (error) {
         console.error("Error fetching analytics data:", error);

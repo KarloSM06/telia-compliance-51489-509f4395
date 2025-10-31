@@ -30,6 +30,34 @@ export interface ROIMetrics {
   profitMargin: number;
 }
 
+export interface BreakEvenMetrics {
+  breakEvenMonth: number; // Månad när break-even nås (0 = aldrig)
+  breakEvenDate: Date | null; // Faktiskt datum
+  monthlyRevenue: number; // Genomsnittlig månadsintäkt
+  monthlyCost: number; // Genomsnittlig månadskostnad
+  monthlyProfit: number; // monthlyRevenue - monthlyCost
+  isBreakEvenReached: boolean;
+}
+
+export interface CumulativeMetrics {
+  month: number;
+  monthName: string;
+  accumulatedCost: number;
+  accumulatedRevenue: number;
+  netProfit: number;
+  roi: number;
+}
+
+export interface ProjectionMetrics {
+  period: number; // 12, 24, 36 månader
+  totalRevenue: number;
+  totalCost: number;
+  netProfit: number;
+  roi: number;
+  breakEvenMonth: number;
+  cumulativeData: CumulativeMetrics[];
+}
+
 // Match booking title to service pricing
 function matchServiceType(
   booking: any,
@@ -179,5 +207,109 @@ export function calculateROI(
     revenuePerBooking: totalRevenue / bookingCount,
     costPerBooking: totalCosts / bookingCount,
     profitMargin: totalRevenue > 0 ? (netProfit / totalRevenue) * 100 : 0
+  };
+}
+
+// Calculate break-even point
+export function calculateBreakEven(
+  businessMetrics: BusinessMetrics,
+  historicalRevenue: number,
+  historicalDays: number
+): BreakEvenMetrics {
+  // Calculate average monthly revenue from historical data
+  const avgDailyRevenue = historicalDays > 0 ? historicalRevenue / historicalDays : 0;
+  const monthlyRevenue = avgDailyRevenue * 30;
+  
+  // Monthly cost = Hiems support cost
+  const monthlyCost = businessMetrics.hiems_monthly_support_cost || 0;
+  
+  // Monthly profit
+  const monthlyProfit = monthlyRevenue - monthlyCost;
+  
+  // Calculate break-even month
+  const integrationCost = businessMetrics.integration_cost || 0;
+  
+  let breakEvenMonth = 0;
+  let isBreakEvenReached = false;
+  let breakEvenDate: Date | null = null;
+  
+  if (monthlyProfit > 0) {
+    breakEvenMonth = Math.ceil(integrationCost / monthlyProfit);
+    isBreakEvenReached = true;
+    
+    // Calculate approximate date
+    if (businessMetrics.integration_start_date) {
+      const startDate = new Date(businessMetrics.integration_start_date);
+      breakEvenDate = new Date(startDate);
+      breakEvenDate.setMonth(breakEvenDate.getMonth() + breakEvenMonth);
+    }
+  }
+  
+  return {
+    breakEvenMonth,
+    breakEvenDate,
+    monthlyRevenue,
+    monthlyCost,
+    monthlyProfit,
+    isBreakEvenReached
+  };
+}
+
+// Calculate cumulative metrics month by month
+export function calculateCumulativeMetrics(
+  months: number,
+  monthlyRevenue: number,
+  monthlyCost: number,
+  integrationCost: number
+): CumulativeMetrics[] {
+  const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'Maj', 'Jun', 'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dec'];
+  const data: CumulativeMetrics[] = [];
+  
+  for (let month = 1; month <= months; month++) {
+    const accumulatedRevenue = monthlyRevenue * month;
+    const accumulatedCost = integrationCost + (monthlyCost * month);
+    const netProfit = accumulatedRevenue - accumulatedCost;
+    const roi = accumulatedCost > 0 ? (netProfit / accumulatedCost) * 100 : 0;
+    
+    data.push({
+      month,
+      monthName: `Mån ${month}`,
+      accumulatedCost,
+      accumulatedRevenue,
+      netProfit,
+      roi
+    });
+  }
+  
+  return data;
+}
+
+// Project ROI forward for N months
+export function projectROI(
+  period: number,
+  businessMetrics: BusinessMetrics,
+  historicalRevenue: number,
+  historicalDays: number
+): ProjectionMetrics {
+  const breakEven = calculateBreakEven(businessMetrics, historicalRevenue, historicalDays);
+  const integrationCost = businessMetrics.integration_cost || 0;
+  
+  const cumulativeData = calculateCumulativeMetrics(
+    period,
+    breakEven.monthlyRevenue,
+    breakEven.monthlyCost,
+    integrationCost
+  );
+  
+  const lastMonth = cumulativeData[cumulativeData.length - 1];
+  
+  return {
+    period,
+    totalRevenue: lastMonth.accumulatedRevenue,
+    totalCost: lastMonth.accumulatedCost,
+    netProfit: lastMonth.netProfit,
+    roi: lastMonth.roi,
+    breakEvenMonth: breakEven.breakEvenMonth,
+    cumulativeData
   };
 }

@@ -33,6 +33,8 @@ import { AreaChartComponent } from "@/components/dashboard/charts/AreaChartCompo
 import { LineChartComponent } from "@/components/dashboard/charts/LineChartComponent";
 import { BarChartComponent } from "@/components/dashboard/charts/BarChartComponent";
 import { PieChartComponent } from "@/components/dashboard/charts/PieChartComponent";
+import { BreakEvenCard } from "@/components/dashboard/BreakEvenCard";
+import { ProjectionTabs } from "@/components/dashboard/ProjectionTabs";
 
 const DashboardAnalytics = () => {
   const [dateRange, setDateRange] = useState<DateRange | undefined>();
@@ -420,6 +422,60 @@ const DashboardAnalytics = () => {
             { key: "profit", color: "hsl(43, 96%, 56%)", name: "Vinst (SEK)" }
           ]}
           xAxisKey="date"
+        />
+      </div>
+
+      {/* Section 4.5: Break-Even & Projections */}
+      <div className="space-y-6">
+        <div>
+          <h2 className="text-2xl font-bold mb-4">ROI-Projektioner</h2>
+          <p className="text-muted-foreground mb-6">
+            Simulering av intäkter, kostnader och ROI över 12, 24 och 36 månader baserat på din nuvarande data.
+          </p>
+        </div>
+        
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <BreakEvenCard breakEven={data.breakEven} />
+          <PremiumCard>
+            <PremiumCardHeader>
+              <PremiumCardTitle>Snabböversikt - 12 Månader</PremiumCardTitle>
+            </PremiumCardHeader>
+            <PremiumCardContent>
+              <div className="space-y-3">
+                <div className="flex justify-between">
+                  <span className="text-sm text-muted-foreground">Total Intäkt</span>
+                  <span className="font-semibold text-green-600">
+                    {data.projection12.totalRevenue.toLocaleString('sv-SE', { maximumFractionDigits: 0 })} SEK
+                  </span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-sm text-muted-foreground">Total Kostnad</span>
+                  <span className="font-semibold text-red-600">
+                    {data.projection12.totalCost.toLocaleString('sv-SE', { maximumFractionDigits: 0 })} SEK
+                  </span>
+                </div>
+                <Separator />
+                <div className="flex justify-between items-center pt-2">
+                  <span className="font-bold">Nettovinst</span>
+                  <span className={`text-xl font-bold ${data.projection12.netProfit >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                    {data.projection12.netProfit >= 0 ? '+' : ''}{data.projection12.netProfit.toLocaleString('sv-SE', { maximumFractionDigits: 0 })} SEK
+                  </span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="font-bold">ROI</span>
+                  <span className={`text-xl font-bold ${data.projection12.roi >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                    {data.projection12.roi.toFixed(1)}%
+                  </span>
+                </div>
+              </div>
+            </PremiumCardContent>
+          </PremiumCard>
+        </div>
+
+        <ProjectionTabs 
+          projection12={data.projection12}
+          projection24={data.projection24}
+          projection36={data.projection36}
         />
       </div>
 
