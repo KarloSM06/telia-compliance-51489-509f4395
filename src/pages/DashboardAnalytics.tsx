@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { formatCostInSEK } from "@/lib/telephonyFormatters";
 import { 
   Download, 
   RefreshCw, 
@@ -351,7 +352,7 @@ const DashboardAnalytics = () => {
             </div>
             <div className="flex justify-between items-center">
               <span className="text-muted-foreground">Total kostnad</span>
-              <span className="font-bold">{data.costs.telephonyCost.toFixed(2)} SEK</span>
+              <span className="font-bold">{formatCostInSEK(data.costs.telephonyCost)}</span>
             </div>
             <div className="flex justify-between items-center border-t pt-4">
               <span className="text-muted-foreground">Totala samtal</span>

@@ -1,7 +1,5 @@
 import { BusinessMetrics, ServicePricing } from "@/hooks/useBusinessMetrics";
 
-const USD_TO_SEK = 10.5; // Same conversion rate as in telephonyFormatters.ts
-
 export interface BookingRevenue {
   bookingId: string;
   estimatedRevenue: number;
@@ -95,9 +93,9 @@ export function calculateOperationalCosts(
   telephonyEvents: any[],
   messageLogs: any[]
 ): OperationalCosts {
-  // Use aggregate_cost_amount if available (already in SEK), otherwise convert cost_amount from USD to SEK
+  // Use aggregate_cost_amount if available, otherwise use cost_amount (no conversion here)
   const telephonyCost = telephonyEvents.reduce((sum, e) => {
-    const cost = e.aggregate_cost_amount || (parseFloat(e.cost_amount) || 0) * USD_TO_SEK;
+    const cost = e.aggregate_cost_amount || parseFloat(e.cost_amount) || 0;
     return sum + cost;
   }, 0);
   
