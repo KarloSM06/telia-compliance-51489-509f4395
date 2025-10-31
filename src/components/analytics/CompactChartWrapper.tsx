@@ -15,11 +15,11 @@ export const CompactChartWrapper = ({
   className 
 }: CompactChartWrapperProps) => {
   return (
-    <Card className={cn("p-3", className)}>
+    <Card className={cn("p-3 overflow-hidden", className)}>
       <h3 className="text-xs font-semibold mb-2 text-muted-foreground uppercase tracking-wide">
         {title}
       </h3>
-      <div style={{ height }}>
+      <div style={{ height, overflow: "hidden" }}>
         {children}
       </div>
     </Card>

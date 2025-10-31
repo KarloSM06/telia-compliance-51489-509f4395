@@ -35,10 +35,10 @@ import { MiniMetricCard } from "@/components/analytics/MiniMetricCard";
 import { HeatmapChart } from "@/components/analytics/HeatmapChart";
 import { FunnelChart } from "@/components/analytics/FunnelChart";
 import { GaugeChart } from "@/components/analytics/GaugeChart";
-import { AreaChartComponent } from "@/components/dashboard/charts/AreaChartComponent";
-import { LineChartComponent } from "@/components/dashboard/charts/LineChartComponent";
-import { BarChartComponent } from "@/components/dashboard/charts/BarChartComponent";
-import { PieChartComponent } from "@/components/dashboard/charts/PieChartComponent";
+import { CompactAreaChart } from "@/components/analytics/CompactAreaChart";
+import { CompactLineChart } from "@/components/analytics/CompactLineChart";
+import { CompactBarChart } from "@/components/analytics/CompactBarChart";
+import { CompactPieChart } from "@/components/analytics/CompactPieChart";
 
 const DashboardAnalytics = () => {
   const [dateRange, setDateRange] = useState<DateRange | undefined>();
@@ -253,21 +253,20 @@ const DashboardAnalytics = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
         <HeatmapChart data={data.hourlyHeatmap} title="Bokningar per Timme & Dag" height={200} />
         
-        <BarChartComponent
+        <CompactBarChart
           title="Samtal per Veckodag"
           data={data.telephony.reduce((acc: any[], t) => {
             const day = new Date(t.event_timestamp).toLocaleDateString('sv-SE', { weekday: 'short' });
-            const existing = acc.find(item => item.day === day);
+            const existing = acc.find(item => item.name === day);
             if (existing) existing.count += 1;
-            else acc.push({ day, count: 1 });
+            else acc.push({ name: day, count: 1 });
             return acc;
           }, [])}
           dataKeys={[{ key: "count", color: "hsl(142, 76%, 36%)", name: "Samtal" }]}
-          xAxisKey="day"
-          height={200}
+          height={180}
         />
         
-        <AreaChartComponent
+        <CompactAreaChart
           title="Meddelanden per Dag"
           data={data.dailyData.slice(-14).map(d => {
             const dayMessages = data.messages.filter(m => {
@@ -284,20 +283,20 @@ const DashboardAnalytics = () => {
             { key: "sms", color: "hsl(43, 96%, 56%)", name: "SMS" },
             { key: "email", color: "hsl(217, 32%, 17%)", name: "Email" }
           ]}
-          height={200}
+          height={180}
         />
       </div>
 
       {/* Section 3: Revenue Deep Dive */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
-        <AreaChartComponent
+        <CompactAreaChart
           title="Daglig Revenue"
           data={data.dailyData.slice(-14).map(d => ({ name: d.date.slice(5), value: d.revenue }))}
           dataKeys={[{ key: "value", color: "hsl(142, 76%, 36%)", name: "Intäkt" }]}
           height={180}
         />
         
-        <LineChartComponent
+        <CompactLineChart
           title="Vinstmarginal %"
           data={data.dailyData.slice(-14).map(d => ({ 
             name: d.date.slice(5), 
@@ -307,7 +306,7 @@ const DashboardAnalytics = () => {
           height={180}
         />
         
-        <BarChartComponent
+        <CompactBarChart
           title="Rev/Bokning"
           data={data.dailyData.slice(-14).map(d => ({ 
             name: d.date.slice(5), 
@@ -317,7 +316,7 @@ const DashboardAnalytics = () => {
           height={180}
         />
         
-        <LineChartComponent
+        <CompactLineChart
           title="ROI Trend"
           data={data.dailyData.slice(-14).map(d => ({ name: d.date.slice(5), roi: d.roi }))}
           dataKeys={[{ key: "roi", color: "hsl(43, 96%, 56%)", name: "ROI%" }]}
@@ -327,21 +326,21 @@ const DashboardAnalytics = () => {
 
       {/* Section 4: Cost Analysis */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
-        <PieChartComponent
+        <CompactPieChart
           title="Kostnadsfördelning"
           data={costBreakdownData}
           innerRadius={50}
           height={180}
         />
         
-        <BarChartComponent
+        <CompactBarChart
           title="Cost per Day"
           data={data.dailyData.slice(-10).map(d => ({ name: d.date.slice(5), cost: d.costs }))}
           dataKeys={[{ key: "cost", color: "hsl(0, 84%, 60%)", name: "Kostnad" }]}
           height={180}
         />
         
-        <LineChartComponent
+        <CompactLineChart
           title="Cost per Call"
           data={data.dailyData.slice(-10).map(d => {
             const dayCalls = data.telephony.filter(t => 
@@ -408,15 +407,14 @@ const DashboardAnalytics = () => {
 
       {/* Section 6: Channel Performance */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-        <BarChartComponent
+        <CompactBarChart
           title="Channel ROI Comparison"
           data={data.channelPerformance.map(c => ({ name: c.channel, roi: c.roi }))}
           dataKeys={[{ key: "roi", color: "hsl(43, 96%, 56%)", name: "ROI%" }]}
-          xAxisKey="name"
           height={180}
         />
         
-        <PieChartComponent
+        <CompactPieChart
           title="Channel Volume"
           data={[
             { name: 'SMS', value: smsCount },
@@ -426,7 +424,7 @@ const DashboardAnalytics = () => {
           height={180}
         />
         
-        <LineChartComponent
+        <CompactLineChart
           title="Delivery Rate Trend"
           data={data.dailyData.slice(-10).map(d => {
             const dayMessages = data.messages.filter(m => 
@@ -445,11 +443,10 @@ const DashboardAnalytics = () => {
 
       {/* Section 7: Telephony Intelligence */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
-        <BarChartComponent
+        <CompactBarChart
           title="Call Duration Distribution"
           data={data.callDurations.map(d => ({ name: d.range, count: d.count }))}
           dataKeys={[{ key: "count", color: "hsl(217, 32%, 17%)", name: "Samtal" }]}
-          xAxisKey="name"
           height={180}
         />
         
@@ -478,7 +475,7 @@ const DashboardAnalytics = () => {
           height={180}
         />
         
-        <BarChartComponent
+        <CompactBarChart
           title="Provider Cost Comparison"
           data={[
             { name: 'VAPI', cost: data.costs.telephonyCost * 0.4 },
@@ -486,7 +483,6 @@ const DashboardAnalytics = () => {
             { name: 'Twilio', cost: data.costs.telephonyCost * 0.25 }
           ]}
           dataKeys={[{ key: "cost", color: "hsl(0, 84%, 60%)", name: "SEK" }]}
-          xAxisKey="name"
           height={180}
         />
       </div>
@@ -496,7 +492,7 @@ const DashboardAnalytics = () => {
 
       {/* Section 9: Review Analytics */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
-        <LineChartComponent
+        <CompactLineChart
           title="Rating Trend"
           data={data.dailyData.slice(-14).map(d => {
             const dayReviews = data.reviews.filter(r => 
@@ -511,7 +507,7 @@ const DashboardAnalytics = () => {
           height={180}
         />
         
-        <BarChartComponent
+        <CompactBarChart
           title="Sentiment Distribution"
           data={data.sentimentTrends.slice(-7).map(s => ({ name: s.date.slice(5), ...s }))}
           dataKeys={[
@@ -519,11 +515,10 @@ const DashboardAnalytics = () => {
             { key: "neutral", color: "hsl(220, 13%, 46%)", name: "Neu" },
             { key: "negative", color: "hsl(0, 84%, 60%)", name: "Neg" }
           ]}
-          xAxisKey="name"
           height={180}
         />
         
-        <PieChartComponent
+        <CompactPieChart
           title="Overall Sentiment"
           data={[
             { name: 'Positiva', value: positiveReviews },
@@ -544,7 +539,7 @@ const DashboardAnalytics = () => {
 
       {/* Section 10: Predictive Insights */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-3">
-        <LineChartComponent
+        <CompactLineChart
           title="Revenue Forecast (7 dagar)"
           data={[
             ...data.dailyData.slice(-7).map(d => ({ name: d.date.slice(5), actual: d.revenue, forecast: null })),
@@ -561,7 +556,7 @@ const DashboardAnalytics = () => {
           height={200}
         />
         
-        <AreaChartComponent
+        <CompactAreaChart
           title="Booking Prediction"
           data={[
             ...data.dailyData.slice(-5).map(d => ({ name: d.date.slice(5), bookings: d.bookings, predicted: null })),
@@ -578,7 +573,7 @@ const DashboardAnalytics = () => {
           height={200}
         />
         
-        <AreaChartComponent
+        <CompactAreaChart
           title="Cost Projection"
           data={[
             ...data.dailyData.slice(-5).map(d => ({ name: d.date.slice(5), costs: d.costs, projected: null })),

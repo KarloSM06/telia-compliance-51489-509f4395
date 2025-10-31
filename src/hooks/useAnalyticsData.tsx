@@ -61,15 +61,21 @@ export const useAnalyticsData = (dateRange?: { from: Date; to: Date }) => {
       const toStr = endOfDay(to).toISOString();
 
       try {
-        // First fetch active telephony integrations
+        // Fetch telephony integrations with fallback logic
         const { data: integrations } = await supabase
           .from('integrations')
-          .select('id')
+          .select('id, capabilities, provider')
           .eq('user_id', user.id)
-          .eq('is_active', true)
-          .or('capabilities.cs.{voice},capabilities.cs.{sms}');
+          .eq('is_active', true);
 
-        const integrationIds = integrations?.map(i => i.id) || [];
+        // Filter telephony integrations in JavaScript to ensure compatibility
+        const integrationIds = integrations
+          ?.filter(i => {
+            const caps = i.capabilities || [];
+            const isTelephonyProvider = ['vapi', 'retell', 'telnyx', 'twilio'].includes(i.provider);
+            return caps.includes('voice') || caps.includes('sms') || isTelephonyProvider;
+          })
+          .map(i => i.id) || [];
 
         // Fetch all data in parallel
         const [bookingsRes, messagesRes, telephonyRes, reviewsRes] = await Promise.all([
