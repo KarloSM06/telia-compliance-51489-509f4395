@@ -24,14 +24,11 @@ import {
 import { useAnalyticsData } from "@/hooks/useAnalyticsData";
 import { useBusinessMetrics } from "@/hooks/useBusinessMetrics";
 import { DateRangePicker, DateRange } from "@/components/dashboard/filters/DateRangePicker";
+import { StatCard } from "@/components/communications/StatCard";
 import { AreaChartComponent } from "@/components/dashboard/charts/AreaChartComponent";
 import { LineChartComponent } from "@/components/dashboard/charts/LineChartComponent";
 import { BarChartComponent } from "@/components/dashboard/charts/BarChartComponent";
 import { PieChartComponent } from "@/components/dashboard/charts/PieChartComponent";
-import { PremiumHeader } from "@/components/premium/PremiumHeader";
-import { PremiumCard } from "@/components/premium/PremiumCard";
-import { PremiumStatCard } from "@/components/premium/PremiumStatCard";
-import { SectionSeparator } from "@/components/premium/SectionSeparator";
 
 const DashboardAnalytics = () => {
   const [dateRange, setDateRange] = useState<DateRange | undefined>();
@@ -152,41 +149,38 @@ const DashboardAnalytics = () => {
   );
 
   return (
-    <div className="relative min-h-screen overflow-hidden">
-      {/* Bakgrundsgradient */}
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,hsl(var(--primary)/0.15),transparent_50%)]" />
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_80%,hsl(var(--primary)/0.1),transparent_50%)]" />
-      
-      <div className="relative z-10 p-6 space-y-8">
-        {/* Header */}
-        <PremiumHeader
-          title="Analytics & ROI"
-          subtitle="Realtidsövervakning av dina affärsresultat och ROI"
-          actions={
-            <>
-              <Button variant="outline" size="sm" onClick={handleRefresh}>
-                <RefreshCw className="h-4 w-4 mr-2" />
-                Uppdatera
-              </Button>
-              <Button variant="outline" size="sm" onClick={handleExport}>
-                <Download className="h-4 w-4 mr-2" />
-                Export CSV
-              </Button>
-              <Button variant="outline" size="sm" asChild>
-                <Link to="/dashboard/settings?tab=roi">
-                  <Settings className="h-4 w-4 mr-2" />
-                  ROI
-                </Link>
-              </Button>
-            </>
-          }
-        />
+    <div className="p-6 space-y-6">
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold">Analytics & ROI</h1>
+          <p className="text-muted-foreground">
+            Realtidsövervakning av dina affärsresultat och ROI
+          </p>
+        </div>
+        <div className="flex gap-2">
+          <Button variant="outline" size="sm" onClick={handleRefresh}>
+            <RefreshCw className="h-4 w-4 mr-2" />
+            Uppdatera
+          </Button>
+          <Button variant="outline" size="sm" onClick={handleExport}>
+            <Download className="h-4 w-4 mr-2" />
+            Export CSV
+          </Button>
+          <Button variant="outline" size="sm" asChild>
+            <Link to="/dashboard/settings?tab=roi">
+              <Settings className="h-4 w-4 mr-2" />
+              ROI-inställningar
+            </Link>
+          </Button>
+        </div>
+      </div>
 
-        {/* Date Range Picker */}
-        <PremiumCard hover={false}>
-          <p className="text-sm font-medium mb-3">Välj tidsperiod:</p>
-          <DateRangePicker value={dateRange} onChange={setDateRange} />
-        </PremiumCard>
+      {/* Date Range Picker */}
+      <div className="bg-card p-4 rounded-lg border">
+        <p className="text-sm font-medium mb-3">Välj tidsperiod:</p>
+        <DateRangePicker value={dateRange} onChange={setDateRange} />
+      </div>
 
       {/* ROI Settings Alert */}
       {!hasROISettings && (
@@ -203,68 +197,56 @@ const DashboardAnalytics = () => {
         </Alert>
       )}
 
-        {/* Section 1: ROI Hero Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <PremiumStatCard
-            title="Total Intäkt (Est.)"
-            value={`${data.roi.totalRevenue.toLocaleString('sv-SE', { maximumFractionDigits: 0 })} SEK`}
-            icon={TrendingUp}
-            trend={{ value: 12, isPositive: true }}
-            iconColor="text-green-600"
-          />
-          <PremiumStatCard
-            title="Operationella Kostnader"
-            value={`${data.roi.totalCosts.toLocaleString('sv-SE', { maximumFractionDigits: 2 })} SEK`}
-            icon={DollarSign}
-            trend={{ value: -5, isPositive: true }}
-            iconColor="text-orange-600"
-          />
-          <PremiumStatCard
-            title="Nettovinst"
-            value={`${data.roi.netProfit.toLocaleString('sv-SE', { maximumFractionDigits: 0 })} SEK`}
-            icon={Award}
-            trend={{ value: 18, isPositive: true }}
-            iconColor="text-blue-600"
-          />
-          <PremiumStatCard
-            title="ROI"
-            value={`${data.roi.roi.toFixed(1)}%`}
-            icon={Target}
-            trend={{ value: 8, isPositive: true }}
-            iconColor="text-purple-600"
-          />
-        </div>
+      {/* Section 1: ROI Hero Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <StatCard
+          title="Total Intäkt (Est.)"
+          value={`${data.roi.totalRevenue.toLocaleString('sv-SE', { maximumFractionDigits: 0 })} SEK`}
+          icon={TrendingUp}
+          trend={{ value: 12, isPositive: true }}
+        />
+        <StatCard
+          title="Operationella Kostnader"
+          value={`${data.roi.totalCosts.toLocaleString('sv-SE', { maximumFractionDigits: 2 })} SEK`}
+          icon={DollarSign}
+          trend={{ value: -5, isPositive: true }}
+        />
+        <StatCard
+          title="Nettovinst"
+          value={`${data.roi.netProfit.toLocaleString('sv-SE', { maximumFractionDigits: 0 })} SEK`}
+          icon={Award}
+          trend={{ value: 18, isPositive: true }}
+        />
+        <StatCard
+          title="ROI"
+          value={`${data.roi.roi.toFixed(1)}%`}
+          icon={Target}
+          trend={{ value: 8, isPositive: true }}
+        />
+      </div>
 
-        <SectionSeparator />
+      {/* Section 2: Booking Overview */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <StatCard
+          title="Totala Bokningar"
+          value={data.bookings.length}
+          icon={Calendar}
+        />
+        <StatCard
+          title="Genomsnittligt Värde"
+          value={`${data.roi.revenuePerBooking.toLocaleString('sv-SE', { maximumFractionDigits: 0 })} SEK`}
+          icon={DollarSign}
+        />
+        <StatCard
+          title="Konverteringsgrad"
+          value={`${businessMetrics?.meeting_to_payment_probability || 50}%`}
+          icon={TrendingUp}
+        />
+      </div>
 
-        {/* Section 2: Booking Overview */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <PremiumStatCard
-            title="Totala Bokningar"
-            value={data.bookings.length}
-            icon={Calendar}
-            iconColor="text-blue-600"
-          />
-          <PremiumStatCard
-            title="Genomsnittligt Värde"
-            value={`${data.roi.revenuePerBooking.toLocaleString('sv-SE', { maximumFractionDigits: 0 })} SEK`}
-            icon={DollarSign}
-            iconColor="text-green-600"
-          />
-          <PremiumStatCard
-            title="Konverteringsgrad"
-            value={`${businessMetrics?.meeting_to_payment_probability || 50}%`}
-            icon={TrendingUp}
-            iconColor="text-purple-600"
-          />
-        </div>
-
-        <SectionSeparator />
-
-        {/* Section 3: Main Graphs */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <PremiumCard hover={false}>
-            <AreaChartComponent
+      {/* Section 3: Main Graphs */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <AreaChartComponent
           title="Intäkter vs Kostnader - Daglig"
           data={revenueVsCostsData}
           dataKeys={[
@@ -272,93 +254,73 @@ const DashboardAnalytics = () => {
             { key: "costs", color: "hsl(0, 84%, 60%)", name: "Kostnader" },
             { key: "profit", color: "hsl(43, 96%, 56%)", name: "Vinst" }
           ]}
-              height={400}
-            />
-          </PremiumCard>
-          
-          <PremiumCard hover={false}>
-            <LineChartComponent
+          height={400}
+        />
+        
+        <LineChartComponent
           title="ROI-utveckling (%)"
           data={roiTrendData}
           dataKeys={[
             { key: "roi", color: "hsl(43, 96%, 56%)", name: "ROI %" }
           ]}
-              height={400}
-            />
-          </PremiumCard>
-        </div>
+          height={400}
+        />
+      </div>
 
-        <SectionSeparator />
-
-        {/* Section 4: Cost Breakdown */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <PremiumCard hover={false}>
-            <PieChartComponent
+      {/* Section 4: Cost Breakdown */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <PieChartComponent
           title="Kostnadsfördelning"
           data={costBreakdownData}
-              innerRadius={60}
-            />
-          </PremiumCard>
-          
-          <PremiumCard hover={false}>
-            <BarChartComponent
+          innerRadius={60}
+        />
+        
+        <BarChartComponent
           title="Bokningar per Veckodag"
           data={bookingsByWeekdayData}
           dataKeys={[
             { key: "count", color: "hsl(142, 76%, 36%)", name: "Bokningar" }
           ]}
-              xAxisKey="day"
-            />
-          </PremiumCard>
-          
-          <PremiumCard hover={false}>
-            <BarChartComponent
+          xAxisKey="day"
+        />
+        
+        <BarChartComponent
           title="Vinstmarginal per Dag"
           data={data.dailyData.slice(-7)}
           dataKeys={[
             { key: "profit", color: "hsl(43, 96%, 56%)", name: "Vinst (SEK)" }
           ]}
-              xAxisKey="date"
-            />
-          </PremiumCard>
-        </div>
+          xAxisKey="date"
+        />
+      </div>
 
-        <SectionSeparator />
+      {/* Section 5: Message Statistics */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <StatCard
+          title="Totala Meddelanden"
+          value={totalMessages}
+          icon={MessageSquare}
+        />
+        <StatCard
+          title="SMS Skickade"
+          value={smsCount}
+          icon={Smartphone}
+        />
+        <StatCard
+          title="Email Skickade"
+          value={emailCount}
+          icon={Mail}
+        />
+        <StatCard
+          title="Leveransstatus"
+          value={`${deliveryRate.toFixed(1)}%`}
+          icon={CheckCircle}
+        />
+      </div>
 
-        {/* Section 5: Message Statistics */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-          <PremiumStatCard
-            title="Totala Meddelanden"
-            value={totalMessages}
-            icon={MessageSquare}
-            iconColor="text-blue-600"
-          />
-          <PremiumStatCard
-            title="SMS Skickade"
-            value={smsCount}
-            icon={Smartphone}
-            iconColor="text-green-600"
-          />
-          <PremiumStatCard
-            title="Email Skickade"
-            value={emailCount}
-            icon={Mail}
-            iconColor="text-purple-600"
-          />
-          <PremiumStatCard
-            title="Leveransstatus"
-            value={`${deliveryRate.toFixed(1)}%`}
-            icon={CheckCircle}
-            iconColor="text-orange-600"
-          />
-        </div>
-
-        <SectionSeparator />
-
-        {/* Section 6: Telephony Deep Dive */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <PremiumCard hover={false}>
-            <AreaChartComponent
+      {/* Section 6: Telephony Deep Dive */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <AreaChartComponent
           title="Samtalsvolym - Daglig"
           data={data.dailyData.map(d => {
             const dayTelephony = data.telephony.filter(t => {
@@ -374,12 +336,11 @@ const DashboardAnalytics = () => {
           dataKeys={[
             { key: "inbound", color: "hsl(142, 76%, 36%)", name: "Inkommande" },
             { key: "outbound", color: "hsl(217, 32%, 17%)", name: "Utgående" }
-            ]}
-            />
-          </PremiumCard>
-          
-          <PremiumCard hover={false}>
-            <h3 className="text-lg font-semibold mb-4">Telefoni-statistik</h3>
+          ]}
+        />
+        
+        <div className="bg-card p-6 rounded-lg border">
+          <h3 className="text-lg font-semibold mb-4">Telefoni-statistik</h3>
           <div className="space-y-4">
             <div className="flex justify-between items-center">
               <span className="text-muted-foreground">Inkommande samtal</span>
@@ -395,50 +356,40 @@ const DashboardAnalytics = () => {
             </div>
             <div className="flex justify-between items-center border-t pt-4">
               <span className="text-muted-foreground">Totala samtal</span>
-                <span className="font-bold text-lg">{data.telephony.length}</span>
-              </div>
+              <span className="font-bold text-lg">{data.telephony.length}</span>
             </div>
-          </PremiumCard>
+          </div>
         </div>
+      </div>
 
-        <SectionSeparator />
-
-        {/* Section 7: Reviews & Customer Satisfaction */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <PremiumStatCard
-            title="Totala Recensioner"
-            value={totalReviews}
-            icon={Star}
-            iconColor="text-yellow-600"
-          />
-          <PremiumStatCard
-            title="Genomsnittsbetyg"
-            value={avgRating.toFixed(1)}
-            icon={Award}
-            iconColor="text-orange-600"
-          />
-          <PremiumCard hover={false}>
-            <PieChartComponent
+      {/* Section 7: Reviews & Customer Satisfaction */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <StatCard
+          title="Totala Recensioner"
+          value={totalReviews}
+          icon={Star}
+        />
+        <StatCard
+          title="Genomsnittsbetyg"
+          value={avgRating.toFixed(1)}
+          icon={Award}
+        />
+        <PieChartComponent
           title="Sentimentfördelning"
           data={[
             { name: 'Positiva', value: positiveReviews },
             { name: 'Neutrala', value: neutralReviews },
             { name: 'Negativa', value: negativeReviews }
-            ].filter(item => item.value > 0)}
-            />
-          </PremiumCard>
+          ].filter(item => item.value > 0)}
+        />
+      </div>
+
+      {/* Section 8: AI-Insights */}
+      <div className="bg-card p-6 rounded-lg border">
+        <div className="flex items-center gap-2 mb-4">
+          <Sparkles className="h-5 w-5 text-primary" />
+          <h3 className="text-lg font-semibold">AI-Insikter & Rekommendationer</h3>
         </div>
-
-        <SectionSeparator />
-
-        {/* Section 8: AI-Insights */}
-        <PremiumCard hover={false}>
-          <div className="flex items-center gap-2 mb-4">
-            <div className="p-2 rounded-lg bg-gradient-to-br from-primary/20 to-primary/10">
-              <Sparkles className="h-5 w-5 text-primary" />
-            </div>
-            <h3 className="text-lg font-semibold">AI-Insikter & Rekommendationer</h3>
-          </div>
         <div className="space-y-4">
           {data.roi.roi > 100 && (
             <Alert>
@@ -468,7 +419,6 @@ const DashboardAnalytics = () => {
             </Alert>
           )}
         </div>
-        </PremiumCard>
       </div>
     </div>
   );

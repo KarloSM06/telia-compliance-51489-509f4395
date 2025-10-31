@@ -1,7 +1,11 @@
 import { GastroSection } from "@/components/dashboard/GastroSection";
 
 const GastroPage = () => {
-  return <GastroSection />;
+  return (
+    <div className="animate-fade-in">
+      <GastroSection />
+    </div>
+  );
 };
 
 export default GastroPage;
