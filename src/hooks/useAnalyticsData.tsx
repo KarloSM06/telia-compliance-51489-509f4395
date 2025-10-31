@@ -6,11 +6,9 @@ import {
   calculateBookingRevenue, 
   calculateOperationalCosts, 
   calculateROI,
-  calculatePaybackMetrics,
   type BookingRevenue,
   type OperationalCosts,
-  type ROIMetrics,
-  type PaybackMetrics
+  type ROIMetrics
 } from "@/lib/roiCalculations";
 import { format, startOfDay, endOfDay, subDays } from "date-fns";
 
@@ -24,7 +22,6 @@ export interface AnalyticsData {
   bookingRevenues: BookingRevenue[];
   costs: OperationalCosts;
   roi: ROIMetrics;
-  payback: PaybackMetrics;
   dailyData: any[];
   weeklyData: any[];
 }
@@ -112,7 +109,6 @@ export const useAnalyticsData = (dateRange?: { from: Date; to: Date }) => {
         
         const costs = calculateOperationalCosts(telephony, messages, businessMetrics, { from, to });
         const roi = calculateROI(bookingRevenues, costs);
-        const payback = calculatePaybackMetrics(businessMetrics, bookingRevenues, costs, { from, to });
 
         // Aggregate daily data
         const dailyMap = new Map();
@@ -165,9 +161,8 @@ export const useAnalyticsData = (dateRange?: { from: Date; to: Date }) => {
           bookingRevenues,
           costs,
           roi,
-          payback,
           dailyData,
-          weeklyData: [] // TODO: Implement weekly aggregation if needed
+          weeklyData: []
         });
       } catch (error) {
         console.error("Error fetching analytics data:", error);

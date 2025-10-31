@@ -32,7 +32,6 @@ export interface BusinessMetrics {
   avg_project_cost?: number;
   hiems_monthly_support_cost?: number;
   integration_cost?: number;
-  integration_start_date?: string;
   created_at?: string;
   updated_at?: string;
 }

@@ -23,9 +23,6 @@ export function ROISettings() {
   const [integrationCost, setIntegrationCost] = useState(
     metrics?.integration_cost || 0
   );
-  const [integrationStartDate, setIntegrationStartDate] = useState(
-    metrics?.integration_start_date || ""
-  );
   const [services, setServices] = useState<ServicePricing[]>(
     metrics?.service_pricing || []
   );
@@ -38,7 +35,6 @@ export function ROISettings() {
       service_pricing: services,
       hiems_monthly_support_cost: hiemsSupportCost,
       integration_cost: integrationCost,
-      integration_start_date: integrationStartDate || null,
     });
   };
 
@@ -154,37 +150,24 @@ export function ROISettings() {
             </div>
 
             <div>
-              <Label htmlFor="integration-cost">Integrationskostnad (SEK)</Label>
+              <Label htmlFor="integration-cost">Integrationskostnad (månadspris SEK)</Label>
               <Input
                 id="integration-cost"
                 type="number"
                 value={integrationCost || ""}
                 onChange={(e) => setIntegrationCost(parseFloat(e.target.value) || 0)}
-                placeholder="15000"
+                placeholder="2000"
               />
               <p className="text-xs text-muted-foreground">
-                <strong>Engångsbetalning</strong> för initial integration och uppsättning
-              </p>
-            </div>
-
-            <div>
-              <Label htmlFor="integration-date">Datum för Integrationskostnad</Label>
-              <Input
-                id="integration-date"
-                type="date"
-                value={integrationStartDate}
-                onChange={(e) => setIntegrationStartDate(e.target.value)}
-              />
-              <p className="text-xs text-muted-foreground">
-                När betalades engångskostnaden? (används för ROI-beräkningar)
+                Månadskostnad för externa integrationer och tjänster
               </p>
             </div>
           </div>
           
           <div className="border-l-4 border-primary/50 bg-primary/5 p-4 rounded-r-lg">
             <p className="text-sm text-muted-foreground">
-              <strong>Tips:</strong> Hiems månadskostnad prorateras automatiskt baserat på tidsperioden. 
-              Engångskostnaden visas endast om den valda perioden inkluderar betalningsdatumet.
+              <strong>Tips:</strong> Alla kostnader prorateras automatiskt baserat på tidsperioden. 
+              För 30 dagar visas hela månadskostnaden, för 15 dagar visas hälften, etc.
             </p>
           </div>
         </PremiumCardContent>

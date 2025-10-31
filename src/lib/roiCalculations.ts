@@ -30,18 +30,6 @@ export interface ROIMetrics {
   profitMargin: number;
 }
 
-export interface PaybackMetrics {
-  initialInvestment: number;
-  monthlyRecurringCost: number;
-  averageMonthlyRevenue: number;
-  paybackPeriodMonths: number;
-  cumulativeProfit: number;
-  breakEvenDate: Date | null;
-  projectedProfit12Months: number;
-  isBreakEvenReached: boolean;
-  monthsSinceStart: number;
-}
-
 // Match booking title to service pricing
 function matchServiceType(
   booking: any,
@@ -144,21 +132,9 @@ export function calculateOperationalCosts(
   const monthlyProration = (daysInRange >= 28 && daysInRange <= 32) ? 1 : daysInRange / 30;
   
   const hiemsSupportCost = (businessMetrics.hiems_monthly_support_cost || 0) * monthlyProration;
+  const integrationCost = (businessMetrics.integration_cost || 0) * monthlyProration;
   
-  // Check if integration cost should be included in this period
-  let integrationCost = 0;
-  let isIntegrationCostIncluded = false;
-  
-  if (businessMetrics.integration_cost && businessMetrics.integration_start_date) {
-    const integrationDate = new Date(businessMetrics.integration_start_date);
-    // Include one-time cost only if the date range includes the integration start date
-    if (integrationDate >= dateRange.from && integrationDate <= dateRange.to) {
-      integrationCost = businessMetrics.integration_cost;
-      isIntegrationCostIncluded = true;
-    }
-  }
-  
-  const totalRecurringCost = telephonyCost + smsCost + emailCost + hiemsSupportCost;
+  const totalRecurringCost = telephonyCost + smsCost + emailCost + hiemsSupportCost + integrationCost;
   
   return {
     telephonyCost,
@@ -166,9 +142,9 @@ export function calculateOperationalCosts(
     emailCost,
     hiemsSupportCost,
     integrationCost,
-    totalCost: totalRecurringCost + integrationCost,
+    totalCost: totalRecurringCost,
     totalRecurringCost,
-    isIntegrationCostIncluded
+    isIntegrationCostIncluded: false
   };
 }
 
@@ -191,68 +167,5 @@ export function calculateROI(
     revenuePerBooking: totalRevenue / bookingCount,
     costPerBooking: totalCosts / bookingCount,
     profitMargin: totalRevenue > 0 ? (netProfit / totalRevenue) * 100 : 0
-  };
-}
-
-// Calculate payback period metrics
-export function calculatePaybackMetrics(
-  businessMetrics: BusinessMetrics,
-  bookingRevenues: BookingRevenue[],
-  operationalCosts: OperationalCosts,
-  dateRange: { from: Date; to: Date }
-): PaybackMetrics {
-  const initialInvestment = businessMetrics.integration_cost || 0;
-  const monthlyRecurringCost = operationalCosts.totalRecurringCost;
-  
-  // Calculate average monthly revenue based on the period
-  const daysInRange = Math.max(1, Math.ceil(
-    (dateRange.to.getTime() - dateRange.from.getTime()) / (1000 * 60 * 60 * 24)
-  ));
-  const monthsInRange = daysInRange / 30;
-  const totalRevenue = bookingRevenues.reduce((sum, b) => sum + b.estimatedRevenue, 0);
-  const averageMonthlyRevenue = monthsInRange > 0 ? totalRevenue / monthsInRange : 0;
-  
-  // Calculate months since integration started
-  let monthsSinceStart = 0;
-  let breakEvenDate: Date | null = null;
-  let paybackPeriodMonths = 0;
-  
-  if (businessMetrics.integration_start_date) {
-    const startDate = new Date(businessMetrics.integration_start_date);
-    const now = new Date();
-    monthsSinceStart = Math.max(0, (now.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24 * 30));
-    
-    // Calculate payback period
-    const monthlyNetProfit = averageMonthlyRevenue - monthlyRecurringCost;
-    
-    if (monthlyNetProfit > 0) {
-      paybackPeriodMonths = initialInvestment / monthlyNetProfit;
-      
-      // Calculate break-even date
-      breakEvenDate = new Date(startDate);
-      breakEvenDate.setMonth(breakEvenDate.getMonth() + Math.ceil(paybackPeriodMonths));
-    }
-  }
-  
-  // Calculate cumulative profit (including initial investment)
-  const totalRecurringCostsToDate = monthlyRecurringCost * monthsSinceStart;
-  const totalRevenueToDate = averageMonthlyRevenue * monthsSinceStart;
-  const cumulativeProfit = totalRevenueToDate - totalRecurringCostsToDate - initialInvestment;
-  
-  // 12-month projection
-  const projectedProfit12Months = (averageMonthlyRevenue * 12) - (monthlyRecurringCost * 12) - initialInvestment;
-  
-  const isBreakEvenReached = cumulativeProfit >= 0;
-  
-  return {
-    initialInvestment,
-    monthlyRecurringCost,
-    averageMonthlyRevenue,
-    paybackPeriodMonths,
-    cumulativeProfit,
-    breakEvenDate,
-    projectedProfit12Months,
-    isBreakEvenReached,
-    monthsSinceStart
   };
 }
