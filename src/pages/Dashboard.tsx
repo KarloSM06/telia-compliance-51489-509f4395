@@ -7,13 +7,11 @@ import { useAuth } from '@/hooks/useAuth';
 import { toast } from 'sonner';
 import { StatCard } from '@/components/communications/StatCard';
 import { RecentActivityCompact } from '@/components/dashboard/RecentActivityCompact';
+import { DateRangePicker, DateRange } from "@/components/dashboard/filters/DateRangePicker";
 
 const Dashboard = () => {
   const { user } = useAuth();
-  const [dateRange] = useState({
-    from: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
-    to: new Date()
-  });
+  const [dateRange, setDateRange] = useState<DateRange | undefined>();
 
   const { data, loading } = useAnalyticsData(dateRange);
 
@@ -87,6 +85,12 @@ const Dashboard = () => {
             </Link>
           </Button>
         </div>
+      </div>
+
+      {/* Date Range Picker - Samma som /analytics */}
+      <div className="bg-card p-4 rounded-lg border">
+        <p className="text-sm font-medium mb-3">Välj tidsperiod:</p>
+        <DateRangePicker value={dateRange} onChange={setDateRange} />
       </div>
 
       {/* ROI ÖVERSIKT - Samma som /analytics */}
