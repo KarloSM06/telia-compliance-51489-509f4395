@@ -125,7 +125,9 @@ export function calculateOperationalCosts(
   const daysInRange = Math.max(1, Math.ceil(
     (dateRange.to.getTime() - dateRange.from.getTime()) / (1000 * 60 * 60 * 24)
   ));
-  const monthlyProration = daysInRange / 30; // Assume 30 days per month
+  
+  // Round to full month if within typical month range (28-32 days)
+  const monthlyProration = (daysInRange >= 28 && daysInRange <= 32) ? 1 : daysInRange / 30;
   
   const hiemsSupportCost = (businessMetrics.hiems_monthly_support_cost || 0) * monthlyProration;
   const integrationCost = (businessMetrics.integration_monthly_cost || 0) * monthlyProration;

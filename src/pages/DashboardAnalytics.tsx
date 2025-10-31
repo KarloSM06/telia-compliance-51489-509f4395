@@ -5,6 +5,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { PremiumCard, PremiumCardContent, PremiumCardHeader, PremiumCardTitle } from "@/components/ui/premium-card";
 import { Separator } from "@/components/ui/separator";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { formatCostInSEK } from "@/lib/telephonyFormatters";
 import { 
   Download, 
@@ -21,7 +22,8 @@ import {
   Sparkles,
   Mail,
   Smartphone,
-  CheckCircle
+  CheckCircle,
+  Info
 } from "lucide-react";
 import { useAnalyticsData } from "@/hooks/useAnalyticsData";
 import { useBusinessMetrics } from "@/hooks/useBusinessMetrics";
@@ -252,6 +254,19 @@ const DashboardAnalytics = () => {
           <PremiumCardTitle className="flex items-center gap-2">
             <DollarSign className="h-5 w-5 text-primary" />
             Kostnadsfördelning
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger>
+                  <Info className="h-4 w-4 text-muted-foreground" />
+                </TooltipTrigger>
+                <TooltipContent className="max-w-xs">
+                  <p className="text-sm">
+                    Fasta kostnader (Hiems Support & Integrationer) prorateras baserat på vald period. 
+                    Perioder på 28-32 dagar räknas som en hel månad.
+                  </p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
           </PremiumCardTitle>
         </PremiumCardHeader>
         <PremiumCardContent>
