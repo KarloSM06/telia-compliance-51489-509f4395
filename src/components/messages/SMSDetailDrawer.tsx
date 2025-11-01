@@ -140,26 +140,28 @@ export const SMSDetailDrawer = ({ message, open, onClose }: SMSDetailDrawerProps
             <Card>
               <CardContent className="p-4">
                 <div className="space-y-3">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <Phone className="h-4 w-4 text-muted-foreground" />
-                      <span className="text-sm text-muted-foreground">Från:</span>
-                    </div>
-                    <div className="flex gap-2 items-center">
-                      <code className="text-sm font-mono bg-muted px-2 py-1 rounded">
-                        {message.metadata?.from || message.recipient || '-'}
-                      </code>
-                      {(message.metadata?.from || message.recipient) && (
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => copyToClipboard(message.metadata?.from || message.recipient, 'Från-nummer')}
-                        >
-                          <Copy className="h-3 w-3" />
-                        </Button>
-                      )}
-                    </div>
-                  </div>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Phone className="h-4 w-4 text-muted-foreground" />
+                  <span className="text-sm text-muted-foreground">Från:</span>
+                </div>
+                <div className="flex gap-2 items-center">
+                  <code className="text-sm font-mono bg-muted px-2 py-1 rounded">
+                    {message.scheduled_message_id 
+                      ? 'System (Påminnelse)' 
+                      : message.metadata?.from || message.recipient || '-'}
+                  </code>
+                  {!message.scheduled_message_id && (message.metadata?.from || message.recipient) && (
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => copyToClipboard(message.metadata?.from || message.recipient, 'Från-nummer')}
+                    >
+                      <Copy className="h-3 w-3" />
+                    </Button>
+                  )}
+                </div>
+              </div>
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                       <Phone className="h-4 w-4 text-muted-foreground" />
@@ -254,17 +256,17 @@ export const SMSDetailDrawer = ({ message, open, onClose }: SMSDetailDrawerProps
               </Card>
             )}
 
-            {/* Message Source (för utgående) */}
-            {message.direction === 'outbound' && (
-              <Card>
-                <CardContent className="p-4">
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-muted-foreground">Källa:</span>
-                    {getMessageSourceBadge(message)}
-                  </div>
-                </CardContent>
-              </Card>
-            )}
+          {/* Message Source (för utgående OCH påminnelser) */}
+          {(message.direction === 'outbound' || message.scheduled_message_id) && (
+            <Card>
+              <CardContent className="p-4">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-muted-foreground">Källa:</span>
+                  {getMessageSourceBadge(message)}
+                </div>
+              </CardContent>
+            </Card>
+          )}
 
             {/* Cost */}
             {typeof message.cost === 'number' && displaySek !== null && (

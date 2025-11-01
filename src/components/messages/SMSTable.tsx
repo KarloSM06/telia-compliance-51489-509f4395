@@ -159,11 +159,13 @@ export const SMSTable = ({ messages, onViewDetails }: SMSTableProps) => {
                   </div>
                 </TableCell>
                 <TableCell>{getDirectionBadge(message.direction)}</TableCell>
-                <TableCell>
-                  <p className="text-sm font-medium font-mono">
-                    {message.metadata?.from || message.recipient}
-                  </p>
-                </TableCell>
+            <TableCell>
+              <p className="text-sm font-medium font-mono">
+                {message.scheduled_message_id 
+                  ? 'System (Påminnelse)' 
+                  : message.metadata?.from || message.recipient}
+              </p>
+            </TableCell>
                 <TableCell>
                   <p className="text-sm font-medium font-mono">
                     {message.recipient || message.metadata?.to || '-'}
@@ -175,12 +177,13 @@ export const SMSTable = ({ messages, onViewDetails }: SMSTableProps) => {
                     {message.message_body.length > 50 ? '...' : ''}
                   </p>
                 </TableCell>
-                <TableCell>
-                  <div className="flex flex-col gap-1">
-                    {message.direction === 'inbound' && getMessageTypeBadge(message.message_type)}
-                    {message.direction === 'outbound' && getMessageSourceBadge(message)}
-                  </div>
-                </TableCell>
+            <TableCell>
+              <div className="flex flex-col gap-1">
+                {message.direction === 'inbound' && getMessageTypeBadge(message.message_type)}
+                {/* Visa badge även om direction är NULL men scheduled_message_id finns */}
+                {(message.direction === 'outbound' || message.scheduled_message_id) && getMessageSourceBadge(message)}
+              </div>
+            </TableCell>
                 <TableCell>{getStatusBadge(message.status)}</TableCell>
                 <TableCell>
                   <p className="text-sm">
