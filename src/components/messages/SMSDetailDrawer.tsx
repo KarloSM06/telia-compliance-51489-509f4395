@@ -139,7 +139,7 @@ export const SMSDetailDrawer = ({ message, open, onClose }: SMSDetailDrawerProps
             {/* Header Info */}
             <div className="space-y-3">
               <div className="flex items-center gap-2 flex-wrap">
-                {getDirectionBadge(message.direction)}
+                {getDirectionBadge(message.direction, !!message.scheduled_message_id)}
                 {getStatusBadge(message.status)}
                 {message.provider && <Badge variant="outline">{message.provider}</Badge>}
                 <Badge variant="outline">{message.channel}</Badge>
@@ -307,11 +307,16 @@ export const SMSDetailDrawer = ({ message, open, onClose }: SMSDetailDrawerProps
                     {message.sent_at ? format(new Date(message.sent_at), 'PPP HH:mm', { locale: sv }) : '-'}
                   </span>
                 </div>
-                {message.delivered_at && (
+                {(message.delivered_at || (message.status === 'delivered' && message.sent_at)) && (
                   <div className="flex items-center justify-between">
                     <span className="text-sm text-muted-foreground">Levererat:</span>
                     <span className="text-sm font-mono">
-                      {format(new Date(message.delivered_at), 'PPP HH:mm', { locale: sv })}
+                      {message.delivered_at 
+                        ? format(new Date(message.delivered_at), 'PPP HH:mm', { locale: sv })
+                        : message.status === 'delivered' && message.sent_at
+                        ? format(new Date(message.sent_at), 'PPP HH:mm', { locale: sv })
+                        : '-'
+                      }
                     </span>
                   </div>
                 )}
