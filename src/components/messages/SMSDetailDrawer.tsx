@@ -44,7 +44,17 @@ export const SMSDetailDrawer = ({ message, open, onClose }: SMSDetailDrawerProps
     }
   };
 
-  const getDirectionBadge = (direction?: string) => {
+  const getDirectionBadge = (direction?: string, isReminder?: boolean) => {
+    // För påminnelser, visa alltid "Utgående"
+    if (isReminder) {
+      return (
+        <Badge variant="outline" className="gap-1 bg-green-500/10 text-green-700 border-green-200">
+          <ArrowUp className="h-3 w-3" />
+          Utgående
+        </Badge>
+      );
+    }
+    
     if (!direction) return null;
     return direction === 'inbound' ? (
       <Badge variant="outline" className="gap-1 bg-blue-500/10 text-blue-700 border-blue-200">

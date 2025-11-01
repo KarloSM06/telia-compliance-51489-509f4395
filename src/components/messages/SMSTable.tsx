@@ -34,7 +34,17 @@ const getStatusBadge = (status: string) => {
   );
 };
 
-const getDirectionBadge = (direction?: string) => {
+const getDirectionBadge = (direction?: string, isReminder?: boolean) => {
+  // För påminnelser, visa alltid "Utgående"
+  if (isReminder) {
+    return (
+      <Badge variant="outline" className="gap-1 bg-green-500/10 text-green-700 border-green-200">
+        <ArrowUp className="h-3 w-3" />
+        Utgående
+      </Badge>
+    );
+  }
+  
   if (!direction) return null;
   return direction === 'inbound' ? (
     <Badge variant="outline" className="gap-1 bg-blue-500/10 text-blue-700 border-blue-200">
@@ -158,7 +168,7 @@ export const SMSTable = ({ messages, onViewDetails }: SMSTableProps) => {
                     <span className="text-xs text-muted-foreground">{providerName}</span>
                   </div>
                 </TableCell>
-                <TableCell>{getDirectionBadge(message.direction)}</TableCell>
+                <TableCell>{getDirectionBadge(message.direction, !!message.scheduled_message_id)}</TableCell>
             <TableCell>
               <p className="text-sm font-medium font-mono">
                 {message.scheduled_message_id 
@@ -190,14 +200,16 @@ export const SMSTable = ({ messages, onViewDetails }: SMSTableProps) => {
                     {format(new Date(message.sent_at), "d MMM HH:mm", { locale: sv })}
                   </p>
                 </TableCell>
-                <TableCell>
-                  <p className="text-sm">
-                    {message.delivered_at 
-                      ? format(new Date(message.delivered_at), "d MMM HH:mm", { locale: sv })
-                      : '-'
-                    }
-                  </p>
-                </TableCell>
+              <TableCell>
+                <p className="text-sm">
+                  {message.delivered_at 
+                    ? format(new Date(message.delivered_at), "d MMM HH:mm", { locale: sv })
+                    : message.status === 'delivered' && message.sent_at
+                    ? format(new Date(message.sent_at), "d MMM HH:mm", { locale: sv })
+                    : '-'
+                  }
+                </p>
+              </TableCell>
                 <TableCell>
                   {typeof message.cost === 'number' ? (
                     <div className="flex flex-col gap-0.5">

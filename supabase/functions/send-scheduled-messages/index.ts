@@ -257,7 +257,10 @@ async function sendViaTwilio(params: {
     sms_provider_settings_id: params.settingsId,
     provider_message_id: result.sid,
     status: 'delivered',
+    direction: 'outbound',
+    message_source: 'calendar_notification',
     sent_at: new Date().toISOString(),
+    delivered_at: new Date().toISOString(),
     cost: 0.50,
     metadata: { twilio_status: result.status },
   });
@@ -309,7 +312,10 @@ async function sendViaTelnyx(params: {
     sms_provider_settings_id: params.settingsId,
     provider_message_id: result.data.id,
     status: 'delivered',
+    direction: 'outbound',
+    message_source: 'calendar_notification',
     sent_at: new Date().toISOString(),
+    delivered_at: new Date().toISOString(),
     cost: 0.50,
     metadata: { telnyx_status: result.data.status },
   });
@@ -362,7 +368,10 @@ async function sendViaSystemTwilio(message: ScheduledMessage, supabase: any) {
     provider_type: 'system',
     provider_message_id: result.sid,
     status: 'delivered',
+    direction: 'outbound',
+    message_source: 'calendar_notification',
     sent_at: new Date().toISOString(),
+    delivered_at: new Date().toISOString(),
     cost: 0.50,
     metadata: { twilio_status: result.status },
   });
