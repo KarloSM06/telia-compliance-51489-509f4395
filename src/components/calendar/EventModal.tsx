@@ -23,17 +23,20 @@ interface EventModalProps {
   onClose: () => void;
   event?: CalendarEvent | null;
   defaultDate?: Date;
-  onSave: (event: Partial<CalendarEvent>) => Promise<void>;
+  onSave: (event: Partial<CalendarEvent>, calendarId?: string) => Promise<void>;
   onDelete?: (id: string) => Promise<void>;
   pendingChanges?: Partial<CalendarEvent>;
+  calendars?: Array<{ id: string; name: string; color: string; is_default: boolean }>;
+  selectedCalendarId?: string;
 }
 
-export const EventModal = ({ open, onClose, event, defaultDate, onSave, onDelete, pendingChanges }: EventModalProps) => {
+export const EventModal = ({ open, onClose, event, defaultDate, onSave, onDelete, pendingChanges, calendars = [], selectedCalendarId }: EventModalProps) => {
   const { timezone } = useUserTimezone();
   
   // Merge event with pending changes for display
   const currentEvent = event && pendingChanges ? { ...event, ...pendingChanges } : event;
   const titleInputRef = useRef<HTMLInputElement>(null);
+  const [calendarId, setCalendarId] = useState<string>(selectedCalendarId || '');
   const [formData, setFormData] = useState({
     title: currentEvent?.title || '',
     description: currentEvent?.description || '',
@@ -53,6 +56,17 @@ export const EventModal = ({ open, onClose, event, defaultDate, onSave, onDelete
   useEffect(() => {
     if (open) {
       setTimeout(() => titleInputRef.current?.focus(), 100);
+      
+      // Set calendar ID
+      if (currentEvent && (currentEvent as any).calendar_id) {
+        setCalendarId((currentEvent as any).calendar_id);
+      } else if (selectedCalendarId) {
+        setCalendarId(selectedCalendarId);
+      } else if (calendars.length > 0) {
+        const defaultCal = calendars.find(c => c.is_default);
+        setCalendarId(defaultCal?.id || calendars[0].id);
+      }
+      
       setFormData({
         title: currentEvent?.title || '',
         description: currentEvent?.description || '',
@@ -131,7 +145,7 @@ export const EventModal = ({ open, onClose, event, defaultDate, onSave, onDelete
         source: 'internal',
         status: 'scheduled',
         reminders: formattedReminders.length > 0 ? formattedReminders : null,
-      } as any);
+      } as any, calendarId);
       toast.success(event ? 'Händelse uppdaterad' : 'Händelse skapad');
       onClose();
     } catch (error) {
@@ -366,23 +380,49 @@ export const EventModal = ({ open, onClose, event, defaultDate, onSave, onDelete
             />
           </div>
 
-          <div>
-            <Label htmlFor="event_type">Kategori</Label>
-            <Select value={formData.event_type} onValueChange={(value) => setFormData({ ...formData, event_type: value })}>
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="meeting">🤝 Möte</SelectItem>
-                <SelectItem value="call">📞 Samtal</SelectItem>
-                <SelectItem value="demo">💼 Demo</SelectItem>
-                <SelectItem value="follow_up">📋 Uppföljning</SelectItem>
-                <SelectItem value="work">💻 Arbete</SelectItem>
-                <SelectItem value="personal">👤 Personligt</SelectItem>
-                <SelectItem value="leisure">🎉 Fritid</SelectItem>
-                <SelectItem value="other">📌 Annat</SelectItem>
-              </SelectContent>
-            </Select>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <Label htmlFor="event_type">Kategori</Label>
+              <Select value={formData.event_type} onValueChange={(value) => setFormData({ ...formData, event_type: value })}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="meeting">🤝 Möte</SelectItem>
+                  <SelectItem value="call">📞 Samtal</SelectItem>
+                  <SelectItem value="demo">💼 Demo</SelectItem>
+                  <SelectItem value="follow_up">📋 Uppföljning</SelectItem>
+                  <SelectItem value="work">💻 Arbete</SelectItem>
+                  <SelectItem value="personal">👤 Personligt</SelectItem>
+                  <SelectItem value="leisure">🎉 Fritid</SelectItem>
+                  <SelectItem value="other">📌 Annat</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            {calendars && calendars.length > 0 && (
+              <div>
+                <Label htmlFor="calendar">Kalender</Label>
+                <Select value={calendarId} onValueChange={setCalendarId}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Välj kalender" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {calendars.map(cal => (
+                      <SelectItem key={cal.id} value={cal.id}>
+                        <div className="flex items-center gap-2">
+                          <div 
+                            className="w-3 h-3 rounded-full" 
+                            style={{ backgroundColor: cal.color }}
+                          />
+                          {cal.name}
+                        </div>
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            )}
           </div>
 
           <div>

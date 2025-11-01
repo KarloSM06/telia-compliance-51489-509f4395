@@ -507,6 +507,7 @@ export type Database = {
           all_day: boolean | null
           attendees: Json | null
           booking_system_integration_id: string | null
+          calendar_id: string | null
           contact_email: string | null
           contact_person: string | null
           contact_phone: string | null
@@ -547,6 +548,7 @@ export type Database = {
           all_day?: boolean | null
           attendees?: Json | null
           booking_system_integration_id?: string | null
+          calendar_id?: string | null
           contact_email?: string | null
           contact_person?: string | null
           contact_phone?: string | null
@@ -587,6 +589,7 @@ export type Database = {
           all_day?: boolean | null
           attendees?: Json | null
           booking_system_integration_id?: string | null
+          calendar_id?: string | null
           contact_email?: string | null
           contact_person?: string | null
           contact_phone?: string | null
@@ -630,6 +633,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "calendar_events_calendar_id_fkey"
+            columns: ["calendar_id"]
+            isOneToOne: false
+            referencedRelation: "calendars"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "calendar_events_created_by_fkey"
             columns: ["created_by"]
             isOneToOne: false
@@ -662,6 +672,53 @@ export type Database = {
             columns: ["user_id"]
             isOneToOne: false
             referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      calendars: {
+        Row: {
+          color: string | null
+          created_at: string | null
+          description: string | null
+          id: string
+          is_active: boolean | null
+          is_default: boolean | null
+          name: string
+          organization_id: string | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          color?: string | null
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          is_active?: boolean | null
+          is_default?: boolean | null
+          name: string
+          organization_id?: string | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          color?: string | null
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          is_active?: boolean | null
+          is_default?: boolean | null
+          name?: string
+          organization_id?: string | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "calendars_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
             referencedColumns: ["id"]
           },
         ]

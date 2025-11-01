@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -11,9 +11,12 @@ import { TimelineView } from "@/components/calendar/TimelineView";
 import { EventModal } from "@/components/calendar/EventModal";
 import { IntegrationSetupModal } from "@/components/calendar/IntegrationSetupModal";
 import { AvailabilitySettings } from "@/components/calendar/AvailabilitySettings";
+import { CalendarSelector } from "@/components/calendar/CalendarSelector";
+import { CalendarManagementModal } from "@/components/calendar/CalendarManagementModal";
 import { useCalendarEvents, CalendarEvent } from "@/hooks/useCalendarEvents";
+import { useCalendars } from "@/hooks/useCalendars";
 import { useBookingIntegrations } from "@/hooks/useBookingIntegrations";
-import { Plus, Settings, Calendar, CalendarDays, CalendarRange, CalendarClock, List } from "lucide-react";
+import { Plus, Settings, Calendar, CalendarDays, CalendarRange, CalendarClock, List, FolderKanban } from "lucide-react";
 import { addMinutes, isSameDay, startOfWeek, endOfWeek, isWithinInterval, format } from "date-fns";
 import { sv } from "date-fns/locale";
 import { checkEventConflicts } from "@/lib/calendarUtils";
@@ -22,15 +25,23 @@ import { useUserTimezone } from "@/hooks/useUserTimezone";
 
 const CalendarPage = () => {
   const { timezone } = useUserTimezone();
-  const { events, loading, createEvent, updateEvent, deleteEvent } = useCalendarEvents();
+  const { calendars, defaultCalendar, createCalendar, updateCalendar, deleteCalendar } = useCalendars();
+  const { events, loading, createEvent, updateEvent, deleteEvent, refetch } = useCalendarEvents();
   const { integrations, createIntegration, updateIntegration, deleteIntegration, triggerSync } = useBookingIntegrations();
   
   const [currentView, setCurrentView] = useState<'month' | 'week' | 'day' | 'year' | 'timeline'>('month');
   const [selectedDay, setSelectedDay] = useState<Date>(new Date());
   const [showEventModal, setShowEventModal] = useState(false);
   const [showIntegrationModal, setShowIntegrationModal] = useState(false);
+  const [showCalendarManagement, setShowCalendarManagement] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState<CalendarEvent | null>(null);
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  const [selectedCalendarId, setSelectedCalendarId] = useState<string | 'all'>('all');
+
+  // Refetch events when selected calendar changes
+  useEffect(() => {
+    refetch(selectedCalendarId);
+  }, [selectedCalendarId]);
 
   const handleEventClick = (event: CalendarEvent) => {
     setSelectedEvent(event);
@@ -63,7 +74,7 @@ const CalendarPage = () => {
     });
   };
 
-  const handleEventSave = async (eventData: Partial<CalendarEvent>) => {
+  const handleEventSave = async (eventData: Partial<CalendarEvent>, calendarId?: string) => {
     // Check for conflicts
     if (eventData.start_time && eventData.end_time) {
       const tempEvent = {
@@ -91,7 +102,7 @@ const CalendarPage = () => {
     if (selectedEvent?.id) {
       await updateEvent(selectedEvent.id, eventData);
     } else {
-      await createEvent(eventData);
+      await createEvent(eventData, calendarId || (selectedCalendarId !== 'all' ? selectedCalendarId : defaultCalendar?.id));
     }
     setShowEventModal(false);
     setSelectedEvent(null);
@@ -132,6 +143,25 @@ const CalendarPage = () => {
               </p>
             </div>
             <div className="flex gap-2 items-center">
+              {/* Calendar selector */}
+              {calendars.length > 0 && (
+                <CalendarSelector
+                  calendars={calendars}
+                  selectedCalendarId={selectedCalendarId}
+                  onSelect={setSelectedCalendarId}
+                />
+              )}
+              
+              <Button 
+                variant="outline" 
+                size="sm"
+                onClick={() => setShowCalendarManagement(true)}
+                className="gap-2"
+              >
+                <FolderKanban className="h-4 w-4" />
+                Hantera kalendrar
+              </Button>
+              
               {/* View selector */}
               <div className="flex gap-1 border rounded-lg p-1 bg-muted/50">
                 <Button
@@ -259,6 +289,8 @@ const CalendarPage = () => {
                   defaultDate={selectedDate || undefined}
                   onSave={handleEventSave}
                   onDelete={deleteEvent}
+                  calendars={calendars}
+                  selectedCalendarId={selectedCalendarId !== 'all' ? selectedCalendarId : defaultCalendar?.id}
                 />
               )}
             </TabsContent>
@@ -323,6 +355,16 @@ const CalendarPage = () => {
         onClose={() => setShowIntegrationModal(false)}
         onSave={createIntegration}
         existingIntegrations={integrations}
+      />
+
+      {/* Calendar management modal */}
+      <CalendarManagementModal
+        open={showCalendarManagement}
+        onClose={() => setShowCalendarManagement(false)}
+        calendars={calendars}
+        onCreateCalendar={createCalendar}
+        onUpdateCalendar={updateCalendar}
+        onDeleteCalendar={deleteCalendar}
       />
     </div>
   );

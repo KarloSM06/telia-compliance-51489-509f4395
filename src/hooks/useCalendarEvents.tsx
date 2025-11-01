@@ -34,24 +34,43 @@ export interface CalendarEvent {
   external_id?: string;
   booking_system_integration_id?: string;
   reminders?: any;
+  calendar_id?: string;
+  calendar?: {
+    id: string;
+    name: string;
+    color: string;
+    is_default: boolean;
+  };
 }
 
-export const useCalendarEvents = () => {
+export const useCalendarEvents = (initialCalendarId?: string) => {
   const { user } = useAuth();
   const { timezone } = useUserTimezone();
   const [events, setEvents] = useState<CalendarEvent[]>([]);
   const [loading, setLoading] = useState(true);
+  const [currentCalendarId, setCurrentCalendarId] = useState<string | 'all'>(initialCalendarId || 'all');
 
-  const fetchEvents = async () => {
+  const fetchEvents = async (calendarId?: string | 'all') => {
     if (!user) return;
+
+    const filterCalendarId = calendarId !== undefined ? calendarId : currentCalendarId;
 
     try {
       setLoading(true);
-      const { data, error } = await supabase
+      let query = supabase
         .from("calendar_events")
-        .select("*")
-        .eq("user_id", user.id)
-        .order("start_time", { ascending: true });
+        .select(`
+          *,
+          calendar:calendars(id, name, color, is_default)
+        `)
+        .eq("user_id", user.id);
+      
+      // Filter by calendar if specific calendar selected
+      if (filterCalendarId && filterCalendarId !== 'all') {
+        query = query.eq('calendar_id', filterCalendarId);
+      }
+      
+      const { data, error } = await query.order("start_time", { ascending: true });
 
       if (error) throw error;
       
@@ -80,7 +99,7 @@ export const useCalendarEvents = () => {
     }
   };
 
-  const createEvent = async (event: Partial<CalendarEvent>) => {
+  const createEvent = async (event: Partial<CalendarEvent>, calendarId?: string) => {
     if (!user) return;
 
     try {
@@ -104,6 +123,7 @@ export const useCalendarEvents = () => {
         status: event.status || 'scheduled',
         source: event.source || 'internal',
         timezone: timezone,
+        calendar_id: calendarId || (event as any).calendar_id,
         description: event.description,
         contact_person: event.contact_person,
         contact_email: event.contact_email,
