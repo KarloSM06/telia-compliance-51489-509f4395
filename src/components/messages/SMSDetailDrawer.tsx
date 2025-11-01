@@ -3,7 +3,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Copy, MessageSquare, Phone, DollarSign, FileJson, Sparkles, ArrowDown, ArrowUp, Star, Calendar as CalendarIcon, HelpCircle, Bot, User, Zap } from 'lucide-react';
+import { Copy, MessageSquare, Phone, DollarSign, FileJson, Sparkles, ArrowDown, ArrowUp, Star, Calendar as CalendarIcon, HelpCircle, Bot, User, Zap, Bell } from 'lucide-react';
 import { toast } from 'sonner';
 import { format } from 'date-fns';
 import { sv } from 'date-fns/locale';
@@ -20,11 +20,9 @@ export const SMSDetailDrawer = ({ message, open, onClose }: SMSDetailDrawerProps
 
   if (!message) return null;
 
-  const costCurrency = message.metadata?.cost_currency ?? 'SEK';
   const displaySek = typeof message.cost === 'number' 
-    ? (message.metadata?.cost_sek ?? (costCurrency === 'USD' ? message.cost * (message.metadata?.fx_rate ?? 10.5) : message.cost))
+    ? message.cost * 10.5  // USD till SEK med fast växelkurs
     : null;
-  const isEstimated = message.metadata?.estimated === true;
 
   const copyToClipboard = (text: string, label: string) => {
     navigator.clipboard.writeText(text);
@@ -80,8 +78,24 @@ export const SMSDetailDrawer = ({ message, open, onClose }: SMSDetailDrawerProps
     );
   };
 
-  const getMessageSourceBadge = (source?: string) => {
+  const getMessageSourceBadge = (msg: any) => {
+    // Identifiera påminnelser från scheduled_messages
+    const isReminder = msg.scheduled_message_id && 
+                       (msg.message_body?.includes('Påminnelse:') || 
+                        msg.message_body?.includes('påminnelse'));
+    
+    if (isReminder) {
+      return (
+        <Badge variant="outline" className="gap-1 bg-blue-500/10 text-blue-700 border-blue-200">
+          <Bell className="h-3 w-3" />
+          Påminnelse
+        </Badge>
+      );
+    }
+    
+    const source = msg.message_source;
     if (!source) return null;
+    
     const config = {
       calendar_notification: { label: "Kalender", icon: CalendarIcon, className: "bg-green-500/10 text-green-700 border-green-200" },
       ai_agent: { label: "AI-Agent", icon: Bot, className: "bg-indigo-500/10 text-indigo-700 border-indigo-200" },
@@ -153,22 +167,22 @@ export const SMSDetailDrawer = ({ message, open, onClose }: SMSDetailDrawerProps
                     </div>
                     <div className="flex gap-2 items-center">
                       <code className="text-sm font-mono bg-muted px-2 py-1 rounded">
-                        {message.metadata?.to || '-'}
+                        {message.recipient || message.metadata?.to || '-'}
                       </code>
-                      {message.metadata?.to && (
+                      {(message.recipient || message.metadata?.to) && (
                         <Button
                           variant="ghost"
                           size="sm"
-                          onClick={() => copyToClipboard(message.metadata?.to, 'Till-nummer')}
+                          onClick={() => copyToClipboard(message.recipient || message.metadata?.to, 'Till-nummer')}
                         >
                           <Copy className="h-3 w-3" />
                         </Button>
                       )}
                     </div>
                   </div>
-                  {message.direction === 'inbound' && message.metadata?.to && (
+                  {message.direction === 'inbound' && (message.recipient || message.metadata?.to) && (
                     <p className="text-xs text-muted-foreground pt-2 border-t">
-                      ℹ️ Detta är ett inkommande SMS till ditt nummer ({message.metadata.to})
+                      ℹ️ Detta är ett inkommande SMS till ditt nummer ({message.recipient || message.metadata.to})
                     </p>
                   )}
                 </div>
@@ -241,12 +255,12 @@ export const SMSDetailDrawer = ({ message, open, onClose }: SMSDetailDrawerProps
             )}
 
             {/* Message Source (för utgående) */}
-            {message.direction === 'outbound' && message.message_source && (
+            {message.direction === 'outbound' && (
               <Card>
                 <CardContent className="p-4">
                   <div className="flex items-center justify-between">
                     <span className="text-sm text-muted-foreground">Källa:</span>
-                    {getMessageSourceBadge(message.message_source)}
+                    {getMessageSourceBadge(message)}
                   </div>
                 </CardContent>
               </Card>
@@ -261,14 +275,11 @@ export const SMSDetailDrawer = ({ message, open, onClose }: SMSDetailDrawerProps
                     <div>
                       <p className="text-xs text-muted-foreground">Kostnad</p>
                       <p className="text-lg font-semibold">
-                        {displaySek.toFixed(3)} SEK
-                        {isEstimated && <span className="text-xs text-muted-foreground ml-1">(uppskattad)</span>}
+                        {displaySek.toFixed(2)} SEK
                       </p>
-                      {costCurrency === 'USD' && (
-                        <p className="text-xs text-muted-foreground">
-                          (${message.cost.toFixed(4)} USD)
-                        </p>
-                      )}
+                      <p className="text-xs text-muted-foreground">
+                        (${message.cost.toFixed(4)} USD @ 10.5 SEK/USD)
+                      </p>
                     </div>
                   </div>
                 </CardContent>

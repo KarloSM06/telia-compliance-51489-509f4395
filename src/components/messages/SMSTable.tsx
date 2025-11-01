@@ -2,7 +2,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { Eye, CheckCircle, XCircle, Clock, ArrowDown, ArrowUp, Star, Calendar, HelpCircle, MessageSquare, Bot, User, Zap } from "lucide-react";
+import { Eye, CheckCircle, XCircle, Clock, ArrowDown, ArrowUp, Star, Calendar, HelpCircle, MessageSquare, Bot, User, Zap, Bell } from "lucide-react";
 import { format } from "date-fns";
 import { sv } from "date-fns/locale";
 import { MessageLog } from "@/hooks/useMessageLogs";
@@ -68,8 +68,24 @@ const getMessageTypeBadge = (type?: string) => {
   );
 };
 
-const getMessageSourceBadge = (source?: string) => {
+const getMessageSourceBadge = (message: any) => {
+  // Identifiera påminnelser från scheduled_messages
+  const isReminder = message.scheduled_message_id && 
+                     (message.message_body?.includes('Påminnelse:') || 
+                      message.message_body?.includes('påminnelse'));
+  
+  if (isReminder) {
+    return (
+      <Badge variant="outline" className="gap-1 bg-blue-500/10 text-blue-700 border-blue-200">
+        <Bell className="h-3 w-3" />
+        Påminnelse
+      </Badge>
+    );
+  }
+  
+  const source = message.message_source;
   if (!source) return null;
+  
   const config = {
     calendar_notification: { label: "Kalender", icon: Calendar, className: "bg-green-500/10 text-green-700 border-green-200" },
     ai_agent: { label: "AI-Agent", icon: Bot, className: "bg-indigo-500/10 text-indigo-700 border-indigo-200" },
@@ -150,7 +166,7 @@ export const SMSTable = ({ messages, onViewDetails }: SMSTableProps) => {
                 </TableCell>
                 <TableCell>
                   <p className="text-sm font-medium font-mono">
-                    {message.metadata?.to || '-'}
+                    {message.recipient || message.metadata?.to || '-'}
                   </p>
                 </TableCell>
                 <TableCell className="max-w-xs">
@@ -162,7 +178,7 @@ export const SMSTable = ({ messages, onViewDetails }: SMSTableProps) => {
                 <TableCell>
                   <div className="flex flex-col gap-1">
                     {message.direction === 'inbound' && getMessageTypeBadge(message.message_type)}
-                    {message.direction === 'outbound' && getMessageSourceBadge(message.message_source)}
+                    {message.direction === 'outbound' && getMessageSourceBadge(message)}
                   </div>
                 </TableCell>
                 <TableCell>{getStatusBadge(message.status)}</TableCell>
@@ -181,15 +197,13 @@ export const SMSTable = ({ messages, onViewDetails }: SMSTableProps) => {
                 </TableCell>
                 <TableCell>
                   {typeof message.cost === 'number' ? (
-                    <div className="flex items-center gap-2">
+                    <div className="flex flex-col gap-0.5">
                       <p className="text-sm font-medium">
-                        {(message.metadata?.cost_sek ?? (message.metadata?.cost_currency === 'USD' ? message.cost * (message.metadata?.fx_rate ?? 10.5) : message.cost)).toFixed(2)} kr
+                        {(message.cost * 10.5).toFixed(2)} SEK
                       </p>
-                      {message.metadata?.cost_currency === 'USD' && (
-                        <span className="text-xs text-muted-foreground">
-                          (${message.cost.toFixed(4)})
-                        </span>
-                      )}
+                      <span className="text-xs text-muted-foreground">
+                        (${message.cost.toFixed(4)} USD)
+                      </span>
                     </div>
                   ) : (
                     <p className="text-sm">-</p>
