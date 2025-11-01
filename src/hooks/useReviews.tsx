@@ -1,8 +1,8 @@
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from './useAuth';
 import { startOfMonth, endOfMonth } from 'date-fns';
-import { useMemo } from 'react';
+import { useMemo, useEffect } from 'react';
 
 interface Review {
   id: string;
@@ -100,6 +100,7 @@ const normalizeTelephonyReview = (event: any): Review => {
 
 export const useReviews = (dateRange?: { from: Date; to: Date }, filters?: ReviewFilterValues) => {
   const { user } = useAuth();
+  const queryClient = useQueryClient();
 
   const { data: reviews = [], isLoading } = useQuery({
     queryKey: ['unified-reviews', user?.id, dateRange],
@@ -281,6 +282,28 @@ export const useReviews = (dateRange?: { from: Date; to: Date }, filters?: Revie
     a.click();
     window.URL.revokeObjectURL(url);
   };
+
+  // Real-time subscription for all review sources
+  useEffect(() => {
+    if (!user) return;
+
+    const channel = supabase
+      .channel('reviews-all-sources')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'reviews' }, 
+        () => queryClient.invalidateQueries({ queryKey: ['unified-reviews', user.id] })
+      )
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'message_logs' }, 
+        () => queryClient.invalidateQueries({ queryKey: ['unified-reviews', user.id] })
+      )
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'telephony_events' }, 
+        () => queryClient.invalidateQueries({ queryKey: ['unified-reviews', user.id] })
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [user, queryClient]);
 
   return {
     reviews: filteredReviews,

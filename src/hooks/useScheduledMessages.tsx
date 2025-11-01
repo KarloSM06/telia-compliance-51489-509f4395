@@ -1,6 +1,8 @@
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from './useAuth';
+import { useEffect } from 'react';
+import { toast } from 'sonner';
 
 export type MessageType = 'booking_confirmation' | 'reminder' | 'review_request' | 'cancellation';
 
@@ -28,6 +30,7 @@ export interface ScheduledMessage {
 
 export const useScheduledMessages = (calendarEventId?: string) => {
   const { user } = useAuth();
+  const queryClient = useQueryClient();
 
   const { data: messages = [], isLoading } = useQuery({
     queryKey: ['scheduled-messages', user?.id, calendarEventId],
@@ -50,6 +53,36 @@ export const useScheduledMessages = (calendarEventId?: string) => {
     },
     enabled: !!user,
   });
+
+  // Real-time subscription for scheduled messages
+  useEffect(() => {
+    if (!user) return;
+
+    const channel = supabase
+      .channel('scheduled-messages-changes')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'scheduled_messages',
+          filter: `user_id=eq.${user.id}`,
+        },
+        (payload) => {
+          console.log('⏰ Scheduled message update:', payload);
+          queryClient.invalidateQueries({ queryKey: ['scheduled-messages', user.id] });
+          
+          if (payload.eventType === 'UPDATE' && (payload.new as any)?.status === 'sent') {
+            toast.success(`✉️ Meddelande skickat till ${(payload.new as any)?.recipient_name}`);
+          }
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [user, queryClient]);
 
   return {
     messages,

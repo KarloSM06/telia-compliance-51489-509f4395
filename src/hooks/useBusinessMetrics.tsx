@@ -2,6 +2,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "./useAuth";
 import { toast } from "sonner";
+import { useEffect } from "react";
 
 export interface ServicePricing {
   service_name: string;
@@ -104,6 +105,32 @@ export const useBusinessMetrics = () => {
       toast.error("Kunde inte spara ROI-inställningar");
     },
   });
+
+  // Real-time subscription for business_metrics
+  useEffect(() => {
+    if (!user?.id) return;
+
+    const channel = supabase
+      .channel('business-metrics-changes')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'business_metrics',
+          filter: `user_id=eq.${user.id}`,
+        },
+        (payload) => {
+          console.log('💼 Business metrics update:', payload);
+          queryClient.invalidateQueries({ queryKey: ['business-metrics', user.id] });
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [user?.id, queryClient]);
 
   return {
     metrics,

@@ -1,7 +1,8 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { toast } from "sonner";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 export interface BookingIntegration {
   id: string;
@@ -35,38 +36,31 @@ export const AVAILABLE_PROVIDERS = [
 
 export const useBookingIntegrations = () => {
   const { user } = useAuth();
-  const [integrations, setIntegrations] = useState<BookingIntegration[]>([]);
-  const [loading, setLoading] = useState(true);
+  const queryClient = useQueryClient();
 
-  const fetchIntegrations = async () => {
-    if (!user) return;
-
-    try {
-      setLoading(true);
+  const { data: integrations = [], isLoading } = useQuery({
+    queryKey: ['booking-integrations', user?.id],
+    queryFn: async () => {
+      if (!user) return [];
       const { data, error } = await supabase
-        .from("booking_system_integrations")
-        .select("*")
-        .eq("user_id", user.id);
-
+        .from('booking_system_integrations')
+        .select('*')
+        .eq('user_id', user.id);
       if (error) throw error;
-      setIntegrations(data || []);
-    } catch (error) {
-      console.error("Error fetching integrations:", error);
-      toast.error("Kunde inte hämta integrationer");
-    } finally {
-      setLoading(false);
-    }
-  };
+      return data as BookingIntegration[];
+    },
+    enabled: !!user,
+  });
 
-  const createIntegration = async (integration: {
-    provider: string;
-    provider_display_name: string;
-    integration_type: string;
-    encrypted_credentials: any;
-  }) => {
-    if (!user) return;
+  const createIntegrationMutation = useMutation({
+    mutationFn: async (integration: {
+      provider: string;
+      provider_display_name: string;
+      integration_type: string;
+      encrypted_credentials: any;
+    }) => {
+      if (!user) throw new Error('Not authenticated');
 
-    try {
       const { data, error } = await supabase
         .from("booking_system_integrations")
         .insert({
@@ -78,19 +72,20 @@ export const useBookingIntegrations = () => {
         .single();
 
       if (error) throw error;
-
-      setIntegrations([...integrations, data]);
-      toast.success("Integration tillagd");
       return data;
-    } catch (error: any) {
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['booking-integrations', user?.id] });
+      toast.success("Integration tillagd");
+    },
+    onError: (error: any) => {
       console.error("Error creating integration:", error);
       toast.error(error.message || "Kunde inte skapa integration");
-      throw error;
-    }
-  };
+    },
+  });
 
-  const updateIntegration = async (id: string, updates: Partial<BookingIntegration>) => {
-    try {
+  const updateIntegrationMutation = useMutation({
+    mutationFn: async ({ id, updates }: { id: string; updates: Partial<BookingIntegration> }) => {
       const { data, error } = await supabase
         .from("booking_system_integrations")
         .update(updates)
@@ -99,62 +94,87 @@ export const useBookingIntegrations = () => {
         .single();
 
       if (error) throw error;
-
-      setIntegrations(integrations.map(i => i.id === id ? data : i));
-      toast.success("Integration uppdaterad");
       return data;
-    } catch (error) {
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['booking-integrations', user?.id] });
+      toast.success("Integration uppdaterad");
+    },
+    onError: (error: any) => {
       console.error("Error updating integration:", error);
       toast.error("Kunde inte uppdatera integration");
-      throw error;
-    }
-  };
+    },
+  });
 
-  const deleteIntegration = async (id: string) => {
-    try {
+  const deleteIntegrationMutation = useMutation({
+    mutationFn: async (id: string) => {
       const { error } = await supabase
         .from("booking_system_integrations")
         .delete()
         .eq("id", id);
 
       if (error) throw error;
-
-      setIntegrations(integrations.filter(i => i.id !== id));
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['booking-integrations', user?.id] });
       toast.success("Integration borttagen");
-    } catch (error) {
+    },
+    onError: (error: any) => {
       console.error("Error deleting integration:", error);
       toast.error("Kunde inte ta bort integration");
-      throw error;
-    }
-  };
+    },
+  });
 
-  const triggerSync = async (integrationId: string) => {
-    try {
+  const triggerSyncMutation = useMutation({
+    mutationFn: async (integrationId: string) => {
       const { data, error } = await supabase.functions.invoke('sync-booking-systems');
-      
       if (error) throw error;
-      
-      toast.success("Synkning startad");
-      await fetchIntegrations();
       return data;
-    } catch (error) {
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['booking-integrations', user?.id] });
+      toast.success("Synkning startad");
+    },
+    onError: (error: any) => {
       console.error("Error triggering sync:", error);
       toast.error("Kunde inte starta synkning");
-      throw error;
-    }
-  };
+    },
+  });
 
+  // Real-time subscription for booking integrations
   useEffect(() => {
-    fetchIntegrations();
-  }, [user]);
+    if (!user) return;
+
+    const channel = supabase
+      .channel('booking-integrations-changes')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'booking_system_integrations',
+          filter: `user_id=eq.${user.id}`,
+        },
+        (payload) => {
+          console.log('📅 Booking integration update:', payload);
+          queryClient.invalidateQueries({ queryKey: ['booking-integrations', user.id] });
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [user, queryClient]);
 
   return {
     integrations,
-    loading,
-    createIntegration,
-    updateIntegration,
-    deleteIntegration,
-    triggerSync,
-    refetch: fetchIntegrations,
+    loading: isLoading,
+    createIntegration: createIntegrationMutation.mutateAsync,
+    updateIntegration: (id: string, updates: Partial<BookingIntegration>) => 
+      updateIntegrationMutation.mutate({ id, updates }),
+    deleteIntegration: deleteIntegrationMutation.mutate,
+    triggerSync: triggerSyncMutation.mutate,
+    refetch: () => queryClient.invalidateQueries({ queryKey: ['booking-integrations', user?.id] }),
   };
 };

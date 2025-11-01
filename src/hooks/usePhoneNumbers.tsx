@@ -1,6 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
+import { useEffect } from 'react';
 
 export interface PhoneNumber {
   id: string;
@@ -63,6 +64,33 @@ export const usePhoneNumbers = () => {
       toast.error(`Synkning misslyckades: ${error.message}`);
     },
   });
+
+  // Real-time subscription for phone numbers
+  useEffect(() => {
+    const channel = supabase
+      .channel('phone-numbers-changes')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'phone_numbers_duplicate',
+        },
+        (payload) => {
+          console.log('📱 Phone number update:', payload);
+          queryClient.invalidateQueries({ queryKey: ['phone-numbers'] });
+          
+          if (payload.eventType === 'INSERT') {
+            toast.info(`📱 Nytt telefonnummer: ${(payload.new as any)?.phone_number}`);
+          }
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [queryClient]);
 
   return {
     phoneNumbers,

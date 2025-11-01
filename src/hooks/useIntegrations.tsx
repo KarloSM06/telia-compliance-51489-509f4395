@@ -2,6 +2,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { useAuth } from './useAuth';
+import { useEffect } from 'react';
 
 export type ProviderType = 'telephony' | 'messaging' | 'calendar' | 'multi';
 export type Capability = 'voice' | 'sms' | 'mms' | 'video' | 'fax' | 'ai_agent' | 'calendar_sync' | 'booking' | 'number_management' | 'event_management' | 'payment' | 'customer_management' | 'realtime_streaming' | 'websocket';
@@ -280,6 +281,36 @@ export const useIntegrations = () => {
       toast.error(`Fel: ${error.message}`);
     },
   });
+
+  // Real-time subscription for integrations
+  useEffect(() => {
+    if (!user) return;
+
+    const channel = supabase
+      .channel('integrations-changes')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'integrations',
+          filter: `user_id=eq.${user.id}`,
+        },
+        (payload) => {
+          console.log('🔌 Integration update:', payload);
+          queryClient.invalidateQueries({ queryKey: ['integrations', user.id] });
+          
+          if (payload.eventType === 'INSERT') {
+            toast.success(`✨ Ny integration tillagd: ${(payload.new as any)?.provider_display_name}`);
+          }
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [user, queryClient]);
 
   return {
     integrations: integrations || [],

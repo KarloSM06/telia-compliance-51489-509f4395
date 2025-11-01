@@ -2,6 +2,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "./useAuth";
 import { toast } from "sonner";
+import { useEffect } from "react";
 
 export interface ConversionFunnelMetrics {
   id: string;
@@ -144,6 +145,28 @@ export function useConversionFunnel(dateRange: DateRange) {
       toast.error("Kunde inte uppdatera lead: " + error.message);
     },
   });
+
+  // Real-time subscription for all funnel data sources
+  useEffect(() => {
+    if (!user?.id) return;
+
+    const channel = supabase
+      .channel('conversion-funnel-changes')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'leads', filter: `user_id=eq.${user.id}` }, 
+        () => queryClient.invalidateQueries({ queryKey: ['conversion-funnel', user.id] })
+      )
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'telephony_events', filter: `user_id=eq.${user.id}` }, 
+        () => queryClient.invalidateQueries({ queryKey: ['conversion-funnel', user.id] })
+      )
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'calendar_events', filter: `user_id=eq.${user.id}` }, 
+        () => queryClient.invalidateQueries({ queryKey: ['conversion-funnel', user.id] })
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [user?.id, queryClient]);
 
   return {
     metrics,
