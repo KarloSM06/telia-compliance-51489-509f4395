@@ -3466,6 +3466,51 @@ export type Database = {
         }
         Relationships: []
       }
+      user_ai_settings: {
+        Row: {
+          ai_provider: string | null
+          analysis_model: string | null
+          chat_model: string | null
+          classification_model: string | null
+          created_at: string | null
+          default_model: string | null
+          enrichment_model: string | null
+          id: string
+          openrouter_api_key_encrypted: string | null
+          updated_at: string | null
+          use_system_fallback: boolean | null
+          user_id: string
+        }
+        Insert: {
+          ai_provider?: string | null
+          analysis_model?: string | null
+          chat_model?: string | null
+          classification_model?: string | null
+          created_at?: string | null
+          default_model?: string | null
+          enrichment_model?: string | null
+          id?: string
+          openrouter_api_key_encrypted?: string | null
+          updated_at?: string | null
+          use_system_fallback?: boolean | null
+          user_id: string
+        }
+        Update: {
+          ai_provider?: string | null
+          analysis_model?: string | null
+          chat_model?: string | null
+          classification_model?: string | null
+          created_at?: string | null
+          default_model?: string | null
+          enrichment_model?: string | null
+          id?: string
+          openrouter_api_key_encrypted?: string | null
+          updated_at?: string | null
+          use_system_fallback?: boolean | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_analysis: {
         Row: {
           average_score: number | null

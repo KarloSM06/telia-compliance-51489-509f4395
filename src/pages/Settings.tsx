@@ -9,6 +9,7 @@ import { SecuritySettings } from "@/components/settings/SecuritySettings";
 import { ProductsSettings } from "@/components/settings/ProductsSettings";
 import { TeamSettings } from "@/components/settings/TeamSettings";
 import { HiemsAdminPanel } from "@/components/settings/HiemsAdminPanel";
+import { AIProviderSettings } from "@/components/settings/AIProviderSettings";
 
 export default function Settings() {
   const { isHiemsAdmin } = useHiemsAdmin();
@@ -45,6 +46,10 @@ export default function Settings() {
               <Package className="h-4 w-4" />
               <span className="hidden sm:inline">Produkter</span>
             </TabsTrigger>
+            <TabsTrigger value="ai" className="gap-2 hover-scale">
+              <SettingsIcon className="h-4 w-4" />
+              <span className="hidden sm:inline">AI</span>
+            </TabsTrigger>
             {showTeamTab && (
               <TabsTrigger value="team" className="gap-2 hover-scale">
                 <Users className="h-4 w-4" />
@@ -69,6 +74,10 @@ export default function Settings() {
 
           <TabsContent value="products" className="space-y-6 animate-enter">
             <ProductsSettings />
+          </TabsContent>
+
+          <TabsContent value="ai" className="space-y-6 animate-enter">
+            <AIProviderSettings />
           </TabsContent>
 
           {showTeamTab && (

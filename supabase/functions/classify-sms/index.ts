@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.75.0';
+import { callAI } from '../_shared/ai-gateway.ts';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -12,7 +13,7 @@ serve(async (req) => {
   }
 
   try {
-    const { messageBody, messageLogId } = await req.json();
+    const { messageBody, messageLogId, userId } = await req.json();
     
     const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
     if (!LOVABLE_API_KEY) {
@@ -21,36 +22,29 @@ serve(async (req) => {
 
     console.log(`🤖 Classifying SMS ${messageLogId}...`);
 
-    // Anropa Lovable AI för klassificering
-    const aiResponse = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${LOVABLE_API_KEY}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        model: 'google/gemini-2.5-flash',
-        messages: [
-          {
-            role: 'system',
-            content: 'Du är en expert på att klassificera SMS-meddelanden. Analysera meddelandet och bestäm om det är en review (omdöme/feedback), en bokningsförfrågan, en fråga, eller ett generellt meddelande. Svara ENDAST med JSON i formatet: {"type": "review|booking_request|question|general", "confidence": 0.0-1.0, "reasoning": "kort förklaring", "sentiment": "positive|neutral|negative", "keywords": ["lista", "av", "nyckelord"]}'
-          },
-          {
-            role: 'user',
-            content: `Klassificera följande SMS:\n\n"${messageBody}"`
-          }
-        ],
-      }),
-    });
-
-    if (!aiResponse.ok) {
-      const errorText = await aiResponse.text();
-      console.error('❌ AI gateway error:', aiResponse.status, errorText);
-      throw new Error(`AI classification failed: ${aiResponse.status}`);
+    if (!userId) {
+      throw new Error('userId is required for AI classification');
     }
 
-    const aiData = await aiResponse.json();
-    const content = aiData.choices[0].message.content;
+    // Call AI with user-specific settings
+    const aiResult = await callAI({
+      userId: userId,
+      useCase: 'classification',
+      messages: [
+        {
+          role: 'system',
+          content: 'Du är en expert på att klassificera SMS-meddelanden. Analysera meddelandet och bestäm om det är en review (omdöme/feedback), en bokningsförfrågan, en fråga, eller ett generellt meddelande. Svara ENDAST med JSON i formatet: {"type": "review|booking_request|question|general", "confidence": 0.0-1.0, "reasoning": "kort förklaring", "sentiment": "positive|neutral|negative", "keywords": ["lista", "av", "nyckelord"]}'
+        },
+        {
+          role: 'user',
+          content: `Klassificera följande SMS:\n\n"${messageBody}"`
+        }
+      ],
+      temperature: 0.3,
+    });
+
+    const content = aiResult.content;
+    console.log(`Used ${aiResult.provider} with model ${aiResult.model}`);
     
     // Extrahera JSON från AI-svaret
     const jsonMatch = content.match(/\{[\s\S]*\}/);

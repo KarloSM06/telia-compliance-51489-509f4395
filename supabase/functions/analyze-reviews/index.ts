@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.75.0";
+import { callAI } from '../_shared/ai-gateway.ts';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -130,7 +131,7 @@ serve(async (req) => {
     }
 
     // 2. Analyze with Lovable AI
-    const insights = await analyzeWithAI(interactions);
+    const insights = await analyzeWithAI(interactions, userId);
 
     // 3. Calculate metrics with NaN protection
     const totalReviews = interactions.filter(i => i.source === 'review').length;
@@ -282,11 +283,7 @@ async function aggregateDataSources(
   return interactions;
 }
 
-async function analyzeWithAI(interactions: NormalizedInteraction[]): Promise<any> {
-  const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
-  if (!LOVABLE_API_KEY) {
-    throw new Error('LOVABLE_API_KEY not configured');
-  }
+async function analyzeWithAI(interactions: NormalizedInteraction[], userId: string): Promise<any> {
 
   // Build analysis prompt
   const interactionsText = interactions.map(i => 
@@ -327,22 +324,43 @@ VIKTIGT:
 
 Analysera och returnera strukturerade insikter PÅ SVENSKA.`;
 
-  const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
-    method: 'POST',
-    headers: {
-      'Authorization': `Bearer ${LOVABLE_API_KEY}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      model: 'google/gemini-2.5-flash',
-      messages: [
-        { role: 'system', content: systemPrompt },
-        { role: 'user', content: userPrompt }
-      ],
-      tools: [{
-        type: 'function',
-        function: {
-          name: 'generate_insights',
+  // Call AI with user-specific settings
+  const aiResult = await callAI({
+    userId: userId,
+    useCase: 'analysis',
+    messages: [
+      { role: 'system', content: systemPrompt },
+      { role: 'user', content: userPrompt }
+    ],
+    temperature: 0.7,
+  });
+
+  console.log(`Used ${aiResult.provider} with model ${aiResult.model}`);
+
+  // Parse the AI response as JSON since we're not using tool calling anymore
+  const insights = JSON.parse(aiResult.content);
+
+  // Validate that we got data
+  const validationWarnings = [];
+  if (!insights.improvement_suggestions || insights.improvement_suggestions.length === 0) {
+    validationWarnings.push('No improvement suggestions');
+  }
+  if (!insights.positive_drivers || insights.positive_drivers.length === 0) {
+    validationWarnings.push('No positive drivers');
+  }
+  if (!insights.negative_drivers || insights.negative_drivers.length === 0) {
+    validationWarnings.push('No negative drivers');
+  }
+  if (!insights.topic_distribution?.categories || insights.topic_distribution.categories.length === 0) {
+    validationWarnings.push('No topic distribution');
+  }
+
+  if (validationWarnings.length > 0) {
+    console.warn('⚠️ AI response validation warnings:', validationWarnings);
+  }
+
+  return insights;
+}
           description: 'Generera strukturerade insikter från kunddata',
           parameters: {
             type: 'object',

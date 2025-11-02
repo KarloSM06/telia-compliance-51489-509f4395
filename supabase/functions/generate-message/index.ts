@@ -1,6 +1,7 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { formatInTimeZone, sv } from "../_shared/timezoneUtils.ts";
+import { callAI } from '../_shared/ai-gateway.ts';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -153,9 +154,8 @@ serve(async (req) => {
       subject = subject.replace(regex, value);
     });
 
-    // Use AI to enhance the message if Lovable AI is available
-    const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
-    if (LOVABLE_API_KEY && template.tone) {
+    // Use AI to enhance the message if user has AI settings
+    if (template.tone && event?.user_id) {
       try {
         const systemPrompt = `Du är en expert på att skriva professionella meddelanden för bokningar.
 Ton: ${template.tone}
@@ -165,25 +165,18 @@ Förbättra följande ${messageType} meddelande. Behåll all viktig information 
 Om det är SMS, håll det kort (max 160 tecken). Om det är e-post, gör det mer detaljerat.
 Returnera endast det förbättrade meddelandet, inget annat.`;
 
-        const aiResponse = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${LOVABLE_API_KEY}`,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            model: 'google/gemini-2.5-flash',
-            messages: [
-              { role: 'system', content: systemPrompt },
-              { role: 'user', content: message }
-            ],
-          }),
+        const aiResult = await callAI({
+          userId: event.user_id,
+          useCase: 'chat',
+          messages: [
+            { role: 'system', content: systemPrompt },
+            { role: 'user', content: message }
+          ],
+          temperature: 0.7,
         });
 
-        if (aiResponse.ok) {
-          const aiData = await aiResponse.json();
-          message = aiData.choices[0].message.content;
-        }
+        message = aiResult.content;
+        console.log(`Used ${aiResult.provider} with model ${aiResult.model}`);
       } catch (aiError) {
         console.error('AI enhancement failed, using template message:', aiError);
       }

@@ -1,4 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+import { callAI } from '../_shared/ai-gateway.ts';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -15,6 +17,30 @@ serve(async (req) => {
 
   try {
     const { messages } = await req.json();
+    
+    // Get authenticated user
+    const supabaseClient = createClient(
+      Deno.env.get('SUPABASE_URL') ?? '',
+      Deno.env.get('SUPABASE_ANON_KEY') ?? ''
+    );
+
+    const authHeader = req.headers.get('Authorization');
+    if (!authHeader) {
+      return new Response(
+        JSON.stringify({ error: 'Unauthorized' }),
+        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    const token = authHeader.replace('Bearer ', '');
+    const { data: { user }, error: userError } = await supabaseClient.auth.getUser(token);
+
+    if (userError || !user) {
+      return new Response(
+        JSON.stringify({ error: 'Invalid token' }),
+        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
     
     // Input validation
     if (!Array.isArray(messages)) {
@@ -130,46 +156,24 @@ TON & PERSONLIGHET:
 
 Kom ihåg: Du representerar ett premium AI-företag. Var professionell men personlig, och fokusera på att skapa värde och förtroende!`;
 
-    const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${LOVABLE_API_KEY}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        model: "google/gemini-2.5-flash",
-        messages: [
-          { role: "system", content: systemPrompt },
-          ...messages,
-        ],
-        stream: true,
-      }),
+    // Call AI with user-specific settings
+    const aiResult = await callAI({
+      userId: user.id,
+      useCase: 'chat',
+      messages: [
+        { role: "system", content: systemPrompt },
+        ...messages,
+      ],
+      temperature: 0.7,
     });
 
-    if (!response.ok) {
-      if (response.status === 429) {
-        return new Response(JSON.stringify({ error: "För många förfrågningar, vänligen försök igen om en stund." }), {
-          status: 429,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-        });
-      }
-      if (response.status === 402) {
-        return new Response(JSON.stringify({ error: "Tjänsten är inte tillgänglig just nu. Vänligen kontakta oss direkt." }), {
-          status: 402,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-        });
-      }
-      const errorText = await response.text();
-      console.error("AI gateway error:", response.status, errorText);
-      return new Response(JSON.stringify({ error: "Ett fel uppstod vid kommunikation med AI:n" }), {
-        status: 500,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
-    }
+    const aiMessage = aiResult.content || "Ledsen, jag kunde inte generera ett svar.";
+    console.log(`Used ${aiResult.provider} with model ${aiResult.model}`);
 
-    return new Response(response.body, {
-      headers: { ...corsHeaders, "Content-Type": "text/event-stream" },
-    });
+    return new Response(
+      JSON.stringify({ content: aiMessage }),
+      { headers: { ...corsHeaders, "Content-Type": "application/json" } }
+    );
   } catch (error) {
     const requestId = crypto.randomUUID();
     

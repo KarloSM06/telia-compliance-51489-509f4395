@@ -1,6 +1,7 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
+import { callAI } from '../_shared/ai-gateway.ts';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -122,46 +123,19 @@ Svara ENDAST med valid JSON i detta exakta format:
   "recommended_product": "<string>"
 }`;
 
-    const aiResponse = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${LOVABLE_API_KEY}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        model: 'google/gemini-2.5-flash',
-        messages: [
-          { role: 'system', content: systemPrompt },
-          { role: 'user', content: userPrompt }
-        ],
-        temperature: 0.7,
-      }),
+    // Call AI with user-specific settings
+    const aiResult = await callAI({
+      userId: user.id,
+      useCase: 'enrichment',
+      messages: [
+        { role: 'system', content: systemPrompt },
+        { role: 'user', content: userPrompt }
+      ],
+      temperature: 0.7,
     });
 
-    if (!aiResponse.ok) {
-      if (aiResponse.status === 429) {
-        return new Response(
-          JSON.stringify({ error: 'AI rate limit exceeded. Please try again later.' }),
-          { status: 429, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-        );
-      }
-      
-      if (aiResponse.status === 402) {
-        return new Response(
-          JSON.stringify({ error: 'AI credits depleted. Please add funds to continue.' }),
-          { status: 402, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-        );
-      }
-
-      throw new Error(`AI API error: ${aiResponse.status}`);
-    }
-
-    const aiData = await aiResponse.json();
-    const aiContent = aiData.choices?.[0]?.message?.content;
-
-    if (!aiContent) {
-      throw new Error('No AI response content');
-    }
+    const aiContent = aiResult.content;
+    console.log(`Used ${aiResult.provider} with model ${aiResult.model}`);
 
     // Parse and validate AI response
     let enrichmentData;
