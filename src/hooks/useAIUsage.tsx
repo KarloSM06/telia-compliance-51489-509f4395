@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "./useAuth";
 import { startOfDay, endOfDay } from "date-fns";
+import { useEffect } from "react";
 
 export interface AIUsageSummary {
   totalCostSEK: number;
@@ -119,6 +120,32 @@ export const useAIUsage = (dateRange?: { from: Date; to: Date }) => {
     },
     enabled: !!user?.id,
   });
+
+  // Realtime subscription for new AI usage
+  useEffect(() => {
+    if (!user?.id) return;
+
+    const channel = supabase
+      .channel('ai-usage-realtime')
+      .on(
+        'postgres_changes',
+        {
+          event: 'INSERT',
+          schema: 'public',
+          table: 'ai_usage_logs',
+          filter: `user_id=eq.${user.id}`,
+        },
+        () => {
+          console.log('New AI usage detected, refreshing...');
+          refetch();
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [user?.id, refetch]);
 
   return {
     usage: data,

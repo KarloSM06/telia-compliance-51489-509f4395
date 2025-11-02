@@ -9,7 +9,8 @@ import { AreaChartComponent } from "@/components/dashboard/charts/AreaChartCompo
 import { PieChartComponent } from "@/components/dashboard/charts/PieChartComponent";
 import { startOfMonth, endOfMonth } from "date-fns";
 import { OpenRouterSetupModal } from "./OpenRouterSetupModal";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { supabase } from "@/integrations/supabase/client";
 
 export function AIIntegrationsTab() {
   const navigate = useNavigate();
@@ -19,8 +20,28 @@ export function AIIntegrationsTab() {
     to: endOfMonth(new Date()),
   });
   const [setupModalOpen, setSetupModalOpen] = useState(false);
+  const [isRealtime, setIsRealtime] = useState(false);
 
   const isOpenRouterConfigured = settings?.ai_provider === 'openrouter' && settings?.openrouter_api_key_encrypted;
+
+  // Realtime indicator for new AI usage
+  useEffect(() => {
+    const channel = supabase
+      .channel('ai-usage-status')
+      .on('postgres_changes', 
+        { event: 'INSERT', schema: 'public', table: 'ai_usage_logs' },
+        () => {
+          setIsRealtime(true);
+          // Reset after 3 seconds
+          setTimeout(() => setIsRealtime(false), 3000);
+        }
+      )
+      .subscribe();
+
+    return () => { 
+      supabase.removeChannel(channel); 
+    };
+  }, []);
 
   return (
     <div className="space-y-6">
@@ -77,6 +98,9 @@ export function AIIntegrationsTab() {
                 Standardmodell: {settings.default_model}
               </Badge>
             )}
+            <Badge variant={isRealtime ? "default" : "outline"} className="animate-in fade-in">
+              {isRealtime ? "🟢 Realtid aktiverad" : "⏸️ Väntar på data"}
+            </Badge>
           </div>
         </CardContent>
       </Card>
