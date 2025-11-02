@@ -10,6 +10,7 @@ import { RecentActivityCompact } from '@/components/dashboard/RecentActivityComp
 import { DateRangePicker, DateRange } from "@/components/dashboard/filters/DateRangePicker";
 import { BreakEvenCard } from '@/components/dashboard/BreakEvenCard';
 import { CumulativeROIChart } from '@/components/dashboard/CumulativeROIChart';
+import { AIUsageCard } from '@/components/dashboard/AIUsageCard';
 
 const Dashboard = () => {
   const { user } = useAuth();
@@ -28,6 +29,7 @@ const Dashboard = () => {
       ['Metric', 'Value'].join(','),
       ['Total Intäkt', `${data.roi.totalRevenue} SEK`].join(','),
       ['Driftkostnader', `${data.costs.totalOperatingCost} SEK`].join(','),
+      ['AI-kostnad', `${data.costs.aiCost} SEK`].join(','),
       ['Total Kostnader (inkl. startup)', `${data.roi.totalCosts} SEK`].join(','),
       ['Nettovinst', `${data.roi.netProfit} SEK`].join(','),
       ['ROI', `${data.roi.roi.toFixed(1)}%`].join(','),
@@ -122,6 +124,15 @@ const Dashboard = () => {
             icon={Target}
             trend={{ value: 8, isPositive: true }}
           />
+        </div>
+      )}
+
+      {/* AI USAGE OVERVIEW */}
+      {data && (
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+          <div className="lg:col-span-1">
+            <AIUsageCard />
+          </div>
         </div>
       )}
 

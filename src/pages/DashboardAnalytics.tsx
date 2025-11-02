@@ -23,10 +23,13 @@ import {
   Mail,
   Smartphone,
   CheckCircle,
-  Info
+  Info,
+  Brain,
+  ExternalLink
 } from "lucide-react";
 import { useAnalyticsData } from "@/hooks/useAnalyticsData";
 import { useBusinessMetrics } from "@/hooks/useBusinessMetrics";
+import { useAIUsage } from "@/hooks/useAIUsage";
 import { DateRangePicker, DateRange } from "@/components/dashboard/filters/DateRangePicker";
 import { StatCard } from "@/components/communications/StatCard";
 import { AreaChartComponent } from "@/components/dashboard/charts/AreaChartComponent";
@@ -47,6 +50,7 @@ const DashboardAnalytics = () => {
     from: new Date(new Date().setMonth(new Date().getMonth() - 1)),
     to: new Date()
   });
+  const { usage: aiUsage, isLoading: aiLoading } = useAIUsage(dateRange);
 
   const handleRefresh = () => {
     window.location.reload();
@@ -57,15 +61,19 @@ const DashboardAnalytics = () => {
     
     // Simple CSV export of daily data
     const csvData = [
-      ['Datum', 'Bokningar', 'Intäkter (SEK)', 'Kostnader (SEK)', 'Vinst (SEK)', 'ROI (%)'],
-      ...data.dailyData.map(d => [
-        d.date,
-        d.bookings,
-        d.revenue.toFixed(2),
-        d.costs.toFixed(2),
-        d.profit.toFixed(2),
-        d.roi.toFixed(2)
-      ])
+      ['Datum', 'Bokningar', 'Intäkter (SEK)', 'Kostnader (SEK)', 'AI-kostnad (SEK)', 'Vinst (SEK)', 'ROI (%)'],
+      ...data.dailyData.map(d => {
+        const dayAICost = aiUsage?.dailyCosts.find(ai => ai.date === d.date)?.cost || 0;
+        return [
+          d.date,
+          d.bookings,
+          d.revenue.toFixed(2),
+          d.costs.toFixed(2),
+          dayAICost.toFixed(2),
+          d.profit.toFixed(2),
+          d.roi.toFixed(2)
+        ];
+      })
     ];
     
     const csv = csvData.map(row => row.join(',')).join('\n');
@@ -141,7 +149,8 @@ const DashboardAnalytics = () => {
   const costBreakdownData = [
     { name: 'Telefoni', value: data.costs.telephonyCost },
     { name: 'SMS', value: data.costs.smsCost },
-    { name: 'Email', value: data.costs.emailCost }
+    { name: 'Email', value: data.costs.emailCost },
+    { name: 'AI', value: data.costs.aiCost }
   ].filter(item => item.value > 0);
 
   const bookingsByWeekdayData = data.bookings.reduce((acc: any[], booking) => {
@@ -310,6 +319,15 @@ const DashboardAnalytics = () => {
                 </div>
                 <span className="font-semibold">
                   {data.costs.emailCost.toLocaleString('sv-SE', { maximumFractionDigits: 2 })} SEK
+                </span>
+              </div>
+              <div className="flex justify-between items-center">
+                <div className="flex items-center gap-2">
+                  <Sparkles className="h-4 w-4 text-muted-foreground" />
+                  <span className="text-sm text-muted-foreground">AI & Modeller</span>
+                </div>
+                <span className="font-semibold">
+                  {data.costs.aiCost.toLocaleString('sv-SE', { maximumFractionDigits: 2 })} SEK
                 </span>
               </div>
             </div>
@@ -578,6 +596,58 @@ const DashboardAnalytics = () => {
             </div>
           </div>
         </div>
+      </div>
+
+      {/* Section 6.5: AI & Automation */}
+      <div className="space-y-4">
+        <h3 className="text-xl font-bold flex items-center gap-2">
+          <Sparkles className="h-5 w-5 text-purple-600" />
+          AI & Automatisering
+        </h3>
+        
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <StatCard
+            title="Total AI-kostnad"
+            value={`${data.costs.aiCost.toFixed(2)} SEK`}
+            icon={Sparkles}
+          />
+          <StatCard
+            title="Antal AI-anrop"
+            value={aiUsage?.totalCalls || 0}
+            icon={TrendingUp}
+          />
+          <StatCard
+            title="Mest använda modellen"
+            value={aiUsage?.costByModel[0]?.model.split('/')[1] || 'N/A'}
+            icon={Brain}
+          />
+          <StatCard
+            title="Snitt kostnad/anrop"
+            value={aiUsage?.totalCalls ? `${(aiUsage.totalCostSEK / aiUsage.totalCalls).toFixed(2)} SEK` : '0 SEK'}
+            icon={DollarSign}
+          />
+        </div>
+        
+        {aiUsage && aiUsage.dailyCosts.length > 0 && (
+          <LineChartComponent
+            title="AI-kostnad över tid"
+            data={aiUsage.dailyCosts.map(d => ({
+              name: d.date,
+              cost: d.cost
+            }))}
+            dataKeys={[
+              { key: "cost", color: "hsl(280, 90%, 50%)", name: "Kostnad (SEK)" }
+            ]}
+            height={300}
+          />
+        )}
+        
+        <Button variant="outline" asChild>
+          <Link to="/dashboard/integrations?tab=ai">
+            <ExternalLink className="h-4 w-4 mr-2" />
+            Se detaljerad AI-statistik
+          </Link>
+        </Button>
       </div>
 
       {/* Section 7: Reviews & Customer Satisfaction */}
