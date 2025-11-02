@@ -176,3 +176,6 @@ verify_jwt = true
 
 [functions.get-user-usage]
 verify_jwt = true
+
+[functions.test-openrouter-endpoints]
+verify_jwt = true
