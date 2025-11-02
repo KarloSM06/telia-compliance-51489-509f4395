@@ -3,11 +3,13 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useAISettings } from "@/hooks/useAISettings";
 import { useAIUsage } from "@/hooks/useAIUsage";
-import { Settings, TrendingUp, Zap, DollarSign, Activity } from "lucide-react";
+import { Settings, TrendingUp, Zap, DollarSign, Activity, Pencil } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { AreaChartComponent } from "@/components/dashboard/charts/AreaChartComponent";
 import { PieChartComponent } from "@/components/dashboard/charts/PieChartComponent";
 import { startOfMonth, endOfMonth } from "date-fns";
+import { OpenRouterSetupModal } from "./OpenRouterSetupModal";
+import { useState } from "react";
 
 export function AIIntegrationsTab() {
   const navigate = useNavigate();
@@ -16,6 +18,7 @@ export function AIIntegrationsTab() {
     from: startOfMonth(new Date()),
     to: endOfMonth(new Date()),
   });
+  const [setupModalOpen, setSetupModalOpen] = useState(false);
 
   const isOpenRouterConfigured = settings?.ai_provider === 'openrouter' && settings?.openrouter_api_key_encrypted;
 
@@ -33,10 +36,27 @@ export function AIIntegrationsTab() {
                   : "Konfigurera OpenRouter för att använda dina egna modeller"}
               </CardDescription>
             </div>
-            <Button variant="outline" onClick={() => navigate('/dashboard/settings?tab=ai')}>
-              <Settings className="h-4 w-4 mr-2" />
-              Inställningar
-            </Button>
+            <div className="flex gap-2">
+              <Button 
+                variant={isOpenRouterConfigured ? "outline" : "default"}
+                onClick={() => setSetupModalOpen(true)}
+              >
+                {isOpenRouterConfigured ? (
+                  <>
+                    <Pencil className="h-4 w-4 mr-2" />
+                    Redigera
+                  </>
+                ) : (
+                  <>
+                    <Settings className="h-4 w-4 mr-2" />
+                    Konfigurera
+                  </>
+                )}
+              </Button>
+              <Button variant="outline" onClick={() => navigate('/dashboard/settings?tab=ai')}>
+                Avancerade inställningar
+              </Button>
+            </div>
           </div>
         </CardHeader>
         <CardContent>
@@ -233,6 +253,11 @@ export function AIIntegrationsTab() {
           )}
         </CardContent>
       </Card>
+
+      <OpenRouterSetupModal 
+        open={setupModalOpen} 
+        onOpenChange={setSetupModalOpen}
+      />
     </div>
   );
 }
