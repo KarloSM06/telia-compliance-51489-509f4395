@@ -28,17 +28,17 @@ export const AIProviderSettings = () => {
   const [showApiKey, setShowApiKey] = useState(false);
   const [defaultModel, setDefaultModel] = useState(settings.default_model);
   const [useFallback, setUseFallback] = useState(settings.use_system_fallback);
-  const [chatModel, setChatModel] = useState(settings.chat_model ?? '');
-  const [enrichmentModel, setEnrichmentModel] = useState(settings.enrichment_model ?? '');
-  const [analysisModel, setAnalysisModel] = useState(settings.analysis_model ?? '');
+  const [chatModel, setChatModel] = useState(settings.chat_model ?? 'use_default');
+  const [enrichmentModel, setEnrichmentModel] = useState(settings.enrichment_model ?? 'use_default');
+  const [analysisModel, setAnalysisModel] = useState(settings.analysis_model ?? 'use_default');
 
   useEffect(() => {
     setProvider(settings.ai_provider);
     setDefaultModel(settings.default_model);
     setUseFallback(settings.use_system_fallback);
-    setChatModel(settings.chat_model ?? '');
-    setEnrichmentModel(settings.enrichment_model ?? '');
-    setAnalysisModel(settings.analysis_model ?? '');
+    setChatModel(settings.chat_model ?? 'use_default');
+    setEnrichmentModel(settings.enrichment_model ?? 'use_default');
+    setAnalysisModel(settings.analysis_model ?? 'use_default');
   }, [settings]);
 
   const handleSave = () => {
@@ -52,9 +52,9 @@ export const AIProviderSettings = () => {
       provider,
       apiKey: apiKey || undefined,
       defaultModel,
-      chatModel: chatModel || undefined,
-      enrichmentModel: enrichmentModel || undefined,
-      analysisModel: analysisModel || undefined,
+      chatModel: chatModel === 'use_default' ? undefined : chatModel,
+      enrichmentModel: enrichmentModel === 'use_default' ? undefined : enrichmentModel,
+      analysisModel: analysisModel === 'use_default' ? undefined : analysisModel,
       useFallback,
     });
     setApiKey(''); // Clear input after save
@@ -159,7 +159,7 @@ export const AIProviderSettings = () => {
                   <SelectValue placeholder="Använd standardmodell" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">Använd standardmodell</SelectItem>
+                  <SelectItem value="use_default">Använd standardmodell</SelectItem>
                   {OPENROUTER_MODELS.map(model => (
                     <SelectItem key={model.value} value={model.value}>
                       {model.label}
@@ -176,7 +176,7 @@ export const AIProviderSettings = () => {
                   <SelectValue placeholder="Använd standardmodell" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">Använd standardmodell</SelectItem>
+                  <SelectItem value="use_default">Använd standardmodell</SelectItem>
                   {OPENROUTER_MODELS.map(model => (
                     <SelectItem key={model.value} value={model.value}>
                       {model.label}
@@ -193,7 +193,7 @@ export const AIProviderSettings = () => {
                   <SelectValue placeholder="Använd standardmodell" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">Använd standardmodell</SelectItem>
+                  <SelectItem value="use_default">Använd standardmodell</SelectItem>
                   {OPENROUTER_MODELS.map(model => (
                     <SelectItem key={model.value} value={model.value}>
                       {model.label}
