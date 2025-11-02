@@ -53,15 +53,20 @@ export const useAISettings = () => {
       // Encrypt API key if provided
       let encryptedKey = null;
       if (provider === 'openrouter' && apiKey) {
-        const { data: encryptData, error: encryptError } = await supabase.rpc(
-          'encrypt_text',
-          { 
-            data: apiKey, 
-            key: 'ENCRYPTION_KEY' 
-          }
+        const { data: encryptData, error: encryptError } = await supabase.functions.invoke(
+          'encrypt-api-key',
+          { body: { apiKey } }
         );
-        if (encryptError) throw encryptError;
-        encryptedKey = encryptData;
+        
+        if (encryptError) {
+          throw new Error(encryptError.message || 'Failed to encrypt API key');
+        }
+        
+        if (!encryptData?.encrypted) {
+          throw new Error('No encrypted key returned');
+        }
+        
+        encryptedKey = encryptData.encrypted;
       }
 
       const { data: { user } } = await supabase.auth.getUser();

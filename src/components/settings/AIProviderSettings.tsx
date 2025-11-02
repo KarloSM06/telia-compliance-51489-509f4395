@@ -7,6 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Switch } from "@/components/ui/switch";
 import { Shield, Sparkles, ExternalLink } from "lucide-react";
 import { useAISettings } from "@/hooks/useAISettings";
+import { toast } from "sonner";
 
 const OPENROUTER_MODELS = [
   { value: 'anthropic/claude-sonnet-4-5', label: 'Claude Sonnet 4.5 (Bäst reasoning)', cost: '$$$' },
@@ -20,27 +21,33 @@ const OPENROUTER_MODELS = [
 ];
 
 export const AIProviderSettings = () => {
-  const { settings, saveSettings, isSaving } = useAISettings();
+  const { settings, saveSettings, isSaving, isLoading } = useAISettings();
   
   const [provider, setProvider] = useState<'lovable' | 'openrouter'>(settings.ai_provider);
   const [apiKey, setApiKey] = useState('');
   const [showApiKey, setShowApiKey] = useState(false);
   const [defaultModel, setDefaultModel] = useState(settings.default_model);
   const [useFallback, setUseFallback] = useState(settings.use_system_fallback);
-  const [chatModel, setChatModel] = useState(settings.chat_model || '');
-  const [enrichmentModel, setEnrichmentModel] = useState(settings.enrichment_model || '');
-  const [analysisModel, setAnalysisModel] = useState(settings.analysis_model || '');
+  const [chatModel, setChatModel] = useState(settings.chat_model ?? '');
+  const [enrichmentModel, setEnrichmentModel] = useState(settings.enrichment_model ?? '');
+  const [analysisModel, setAnalysisModel] = useState(settings.analysis_model ?? '');
 
   useEffect(() => {
     setProvider(settings.ai_provider);
     setDefaultModel(settings.default_model);
     setUseFallback(settings.use_system_fallback);
-    setChatModel(settings.chat_model || '');
-    setEnrichmentModel(settings.enrichment_model || '');
-    setAnalysisModel(settings.analysis_model || '');
+    setChatModel(settings.chat_model ?? '');
+    setEnrichmentModel(settings.enrichment_model ?? '');
+    setAnalysisModel(settings.analysis_model ?? '');
   }, [settings]);
 
   const handleSave = () => {
+    // Validate OpenRouter API key if provider is openrouter and key is provided
+    if (provider === 'openrouter' && apiKey && !apiKey.startsWith('sk-or-')) {
+      toast.error('OpenRouter API-nyckeln måste börja med "sk-or-"');
+      return;
+    }
+
     saveSettings({
       provider,
       apiKey: apiKey || undefined,
