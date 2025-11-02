@@ -128,14 +128,11 @@ async function testGenerationEndpoint(apiKey: string): Promise<EndpointTestResul
   const startTime = Date.now();
   
   try {
-    console.log('Testing /api/v1/generation endpoint...');
+    console.log('⚠️ Testing /api/v1/generation (UNDOCUMENTED) endpoint...');
     
-    // Calculate date range (last 7 days)
-    const endDate = new Date();
-    const startDate = new Date();
-    startDate.setDate(startDate.getDate() - 7);
-    
-    const url = `https://openrouter.ai/api/v1/generation?start=${startDate.toISOString()}&end=${endDate.toISOString()}&limit=5`;
+    // This endpoint is NOT documented in OpenRouter API docs
+    // It requires generation_id from actual API calls
+    const url = 'https://openrouter.ai/api/v1/generation?limit=5';
     
     const response = await fetch(url, {
       headers: {
@@ -152,7 +149,7 @@ async function testGenerationEndpoint(apiKey: string): Promise<EndpointTestResul
       
       return {
         status: 'error',
-        error: `HTTP ${response.status}: ${errorText}`,
+        error: `⚠️ UNDOCUMENTED: HTTP ${response.status}. Använd /chat/completions för realtid istället.`,
         requires_special_key: response.status === 403 || response.status === 401,
         response_time_ms: responseTime,
       };
@@ -168,7 +165,7 @@ async function testGenerationEndpoint(apiKey: string): Promise<EndpointTestResul
         sample_record: data.data?.[0] || null,
         has_usage_data: !!data.data?.[0]?.total_cost,
       },
-      data_format: 'Array of generation objects with tokens, cost, and model info',
+      data_format: '⚠️ UNDOCUMENTED: Använd submit-prompt med /chat/completions istället',
       requires_special_key: false,
       response_time_ms: responseTime,
     };
@@ -187,12 +184,10 @@ async function testActivityEndpoint(apiKey: string): Promise<EndpointTestResult>
   const startTime = Date.now();
   
   try {
-    console.log('Testing /api/v1/activity endpoint...');
+    console.log('✅ Testing /api/v1/activity (DOCUMENTED) endpoint...');
     
-    // Test without date parameter first
-    const urlNoDate = 'https://openrouter.ai/api/v1/activity';
-    
-    const response = await fetch(urlNoDate, {
+    // Test without date parameter (returns last 30 days by default)
+    const response = await fetch('https://openrouter.ai/api/v1/activity', {
       headers: {
         'Authorization': `Bearer ${apiKey}`,
         'Content-Type': 'application/json',
@@ -207,23 +202,32 @@ async function testActivityEndpoint(apiKey: string): Promise<EndpointTestResult>
       
       return {
         status: 'error',
-        error: `HTTP ${response.status}: ${errorText}`,
+        error: `HTTP ${response.status}: ${errorText}. Kan kräva Provisioning Key om 401/403.`,
         requires_special_key: response.status === 403 || response.status === 401,
         response_time_ms: responseTime,
       };
     }
 
     const data = await response.json();
-    console.log('Activity endpoint response sample:', JSON.stringify(data).substring(0, 500));
+    console.log('Activity endpoint response:', JSON.stringify(data).substring(0, 500));
+
+    // Check if data follows documented format
+    const hasCorrectFormat = data.data && Array.isArray(data.data) && 
+      data.data.length > 0 && 
+      data.data[0].date && 
+      data.data[0].model;
 
     return {
       status: 'success',
       data_sample: {
         total_records: data.data?.length || 0,
         sample_record: data.data?.[0] || null,
-        has_aggregated_data: !!data.data?.[0]?.usage,
+        date_range: data.data?.length > 0 
+          ? `${data.data[data.data.length - 1].date} → ${data.data[0].date}`
+          : 'Ingen data',
+        has_aggregated_fields: hasCorrectFormat,
       },
-      data_format: 'Aggregated daily usage grouped by model/endpoint',
+      data_format: '✅ Aggregerad per dag: date, endpoint, model, tokens, cost, requests',
       requires_special_key: false,
       response_time_ms: responseTime,
     };

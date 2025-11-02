@@ -63,27 +63,11 @@ serve(async (req) => {
           continue;
         }
 
-        // Get the last sync timestamp for this user
-        const { data: lastLog } = await supabase
-          .from('ai_usage_logs')
-          .select('created_at')
-          .eq('user_id', setting.user_id)
-          .order('created_at', { ascending: false })
-          .limit(1)
-          .single();
+        console.log(`Syncing user ${setting.user_id} - fetching last 30 days from activity endpoint`);
 
-        // Default to last 24 hours if no previous sync
-        const startDate = lastLog?.created_at 
-          ? new Date(lastLog.created_at).toISOString()
-          : new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
-
-        const endDate = new Date().toISOString();
-
-        console.log(`Syncing user ${setting.user_id} from ${startDate} to ${endDate}`);
-
-        // Fetch usage from OpenRouter
+        // Fetch aggregated usage from OpenRouter /activity endpoint (last 30 days)
         const openRouterResponse = await fetch(
-          `https://openrouter.ai/api/v1/generation?start=${startDate}&end=${endDate}`,
+          'https://openrouter.ai/api/v1/activity',
           {
             headers: {
               'Authorization': `Bearer ${decryptedKey}`,
@@ -105,35 +89,58 @@ serve(async (req) => {
           continue;
         }
 
-        // Map and insert usage logs
-        const usageLogs = usageData.data.map((generation: any) => ({
-          user_id: setting.user_id,
-          model: generation.model,
-          prompt_tokens: generation.native_tokens_prompt || 0,
-          completion_tokens: generation.native_tokens_completion || 0,
-          total_tokens: (generation.native_tokens_prompt || 0) + (generation.native_tokens_completion || 0),
-          cost_sek: parseFloat(generation.total_cost || 0) * 11,
-          cost_usd: parseFloat(generation.total_cost || 0),
-          provider: 'openrouter',
-          use_case: 'external_automation',
-          generation_id: generation.id,
-          created_at: generation.created_at,
-        }));
+        // Get existing dates we already have from submit-prompt
+        const thirtyDaysAgo = new Date();
+        thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
 
-        // Upsert to avoid duplicates
+        const { data: existingLogs } = await supabase
+          .from('ai_usage_logs')
+          .select('created_at')
+          .eq('user_id', setting.user_id)
+          .gte('created_at', thirtyDaysAgo.toISOString());
+
+        const existingDatesSet = new Set(
+          existingLogs?.map(log => log.created_at.split('T')[0]) || []
+        );
+
+        // Filter out dates we already have to avoid duplicates
+        const newActivityLogs = usageData.data
+          .filter((item: any) => !existingDatesSet.has(item.date))
+          .map((item: any) => ({
+            user_id: setting.user_id,
+            model: item.model,
+            prompt_tokens: item.prompt_tokens || 0,
+            completion_tokens: item.completion_tokens || 0,
+            total_tokens: item.total_tokens || 0,
+            cost_usd: item.cost || 0,
+            cost_sek: (item.cost || 0) * 11,
+            provider: 'openrouter',
+            use_case: 'activity_backup',
+            generation_id: null, // Activity endpoint doesn't provide this
+            created_at: item.date, // YYYY-MM-DD format
+            request_metadata: {
+              endpoint: item.endpoint,
+              requests_count: item.requests,
+              source: 'activity_cron'
+            }
+          }));
+
+        if (newActivityLogs.length === 0) {
+          console.log(`All dates already synced for user ${setting.user_id}`);
+          continue;
+        }
+
+        // Insert new logs
         const { error: insertError } = await supabase
           .from('ai_usage_logs')
-          .upsert(usageLogs, {
-            onConflict: 'generation_id',
-            ignoreDuplicates: true
-          });
+          .insert(newActivityLogs);
 
         if (insertError) {
           console.error(`Error inserting logs for user ${setting.user_id}:`, insertError);
           totalErrors++;
         } else {
-          totalSynced += usageLogs.length;
-          console.log(`Synced ${usageLogs.length} logs for user ${setting.user_id}`);
+          totalSynced += newActivityLogs.length;
+          console.log(`Synced ${newActivityLogs.length} new activity logs for user ${setting.user_id}`);
         }
 
       } catch (userError) {

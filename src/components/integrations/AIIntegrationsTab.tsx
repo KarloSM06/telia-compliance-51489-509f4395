@@ -126,7 +126,7 @@ export function AIIntegrationsTab() {
             </div>
           </div>
         </CardHeader>
-        <CardContent>
+        <CardContent className="space-y-4">
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-2">
               <div className={`h-3 w-3 rounded-full ${isOpenRouterConfigured ? 'bg-green-500' : 'bg-gray-300'}`} />
@@ -148,6 +148,34 @@ export function AIIntegrationsTab() {
               {isRealtime ? "🟢 Realtid aktiverad" : "⏸️ Väntar på data"}
             </Badge>
           </div>
+
+          {isOpenRouterConfigured && (
+            <div className="pt-3 border-t">
+              <h4 className="text-sm font-semibold mb-2">📊 Tracking Status</h4>
+              <div className="space-y-2 text-sm">
+                <div className="flex items-center justify-between">
+                  <span className="text-muted-foreground">Realtids-tracking (submit-prompt)</span>
+                  <Badge variant="default" className="bg-green-600">Aktiv</Badge>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-muted-foreground">Backup-sync (cron, varje timme)</span>
+                  <Badge variant="default" className="bg-blue-600">Aktiv</Badge>
+                </div>
+              </div>
+              <p className="text-xs text-muted-foreground mt-3">
+                All AI-användning loggas automatiskt via hybrid-strategi. Se{' '}
+                <a 
+                  href="https://github.com/yourusername/hiems/blob/main/OPENROUTER_INTEGRATION.md" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="underline hover:text-primary"
+                >
+                  dokumentation
+                </a>{' '}
+                för detaljer.
+              </p>
+            </div>
+          )}
         </CardContent>
       </Card>
 
