@@ -5,9 +5,12 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
-import { Shield, Sparkles, ExternalLink } from "lucide-react";
+import { Shield, Sparkles, ExternalLink, TrendingUp } from "lucide-react";
 import { useAISettings } from "@/hooks/useAISettings";
+import { useAIUsage } from "@/hooks/useAIUsage";
 import { toast } from "sonner";
+import { subDays } from "date-fns";
+import { useNavigate } from "react-router-dom";
 
 const OPENROUTER_MODELS = [
   { value: 'anthropic/claude-sonnet-4-5', label: 'Claude Sonnet 4.5 (Bäst reasoning)', cost: '$$$' },
@@ -21,7 +24,12 @@ const OPENROUTER_MODELS = [
 ];
 
 export const AIProviderSettings = () => {
+  const navigate = useNavigate();
   const { settings, saveSettings, isSaving, isLoading } = useAISettings();
+  const { usage: recentUsage } = useAIUsage({
+    from: subDays(new Date(), 30),
+    to: new Date(),
+  });
   
   const [provider, setProvider] = useState<'lovable' | 'openrouter'>(settings.ai_provider);
   const [apiKey, setApiKey] = useState('');
@@ -122,6 +130,37 @@ export const AIProviderSettings = () => {
                 <ExternalLink className="h-3 w-3" />
               </a>
             </p>
+            
+            {/* Usage display */}
+            {recentUsage && recentUsage.totalCalls > 0 && (
+              <div className="mt-3 p-3 bg-muted rounded-md space-y-2">
+                <div className="flex items-center justify-between text-sm">
+                  <span className="text-muted-foreground">Senaste 30 dagar:</span>
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    className="h-auto p-0 text-xs"
+                    onClick={() => navigate('/dashboard/integrations?tab=ai')}
+                  >
+                    Se detaljer <ExternalLink className="h-3 w-3 ml-1" />
+                  </Button>
+                </div>
+                <div className="grid grid-cols-3 gap-2 text-xs">
+                  <div>
+                    <div className="text-muted-foreground">Tokens</div>
+                    <div className="font-medium">{recentUsage.totalTokens.toLocaleString()}</div>
+                  </div>
+                  <div>
+                    <div className="text-muted-foreground">Anrop</div>
+                    <div className="font-medium">{recentUsage.totalCalls}</div>
+                  </div>
+                  <div>
+                    <div className="text-muted-foreground">Kostnad</div>
+                    <div className="font-medium">{recentUsage.totalCostSEK.toFixed(2)} SEK</div>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         )}
 

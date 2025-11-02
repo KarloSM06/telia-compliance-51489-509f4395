@@ -13,6 +13,7 @@ export interface OperationalCosts {
   telephonyCost: number;
   smsCost: number;
   emailCost: number;
+  aiCost: number;
   hiemsSupportCost: number;
   integrationCost: number;
   totalOperatingCost: number;
@@ -135,6 +136,7 @@ export function calculateBookingRevenue(
 export function calculateOperationalCosts(
   telephonyEvents: any[],
   messageLogs: any[],
+  aiUsageLogs: any[],
   businessMetrics: BusinessMetrics,
   dateRange: { from: Date; to: Date }
 ): OperationalCosts {
@@ -160,6 +162,11 @@ export function calculateOperationalCosts(
       return sum + costSEK;
     }, 0);
   
+  // Calculate AI costs from usage logs
+  const aiCost = aiUsageLogs.reduce((sum, log) => {
+    return sum + (parseFloat(log.cost_sek) || 0);
+  }, 0);
+  
   // Calculate prorated fixed costs based on date range
   const daysInRange = Math.max(1, Math.ceil(
     (dateRange.to.getTime() - dateRange.from.getTime()) / (1000 * 60 * 60 * 24)
@@ -183,12 +190,13 @@ export function calculateOperationalCosts(
     }
   }
   
-  const totalOperatingCost = telephonyCost + smsCost + emailCost + hiemsSupportCost;
+  const totalOperatingCost = telephonyCost + smsCost + emailCost + aiCost + hiemsSupportCost;
   
   return {
     telephonyCost,
     smsCost,
     emailCost,
+    aiCost,
     hiemsSupportCost,
     integrationCost,
     totalOperatingCost,

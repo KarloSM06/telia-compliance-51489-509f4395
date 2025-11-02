@@ -70,7 +70,7 @@ export const useAnalyticsData = (dateRange?: { from: Date; to: Date }) => {
         const integrationIds = integrations?.map(i => i.id) || [];
 
         // Fetch all data in parallel
-        const [bookingsRes, messagesRes, telephonyRes, reviewsRes] = await Promise.all([
+        const [bookingsRes, messagesRes, telephonyRes, reviewsRes, aiUsageRes] = await Promise.all([
           supabase
             .from("calendar_events")
             .select("*")
@@ -100,6 +100,13 @@ export const useAnalyticsData = (dateRange?: { from: Date; to: Date }) => {
             .select("*")
             .eq("user_id", user.id)
             .gte("created_at", fromStr)
+            .lte("created_at", toStr),
+          
+          supabase
+            .from("ai_usage_logs")
+            .select("*")
+            .eq("user_id", user.id)
+            .gte("created_at", fromStr)
             .lte("created_at", toStr)
         ]);
 
@@ -107,6 +114,7 @@ export const useAnalyticsData = (dateRange?: { from: Date; to: Date }) => {
         const messages = messagesRes.data || [];
         const telephonyRaw = telephonyRes.data || [];
         const reviews = reviewsRes.data || [];
+        const aiUsage = aiUsageRes.data || [];
 
         // Filter to only parent events (same logic as /telephony page)
         const telephony = telephonyRaw.filter(e => 
@@ -118,7 +126,7 @@ export const useAnalyticsData = (dateRange?: { from: Date; to: Date }) => {
           calculateBookingRevenue(b, businessMetrics)
         );
         
-        const costs = calculateOperationalCosts(telephony, messages, businessMetrics, { from, to });
+        const costs = calculateOperationalCosts(telephony, messages, aiUsage, businessMetrics, { from, to });
         const roi = calculateROI(bookingRevenues, costs);
 
         // Aggregate daily data

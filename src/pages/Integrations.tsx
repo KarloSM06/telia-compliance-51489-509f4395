@@ -9,6 +9,7 @@ import { IntegrationCard } from '@/components/integrations/IntegrationCard';
 import { AddIntegrationModal } from '@/components/integrations/AddIntegrationModal';
 import { IntegrationTester } from '@/components/integrations/IntegrationTester';
 import { SyncStatusDashboard } from '@/components/integrations/SyncStatusDashboard';
+import { AIIntegrationsTab } from '@/components/integrations/AIIntegrationsTab';
 import { toast } from 'sonner';
 
 export default function Integrations() {
@@ -113,6 +114,9 @@ export default function Integrations() {
               <TabsTrigger value="calendar">
                 Kalender ({calendarIntegrations.length})
               </TabsTrigger>
+              <TabsTrigger value="ai">
+                AI & Modeller
+              </TabsTrigger>
             </TabsList>
 
             <TabsContent value="all" className="space-y-4">
@@ -189,6 +193,10 @@ export default function Integrations() {
                   />
                 ))
               )}
+            </TabsContent>
+
+            <TabsContent value="ai">
+              <AIIntegrationsTab />
             </TabsContent>
           </Tabs>
         )}

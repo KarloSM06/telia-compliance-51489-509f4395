@@ -166,6 +166,69 @@ export type Database = {
         }
         Relationships: []
       }
+      ai_usage_logs: {
+        Row: {
+          cached_tokens: number | null
+          completion_tokens: number
+          cost_sek: number
+          cost_usd: number
+          created_at: string | null
+          error_message: string | null
+          generation_id: string | null
+          id: string
+          model: string
+          prompt_tokens: number
+          provider: string | null
+          reasoning_tokens: number | null
+          request_metadata: Json | null
+          status: string | null
+          total_tokens: number
+          upstream_cost_usd: number | null
+          use_case: string | null
+          user_id: string
+        }
+        Insert: {
+          cached_tokens?: number | null
+          completion_tokens?: number
+          cost_sek: number
+          cost_usd: number
+          created_at?: string | null
+          error_message?: string | null
+          generation_id?: string | null
+          id?: string
+          model: string
+          prompt_tokens?: number
+          provider?: string | null
+          reasoning_tokens?: number | null
+          request_metadata?: Json | null
+          status?: string | null
+          total_tokens?: number
+          upstream_cost_usd?: number | null
+          use_case?: string | null
+          user_id: string
+        }
+        Update: {
+          cached_tokens?: number | null
+          completion_tokens?: number
+          cost_sek?: number
+          cost_usd?: number
+          created_at?: string | null
+          error_message?: string | null
+          generation_id?: string | null
+          id?: string
+          model?: string
+          prompt_tokens?: number
+          provider?: string | null
+          reasoning_tokens?: number | null
+          request_metadata?: Json | null
+          status?: string | null
+          total_tokens?: number
+          upstream_cost_usd?: number | null
+          use_case?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       availability_slots: {
         Row: {
           created_at: string

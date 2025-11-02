@@ -1,0 +1,156 @@
+import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+};
+
+serve(async (req) => {
+  if (req.method === 'OPTIONS') {
+    return new Response(null, { headers: corsHeaders });
+  }
+
+  try {
+    const supabaseUrl = Deno.env.get('SUPABASE_URL');
+    const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
+    const encryptionKey = Deno.env.get('ENCRYPTION_KEY');
+
+    if (!supabaseUrl || !supabaseServiceKey || !encryptionKey) {
+      throw new Error('Missing environment variables');
+    }
+
+    const supabase = createClient(supabaseUrl, supabaseServiceKey);
+
+    // Get user from auth header
+    const authHeader = req.headers.get('Authorization');
+    if (!authHeader) {
+      throw new Error('Missing authorization header');
+    }
+
+    const token = authHeader.replace('Bearer ', '');
+    const { data: { user }, error: authError } = await supabase.auth.getUser(token);
+
+    if (authError || !user) {
+      throw new Error('Unauthorized');
+    }
+
+    // Get user's AI settings
+    const { data: settings, error: settingsError } = await supabase
+      .from('user_ai_settings')
+      .select('*')
+      .eq('user_id', user.id)
+      .single();
+
+    if (settingsError || !settings?.openrouter_api_key_encrypted) {
+      return new Response(
+        JSON.stringify({ 
+          error: 'OpenRouter API key not configured',
+          usage: null 
+        }),
+        { 
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          status: 400 
+        }
+      );
+    }
+
+    // Decrypt OpenRouter API key
+    const { data: decryptedKey, error: decryptError } = await supabase.rpc('decrypt_text', {
+      encrypted_data: settings.openrouter_api_key_encrypted,
+      key: encryptionKey
+    });
+
+    if (decryptError || !decryptedKey) {
+      throw new Error('Failed to decrypt API key');
+    }
+
+    // Fetch usage from OpenRouter API
+    const { startDate, endDate, limit } = await req.json();
+    
+    const params = new URLSearchParams();
+    if (startDate) params.set('start_date', startDate);
+    if (endDate) params.set('end_date', endDate);
+    if (limit) params.set('limit', limit.toString());
+
+    const response = await fetch(`https://openrouter.ai/api/v1/generation?${params.toString()}`, {
+      headers: {
+        'Authorization': `Bearer ${decryptedKey}`,
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('OpenRouter API error:', response.status, errorText);
+      throw new Error(`OpenRouter API error: ${response.status}`);
+    }
+
+    const data = await response.json();
+    
+    // Sync usage data to our database
+    const USD_TO_SEK = 10.5;
+    if (data.data && Array.isArray(data.data)) {
+      const usageLogs = data.data.map((item: any) => ({
+        user_id: user.id,
+        generation_id: item.id,
+        model: item.model,
+        provider: 'openrouter',
+        use_case: null, // We don't have this from OpenRouter API
+        prompt_tokens: item.tokens_prompt || 0,
+        completion_tokens: item.tokens_completion || 0,
+        total_tokens: (item.tokens_prompt || 0) + (item.tokens_completion || 0),
+        cost_usd: item.native_tokens_prompt_cost + item.native_tokens_completion_cost || 0,
+        cost_sek: (item.native_tokens_prompt_cost + item.native_tokens_completion_cost || 0) * USD_TO_SEK,
+        upstream_cost_usd: item.total_cost,
+        created_at: item.created_at,
+        status: 'success',
+      }));
+
+      // Upsert to avoid duplicates (based on generation_id)
+      for (const log of usageLogs) {
+        await supabase
+          .from('ai_usage_logs')
+          .upsert(log, { 
+            onConflict: 'generation_id',
+            ignoreDuplicates: false 
+          });
+      }
+    }
+
+    // Calculate summary
+    const totalCost = data.data.reduce((sum: number, item: any) => 
+      sum + (item.native_tokens_prompt_cost + item.native_tokens_completion_cost || 0), 0
+    );
+
+    return new Response(
+      JSON.stringify({
+        credits_used: data.data.length,
+        cost_sek: totalCost * USD_TO_SEK,
+        tokens_used: data.data.reduce((sum: number, item: any) => 
+          sum + (item.tokens_prompt || 0) + (item.tokens_completion || 0), 0
+        ),
+        breakdown_by_model: data.data.reduce((acc: any, item: any) => {
+          const model = item.model;
+          if (!acc[model]) {
+            acc[model] = { count: 0, cost: 0, tokens: 0 };
+          }
+          acc[model].count += 1;
+          acc[model].cost += (item.native_tokens_prompt_cost + item.native_tokens_completion_cost || 0);
+          acc[model].tokens += (item.tokens_prompt || 0) + (item.tokens_completion || 0);
+          return acc;
+        }, {}),
+      }),
+      { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+    );
+  } catch (error) {
+    console.error('Error in fetch-openrouter-usage:', error);
+    return new Response(
+      JSON.stringify({ error: error.message }),
+      { 
+        status: 500,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+      }
+    );
+  }
+});
