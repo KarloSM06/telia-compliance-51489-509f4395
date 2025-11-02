@@ -101,8 +101,8 @@ serve(async (req) => {
         prompt_tokens: usage.prompt_tokens || 0,
         completion_tokens: usage.completion_tokens || 0,
         total_tokens: usage.total_tokens || 0,
-        cost_usd: parseFloat(usage.total_cost || '0'),
-        cost_sek: parseFloat(usage.total_cost || '0') * 11, // Approximate conversion
+        cost_usd: usage.cost || 0,
+        cost_sek: (usage.cost || 0) * 11, // Approximate conversion
         provider: 'openrouter',
         use_case,
         generation_id: data.id || null,
