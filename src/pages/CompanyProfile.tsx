@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import { PremiumCard, PremiumCardContent, PremiumCardHeader, PremiumCardTitle, PremiumCardDescription } from "@/components/ui/premium-card";
 import { PremiumHeader } from "@/components/ui/premium-header";
-import { PremiumStatCard } from "@/components/ui/premium-stat-card";
+import { PremiumTelephonyStatCard } from "@/components/telephony/PremiumTelephonyStatCard";
 import { SectionSeparator } from "@/components/ui/section-separator";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -13,6 +13,7 @@ import { Building2, Save, Users, DollarSign, TrendingUp, Calendar, Package } fro
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ROISettings } from "@/components/settings/ROISettings";
+import hiemsLogoSnowflake from '@/assets/hiems-logo-snowflake.png';
 
 const CompanyProfile = () => {
   const [searchParams] = useSearchParams();
@@ -57,6 +58,14 @@ const CompanyProfile = () => {
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-primary/5 via-background to-background" />
       <div className="absolute inset-0 bg-grid-white/[0.02] bg-[size:60px_60px]" />
       
+      {/* Snowflakes */}
+      <div className="absolute -top-32 -right-32 w-[500px] h-[500px] opacity-[0.03] pointer-events-none">
+        <img src={hiemsLogoSnowflake} alt="" className="w-full h-full object-contain animate-[spin_60s_linear_infinite]" />
+      </div>
+      <div className="absolute top-1/3 -left-20 w-[350px] h-[350px] opacity-[0.02] pointer-events-none">
+        <img src={hiemsLogoSnowflake} alt="" className="w-full h-full object-contain animate-[spin_45s_linear_infinite_reverse]" />
+      </div>
+      
       <div className="relative z-10 container mx-auto p-6 max-w-6xl space-y-8">
         <PremiumHeader
           icon={<Building2 className="h-8 w-8 text-primary" />}
@@ -80,25 +89,31 @@ const CompanyProfile = () => {
             {/* Company Statistics */}
             {organization && (
               <>
-                <div className="grid gap-4 md:grid-cols-3 animate-fade-in">
-                  <PremiumStatCard
+                <div className="grid gap-6 md:grid-cols-3 animate-fade-in">
+                  <PremiumTelephonyStatCard
                     title="Antal Medlemmar"
                     value={organization.max_members}
-                    icon={<Users className="h-5 w-5" />}
+                    icon={Users}
+                    color="text-blue-600"
+                    subtitle="Aktiva användare"
                   />
-                  <PremiumStatCard
+                  <PremiumTelephonyStatCard
                     title="Plan"
                     value={organization.plan_type.toUpperCase()}
-                    icon={<TrendingUp className="h-5 w-5" />}
+                    icon={TrendingUp}
+                    color="text-purple-600"
+                    subtitle="Nuvarande abonnemang"
                   />
-                  <PremiumStatCard
+                  <PremiumTelephonyStatCard
                     title="Medlem Sedan"
                     value={new Date(organization.created_at).toLocaleDateString('sv-SE', {
                       day: 'numeric',
                       month: 'short',
                       year: 'numeric',
                     })}
-                    icon={<Calendar className="h-5 w-5" />}
+                    icon={Calendar}
+                    color="text-green-600"
+                    subtitle="Registreringsdatum"
                   />
                 </div>
 

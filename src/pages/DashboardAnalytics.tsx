@@ -33,7 +33,8 @@ import { useAnalyticsData } from "@/hooks/useAnalyticsData";
 import { useBusinessMetrics } from "@/hooks/useBusinessMetrics";
 import { useAIUsage } from "@/hooks/useAIUsage";
 import { DateRangePicker, DateRange } from "@/components/dashboard/filters/DateRangePicker";
-import { StatCard } from "@/components/communications/StatCard";
+import { PremiumTelephonyStatCard } from "@/components/telephony/PremiumTelephonyStatCard";
+import { AnimatedSection } from "@/components/shared/AnimatedSection";
 import { AreaChartComponent } from "@/components/dashboard/charts/AreaChartComponent";
 import { LineChartComponent } from "@/components/dashboard/charts/LineChartComponent";
 import { BarChartComponent } from "@/components/dashboard/charts/BarChartComponent";
@@ -43,6 +44,7 @@ import { ProjectionTabs } from "@/components/dashboard/ProjectionTabs";
 import { ServiceROIBreakdown } from "@/components/dashboard/ServiceROIBreakdown";
 import { ConversionFunnelChart } from "@/components/dashboard/ConversionFunnelChart";
 import { useConversionFunnel } from "@/hooks/useConversionFunnel";
+import hiemsLogoSnowflake from '@/assets/hiems-logo-snowflake.png';
 
 const DashboardAnalytics = () => {
   const [dateRange, setDateRange] = useState<DateRange | undefined>();
@@ -191,104 +193,177 @@ const DashboardAnalytics = () => {
   );
 
   return (
-    <div className="p-6 space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold">Analytics & ROI</h1>
-          <p className="text-muted-foreground">
-            Realtidsövervakning av dina affärsresultat och ROI
-          </p>
+    <div className="min-h-screen">
+      {/* Hero Section */}
+      <section className="relative py-16 bg-gradient-to-b from-background via-primary/5 to-background overflow-hidden">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,hsl(var(--primary)/0.15),transparent_50%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_80%,hsl(var(--primary)/0.1),transparent_50%)]" />
+        
+        {/* Snowflakes */}
+        <div className="absolute -top-32 -right-32 w-[700px] h-[700px] opacity-5 pointer-events-none">
+          <img src={hiemsLogoSnowflake} alt="" className="w-full h-full object-contain animate-[spin_60s_linear_infinite]" />
         </div>
-        <div className="flex gap-2">
-          <Button variant="outline" size="sm" onClick={handleRefresh}>
-            <RefreshCw className="h-4 w-4 mr-2" />
-            Uppdatera
-          </Button>
-          <Button variant="outline" size="sm" onClick={handleExport}>
-            <Download className="h-4 w-4 mr-2" />
-            Export CSV
-          </Button>
-          <Button variant="outline" size="sm" asChild>
-            <Link to="/dashboard/settings?tab=roi">
-              <Settings className="h-4 w-4 mr-2" />
-              ROI-inställningar
-            </Link>
-          </Button>
+        <div className="absolute -top-20 -left-20 w-[450px] h-[450px] opacity-[0.03] pointer-events-none">
+          <img src={hiemsLogoSnowflake} alt="" className="w-full h-full object-contain animate-[spin_40s_linear_infinite_reverse]" />
         </div>
-      </div>
+        <div className="absolute -bottom-20 left-1/2 -translate-x-1/2 w-[350px] h-[350px] opacity-[0.04] pointer-events-none">
+          <img src={hiemsLogoSnowflake} alt="" className="w-full h-full object-contain animate-[spin_50s_linear_infinite]" />
+        </div>
+        
+        <div className="container mx-auto px-6 lg:px-8 relative z-10">
+          <AnimatedSection>
+            <div className="max-w-4xl mx-auto text-center space-y-6">
+              <div className="inline-block">
+                <span className="text-sm font-semibold tracking-wider text-primary uppercase">Realtidsövervakning</span>
+                <div className="w-32 h-1.5 bg-gradient-to-r from-primary via-primary/60 to-transparent mx-auto rounded-full shadow-lg shadow-primary/50 mt-2" />
+              </div>
+              
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent leading-tight">
+                Analytics & ROI
+              </h1>
+              
+              <p className="text-lg sm:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed font-light">
+                Realtidsövervakning av dina affärsresultat och ROI
+              </p>
+            </div>
+          </AnimatedSection>
+        </div>
+      </section>
 
-      {/* Date Range Picker */}
-      <div className="bg-card p-4 rounded-lg border">
-        <p className="text-sm font-medium mb-3">Välj tidsperiod:</p>
-        <DateRangePicker value={dateRange} onChange={setDateRange} />
-      </div>
+      {/* Quick Actions */}
+      <section className="relative py-8 border-y border-primary/10">
+        <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent" />
+        <div className="container mx-auto px-6 lg:px-8">
+          <AnimatedSection delay={100}>
+            <div className="flex items-center justify-between flex-wrap gap-4">
+              <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-green-500/10 border border-green-500/20 hover:scale-105 transition-transform duration-300">
+                  <div className="w-2.5 h-2.5 rounded-full bg-green-500 animate-pulse" />
+                  <span className="text-sm font-semibold text-green-600 uppercase tracking-wide">Live</span>
+                </div>
+                <Badge variant="outline">{data.bookings.length} bokningar denna period</Badge>
+              </div>
+              
+              <div className="flex gap-2 flex-wrap">
+                <Button variant="outline" size="sm" onClick={handleRefresh} className="hover:bg-primary/5 hover:border-primary/30 transition-all duration-500">
+                  <RefreshCw className="h-4 w-4 mr-2" />
+                  Uppdatera
+                </Button>
+                <Button variant="outline" size="sm" onClick={handleExport} className="hover:bg-primary/5 hover:border-primary/30 transition-all duration-500">
+                  <Download className="h-4 w-4 mr-2" />
+                  Export CSV
+                </Button>
+                <Button variant="outline" size="sm" asChild className="hover:bg-primary/5 hover:border-primary/30 transition-all duration-500">
+                  <Link to="/dashboard/settings?tab=roi">
+                    <Settings className="h-4 w-4 mr-2" />
+                    ROI-inställningar
+                  </Link>
+                </Button>
+              </div>
+            </div>
+          </AnimatedSection>
+        </div>
+      </section>
 
-      {/* ROI Settings Alert */}
-      {!hasROISettings && (
-        <Alert>
-          <Sparkles className="h-4 w-4" />
-          <AlertTitle>Konfigurera ROI-inställningar</AlertTitle>
-          <AlertDescription>
-            För att få exakta ROI-beräkningar, vänligen konfigurera dina tjänstepriser och affärsinformation i{" "}
-            <Link to="/dashboard/settings?tab=roi" className="underline font-medium">
-              ROI-inställningar
-            </Link>
-            .
-          </AlertDescription>
-        </Alert>
-      )}
+      {/* Date Range Picker & Alert */}
+      <section className="relative py-8">
+        <div className="container mx-auto px-6 lg:px-8 space-y-4">
+          <AnimatedSection delay={150}>
+            <div className="bg-card p-4 rounded-lg border border-primary/10">
+              <p className="text-sm font-medium mb-3">Välj tidsperiod:</p>
+              <DateRangePicker value={dateRange} onChange={setDateRange} />
+            </div>
 
-      {/* Section 1: ROI Hero Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <StatCard
-          title="Total Intäkt (Est.)"
-          value={`${data.roi.totalRevenue.toLocaleString('sv-SE', { maximumFractionDigits: 0 })} SEK`}
-          icon={TrendingUp}
-          trend={{ value: 12, isPositive: true }}
-        />
-        <StatCard
-          title="Driftkostnader"
-          value={`${data.costs.totalOperatingCost.toLocaleString('sv-SE', { maximumFractionDigits: 2 })} SEK`}
-          icon={DollarSign}
-          trend={{ value: -5, isPositive: true }}
-        />
-        <StatCard
-          title="Nettovinst"
-          value={`${data.roi.netProfit.toLocaleString('sv-SE', { maximumFractionDigits: 0 })} SEK`}
-          icon={Award}
-          trend={{ value: 18, isPositive: true }}
-        />
-        <StatCard
-          title="ROI"
-          value={`${data.roi.roi.toFixed(1)}%`}
-          icon={Target}
-          trend={{ value: 8, isPositive: true }}
-        />
-      </div>
+            {/* ROI Settings Alert */}
+            {!hasROISettings && (
+              <Alert>
+                <Sparkles className="h-4 w-4" />
+                <AlertTitle>Konfigurera ROI-inställningar</AlertTitle>
+                <AlertDescription>
+                  För att få exakta ROI-beräkningar, vänligen konfigurera dina tjänstepriser och affärsinformation i{" "}
+                  <Link to="/dashboard/settings?tab=roi" className="underline font-medium">
+                    ROI-inställningar
+                  </Link>
+                  .
+                </AlertDescription>
+              </Alert>
+            )}
+          </AnimatedSection>
+        </div>
+      </section>
+
+      {/* ROI Stats Overview */}
+      <section className="relative py-16 bg-gradient-to-b from-background via-primary/3 to-background">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_50%,hsl(var(--primary)/0.12),transparent_50%)]" />
+        <div className="container mx-auto px-6 lg:px-8 relative z-10">
+          <AnimatedSection delay={200}>
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4 mb-8">
+              <PremiumTelephonyStatCard 
+                title="Total Intäkt (Est.)" 
+                value={`${data.roi.totalRevenue.toLocaleString('sv-SE', { maximumFractionDigits: 0 })} SEK`}
+                icon={TrendingUp}
+                color="text-blue-600"
+                subtitle="+12% från föregående period"
+              />
+              <PremiumTelephonyStatCard 
+                title="Driftkostnader" 
+                value={`${data.costs.totalOperatingCost.toLocaleString('sv-SE', { maximumFractionDigits: 2 })} SEK`}
+                icon={DollarSign}
+                color="text-orange-600"
+                subtitle="Inkl. alla tjänster"
+              />
+              <PremiumTelephonyStatCard 
+                title="Nettovinst" 
+                value={`${data.roi.netProfit.toLocaleString('sv-SE', { maximumFractionDigits: 0 })} SEK`}
+                icon={Award}
+                color="text-green-600"
+                subtitle="+18% ökning"
+              />
+              <PremiumTelephonyStatCard 
+                title="ROI" 
+                value={`${data.roi.roi.toFixed(1)}%`}
+                icon={Target}
+                color="text-purple-600"
+                subtitle="Avkastning på investering"
+              />
+            </div>
 
 
-      {/* Section 2: Booking Overview */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <StatCard
-          title="Totala Bokningar"
-          value={data.bookings.length}
-          icon={Calendar}
-        />
-        <StatCard
-          title="Genomsnittligt Värde"
-          value={`${data.roi.revenuePerBooking.toLocaleString('sv-SE', { maximumFractionDigits: 0 })} SEK`}
-          icon={DollarSign}
-        />
-        <StatCard
-          title="Konverteringsgrad"
-          value={`${businessMetrics?.meeting_to_payment_probability || 50}%`}
-          icon={TrendingUp}
-        />
-      </div>
+            {/* Booking Overview */}
+            <div className="grid gap-6 md:grid-cols-3">
+              <PremiumTelephonyStatCard 
+                title="Totala Bokningar" 
+                value={data.bookings.length}
+                icon={Calendar}
+                color="text-indigo-600"
+                subtitle="Under vald period"
+              />
+              <PremiumTelephonyStatCard 
+                title="Genomsnittligt Värde" 
+                value={`${data.roi.revenuePerBooking.toLocaleString('sv-SE', { maximumFractionDigits: 0 })} SEK`}
+                icon={DollarSign}
+                color="text-amber-600"
+                subtitle="Per bokning"
+              />
+              <PremiumTelephonyStatCard 
+                title="Konverteringsgrad" 
+                value={`${businessMetrics?.meeting_to_payment_probability || 50}%`}
+                icon={TrendingUp}
+                color="text-emerald-600"
+                subtitle="Möte till betalning"
+              />
+            </div>
+          </AnimatedSection>
+        </div>
+      </section>
 
-      {/* Section 2.5: Cost Breakdown Card */}
-      <PremiumCard>
+      {/* Cost Breakdown & Details */}
+      <section className="relative py-12">
+        <div className="container mx-auto px-6 lg:px-8">
+          <AnimatedSection delay={250}>
+            <div className="space-y-6">
+              {/* Section 2.5: Cost Breakdown Card */}
+              <PremiumCard>
         <PremiumCardHeader>
           <PremiumCardTitle className="flex items-center gap-2">
             <DollarSign className="h-5 w-5 text-primary" />
@@ -842,9 +917,13 @@ const DashboardAnalytics = () => {
                 Du har {data.bookings.length} bokningar. Fokusera på leadgenerering för att öka intäkterna.
               </AlertDescription>
             </Alert>
-          )}
+            )}
+                </div>
+              </div>
+            </div>
+          </AnimatedSection>
         </div>
-      </div>
+      </section>
     </div>
   );
 };
