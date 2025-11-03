@@ -35,11 +35,11 @@ export const EventDetailDrawer = ({ event, open, onClose }: EventDetailDrawerPro
   return (
     <Sheet open={open} onOpenChange={onClose}>
       <SheetContent className={cn(
-        "w-full sm:max-w-2xl overflow-y-auto",
+        "w-full sm:max-w-3xl overflow-y-auto",
         "bg-gradient-to-br from-background via-background to-background/95"
       )}>
-        {/* Snowflake in drawer */}
-        <div className="absolute -top-20 -right-20 w-[300px] h-[300px] opacity-[0.02] pointer-events-none">
+        {/* STOR Snowflake Background */}
+        <div className="absolute -top-32 -right-32 w-[500px] h-[500px] opacity-[0.03] pointer-events-none">
           <img 
             src={hiemsLogoSnowflake} 
             alt="" 
@@ -47,25 +47,32 @@ export const EventDetailDrawer = ({ event, open, onClose }: EventDetailDrawerPro
           />
         </div>
         
-        <SheetHeader className="relative">
-          <SheetTitle className="text-2xl flex items-center gap-2">
-            <Phone className="h-6 w-6 text-primary" />
+        <SheetHeader className="relative space-y-4 mb-6">
+          {/* UPPERCASE label */}
+          <div className="inline-block">
+            <span className="text-xs font-semibold tracking-wider text-primary uppercase">
+              Event Information
+            </span>
+          </div>
+          
+          <SheetTitle className="text-3xl flex items-center gap-3">
+            <Phone className="h-7 w-7 text-primary" />
             Event Details
           </SheetTitle>
         </SheetHeader>
 
         <ScrollArea className="h-full pb-6">
-          <div className="space-y-4 mt-6 relative">
-            {/* Tabs för bättre organisation */}
+          <div className="space-y-6 mt-6 relative">
+            {/* STÖRRE Tabs */}
             <Tabs defaultValue="overview" className="w-full">
-              <TabsList className="grid w-full grid-cols-4">
-                <TabsTrigger value="overview">Översikt</TabsTrigger>
-                <TabsTrigger value="technical">Tekniskt</TabsTrigger>
-                <TabsTrigger value="costs">Kostnader</TabsTrigger>
-                <TabsTrigger value="conversation">Samtal</TabsTrigger>
+              <TabsList className="grid w-full grid-cols-4 h-12 p-1">
+                <TabsTrigger value="overview" className="text-sm font-medium data-[state=active]:bg-primary/10">Översikt</TabsTrigger>
+                <TabsTrigger value="technical" className="text-sm font-medium data-[state=active]:bg-primary/10">Tekniskt</TabsTrigger>
+                <TabsTrigger value="costs" className="text-sm font-medium data-[state=active]:bg-primary/10">Kostnader</TabsTrigger>
+                <TabsTrigger value="conversation" className="text-sm font-medium data-[state=active]:bg-primary/10">Samtal</TabsTrigger>
               </TabsList>
               
-              <TabsContent value="overview" className="space-y-4 mt-4">
+              <TabsContent value="overview" className="space-y-4 mt-6">
             {/* Header Info */}
             <div className="space-y-3">
               <div className="flex items-center gap-2">
@@ -81,7 +88,7 @@ export const EventDetailDrawer = ({ event, open, onClose }: EventDetailDrawerPro
             </div>
 
             {/* Phone Number */}
-            <Card>
+            <Card className="border border-primary/10 bg-gradient-to-br from-card/80 via-card/50 to-card/30 backdrop-blur-md">
               <CardContent className="p-4">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
@@ -151,7 +158,7 @@ export const EventDetailDrawer = ({ event, open, onClose }: EventDetailDrawerPro
 
               </TabsContent>
               
-              <TabsContent value="technical" className="space-y-4 mt-4">
+              <TabsContent value="technical" className="space-y-4 mt-6">
 
             {/* Analysis Summary */}
             {event.normalized?.analysis && (
@@ -295,7 +302,7 @@ export const EventDetailDrawer = ({ event, open, onClose }: EventDetailDrawerPro
                 </Card>
               </TabsContent>
               
-              <TabsContent value="costs" className="space-y-4 mt-4">
+              <TabsContent value="costs" className="space-y-4 mt-6">
                 {/* Cost Breakdown */}
                 {(event.cost_breakdown || event.aggregate_cost_amount) && (
                   <CostBreakdownCard event={event} />
@@ -328,7 +335,7 @@ export const EventDetailDrawer = ({ event, open, onClose }: EventDetailDrawerPro
                 )}
               </TabsContent>
               
-              <TabsContent value="conversation" className="space-y-4 mt-4">
+              <TabsContent value="conversation" className="space-y-4 mt-6">
 
                 {/* Analysis Summary */}
                 {event.normalized?.analysis && (

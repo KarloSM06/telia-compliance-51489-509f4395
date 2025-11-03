@@ -25,7 +25,7 @@ export const PremiumTelephonyStatCard = ({
       "relative overflow-hidden border-primary/10",
       "bg-gradient-to-br from-card/80 via-card/50 to-card/30",
       "backdrop-blur-md",
-      "hover:shadow-2xl hover:shadow-primary/10 hover:-translate-y-1",
+      "hover:shadow-2xl hover:shadow-primary/20 hover:border-primary/30 hover:-translate-y-1",
       "transition-all duration-500 group"
     )}>
       {/* Snowflake background */}
