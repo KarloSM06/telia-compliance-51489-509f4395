@@ -95,6 +95,11 @@ export const APIKeyUsageChart = ({ activityData, keysList, isLoading }: APIKeyUs
   // Debug: Check if keysList is available
   if (!keysList || keysList.length === 0) {
     console.warn('⚠️ APIKeyUsageChart: keysList is empty or undefined');
+  } else {
+    console.log('📋 Available keys:', keysList.map(k => ({ 
+      hash: k.hash.substring(0, 20) + '...', 
+      name: k.label || k.name 
+    })));
   }
 
   const getEndpointId = (item: ActivityItem): string => {
@@ -103,46 +108,146 @@ export const APIKeyUsageChart = ({ activityData, keysList, isLoading }: APIKeyUs
     return id || 'Unknown';
   };
 
-  const getKeyName = (endpointId: string) => {
-    if (!endpointId || endpointId === 'Unknown') return 'Unknown';
-    
-    console.log('🔍 Matching endpoint_id:', endpointId);
-    const printKey = (k: APIKey | undefined) => k ? (k.label || k.name || '(unnamed)') : 'none';
+  // Build lookup maps for efficient key name resolution
+  const { nameByExact, nameByMasked, nameByPrefix } = useMemo(() => {
+    const exact = new Map<string, string>();
+    const masked = new Map<string, string>();
+    const prefix = new Map<string, string>();
 
-    // 1) Masked key matching: sk-or-v1-xxx...yyy
-    if (endpointId.includes('...')) {
-      const [prefix, suffix] = endpointId.split('...');
-      if (prefix && suffix) {
-        const maskedMatch = keysList?.find(k => k.hash.startsWith(prefix) && k.hash.endsWith(suffix));
-        console.log('🔗 Masked match result:', printKey(maskedMatch));
-        if (maskedMatch) return maskedMatch.label || maskedMatch.name || 'Unnamed Key';
+    if (!keysList) return { nameByExact: exact, nameByMasked: masked, nameByPrefix: prefix };
+
+    keysList.forEach(k => {
+      const display = k.label || k.name || 'Unnamed Key';
+      const h = k.hash || '';
+      
+      if (!h) return;
+
+      // Exact hash mapping
+      exact.set(h, display);
+
+      // Generate common masked formats
+      // Format 1: sk-or-v1-xxx...yyy (3 chars each side)
+      if (h.includes('sk-or-v1-')) {
+        const afterPrefix = h.split('sk-or-v1-')[1];
+        if (afterPrefix && afterPrefix.length >= 6) {
+          const masked3 = `sk-or-v1-${afterPrefix.slice(0, 3)}...${h.slice(-3)}`;
+          masked.set(masked3, display);
+          
+          // Also try 4 chars at the end
+          const masked4 = `sk-or-v1-${afterPrefix.slice(0, 3)}...${h.slice(-4)}`;
+          masked.set(masked4, display);
+        }
       }
-    }
 
-    // 2) Exact matching
-    let matchingKey = keysList?.find(k => k.hash === endpointId);
-    console.log('✅ Exact match:', printKey(matchingKey));
+      // Generic masked format
+      if (h.length >= 6) {
+        masked.set(`${h.slice(0, 3)}...${h.slice(-3)}`, display);
+        masked.set(`${h.slice(0, 3)}...${h.slice(-4)}`, display);
+      }
+
+      // Prefix mapping for partial matches (first 12 chars)
+      if (h.length >= 12) {
+        const prefixKey = h.slice(0, 12);
+        prefix.set(prefixKey, display);
+      }
+    });
+
+    return { nameByExact: exact, nameByMasked: masked, nameByPrefix: prefix };
+  }, [keysList]);
+
+  // Resolve endpoint_id to display name with multiple matching strategies
+  const resolveKeyName = useMemo(() => {
+    const cache = new Map<string, string>();
     
-    // 3) Partial matching (first/last 8 chars)
-    if (!matchingKey && endpointId.length >= 8) {
-      matchingKey = keysList?.find(k => {
-        const keyStart = k.hash.substring(0, Math.min(8, k.hash.length));
-        const keyEnd = k.hash.substring(Math.max(0, k.hash.length - 8));
-        const idStart = endpointId.substring(0, Math.min(8, endpointId.length));
-        const idEnd = endpointId.substring(Math.max(0, endpointId.length - 8));
-        
-        return keyStart === idStart || keyEnd === idEnd;
-      });
-      console.log('🧩 Partial match:', printKey(matchingKey));
-    }
-    
-    if (matchingKey) {
-      return matchingKey.label || matchingKey.name || 'Unnamed Key';
-    }
-    
-    console.warn('❌ No match for endpoint_id:', endpointId);
-    return `Key ${endpointId.substring(0, 8)}...`;
-  };
+    return (endpointId: string): string => {
+      if (!endpointId || endpointId === 'Unknown') return 'Unknown';
+      
+      // Check cache first
+      if (cache.has(endpointId)) {
+        return cache.get(endpointId)!;
+      }
+
+      console.log('🔍 Resolving endpoint_id:', endpointId);
+
+      let result: string | undefined;
+
+      // 1) Try masked format lookup
+      result = nameByMasked.get(endpointId);
+      if (result) {
+        console.log('🔗 Masked match:', result);
+        cache.set(endpointId, result);
+        return result;
+      }
+
+      // 2) Try exact match
+      result = nameByExact.get(endpointId);
+      if (result) {
+        console.log('✅ Exact match:', result);
+        cache.set(endpointId, result);
+        return result;
+      }
+
+      // 3) Try prefix match (first 12 chars)
+      if (endpointId.length >= 12) {
+        const prefixKey = endpointId.slice(0, 12);
+        result = nameByPrefix.get(prefixKey);
+        if (result) {
+          console.log('🔗 Prefix match:', result);
+          cache.set(endpointId, result);
+          return result;
+        }
+      }
+
+      // 4) Try manual masked matching (prefix...suffix)
+      if (endpointId.includes('...')) {
+        const [p, s] = endpointId.split('...');
+        if (p && s && keysList) {
+          const match = keysList.find(k => 
+            k.hash && k.hash.startsWith(p) && k.hash.endsWith(s)
+          );
+          if (match) {
+            result = match.label || match.name || 'Unnamed Key';
+            console.log('🧩 Manual masked match:', result);
+            cache.set(endpointId, result);
+            return result;
+          }
+        }
+      }
+
+      // 5) Try partial matching (longer prefix/suffix)
+      if (keysList && endpointId.length >= 8) {
+        const match = keysList.find(k => {
+          const h = k.hash || '';
+          if (!h) return false;
+          
+          const prefixLen = Math.min(10, endpointId.length, h.length);
+          const suffixLen = Math.min(8, endpointId.length, h.length);
+          
+          return (
+            h.startsWith(endpointId.slice(0, prefixLen)) ||
+            h.endsWith(endpointId.slice(-suffixLen))
+          );
+        });
+
+        if (match) {
+          result = match.label || match.name || 'Unnamed Key';
+          console.log('🧩 Partial match:', result);
+          cache.set(endpointId, result);
+          return result;
+        }
+      }
+
+      console.warn('❌ No match for endpoint_id:', endpointId);
+      console.warn('   First 3 available keys:', keysList?.slice(0, 3).map(k => ({
+        hash: k.hash?.substring(0, 20) + '...',
+        name: k.label || k.name
+      })));
+      
+      const fallback = `Key ${endpointId.substring(0, 8)}...`;
+      cache.set(endpointId, fallback);
+      return fallback;
+    };
+  }, [nameByExact, nameByMasked, nameByPrefix, keysList]);
 
   const { chartData, uniqueKeys } = useMemo(() => {
     if (!activityData || activityData.length === 0) {
@@ -152,7 +257,7 @@ export const APIKeyUsageChart = ({ activityData, keysList, isLoading }: APIKeyUs
     const keyDataByDate = activityData.reduce((acc, item) => {
       const date = item.date.split(' ')[0];
       const endpointId = getEndpointId(item);
-      const keyName = getKeyName(endpointId);
+      const keyName = resolveKeyName(endpointId);
       
       if (!acc[date]) acc[date] = {};
       if (!acc[date][keyName]) {
@@ -174,11 +279,11 @@ export const APIKeyUsageChart = ({ activityData, keysList, isLoading }: APIKeyUs
 
     const keys = Array.from(new Set(activityData.map(item => {
       const endpointId = getEndpointId(item);
-      return getKeyName(endpointId);
+      return resolveKeyName(endpointId);
     })));
 
     return { chartData: data, uniqueKeys: keys };
-  }, [activityData, keysList, selectedMetric]);
+  }, [activityData, resolveKeyName, selectedMetric]);
 
   const handleToggleKey = (key: string) => {
     setHiddenKeys(prev => {
