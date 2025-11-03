@@ -7,9 +7,20 @@ import NotificationSettings from "@/pages/NotificationSettings";
 import SMSProviderSettings from "@/pages/SMSProviderSettings";
 import NotificationAnalytics from "@/pages/NotificationAnalytics";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { PremiumHeader } from "@/components/ui/premium-header";
+
 export default function Notifications() {
   const [activeTab, setActiveTab] = useState("analytics");
   return <div className="min-h-screen">
+      {/* Header Section */}
+      <div className="container mx-auto px-6 lg:px-8 pt-8 pb-4">
+        <PremiumHeader 
+          icon={<Bell className="h-6 w-6 text-primary" />}
+          title="Notifikationer"
+          subtitle="Hantera och analysera dina notifikationer"
+        />
+      </div>
+
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-0">
 
         {/* Desktop Navigation - Minimalist Pill Design */}
