@@ -21,47 +21,19 @@ export const PremiumTelephonyStatCard = ({
   animate = false
 }: PremiumTelephonyStatCardProps) => {
   return (
-    <Card className={cn(
-      "relative overflow-hidden border-primary/10",
-      "bg-gradient-to-br from-card/80 via-card/50 to-card/30",
-      "backdrop-blur-md",
-      "hover:shadow-2xl hover:shadow-primary/20 hover:border-primary/30 hover:-translate-y-1",
-      "transition-all duration-500 group"
-    )}>
-      {/* Snowflake background */}
-      <div className="absolute -top-8 -right-8 w-24 h-24 opacity-[0.03] group-hover:opacity-[0.05] transition-opacity">
-        <img 
-          src={hiemsLogoSnowflake} 
-          alt="" 
-          className="w-full h-full object-contain animate-[spin_60s_linear_infinite]"
-        />
-      </div>
-      
-      {/* Radial gradient glow */}
-      <div className={cn(
-        "absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity",
-        "bg-[radial-gradient(circle_at_50%_50%,hsl(var(--primary)/0.1),transparent_70%)]"
-      )} />
-      
-      <CardContent className="pt-6 relative">
+    <Card className="border border-border/50 bg-card hover:border-border transition-colors">
+      <CardContent className="pt-6">
         <div className="flex items-start justify-between">
-          <div className="space-y-2 flex-1">
-            <p className="text-sm text-muted-foreground font-medium">{title}</p>
-            <div className="flex items-baseline gap-2">
-              <p className="text-3xl font-bold">{value}</p>
-            </div>
+          <div className="space-y-1 flex-1">
+            <p className="text-xs text-muted-foreground font-medium uppercase tracking-wide">
+              {title}
+            </p>
+            <p className="text-2xl font-bold">{value}</p>
             <p className="text-xs text-muted-foreground">{subtitle}</p>
           </div>
           
-          {/* Icon with premium styling */}
-          <div className={cn(
-            "rounded-xl p-3 backdrop-blur-sm",
-            "bg-gradient-to-br from-primary/20 to-primary/5",
-            "border border-primary/20",
-            "group-hover:scale-110 transition-transform",
-            animate && "animate-pulse"
-          )}>
-            <Icon className={cn("h-6 w-6", color)} />
+          <div className="rounded-lg p-2 bg-primary/5">
+            <Icon className={cn("h-5 w-5", color, animate && "animate-pulse")} />
           </div>
         </div>
       </CardContent>
