@@ -3,10 +3,10 @@ import { OpenRouterHeader } from "@/components/dashboard/openrouter/OpenRouterHe
 import { ConnectionStatusBanner } from "@/components/dashboard/openrouter/ConnectionStatusBanner";
 import { AccountBalanceCards } from "@/components/dashboard/openrouter/AccountBalanceCards";
 import { APIKeysTable } from "@/components/dashboard/openrouter/APIKeysTable";
+import { APIKeysOverview } from "@/components/dashboard/openrouter/APIKeysOverview";
 import { SpendOverview } from "@/components/dashboard/openrouter/SpendOverview";
 import { CostTrendChart } from "@/components/dashboard/openrouter/CostTrendChart";
 import { TopModelsCard } from "@/components/dashboard/openrouter/TopModelsCard";
-import { UseCaseBreakdown } from "@/components/dashboard/openrouter/UseCaseBreakdown";
 import { SpendInsights } from "@/components/dashboard/openrouter/SpendInsights";
 import { useOpenRouterCredits } from "@/hooks/useOpenRouterCredits";
 import { useOpenRouterKeyInfo } from "@/hooks/useOpenRouterKeyInfo";
@@ -55,9 +55,11 @@ const OpenRouterDashboard = () => {
       return {
         dailyCosts: [],
         topModels: [],
-        useCases: [],
         totalSpend: 0,
-        insights: []
+        avgDailyCost: 0,
+        highestCostDay: 0,
+        insights: [],
+        periodDays: selectedPeriod === '7d' ? 7 : selectedPeriod === '30d' ? 30 : 90
       };
     }
 
@@ -78,8 +80,13 @@ const OpenRouterDashboard = () => {
       .map(([date, cost]) => ({ date, cost }))
       .sort((a, b) => a.date.localeCompare(b.date));
 
-    // Calculate total spend
+    // Calculate total spend and metrics
     const totalSpend = dailyCosts.reduce((sum, item) => sum + item.cost, 0);
+    const periodDays = selectedPeriod === '7d' ? 7 : selectedPeriod === '30d' ? 30 : 90;
+    const avgDailyCost = dailyCosts.length > 0 ? totalSpend / dailyCosts.length : 0;
+    const highestCostDay = dailyCosts.length > 0 
+      ? Math.max(...dailyCosts.map(d => d.cost))
+      : 0;
 
     // Calculate top models
     const modelCostsMap = new Map<string, { cost: number; calls: number }>();
@@ -120,9 +127,11 @@ const OpenRouterDashboard = () => {
     return {
       dailyCosts,
       topModels,
-      useCases: [],
       totalSpend,
-      insights
+      avgDailyCost,
+      highestCostDay,
+      insights,
+      periodDays
     };
   }, [activityData, selectedPeriod]);
 
@@ -157,6 +166,11 @@ const OpenRouterDashboard = () => {
         />
       )}
 
+      <APIKeysOverview
+        keys={keysList}
+        isLoading={isLoadingKeys}
+      />
+
       <Tabs value={selectedPeriod} onValueChange={(v) => setSelectedPeriod(v as '7d' | '30d' | '90d')}>
         <TabsList>
           <TabsTrigger value="7d">7 dagar</TabsTrigger>
@@ -167,22 +181,25 @@ const OpenRouterDashboard = () => {
         <TabsContent value={selectedPeriod} className="space-y-6 mt-6">
           <SpendOverview
             totalSpend={processedData.totalSpend}
+            averageDailyCost={processedData.avgDailyCost}
+            highestCostDay={processedData.highestCostDay}
+            periodDays={processedData.periodDays}
+          />
+
+          <CostTrendChart
+            data={processedData.dailyCosts}
+            isLoading={isLoadingActivity}
           />
 
           <div className="grid gap-6 md:grid-cols-2">
-            <CostTrendChart
-              data={processedData.dailyCosts}
-              isLoading={isLoadingActivity}
-            />
             <TopModelsCard
               models={processedData.topModels}
               isLoading={isLoadingActivity}
             />
+            {processedData.insights.length > 0 && (
+              <SpendInsights insights={processedData.insights} />
+            )}
           </div>
-
-          {processedData.insights.length > 0 && (
-            <SpendInsights insights={processedData.insights} />
-          )}
         </TabsContent>
       </Tabs>
 
