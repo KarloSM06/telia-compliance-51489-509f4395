@@ -1,4 +1,4 @@
-import { Home, LayoutDashboard, Settings, BarChart3, LogOut, Phone, Users, Target, Star, Calendar, Bell, MessageSquare, Mail, Building2, Plug } from "lucide-react";
+import { Home, LayoutDashboard, Settings, BarChart3, LogOut, Phone, Users, Target, Star, Calendar, Bell, MessageSquare, Mail, Building2, Plug, Brain } from "lucide-react";
 import { NavLink, useNavigate } from "react-router-dom";
 import {
   Sidebar,
@@ -38,6 +38,7 @@ const businessToolsItems = [
   { title: "Rekrytering", url: "/dashboard/talent", icon: Users },
   { title: "Integrationer", url: "/dashboard/integrations", icon: Plug },
   { title: "Kalender", url: "/dashboard/calendar", icon: Calendar },
+  { title: "OpenRouter", url: "/dashboard/openrouter", icon: Brain },
 ];
 
 const communicationItems = [

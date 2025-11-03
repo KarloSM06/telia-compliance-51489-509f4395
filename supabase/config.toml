@@ -191,3 +191,12 @@ verify_jwt = true
 
 [functions.get-masked-keys]
 verify_jwt = true
+
+[functions.get-openrouter-keys]
+verify_jwt = true
+
+[functions.get-openrouter-key-details]
+verify_jwt = true
+
+[functions.sync-openrouter-account]
+verify_jwt = true

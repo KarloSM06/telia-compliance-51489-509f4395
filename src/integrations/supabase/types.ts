@@ -2095,6 +2095,78 @@ export type Database = {
         }
         Relationships: []
       }
+      openrouter_account_snapshots: {
+        Row: {
+          api_keys_count: number | null
+          api_keys_data: Json | null
+          created_at: string | null
+          id: string
+          limit_remaining: number | null
+          rate_limit_interval: string | null
+          rate_limit_requests: number | null
+          snapshot_date: string
+          total_credits: number | null
+          total_usage: number | null
+          user_id: string
+        }
+        Insert: {
+          api_keys_count?: number | null
+          api_keys_data?: Json | null
+          created_at?: string | null
+          id?: string
+          limit_remaining?: number | null
+          rate_limit_interval?: string | null
+          rate_limit_requests?: number | null
+          snapshot_date: string
+          total_credits?: number | null
+          total_usage?: number | null
+          user_id: string
+        }
+        Update: {
+          api_keys_count?: number | null
+          api_keys_data?: Json | null
+          created_at?: string | null
+          id?: string
+          limit_remaining?: number | null
+          rate_limit_interval?: string | null
+          rate_limit_requests?: number | null
+          snapshot_date?: string
+          total_credits?: number | null
+          total_usage?: number | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      openrouter_usage_history: {
+        Row: {
+          date: string
+          id: string
+          models_used: Json | null
+          synced_at: string | null
+          total_cost_usd: number | null
+          total_requests: number | null
+          user_id: string
+        }
+        Insert: {
+          date: string
+          id?: string
+          models_used?: Json | null
+          synced_at?: string | null
+          total_cost_usd?: number | null
+          total_requests?: number | null
+          user_id: string
+        }
+        Update: {
+          date?: string
+          id?: string
+          models_used?: Json | null
+          synced_at?: string | null
+          total_cost_usd?: number | null
+          total_requests?: number | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       organizations: {
         Row: {
           created_at: string | null

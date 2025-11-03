@@ -39,6 +39,7 @@ const ReviewDashboard = lazy(() => import("./pages/ReviewDashboard"));
 const Unsubscribe = lazy(() => import("./pages/Unsubscribe"));
 const TelephonyPage = lazy(() => import("./pages/TelephonyPage"));
 const Integrations = lazy(() => import("./pages/Integrations"));
+const OpenRouterDashboard = lazy(() => import("./pages/OpenRouterDashboard"));
 const DashboardLayout = lazy(() => import("./components/dashboard/DashboardLayout").then(m => ({ default: m.DashboardLayout })));
 
 // Loading fallback component
@@ -97,6 +98,7 @@ const App = () => {
               <Route path="/dashboard/reviews" element={<DashboardLayout><ReviewDashboard /></DashboardLayout>} />
               <Route path="/dashboard/telephony" element={<DashboardLayout><TelephonyPage /></DashboardLayout>} />
               <Route path="/dashboard/integrations" element={<DashboardLayout><Integrations /></DashboardLayout>} />
+              <Route path="/dashboard/openrouter" element={<DashboardLayout><OpenRouterDashboard /></DashboardLayout>} />
               <Route path="/unsubscribe" element={<Unsubscribe />} />
               <Route path="/demo" element={<Demo />} />
               <Route path="/om-oss" element={<AboutUs />} />
