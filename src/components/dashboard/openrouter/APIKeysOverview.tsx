@@ -118,8 +118,7 @@ export const APIKeysOverview = ({ keys, isLoading }: APIKeysOverviewProps) => {
 
         <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-3 mt-4">
           {apiKeys.map((key) => {
-            const displayName = getKeyDisplayName(key);
-            const maskedLabel = getKeyMaskedLabel(key);
+            const displayName = (key.name?.trim() || '') || 'Namnlös';
             const dailyUsage = key.usage_daily || 0;
             const dailyColorClass = getDailyUsageColor(dailyUsage);
             
@@ -133,14 +132,6 @@ export const APIKeysOverview = ({ keys, isLoading }: APIKeysOverviewProps) => {
                     <p className="font-medium text-sm truncate">
                       {displayName}
                     </p>
-                    <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                      {maskedLabel && (
-                        <span className="font-mono truncate">{maskedLabel}</span>
-                      )}
-                      <span className="font-mono">
-                        {key.hash.substring(0, 8)}...{key.hash.substring(key.hash.length - 4)}
-                      </span>
-                    </div>
                   </div>
                   <Badge variant={key.disabled ? "secondary" : "default"} className="ml-2">
                     {key.disabled ? "Inaktiv" : "Aktiv"}
