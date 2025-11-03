@@ -1,30 +1,24 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Card } from '@/components/ui/card';
-import { RefreshCw, Download, Star, Brain, Tag, ThumbsUp } from 'lucide-react';
+import { RefreshCw, Download } from 'lucide-react';
 import { toast } from 'sonner';
 import { useReviews, ReviewFilterValues } from '@/hooks/useReviews';
-import { useReviewChartData } from '@/hooks/useReviewChartData';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { useQueryClient } from '@tanstack/react-query';
-import { PremiumTelephonyStatCard } from '@/components/telephony/PremiumTelephonyStatCard';
-import { ReviewsActivityChart } from '@/components/reviews/charts/ReviewsActivityChart';
-import { SentimentTrendChart } from '@/components/reviews/charts/SentimentTrendChart';
-import { RatingDistributionChart } from '@/components/reviews/charts/RatingDistributionChart';
-import { TopicsDistributionChart } from '@/components/reviews/charts/TopicsDistributionChart';
-import { RatingVsSentimentChart } from '@/components/reviews/charts/RatingVsSentimentChart';
-import { ResponseTimeTrendChart } from '@/components/reviews/charts/ResponseTimeTrendChart';
+import { ReviewStatsCards } from '@/components/reviews/ReviewStatsCards';
 import { ReviewFilters } from '@/components/reviews/ReviewFilters';
-import { ReviewsTable } from '@/components/reviews/ReviewsTable';
+import { ReviewCardList } from '@/components/reviews/ReviewCardList';
 import { ReviewDetailDrawer } from '@/components/reviews/ReviewDetailDrawer';
+import { ReviewInsightsSection } from '@/components/reviews/ReviewInsightsSection';
+import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from '@/components/ui/resizable';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 export default function ReviewDashboard() {
   const { user } = useAuth();
   const queryClient = useQueryClient();
+  const isMobile = useIsMobile();
   const [selectedReview, setSelectedReview] = useState<any>(null);
-  const [dateRangeDays, setDateRangeDays] = useState(30);
   const [filters, setFilters] = useState<ReviewFilterValues>({
     search: '',
     rating: 'all',
@@ -33,27 +27,6 @@ export default function ReviewDashboard() {
   });
 
   const { reviews, allReviews, stats, isLoading, exportToCSV } = useReviews(undefined, filters);
-  const chartData = useReviewChartData(reviews);
-
-  const aiInsights = useMemo(() => {
-    if (!reviews || reviews.length === 0) return null;
-    const allTopics: string[] = [];
-    reviews.forEach(r => {
-      if (r.topics && Array.isArray(r.topics)) {
-        r.topics.forEach((t: any) => {
-          const topicStr = typeof t === 'string' ? t : (t?.topic || 'other');
-          allTopics.push(topicStr);
-        });
-      }
-    });
-    const topicCounts = allTopics.reduce((acc, t) => ({ ...acc, [t]: (acc[t] || 0) + 1 }), {} as Record<string, number>);
-    const topTopics = Object.entries(topicCounts).map(([topic, count]) => ({ topic, count })).sort((a, b) => b.count - a.count);
-    const reviewsWithSentiment = reviews.filter(r => r.sentiment_score !== null && r.sentiment_score !== undefined);
-    const avgSentiment = reviewsWithSentiment.length > 0 
-      ? reviewsWithSentiment.reduce((s, r) => s + (r.sentiment_score || 0), 0) / reviewsWithSentiment.length 
-      : 0;
-    return { topTopics, avgSentiment, topTopic: topTopics[0] || { topic: '-', count: 0 } };
-  }, [reviews]);
 
   // Realtime subscriptions för alla review-källor
   useEffect(() => {
@@ -141,20 +114,17 @@ export default function ReviewDashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background to-muted/20">
-      {/* Header Section */}
-      <section className="p-6 border-b bg-background">
-        <div className="flex items-center justify-between flex-wrap gap-4">
+    <div className="h-screen flex flex-col">
+      {/* Fixed Header */}
+      <div className="p-6 border-b bg-background">
+        <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent">Recensioner</h1>
-            <p className="text-muted-foreground">AI-driven analys av kundrecensioner och feedback</p>
+            <h1 className="text-3xl font-bold">Recensioner</h1>
+            <p className="text-muted-foreground">
+              AI-driven analys av kundrecensioner och feedback
+            </p>
           </div>
-          <div className="flex items-center gap-3">
-            <Badge className="bg-green-500/20 text-green-700">
-              <div className="w-2 h-2 rounded-full bg-green-500 mr-2 animate-pulse" />
-              Live
-            </Badge>
-            <Badge variant="outline">{reviews.length} recensioner</Badge>
+          <div className="flex gap-2">
             <Button variant="outline" size="sm" onClick={handleRefresh}>
               <RefreshCw className="h-4 w-4 mr-2" />
               Uppdatera
@@ -165,74 +135,54 @@ export default function ReviewDashboard() {
             </Button>
           </div>
         </div>
-      </section>
+      </div>
 
-      {/* AI Stats Cards */}
-      <section className="p-6 bg-gradient-to-b from-muted/20 to-background">
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-          <PremiumTelephonyStatCard 
-            title="Totalt" 
-            value={stats.totalReviews} 
-            icon={Star} 
-            color="text-amber-600" 
-            subtitle="Alla källor" 
-          />
-          <PremiumTelephonyStatCard 
-            title="AI Sentiment" 
-            value={aiInsights ? `${(aiInsights.avgSentiment * 100).toFixed(0)}%` : '0%'} 
-            icon={Brain} 
-            color="text-purple-600" 
-            subtitle="Positivitet" 
-          />
-          <PremiumTelephonyStatCard 
-            title="Top Topic" 
-            value={aiInsights?.topTopic.topic || '-'} 
-            icon={Tag} 
-            color="text-blue-600" 
-            subtitle={`${aiInsights?.topTopic.count || 0} nämn`} 
-          />
-          <PremiumTelephonyStatCard 
-            title="Kommentarer" 
-            value={reviews.filter(r => r.comment).length} 
-            icon={ThumbsUp} 
-            color="text-green-600" 
-            subtitle="Med text" 
-          />
-        </div>
-      </section>
-
-      {/* Charts Section */}
-      <section className="p-6">
-        <Card className="p-6 mb-6 border border-primary/10 bg-gradient-to-br from-card/80 to-card/50 backdrop-blur">
-          <div className="flex items-center justify-between flex-wrap gap-4 mb-6">
-            <h2 className="text-xl font-bold">Statistik & Analys</h2>
-            <div className="flex gap-2">
-              <Button variant={dateRangeDays === 7 ? "default" : "outline"} size="sm" onClick={() => setDateRangeDays(7)}>7 dagar</Button>
-              <Button variant={dateRangeDays === 30 ? "default" : "outline"} size="sm" onClick={() => setDateRangeDays(30)}>30 dagar</Button>
-              <Button variant={dateRangeDays === 90 ? "default" : "outline"} size="sm" onClick={() => setDateRangeDays(90)}>90 dagar</Button>
-            </div>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <ReviewsActivityChart data={chartData.dailyActivity} isLoading={isLoading} />
-            <SentimentTrendChart data={chartData.sentimentTrend} isLoading={isLoading} />
-            <RatingDistributionChart data={chartData.ratingDistribution} isLoading={isLoading} />
-            <TopicsDistributionChart data={chartData.topicsDistribution} isLoading={isLoading} />
-            <RatingVsSentimentChart data={chartData.ratingVsSentiment} isLoading={isLoading} />
-            <ResponseTimeTrendChart data={chartData.responseTimeTrend} isLoading={isLoading} />
-          </div>
-        </Card>
-      </section>
-
-      {/* Reviews Table Section */}
-      <section className="p-6">
-        <Card className="p-6 border border-primary/10 bg-gradient-to-br from-card/80 to-card/50 backdrop-blur">
-          <div className="mb-6">
-            <h2 className="text-xl font-semibold mb-4">Alla recensioner</h2>
+      {/* Resizable Split Layout */}
+      <ResizablePanelGroup 
+        direction={isMobile ? "vertical" : "horizontal"} 
+        className="flex-1"
+      >
+        {/* LEFT PANEL - Review List */}
+        <ResizablePanel defaultSize={50} minSize={30}>
+          <div className="h-full overflow-y-auto p-6 space-y-6">
+            {/* Stats Cards */}
+            <ReviewStatsCards stats={stats} insights={undefined} />
+            
+            {/* Filters */}
             <ReviewFilters onFilterChange={setFilters} />
+            
+            {/* Review List Header */}
+            <div className="flex items-center justify-between">
+              <h2 className="text-xl font-semibold">Recensioner</h2>
+              <p className="text-sm text-muted-foreground">
+                Visar {reviews.length} av {allReviews.length}
+              </p>
+            </div>
+            
+            {/* Card-based Review List */}
+            {isLoading ? (
+              <div className="flex items-center justify-center py-12">
+                <RefreshCw className="h-8 w-8 animate-spin text-muted-foreground" />
+              </div>
+            ) : (
+              <ReviewCardList 
+                reviews={reviews} 
+                onViewDetails={setSelectedReview} 
+              />
+            )}
           </div>
-          <ReviewsTable reviews={reviews} onViewDetails={setSelectedReview} />
-        </Card>
-      </section>
+        </ResizablePanel>
+
+        {/* Resize Handle */}
+        <ResizableHandle withHandle />
+
+        {/* RIGHT PANEL - AI Insights */}
+        <ResizablePanel defaultSize={50} minSize={30}>
+          <div className="h-full overflow-y-auto p-6">
+            <ReviewInsightsSection />
+          </div>
+        </ResizablePanel>
+      </ResizablePanelGroup>
 
       {/* Review Detail Drawer */}
       <ReviewDetailDrawer
