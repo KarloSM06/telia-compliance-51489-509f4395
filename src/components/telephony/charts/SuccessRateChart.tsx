@@ -122,7 +122,7 @@ export const SuccessRateChart = ({ data, isLoading }: SuccessRateChartProps) => 
         </div>
       </div>
 
-      <ResponsiveContainer width="100%" height={400}>
+      <ResponsiveContainer width="100%" height={280}>
         <ComposedChart data={data} margin={{ top: 5, right: 10, left: 0, bottom: 5 }}>
           <CartesianGrid 
             strokeDasharray="3 3" 

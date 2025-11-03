@@ -338,44 +338,33 @@ export default function TelephonyPage() {
               </div>
             </Card>
 
-            <div className="space-y-6">
-              {/* Main Activity Chart - Full Width */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <TelephonyActivityChart 
                 data={chartData.dailyActivity}
                 providers={chartData.providers}
                 isLoading={isLoading}
               />
-
-              {/* Success Rate Chart - Full Width */}
               <SuccessRateChart 
                 data={chartData.successRateData}
                 isLoading={isLoading}
               />
-
-              {/* Two Column Charts */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <ProviderPerformanceChart 
-                  data={chartData.providerPerformance}
-                  providers={chartData.providers}
-                  isLoading={isLoading}
-                />
-                <CallDirectionChart 
-                  data={chartData.directionAnalysis}
-                  isLoading={isLoading}
-                />
-              </div>
-
-              {/* Two Column Charts */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <AvgDurationTrendChart 
-                  data={chartData.avgDurationTrend}
-                  isLoading={isLoading}
-                />
-                <EventTypeDistributionChart 
-                  data={chartData.eventTypeDistribution}
-                  isLoading={isLoading}
-                />
-              </div>
+              <ProviderPerformanceChart 
+                data={chartData.providerPerformance}
+                providers={chartData.providers}
+                isLoading={isLoading}
+              />
+              <CallDirectionChart 
+                data={chartData.directionAnalysis}
+                isLoading={isLoading}
+              />
+              <AvgDurationTrendChart 
+                data={chartData.avgDurationTrend}
+                isLoading={isLoading}
+              />
+              <EventTypeDistributionChart 
+                data={chartData.eventTypeDistribution}
+                isLoading={isLoading}
+              />
             </div>
           </AnimatedSection>
         </div>

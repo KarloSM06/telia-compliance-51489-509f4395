@@ -119,7 +119,7 @@ export const EventTypeDistributionChart = ({ data, isLoading }: EventTypeDistrib
         </div>
       </div>
       
-      <ResponsiveContainer width="100%" height={280}>
+      <ResponsiveContainer width="100%" height={200}>
         <BarChart data={data} margin={{ top: 5, right: 10, left: 0, bottom: 5 }}>
           <CartesianGrid 
             strokeDasharray="3 3" 

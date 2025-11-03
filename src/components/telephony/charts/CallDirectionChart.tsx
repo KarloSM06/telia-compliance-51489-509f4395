@@ -121,7 +121,7 @@ export const CallDirectionChart = ({ data, isLoading }: CallDirectionChartProps)
         </Tabs>
       </div>
       
-      <ResponsiveContainer width="100%" height={350}>
+      <ResponsiveContainer width="100%" height={280}>
         <AreaChart data={chartData} margin={{ top: 5, right: 10, left: 0, bottom: 5 }}>
           <CartesianGrid 
             strokeDasharray="3 3" 

@@ -130,7 +130,7 @@ export const ProviderPerformanceChart = ({ data, providers, isLoading }: Provide
         </Tabs>
       </div>
       
-      <ResponsiveContainer width="100%" height={350}>
+      <ResponsiveContainer width="100%" height={280}>
         <LineChart data={chartData} margin={{ top: 5, right: 10, left: 0, bottom: 5 }}>
           <CartesianGrid 
             strokeDasharray="3 3" 
