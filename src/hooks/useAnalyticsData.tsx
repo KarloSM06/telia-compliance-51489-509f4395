@@ -18,6 +18,7 @@ import {
 } from "@/lib/roiCalculations";
 import { format, startOfDay, endOfDay, subDays } from "date-fns";
 import { USD_TO_SEK } from "@/lib/constants";
+import { calculateAICost } from "@/lib/aiCostCalculator";
 
 export interface AnalyticsData {
   bookings: any[];
@@ -172,8 +173,13 @@ export const useAnalyticsData = (dateRange?: { from: Date; to: Date }) => {
             dailyMap.set(day, { date: day, bookings: 0, revenue: 0, costs: 0 });
           }
           const dayData = dailyMap.get(day);
-          // cost_sek is not populated in DB, use cost_usd instead
-          dayData.costs += Number(ai.cost_usd || 0) * USD_TO_SEK;
+          // cost_usd is often 0 in DB, calculate from tokens as fallback
+          const costUSD = ai.cost_usd || calculateAICost({
+            model: ai.model,
+            prompt_tokens: ai.prompt_tokens || 0,
+            completion_tokens: ai.completion_tokens || 0,
+          });
+          dayData.costs += Number(costUSD) * USD_TO_SEK;
         });
 
         const dailyData = Array.from(dailyMap.values()).map(d => ({

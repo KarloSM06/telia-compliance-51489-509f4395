@@ -1,5 +1,6 @@
 import { BusinessMetrics, ServicePricing } from "@/hooks/useBusinessMetrics";
 import { USD_TO_SEK } from './constants';
+import { calculateAICost } from './aiCostCalculator';
 
 export interface BookingRevenue {
   bookingId: string;
@@ -162,9 +163,14 @@ export function calculateOperationalCosts(
     }, 0);
   
   // Calculate AI costs from usage logs
-  // cost_sek is not populated in DB, use cost_usd instead
+  // cost_usd is often 0 in DB, calculate from tokens as fallback
   const aiCost = aiUsageLogs.reduce((sum, log) => {
-    return sum + ((parseFloat(log.cost_usd) || 0) * USD_TO_SEK);
+    const costUSD = parseFloat(log.cost_usd) || calculateAICost({
+      model: log.model,
+      prompt_tokens: log.prompt_tokens || 0,
+      completion_tokens: log.completion_tokens || 0,
+    });
+    return sum + (costUSD * USD_TO_SEK);
   }, 0);
   
   // Calculate prorated fixed costs based on date range

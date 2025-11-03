@@ -26,6 +26,7 @@ import hiemsLogoSnowflake from '@/assets/hiems-logo-snowflake.png';
 import { format } from 'date-fns';
 import { USD_TO_SEK } from '@/lib/constants';
 import { useDateRangeStore } from '@/stores/useDateRangeStore';
+import { calculateAICost } from '@/lib/aiCostCalculator';
 
 const COLORS = ['hsl(217, 91%, 60%)', 'hsl(271, 70%, 60%)', 'hsl(189, 94%, 43%)', 'hsl(330, 81%, 60%)', 'hsl(142, 76%, 36%)'];
 
@@ -35,6 +36,23 @@ const Dashboard = () => {
   const { dateRange, setDateRange } = useDateRangeStore();
 
   const { data, loading } = useAnalyticsData(dateRange);
+
+  // Debug logging for telephony costs
+  if (data?.telephony) {
+    console.log('🔍 Telephony Debug Info:');
+    console.log('Total events:', data.telephony.length);
+    console.log('Sample events:', data.telephony.slice(0, 3).map(e => ({
+      id: e.id,
+      provider: e.provider,
+      event_type: e.event_type,
+      cost_amount: e.cost_amount,
+      cost_currency: e.cost_currency,
+      aggregate_cost_amount: e.aggregate_cost_amount,
+      cost_in_SEK: (parseFloat(e.cost_amount) || 0) * USD_TO_SEK
+    })));
+    const totalCost = data.telephony.reduce((sum, e) => sum + ((parseFloat(e.cost_amount) || 0) * USD_TO_SEK), 0);
+    console.log('Total telephony cost (SEK):', totalCost);
+  }
 
   const handleRefresh = () => {
     window.location.reload();
@@ -54,8 +72,20 @@ const Dashboard = () => {
         const smsCost = dayMessages.filter(m => m.message_type === 'sms').reduce((sum, m) => sum + ((m.metadata as any)?.cost_sek || 0), 0);
         const emailCost = dayMessages.filter(m => m.message_type === 'email').reduce((sum, m) => sum + ((m.metadata as any)?.cost_sek || 0), 0);
         
+        // Calculate AI cost with fallback to token-based calculation
+        const dayAI = (data as any).ai_usage_logs?.filter((ai: any) => 
+          format(new Date(ai.created_at), 'yyyy-MM-dd') === d.date
+        ) || [];
+        const aiCost = dayAI.reduce((sum: number, ai: any) => {
+          const costUSD = ai.cost_usd || calculateAICost({
+            model: ai.model,
+            prompt_tokens: ai.prompt_tokens || 0,
+            completion_tokens: ai.completion_tokens || 0,
+          });
+          return sum + (costUSD * USD_TO_SEK);
+        }, 0);
+        
         const dailyHiems = (businessMetrics?.hiems_monthly_support_cost || 0) / 30;
-        const aiCost = d.costs - telephonyCost - smsCost - emailCost - dailyHiems;
 
         return [
           d.date,
