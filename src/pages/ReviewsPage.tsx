@@ -6,6 +6,7 @@ import { RefreshCw, Download, Star, Settings, Brain, Tag, AlertTriangle, ThumbsU
 import { toast } from 'sonner';
 import { useReviews, ReviewFilterValues } from '@/hooks/useReviews';
 import { useReviewChartData } from '@/hooks/useReviewChartData';
+import { useDateRangeStore } from '@/stores/useDateRangeStore';
 import { PremiumTelephonyStatCard } from '@/components/telephony/PremiumTelephonyStatCard';
 import { AnimatedSection } from '@/components/shared/AnimatedSection';
 import { ReviewsActivityChart } from '@/components/reviews/charts/ReviewsActivityChart';
@@ -19,7 +20,7 @@ import { ReviewsTable } from '@/components/reviews/ReviewsTable';
 import hiemsLogoSnowflake from '@/assets/hiems-logo-snowflake.png';
 
 export default function ReviewsPage() {
-  const [dateRangeDays, setDateRangeDays] = useState(30);
+  const { dateRange, setPreset } = useDateRangeStore();
   const [filters, setFilters] = useState<ReviewFilterValues>({
     search: '',
     rating: 'all',
@@ -27,6 +28,11 @@ export default function ReviewsPage() {
     source: 'all',
   });
   const [selectedReview, setSelectedReview] = useState<any>(null);
+  
+  // Calculate current preset from global dateRange
+  const dateRangeDays = Math.round(
+    (dateRange.to.getTime() - dateRange.from.getTime()) / (1000 * 60 * 60 * 24)
+  );
 
   const { reviews, stats, isLoading, exportToCSV } = useReviews(undefined, filters);
   const chartData = useReviewChartData(reviews);
@@ -114,9 +120,9 @@ export default function ReviewsPage() {
               <div className="flex items-center justify-between flex-wrap gap-4">
                 <h2 className="text-xl font-bold bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent">Statistik & Analys</h2>
                 <div className="flex gap-2">
-                  <Button variant={dateRangeDays === 7 ? "default" : "outline"} size="sm" onClick={() => setDateRangeDays(7)}>7 dagar</Button>
-                  <Button variant={dateRangeDays === 30 ? "default" : "outline"} size="sm" onClick={() => setDateRangeDays(30)}>30 dagar</Button>
-                  <Button variant={dateRangeDays === 90 ? "default" : "outline"} size="sm" onClick={() => setDateRangeDays(90)}>90 dagar</Button>
+                  <Button variant={dateRangeDays === 7 ? "default" : "outline"} size="sm" onClick={() => setPreset(7)}>7 dagar</Button>
+                  <Button variant={dateRangeDays === 30 ? "default" : "outline"} size="sm" onClick={() => setPreset(30)}>30 dagar</Button>
+                  <Button variant={dateRangeDays === 90 ? "default" : "outline"} size="sm" onClick={() => setPreset(90)}>90 dagar</Button>
                 </div>
               </div>
             </Card>

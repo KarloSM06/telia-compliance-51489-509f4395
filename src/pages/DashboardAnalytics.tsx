@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -32,7 +31,8 @@ import { Badge } from "@/components/ui/badge";
 import { useAnalyticsData } from "@/hooks/useAnalyticsData";
 import { useBusinessMetrics } from "@/hooks/useBusinessMetrics";
 import { useAIUsage } from "@/hooks/useAIUsage";
-import { DateRangePicker, DateRange } from "@/components/dashboard/filters/DateRangePicker";
+import { DateRangePicker } from "@/components/dashboard/filters/DateRangePicker";
+import { useDateRangeStore } from '@/stores/useDateRangeStore';
 import { StatCard } from "@/components/communications/StatCard";
 import { PremiumTelephonyStatCard } from "@/components/telephony/PremiumTelephonyStatCard";
 import { AnimatedSection } from "@/components/shared/AnimatedSection";
@@ -48,13 +48,10 @@ import { useConversionFunnel } from "@/hooks/useConversionFunnel";
 import hiemsLogoSnowflake from '@/assets/hiems-logo-snowflake.png';
 
 const DashboardAnalytics = () => {
-  const [dateRange, setDateRange] = useState<DateRange | undefined>();
+  const { dateRange, setDateRange } = useDateRangeStore();
   const { data, loading } = useAnalyticsData(dateRange);
   const { metrics: businessMetrics } = useBusinessMetrics();
-  const { metrics: funnelMetrics } = useConversionFunnel(dateRange || {
-    from: new Date(new Date().setMonth(new Date().getMonth() - 1)),
-    to: new Date()
-  });
+  const { metrics: funnelMetrics } = useConversionFunnel(dateRange);
   const { usage: aiUsage, isLoading: aiLoading } = useAIUsage(dateRange);
 
   const handleRefresh = () => {

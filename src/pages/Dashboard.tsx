@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -11,7 +10,7 @@ import { toast } from 'sonner';
 import { PremiumTelephonyStatCard } from '@/components/telephony/PremiumTelephonyStatCard';
 import { AnimatedSection } from '@/components/shared/AnimatedSection';
 import { RecentActivityCompact } from '@/components/dashboard/RecentActivityCompact';
-import { DateRangePicker, DateRange } from "@/components/dashboard/filters/DateRangePicker";
+import { DateRangePicker } from "@/components/dashboard/filters/DateRangePicker";
 import { BreakEvenCard } from '@/components/dashboard/BreakEvenCard';
 import { ProjectionTabs } from '@/components/dashboard/ProjectionTabs';
 import { RevenueVsCostsChart } from '@/components/dashboard/charts/RevenueVsCostsChart';
@@ -26,13 +25,14 @@ import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from 'recha
 import hiemsLogoSnowflake from '@/assets/hiems-logo-snowflake.png';
 import { format } from 'date-fns';
 import { USD_TO_SEK } from '@/lib/constants';
+import { useDateRangeStore } from '@/stores/useDateRangeStore';
 
 const COLORS = ['hsl(217, 91%, 60%)', 'hsl(271, 70%, 60%)', 'hsl(189, 94%, 43%)', 'hsl(330, 81%, 60%)', 'hsl(142, 76%, 36%)'];
 
 const Dashboard = () => {
   const { user } = useAuth();
   const { metrics: businessMetrics } = useBusinessMetrics();
-  const [dateRange, setDateRange] = useState<DateRange | undefined>();
+  const { dateRange, setDateRange } = useDateRangeStore();
 
   const { data, loading } = useAnalyticsData(dateRange);
 

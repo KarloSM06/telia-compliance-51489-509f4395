@@ -6,6 +6,7 @@ import { RefreshCw, Download, Settings, Bell, TrendingUp, AlertCircle, Eye } fro
 import { toast } from 'sonner';
 import { useOwnerNotifications } from '@/hooks/useOwnerNotifications';
 import { useNotificationChartData } from '@/hooks/useNotificationChartData';
+import { useDateRangeStore } from '@/stores/useDateRangeStore';
 import { PremiumTelephonyStatCard } from '@/components/telephony/PremiumTelephonyStatCard';
 import { AnimatedSection } from '@/components/shared/AnimatedSection';
 import { NotificationsActivityChart } from '@/components/notifications/charts/NotificationsActivityChart';
@@ -19,7 +20,7 @@ import { NotificationsTable } from '@/components/notifications/NotificationsTabl
 import hiemsLogoSnowflake from '@/assets/hiems-logo-snowflake.png';
 
 export default function NotificationsPage() {
-  const [dateRangeDays, setDateRangeDays] = useState(30);
+  const { dateRange, setPreset } = useDateRangeStore();
   const [filters, setFilters] = useState<NotificationFilterValues>({
     search: '',
     type: 'all',
@@ -29,6 +30,11 @@ export default function NotificationsPage() {
     readStatus: 'all',
   });
   const [selectedNotification, setSelectedNotification] = useState<any>(null);
+  
+  // Calculate current preset from global dateRange
+  const dateRangeDays = Math.round(
+    (dateRange.to.getTime() - dateRange.from.getTime()) / (1000 * 60 * 60 * 24)
+  );
   
   const { notifications, isLoading, unreadCount, markAllAsRead, markAsRead, deleteNotification } = useOwnerNotifications();
   const chartData = useNotificationChartData(notifications);
@@ -212,21 +218,21 @@ export default function NotificationsPage() {
                   <Button 
                     variant={dateRangeDays === 7 ? "default" : "outline"}
                     size="sm"
-                    onClick={() => setDateRangeDays(7)}
+                    onClick={() => setPreset(7)}
                   >
                     7 dagar
                   </Button>
                   <Button 
                     variant={dateRangeDays === 30 ? "default" : "outline"}
                     size="sm"
-                    onClick={() => setDateRangeDays(30)}
+                    onClick={() => setPreset(30)}
                   >
                     30 dagar
                   </Button>
                   <Button 
                     variant={dateRangeDays === 90 ? "default" : "outline"}
                     size="sm"
-                    onClick={() => setDateRangeDays(90)}
+                    onClick={() => setPreset(90)}
                   >
                     90 dagar
                   </Button>

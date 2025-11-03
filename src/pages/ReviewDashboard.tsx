@@ -9,6 +9,7 @@ import { useReviewChartData } from '@/hooks/useReviewChartData';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { useQueryClient } from '@tanstack/react-query';
+import { useDateRangeStore } from '@/stores/useDateRangeStore';
 import { ReviewFilters } from '@/components/reviews/ReviewFilters';
 import { ReviewCardList } from '@/components/reviews/ReviewCardList';
 import { ReviewDetailDrawer } from '@/components/reviews/ReviewDetailDrawer';
@@ -27,13 +28,18 @@ export default function ReviewDashboard() {
   const { user } = useAuth();
   const queryClient = useQueryClient();
   const [selectedReview, setSelectedReview] = useState<any>(null);
-  const [dateRangeDays, setDateRangeDays] = useState(30);
+  const { dateRange, setPreset } = useDateRangeStore();
   const [filters, setFilters] = useState<ReviewFilterValues>({
     search: '',
     rating: 'all',
     sentiment: 'all',
     source: 'all',
   });
+  
+  // Calculate current preset from global dateRange
+  const dateRangeDays = Math.round(
+    (dateRange.to.getTime() - dateRange.from.getTime()) / (1000 * 60 * 60 * 24)
+  );
 
   const { reviews, allReviews, stats, isLoading, exportToCSV } = useReviews(undefined, filters);
   const chartData = useReviewChartData(allReviews);
@@ -308,21 +314,21 @@ export default function ReviewDashboard() {
                   <Button 
                     variant={dateRangeDays === 7 ? "default" : "outline"}
                     size="sm"
-                    onClick={() => setDateRangeDays(7)}
+                    onClick={() => setPreset(7)}
                   >
                     7 dagar
                   </Button>
                   <Button 
                     variant={dateRangeDays === 30 ? "default" : "outline"}
                     size="sm"
-                    onClick={() => setDateRangeDays(30)}
+                    onClick={() => setPreset(30)}
                   >
                     30 dagar
                   </Button>
                   <Button 
                     variant={dateRangeDays === 90 ? "default" : "outline"}
                     size="sm"
-                    onClick={() => setDateRangeDays(90)}
+                    onClick={() => setPreset(90)}
                   >
                     90 dagar
                   </Button>

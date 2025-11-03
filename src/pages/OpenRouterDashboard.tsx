@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { OpenRouterHeader } from "@/components/dashboard/openrouter/OpenRouterHeader";
 import { ConnectionStatusBanner } from "@/components/dashboard/openrouter/ConnectionStatusBanner";
 import { AccountBalanceCards } from "@/components/dashboard/openrouter/AccountBalanceCards";
@@ -21,23 +21,16 @@ import { AnimatedSection } from "@/components/shared/AnimatedSection";
 import { RefreshCw, Download, Settings } from "lucide-react";
 import hiemsLogoSnowflake from '@/assets/hiems-logo-snowflake.png';
 import { toast } from "sonner";
-
-interface DateRange {
-  from: Date;
-  to: Date;
-}
+import { useDateRangeStore } from '@/stores/useDateRangeStore';
 
 const OpenRouterDashboard = () => {
   const [showSetupModal, setShowSetupModal] = useState(false);
-  const [dateRangeDays, setDateRangeDays] = useState(30);
-
-  const dateRange: DateRange = useMemo(() => {
-    const to = new Date();
-    to.setHours(0, 0, 0, 0);
-    const from = new Date(to);
-    from.setDate(to.getDate() - dateRangeDays);
-    return { from, to };
-  }, [dateRangeDays]);
+  const { dateRange, setPreset } = useDateRangeStore();
+  
+  // Calculate current preset from global dateRange
+  const dateRangeDays = Math.round(
+    (dateRange.to.getTime() - dateRange.from.getTime()) / (1000 * 60 * 60 * 24)
+  );
 
   // Fetch data
   const { data: keysStatus } = useOpenRouterKeys();
@@ -194,21 +187,21 @@ const OpenRouterDashboard = () => {
           <Button 
             variant={dateRangeDays === 7 ? "default" : "outline"}
             size="sm"
-            onClick={() => setDateRangeDays(7)}
+            onClick={() => setPreset(7)}
           >
             7 dagar
           </Button>
           <Button 
             variant={dateRangeDays === 30 ? "default" : "outline"}
             size="sm"
-            onClick={() => setDateRangeDays(30)}
+            onClick={() => setPreset(30)}
           >
             30 dagar
           </Button>
           <Button 
             variant={dateRangeDays === 90 ? "default" : "outline"}
             size="sm"
-            onClick={() => setDateRangeDays(90)}
+            onClick={() => setPreset(90)}
           >
             90 dagar
           </Button>

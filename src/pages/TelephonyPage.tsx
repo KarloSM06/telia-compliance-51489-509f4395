@@ -8,6 +8,7 @@ import { useIntegrations } from '@/hooks/useIntegrations';
 import { useTelephonyMetrics } from '@/hooks/useTelephonyMetrics';
 import { useTelephonyChartData } from '@/hooks/useTelephonyChartData';
 import { usePhoneNumbers } from '@/hooks/usePhoneNumbers';
+import { useDateRangeStore } from '@/stores/useDateRangeStore';
 import { EventsTable } from '@/components/telephony/EventsTable';
 import { EventFilters, EventFilterValues } from '@/components/telephony/EventFilters';
 import { ProviderManagementDialog } from '@/components/telephony/ProviderManagementDialog';
@@ -30,7 +31,7 @@ export default function TelephonyPage() {
   const [showProviderDialog, setShowProviderDialog] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState<any>(null);
-  const [dateRangeDays, setDateRangeDays] = useState(30);
+  const { dateRange, setPreset } = useDateRangeStore();
   const [filters, setFilters] = useState<EventFilterValues>({
     search: '',
     provider: 'all',
@@ -39,6 +40,11 @@ export default function TelephonyPage() {
     status: 'all',
     callStatus: 'all',
   });
+  
+  // Calculate current preset from global dateRange
+  const dateRangeDays = Math.round(
+    (dateRange.to.getTime() - dateRange.from.getTime()) / (1000 * 60 * 60 * 24)
+  );
 
   const { integrations, getByCapability } = useIntegrations();
   const { metrics, isLoading, refetch } = useTelephonyMetrics();
@@ -330,21 +336,21 @@ export default function TelephonyPage() {
                   <Button 
                     variant={dateRangeDays === 7 ? "default" : "outline"}
                     size="sm"
-                    onClick={() => setDateRangeDays(7)}
+                    onClick={() => setPreset(7)}
                   >
                     7 dagar
                   </Button>
                   <Button 
                     variant={dateRangeDays === 30 ? "default" : "outline"}
                     size="sm"
-                    onClick={() => setDateRangeDays(30)}
+                    onClick={() => setPreset(30)}
                   >
                     30 dagar
                   </Button>
                   <Button 
                     variant={dateRangeDays === 90 ? "default" : "outline"}
                     size="sm"
-                    onClick={() => setDateRangeDays(90)}
+                    onClick={() => setPreset(90)}
                   >
                     90 dagar
                   </Button>

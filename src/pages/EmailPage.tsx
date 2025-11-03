@@ -8,6 +8,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useAuth } from '@/hooks/useAuth';
 import { useMessageLogs } from "@/hooks/useMessageLogs";
 import { useEmailChartData } from "@/hooks/useEmailChartData";
+import { useDateRangeStore } from '@/stores/useDateRangeStore';
 import { EmailStatsCards } from "@/components/messages/EmailStatsCards";
 import { EmailTable } from "@/components/messages/EmailTable";
 import { EmailFilters, EmailFilterValues } from "@/components/messages/EmailFilters";
@@ -25,11 +26,16 @@ export default function EmailPage() {
   const queryClient = useQueryClient();
   const [selectedMessage, setSelectedMessage] = useState<any>(null);
   const [showProvidersDialog, setShowProvidersDialog] = useState(false);
-  const [dateRangeDays, setDateRangeDays] = useState(30);
+  const { dateRange, setPreset } = useDateRangeStore();
   const [filters, setFilters] = useState<EmailFilterValues>({
     search: '',
     status: 'all',
   });
+  
+  // Calculate current preset from global dateRange
+  const dateRangeDays = Math.round(
+    (dateRange.to.getTime() - dateRange.from.getTime()) / (1000 * 60 * 60 * 24)
+  );
 
   const { logs, stats, isLoading } = useMessageLogs({
     channel: 'email',
@@ -176,8 +182,9 @@ export default function EmailPage() {
               <div className="flex items-center justify-between mb-4">
                 <h2 className="text-xl font-bold bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent">Statistik & Analys</h2>
                 <div className="flex gap-2">
-                  <Button variant={dateRangeDays === 7 ? "default" : "outline"} size="sm" onClick={() => setDateRangeDays(7)}>7 dagar</Button>
-                  <Button variant={dateRangeDays === 30 ? "default" : "outline"} size="sm" onClick={() => setDateRangeDays(30)}>30 dagar</Button>
+                  <Button variant={dateRangeDays === 7 ? "default" : "outline"} size="sm" onClick={() => setPreset(7)}>7 dagar</Button>
+                  <Button variant={dateRangeDays === 30 ? "default" : "outline"} size="sm" onClick={() => setPreset(30)}>30 dagar</Button>
+                  <Button variant={dateRangeDays === 90 ? "default" : "outline"} size="sm" onClick={() => setPreset(90)}>90 dagar</Button>
                 </div>
               </div>
             </Card>
