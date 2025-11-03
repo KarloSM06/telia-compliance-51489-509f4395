@@ -73,13 +73,13 @@ export const APIKeysOverview = ({ keys, isLoading }: APIKeysOverviewProps) => {
           
           <div className="space-y-2">
             <p className="text-sm text-muted-foreground">Total Limit</p>
-            <p className="text-2xl font-bold">{totals.limit.toLocaleString()}</p>
-            <p className="text-xs text-muted-foreground">requests</p>
+            <p className="text-2xl font-bold">${totals.limit.toFixed(2)}</p>
+            <p className="text-xs text-muted-foreground">USD</p>
           </div>
           
           <div className="space-y-2">
             <p className="text-sm text-muted-foreground">Total Användning</p>
-            <p className="text-2xl font-bold">{totals.usage.toLocaleString()}</p>
+            <p className="text-2xl font-bold">${totals.usage.toFixed(2)}</p>
             <p className="text-xs text-muted-foreground">
               {usagePercentage.toFixed(1)}% använt
             </p>
@@ -87,8 +87,8 @@ export const APIKeysOverview = ({ keys, isLoading }: APIKeysOverviewProps) => {
           
           <div className="space-y-2">
             <p className="text-sm text-muted-foreground">Återstående</p>
-            <p className="text-2xl font-bold">{totals.remaining.toLocaleString()}</p>
-            <p className="text-xs text-muted-foreground">requests</p>
+            <p className="text-2xl font-bold">${totals.remaining.toFixed(2)}</p>
+            <p className="text-xs text-muted-foreground">USD</p>
           </div>
         </div>
 
@@ -138,8 +138,8 @@ export const APIKeysOverview = ({ keys, isLoading }: APIKeysOverviewProps) => {
                   <>
                     <Progress value={keyUsagePercentage} className="h-1" />
                     <div className="flex justify-between text-xs text-muted-foreground">
-                      <span>{key.usage?.toLocaleString() || 0} använt</span>
-                      <span>{key.limit_remaining?.toLocaleString() || 0} kvar</span>
+                      <span>${(key.usage || 0).toFixed(2)} använt</span>
+                      <span>${(key.limit_remaining || 0).toFixed(2)} kvar</span>
                     </div>
                   </>
                 )}
