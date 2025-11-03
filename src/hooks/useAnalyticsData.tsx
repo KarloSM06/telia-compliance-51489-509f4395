@@ -165,6 +165,16 @@ export const useAnalyticsData = (dateRange?: { from: Date; to: Date }) => {
           dayData.costs += costSEK;
         });
 
+        // FAS 1: Add AI usage costs to daily map
+        aiUsage.forEach(ai => {
+          const day = format(new Date(ai.created_at), 'yyyy-MM-dd');
+          if (!dailyMap.has(day)) {
+            dailyMap.set(day, { date: day, bookings: 0, revenue: 0, costs: 0 });
+          }
+          const dayData = dailyMap.get(day);
+          dayData.costs += Number(ai.cost_sek || 0);
+        });
+
         const dailyData = Array.from(dailyMap.values()).map(d => ({
           ...d,
           profit: d.revenue - d.costs,

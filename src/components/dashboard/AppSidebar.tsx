@@ -28,7 +28,7 @@ import {
 // 4-grupps struktur för optimal användarupplevelse
 const overviewItems = [
   { title: "Dashboard", url: "/dashboard", icon: Home },
-  { title: "Analytics", url: "/dashboard/analytics", icon: BarChart3 },
+  // FAS 7: Analytics removed - now integrated into Dashboard
   // Custom Dashboard - gömmer från navigation (kommer i framtiden)
   // { title: "Custom Dashboard", url: "/dashboard/custom", icon: LayoutDashboard },
 ];

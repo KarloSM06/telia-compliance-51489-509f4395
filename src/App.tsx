@@ -80,7 +80,8 @@ const App = () => {
               <Route path="/" element={<Index />} />
               <Route path="/auth" element={<Auth />} />
               <Route path="/dashboard" element={<DashboardLayout><Dashboard /></DashboardLayout>} />
-              <Route path="/dashboard/analytics" element={<DashboardLayout><DashboardAnalytics /></DashboardLayout>} />
+              {/* FAS 2: Redirect /analytics to /dashboard */}
+              <Route path="/dashboard/analytics" element={<DashboardLayout><Dashboard /></DashboardLayout>} />
               <Route path="/dashboard/packages" element={<DashboardLayout><DashboardPackages /></DashboardLayout>} />
               <Route path="/dashboard/custom" element={<DashboardLayout><CustomDashboard /></DashboardLayout>} />
               <Route path="/dashboard/settings" element={<DashboardLayout><Settings /></DashboardLayout>} />
