@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 import { useAnalyticsData } from '@/hooks/useAnalyticsData';
 import { useAuth } from '@/hooks/useAuth';
 import { useBusinessMetrics } from '@/hooks/useBusinessMetrics';
+import { useOpenRouterActivitySEK } from '@/hooks/useOpenRouterActivitySEK';
 import { toast } from 'sonner';
 import { PremiumTelephonyStatCard } from '@/components/telephony/PremiumTelephonyStatCard';
 import { AnimatedSection } from '@/components/shared/AnimatedSection';
@@ -34,6 +35,7 @@ const Dashboard = () => {
   const { user } = useAuth();
   const { metrics: businessMetrics } = useBusinessMetrics();
   const { dateRange, setDateRange } = useDateRangeStore();
+  const { data: openrouterData } = useOpenRouterActivitySEK(dateRange, true);
 
   const { data, loading } = useAnalyticsData(dateRange);
 
@@ -43,6 +45,16 @@ const Dashboard = () => {
 
   const handleExport = () => {
     if (!data) return;
+    
+    // Map OpenRouter costs per day from actual API data
+    const openrouterDailyMap = new Map<string, number>();
+    openrouterData?.activity?.forEach(item => {
+      const day = item.date;
+      if (!openrouterDailyMap.has(day)) {
+        openrouterDailyMap.set(day, 0);
+      }
+      openrouterDailyMap.set(day, openrouterDailyMap.get(day)! + item.usage);
+    });
 
     const csvContent = [
       ['Datum', 'Bokningar', 'Intäkter (SEK)', 'Kostnader (SEK)', 'Telefoni (SEK)', 'SMS (SEK)', 'Email (SEK)', 'AI (SEK)', 'Hiems (SEK)', 'Vinst (SEK)', 'ROI (%)'].join(','),
@@ -56,18 +68,9 @@ const Dashboard = () => {
         const smsCost = dayMessages.filter(m => m.message_type === 'sms').reduce((sum, m) => sum + ((m.metadata as any)?.cost_sek || 0), 0);
         const emailCost = dayMessages.filter(m => m.message_type === 'email').reduce((sum, m) => sum + ((m.metadata as any)?.cost_sek || 0), 0);
         
-        // Calculate AI cost with fallback to token-based calculation
-        const dayAI = (data as any).ai_usage_logs?.filter((ai: any) => 
-          format(new Date(ai.created_at), 'yyyy-MM-dd') === d.date
-        ) || [];
-        const aiCost = dayAI.reduce((sum: number, ai: any) => {
-          const costUSD = ai.cost_usd || calculateAICost({
-            model: ai.model,
-            prompt_tokens: ai.prompt_tokens || 0,
-            completion_tokens: ai.completion_tokens || 0,
-          });
-          return sum + (costUSD * USD_TO_SEK);
-        }, 0);
+        // Use actual OpenRouter cost from API (already in SEK)
+        const openrouterDailyCost = openrouterDailyMap.get(d.date) || 0;
+        const aiCost = openrouterDailyCost;
         
         const dailyHiems = (businessMetrics?.hiems_monthly_support_cost || 0) / 30;
 

@@ -138,7 +138,8 @@ export function calculateOperationalCosts(
   messageLogs: any[],
   aiUsageLogs: any[],
   businessMetrics: BusinessMetrics,
-  dateRange: { from: Date; to: Date }
+  dateRange: { from: Date; to: Date },
+  openRouterCostSEK: number = 0
 ): OperationalCosts {
   // Calculate telephony costs - only VAPI events (aggregate cost)
   const telephonyCost = telephonyEvents
@@ -164,16 +165,20 @@ export function calculateOperationalCosts(
       return sum + costSEK;
     }, 0);
   
-  // Calculate AI costs from usage logs
-  // cost_usd is often 0 in DB, calculate from tokens as fallback
-  const aiCost = aiUsageLogs.reduce((sum, log) => {
-    const costUSD = parseFloat(log.cost_usd) || calculateAICost({
-      model: log.model,
-      prompt_tokens: log.prompt_tokens || 0,
-      completion_tokens: log.completion_tokens || 0,
-    });
-    return sum + (costUSD * USD_TO_SEK);
-  }, 0);
+  // AI costs - exclude OpenRouter (we use actual API data), calculate others from tokens
+  const otherAICost = aiUsageLogs
+    .filter(log => log.provider !== 'openrouter')
+    .reduce((sum, log) => {
+      const costUSD = parseFloat(log.cost_usd) || calculateAICost({
+        model: log.model,
+        prompt_tokens: log.prompt_tokens || 0,
+        completion_tokens: log.completion_tokens || 0,
+      });
+      return sum + (costUSD * USD_TO_SEK);
+    }, 0);
+  
+  // Total AI cost = other providers + actual OpenRouter cost from API
+  const aiCost = otherAICost + openRouterCostSEK;
   
   // Calculate prorated fixed costs based on date range
   const daysInRange = Math.max(1, Math.ceil(

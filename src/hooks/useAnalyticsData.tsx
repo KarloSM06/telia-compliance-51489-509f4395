@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "./useAuth";
 import { useBusinessMetrics } from "./useBusinessMetrics";
+import { useOpenRouterActivitySEK } from "./useOpenRouterActivitySEK";
 import { supabase } from "@/integrations/supabase/client";
 import { 
   calculateBookingRevenue, 
@@ -40,6 +41,7 @@ export interface AnalyticsData {
 export const useAnalyticsData = (dateRange?: { from: Date; to: Date }) => {
   const { user } = useAuth();
   const { metrics: businessMetrics } = useBusinessMetrics();
+  const { data: openrouterData } = useOpenRouterActivitySEK(dateRange, true);
   const [data, setData] = useState<AnalyticsData | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -126,7 +128,13 @@ export const useAnalyticsData = (dateRange?: { from: Date; to: Date }) => {
           calculateBookingRevenue(b, businessMetrics)
         );
         
-        const costs = calculateOperationalCosts(telephony, messages, aiUsage, businessMetrics, { from, to });
+        // Calculate total OpenRouter cost from actual API data (already in SEK)
+        const openRouterCostSEK = openrouterData?.activity?.reduce(
+          (sum, item) => sum + (item.usage || 0), 
+          0
+        ) || 0;
+        
+        const costs = calculateOperationalCosts(telephony, messages, aiUsage, businessMetrics, { from, to }, openRouterCostSEK);
         const roi = calculateROI(bookingRevenues, costs);
 
         // Aggregate daily data
@@ -167,20 +175,32 @@ export const useAnalyticsData = (dateRange?: { from: Date; to: Date }) => {
             dayData.costs += costSEK;
           });
 
-        // Add AI usage costs to daily map
-        aiUsage.forEach(ai => {
-          const day = format(new Date(ai.created_at), 'yyyy-MM-dd');
+        // Add AI usage costs to daily map (exclude OpenRouter - we use actual API data)
+        aiUsage
+          .filter(ai => ai.provider !== 'openrouter')
+          .forEach(ai => {
+            const day = format(new Date(ai.created_at), 'yyyy-MM-dd');
+            if (!dailyMap.has(day)) {
+              dailyMap.set(day, { date: day, bookings: 0, revenue: 0, costs: 0 });
+            }
+            const dayData = dailyMap.get(day);
+            // cost_usd is often 0 in DB, calculate from tokens as fallback
+            const costUSD = ai.cost_usd || calculateAICost({
+              model: ai.model,
+              prompt_tokens: ai.prompt_tokens || 0,
+              completion_tokens: ai.completion_tokens || 0,
+            });
+            dayData.costs += Number(costUSD) * USD_TO_SEK;
+          });
+
+        // Add actual OpenRouter costs per day from API
+        openrouterData?.activity?.forEach(item => {
+          const day = item.date;
           if (!dailyMap.has(day)) {
             dailyMap.set(day, { date: day, bookings: 0, revenue: 0, costs: 0 });
           }
           const dayData = dailyMap.get(day);
-          // cost_usd is often 0 in DB, calculate from tokens as fallback
-          const costUSD = ai.cost_usd || calculateAICost({
-            model: ai.model,
-            prompt_tokens: ai.prompt_tokens || 0,
-            completion_tokens: ai.completion_tokens || 0,
-          });
-          dayData.costs += Number(costUSD) * USD_TO_SEK;
+          dayData.costs += item.usage; // Already in SEK
         });
 
         const dailyData = Array.from(dailyMap.values()).map(d => ({
