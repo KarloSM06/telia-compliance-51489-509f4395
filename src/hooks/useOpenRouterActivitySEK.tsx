@@ -17,22 +17,38 @@ export const useOpenRouterActivitySEK = (dateRange?: DateRange, enabled: boolean
   const { data: rawData, isLoading, error } = useOpenRouterActivity(dateRange, enabled);
 
   const convertedData = useMemo(() => {
-    if (!rawData) return rawData;
+    if (!rawData?.data) return { activity: [], daily_usage: [] };
 
-    // Convert activity data
-    const activityData = rawData.activity?.map((item: any) => ({
-      ...item,
-      usage: (item.usage || 0) * USD_TO_SEK, // Convert USD to SEK
-    })) || [];
+    // Convert and prepare data for ModelUsageChart
+    const activityData = rawData.data.map((item: any) => ({
+      date: item.date,
+      model: item.model || item.model_permaslug,
+      usage: (item.usage || 0) * USD_TO_SEK,
+      prompt_tokens: item.prompt_tokens || 0,
+      completion_tokens: item.completion_tokens || 0,
+      requests: item.requests || 0,
+    }));
 
-    // Convert daily usage data
-    const dailyUsageData = rawData.daily_usage?.map((item: any) => ({
-      ...item,
-      usage: (item.usage || 0) * USD_TO_SEK, // Convert USD to SEK
-    })) || [];
+    // Aggregate data by date and endpoint_id for APIKeyUsageChart
+    const dailyUsageMap = new Map();
+    rawData.data.forEach((item: any) => {
+      const key = `${item.date}_${item.endpoint_id}`;
+      if (!dailyUsageMap.has(key)) {
+        dailyUsageMap.set(key, {
+          date: item.date,
+          endpoint_id: item.endpoint_id,
+          usage: 0,
+          requests: 0,
+        });
+      }
+      const existing = dailyUsageMap.get(key);
+      existing.usage += (item.usage || 0) * USD_TO_SEK;
+      existing.requests += item.requests || 0;
+    });
+
+    const dailyUsageData = Array.from(dailyUsageMap.values());
 
     return {
-      ...rawData,
       activity: activityData,
       daily_usage: dailyUsageData,
     };
