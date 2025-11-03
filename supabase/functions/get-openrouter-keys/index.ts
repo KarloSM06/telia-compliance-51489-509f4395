@@ -1,0 +1,88 @@
+import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.38.0';
+
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+};
+
+serve(async (req) => {
+  if (req.method === 'OPTIONS') {
+    return new Response(null, { headers: corsHeaders });
+  }
+
+  try {
+    const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
+    const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+    const supabase = createClient(supabaseUrl, supabaseServiceKey);
+
+    const authHeader = req.headers.get('Authorization');
+    if (!authHeader) {
+      throw new Error('No authorization header');
+    }
+
+    const { data: { user }, error: authError } = await supabase.auth.getUser(
+      authHeader.replace('Bearer ', '')
+    );
+
+    if (authError || !user) {
+      throw new Error('Unauthorized');
+    }
+
+    // Fetch provisioning key
+    const { data: settings, error: settingsError } = await supabase
+      .from('user_ai_settings')
+      .select('openrouter_provisioning_key_encrypted')
+      .eq('user_id', user.id)
+      .single();
+
+    if (settingsError || !settings?.openrouter_provisioning_key_encrypted) {
+      throw new Error('No provisioning key configured');
+    }
+
+    // Decrypt provisioning key
+    const encryptionKey = Deno.env.get('ENCRYPTION_KEY');
+    if (!encryptionKey) {
+      throw new Error('Encryption key not configured');
+    }
+
+    const { data: decryptedKey, error: decryptError } = await supabase.rpc(
+      'decrypt_text',
+      {
+        encrypted_data: settings.openrouter_provisioning_key_encrypted,
+        key: encryptionKey,
+      }
+    );
+
+    if (decryptError || !decryptedKey) {
+      throw new Error('Failed to decrypt provisioning key');
+    }
+
+    // Fetch keys from OpenRouter API
+    const openRouterResponse = await fetch('https://openrouter.ai/api/v1/keys', {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${decryptedKey}`,
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (!openRouterResponse.ok) {
+      const errorText = await openRouterResponse.text();
+      console.error('OpenRouter API error:', errorText);
+      throw new Error(`OpenRouter API error: ${openRouterResponse.status}`);
+    }
+
+    const keysData = await openRouterResponse.json();
+
+    return new Response(JSON.stringify(keysData), {
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    });
+  } catch (error) {
+    console.error('Error in get-openrouter-keys:', error);
+    return new Response(JSON.stringify({ error: error.message }), {
+      status: 400,
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    });
+  }
+});

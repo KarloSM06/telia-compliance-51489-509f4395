@@ -1,16 +1,15 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useAISettings } from "@/hooks/useAISettings";
 import { useAIUsage } from "@/hooks/useAIUsage";
-import { useOpenRouterCredits } from "@/hooks/useOpenRouterCredits";
-import { useOpenRouterKeyInfo } from "@/hooks/useOpenRouterKeyInfo";
 import { useOpenRouterModels } from "@/hooks/useOpenRouterModels";
 import { useOpenRouterActivity } from "@/hooks/useOpenRouterActivity";
 import { useOpenRouterKeys } from "@/hooks/useOpenRouterKeys";
-import { Settings, TrendingUp, Zap, DollarSign, Activity, Pencil, CreditCard, BarChart3, RefreshCw, Sparkles, Info } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { Settings, TrendingUp, Zap, DollarSign, Activity, Pencil, BarChart3, RefreshCw, Sparkles, Info, ExternalLink } from "lucide-react";
+import { useNavigate, Link } from "react-router-dom";
 import { AreaChartComponent } from "@/components/dashboard/charts/AreaChartComponent";
 import { PieChartComponent } from "@/components/dashboard/charts/PieChartComponent";
 import { BarChartComponent } from "@/components/dashboard/charts/BarChartComponent";
@@ -40,8 +39,6 @@ export function AIIntegrationsTab() {
   const hasProvisioningKey = !!settings?.openrouter_provisioning_key_encrypted;
 
   // Fetch OpenRouter data
-  const { data: credits } = useOpenRouterCredits();
-  const { data: keyInfo } = useOpenRouterKeyInfo();
   const { data: models } = useOpenRouterModels();
   const { data: activityData } = useOpenRouterActivity(dateRange, hasProvisioningKey);
 
@@ -214,9 +211,7 @@ export function AIIntegrationsTab() {
                       Uppdateras varje minut från /credits endpoint
                     </p>
                   </div>
-                  <Badge variant="default" className="bg-green-600">
-                    {credits ? `$${credits.limit_remaining?.toFixed(2)} kvar` : 'Aktiv'}
-                  </Badge>
+                  <Badge variant="default">Aktiv</Badge>
                 </div>
               </div>
             </div>
@@ -224,61 +219,17 @@ export function AIIntegrationsTab() {
         </CardContent>
       </Card>
 
-      {/* Account Overview - Only show if OpenRouter is configured */}
+      {/* Link to Analytics for Account Overview */}
       {isOpenRouterConfigured && (
-        <Card>
-          <CardHeader>
-            <CardTitle>📊 Account Overview</CardTitle>
-            <CardDescription>Din OpenRouter-kontoinformation</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="grid gap-4 md:grid-cols-3">
-              {/* Credit Balance Card */}
-              <div className="p-4 border rounded-lg">
-                <div className="flex items-center gap-2 mb-2">
-                  <CreditCard className="h-4 w-4 text-muted-foreground" />
-                  <div className="text-sm text-muted-foreground">Credit Balance</div>
-                </div>
-                <div className="text-2xl font-bold">
-                  ${credits?.limit_remaining?.toFixed(2) || '0.00'}
-                </div>
-                <div className="text-xs text-muted-foreground">
-                  of ${credits?.total_credits?.toFixed(2) || '0.00'}
-                </div>
-              </div>
-              
-              {/* Usage This Month Card */}
-              <div className="p-4 border rounded-lg">
-                <div className="flex items-center gap-2 mb-2">
-                  <TrendingUp className="h-4 w-4 text-muted-foreground" />
-                  <div className="text-sm text-muted-foreground">Usage This Month</div>
-                </div>
-                <div className="text-2xl font-bold">
-                  ${credits?.total_usage?.toFixed(2) || '0.00'}
-                </div>
-                <div className="text-xs text-muted-foreground">
-                  {credits?.limit_remaining && credits?.total_credits 
-                    ? `${((credits.total_usage / credits.total_credits) * 100).toFixed(1)}% used`
-                    : 'N/A'}
-                </div>
-              </div>
-              
-              {/* Rate Limit Card */}
-              <div className="p-4 border rounded-lg">
-                <div className="flex items-center gap-2 mb-2">
-                  <Activity className="h-4 w-4 text-muted-foreground" />
-                  <div className="text-sm text-muted-foreground">Rate Limit</div>
-                </div>
-                <div className="text-2xl font-bold">
-                  {keyInfo?.data?.rate_limit?.requests || 'N/A'}
-                </div>
-                <div className="text-xs text-muted-foreground">
-                  requests per {keyInfo?.data?.rate_limit?.interval || '10s'}
-                </div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+        <Alert>
+          <BarChart3 className="h-4 w-4" />
+          <AlertDescription>
+            Se fullständig account overview med detaljerad statistik och API-nycklar på{' '}
+            <Link to="/dashboard/analytics" className="text-primary hover:underline font-medium inline-flex items-center gap-1">
+              Analytics-sidan <ExternalLink className="h-3 w-3" />
+            </Link>
+          </AlertDescription>
+        </Alert>
       )}
 
       {/* Usage Overview */}
