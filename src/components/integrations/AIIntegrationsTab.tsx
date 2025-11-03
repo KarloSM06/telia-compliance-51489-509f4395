@@ -8,6 +8,7 @@ import { useOpenRouterCredits } from "@/hooks/useOpenRouterCredits";
 import { useOpenRouterKeyInfo } from "@/hooks/useOpenRouterKeyInfo";
 import { useOpenRouterModels } from "@/hooks/useOpenRouterModels";
 import { useOpenRouterActivity } from "@/hooks/useOpenRouterActivity";
+import { useOpenRouterKeys } from "@/hooks/useOpenRouterKeys";
 import { Settings, TrendingUp, Zap, DollarSign, Activity, Pencil, CreditCard, BarChart3, RefreshCw } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { AreaChartComponent } from "@/components/dashboard/charts/AreaChartComponent";
@@ -22,6 +23,7 @@ import { toast } from "sonner";
 export function AIIntegrationsTab() {
   const navigate = useNavigate();
   const { settings } = useAISettings();
+  const { data: keyStatus } = useOpenRouterKeys();
   const { usage, isLoading } = useAIUsage({
     from: startOfMonth(new Date()),
     to: endOfMonth(new Date()),
@@ -99,7 +101,40 @@ export function AIIntegrationsTab() {
           </div>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="flex items-center gap-4">
+          {/* Key Status Display */}
+          <div className="grid grid-cols-2 gap-4 pb-4">
+            {/* API Key Status */}
+            <div className="p-3 border rounded-lg">
+              <div className="text-sm font-medium mb-2">API Key</div>
+              {keyStatus?.api_key_exists ? (
+                <div>
+                  <Badge variant="default" className="bg-green-600 mb-2">Konfigurerad</Badge>
+                  <p className="text-xs text-muted-foreground font-mono break-all">
+                    {keyStatus.api_key_masked}
+                  </p>
+                </div>
+              ) : (
+                <Badge variant="secondary">Ej konfigurerad</Badge>
+              )}
+            </div>
+            
+            {/* Provisioning Key Status */}
+            <div className="p-3 border rounded-lg">
+              <div className="text-sm font-medium mb-2">Provisioning Key</div>
+              {keyStatus?.provisioning_key_exists ? (
+                <div>
+                  <Badge variant="default" className="bg-green-600 mb-2">Konfigurerad</Badge>
+                  <p className="text-xs text-muted-foreground font-mono break-all">
+                    {keyStatus.provisioning_key_masked}
+                  </p>
+                </div>
+              ) : (
+                <Badge variant="secondary">Ej konfigurerad</Badge>
+              )}
+            </div>
+          </div>
+
+          <div className="flex items-center gap-4 pt-4 border-t">
             <div className="flex items-center gap-2">
               <div className={`h-3 w-3 rounded-full ${isOpenRouterConfigured ? 'bg-green-500' : 'bg-gray-300'}`} />
               <span className="text-sm font-medium">

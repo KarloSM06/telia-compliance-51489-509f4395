@@ -53,8 +53,18 @@ export const useAISettings = () => {
       analysisModel?: string;
       useFallback: boolean;
     }) => {
-      // Encrypt API key if provided
-      let encryptedKey = null;
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error('Not authenticated');
+
+      // Fetch existing settings to preserve keys if not updating
+      const { data: existingSettings } = await supabase
+        .from('user_ai_settings')
+        .select('openrouter_api_key_encrypted, openrouter_provisioning_key_encrypted')
+        .eq('user_id', user.id)
+        .single();
+
+      // Encrypt API key if provided, otherwise keep existing
+      let encryptedKey = existingSettings?.openrouter_api_key_encrypted || null;
       if (provider === 'openrouter' && apiKey) {
         const { data: encryptData, error: encryptError } = await supabase.functions.invoke(
           'encrypt-api-key',
@@ -72,8 +82,8 @@ export const useAISettings = () => {
         encryptedKey = encryptData.encrypted;
       }
 
-      // Encrypt provisioning key if provided
-      let encryptedProvisioningKey = null;
+      // Encrypt provisioning key if provided, otherwise keep existing
+      let encryptedProvisioningKey = existingSettings?.openrouter_provisioning_key_encrypted || null;
       if (provider === 'openrouter' && provisioningKey) {
         const { data: encryptData, error: encryptError } = await supabase.functions.invoke(
           'encrypt-provisioning-key',
@@ -90,9 +100,6 @@ export const useAISettings = () => {
         
         encryptedProvisioningKey = encryptData.encrypted;
       }
-
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) throw new Error('Not authenticated');
 
       const { error } = await supabase
         .from('user_ai_settings')
@@ -112,10 +119,17 @@ export const useAISettings = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['ai-settings'] });
+      queryClient.invalidateQueries({ queryKey: ['openrouter-keys-status'] });
       toast.success('AI-inställningar sparade');
     },
     onError: (error: Error) => {
-      toast.error(`Kunde inte spara: ${error.message}`);
+      if (error.message.includes('duplicate') || error.message.includes('unique')) {
+        toast.error('Det finns redan en konfiguration. Försök igen.');
+      } else if (error.message.includes('encrypt')) {
+        toast.error('Kunde inte kryptera nyckeln. Kontrollera att den är giltig.');
+      } else {
+        toast.error(`Kunde inte spara: ${error.message}`);
+      }
     },
   });
 

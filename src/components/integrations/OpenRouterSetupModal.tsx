@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -6,10 +6,12 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { useAISettings } from "@/hooks/useAISettings";
+import { useOpenRouterKeys } from "@/hooks/useOpenRouterKeys";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { Check, Loader2, AlertCircle, Zap, BarChart3 } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Badge } from "@/components/ui/badge";
 
 interface OpenRouterSetupModalProps {
   open: boolean;
@@ -27,14 +29,28 @@ const AVAILABLE_MODELS = [
 
 export function OpenRouterSetupModal({ open, onOpenChange }: OpenRouterSetupModalProps) {
   const { settings, saveSettings, isSaving } = useAISettings();
+  const { data: keyStatus, isLoading: keysLoading } = useOpenRouterKeys();
   const [apiKey, setApiKey] = useState("");
   const [provisioningKey, setProvisioningKey] = useState("");
   const [selectedModel, setSelectedModel] = useState(settings?.default_model || "google/gemini-2.5-flash");
   const [useFallback, setUseFallback] = useState(settings?.use_system_fallback ?? true);
   const [isTesting, setIsTesting] = useState(false);
   const [connectionStatus, setConnectionStatus] = useState<{ type: "success" | "error"; message: string } | null>(null);
+  const [showApiKeyInput, setShowApiKeyInput] = useState(false);
+  const [showProvisioningKeyInput, setShowProvisioningKeyInput] = useState(false);
 
   const isConfigured = settings?.ai_provider === "openrouter" && settings?.openrouter_api_key_encrypted;
+
+  // Reset inputs when opening modal
+  useEffect(() => {
+    if (open) {
+      setApiKey("");
+      setProvisioningKey("");
+      setShowApiKeyInput(!keyStatus?.api_key_exists);
+      setShowProvisioningKeyInput(!keyStatus?.provisioning_key_exists);
+      setConnectionStatus(null);
+    }
+  }, [open, keyStatus]);
 
   const handleTestConnection = async () => {
     if (!apiKey) {
@@ -66,7 +82,8 @@ export function OpenRouterSetupModal({ open, onOpenChange }: OpenRouterSetupModa
   };
 
   const handleSave = async () => {
-    if (!apiKey && !isConfigured) {
+    // If no new key provided and no existing key, require input
+    if (!apiKey && !keyStatus?.api_key_exists) {
       toast.error("Ange en API-nyckel");
       return;
     }
@@ -79,6 +96,11 @@ export function OpenRouterSetupModal({ open, onOpenChange }: OpenRouterSetupModa
       useFallback,
     });
 
+    // Reset state and close
+    setApiKey("");
+    setProvisioningKey("");
+    setShowApiKeyInput(false);
+    setShowProvisioningKeyInput(false);
     onOpenChange(false);
   };
 
@@ -114,47 +136,84 @@ export function OpenRouterSetupModal({ open, onOpenChange }: OpenRouterSetupModa
               </div>
             </div>
             
-            <div className="space-y-2">
-              <Label htmlFor="api-key">OpenRouter API Key</Label>
-              <div className="flex gap-2">
-                <Input
-                  id="api-key"
-                  type="password"
-                  placeholder="sk-or-v1-..."
-                  value={apiKey}
-                  onChange={(e) => setApiKey(e.target.value)}
-                  disabled={isTesting || isSaving}
-                  className="bg-background"
-                />
-                <Button
-                  variant="outline"
-                  onClick={handleTestConnection}
-                  disabled={!apiKey || isTesting || isSaving}
-                >
-                  {isTesting ? (
-                    <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Testing
-                    </>
-                  ) : (
-                    <>
-                      <Check className="mr-2 h-4 w-4" />
-                      Test
-                    </>
-                  )}
-                </Button>
-              </div>
-              <p className="text-xs text-muted-foreground">
-                Hämta från{" "}
-                <a
-                  href="https://openrouter.ai/keys"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="underline hover:text-foreground"
-                >
-                  openrouter.ai/keys
-                </a>
-              </p>
+            <div className="space-y-3">
+              {/* Key Status Display */}
+              {keyStatus?.api_key_exists ? (
+                <div className="p-3 bg-green-50 dark:bg-green-950/30 rounded border border-green-200 dark:border-green-900">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <div className="flex items-center gap-2 mb-1">
+                        <Badge variant="default" className="bg-green-600">✓ API Key sparad</Badge>
+                      </div>
+                      <p className="text-xs text-muted-foreground font-mono">
+                        {keyStatus.api_key_masked}
+                      </p>
+                    </div>
+                    <Button 
+                      variant="ghost" 
+                      size="sm"
+                      onClick={() => setShowApiKeyInput(!showApiKeyInput)}
+                    >
+                      {showApiKeyInput ? 'Avbryt' : 'Uppdatera'}
+                    </Button>
+                  </div>
+                </div>
+              ) : (
+                <div className="p-3 bg-amber-50 dark:bg-amber-950/30 rounded border border-amber-200 dark:border-amber-900">
+                  <div className="flex items-center gap-2">
+                    <AlertCircle className="h-4 w-4 text-amber-600 dark:text-amber-400" />
+                    <span className="text-sm font-medium">⚠️ Ingen API Key sparad</span>
+                  </div>
+                </div>
+              )}
+
+              {/* Input Field */}
+              {(showApiKeyInput || !keyStatus?.api_key_exists) && (
+                <div className="space-y-2">
+                  <Label htmlFor="api-key">
+                    {keyStatus?.api_key_exists ? 'Ny API Key' : 'OpenRouter API Key'}
+                  </Label>
+                  <div className="flex gap-2">
+                    <Input
+                      id="api-key"
+                      type="password"
+                      placeholder="sk-or-v1-..."
+                      value={apiKey}
+                      onChange={(e) => setApiKey(e.target.value)}
+                      disabled={isTesting || isSaving}
+                      className="bg-background"
+                    />
+                    <Button
+                      variant="outline"
+                      onClick={handleTestConnection}
+                      disabled={!apiKey || isTesting || isSaving}
+                    >
+                      {isTesting ? (
+                        <>
+                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                          Testing
+                        </>
+                      ) : (
+                        <>
+                          <Check className="mr-2 h-4 w-4" />
+                          Test
+                        </>
+                      )}
+                    </Button>
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    Hämta från{" "}
+                    <a
+                      href="https://openrouter.ai/keys"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="underline hover:text-foreground"
+                    >
+                      openrouter.ai/keys
+                    </a>
+                  </p>
+                </div>
+              )}
             </div>
 
             <div className="text-xs text-muted-foreground bg-background/50 p-3 rounded">
@@ -181,28 +240,67 @@ export function OpenRouterSetupModal({ open, onOpenChange }: OpenRouterSetupModa
               </div>
             </div>
             
-            <div className="space-y-2">
-              <Label htmlFor="provisioning-key">Provisioning Key</Label>
-              <Input
-                id="provisioning-key"
-                type="password"
-                placeholder="pk-or-..."
-                value={provisioningKey}
-                onChange={(e) => setProvisioningKey(e.target.value)}
-                disabled={isTesting || isSaving}
-                className="bg-background"
-              />
-              <p className="text-xs text-muted-foreground">
-                Hämta från{" "}
-                <a
-                  href="https://openrouter.ai/settings/keys"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="underline hover:text-foreground"
-                >
-                  openrouter.ai/settings/keys
-                </a>
-              </p>
+            <div className="space-y-3">
+              {/* Key Status Display */}
+              {keyStatus?.provisioning_key_exists ? (
+                <div className="p-3 bg-green-50 dark:bg-green-950/30 rounded border border-green-200 dark:border-green-900">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <div className="flex items-center gap-2 mb-1">
+                        <Badge variant="default" className="bg-green-600">✓ Provisioning Key sparad</Badge>
+                      </div>
+                      <p className="text-xs text-muted-foreground font-mono">
+                        {keyStatus.provisioning_key_masked}
+                      </p>
+                    </div>
+                    <Button 
+                      variant="ghost" 
+                      size="sm"
+                      onClick={() => setShowProvisioningKeyInput(!showProvisioningKeyInput)}
+                    >
+                      {showProvisioningKeyInput ? 'Avbryt' : 'Uppdatera'}
+                    </Button>
+                  </div>
+                </div>
+              ) : (
+                <div className="p-3 bg-gray-100 dark:bg-gray-800 rounded border">
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm font-medium">ℹ️ Ingen Provisioning Key sparad</span>
+                  </div>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    Valfri - behövs endast för historik-tracking
+                  </p>
+                </div>
+              )}
+
+              {/* Input Field */}
+              {(showProvisioningKeyInput || !keyStatus?.provisioning_key_exists) && (
+                <div className="space-y-2">
+                  <Label htmlFor="provisioning-key">
+                    {keyStatus?.provisioning_key_exists ? 'Ny Provisioning Key' : 'Provisioning Key'}
+                  </Label>
+                  <Input
+                    id="provisioning-key"
+                    type="password"
+                    placeholder="pk-or-..."
+                    value={provisioningKey}
+                    onChange={(e) => setProvisioningKey(e.target.value)}
+                    disabled={isTesting || isSaving}
+                    className="bg-background"
+                  />
+                  <p className="text-xs text-muted-foreground">
+                    Hämta från{" "}
+                    <a
+                      href="https://openrouter.ai/settings/keys"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="underline hover:text-foreground"
+                    >
+                      openrouter.ai/settings/keys
+                    </a>
+                  </p>
+                </div>
+              )}
             </div>
 
             <div className="text-xs text-muted-foreground bg-background/50 p-3 rounded">

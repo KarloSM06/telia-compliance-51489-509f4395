@@ -188,3 +188,6 @@ verify_jwt = true
 
 [functions.get-user-usage]
 verify_jwt = true
+
+[functions.get-masked-keys]
+verify_jwt = true
