@@ -47,6 +47,18 @@ export const ActivityTable = ({ activities, onViewDetails }: ActivityTableProps)
     return tokens.toString();
   };
 
+  const formatDate = (dateString: any) => {
+    if (!dateString) return { date: 'N/A', time: 'N/A' };
+    
+    const date = new Date(dateString);
+    if (isNaN(date.getTime())) return { date: 'Invalid date', time: 'N/A' };
+    
+    return {
+      date: format(date, 'PPP', { locale: sv }),
+      time: format(date, 'HH:mm:ss')
+    };
+  };
+
   if (activities.length === 0) {
     return (
       <div className="flex items-center justify-center py-12 border rounded-lg">
@@ -90,18 +102,16 @@ export const ActivityTable = ({ activities, onViewDetails }: ActivityTableProps)
           </TableRow>
         </TableHeader>
         <TableBody>
-          {sortedActivities.map((activity) => (
-            <TableRow key={activity.id} className="cursor-pointer hover:bg-muted/50">
-              <TableCell>
-                <div className="flex flex-col">
-                  <span className="text-sm font-medium">
-                    {format(new Date(activity.created_at), 'PPP', { locale: sv })}
-                  </span>
-                  <span className="text-xs text-muted-foreground">
-                    {format(new Date(activity.created_at), 'HH:mm:ss')}
-                  </span>
-                </div>
-              </TableCell>
+          {sortedActivities.map((activity) => {
+            const { date, time } = formatDate(activity.created_at);
+            return (
+              <TableRow key={activity.id} className="cursor-pointer hover:bg-muted/50">
+                <TableCell>
+                  <div className="flex flex-col">
+                    <span className="text-sm font-medium">{date}</span>
+                    <span className="text-xs text-muted-foreground">{time}</span>
+                  </div>
+                </TableCell>
               <TableCell>
                 <span className="text-sm font-mono">{activity.model}</span>
               </TableCell>
@@ -135,8 +145,9 @@ export const ActivityTable = ({ activities, onViewDetails }: ActivityTableProps)
                   <Eye className="h-4 w-4" />
                 </Button>
               </TableCell>
-            </TableRow>
-          ))}
+              </TableRow>
+            );
+          })}
         </TableBody>
       </Table>
     </div>
