@@ -34,9 +34,12 @@ export const EventDetailDrawer = ({ event, open, onClose }: EventDetailDrawerPro
 
   return (
     <Sheet open={open} onOpenChange={onClose}>
-      <SheetContent className="w-full sm:max-w-2xl overflow-y-auto">
-        {/* Small subtle snowflake */}
-        <div className="absolute -top-10 -right-10 w-[200px] h-[200px] opacity-[0.015] pointer-events-none">
+      <SheetContent className={cn(
+        "w-full sm:max-w-3xl overflow-y-auto",
+        "bg-gradient-to-br from-background via-background to-background/95"
+      )}>
+        {/* STOR Snowflake Background */}
+        <div className="absolute -top-32 -right-32 w-[500px] h-[500px] opacity-[0.03] pointer-events-none">
           <img 
             src={hiemsLogoSnowflake} 
             alt="" 
@@ -44,29 +47,29 @@ export const EventDetailDrawer = ({ event, open, onClose }: EventDetailDrawerPro
           />
         </div>
         
-        <SheetHeader className="relative">
-          <SheetTitle className="text-xl flex items-center gap-2">
-            <Phone className="h-5 w-5 text-primary" />
+        <SheetHeader className="relative space-y-4 mb-6">
+          {/* UPPERCASE label */}
+          <div className="inline-block">
+            <span className="text-xs font-semibold tracking-wider text-primary uppercase">
+              Event Information
+            </span>
+          </div>
+          
+          <SheetTitle className="text-3xl flex items-center gap-3">
+            <Phone className="h-7 w-7 text-primary" />
             Event Details
           </SheetTitle>
         </SheetHeader>
 
         <ScrollArea className="h-full pb-6">
           <div className="space-y-6 mt-6 relative">
+            {/* STÖRRE Tabs */}
             <Tabs defaultValue="overview" className="w-full">
-              <TabsList className="grid w-full grid-cols-4">
-                <TabsTrigger value="overview">
-                  Översikt
-                </TabsTrigger>
-                <TabsTrigger value="technical">
-                  Tekniskt
-                </TabsTrigger>
-                <TabsTrigger value="costs">
-                  Kostnader
-                </TabsTrigger>
-                <TabsTrigger value="conversation">
-                  Samtal
-                </TabsTrigger>
+              <TabsList className="grid w-full grid-cols-4 h-12 p-1">
+                <TabsTrigger value="overview" className="text-sm font-medium data-[state=active]:bg-primary/10">Översikt</TabsTrigger>
+                <TabsTrigger value="technical" className="text-sm font-medium data-[state=active]:bg-primary/10">Tekniskt</TabsTrigger>
+                <TabsTrigger value="costs" className="text-sm font-medium data-[state=active]:bg-primary/10">Kostnader</TabsTrigger>
+                <TabsTrigger value="conversation" className="text-sm font-medium data-[state=active]:bg-primary/10">Samtal</TabsTrigger>
               </TabsList>
               
               <TabsContent value="overview" className="space-y-4 mt-6">

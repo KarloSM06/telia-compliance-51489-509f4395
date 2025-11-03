@@ -205,157 +205,179 @@ export default function TelephonyPage() {
 
   return (
     <div className="min-h-screen">
-      {/* Hero Section - Minimalist */}
-      <section className="relative py-16 bg-gradient-to-b from-background to-background/95 overflow-hidden">
-        {/* Single subtle snowflake */}
-        <div className="absolute -top-10 -right-10 w-[300px] h-[300px] opacity-[0.015] pointer-events-none">
-          <img 
-            src={hiemsLogoSnowflake} 
-            alt="" 
-            className="w-full h-full object-contain animate-[spin_60s_linear_infinite]"
-          />
-        </div>
+      {/* Hero Section - FULL PREMIUM UPGRADE */}
+      <section className="relative py-32 bg-gradient-to-b from-background via-primary/5 to-background overflow-hidden">
+        {/* Radial gradient overlays */}
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,hsl(var(--primary)/0.15),transparent_50%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_80%,hsl(var(--primary)/0.1),transparent_50%)]" />
         
+        {/* 3 STORA snowflakes */}
+        <div className="absolute -top-32 -right-32 w-[800px] h-[800px] opacity-5 pointer-events-none">
+          <img src={hiemsLogoSnowflake} alt="" className="w-full h-full object-contain animate-[spin_60s_linear_infinite]" />
+        </div>
+        <div className="absolute -top-20 -left-20 w-[500px] h-[500px] opacity-[0.03] pointer-events-none">
+          <img src={hiemsLogoSnowflake} alt="" className="w-full h-full object-contain animate-[spin_40s_linear_infinite_reverse]" />
+        </div>
+        <div className="absolute -bottom-20 left-1/2 -translate-x-1/2 w-[400px] h-[400px] opacity-[0.04] pointer-events-none">
+          <img src={hiemsLogoSnowflake} alt="" className="w-full h-full object-contain animate-[spin_50s_linear_infinite]" />
+        </div>
+
         <div className="container mx-auto px-6 lg:px-8 relative z-10">
           <AnimatedSection>
-            <div className="max-w-3xl">
-              <h1 className="text-4xl font-bold text-foreground mb-2">
+            <div className="max-w-4xl mx-auto text-center space-y-8">
+              {/* UPPERCASE label med accent line */}
+              <div className="inline-block">
+                <span className="text-sm font-semibold tracking-wider text-primary uppercase">Realtidsövervakning</span>
+                <div className="w-32 h-1.5 bg-gradient-to-r from-primary via-primary/60 to-transparent mx-auto rounded-full shadow-lg shadow-primary/50 mt-2" />
+              </div>
+              
+              <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent leading-tight">
                 Telefoni
               </h1>
-              <p className="text-base text-muted-foreground">
-                Realtidsövervakning av samtal och meddelanden
+              
+              <p className="text-xl sm:text-2xl text-muted-foreground max-w-3xl mx-auto leading-relaxed font-light">
+                Alla dina samtal och meddelanden i realtid
               </p>
             </div>
           </AnimatedSection>
         </div>
       </section>
 
-      {/* Stats Overview with Action Bar */}
-      <section className="relative py-8">
+      {/* Quick Actions - Egen section */}
+      <section className="relative py-8 border-y border-primary/10">
         <div className="container mx-auto px-6 lg:px-8">
-          {/* Action bar */}
-          <div className="flex items-center justify-between mb-6">
-            <div className="flex items-center gap-2">
-              <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-green-500/10 text-xs font-medium text-green-600">
-                <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
-                Live
-              </div>
-              <span className="text-sm text-muted-foreground">
-                {filteredEvents.length} events
-              </span>
-            </div>
-            
-            <div className="flex gap-2">
-              <Button 
-                variant="ghost" 
-                size="sm"
-                onClick={handleRefresh}
-                disabled={isLoading}
-              >
-                <RefreshCw className={cn("h-4 w-4", isLoading && "animate-spin")} />
-              </Button>
-              <Button 
-                variant="ghost" 
-                size="sm"
-                onClick={handleExport}
-              >
-                <Download className="h-4 w-4" />
-              </Button>
-              <Button 
-                variant="outline" 
-                size="sm"
-                onClick={() => setShowProviderDialog(true)}
-              >
-                <Settings className="h-4 w-4 mr-2" />
-                Providers
-              </Button>
-            </div>
-          </div>
-
-          {/* Stats Cards */}
           <AnimatedSection delay={100}>
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-              <PremiumTelephonyStatCard
-                title="Totalt Samtal"
-                value={metrics.totalCalls}
-                icon={Phone}
-                subtitle="Alla samtal"
-                color="text-blue-600"
-              />
-              <PremiumTelephonyStatCard
-                title="Pågående"
-                value={inProgressCalls}
-                icon={Loader2}
-                subtitle="Aktiva nu"
-                color="text-green-600"
-                animate={inProgressCalls > 0}
-              />
-              <PremiumTelephonyStatCard
-                title="Total Tid"
-                value={formatDuration(metrics.totalDuration)}
-                icon={Clock}
-                subtitle="Samtalsvolym"
-                color="text-purple-600"
-              />
-              <PremiumTelephonyStatCard
-                title="Total Kostnad"
-                value={formatCostInSEK(metrics.totalCost)}
-                icon={DollarSign}
-                subtitle="Totala utgifter"
-                color="text-orange-600"
-              />
+            <div className="flex items-center justify-between flex-wrap gap-4">
+              <div className="flex items-center gap-3 flex-wrap">
+                <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-green-500/10 border border-green-500/20 hover:scale-105 transition-transform duration-300">
+                  <div className="w-2.5 h-2.5 rounded-full bg-green-500 animate-pulse" />
+                  <span className="text-sm font-semibold text-green-600 uppercase tracking-wide">Live</span>
+                </div>
+                <Badge variant="outline" className="text-sm font-medium">
+                  {filteredEvents.length} av {metrics.events.length} events
+                </Badge>
+              </div>
+              
+              <div className="flex gap-2 flex-wrap">
+                <Button variant="outline" size="sm" onClick={() => syncNumbers()} disabled={isSyncing} className="hover:bg-primary/5 hover:border-primary/30 transition-all duration-500">
+                  <Phone className={`h-4 w-4 mr-2 ${isSyncing ? 'animate-spin' : ''}`} />
+                  Synka nummer
+                </Button>
+                <Button variant="outline" size="sm" onClick={handleRefresh} className="hover:bg-primary/5 hover:border-primary/30 transition-all duration-500">
+                  <RefreshCw className="h-4 w-4 mr-2" />
+                  Uppdatera
+                </Button>
+                <Button variant="outline" size="sm" onClick={handleExport} className="hover:bg-primary/5 hover:border-primary/30 transition-all duration-500">
+                  <Download className="h-4 w-4 mr-2" />
+                  Export
+                </Button>
+                <Button variant="outline" size="sm" onClick={() => setShowProviderDialog(true)} className="hover:bg-primary/5 hover:border-primary/30 transition-all duration-500">
+                  <Settings className="h-4 w-4 mr-2" />
+                  Providers
+                </Button>
+              </div>
             </div>
           </AnimatedSection>
         </div>
       </section>
 
-      {/* Provider Summary - Compact */}
-      {Object.keys(metrics.byProvider).length > 0 && (
-        <section className="relative py-6 border-y border-border/50">
-          <div className="container mx-auto px-6 lg:px-8">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wide">
-                Providers
-              </h3>
-              <Button 
-                variant="ghost" 
-                size="sm"
-                onClick={() => setShowProviderDialog(true)}
-                className="text-xs"
-              >
-                Visa alla
-              </Button>
+      {/* Stats Overview - Egen section */}
+      <section className="relative py-16 bg-gradient-to-b from-background via-primary/3 to-background">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_50%,hsl(var(--primary)/0.12),transparent_50%)]" />
+        <div className="container mx-auto px-6 lg:px-8 relative z-10">
+          <AnimatedSection delay={200}>
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+              <PremiumTelephonyStatCard title="Total Samtal" value={metrics.totalCalls} icon={Phone} color="text-blue-600" subtitle={`${completedCalls} avslutade`} />
+              <PremiumTelephonyStatCard title="Pågående" value={inProgressCalls} icon={Loader2} color="text-green-600" subtitle="Aktiva samtal" animate={inProgressCalls > 0} />
+              <PremiumTelephonyStatCard title="Total Tid" value={formatDuration(metrics.totalDuration)} icon={Clock} color="text-purple-600" subtitle={`⌀ ${formatDuration(avgCallDuration)} per samtal`} />
+              <PremiumTelephonyStatCard title="Total Kostnad" value={formatCostInSEK(metrics.totalCost)} icon={DollarSign} color="text-orange-600" subtitle={`≈ $${metrics.totalCost.toFixed(4)} USD`} />
             </div>
-            
-            <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-4">
-              {Object.entries(metrics.byProvider).map(([provider, data]: [string, any]) => {
+          </AnimatedSection>
+        </div>
+      </section>
+
+      {/* Provider Overview - ExpertiseCard Style */}
+      {Object.keys(metrics.byProvider).length > 0 && (
+        <section className="relative py-24 bg-gradient-to-b from-background via-primary/5 to-background overflow-hidden">
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_40%_60%,hsl(var(--primary)/0.12),transparent_50%)]" />
+          <div className="container mx-auto px-6 lg:px-8 relative z-10">
+            <AnimatedSection delay={300}>
+              <div className="text-center mb-16">
+                <div className="inline-block">
+                  <span className="text-sm font-semibold tracking-wider text-primary uppercase">Dina Providers</span>
+                  <div className="w-24 h-1.5 bg-gradient-to-r from-primary via-primary/60 to-transparent mx-auto rounded-full shadow-lg shadow-primary/50 mt-2" />
+                </div>
+                <h2 className="text-4xl sm:text-5xl font-bold bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent mt-4">
+                  Provider Översikt
+                </h2>
+                <p className="text-lg text-muted-foreground mt-4 max-w-2xl mx-auto">
+                  Detaljerad status och statistik för varje integrerad telefoni-provider
+                </p>
+              </div>
+            </AnimatedSection>
+            <div className="space-y-12">
+              {Object.entries(metrics.byProvider).map(([provider, data]: [string, any], index) => {
                 const integration = telephonyProviders.find(p => p.provider === provider);
-                
+                const isLeft = index % 2 === 0;
                 return (
-                  <div 
-                    key={provider}
-                    className="flex items-center gap-3 p-3 rounded-lg border border-border/50 bg-card/50 hover:bg-card hover:border-border transition-colors"
-                  >
-                    <img 
-                      src={getProviderLogo(provider)} 
-                      alt={getProviderDisplayName(provider)}
-                      className="h-8 w-8 object-contain"
-                    />
-                    
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2">
-                        <p className="text-sm font-medium truncate">
-                          {getProviderDisplayName(provider)}
-                        </p>
-                        {integration?.is_active && (
-                          <div className="w-1.5 h-1.5 rounded-full bg-green-500 flex-shrink-0" />
-                        )}
+                  <AnimatedSection key={provider} delay={400 + index * 100}>
+                    <Card className="group h-full overflow-hidden border border-primary/10 bg-gradient-to-br from-card/80 via-card/50 to-card/30 backdrop-blur-md hover:bg-card/90 hover:border-primary/30 transition-all duration-500 hover:shadow-2xl hover:shadow-primary/20 hover:-translate-y-1">
+                      <div className={`flex flex-col ${isLeft ? 'md:flex-row' : 'md:flex-row-reverse'} h-full`}>
+                        <div className="relative md:w-[40%] aspect-square md:aspect-auto overflow-hidden">
+                          <div className="absolute inset-0 bg-gradient-to-br from-primary/30 via-primary/10 to-transparent z-10" />
+                          <div className="relative w-full h-full flex items-center justify-center bg-gradient-to-br from-primary/5 to-background p-12">
+                            <img src={getProviderLogo(provider)} alt={getProviderDisplayName(provider)} className="max-w-full max-h-full object-contain transition-transform duration-700 group-hover:scale-110 group-hover:brightness-110 filter drop-shadow-2xl" />
+                          </div>
+                          <div className="absolute top-4 right-4 z-20">
+                            <div className={cn("px-4 py-2 rounded-full backdrop-blur-md border-2 font-semibold text-sm uppercase tracking-wide shadow-lg", integration?.is_active ? "bg-green-500/20 border-green-500 text-green-600" : "bg-gray-500/20 border-gray-400 text-gray-600")}>
+                              {integration?.is_active ? "Aktiv" : "Inaktiv"}
+                            </div>
+                          </div>
+                        </div>
+                        <div className="md:w-[60%] flex flex-col bg-gradient-to-br from-card/5 to-transparent">
+                          <CardHeader className="pb-4">
+                            <CardTitle className="text-3xl font-bold group-hover:text-primary transition-colors duration-300">
+                              {getProviderDisplayName(provider)}
+                            </CardTitle>
+                            <CardDescription className="text-base mt-2">
+                              Synkad: {integration?.last_synced_at ? formatRelativeTime(integration.last_synced_at) : "Aldrig"}
+                            </CardDescription>
+                          </CardHeader>
+                          <CardContent className="flex-1 space-y-6">
+                            <div className="space-y-3">
+                              <h4 className="text-sm font-semibold text-primary uppercase tracking-wide">Statistik & Prestanda</h4>
+                              <div className="grid grid-cols-2 gap-3">
+                                <div className="flex items-start gap-3 p-4 rounded-lg bg-background/50 hover:bg-primary/10 border border-border/50 hover:border-primary/30 transition-all duration-300 group/item">
+                                  <Phone className="flex-shrink-0 h-5 w-5 text-blue-600 group-hover/item:scale-110 transition-transform" />
+                                  <div><p className="font-semibold text-sm">Samtal</p><p className="text-2xl font-bold">{data.totalCalls}</p></div>
+                                </div>
+                                <div className="flex items-start gap-3 p-4 rounded-lg bg-background/50 hover:bg-primary/10 border border-border/50 hover:border-primary/30 transition-all duration-300 group/item">
+                                  <MessageSquare className="flex-shrink-0 h-5 w-5 text-green-600 group-hover/item:scale-110 transition-transform" />
+                                  <div><p className="font-semibold text-sm">SMS</p><p className="text-2xl font-bold">{data.totalSMS}</p></div>
+                                </div>
+                                <div className="flex items-start gap-3 p-4 rounded-lg bg-background/50 hover:bg-primary/10 border border-border/50 hover:border-primary/30 transition-all duration-300 group/item">
+                                  <Clock className="flex-shrink-0 h-5 w-5 text-purple-600 group-hover/item:scale-110 transition-transform" />
+                                  <div><p className="font-semibold text-sm">Total Tid</p><p className="text-xl font-bold">{formatDuration(data.totalDuration)}</p></div>
+                                </div>
+                                <div className="flex items-start gap-3 p-4 rounded-lg bg-background/50 hover:bg-primary/10 border border-border/50 hover:border-primary/30 transition-all duration-300 group/item">
+                                  <DollarSign className="flex-shrink-0 h-5 w-5 text-orange-600 group-hover/item:scale-110 transition-transform" />
+                                  <div><p className="font-semibold text-sm">Kostnad</p><p className="text-xl font-bold">{formatCostInSEK(data.totalCost)}</p></div>
+                                </div>
+                              </div>
+                            </div>
+                            <div className="flex gap-2 pt-4 border-t border-primary/10">
+                              <Button variant="outline" size="sm" onClick={() => handleRefreshProvider(integration?.id)} className="hover:bg-primary/5 transition-all duration-300">
+                                <RefreshCw className="h-4 w-4 mr-2" />Synka
+                              </Button>
+                              <Button variant="ghost" size="sm" onClick={() => setShowProviderDialog(true)} className="hover:bg-primary/5 transition-all duration-300">
+                                <Settings className="h-4 w-4 mr-2" />Inställningar
+                              </Button>
+                            </div>
+                          </CardContent>
+                        </div>
                       </div>
-                      <p className="text-xs text-muted-foreground">
-                        {data.totalCalls} samtal • {formatCostInSEK(data.totalCost)}
-                      </p>
-                    </div>
-                  </div>
+                    </Card>
+                  </AnimatedSection>
                 );
               })}
             </div>
@@ -363,36 +385,47 @@ export default function TelephonyPage() {
         </section>
       )}
 
-      {/* Events Section */}
-      <section className="relative py-6 pb-16">
+      {/* Filters Section */}
+      <section className="relative py-16 bg-gradient-to-b from-background via-primary/3 to-background">
         <div className="container mx-auto px-6 lg:px-8">
-          <div className="space-y-4">
-            {/* Simple header */}
-            <div className="flex items-center justify-between">
-              <h2 className="text-lg font-semibold">Events</h2>
-              <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                <Clock className="h-3.5 w-3.5" />
-                <span>Senaste först</span>
-              </div>
-            </div>
-            
-            {/* Filters inline */}
+          <AnimatedSection delay={600}>
             <EventFilters onFilterChange={setFilters} providers={telephonyProviders} />
-            
-            {/* Events table */}
-            {isLoading ? (
-              <div className="flex items-center justify-center py-12">
-                <Loader2 className="h-8 w-8 animate-spin text-primary" />
+          </AnimatedSection>
+        </div>
+      </section>
+
+      {/* Events Table */}
+      <section className="relative py-24 pb-32">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_60%_40%,hsl(var(--primary)/0.12),transparent_50%)]" />
+        <div className="container mx-auto px-6 lg:px-8 relative z-10">
+          <AnimatedSection delay={700}>
+            <div className="space-y-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <div className="inline-block mb-2">
+                    <span className="text-sm font-semibold tracking-wider text-primary uppercase">Event Historik</span>
+                  </div>
+                  <h2 className="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent">
+                    Alla Events
+                  </h2>
+                </div>
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <Clock className="h-4 w-4" />
+                  <span>Senaste först</span>
+                </div>
               </div>
-            ) : (
-              <Card className="border border-border/50">
-                <EventsTable 
-                  events={filteredEvents}
-                  onViewDetails={setSelectedEvent}
-                />
-              </Card>
-            )}
-          </div>
+              
+              {isLoading ? (
+                <div className="flex items-center justify-center py-12">
+                  <Loader2 className="h-8 w-8 animate-spin text-primary" />
+                </div>
+              ) : (
+                <Card className="border border-primary/10 bg-gradient-to-br from-card/80 via-card/50 to-card/30 backdrop-blur-md overflow-hidden">
+                  <EventsTable events={filteredEvents} onViewDetails={setSelectedEvent} />
+                </Card>
+              )}
+            </div>
+          </AnimatedSection>
         </div>
       </section>
 
