@@ -108,7 +108,7 @@ export const EventFilters = ({ onFilterChange, providers }: EventFiltersProps) =
       </div>
       
       <CollapsibleContent>
-        <Card className="border-primary/10 bg-gradient-to-br from-card/80 via-card/50 to-card/30 backdrop-blur-md">
+        <Card className="border-border/50 bg-card/50">
           <CardContent className="pt-6">
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
               {/* Search */}
