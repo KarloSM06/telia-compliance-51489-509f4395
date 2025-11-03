@@ -140,11 +140,13 @@ export function calculateOperationalCosts(
   businessMetrics: BusinessMetrics,
   dateRange: { from: Date; to: Date }
 ): OperationalCosts {
-  // Always use cost_amount (USD) and convert to SEK - aggregate_cost_amount is incorrect in DB
-  const telephonyCost = telephonyEvents.reduce((sum, e) => {
-    const costSEK = (parseFloat(e.cost_amount) || 0) * USD_TO_SEK;
-    return sum + costSEK;
-  }, 0);
+  // Calculate telephony costs - only VAPI events (aggregate cost)
+  const telephonyCost = telephonyEvents
+    .filter(e => e.provider === 'vapi')
+    .reduce((sum, e) => {
+      const costUSD = parseFloat(e.aggregate_cost_amount) || 0;
+      return sum + (costUSD * USD_TO_SEK);
+    }, 0);
   
   const smsCost = messageLogs
     .filter(m => m.channel === 'sms')

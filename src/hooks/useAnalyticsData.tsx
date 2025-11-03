@@ -155,16 +155,17 @@ export const useAnalyticsData = (dateRange?: { from: Date; to: Date }) => {
           dayData.costs += costSEK;
         });
 
-        telephony.forEach(t => {
-          const day = format(new Date(t.event_timestamp), 'yyyy-MM-dd');
-          if (!dailyMap.has(day)) {
-            dailyMap.set(day, { date: day, bookings: 0, revenue: 0, costs: 0 });
-          }
-          const dayData = dailyMap.get(day);
-          // Always use cost_amount (USD) and convert to SEK - aggregate_cost_amount is incorrect in DB
-          const costSEK = (parseFloat(String(t.cost_amount || 0)) * USD_TO_SEK);
-          dayData.costs += costSEK;
-        });
+        telephony
+          .filter(t => t.provider === 'vapi')
+          .forEach(t => {
+            const day = format(new Date(t.event_timestamp), 'yyyy-MM-dd');
+            if (!dailyMap.has(day)) {
+              dailyMap.set(day, { date: day, bookings: 0, revenue: 0, costs: 0 });
+            }
+            const dayData = dailyMap.get(day);
+            const costSEK = (parseFloat(String(t.aggregate_cost_amount || 0)) * USD_TO_SEK);
+            dayData.costs += costSEK;
+          });
 
         // Add AI usage costs to daily map
         aiUsage.forEach(ai => {

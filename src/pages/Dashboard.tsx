@@ -37,23 +37,6 @@ const Dashboard = () => {
 
   const { data, loading } = useAnalyticsData(dateRange);
 
-  // Debug logging for telephony costs
-  if (data?.telephony) {
-    console.log('🔍 Telephony Debug Info:');
-    console.log('Total events:', data.telephony.length);
-    console.log('Sample events:', data.telephony.slice(0, 3).map(e => ({
-      id: e.id,
-      provider: e.provider,
-      event_type: e.event_type,
-      cost_amount: e.cost_amount,
-      cost_currency: e.cost_currency,
-      aggregate_cost_amount: e.aggregate_cost_amount,
-      cost_in_SEK: (parseFloat(e.cost_amount) || 0) * USD_TO_SEK
-    })));
-    const totalCost = data.telephony.reduce((sum, e) => sum + ((parseFloat(e.cost_amount) || 0) * USD_TO_SEK), 0);
-    console.log('Total telephony cost (SEK):', totalCost);
-  }
-
   const handleRefresh = () => {
     window.location.reload();
   };
@@ -64,9 +47,10 @@ const Dashboard = () => {
     const csvContent = [
       ['Datum', 'Bokningar', 'Intäkter (SEK)', 'Kostnader (SEK)', 'Telefoni (SEK)', 'SMS (SEK)', 'Email (SEK)', 'AI (SEK)', 'Hiems (SEK)', 'Vinst (SEK)', 'ROI (%)'].join(','),
       ...data.dailyData.map(d => {
-        const dayTelephony = data.telephony.filter(t => format(new Date(t.event_timestamp), 'yyyy-MM-dd') === d.date);
-        // Always use cost_amount (USD) and convert to SEK - aggregate_cost_amount is incorrect in DB
-        const telephonyCost = dayTelephony.reduce((sum, t) => sum + ((parseFloat(t.cost_amount) || 0) * USD_TO_SEK), 0);
+        const dayTelephony = data.telephony
+          .filter(t => t.provider === 'vapi')
+          .filter(t => format(new Date(t.event_timestamp), 'yyyy-MM-dd') === d.date);
+        const telephonyCost = dayTelephony.reduce((sum, t) => sum + ((parseFloat(t.aggregate_cost_amount) || 0) * USD_TO_SEK), 0);
         
         const dayMessages = data.messages.filter(m => format(new Date(m.created_at), 'yyyy-MM-dd') === d.date);
         const smsCost = dayMessages.filter(m => m.message_type === 'sms').reduce((sum, m) => sum + ((m.metadata as any)?.cost_sek || 0), 0);
