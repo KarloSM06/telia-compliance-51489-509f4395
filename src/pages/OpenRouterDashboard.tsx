@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { OpenRouterHeader } from "@/components/dashboard/openrouter/OpenRouterHeader";
 import { ConnectionStatusBanner } from "@/components/dashboard/openrouter/ConnectionStatusBanner";
 import { AccountBalanceCards } from "@/components/dashboard/openrouter/AccountBalanceCards";
@@ -26,10 +26,13 @@ const OpenRouterDashboard = () => {
   const [showSetupModal, setShowSetupModal] = useState(false);
   const [dateRangeDays, setDateRangeDays] = useState(30);
 
-  const dateRange: DateRange = {
-    from: new Date(new Date().setDate(new Date().getDate() - dateRangeDays)),
-    to: new Date()
-  };
+  const dateRange: DateRange = useMemo(() => {
+    const to = new Date();
+    to.setHours(0, 0, 0, 0);
+    const from = new Date(to);
+    from.setDate(to.getDate() - dateRangeDays);
+    return { from, to };
+  }, [dateRangeDays]);
 
   // Fetch data
   const { data: keysStatus } = useOpenRouterKeys();

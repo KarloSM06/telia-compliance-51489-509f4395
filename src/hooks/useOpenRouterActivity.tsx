@@ -7,20 +7,24 @@ interface DateRange {
 }
 
 export const useOpenRouterActivity = (dateRange?: DateRange, enabled: boolean = true) => {
+  const startStr = dateRange?.from?.toISOString().split('T')[0];
+  const endStr = dateRange?.to?.toISOString().split('T')[0];
+
   return useQuery({
-    queryKey: ['openrouter-activity', dateRange],
+    queryKey: ['openrouter-activity', startStr, endStr],
     queryFn: async () => {
       const { data, error } = await supabase.functions.invoke('get-openrouter-activity', {
         body: {
-          start_date: dateRange?.from?.toISOString().split('T')[0],
-          end_date: dateRange?.to?.toISOString().split('T')[0],
+          start_date: startStr,
+          end_date: endStr,
         }
       });
       if (error) throw error;
       return data;
     },
-    enabled: enabled && !!dateRange,
+    enabled: enabled && !!startStr && !!endStr,
     staleTime: 60000, // Cache for 1 minute
     retry: 1,
+    refetchOnWindowFocus: false,
   });
 };
