@@ -180,6 +180,9 @@ verify_jwt = false
 [[functions.process-analysis-queue.schedule]]
 schedule = "*/5 * * * *"
 
+[functions.analyze-notifications]
+verify_jwt = true
+
 [functions.encrypt-api-key]
 verify_jwt = true
 

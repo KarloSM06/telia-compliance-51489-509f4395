@@ -2000,6 +2000,108 @@ export type Database = {
         }
         Relationships: []
       }
+      notification_analysis_queue: {
+        Row: {
+          created_at: string | null
+          error_message: string | null
+          id: string
+          processed_at: string | null
+          status: string
+          trigger_source: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          error_message?: string | null
+          id?: string
+          processed_at?: string | null
+          status?: string
+          trigger_source?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          error_message?: string | null
+          id?: string
+          processed_at?: string | null
+          status?: string
+          trigger_source?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      notification_insights: {
+        Row: {
+          ai_model: string
+          analysis_period_end: string
+          analysis_period_start: string
+          avg_read_time_minutes: number
+          channel_effectiveness: Json | null
+          confidence_score: number | null
+          created_at: string | null
+          engagement_score: number
+          engagement_trend: string | null
+          high_priority_alerts: number
+          id: string
+          optimization_suggestions: Json | null
+          peak_engagement_hours: number[] | null
+          read_rate: number
+          recommended_channels: string[] | null
+          total_notifications: number
+          total_read: number
+          total_sent: number
+          type_distribution: Json | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          ai_model?: string
+          analysis_period_end: string
+          analysis_period_start: string
+          avg_read_time_minutes?: number
+          channel_effectiveness?: Json | null
+          confidence_score?: number | null
+          created_at?: string | null
+          engagement_score?: number
+          engagement_trend?: string | null
+          high_priority_alerts?: number
+          id?: string
+          optimization_suggestions?: Json | null
+          peak_engagement_hours?: number[] | null
+          read_rate?: number
+          recommended_channels?: string[] | null
+          total_notifications?: number
+          total_read?: number
+          total_sent?: number
+          type_distribution?: Json | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          ai_model?: string
+          analysis_period_end?: string
+          analysis_period_start?: string
+          avg_read_time_minutes?: number
+          channel_effectiveness?: Json | null
+          confidence_score?: number | null
+          created_at?: string | null
+          engagement_score?: number
+          engagement_trend?: string | null
+          high_priority_alerts?: number
+          id?: string
+          optimization_suggestions?: Json | null
+          peak_engagement_hours?: number[] | null
+          read_rate?: number
+          recommended_channels?: string[] | null
+          total_notifications?: number
+          total_read?: number
+          total_sent?: number
+          type_distribution?: Json | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       notification_recipients: {
         Row: {
           created_at: string | null
@@ -3916,6 +4018,22 @@ export type Database = {
       }
     }
     Views: {
+      mv_daily_communication_stats: {
+        Row: {
+          channel: string | null
+          date: string | null
+          delivered_count: number | null
+          failed_count: number | null
+          inbound_count: number | null
+          message_count: number | null
+          outbound_count: number | null
+          provider: string | null
+          status: string | null
+          total_cost: number | null
+          user_id: string | null
+        }
+        Relationships: []
+      }
       v_user_costs: {
         Row: {
           cost_sek: number | null
@@ -3958,6 +4076,7 @@ export type Database = {
         Returns: boolean
       }
       is_admin: { Args: { user_id: string }; Returns: boolean }
+      refresh_communication_stats: { Args: never; Returns: undefined }
       user_can_access_dashboard: {
         Args: { dashboard_uuid: string; user_uuid: string }
         Returns: boolean

@@ -2,10 +2,11 @@ import { useState, useMemo } from 'react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
-import { RefreshCw, Download, Bell, Clock, CheckCircle, Mail } from 'lucide-react';
+import { RefreshCw, Download, Bell, Clock, CheckCircle, Mail, TrendingUp, Sparkles } from 'lucide-react';
 import { toast } from 'sonner';
 import { useOwnerNotifications } from '@/hooks/useOwnerNotifications';
 import { useNotificationChartData } from '@/hooks/useNotificationChartData';
+import { useNotificationInsights } from '@/hooks/useNotificationInsights';
 import { PremiumTelephonyStatCard } from '@/components/telephony/PremiumTelephonyStatCard';
 import { AnimatedSection } from '@/components/shared/AnimatedSection';
 import { NotificationsActivityChart } from '@/components/notifications/charts/NotificationsActivityChart';
@@ -21,28 +22,41 @@ export default function NotificationAnalytics() {
   const [dateRangeDays, setDateRangeDays] = useState(30);
   const { notifications, isLoading } = useOwnerNotifications();
   const chartData = useNotificationChartData(notifications);
+  const { insights, isAnalyzing, triggerAnalysis, newNotificationsCount, queueStatus } = useNotificationInsights();
   const queryClient = useQueryClient();
 
-  // Calculate stats
+  // Calculate stats from AI insights if available, fallback to manual calculation
   const stats = useMemo(() => {
+    if (insights) {
+      return {
+        total: insights.total_notifications,
+        sent: insights.total_sent,
+        read: insights.total_read,
+        readRate: insights.read_rate,
+        avgReadTime: insights.avg_read_time_minutes,
+        topChannel: insights.recommended_channels[0] || 'email',
+        engagementScore: insights.engagement_score,
+        engagementTrend: insights.engagement_trend,
+      };
+    }
+
+    // Fallback: manual calculation
     const totalNotifications = notifications.length;
     const sent = notifications.filter(n => n.status === 'sent').length;
     const read = notifications.filter(n => n.read_at).length;
     const readRate = sent > 0 ? (read / sent) * 100 : 0;
     
-    // Avg read time (from sent_at to read_at in minutes)
     const readTimes = notifications
       .filter(n => n.sent_at && n.read_at)
       .map(n => {
         const sentTime = new Date(n.sent_at!).getTime();
         const readTime = new Date(n.read_at!).getTime();
-        return (readTime - sentTime) / 1000 / 60; // minutes
+        return (readTime - sentTime) / 1000 / 60;
       });
     const avgReadTime = readTimes.length > 0 
       ? readTimes.reduce((a, b) => a + b, 0) / readTimes.length 
       : 0;
     
-    // Most common channel
     const channelCounts: Record<string, number> = {};
     notifications.forEach(n => {
       n.channel.forEach(ch => {
@@ -59,8 +73,10 @@ export default function NotificationAnalytics() {
       readRate,
       avgReadTime,
       topChannel: topChannel ? topChannel[0] : 'email',
+      engagementScore: 0,
+      engagementTrend: 'unknown',
     };
-  }, [notifications]);
+  }, [notifications, insights]);
 
   const handleRefresh = async () => {
     toast.loading('Uppdaterar data...');
@@ -151,9 +167,23 @@ export default function NotificationAnalytics() {
                   <span className="text-sm font-semibold text-green-600 uppercase tracking-wide">Live</span>
                 </div>
                 <Badge variant="outline">{notifications.length} notifikationer</Badge>
+                {newNotificationsCount > 0 && (
+                  <Badge variant="outline" className="bg-primary/10">
+                    {newNotificationsCount} nya sedan analys
+                  </Badge>
+                )}
               </div>
               
               <div className="flex gap-2">
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  onClick={triggerAnalysis}
+                  disabled={isAnalyzing}
+                >
+                  <Sparkles className="h-4 w-4 mr-2" />
+                  {isAnalyzing ? 'Analyserar...' : 'AI-analys'}
+                </Button>
                 <Button variant="outline" size="sm" onClick={handleRefresh}>
                   <RefreshCw className="h-4 w-4 mr-2" />
                   Uppdatera
@@ -203,6 +233,51 @@ export default function NotificationAnalytics() {
                 subtitle="mest använd" 
               />
             </div>
+
+            {insights && (
+              <div className="mt-6 grid gap-6 md:grid-cols-2">
+                <PremiumTelephonyStatCard 
+                  title="Engagemangsscore (AI)" 
+                  value={`${insights.engagement_score}/100`} 
+                  icon={TrendingUp} 
+                  color="text-indigo-600" 
+                  subtitle={`Trend: ${insights.engagement_trend}`} 
+                />
+                <PremiumTelephonyStatCard 
+                  title="Högprioriterade notiser" 
+                  value={insights.high_priority_alerts} 
+                  icon={Bell} 
+                  color="text-red-600" 
+                  subtitle="kritiska händelser" 
+                />
+              </div>
+            )}
+
+            {insights?.optimization_suggestions && insights.optimization_suggestions.length > 0 && (
+              <div className="mt-6">
+                <Card className="p-6 border border-primary/10 bg-gradient-to-br from-card/80 via-card/50 to-card/30 backdrop-blur-md">
+                  <h3 className="text-lg font-bold mb-4 bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent">
+                    AI-optimeringsförslag
+                  </h3>
+                  <div className="space-y-3">
+                    {insights.optimization_suggestions.slice(0, 3).map((suggestion, idx) => (
+                      <div key={idx} className="flex items-start gap-3 p-3 rounded-lg bg-background/50">
+                        <Sparkles className="h-5 w-5 text-primary mt-0.5" />
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2 mb-1">
+                            <p className="font-semibold">{suggestion.title}</p>
+                            <Badge variant={suggestion.impact === 'high' ? 'default' : 'outline'} className="text-xs">
+                              {suggestion.impact}
+                            </Badge>
+                          </div>
+                          <p className="text-sm text-muted-foreground">{suggestion.description}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </Card>
+              </div>
+            )}
           </AnimatedSection>
         </div>
       </section>
