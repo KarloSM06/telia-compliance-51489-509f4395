@@ -6,6 +6,7 @@ import { APIKeysOverview } from "@/components/dashboard/openrouter/APIKeysOvervi
 import { APIKeyUsageBreakdown } from "@/components/dashboard/openrouter/APIKeyUsageBreakdown";
 import { ModelUsageChart } from "@/components/dashboard/openrouter/ModelUsageChart";
 import { APIKeyUsageChart } from "@/components/dashboard/openrouter/APIKeyUsageChart";
+import { TopModelsCard } from "@/components/dashboard/openrouter/TopModelsCard";
 import { useOpenRouterCredits } from "@/hooks/useOpenRouterCredits";
 import { useOpenRouterKeyInfo } from "@/hooks/useOpenRouterKeyInfo";
 import { useOpenRouterKeys } from "@/hooks/useOpenRouterKeys";
@@ -14,8 +15,11 @@ import { useOpenRouterAccountSnapshots } from "@/hooks/useOpenRouterAccountSnaps
 import { useOpenRouterActivity } from "@/hooks/useOpenRouterActivity";
 import { OpenRouterSetupModal } from "@/components/integrations/OpenRouterSetupModal";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from "@/components/ui/resizable";
+import { useIsMobile } from "@/hooks/use-mobile";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface DateRange {
   from: Date;
@@ -25,6 +29,7 @@ interface DateRange {
 const OpenRouterDashboard = () => {
   const [showSetupModal, setShowSetupModal] = useState(false);
   const [dateRangeDays, setDateRangeDays] = useState(30);
+  const isMobile = useIsMobile();
 
   const dateRange: DateRange = useMemo(() => {
     const to = new Date();
@@ -49,86 +54,163 @@ const OpenRouterDashboard = () => {
 
   const apiKeyExists = keysStatus?.api_key_exists || false;
   const provisioningKeyExists = keysStatus?.provisioning_key_exists || false;
-
   const lastSnapshot = snapshots?.[0];
 
+  // Calculate today's cost
+  const todaysCost = useMemo(() => {
+    if (!activityData?.data) return 0;
+    const today = new Date().toISOString().split('T')[0];
+    return activityData.data
+      .filter(item => item.date.startsWith(today))
+      .reduce((sum, item) => sum + (item.usage || 0), 0);
+  }, [activityData]);
+
+  // Calculate model costs for top models
+  const modelCosts = useMemo(() => {
+    if (!activityData?.data) return [];
+    const costs: Record<string, { cost: number; calls: number }> = activityData.data.reduce((acc, item) => {
+      const model = item.model || 'Unknown';
+      if (!acc[model]) {
+        acc[model] = { cost: 0, calls: 0 };
+      }
+      acc[model].cost += item.usage || 0;
+      acc[model].calls += item.requests || 1;
+      return acc;
+    }, {} as Record<string, { cost: number; calls: number }>);
+
+    const totalCost = Object.values(costs).reduce((sum, c) => sum + c.cost, 0);
+    
+    return Object.entries(costs)
+      .map(([model, data]) => ({
+        model,
+        cost: data.cost,
+        calls: data.calls,
+        percentage: totalCost > 0 ? (data.cost / totalCost) * 100 : 0
+      }))
+      .sort((a, b) => b.cost - a.cost);
+  }, [activityData]);
+
   return (
-    <div className="space-y-6 p-6">
-      <OpenRouterHeader
-        lastSyncAt={lastSnapshot?.created_at}
-        onSettingsClick={() => setShowSetupModal(true)}
-      />
-
-      <ConnectionStatusBanner
-        apiKeyExists={apiKeyExists}
-        provisioningKeyExists={provisioningKeyExists}
-        rateLimitRequests={keyInfo?.data?.rate_limit?.requests}
-        rateLimitInterval={keyInfo?.data?.rate_limit?.interval}
-        onSetupClick={() => setShowSetupModal(true)}
-      />
-
-      {isLoadingCredits || isLoadingKeyInfo ? (
-        <div className="grid gap-4 md:grid-cols-3">
-          <Skeleton className="h-32" />
-          <Skeleton className="h-32" />
-          <Skeleton className="h-32" />
+    <div className="h-screen flex flex-col">
+      {/* Fixed Header */}
+      <div className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+        <div className="flex h-16 items-center justify-between px-6">
+          <div>
+            <h1 className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+              OpenRouter Dashboard
+            </h1>
+            <p className="text-xs text-muted-foreground">
+              Hantera API-nycklar och övervaka användning
+            </p>
+          </div>
+          <OpenRouterHeader
+            lastSyncAt={lastSnapshot?.created_at}
+            onSettingsClick={() => setShowSetupModal(true)}
+          />
         </div>
-      ) : (
-        <AccountBalanceCards
-          totalCredits={credits?.data?.total_credits}
-          totalUsage={credits?.data?.total_usage}
-          limitRemaining={keyInfo?.data?.limit_remaining}
-          rateLimitRequests={keyInfo?.data?.rate_limit?.requests}
-          rateLimitInterval={keyInfo?.data?.rate_limit?.interval}
-        />
-      )}
+      </div>
 
-      <APIKeysOverview
-        keys={keysList}
-        isLoading={isLoadingKeys}
-      />
+      {/* Main Content with ResizablePanels */}
+      <div className="flex-1 overflow-hidden">
+        <ResizablePanelGroup
+          direction={isMobile ? "vertical" : "horizontal"}
+          className="h-full"
+        >
+          {/* Left Panel - Overview & Lists */}
+          <ResizablePanel defaultSize={45} minSize={30}>
+            <ScrollArea className="h-full">
+              <div className="space-y-4 p-6">
+                {/* Connection Status (only if not fully configured) */}
+                {(!apiKeyExists || !provisioningKeyExists) && (
+                  <ConnectionStatusBanner
+                    apiKeyExists={apiKeyExists}
+                    provisioningKeyExists={provisioningKeyExists}
+                    rateLimitRequests={keyInfo?.data?.rate_limit?.requests}
+                    rateLimitInterval={keyInfo?.data?.rate_limit?.interval}
+                    onSetupClick={() => setShowSetupModal(true)}
+                  />
+                )}
 
-      <APIKeyUsageBreakdown
-        keys={keysList}
-        isLoading={isLoadingKeys}
-      />
+                {/* Stats Cards */}
+                {isLoadingCredits || isLoadingKeyInfo ? (
+                  <div className="grid gap-3 grid-cols-2 md:grid-cols-4">
+                    <Skeleton className="h-24" />
+                    <Skeleton className="h-24" />
+                    <Skeleton className="h-24" />
+                    <Skeleton className="h-24" />
+                  </div>
+                ) : (
+                  <AccountBalanceCards
+                    totalCredits={credits?.data?.total_credits}
+                    totalUsage={credits?.data?.total_usage}
+                    limitRemaining={keyInfo?.data?.limit_remaining}
+                    rateLimitRequests={keyInfo?.data?.rate_limit?.requests}
+                    rateLimitInterval={keyInfo?.data?.rate_limit?.interval}
+                    todaysCost={todaysCost}
+                  />
+                )}
 
-      <Card className="p-4">
-        <div className="flex items-center justify-between mb-3">
-          <h3 className="font-medium">Tidsperiod för grafer</h3>
-        </div>
-        <div className="flex gap-2">
-          <Button 
-            variant={dateRangeDays === 7 ? "default" : "outline"}
-            onClick={() => setDateRangeDays(7)}
-          >
-            7 dagar
-          </Button>
-          <Button 
-            variant={dateRangeDays === 30 ? "default" : "outline"}
-            onClick={() => setDateRangeDays(30)}
-          >
-            30 dagar
-          </Button>
-          <Button 
-            variant={dateRangeDays === 90 ? "default" : "outline"}
-            onClick={() => setDateRangeDays(90)}
-          >
-            90 dagar
-          </Button>
-        </div>
-      </Card>
+                {/* Date Range Selector */}
+                <div className="flex items-center gap-2">
+                  <span className="text-sm font-medium">Tidsperiod:</span>
+                  <Tabs value={dateRangeDays.toString()} onValueChange={(v) => setDateRangeDays(Number(v))}>
+                    <TabsList>
+                      <TabsTrigger value="7">7d</TabsTrigger>
+                      <TabsTrigger value="30">30d</TabsTrigger>
+                      <TabsTrigger value="90">90d</TabsTrigger>
+                    </TabsList>
+                  </Tabs>
+                </div>
 
-      <ModelUsageChart 
-        activityData={activityData?.data || []}
-        isLoading={isLoadingActivity}
-      />
+                {/* API Keys Overview */}
+                <APIKeysOverview
+                  keys={keysList}
+                  isLoading={isLoadingKeys}
+                />
 
-      <APIKeyUsageChart 
-        activityData={activityData?.data || []}
-        keysList={keysList?.data || []}
-        isLoading={isLoadingActivity}
-      />
+                {/* API Key Usage Breakdown */}
+                <APIKeyUsageBreakdown
+                  keys={keysList}
+                  isLoading={isLoadingKeys}
+                />
+              </div>
+            </ScrollArea>
+          </ResizablePanel>
+
+          <ResizableHandle withHandle />
+
+          {/* Right Panel - Charts & Analysis */}
+          <ResizablePanel defaultSize={55} minSize={30}>
+            <ScrollArea className="h-full">
+              <div className="space-y-4 p-6">
+                <div>
+                  <h2 className="text-lg font-semibold mb-1">Användning & Analys</h2>
+                  <p className="text-xs text-muted-foreground">Visualisera dina användningsmönster</p>
+                </div>
+
+                {/* Model Usage Chart */}
+                <ModelUsageChart 
+                  activityData={activityData?.data || []}
+                  isLoading={isLoadingActivity}
+                />
+
+                {/* API Key Usage Chart */}
+                <APIKeyUsageChart 
+                  activityData={activityData?.data || []}
+                  keysList={keysList?.data || []}
+                  isLoading={isLoadingActivity}
+                />
+
+                {/* Top Models */}
+                <TopModelsCard
+                  models={modelCosts.slice(0, 5)}
+                  isLoading={isLoadingActivity}
+                />
+              </div>
+            </ScrollArea>
+          </ResizablePanel>
+        </ResizablePanelGroup>
+      </div>
 
       <OpenRouterSetupModal
         open={showSetupModal}
