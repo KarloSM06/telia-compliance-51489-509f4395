@@ -11,6 +11,9 @@ interface ActivityItem {
   date: string;
   usage: number;
   endpoint_id?: string;
+  api_key?: string;
+  key_hash?: string;
+  key_id?: string;
   requests: number;
 }
 
@@ -89,20 +92,48 @@ export const APIKeyUsageChart = ({ activityData, keysList, isLoading }: APIKeyUs
   const [selectedMetric, setSelectedMetric] = useState<MetricType>('cost');
   const [hiddenKeys, setHiddenKeys] = useState<Set<string>>(new Set());
 
-  const getEndpointId = (endpointId: string) => {
-    if (!endpointId) return 'Unknown';
-    return endpointId;
+  // Debug: Check if keysList is available
+  if (!keysList || keysList.length === 0) {
+    console.warn('⚠️ APIKeyUsageChart: keysList is empty or undefined');
+  }
+
+  const getEndpointId = (item: ActivityItem): string => {
+    // Try multiple possible fields
+    const id = item.endpoint_id || item.api_key || item.key_hash || item.key_id;
+    return id || 'Unknown';
   };
 
   const getKeyName = (endpointId: string) => {
     if (!endpointId || endpointId === 'Unknown') return 'Unknown';
     
-    const matchingKey = keysList?.find(k => k.hash === endpointId);
+    console.log('🔍 Trying to match endpoint_id:', endpointId);
+    console.log('📋 Available keys:', keysList?.map(k => ({ hash: k.hash, name: k.label || k.name })));
+    
+    // Try exact match first
+    let matchingKey = keysList?.find(k => k.hash === endpointId);
+    console.log('✅ Exact match found:', matchingKey);
+    
+    // If no exact match, try partial matching (first/last 8 chars)
+    if (!matchingKey && endpointId.length >= 8) {
+      matchingKey = keysList?.find(k => {
+        const keyStart = k.hash.substring(0, Math.min(8, k.hash.length));
+        const keyEnd = k.hash.substring(Math.max(0, k.hash.length - 8));
+        const idStart = endpointId.substring(0, Math.min(8, endpointId.length));
+        const idEnd = endpointId.substring(Math.max(0, endpointId.length - 8));
+        
+        return keyStart === idStart || keyEnd === idEnd;
+      });
+      
+      if (matchingKey) {
+        console.log('✅ Partial match found:', matchingKey);
+      }
+    }
     
     if (matchingKey) {
       return matchingKey.label || matchingKey.name || 'Unnamed Key';
     }
     
+    console.warn('❌ No match found for endpoint_id:', endpointId);
     return `Key ${endpointId.substring(0, 8)}...`;
   };
 
@@ -113,7 +144,7 @@ export const APIKeyUsageChart = ({ activityData, keysList, isLoading }: APIKeyUs
 
     const keyDataByDate = activityData.reduce((acc, item) => {
       const date = item.date.split(' ')[0];
-      const endpointId = getEndpointId(item.endpoint_id || '');
+      const endpointId = getEndpointId(item);
       const keyName = getKeyName(endpointId);
       
       if (!acc[date]) acc[date] = {};
@@ -135,7 +166,7 @@ export const APIKeyUsageChart = ({ activityData, keysList, isLoading }: APIKeyUs
     })).sort((a, b) => a.date.localeCompare(b.date));
 
     const keys = Array.from(new Set(activityData.map(item => {
-      const endpointId = getEndpointId(item.endpoint_id || '');
+      const endpointId = getEndpointId(item);
       return getKeyName(endpointId);
     })));
 
