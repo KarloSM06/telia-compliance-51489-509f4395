@@ -215,11 +215,10 @@ export default function TelephonyPage() {
   return (
     <div className="min-h-screen">
       {/* Hero Section - COMPACT & MODERN */}
-      <section className="relative py-16 bg-gradient-to-b from-primary/[0.08] via-primary/[0.12] to-background overflow-hidden">
-        {/* Radial gradient overlays - Mer blått */}
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,hsl(var(--primary)/0.25),transparent_50%)]" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_80%,hsl(217,91%,30%)/0.15),transparent_50%)]" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,hsl(217,91%,40%)/0.08),transparent_70%)]" />
+      <section className="relative py-16 bg-gradient-to-b from-background via-primary/5 to-background overflow-hidden">
+        {/* Radial gradient overlays */}
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,hsl(var(--primary)/0.15),transparent_50%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_80%,hsl(var(--primary)/0.1),transparent_50%)]" />
         
         {/* STORA snowflakes - fler för djup */}
         <div className="absolute -top-32 -right-32 w-[700px] h-[700px] opacity-5 pointer-events-none">
@@ -301,9 +300,8 @@ export default function TelephonyPage() {
       </section>
 
       {/* Stats Overview - Egen section */}
-      <section className="relative py-16 bg-gradient-to-b from-background via-primary/[0.08] to-primary/[0.05]">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_50%,hsl(var(--primary)/0.18),transparent_50%)]" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_80%,hsl(217,91%,35%)/0.12),transparent_60%)]" />
+      <section className="relative py-16 bg-gradient-to-b from-background via-primary/3 to-background">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_50%,hsl(var(--primary)/0.12),transparent_50%)]" />
         <div className="container mx-auto px-6 lg:px-8 relative z-10">
           <AnimatedSection delay={200}>
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
@@ -317,10 +315,7 @@ export default function TelephonyPage() {
       </section>
 
       {/* Charts Section */}
-      <section className="relative py-12 bg-gradient-to-b from-primary/[0.05] via-primary/[0.08] to-background">
-        {/* Extra blå gradient overlays */}
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_40%_30%,hsl(217,91%,40%)/0.1),transparent_60%)]" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_60%_70%,hsl(var(--primary)/0.08),transparent_50%)]" />
+      <section className="relative py-12 bg-gradient-to-b from-background via-primary/2 to-background">
         <div className="container mx-auto px-6 lg:px-8">
           <AnimatedSection delay={300}>
             <Card className="p-6 mb-6 border border-primary/10 bg-gradient-to-br from-card/80 via-card/50 to-card/30 backdrop-blur-md hover:shadow-xl hover:border-primary/30 transition-all duration-500">
@@ -391,8 +386,7 @@ export default function TelephonyPage() {
 
       {/* Provider Overview - Compact */}
       {Object.keys(metrics.byProvider).length > 0 && (
-        <section className="relative py-6 border-y border-border/50 bg-gradient-to-r from-primary/[0.03] via-primary/[0.05] to-primary/[0.03]">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,hsl(217,91%,45%)/0.06),transparent_60%)]" />
+        <section className="relative py-6 border-y border-border/50">
           <div className="container mx-auto px-6 lg:px-8">
             <AnimatedSection delay={400}>
               <div className="mb-4">
@@ -434,8 +428,7 @@ export default function TelephonyPage() {
       )}
 
       {/* Events Section */}
-      <section className="relative py-8 pb-16 bg-gradient-to-b from-background via-primary/[0.04] to-primary/[0.06]">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_60%,hsl(217,91%,40%)/0.08),transparent_50%)]" />
+      <section className="relative py-8 pb-16">
         <div className="container mx-auto px-6 lg:px-8">
           <AnimatedSection delay={500}>
             <div className="space-y-4">
