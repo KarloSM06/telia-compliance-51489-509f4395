@@ -125,6 +125,9 @@ serve(async (req) => {
         synced_records: syncedCount,
         skipped_records: skippedCount,
         total_records: logsToInsert.length,
+        message: syncedCount === 0 && skippedCount > 0 
+          ? 'Alla anrop fanns redan i systemet'
+          : `${syncedCount} nya anrop synkade, ${skippedCount} dubletter hoppades över`
       }),
       { 
         status: 200,

@@ -1,5 +1,24 @@
 # OpenRouter Integration - Complete Guide
 
+# OpenRouter Integration Guide
+
+## 🎯 VAR KONFIGURERAR JAG OPENROUTER?
+
+**Endast på ETT ställe:** `Dashboard → Integrationer → AI-tab`
+
+❌ **INTE** under Inställningar (AI-tab har tagits bort för att undvika duplicates)  
+✅ **JA** under Integrationer → AI & Modeller
+
+Här kan du:
+- Lägga in API Key (sk-or-...)
+- Lägga in Provisioning Key (pk-or-...) (valfritt)
+- Välja standardmodell och specialiserade modeller
+- Aktivera fallback till Lovable AI
+- Se din usage i realtid
+- Synka historisk data från OpenRouter
+
+---
+
 ## Overview
 Komplett OpenRouter-integration med realtids-tracking, kontoinformation, modellista och historisk analys.
 

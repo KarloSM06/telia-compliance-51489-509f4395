@@ -9,7 +9,7 @@ import { useOpenRouterKeyInfo } from "@/hooks/useOpenRouterKeyInfo";
 import { useOpenRouterModels } from "@/hooks/useOpenRouterModels";
 import { useOpenRouterActivity } from "@/hooks/useOpenRouterActivity";
 import { useOpenRouterKeys } from "@/hooks/useOpenRouterKeys";
-import { Settings, TrendingUp, Zap, DollarSign, Activity, Pencil, CreditCard, BarChart3, RefreshCw } from "lucide-react";
+import { Settings, TrendingUp, Zap, DollarSign, Activity, Pencil, CreditCard, BarChart3, RefreshCw, Sparkles, Info } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { AreaChartComponent } from "@/components/dashboard/charts/AreaChartComponent";
 import { PieChartComponent } from "@/components/dashboard/charts/PieChartComponent";
@@ -65,6 +65,24 @@ export function AIIntegrationsTab() {
 
   return (
     <div className="space-y-6">
+      {/* Main Header */}
+      <Card className="bg-gradient-to-r from-purple-50 to-blue-50 dark:from-purple-950/30 dark:to-blue-950/30">
+        <CardHeader>
+          <div className="flex items-center justify-between">
+            <div>
+              <CardTitle className="flex items-center gap-2 text-2xl">
+                <Sparkles className="h-6 w-6 text-purple-600" />
+                AI-inställningar & Användning
+              </CardTitle>
+              <CardDescription className="mt-2">
+                ⚠️ Detta är DEN ENDA platsen att konfigurera OpenRouter. 
+                Lägg in dina nycklar, välj modeller och följ din användning här.
+              </CardDescription>
+            </div>
+          </div>
+        </CardHeader>
+      </Card>
+
       {/* Connection Status */}
       <Card>
         <CardHeader>
@@ -77,27 +95,22 @@ export function AIIntegrationsTab() {
                   : "Konfigurera OpenRouter för att använda dina egna modeller"}
               </CardDescription>
             </div>
-            <div className="flex gap-2">
-              <Button 
-                variant={isOpenRouterConfigured ? "outline" : "default"}
-                onClick={() => setSetupModalOpen(true)}
-              >
-                {isOpenRouterConfigured ? (
-                  <>
-                    <Pencil className="h-4 w-4 mr-2" />
-                    Redigera
-                  </>
-                ) : (
-                  <>
-                    <Settings className="h-4 w-4 mr-2" />
-                    Konfigurera
-                  </>
-                )}
-              </Button>
-              <Button variant="outline" onClick={() => navigate('/dashboard/settings?tab=ai')}>
-                Avancerade inställningar
-              </Button>
-            </div>
+            <Button 
+              variant={isOpenRouterConfigured ? "outline" : "default"}
+              onClick={() => setSetupModalOpen(true)}
+            >
+              {isOpenRouterConfigured ? (
+                <>
+                  <Pencil className="h-4 w-4 mr-2" />
+                  Redigera nycklar & modeller
+                </>
+              ) : (
+                <>
+                  <Settings className="h-4 w-4 mr-2" />
+                  Konfigurera
+                </>
+              )}
+            </Button>
           </div>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -459,7 +472,19 @@ export function AIIntegrationsTab() {
                     
                     if (error) throw error;
                     
-                    toast.success(`Synkade ${data.synced_records} poster från OpenRouter`);
+                    if (data.synced_records === 0 && data.skipped_records > 0) {
+                      toast.info(
+                        `✅ ${data.skipped_records} anrop fanns redan i systemet. Ingen ny data att synka.`,
+                        { duration: 5000 }
+                      );
+                    } else if (data.synced_records > 0) {
+                      toast.success(
+                        `✅ Synkade ${data.synced_records} nya anrop. ${data.skipped_records > 0 ? `${data.skipped_records} fanns redan.` : ''}`,
+                        { duration: 5000 }
+                      );
+                    } else {
+                      toast.info('Ingen data att synka från OpenRouter.', { duration: 3000 });
+                    }
                   } catch (error) {
                     console.error('Sync error:', error);
                     toast.error('Kunde inte synka data från OpenRouter');

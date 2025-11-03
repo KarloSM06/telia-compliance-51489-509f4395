@@ -9,7 +9,7 @@ import { useAISettings } from "@/hooks/useAISettings";
 import { useOpenRouterKeys } from "@/hooks/useOpenRouterKeys";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
-import { Check, Loader2, AlertCircle, Zap, BarChart3 } from "lucide-react";
+import { Check, Loader2, AlertCircle, Zap, BarChart3, Settings } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 
@@ -18,13 +18,15 @@ interface OpenRouterSetupModalProps {
   onOpenChange: (open: boolean) => void;
 }
 
-const AVAILABLE_MODELS = [
-  { id: "google/gemini-2.5-flash", name: "Gemini 2.5 Flash (Rekommenderad)" },
-  { id: "google/gemini-2.5-pro", name: "Gemini 2.5 Pro" },
-  { id: "google/gemini-2.5-flash-lite", name: "Gemini 2.5 Flash Lite" },
-  { id: "openai/gpt-5", name: "GPT-5" },
-  { id: "openai/gpt-5-mini", name: "GPT-5 Mini" },
-  { id: "openai/gpt-5-nano", name: "GPT-5 Nano" },
+const OPENROUTER_MODELS = [
+  { value: 'anthropic/claude-sonnet-4-5', label: 'Claude Sonnet 4.5 (Bäst reasoning)', cost: '$$$' },
+  { value: 'anthropic/claude-opus-4-1', label: 'Claude Opus 4.1 (Mest intelligent)', cost: '$$$$' },
+  { value: 'openai/gpt-5', label: 'GPT-5 (Kraftfull)', cost: '$$$' },
+  { value: 'openai/gpt-5-mini', label: 'GPT-5 Mini (Balanserad)', cost: '$$' },
+  { value: 'google/gemini-2.5-pro', label: 'Gemini 2.5 Pro (Multimodal)', cost: '$$' },
+  { value: 'google/gemini-2.5-flash', label: 'Gemini 2.5 Flash (Snabb)', cost: '$' },
+  { value: 'meta-llama/llama-3.3-70b-instruct', label: 'Llama 3.3 70B', cost: '$' },
+  { value: 'mistralai/mistral-large-2411', label: 'Mistral Large', cost: '$$' },
 ];
 
 export function OpenRouterSetupModal({ open, onOpenChange }: OpenRouterSetupModalProps) {
@@ -32,7 +34,10 @@ export function OpenRouterSetupModal({ open, onOpenChange }: OpenRouterSetupModa
   const { data: keyStatus, isLoading: keysLoading } = useOpenRouterKeys();
   const [apiKey, setApiKey] = useState("");
   const [provisioningKey, setProvisioningKey] = useState("");
-  const [selectedModel, setSelectedModel] = useState(settings?.default_model || "google/gemini-2.5-flash");
+  const [defaultModel, setDefaultModel] = useState(settings?.default_model || "google/gemini-2.5-flash");
+  const [chatModel, setChatModel] = useState(settings?.chat_model ?? 'use_default');
+  const [enrichmentModel, setEnrichmentModel] = useState(settings?.enrichment_model ?? 'use_default');
+  const [analysisModel, setAnalysisModel] = useState(settings?.analysis_model ?? 'use_default');
   const [useFallback, setUseFallback] = useState(settings?.use_system_fallback ?? true);
   const [isTesting, setIsTesting] = useState(false);
   const [connectionStatus, setConnectionStatus] = useState<{ type: "success" | "error"; message: string } | null>(null);
@@ -92,7 +97,10 @@ export function OpenRouterSetupModal({ open, onOpenChange }: OpenRouterSetupModa
       provider: "openrouter",
       apiKey: apiKey || undefined,
       provisioningKey: provisioningKey || undefined,
-      defaultModel: selectedModel,
+      defaultModel,
+      chatModel: chatModel === 'use_default' ? undefined : chatModel,
+      enrichmentModel: enrichmentModel === 'use_default' ? undefined : enrichmentModel,
+      analysisModel: analysisModel === 'use_default' ? undefined : analysisModel,
       useFallback,
     });
 
@@ -313,37 +321,105 @@ export function OpenRouterSetupModal({ open, onOpenChange }: OpenRouterSetupModa
             </div>
           </div>
 
-          {/* Model Selection */}
-          <div className="space-y-2">
-            <Label htmlFor="model">Default Model</Label>
-            <Select value={selectedModel} onValueChange={setSelectedModel}>
-              <SelectTrigger disabled={isTesting || isSaving}>
-                <SelectValue placeholder="Select a model" />
-              </SelectTrigger>
-              <SelectContent>
-                {AVAILABLE_MODELS.map((model) => (
-                  <SelectItem key={model.id} value={model.id}>
-                    {model.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            <p className="text-xs text-muted-foreground">
-              Choose the default AI model for your requests
-            </p>
-          </div>
+          {/* Modellkonfiguration */}
+          <div className="space-y-4 p-4 border rounded-lg bg-slate-50 dark:bg-slate-900/50">
+            <h3 className="font-semibold text-lg flex items-center gap-2">
+              <Settings className="h-5 w-5" />
+              Modellkonfiguration
+            </h3>
+            
+            {/* Default model */}
+            <div className="space-y-2">
+              <Label htmlFor="model">Standardmodell för alla anrop</Label>
+              <Select value={defaultModel} onValueChange={setDefaultModel}>
+                <SelectTrigger disabled={isTesting || isSaving}>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {OPENROUTER_MODELS.map((model) => (
+                    <SelectItem key={model.value} value={model.value}>
+                      {model.label} <span className="text-muted-foreground ml-2">{model.cost}</span>
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <p className="text-xs text-muted-foreground">
+                Används för alla ändamål om inget annat anges nedan
+              </p>
+            </div>
 
-          {/* Fallback Option */}
-          <div className="flex items-center space-x-2">
-            <Switch
-              id="fallback"
-              checked={useFallback}
-              onCheckedChange={setUseFallback}
-              disabled={isTesting || isSaving}
-            />
-            <Label htmlFor="fallback" className="cursor-pointer">
-              Fallback to Lovable AI if OpenRouter fails
-            </Label>
+            {/* Avancerade inställningar */}
+            <details className="space-y-3">
+              <summary className="cursor-pointer text-sm font-medium hover:text-primary">
+                ⚙️ Specialiserade modeller per ändamål
+              </summary>
+              
+              <div className="space-y-3 pt-2">
+                {/* Chat model */}
+                <div className="space-y-2">
+                  <Label>Chat-modell (för chatbot)</Label>
+                  <Select value={chatModel} onValueChange={setChatModel}>
+                    <SelectTrigger disabled={isTesting || isSaving}>
+                      <SelectValue placeholder="Använd standardmodell" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="use_default">Använd standardmodell</SelectItem>
+                      {OPENROUTER_MODELS.map(m => (
+                        <SelectItem key={m.value} value={m.value}>{m.label}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                {/* Enrichment model */}
+                <div className="space-y-2">
+                  <Label>Lead-berikningsmodell</Label>
+                  <Select value={enrichmentModel} onValueChange={setEnrichmentModel}>
+                    <SelectTrigger disabled={isTesting || isSaving}>
+                      <SelectValue placeholder="Använd standardmodell" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="use_default">Använd standardmodell</SelectItem>
+                      {OPENROUTER_MODELS.map(m => (
+                        <SelectItem key={m.value} value={m.value}>{m.label}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                {/* Analysis model */}
+                <div className="space-y-2">
+                  <Label>Analysmodell (reviews, samtal)</Label>
+                  <Select value={analysisModel} onValueChange={setAnalysisModel}>
+                    <SelectTrigger disabled={isTesting || isSaving}>
+                      <SelectValue placeholder="Använd standardmodell" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="use_default">Använd standardmodell</SelectItem>
+                      {OPENROUTER_MODELS.map(m => (
+                        <SelectItem key={m.value} value={m.value}>{m.label}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+            </details>
+
+            {/* Fallback switch */}
+            <div className="flex items-center justify-between border-t pt-3">
+              <div>
+                <Label htmlFor="fallback">Fallback till Lovable AI</Label>
+                <p className="text-xs text-muted-foreground">
+                  Om OpenRouter misslyckas, använd Lovable AI automatiskt
+                </p>
+              </div>
+              <Switch
+                id="fallback"
+                checked={useFallback}
+                onCheckedChange={setUseFallback}
+                disabled={isTesting || isSaving}
+              />
+            </div>
           </div>
 
           {/* Förklaring */}
