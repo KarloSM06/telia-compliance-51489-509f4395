@@ -96,7 +96,14 @@ export const APIKeyUsageChart = ({ activityData, keysList, isLoading }: APIKeyUs
 
   const getKeyName = (endpointId: string) => {
     if (!endpointId || endpointId === 'Unknown') return 'Unknown';
-    return `Endpoint ${endpointId.substring(0, 12)}`;
+    
+    const matchingKey = keysList?.find(k => k.hash === endpointId);
+    
+    if (matchingKey) {
+      return matchingKey.label || matchingKey.name || 'Unnamed Key';
+    }
+    
+    return `Key ${endpointId.substring(0, 8)}...`;
   };
 
   const { chartData, uniqueKeys } = useMemo(() => {
