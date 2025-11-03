@@ -3,9 +3,13 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useReminderSettings } from "@/hooks/useReminderSettings";
-import { useState, useEffect } from "react";
-import { Mail, MessageSquare, Bell, CheckCircle2, Clock, Star } from "lucide-react";
+import { useState, useEffect, useMemo } from "react";
+import { Mail, MessageSquare, Bell, CheckCircle2, Clock, Star, Zap, Timer } from "lucide-react";
 import { TimelineStep } from "@/components/communications/TimelineStep";
+import { AnimatedSection } from "@/components/shared/AnimatedSection";
+import { PremiumTelephonyStatCard } from "@/components/telephony/PremiumTelephonyStatCard";
+import { Card } from "@/components/ui/card";
+import hiemsLogoSnowflake from "@/assets/hiems-logo-snowflake.png";
 
 export default function ReminderSettings() {
   const { settings, updateSettings, isLoading } = useReminderSettings();
@@ -34,13 +38,125 @@ export default function ReminderSettings() {
     updateSettings(formData);
   };
 
+  // Calculate stats from form data
+  const stats = useMemo(() => {
+    const enabledCount = [
+      formData.booking_confirmation_enabled,
+      formData.reminder_1_enabled,
+      formData.reminder_2_enabled,
+      formData.review_request_enabled
+    ].filter(Boolean).length;
+
+    const avgHoursBefore = formData.reminder_1_enabled && formData.reminder_2_enabled
+      ? Math.round((formData.reminder_1_hours_before + formData.reminder_2_hours_before) / 2)
+      : formData.reminder_1_enabled ? formData.reminder_1_hours_before
+      : formData.reminder_2_enabled ? formData.reminder_2_hours_before
+      : 0;
+
+    // Count most used channel
+    const allChannels = [
+      ...formData.booking_confirmation_channel,
+      ...formData.reminder_1_channel,
+      ...formData.reminder_2_channel,
+      ...formData.review_request_channel
+    ];
+    const emailCount = allChannels.filter(c => c === 'email').length;
+    const smsCount = allChannels.filter(c => c === 'sms').length;
+    const topChannel = emailCount >= smsCount ? 'E-post' : 'SMS';
+
+    return { enabledCount, avgHoursBefore, topChannel };
+  }, [formData]);
+
   if (isLoading) {
     return <div className="flex items-center justify-center py-12">Laddar inställningar...</div>;
   }
 
   return (
-    <div className="space-y-8 w-full pb-12">
-      <div className="space-y-6">
+    <div className="space-y-0 w-full">
+      {/* Hero Section */}
+      <section className="relative py-16 bg-gradient-to-b from-background via-primary/5 to-background overflow-hidden">
+        {/* Radial gradients */}
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,hsl(var(--primary)/0.15),transparent_50%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_80%,hsl(var(--primary)/0.1),transparent_50%)]" />
+        
+        {/* Snowflakes */}
+        <div className="absolute -top-32 -right-32 w-[700px] h-[700px] opacity-5 pointer-events-none">
+          <img src={hiemsLogoSnowflake} alt="" className="w-full h-full object-contain animate-[spin_60s_linear_infinite]" />
+        </div>
+        <div className="absolute top-1/2 -left-40 w-[500px] h-[500px] opacity-[0.03] pointer-events-none">
+          <img src={hiemsLogoSnowflake} alt="" className="w-full h-full object-contain animate-[spin_45s_linear_infinite_reverse]" />
+        </div>
+        <div className="absolute -bottom-20 right-1/4 w-[400px] h-[400px] opacity-[0.04] pointer-events-none">
+          <img src={hiemsLogoSnowflake} alt="" className="w-full h-full object-contain animate-[spin_80s_linear_infinite]" />
+        </div>
+        <div className="absolute top-10 left-1/3 w-[300px] h-[300px] opacity-[0.02] pointer-events-none">
+          <img src={hiemsLogoSnowflake} alt="" className="w-full h-full object-contain animate-[spin_100s_linear_infinite_reverse]" />
+        </div>
+        <div className="absolute bottom-1/3 right-10 w-[250px] h-[250px] opacity-[0.03] pointer-events-none">
+          <img src={hiemsLogoSnowflake} alt="" className="w-full h-full object-contain animate-[spin_70s_linear_infinite]" />
+        </div>
+        
+        <div className="container mx-auto px-6 lg:px-8 relative z-10">
+          <AnimatedSection>
+            <div className="max-w-4xl mx-auto text-center space-y-6">
+              <div className="inline-block">
+                <span className="text-sm font-semibold tracking-wider text-primary uppercase">Tidsstyrning</span>
+                <div className="w-32 h-1.5 bg-gradient-to-r from-primary via-primary/60 to-transparent mx-auto rounded-full shadow-lg shadow-primary/50 mt-2" />
+              </div>
+              
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent leading-tight">
+                Påminnelser
+              </h1>
+              
+              <p className="text-lg sm:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed font-light">
+                Konfigurera automatiska påminnelser för bokningar och recensioner
+              </p>
+            </div>
+          </AnimatedSection>
+        </div>
+      </section>
+
+      {/* Main Content */}
+      <div className="container mx-auto px-6 lg:px-8 py-8 space-y-8">
+        {/* Stats Overview */}
+        <AnimatedSection delay={100}>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <PremiumTelephonyStatCard
+              title="Aktiverade påminnelser"
+              value={`${stats.enabledCount}/4`}
+              icon={Bell}
+              subtitle="I användning"
+              color="text-green-600"
+              animate
+            />
+            <PremiumTelephonyStatCard
+              title="Genomsnitt timing"
+              value={`${stats.avgHoursBefore}h`}
+              icon={Timer}
+              subtitle="Före bokning"
+              color="text-blue-600"
+            />
+            <PremiumTelephonyStatCard
+              title="Föredragen kanal"
+              value={stats.topChannel}
+              icon={stats.topChannel === 'E-post' ? Mail : MessageSquare}
+              subtitle="Mest använd"
+              color="text-purple-600"
+            />
+            <PremiumTelephonyStatCard
+              title="Automatisering"
+              value="Aktiv"
+              icon={Zap}
+              subtitle="Påslagen"
+              color="text-orange-600"
+            />
+          </div>
+        </AnimatedSection>
+
+        {/* Timeline Steps Card */}
+        <AnimatedSection delay={200}>
+          <Card className="p-6 border border-primary/10 bg-gradient-to-br from-card/80 via-card/50 to-card/30 backdrop-blur-md hover:shadow-xl hover:border-primary/30 transition-all duration-500">
+            <div className="space-y-6">
         {/* Booking Confirmation */}
         <TimelineStep
           icon={CheckCircle2}
@@ -305,12 +421,15 @@ export default function ReminderSettings() {
             </div>
           </div>
         </TimelineStep>
-      </div>
+            </div>
+          </Card>
+        </AnimatedSection>
 
-      <div className="flex justify-end pt-6">
-        <Button onClick={handleSave} size="lg" className="min-w-[200px]">
-          Spara inställningar
-        </Button>
+        <div className="flex justify-end pt-6">
+          <Button onClick={handleSave} size="lg" className="min-w-[200px]">
+            Spara inställningar
+          </Button>
+        </div>
       </div>
     </div>
   );

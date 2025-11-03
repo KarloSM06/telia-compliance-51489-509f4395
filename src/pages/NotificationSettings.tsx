@@ -1,17 +1,39 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { useNotificationSettings } from "@/hooks/useNotificationSettings";
-import { Bell, Mail, Phone, Clock, Users, CheckCircle2, Send } from "lucide-react";
+import { Bell, Mail, Phone, Clock, Users, CheckCircle2, Send, RefreshCw, Zap } from "lucide-react";
 import { NotificationRecipientForm } from "@/components/NotificationRecipientForm";
 import { SettingRow } from "@/components/communications/SettingRow";
 import { Badge } from "@/components/ui/badge";
+import { AnimatedSection } from "@/components/shared/AnimatedSection";
+import { PremiumTelephonyStatCard } from "@/components/telephony/PremiumTelephonyStatCard";
+import hiemsLogoSnowflake from "@/assets/hiems-logo-snowflake.png";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/hooks/useAuth";
 
 export default function NotificationSettings() {
   const { settings, isLoading, updateSettings, isUpdating, sendTestNotification, isTesting } = useNotificationSettings();
+  const { user } = useAuth();
   const [testStatus, setTestStatus] = useState<string | null>(null);
+
+  // Fetch recipients count
+  const { data: recipients } = useQuery({
+    queryKey: ['notification-recipients', user?.id],
+    queryFn: async () => {
+      if (!user) return [];
+      const { data, error } = await supabase
+        .from('notification_recipients')
+        .select('*')
+        .eq('user_id', user.id);
+      if (error) throw error;
+      return data;
+    },
+    enabled: !!user,
+  });
   
   // Initialize with default values to prevent loading state issues
   const [localSettings, setLocalSettings] = useState({
@@ -62,18 +84,159 @@ export default function NotificationSettings() {
     }
   };
 
+  // Calculate stats
+  const stats = useMemo(() => {
+    const activeChannels = [
+      localSettings.enable_email_notifications,
+      localSettings.enable_sms_notifications,
+      localSettings.enable_inapp_notifications
+    ].filter(Boolean).length;
+
+    const quietHoursActive = !!(localSettings.quiet_hours_start && localSettings.quiet_hours_end);
+
+    const activeEvents = [
+      localSettings.notify_on_new_booking,
+      localSettings.notify_on_booking_cancelled,
+      localSettings.notify_on_booking_updated,
+      localSettings.notify_on_new_review,
+      localSettings.notify_on_message_failed
+    ].filter(Boolean).length;
+
+    return {
+      activeChannels,
+      quietHoursActive,
+      recipientsCount: recipients?.length || 0,
+      activeEvents
+    };
+  }, [localSettings, recipients]);
+
   if (isLoading) {
     return <div className="flex items-center justify-center py-12">Laddar inställningar...</div>;
   }
 
   return (
-    <div className="space-y-6 w-full pb-12">
-      {/* Two Column Layout */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Left Column - Contact & Channels */}
-        <div className="space-y-6">
-          {/* Contact Information */}
-          <Card>
+    <div className="space-y-0 w-full">
+      {/* Hero Section */}
+      <section className="relative py-16 bg-gradient-to-b from-background via-primary/5 to-background overflow-hidden">
+        {/* Radial gradients */}
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,hsl(var(--primary)/0.15),transparent_50%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_80%,hsl(var(--primary)/0.1),transparent_50%)]" />
+        
+        {/* Snowflakes */}
+        <div className="absolute -top-32 -right-32 w-[700px] h-[700px] opacity-5 pointer-events-none">
+          <img src={hiemsLogoSnowflake} alt="" className="w-full h-full object-contain animate-[spin_60s_linear_infinite]" />
+        </div>
+        <div className="absolute top-1/2 -left-40 w-[500px] h-[500px] opacity-[0.03] pointer-events-none">
+          <img src={hiemsLogoSnowflake} alt="" className="w-full h-full object-contain animate-[spin_45s_linear_infinite_reverse]" />
+        </div>
+        <div className="absolute -bottom-20 right-1/4 w-[400px] h-[400px] opacity-[0.04] pointer-events-none">
+          <img src={hiemsLogoSnowflake} alt="" className="w-full h-full object-contain animate-[spin_80s_linear_infinite]" />
+        </div>
+        <div className="absolute top-10 left-1/3 w-[300px] h-[300px] opacity-[0.02] pointer-events-none">
+          <img src={hiemsLogoSnowflake} alt="" className="w-full h-full object-contain animate-[spin_100s_linear_infinite_reverse]" />
+        </div>
+        <div className="absolute bottom-1/3 right-10 w-[250px] h-[250px] opacity-[0.03] pointer-events-none">
+          <img src={hiemsLogoSnowflake} alt="" className="w-full h-full object-contain animate-[spin_70s_linear_infinite]" />
+        </div>
+        
+        <div className="container mx-auto px-6 lg:px-8 relative z-10">
+          <AnimatedSection>
+            <div className="max-w-4xl mx-auto text-center space-y-6">
+              <div className="inline-block">
+                <span className="text-sm font-semibold tracking-wider text-primary uppercase">Realtidsövervakning</span>
+                <div className="w-32 h-1.5 bg-gradient-to-r from-primary via-primary/60 to-transparent mx-auto rounded-full shadow-lg shadow-primary/50 mt-2" />
+              </div>
+              
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent leading-tight">
+                Ägarnotiser
+              </h1>
+              
+              <p className="text-lg sm:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed font-light">
+                Hantera hur och när du får notifikationer om bokningar och händelser
+              </p>
+            </div>
+          </AnimatedSection>
+        </div>
+      </section>
+
+      {/* Quick Actions Bar */}
+      <section className="relative py-6 border-y border-primary/10 bg-card/50 backdrop-blur-sm">
+        <div className="container mx-auto px-6 lg:px-8">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2">
+                <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+                <span className="text-sm font-medium text-muted-foreground">Live</span>
+              </div>
+              <Badge variant="secondary">{stats.activeChannels} kanaler aktiva</Badge>
+            </div>
+            <div className="flex gap-2">
+              <Button 
+                onClick={handleTest} 
+                variant="outline" 
+                size="sm" 
+                disabled={isTesting}
+                className="gap-2"
+              >
+                <Send className="h-4 w-4" />
+                {isTesting ? "Skickar..." : "Skicka test"}
+              </Button>
+              <Button 
+                onClick={handleSave} 
+                disabled={isUpdating}
+                size="sm"
+                className="gap-2"
+              >
+                {isUpdating ? "Sparar..." : "Spara inställningar"}
+              </Button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Main Content */}
+      <div className="container mx-auto px-6 lg:px-8 py-8 space-y-8">
+        {/* Stats Overview */}
+        <AnimatedSection delay={100}>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <PremiumTelephonyStatCard
+              title="Aktiva kanaler"
+              value={stats.activeChannels}
+              icon={Bell}
+              subtitle="I användning"
+              color="text-blue-600"
+              animate
+            />
+            <PremiumTelephonyStatCard
+              title="Tyst period"
+              value={stats.quietHoursActive ? 'Aktiv' : 'Inaktiv'}
+              icon={Clock}
+              subtitle={stats.quietHoursActive ? 'Konfigurerad' : 'Ej konfigurerad'}
+              color="text-purple-600"
+            />
+            <PremiumTelephonyStatCard
+              title="Mottagare"
+              value={stats.recipientsCount}
+              icon={Users}
+              subtitle="Registrerade"
+              color="text-green-600"
+            />
+            <PremiumTelephonyStatCard
+              title="Händelser"
+              value={`${stats.activeEvents}/5`}
+              icon={Zap}
+              subtitle="Bevakade"
+              color="text-orange-600"
+            />
+          </div>
+        </AnimatedSection>
+        {/* Two Column Layout */}
+        <AnimatedSection delay={200}>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Left Column - Contact & Channels */}
+            <div className="space-y-6">
+              {/* Contact Information */}
+              <Card className="border border-primary/10 bg-gradient-to-br from-card/80 via-card/50 to-card/30 backdrop-blur-md hover:shadow-xl hover:border-primary/30 transition-all duration-500">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Users className="h-5 w-5" />
@@ -113,8 +276,8 @@ export default function NotificationSettings() {
             </CardContent>
           </Card>
 
-          {/* Notification Channels */}
-          <Card>
+              {/* Notification Channels */}
+              <Card className="border border-primary/10 bg-gradient-to-br from-card/80 via-card/50 to-card/30 backdrop-blur-md hover:shadow-xl hover:border-primary/30 transition-all duration-500">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Bell className="h-5 w-5" />
@@ -141,12 +304,12 @@ export default function NotificationSettings() {
               />
             </CardContent>
           </Card>
-        </div>
+            </div>
 
-        {/* Right Column - Events & Quiet Hours */}
-        <div className="space-y-6">
-          {/* Event Types */}
-          <Card>
+            {/* Right Column - Events & Quiet Hours */}
+            <div className="space-y-6">
+              {/* Event Types */}
+              <Card className="border border-primary/10 bg-gradient-to-br from-card/80 via-card/50 to-card/30 backdrop-blur-md hover:shadow-xl hover:border-primary/30 transition-all duration-500">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <CheckCircle2 className="h-5 w-5" />
@@ -178,8 +341,8 @@ export default function NotificationSettings() {
             </CardContent>
           </Card>
 
-          {/* Quiet Hours */}
-          <Card>
+              {/* Quiet Hours */}
+              <Card className="border border-primary/10 bg-gradient-to-br from-card/80 via-card/50 to-card/30 backdrop-blur-md hover:shadow-xl hover:border-primary/30 transition-all duration-500">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Clock className="h-5 w-5" />
@@ -215,11 +378,13 @@ export default function NotificationSettings() {
               </p>
             </CardContent>
           </Card>
-        </div>
-      </div>
+            </div>
+          </div>
+        </AnimatedSection>
 
-      {/* Additional Recipients */}
-      <Card>
+        {/* Additional Recipients */}
+        <AnimatedSection delay={300}>
+          <Card className="border border-primary/10 bg-gradient-to-br from-card/80 via-card/50 to-card/30 backdrop-blur-md hover:shadow-xl hover:border-primary/30 transition-all duration-500">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Users className="h-5 w-5" />
@@ -233,40 +398,24 @@ export default function NotificationSettings() {
           <NotificationRecipientForm />
         </CardContent>
       </Card>
+        </AnimatedSection>
 
-      {/* Action Buttons */}
-      <div className="flex flex-col sm:flex-row gap-4 items-center justify-end">
         {testStatus && (
-          <div className="flex-1">
-            {testStatus === "success" ? (
-              <div className="flex items-center gap-2 text-success">
-                <CheckCircle2 className="h-5 w-5" />
-                <span>Testnotifikation skickad!</span>
-              </div>
-            ) : (
-              <div className="flex items-center gap-2 text-destructive">
-                <Badge variant="destructive">Misslyckades</Badge>
-              </div>
-            )}
-          </div>
+          <AnimatedSection delay={400}>
+            <div className="flex items-center justify-center p-4 border border-primary/10 rounded-lg bg-gradient-to-br from-card/80 via-card/50 to-card/30 backdrop-blur-md">
+              {testStatus === "success" ? (
+                <div className="flex items-center gap-2 text-success">
+                  <CheckCircle2 className="h-5 w-5" />
+                  <span>Testnotifikation skickad!</span>
+                </div>
+              ) : (
+                <div className="flex items-center gap-2 text-destructive">
+                  <Badge variant="destructive">Misslyckades</Badge>
+                </div>
+              )}
+            </div>
+          </AnimatedSection>
         )}
-        <Button 
-          onClick={handleTest} 
-          variant="outline" 
-          disabled={isTesting}
-          className="gap-2"
-        >
-          <Send className="h-4 w-4" />
-          {isTesting ? "Skickar..." : "Skicka test"}
-        </Button>
-        <Button 
-          onClick={handleSave} 
-          disabled={isUpdating}
-          size="lg"
-          className="min-w-[200px]"
-        >
-          {isUpdating ? "Sparar..." : "Spara inställningar"}
-        </Button>
       </div>
     </div>
   );

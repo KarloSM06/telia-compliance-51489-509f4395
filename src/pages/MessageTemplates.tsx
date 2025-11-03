@@ -7,14 +7,19 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Checkbox } from "@/components/ui/checkbox";
 import { useMessageTemplates, type TemplateType, type Tone } from "@/hooks/useMessageTemplates";
 import { useState } from "react";
-import { Plus, Trash2, Edit, FileText, Send, Search, Filter, CheckCircle } from "lucide-react";
+import { Plus, Trash2, Edit, FileText, Send, Search, Filter, CheckCircle, RefreshCw, Mail, MessageSquare } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import { TestMessageModal } from "@/components/message-templates/TestMessageModal";
-import { StatCard } from "@/components/communications/StatCard";
 import { Badge } from "@/components/ui/badge";
+import { AnimatedSection } from "@/components/shared/AnimatedSection";
+import { PremiumTelephonyStatCard } from "@/components/telephony/PremiumTelephonyStatCard";
+import hiemsLogoSnowflake from "@/assets/hiems-logo-snowflake.png";
+import { useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 
 export default function MessageTemplates() {
   const { templates, createTemplate, updateTemplate, deleteTemplate, isLoading } = useMessageTemplates();
+  const queryClient = useQueryClient();
   const [editingId, setEditingId] = useState<string | null>(null);
   const [isCreating, setIsCreating] = useState(false);
   const [testingTemplate, setTestingTemplate] = useState<{ id: string; name: string } | null>(null);
@@ -101,23 +106,130 @@ export default function MessageTemplates() {
     return matchesSearch && matchesType;
   }) || [];
 
+  const handleRefresh = async () => {
+    toast.loading('Uppdaterar mallar...');
+    await queryClient.invalidateQueries({ queryKey: ['message-templates'] });
+    toast.dismiss();
+    toast.success('Mallar uppdaterade');
+  };
+
   if (isLoading) {
     return <div className="flex items-center justify-center py-12">Laddar mallar...</div>;
   }
 
   return (
-    <div className="space-y-6 w-full pb-12">
-      {/* Stats Overview */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <StatCard title="Totalt antal mallar" value={stats.total} icon={FileText} />
-        <StatCard title="Aktiva mallar" value={stats.active} icon={CheckCircle} />
-        <StatCard title="E-post mallar" value={stats.email} icon={FileText} />
-        <StatCard title="SMS mallar" value={stats.sms} icon={Send} />
-      </div>
+    <div className="space-y-0 w-full">
+      {/* Hero Section */}
+      <section className="relative py-16 bg-gradient-to-b from-background via-primary/5 to-background overflow-hidden">
+        {/* Radial gradients */}
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,hsl(var(--primary)/0.15),transparent_50%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_80%,hsl(var(--primary)/0.1),transparent_50%)]" />
+        
+        {/* Snowflakes */}
+        <div className="absolute -top-32 -right-32 w-[700px] h-[700px] opacity-5 pointer-events-none">
+          <img src={hiemsLogoSnowflake} alt="" className="w-full h-full object-contain animate-[spin_60s_linear_infinite]" />
+        </div>
+        <div className="absolute top-1/2 -left-40 w-[500px] h-[500px] opacity-[0.03] pointer-events-none">
+          <img src={hiemsLogoSnowflake} alt="" className="w-full h-full object-contain animate-[spin_45s_linear_infinite_reverse]" />
+        </div>
+        <div className="absolute -bottom-20 right-1/4 w-[400px] h-[400px] opacity-[0.04] pointer-events-none">
+          <img src={hiemsLogoSnowflake} alt="" className="w-full h-full object-contain animate-[spin_80s_linear_infinite]" />
+        </div>
+        <div className="absolute top-10 left-1/3 w-[300px] h-[300px] opacity-[0.02] pointer-events-none">
+          <img src={hiemsLogoSnowflake} alt="" className="w-full h-full object-contain animate-[spin_100s_linear_infinite_reverse]" />
+        </div>
+        <div className="absolute bottom-1/3 right-10 w-[250px] h-[250px] opacity-[0.03] pointer-events-none">
+          <img src={hiemsLogoSnowflake} alt="" className="w-full h-full object-contain animate-[spin_70s_linear_infinite]" />
+        </div>
+        
+        <div className="container mx-auto px-6 lg:px-8 relative z-10">
+          <AnimatedSection>
+            <div className="max-w-4xl mx-auto text-center space-y-6">
+              <div className="inline-block">
+                <span className="text-sm font-semibold tracking-wider text-primary uppercase">Automatisering</span>
+                <div className="w-32 h-1.5 bg-gradient-to-r from-primary via-primary/60 to-transparent mx-auto rounded-full shadow-lg shadow-primary/50 mt-2" />
+              </div>
+              
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent leading-tight">
+                Meddelandemallar
+              </h1>
+              
+              <p className="text-lg sm:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed font-light">
+                Skapa och hantera anpassade meddelandemallar för automatiska utskick
+              </p>
+            </div>
+          </AnimatedSection>
+        </div>
+      </section>
 
-      {/* Search and Filter Bar */}
-      <Card>
-        <CardContent className="pt-6">
+      {/* Quick Actions Bar */}
+      <section className="relative py-6 border-y border-primary/10 bg-card/50 backdrop-blur-sm">
+        <div className="container mx-auto px-6 lg:px-8">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2">
+                <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+                <span className="text-sm font-medium text-muted-foreground">Live</span>
+              </div>
+              <Badge variant="secondary">{templates?.length || 0} mallar</Badge>
+            </div>
+            <div className="flex gap-2">
+              <Button onClick={handleRefresh} variant="outline" size="sm" className="gap-2">
+                <RefreshCw className="h-4 w-4" />
+                Uppdatera
+              </Button>
+              {!isCreating && (
+                <Button onClick={() => setIsCreating(true)} size="sm" className="gap-2">
+                  <Plus className="h-4 w-4" />
+                  Ny mall
+                </Button>
+              )}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Main Content */}
+      <div className="container mx-auto px-6 lg:px-8 py-8 space-y-8">
+        {/* Stats Overview */}
+        <AnimatedSection delay={100}>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <PremiumTelephonyStatCard
+              title="Totalt antal mallar"
+              value={stats.total}
+              icon={FileText}
+              subtitle="Alla skapade mallar"
+              color="text-blue-600"
+            />
+            <PremiumTelephonyStatCard
+              title="Aktiva mallar"
+              value={stats.active}
+              icon={CheckCircle}
+              subtitle="I användning"
+              color="text-green-600"
+              animate
+            />
+            <PremiumTelephonyStatCard
+              title="E-post mallar"
+              value={stats.email}
+              icon={Mail}
+              subtitle="För e-postutskick"
+              color="text-purple-600"
+            />
+            <PremiumTelephonyStatCard
+              title="SMS mallar"
+              value={stats.sms}
+              icon={MessageSquare}
+              subtitle="För SMS-utskick"
+              color="text-orange-600"
+            />
+          </div>
+        </AnimatedSection>
+
+        {/* Search and Filter Bar */}
+        <AnimatedSection delay={200}>
+          <Card className="border border-primary/10 bg-gradient-to-br from-card/80 via-card/50 to-card/30 backdrop-blur-md hover:shadow-xl hover:border-primary/30 transition-all duration-500">
+            <CardContent className="pt-6">
           <div className="flex flex-col md:flex-row gap-4">
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -142,20 +254,16 @@ export default function MessageTemplates() {
                   <SelectItem value="cancellation">Avbokning</SelectItem>
                 </SelectContent>
               </Select>
-              {!isCreating && (
-                <Button onClick={() => setIsCreating(true)} className="gap-2">
-                  <Plus className="h-4 w-4" />
-                  Ny mall
-                </Button>
-              )}
             </div>
           </div>
         </CardContent>
       </Card>
+        </AnimatedSection>
 
-      {/* Create/Edit Form */}
-      {isCreating && (
-        <Card className="border-2 border-primary/20 shadow-card">
+        {/* Create/Edit Form */}
+        {isCreating && (
+          <AnimatedSection delay={300}>
+            <Card className="border-2 border-primary/20 shadow-xl bg-gradient-to-br from-card/90 via-card/70 to-card/50 backdrop-blur-lg">
           <CardHeader className="bg-gradient-card">
             <CardTitle className="flex items-center gap-2">
               <FileText className="h-5 w-5" />
@@ -285,12 +393,14 @@ export default function MessageTemplates() {
             </div>
           </CardContent>
         </Card>
-      )}
+          </AnimatedSection>
+        )}
 
-      {/* Templates Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        {filteredTemplates.map((template) => (
-          <Card key={template.id} className="hover:shadow-card transition-all hover-scale">
+        {/* Templates Grid */}
+        <AnimatedSection delay={400}>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            {filteredTemplates.map((template) => (
+              <Card key={template.id} className="border border-primary/10 bg-gradient-to-br from-card/80 via-card/50 to-card/30 backdrop-blur-md hover:shadow-2xl hover:shadow-primary/20 hover:border-primary/30 hover:-translate-y-1 transition-all duration-500">
             <CardHeader>
               <div className="flex items-start justify-between gap-4">
                 <div className="flex-1">
@@ -351,26 +461,30 @@ export default function MessageTemplates() {
               </p>
             </CardContent>
           </Card>
-        ))}
-      </div>
+            ))}
+          </div>
+        </AnimatedSection>
 
-      {filteredTemplates.length === 0 && (
-        <Card>
-          <CardContent className="py-12 text-center">
+        {filteredTemplates.length === 0 && (
+          <AnimatedSection delay={500}>
+            <Card className="border border-primary/10 bg-gradient-to-br from-card/80 via-card/50 to-card/30 backdrop-blur-md">
+              <CardContent className="py-12 text-center">
             <FileText className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
             <p className="text-muted-foreground">Inga mallar hittades</p>
           </CardContent>
         </Card>
-      )}
+          </AnimatedSection>
+        )}
 
-      {testingTemplate && (
-        <TestMessageModal
-          open={!!testingTemplate}
-          onClose={() => setTestingTemplate(null)}
-          templateId={testingTemplate.id}
-          templateName={testingTemplate.name}
-        />
-      )}
+        {testingTemplate && (
+          <TestMessageModal
+            open={!!testingTemplate}
+            onClose={() => setTestingTemplate(null)}
+            templateId={testingTemplate.id}
+            templateName={testingTemplate.name}
+          />
+        )}
+      </div>
     </div>
   );
 }
