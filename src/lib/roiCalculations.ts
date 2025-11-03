@@ -1,6 +1,5 @@
 import { BusinessMetrics, ServicePricing } from "@/hooks/useBusinessMetrics";
-
-const USD_TO_SEK = 10.5;
+import { USD_TO_SEK } from './constants';
 
 export interface BookingRevenue {
   bookingId: string;
