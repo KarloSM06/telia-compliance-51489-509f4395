@@ -15,12 +15,6 @@ verify_jwt = true
 [functions.get-openrouter-activity]
 verify_jwt = true
 
-[functions.get-openrouter-keys]
-verify_jwt = true
-
-[functions.get-openrouter-key-details]
-verify_jwt = true
-
 [functions.send-test-message]
 verify_jwt = true
 

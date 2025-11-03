@@ -41,7 +41,6 @@ import { ProjectionTabs } from "@/components/dashboard/ProjectionTabs";
 import { ServiceROIBreakdown } from "@/components/dashboard/ServiceROIBreakdown";
 import { ConversionFunnelChart } from "@/components/dashboard/ConversionFunnelChart";
 import { useConversionFunnel } from "@/hooks/useConversionFunnel";
-import { AccountOverview } from "@/components/dashboard/AccountOverview";
 
 const DashboardAnalytics = () => {
   const [dateRange, setDateRange] = useState<DateRange | undefined>();
@@ -219,9 +218,6 @@ const DashboardAnalytics = () => {
           </AlertDescription>
         </Alert>
       )}
-
-      {/* OpenRouter Account Overview */}
-      <AccountOverview />
 
       {/* Section 1: ROI Hero Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
