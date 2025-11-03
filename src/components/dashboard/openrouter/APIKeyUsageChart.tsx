@@ -92,8 +92,8 @@ export const APIKeyUsageChart = ({ activityData, keysList, isLoading }: APIKeyUs
   const [selectedMetric, setSelectedMetric] = useState<MetricType>('cost');
   const [hiddenKeys, setHiddenKeys] = useState<Set<string>>(new Set());
 
-  // Helper to get display name, prioritizing 'name' over 'label'
-  const getDisplayName = (k: APIKey) => (k?.name?.trim() || k?.label || 'Unnamed Key');
+  // Helper to get display name, prioritizing 'label' over 'name' (label contains user-set display name)
+  const getDisplayName = (k: APIKey) => (k?.label || k?.name || 'Unnamed Key');
 
   // Debug: Check if keysList is available
   if (!keysList || keysList.length === 0) {
