@@ -6,7 +6,7 @@ import { format } from "date-fns";
 import { sv } from "date-fns/locale";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Key, DollarSign, Zap, LineChartIcon } from "lucide-react";
-import { buildKeyResolver, type APIKey as ImportedAPIKey } from "@/lib/openrouterKeys";
+
 
 interface ActivityItem {
   date: string;
@@ -93,11 +93,61 @@ export const APIKeyUsageChart = ({ activityData, keysList, isLoading }: APIKeyUs
   const [selectedMetric, setSelectedMetric] = useState<MetricType>('cost');
   const [hiddenKeys, setHiddenKeys] = useState<Set<string>>(new Set());
 
-  // Build resolver for mapping activity IDs to display names
-  const { resolve: resolveKeyName, ensureUnique } = useMemo(
-    () => buildKeyResolver(keysList as ImportedAPIKey[] || []),
-    [keysList]
-  );
+  // Build resolver that maps activity endpoint IDs to user-set key names only (fallback: 'Namnlös')
+  const resolveNameFromEndpoint = useMemo(() => {
+    const keys = keysList || [];
+
+    const exactMap = new Map<string, APIKey>();
+    const maskedMap = new Map<string, APIKey>();
+
+    keys.forEach((k) => {
+      if (k.hash) exactMap.set(k.hash, k);
+      if (k.label) maskedMap.set(k.label, k);
+      if (k.hash && k.hash.length >= 6) {
+        maskedMap.set(`${k.hash.slice(0, 3)}...${k.hash.slice(-3)}`, k);
+        maskedMap.set(`${k.hash.slice(0, 3)}...${k.hash.slice(-4)}`, k);
+        maskedMap.set(`${k.hash.slice(0, 8)}...${k.hash.slice(-4)}`, k);
+      }
+    });
+
+    return (endpointId: string | undefined | null): string => {
+      if (!endpointId) return 'Namnlös';
+
+      if (maskedMap.has(endpointId)) {
+        const k = maskedMap.get(endpointId)!;
+        return k.name?.trim() || 'Namnlös';
+      }
+
+      if (exactMap.has(endpointId)) {
+        const k = exactMap.get(endpointId)!;
+        return k.name?.trim() || 'Namnlös';
+      }
+
+      if (endpointId.includes('...')) {
+        const [prefix, suffix] = endpointId.split('...');
+        const match = keys.find(k =>
+          k.hash &&
+          k.hash.startsWith(prefix) &&
+          k.hash.endsWith(suffix)
+        );
+        if (match) return match.name?.trim() || 'Namnlös';
+      }
+
+      if (endpointId.length >= 8) {
+        const prefixLen = Math.min(12, endpointId.length);
+        const suffixLen = Math.min(8, endpointId.length);
+        const match = keys.find(k =>
+          k.hash && (
+            k.hash.startsWith(endpointId.slice(0, prefixLen)) ||
+            k.hash.endsWith(endpointId.slice(-suffixLen))
+          )
+        );
+        if (match) return match.name?.trim() || 'Namnlös';
+      }
+
+      return 'Namnlös';
+    };
+  }, [keysList]);
 
   // Debug: Check if keysList is available
   if (!keysList || keysList.length === 0) {
@@ -125,7 +175,7 @@ export const APIKeyUsageChart = ({ activityData, keysList, isLoading }: APIKeyUs
     const keyDataByDate = activityData.reduce((acc, item) => {
       const date = item.date.split(' ')[0];
       const endpointId = getEndpointId(item);
-      const keyName = resolveKeyName(endpointId);
+      const keyName = resolveNameFromEndpoint(endpointId);
       
       if (!acc[date]) acc[date] = {};
       if (!acc[date][keyName]) {
@@ -147,13 +197,13 @@ export const APIKeyUsageChart = ({ activityData, keysList, isLoading }: APIKeyUs
 
     const keys = Array.from(new Set(activityData.map(item => {
       const endpointId = getEndpointId(item);
-      return resolveKeyName(endpointId);
+      return resolveNameFromEndpoint(endpointId);
     })));
 
     return { chartData: data, uniqueKeys: keys };
-  }, [activityData, resolveKeyName, selectedMetric]);
+  }, [activityData, resolveNameFromEndpoint, selectedMetric]);
 
-  const uniqueLegendNames = useMemo(() => ensureUnique(uniqueKeys), [uniqueKeys, ensureUnique]);
+  const uniqueLegendNames = uniqueKeys;
 
   const handleToggleKey = (key: string) => {
     setHiddenKeys(prev => {
