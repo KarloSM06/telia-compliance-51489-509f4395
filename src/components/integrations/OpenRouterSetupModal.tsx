@@ -87,29 +87,43 @@ export function OpenRouterSetupModal({ open, onOpenChange }: OpenRouterSetupModa
   };
 
   const handleSave = async () => {
-    // If no new key provided and no existing key, require input
+    console.log('💾 Saving AI settings:', {
+      hasNewApiKey: !!apiKey,
+      hasNewProvisioningKey: !!provisioningKey,
+      existingApiKey: !!keyStatus?.api_key_exists,
+      existingProvisioningKey: !!keyStatus?.provisioning_key_exists,
+      defaultModel,
+    });
+
     if (!apiKey && !keyStatus?.api_key_exists) {
       toast.error("Ange en API-nyckel");
       return;
     }
 
-    await saveSettings({
-      provider: "openrouter",
-      apiKey: apiKey || undefined,
-      provisioningKey: provisioningKey || undefined,
-      defaultModel,
-      chatModel: chatModel === 'use_default' ? undefined : chatModel,
-      enrichmentModel: enrichmentModel === 'use_default' ? undefined : enrichmentModel,
-      analysisModel: analysisModel === 'use_default' ? undefined : analysisModel,
-      useFallback,
-    });
+    try {
+      await saveSettings({
+        provider: "openrouter",
+        apiKey: apiKey || undefined,
+        provisioningKey: provisioningKey || undefined,
+        defaultModel,
+        chatModel: chatModel === 'use_default' ? undefined : chatModel,
+        enrichmentModel: enrichmentModel === 'use_default' ? undefined : enrichmentModel,
+        analysisModel: analysisModel === 'use_default' ? undefined : analysisModel,
+        useFallback,
+      });
 
-    // Reset state and close
-    setApiKey("");
-    setProvisioningKey("");
-    setShowApiKeyInput(false);
-    setShowProvisioningKeyInput(false);
-    onOpenChange(false);
+      console.log('✅ AI settings saved successfully');
+      
+      // Reset state and close
+      setApiKey("");
+      setProvisioningKey("");
+      setShowApiKeyInput(false);
+      setShowProvisioningKeyInput(false);
+      onOpenChange(false);
+    } catch (error) {
+      console.error('❌ Failed to save AI settings:', error);
+      // Error already handled by onError in useAISettings
+    }
   };
 
   return (

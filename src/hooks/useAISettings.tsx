@@ -113,6 +113,9 @@ export const useAISettings = () => {
           enrichment_model: enrichmentModel || null,
           analysis_model: analysisModel || null,
           use_system_fallback: useFallback,
+        }, {
+          onConflict: 'user_id',
+          ignoreDuplicates: false
         });
 
       if (error) throw error;
@@ -123,10 +126,16 @@ export const useAISettings = () => {
       toast.success('AI-inställningar sparade');
     },
     onError: (error: Error) => {
-      if (error.message.includes('duplicate') || error.message.includes('unique')) {
-        toast.error('Det finns redan en konfiguration. Försök igen.');
+      console.error('💥 Save AI settings error:', error);
+      
+      if (error.message.includes('duplicate key') || error.message.includes('violates unique constraint')) {
+        toast.error('Ett tekniskt fel uppstod. Försök igen eller kontakta support.');
       } else if (error.message.includes('encrypt')) {
-        toast.error('Kunde inte kryptera nyckeln. Kontrollera att den är giltig.');
+        toast.error('Kunde inte kryptera nyckeln. Kontrollera att formatet är korrekt (sk-or-... eller pk-or-...).');
+      } else if (error.message.includes('JWT')) {
+        toast.error('Session har löpt ut. Logga in igen.');
+      } else if (error.message.includes('foreign key')) {
+        toast.error('Användarprofil hittades inte. Logga ut och in igen.');
       } else {
         toast.error(`Kunde inte spara: ${error.message}`);
       }
