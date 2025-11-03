@@ -106,14 +106,24 @@ export const APIKeyUsageChart = ({ activityData, keysList, isLoading }: APIKeyUs
   const getKeyName = (endpointId: string) => {
     if (!endpointId || endpointId === 'Unknown') return 'Unknown';
     
-    console.log('🔍 Trying to match endpoint_id:', endpointId);
-    console.log('📋 Available keys:', keysList?.map(k => ({ hash: k.hash, name: k.label || k.name })));
-    
-    // Try exact match first
+    console.log('🔍 Matching endpoint_id:', endpointId);
+    const printKey = (k: APIKey | undefined) => k ? (k.label || k.name || '(unnamed)') : 'none';
+
+    // 1) Masked key matching: sk-or-v1-xxx...yyy
+    if (endpointId.includes('...')) {
+      const [prefix, suffix] = endpointId.split('...');
+      if (prefix && suffix) {
+        const maskedMatch = keysList?.find(k => k.hash.startsWith(prefix) && k.hash.endsWith(suffix));
+        console.log('🔗 Masked match result:', printKey(maskedMatch));
+        if (maskedMatch) return maskedMatch.label || maskedMatch.name || 'Unnamed Key';
+      }
+    }
+
+    // 2) Exact matching
     let matchingKey = keysList?.find(k => k.hash === endpointId);
-    console.log('✅ Exact match found:', matchingKey);
+    console.log('✅ Exact match:', printKey(matchingKey));
     
-    // If no exact match, try partial matching (first/last 8 chars)
+    // 3) Partial matching (first/last 8 chars)
     if (!matchingKey && endpointId.length >= 8) {
       matchingKey = keysList?.find(k => {
         const keyStart = k.hash.substring(0, Math.min(8, k.hash.length));
@@ -123,17 +133,14 @@ export const APIKeyUsageChart = ({ activityData, keysList, isLoading }: APIKeyUs
         
         return keyStart === idStart || keyEnd === idEnd;
       });
-      
-      if (matchingKey) {
-        console.log('✅ Partial match found:', matchingKey);
-      }
+      console.log('🧩 Partial match:', printKey(matchingKey));
     }
     
     if (matchingKey) {
       return matchingKey.label || matchingKey.name || 'Unnamed Key';
     }
     
-    console.warn('❌ No match found for endpoint_id:', endpointId);
+    console.warn('❌ No match for endpoint_id:', endpointId);
     return `Key ${endpointId.substring(0, 8)}...`;
   };
 
