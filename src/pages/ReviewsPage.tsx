@@ -14,13 +14,13 @@ import hiemsLogoSnowflake from '@/assets/hiems-logo-snowflake.png';
 
 export default function ReviewsPage() {
   const [dateRangeDays, setDateRangeDays] = useState(30);
-  const { filteredReviews: reviews, stats, isLoading } = useReviews();
+  const { reviews, stats, isLoading } = useReviews();
   const chartData = useReviewChartData(reviews);
 
   const handleExport = () => {
     const csvContent = [
       ['Kund', 'Betyg', 'Sentiment', 'Kommentar', 'Datum'].join(','),
-      ...reviews.map(r => [r.customerName || '-', r.rating || '-', r.sentimentScore || '-', `"${r.reviewComment?.replace(/"/g, '""') || '-'}"`, r.submittedAt].join(','))
+      ...reviews.map(r => [r.customer_name || '-', r.rating || '-', r.sentiment_score || '-', `"${r.comment?.replace(/"/g, '""') || '-'}"`, r.submitted_at].join(','))
     ].join('\n');
     const blob = new Blob([csvContent], { type: 'text/csv' });
     const url = window.URL.createObjectURL(blob);
@@ -60,7 +60,7 @@ export default function ReviewsPage() {
               <PremiumTelephonyStatCard title="Totalt Recensioner" value={stats.totalReviews} icon={Star} color="text-amber-600" subtitle="Alla källor" />
               <PremiumTelephonyStatCard title="Genomsnittsbetyg" value={stats.averageRating.toFixed(1)} icon={TrendingUp} color="text-green-600" subtitle="⭐ av 5" />
               <PremiumTelephonyStatCard title="Sentiment Score" value={`${(stats.averageRating/5*100).toFixed(0)}%`} icon={Heart} color="text-pink-600" subtitle="Positivt" />
-              <PremiumTelephonyStatCard title="Kommentarer" value={reviews.filter(r => r.reviewComment).length} icon={MessageCircle} color="text-blue-600" subtitle="Med text" />
+              <PremiumTelephonyStatCard title="Kommentarer" value={reviews.filter(r => r.comment).length} icon={MessageCircle} color="text-blue-600" subtitle="Med text" />
             </div>
           </AnimatedSection>
         </div>

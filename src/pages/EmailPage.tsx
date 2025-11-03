@@ -86,7 +86,15 @@ export default function EmailPage() {
   const handleExport = () => {
     const csvContent = [
       ['Mottagare', 'Ämne', 'Status', 'Skickat', 'Levererat', 'Öppnat', 'Klickat'].join(','),
-      ...filteredMessages.map((msg) => [msg.recipient || '-', msg.subject || '-', msg.status || '-', msg.sent_at || '-', msg.delivered_at || '-', msg.opened_at || '-', msg.clicked_at || '-'].join(','))
+      ...filteredMessages.map((msg) => [
+        msg.recipient || '-',
+        msg.subject || '-',
+        msg.status || '-',
+        msg.sent_at || '-',
+        msg.delivered_at || '-',
+        msg.opened_at || '-',
+        msg.clicked_at || '-'
+      ].join(','))
     ].join('\n');
     const blob = new Blob([csvContent], { type: 'text/csv' });
     const url = window.URL.createObjectURL(blob);
@@ -153,7 +161,7 @@ export default function EmailPage() {
           <AnimatedSection delay={200}>
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
               <PremiumTelephonyStatCard title="Totalt Email" value={emailStats.total} icon={Mail} color="text-blue-600" subtitle={`${emailStats.sent} skickade`} />
-              <PremiumTelephonyStatCard title="Leveransgrad" value={`${((emailStats.sent/emailStats.total)*100).toFixed(1)}%`} icon={TrendingUp} color="text-green-600" subtitle={`${emailStats.failed} misslyckade`} />
+              <PremiumTelephonyStatCard title="Leveransgrad" value={`${((emailStats.sent/Math.max(emailStats.total,1))*100).toFixed(1)}%`} icon={TrendingUp} color="text-green-600" subtitle={`${emailStats.failed} misslyckade`} />
               <PremiumTelephonyStatCard title="Öppningsgrad" value={`${openRate.toFixed(1)}%`} icon={Eye} color="text-purple-600" subtitle={`${emailStats.opened} öppnade`} />
               <PremiumTelephonyStatCard title="Klickgrad" value={`${clickRate.toFixed(1)}%`} icon={MousePointerClick} color="text-orange-600" subtitle={`${emailStats.clicked} klickade`} />
             </div>
@@ -194,7 +202,15 @@ export default function EmailPage() {
                 <p className="text-sm text-muted-foreground">Visar {filteredMessages.length} av {logs.length}</p>
               </div>
               <EmailFilters onFilterChange={setFilters} />
-              <div className="mt-4">{isLoading ? <div className="flex items-center justify-center py-12"><RefreshCw className="h-8 w-8 animate-spin" /></div> : <EmailTable messages={filteredMessages} onViewDetails={setSelectedMessage} />}</div>
+              <div className="mt-4">
+                {isLoading ? (
+                  <div className="flex items-center justify-center py-12">
+                    <RefreshCw className="h-8 w-8 animate-spin" />
+                  </div>
+                ) : (
+                  <EmailTable messages={filteredMessages} onViewDetails={setSelectedMessage} />
+                )}
+              </div>
             </Card>
           </AnimatedSection>
         </div>
@@ -202,67 +218,6 @@ export default function EmailPage() {
 
       <EmailDetailDrawer message={selectedMessage} open={!!selectedMessage} onClose={() => setSelectedMessage(null)} />
       <MessageProvidersDialog open={showProvidersDialog} onClose={() => setShowProvidersDialog(false)} providers={providerStats} type="email" />
-    </div>
-        <div className="flex gap-2">
-          <Button variant="outline" size="sm" onClick={() => setShowProvidersDialog(true)}>
-            <Settings className="h-4 w-4 mr-2" />
-            Leverantörer
-          </Button>
-          <Button variant="outline" size="sm" onClick={handleRefresh}>
-            <RefreshCw className="h-4 w-4 mr-2" />
-            Uppdatera
-          </Button>
-          <Button variant="outline" size="sm" onClick={handleExport}>
-            <Download className="h-4 w-4 mr-2" />
-            Export
-          </Button>
-        </div>
-      </div>
-
-      {/* Stats Cards */}
-      <EmailStatsCards
-        total={emailStats.total}
-        sent={emailStats.sent}
-        opened={emailStats.opened}
-        clicked={emailStats.clicked}
-        failed={emailStats.failed}
-        cost={emailStats.cost}
-      />
-
-      {/* Filters */}
-      <EmailFilters onFilterChange={setFilters} />
-
-      {/* Messages Table */}
-      <div className="space-y-2">
-        <div className="flex items-center justify-between">
-          <h2 className="text-xl font-semibold">Meddelanden</h2>
-          <p className="text-sm text-muted-foreground">
-            Visar {filteredMessages.length} av {logs.length} meddelanden
-          </p>
-        </div>
-        {isLoading ? (
-          <div className="flex items-center justify-center py-12">
-            <RefreshCw className="h-8 w-8 animate-spin text-muted-foreground" />
-          </div>
-        ) : (
-          <EmailTable messages={filteredMessages} onViewDetails={setSelectedMessage} />
-        )}
-      </div>
-
-      {/* Message Detail Drawer */}
-      <EmailDetailDrawer
-        message={selectedMessage}
-        open={!!selectedMessage}
-        onClose={() => setSelectedMessage(null)}
-      />
-
-      {/* Providers Dialog */}
-      <MessageProvidersDialog
-        open={showProvidersDialog}
-        onClose={() => setShowProvidersDialog(false)}
-        providers={providerStats}
-        type="email"
-      />
     </div>
   );
 }

@@ -7,7 +7,7 @@ interface Review {
   sentiment_score?: number;
   topics?: any;
   customer_name?: string;
-  review_comment?: string;
+  comment?: string;
 }
 
 interface DailyData {
