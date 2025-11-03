@@ -7,60 +7,13 @@ import NotificationSettings from "@/pages/NotificationSettings";
 import SMSProviderSettings from "@/pages/SMSProviderSettings";
 import NotificationAnalytics from "@/pages/NotificationAnalytics";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-
 export default function Notifications() {
   const [activeTab, setActiveTab] = useState("analytics");
-
-  return (
-    <div className="min-h-screen">
+  return <div className="min-h-screen">
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-0">
 
         {/* Desktop Navigation - Minimalist Pill Design */}
-        <div className="hidden lg:block sticky top-0 z-40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b border-border py-4">
-          <div className="container mx-auto px-6 lg:px-8">
-            <TabsList className="flex flex-wrap justify-center gap-3 bg-transparent border-0 p-0">
-            <TabsTrigger 
-              value="analytics" 
-              className="group relative gap-2 px-6 py-3 bg-card text-foreground border border-border rounded-full shadow-sm hover:shadow-md hover:bg-accent data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:border-primary data-[state=active]:shadow-md transition-all duration-200"
-            >
-              <BarChart3 className="h-5 w-5" />
-              <span className="font-medium">Analys</span>
-            </TabsTrigger>
-            
-            <TabsTrigger 
-              value="templates" 
-              className="group relative gap-2 px-6 py-3 bg-card text-foreground border border-border rounded-full shadow-sm hover:shadow-md hover:bg-accent data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:border-primary data-[state=active]:shadow-md transition-all duration-200"
-            >
-              <FileText className="h-5 w-5" />
-              <span className="font-medium">Mallar</span>
-            </TabsTrigger>
-            
-            <TabsTrigger 
-              value="reminders" 
-              className="group relative gap-2 px-6 py-3 bg-card text-foreground border border-border rounded-full shadow-sm hover:shadow-md hover:bg-accent data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:border-primary data-[state=active]:shadow-md transition-all duration-200"
-            >
-              <Bell className="h-5 w-5" />
-              <span className="font-medium">Påminnelser</span>
-            </TabsTrigger>
-            
-            <TabsTrigger 
-              value="notifications" 
-              className="group relative gap-2 px-6 py-3 bg-card text-foreground border border-border rounded-full shadow-sm hover:shadow-md hover:bg-accent data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:border-primary data-[state=active]:shadow-md transition-all duration-200"
-            >
-              <BellRing className="h-5 w-5" />
-              <span className="font-medium">Ägarnotiser</span>
-            </TabsTrigger>
-            
-            <TabsTrigger 
-              value="sms-provider" 
-              className="group relative gap-2 px-6 py-3 bg-card text-foreground border border-border rounded-full shadow-sm hover:shadow-md hover:bg-accent data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:border-primary data-[state=active]:shadow-md transition-all duration-200"
-            >
-              <MessageSquare className="h-5 w-5" />
-              <span className="font-medium">SMS-leverantör</span>
-            </TabsTrigger>
-          </TabsList>
-          </div>
-        </div>
+        
 
         {/* Mobile Navigation */}
         <div className="lg:hidden sticky top-0 z-40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b border-border py-4">
@@ -127,6 +80,5 @@ export default function Notifications() {
           </TabsContent>
         </div>
       </Tabs>
-    </div>
-  );
+    </div>;
 }
