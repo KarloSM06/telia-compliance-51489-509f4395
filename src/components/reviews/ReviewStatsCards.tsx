@@ -1,6 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Star, TrendingUp, ThumbsUp, Sparkles, Brain, Tag, AlertTriangle } from 'lucide-react';
-
+import { Star, TrendingUp, ThumbsUp, Sparkles } from 'lucide-react';
 interface ReviewStatsCardsProps {
   stats: {
     totalReviews: number;
@@ -10,10 +9,7 @@ interface ReviewStatsCardsProps {
     };
   };
   insights?: {
-    avgSentiment: number;
-    topTopic: { name: string; count: number } | null;
-    topPositiveTopic: { topic: string; count: number } | null;
-    topNegativeTopic: { topic: string; count: number } | null;
+    average_sentiment: number;
   } | null;
 }
 export const ReviewStatsCards = ({
@@ -21,8 +17,8 @@ export const ReviewStatsCards = ({
   insights
 }: ReviewStatsCardsProps) => {
   const satisfiedCustomers = stats.totalReviews > 0 ? Math.round(((stats.ratingDistribution[4] || 0) + (stats.ratingDistribution[5] || 0)) / stats.totalReviews * 100) : 0;
-  const sentimentScore = insights?.avgSentiment !== undefined ? Math.round((insights.avgSentiment + 1) * 50) : null;
-  
+  const sentimentScore = insights?.average_sentiment ? Math.round((insights.average_sentiment + 1) * 50) // Convert from -1 to 1 range to 0-100%
+  : null;
   const cards = [{
     title: 'Total Recensioner',
     value: stats.totalReviews,
@@ -47,45 +43,11 @@ export const ReviewStatsCards = ({
   }, {
     title: 'AI Sentiment',
     value: sentimentScore !== null ? `${sentimentScore}%` : 'N/A',
-    icon: Brain,
+    icon: Sparkles,
     color: 'text-purple-600',
     bgColor: 'bg-purple-500/10',
-    subtitle: sentimentScore !== null ? `Baserat på ${stats.totalReviews} recensioner` : 'Kör analys först'
+    subtitle: sentimentScore !== null ? 'AI-driven analys' : 'Kör analys först'
   }];
-
-  // Add AI insights cards if available
-  if (insights && insights.topTopic) {
-    cards.push({
-      title: 'Top Topic',
-      value: insights.topTopic.name,
-      icon: Tag,
-      color: 'text-blue-600',
-      bgColor: 'bg-blue-500/10',
-      subtitle: `${insights.topTopic.count} omnämnanden`
-    });
-  }
-
-  if (insights && insights.topPositiveTopic) {
-    cards.push({
-      title: 'Styrka',
-      value: insights.topPositiveTopic.topic,
-      icon: ThumbsUp,
-      color: 'text-green-600',
-      bgColor: 'bg-green-500/10',
-      subtitle: `${insights.topPositiveTopic.count} positiva omnämnanden`
-    });
-  }
-
-  if (insights && insights.topNegativeTopic) {
-    cards.push({
-      title: 'Förbättringsområde',
-      value: insights.topNegativeTopic.topic,
-      icon: AlertTriangle,
-      color: 'text-orange-600',
-      bgColor: 'bg-orange-500/10',
-      subtitle: `${insights.topNegativeTopic.count} negativa omnämnanden`
-    });
-  }
   return <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
       {cards.map(card => <Card key={card.title}>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">

@@ -1,15 +1,14 @@
 import { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { FileText, Bell, BellRing, MessageSquare, BarChart3 } from "lucide-react";
+import { FileText, Bell, BellRing, MessageSquare } from "lucide-react";
 import MessageTemplates from "@/pages/MessageTemplates";
 import ReminderSettings from "@/pages/ReminderSettings";
 import NotificationSettings from "@/pages/NotificationSettings";
 import SMSProviderSettings from "@/pages/SMSProviderSettings";
-import NotificationAnalytics from "@/pages/NotificationAnalytics";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 export default function Notifications() {
-  const [activeTab, setActiveTab] = useState("analytics");
+  const [activeTab, setActiveTab] = useState("templates");
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-background to-muted/20">
@@ -29,15 +28,7 @@ export default function Notifications() {
         <div className="hidden lg:block mb-8">
           <TabsList className="flex flex-wrap justify-center gap-3 bg-transparent border-0 p-0">
             <TabsTrigger 
-              value="analytics" 
-              className="group relative gap-2 px-6 py-3 bg-card text-foreground border border-border rounded-full shadow-sm hover:shadow-md hover:bg-accent data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:border-primary data-[state=active]:shadow-md transition-all duration-200"
-            >
-              <BarChart3 className="h-5 w-5" />
-              <span className="font-medium">Analys</span>
-            </TabsTrigger>
-            
-            <TabsTrigger 
-              value="templates"
+              value="templates" 
               className="group relative gap-2 px-6 py-3 bg-card text-foreground border border-border rounded-full shadow-sm hover:shadow-md hover:bg-accent data-[state=active]:bg-primary data-[state=active]:text-primary-foreground data-[state=active]:border-primary data-[state=active]:shadow-md transition-all duration-200"
             >
               <FileText className="h-5 w-5" />
@@ -77,12 +68,6 @@ export default function Notifications() {
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="analytics">
-                <div className="flex items-center gap-2">
-                  <BarChart3 className="h-4 w-4" />
-                  Analys
-                </div>
-              </SelectItem>
               <SelectItem value="templates">
                 <div className="flex items-center gap-2">
                   <FileText className="h-4 w-4" />
@@ -112,10 +97,6 @@ export default function Notifications() {
         </div>
 
         <div className="w-full px-1">
-          <TabsContent value="analytics" className="animate-fade-in mt-0">
-            <NotificationAnalytics />
-          </TabsContent>
-
           <TabsContent value="templates" className="animate-fade-in mt-0">
             <MessageTemplates />
           </TabsContent>
