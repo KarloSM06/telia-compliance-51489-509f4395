@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { OpenRouterHeader } from "@/components/dashboard/openrouter/OpenRouterHeader";
 import { ConnectionStatusBanner } from "@/components/dashboard/openrouter/ConnectionStatusBanner";
 import { AccountBalanceCards } from "@/components/dashboard/openrouter/AccountBalanceCards";
@@ -12,6 +12,7 @@ import { useOpenRouterKeys } from "@/hooks/useOpenRouterKeys";
 import { useOpenRouterKeysList } from "@/hooks/useOpenRouterKeysList";
 import { useOpenRouterAccountSnapshots } from "@/hooks/useOpenRouterAccountSnapshots";
 import { useOpenRouterActivity } from "@/hooks/useOpenRouterActivity";
+import { useSyncOpenRouterActivity } from "@/hooks/useSyncOpenRouterActivity";
 import { OpenRouterSetupModal } from "@/components/integrations/OpenRouterSetupModal";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Card } from "@/components/ui/card";
@@ -46,11 +47,33 @@ const OpenRouterDashboard = () => {
     dateRange,
     keysStatus?.provisioning_key_exists || false
   );
+  const { mutate: syncActivity } = useSyncOpenRouterActivity();
 
   const apiKeyExists = keysStatus?.api_key_exists || false;
   const provisioningKeyExists = keysStatus?.provisioning_key_exists || false;
 
   const lastSnapshot = snapshots?.[0];
+
+  // Auto-sync activity on mount if provisioning key exists
+  useEffect(() => {
+    if (provisioningKeyExists && !isLoadingActivity) {
+      const endDate = new Date();
+      const startDate = new Date();
+      startDate.setDate(endDate.getDate() - 30);
+      
+      // Silent background sync
+      syncActivity(
+        {
+          start_date: startDate.toISOString().split('T')[0],
+          end_date: endDate.toISOString().split('T')[0]
+        },
+        {
+          onError: () => {}, // Silent error - no toast
+          onSuccess: () => {} // Silent success - no toast
+        }
+      );
+    }
+  }, [provisioningKeyExists]);
 
   return (
     <div className="space-y-6 p-6">

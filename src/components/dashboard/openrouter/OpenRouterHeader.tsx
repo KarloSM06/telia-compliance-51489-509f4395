@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { RefreshCw, Settings, Zap } from "lucide-react";
 import { useSyncOpenRouterAccount } from "@/hooks/useSyncOpenRouterAccount";
+import { useSyncOpenRouterActivity } from "@/hooks/useSyncOpenRouterActivity";
 import { formatDistanceToNow } from "date-fns";
 import { sv } from "date-fns/locale";
 
@@ -10,7 +11,25 @@ interface OpenRouterHeaderProps {
 }
 
 export const OpenRouterHeader = ({ lastSyncAt, onSettingsClick }: OpenRouterHeaderProps) => {
-  const { mutate: syncAccount, isPending: isSyncing } = useSyncOpenRouterAccount();
+  const { mutate: syncAccount, isPending: isSyncingAccount } = useSyncOpenRouterAccount();
+  const { mutate: syncActivity, isPending: isSyncingActivity } = useSyncOpenRouterActivity();
+  
+  const isSyncing = isSyncingAccount || isSyncingActivity;
+
+  const handleSync = () => {
+    // 1. Synka kontoinformation
+    syncAccount();
+    
+    // 2. Synka aktivitetsdata (senaste 90 dagarna)
+    const endDate = new Date();
+    const startDate = new Date();
+    startDate.setDate(endDate.getDate() - 90);
+    
+    syncActivity({
+      start_date: startDate.toISOString().split('T')[0],
+      end_date: endDate.toISOString().split('T')[0]
+    });
+  };
 
   return (
     <div className="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
@@ -31,7 +50,7 @@ export const OpenRouterHeader = ({ lastSyncAt, onSettingsClick }: OpenRouterHead
         <Button
           variant="outline"
           size="sm"
-          onClick={() => syncAccount()}
+          onClick={handleSync}
           disabled={isSyncing}
         >
           <RefreshCw className={`h-4 w-4 mr-2 ${isSyncing ? 'animate-spin' : ''}`} />
