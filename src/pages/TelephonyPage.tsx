@@ -206,7 +206,10 @@ export default function TelephonyPage() {
   return (
     <div className="min-h-screen">
       {/* Hero Section - Minimalist */}
-      <section className="relative py-20 bg-gradient-to-b from-background to-background/95 overflow-hidden">
+      <section className="relative py-20 bg-gradient-to-b from-background via-primary/5 to-background overflow-hidden">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,hsl(var(--primary)/0.15),transparent_50%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_80%,hsl(var(--primary)/0.1),transparent_50%)]" />
+        
         {/* Subtil snowflake */}
         <div className="absolute -top-20 -right-20 w-[400px] h-[400px] opacity-[0.02] pointer-events-none">
           <img src={hiemsLogoSnowflake} alt="" className="w-full h-full object-contain animate-[spin_60s_linear_infinite]" />
@@ -215,7 +218,12 @@ export default function TelephonyPage() {
         <div className="container mx-auto px-6 lg:px-8 relative z-10">
           <AnimatedSection>
             <div className="max-w-3xl mx-auto text-center space-y-4">
-              <h1 className="text-4xl sm:text-5xl font-bold text-foreground leading-tight">
+              <div className="inline-block">
+                <span className="text-sm font-semibold tracking-wider text-primary uppercase">Realtidsövervakning</span>
+                <div className="w-32 h-1.5 bg-gradient-to-r from-primary via-primary/60 to-transparent mx-auto rounded-full shadow-lg shadow-primary/50 mt-2" />
+              </div>
+              
+              <h1 className="text-4xl sm:text-5xl font-bold bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent leading-tight">
                 Telefoni
               </h1>
               
@@ -228,8 +236,9 @@ export default function TelephonyPage() {
       </section>
 
       {/* Quick Actions - Egen section */}
-      <section className="relative py-8 border-y border-primary/10">
-        <div className="container mx-auto px-6 lg:px-8">
+      <section className="relative py-8 border-y border-primary/10 bg-gradient-to-b from-background via-primary/3 to-background">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_50%,hsl(var(--primary)/0.08),transparent_50%)]" />
+        <div className="container mx-auto px-6 lg:px-8 relative z-10">
           <AnimatedSection delay={100}>
             <div className="flex items-center justify-between flex-wrap gap-4">
               <div className="flex items-center gap-3 flex-wrap">
@@ -266,7 +275,8 @@ export default function TelephonyPage() {
       </section>
 
       {/* Stats Overview */}
-      <section className="relative py-12">
+      <section className="relative py-12 bg-gradient-to-b from-background via-primary/3 to-background">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_50%,hsl(var(--primary)/0.12),transparent_50%)]" />
         <div className="container mx-auto px-6 lg:px-8 relative z-10">
           <AnimatedSection delay={200}>
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
@@ -281,10 +291,11 @@ export default function TelephonyPage() {
 
       {/* Provider Overview - Kompakt Grid */}
       {Object.keys(metrics.byProvider).length > 0 && (
-        <section className="relative py-6 border-y border-border/50">
-          <div className="container mx-auto px-6 lg:px-8">
+        <section className="relative py-6 border-y border-primary/10 bg-gradient-to-b from-background via-primary/5 to-background">
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_60%_40%,hsl(var(--primary)/0.1),transparent_50%)]" />
+          <div className="container mx-auto px-6 lg:px-8 relative z-10">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wide">
+              <h3 className="text-sm font-medium text-primary uppercase tracking-wide">
                 Providers
               </h3>
             </div>
@@ -296,12 +307,12 @@ export default function TelephonyPage() {
                 return (
                   <div 
                     key={provider}
-                    className="flex items-center gap-3 p-3 rounded-lg border border-border/50 bg-card/50 hover:bg-card hover:border-border transition-colors"
+                    className="group flex items-center gap-3 p-3 rounded-lg border border-primary/10 bg-gradient-to-br from-card/80 via-card/50 to-card/30 backdrop-blur-md hover:shadow-xl hover:shadow-primary/10 hover:-translate-y-0.5 transition-all duration-300"
                   >
                     <img 
                       src={getProviderLogo(provider)} 
                       alt={getProviderDisplayName(provider)}
-                      className="h-8 w-8 object-contain"
+                      className="h-8 w-8 object-contain group-hover:scale-110 transition-transform"
                     />
                     
                     <div className="flex-1 min-w-0">
@@ -310,7 +321,7 @@ export default function TelephonyPage() {
                           {getProviderDisplayName(provider)}
                         </p>
                         {integration?.is_active && (
-                          <div className="w-1.5 h-1.5 rounded-full bg-green-500" />
+                          <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
                         )}
                       </div>
                       <p className="text-xs text-muted-foreground">
@@ -326,10 +337,13 @@ export default function TelephonyPage() {
       )}
 
       {/* Events Section with Filters */}
-      <section className="relative py-8 pb-16">
-        <div className="container mx-auto px-6 lg:px-8">
+      <section className="relative py-8 pb-16 bg-gradient-to-b from-background via-primary/3 to-background">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_40%_60%,hsl(var(--primary)/0.12),transparent_50%)]" />
+        <div className="container mx-auto px-6 lg:px-8 relative z-10">
           <div className="space-y-4">
-            <h2 className="text-xl font-semibold">Events</h2>
+            <div className="inline-block">
+              <h2 className="text-xl font-semibold bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent">Events</h2>
+            </div>
             
             {/* Filters direkt här */}
             <EventFilters onFilterChange={setFilters} providers={telephonyProviders} />

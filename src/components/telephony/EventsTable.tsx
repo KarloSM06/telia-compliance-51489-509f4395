@@ -94,7 +94,7 @@ export const EventsTable = ({ events, onViewDetails }: EventsTableProps) => {
   }
 
   return (
-    <div className="rounded-lg border border-border/50 bg-card overflow-hidden">
+    <div className="rounded-lg border border-primary/10 bg-gradient-to-br from-card/80 via-card/50 to-card/30 backdrop-blur-md overflow-hidden hover:shadow-xl hover:shadow-primary/5 transition-all duration-300">
       <Table>
         <TableHeader>
           <TableRow className="hover:bg-transparent border-border/50">
