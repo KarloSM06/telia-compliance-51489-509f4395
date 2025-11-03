@@ -401,13 +401,43 @@ serve(async (req) => {
     const retellSignature = allHeaders['x-retell-signature'] || null;
 
     // Find telephony integration
-    const { data: integration, error: integrationError } = await supabase
+    let { data: integration, error: integrationError } = await supabase
       .from('integrations')
       .select('*')
       .eq('user_id', userId)
       .eq('provider', provider)
       .eq('is_active', true)
       .single();
+
+    // Auto-create Telnyx integration if events are received but integration doesn't exist
+    if ((integrationError || !integration) && provider === 'telnyx') {
+      console.log(`📝 Auto-creating Telnyx integration for user ${userId} based on incoming webhook`);
+      
+      const { data: newIntegration, error: createError } = await supabase
+        .from('integrations')
+        .insert({
+          user_id: userId,
+          provider: 'telnyx',
+          provider_type: 'multi',
+          is_active: true,
+          capabilities: ['voice', 'sms', 'mms', 'fax', 'number_management'],
+          settings: {
+            auto_discovered: true,
+            discovered_at: new Date().toISOString(),
+            note: 'Automatically created from incoming webhooks'
+          },
+          encrypted_credentials: null
+        })
+        .select()
+        .single();
+      
+      if (createError) {
+        console.error('❌ Failed to auto-create Telnyx integration:', createError);
+      } else {
+        integration = newIntegration;
+        console.log('✅ Telnyx integration auto-created:', newIntegration.id);
+      }
+    }
 
     if (integrationError || !integration) {
       console.log(`⚠️ No active ${provider} integration configured for user ${userId}`);
