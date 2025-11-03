@@ -66,7 +66,10 @@ const OpenRouterDashboard = () => {
     // Calculate daily costs
     const dailyCostsMap = new Map<string, number>();
     activity.forEach((item: any) => {
-      const date = new Date(item.created_at).toISOString().split('T')[0];
+      if (!item.created_at) return;
+      const dateObj = new Date(item.created_at);
+      if (isNaN(dateObj.getTime())) return; // Skip invalid dates
+      const date = dateObj.toISOString().split('T')[0];
       const cost = (item.total_cost || 0) * 11; // Convert USD to SEK
       dailyCostsMap.set(date, (dailyCostsMap.get(date) || 0) + cost);
     });
