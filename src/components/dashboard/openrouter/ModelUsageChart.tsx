@@ -177,7 +177,7 @@ export const ModelUsageChart = ({ activityData, isLoading }: ModelUsageChartProp
         </Tabs>
       </div>
       
-      <ResponsiveContainer width="100%" height={250}>
+      <ResponsiveContainer width="100%" height={350}>
         <LineChart data={chartData} margin={{ top: 5, right: 10, left: 0, bottom: 5 }}>
           <CartesianGrid 
             strokeDasharray="3 3" 
