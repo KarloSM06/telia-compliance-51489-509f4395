@@ -15,12 +15,12 @@ interface TopModelsCardProps {
 }
 
 export const TopModelsCard = ({ models, isLoading }: TopModelsCardProps) => {
-  const topModels = models.slice(0, 5);
+  const topModels = models.slice(0, 10);
 
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Mest Använda Modeller</CardTitle>
+        <CardTitle>Top 10 Modeller</CardTitle>
       </CardHeader>
       <CardContent>
         {isLoading ? (

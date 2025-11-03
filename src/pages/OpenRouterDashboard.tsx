@@ -7,7 +7,8 @@ import { APIKeysOverview } from "@/components/dashboard/openrouter/APIKeysOvervi
 import { SpendOverview } from "@/components/dashboard/openrouter/SpendOverview";
 import { CostTrendChart } from "@/components/dashboard/openrouter/CostTrendChart";
 import { TopModelsCard } from "@/components/dashboard/openrouter/TopModelsCard";
-import { SpendInsights } from "@/components/dashboard/openrouter/SpendInsights";
+import { APIModelsOverview } from "@/components/dashboard/openrouter/APIModelsOverview";
+import { MultiLineModelCostChart } from "@/components/dashboard/openrouter/MultiLineModelCostChart";
 import { useOpenRouterCredits } from "@/hooks/useOpenRouterCredits";
 import { useOpenRouterKeyInfo } from "@/hooks/useOpenRouterKeyInfo";
 import { useOpenRouterKeys } from "@/hooks/useOpenRouterKeys";
@@ -55,10 +56,12 @@ const OpenRouterDashboard = () => {
       return {
         dailyCosts: [],
         topModels: [],
+        modelOverview: [],
+        modelCostsOverTime: [],
+        modelNames: [],
         totalSpend: 0,
         avgDailyCost: 0,
         highestCostDay: 0,
-        insights: [],
         periodDays: selectedPeriod === '7d' ? 7 : selectedPeriod === '30d' ? 30 : 90
       };
     }
@@ -70,9 +73,9 @@ const OpenRouterDashboard = () => {
     activity.forEach((item: any) => {
       if (!item.created_at) return;
       const dateObj = new Date(item.created_at);
-      if (isNaN(dateObj.getTime())) return; // Skip invalid dates
+      if (isNaN(dateObj.getTime())) return;
       const date = dateObj.toISOString().split('T')[0];
-      const cost = (item.total_cost || 0) * 11; // Convert USD to SEK
+      const cost = (item.total_cost || 0) * 11;
       dailyCostsMap.set(date, (dailyCostsMap.get(date) || 0) + cost);
     });
 
@@ -88,7 +91,7 @@ const OpenRouterDashboard = () => {
       ? Math.max(...dailyCosts.map(d => d.cost))
       : 0;
 
-    // Calculate top models
+    // Calculate model costs and calls
     const modelCostsMap = new Map<string, { cost: number; calls: number }>();
     activity.forEach((item: any) => {
       const model = item.model || 'Unknown';
@@ -100,37 +103,59 @@ const OpenRouterDashboard = () => {
       });
     });
 
-    const topModels = Array.from(modelCostsMap.entries())
-      .map(([model, data]) => ({
-        model,
-        cost: data.cost,
-        calls: data.calls,
-        percentage: totalSpend > 0 ? (data.cost / totalSpend) * 100 : 0
-      }))
-      .sort((a, b) => b.cost - a.cost);
+    // Model overview for grid display
+    const modelOverview = Array.from(modelCostsMap.entries()).map(([model, data]) => ({
+      model,
+      cost: data.cost,
+      calls: data.calls,
+      percentage: totalSpend > 0 ? (data.cost / totalSpend) * 100 : 0,
+      avgCostPerCall: data.calls > 0 ? data.cost / data.calls : 0,
+      status: data.calls > 0 ? 'active' as const : 'inactive' as const
+    })).sort((a, b) => b.cost - a.cost);
 
-    // Generate insights
-    const insights = [];
-    if (totalSpend > 1000) {
-      insights.push({
-        type: 'warning' as const,
-        message: `Hög användning: ${totalSpend.toFixed(2)} SEK spenderat de senaste ${selectedPeriod === '7d' ? '7 dagarna' : selectedPeriod === '30d' ? '30 dagarna' : '90 dagarna'}`
-      });
-    }
-    if (topModels.length > 0 && topModels[0].percentage > 70) {
-      insights.push({
-        type: 'info' as const,
-        message: `${topModels[0].model} står för ${topModels[0].percentage.toFixed(1)}% av total kostnad`
-      });
-    }
+    // Top models for card
+    const topModels = modelOverview.map(({ model, cost, calls, percentage }) => ({
+      model,
+      cost,
+      calls,
+      percentage
+    }));
+
+    // Model costs by date for multi-line chart
+    const modelCostsByDate = new Map<string, Map<string, number>>();
+    activity.forEach((item: any) => {
+      if (!item.created_at) return;
+      const dateObj = new Date(item.created_at);
+      if (isNaN(dateObj.getTime())) return;
+      const date = dateObj.toISOString().split('T')[0];
+      const model = item.model || 'Unknown';
+      const cost = (item.total_cost || 0) * 11;
+      
+      if (!modelCostsByDate.has(date)) {
+        modelCostsByDate.set(date, new Map());
+      }
+      const dateMap = modelCostsByDate.get(date)!;
+      dateMap.set(model, (dateMap.get(model) || 0) + cost);
+    });
+
+    const modelCostsOverTime = Array.from(modelCostsByDate.entries())
+      .map(([date, models]) => ({
+        date,
+        ...Object.fromEntries(models.entries())
+      }))
+      .sort((a, b) => a.date.localeCompare(b.date));
+
+    const modelNames = Array.from(new Set(activity.map((item: any) => item.model || 'Unknown'))) as string[];
 
     return {
       dailyCosts,
       topModels,
+      modelOverview,
+      modelCostsOverTime,
+      modelNames,
       totalSpend,
       avgDailyCost,
       highestCostDay,
-      insights,
       periodDays
     };
   }, [activityData, selectedPeriod]);
@@ -171,6 +196,11 @@ const OpenRouterDashboard = () => {
         isLoading={isLoadingKeys}
       />
 
+      <APIModelsOverview
+        models={processedData.modelOverview}
+        isLoading={isLoadingActivity}
+      />
+
       <Tabs value={selectedPeriod} onValueChange={(v) => setSelectedPeriod(v as '7d' | '30d' | '90d')}>
         <TabsList>
           <TabsTrigger value="7d">7 dagar</TabsTrigger>
@@ -186,29 +216,18 @@ const OpenRouterDashboard = () => {
             periodDays={processedData.periodDays}
           />
 
-          <CostTrendChart
-            data={processedData.dailyCosts}
+          <MultiLineModelCostChart
+            data={processedData.modelCostsOverTime}
+            modelNames={processedData.modelNames}
             isLoading={isLoadingActivity}
           />
 
-          <div className="grid gap-6 md:grid-cols-2">
-            <TopModelsCard
-              models={processedData.topModels}
-              isLoading={isLoadingActivity}
-            />
-            {processedData.insights.length > 0 && (
-              <SpendInsights insights={processedData.insights} />
-            )}
-          </div>
+          <TopModelsCard
+            models={processedData.topModels}
+            isLoading={isLoadingActivity}
+          />
         </TabsContent>
       </Tabs>
-
-      <APIKeysTable
-        keys={keysList}
-        isLoading={isLoadingKeys}
-        hasProvisioningKey={provisioningKeyExists}
-        onSetupClick={() => setShowSetupModal(true)}
-      />
 
       <OpenRouterSetupModal
         open={showSetupModal}
