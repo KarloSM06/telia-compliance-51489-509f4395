@@ -326,6 +326,15 @@ const DashboardAnalytics = () => {
               </div>
               <div className="flex justify-between items-center">
                 <div className="flex items-center gap-2">
+                  <Brain className="h-4 w-4 text-purple-500" />
+                  <span className="text-sm text-muted-foreground">OpenRouter AI (månad)</span>
+                </div>
+                <span className="font-semibold">
+                  {(aiUsage?.totalCostSEK || 0).toLocaleString('sv-SE', { maximumFractionDigits: 2 })} SEK
+                </span>
+              </div>
+              <div className="flex justify-between items-center">
+                <div className="flex items-center gap-2">
                   <Smartphone className="h-4 w-4 text-muted-foreground" />
                   <span className="text-sm text-muted-foreground">SMS</span>
                 </div>
