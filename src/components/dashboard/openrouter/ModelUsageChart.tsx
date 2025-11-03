@@ -131,54 +131,54 @@ export const ModelUsageChart = ({ activityData, isLoading }: ModelUsageChartProp
 
   if (isLoading) {
     return (
-      <Card className="p-6 bg-gradient-to-br from-background to-muted/20">
-        <Skeleton className="h-[450px] animate-pulse" />
+      <Card className="p-3">
+        <Skeleton className="h-[250px] animate-pulse" />
       </Card>
     );
   }
 
   if (!chartData || chartData.length === 0) {
     return (
-      <Card className="p-6 bg-gradient-to-br from-background to-muted/20">
-        <div className="flex items-center gap-2 mb-4">
-          <TrendingUp className="h-5 w-5 text-primary" />
-          <h3 className="text-xl font-semibold">AI-modeller användning över tid</h3>
+      <Card className="p-3">
+        <div className="flex items-center gap-2 mb-2">
+          <TrendingUp className="h-4 w-4 text-primary" />
+          <h3 className="text-sm font-semibold">AI-modeller</h3>
         </div>
-        <div className="flex flex-col items-center justify-center h-64 text-muted-foreground">
-          <LineChartIcon className="h-12 w-12 mb-3 opacity-50" />
-          <p>Ingen data tillgänglig för vald period</p>
+        <div className="flex flex-col items-center justify-center h-48 text-muted-foreground">
+          <LineChartIcon className="h-8 w-8 mb-2 opacity-50" />
+          <p className="text-xs">Ingen data tillgänglig</p>
         </div>
       </Card>
     );
   }
 
   return (
-    <Card className="p-6 bg-gradient-to-br from-background to-muted/20 transition-all duration-300 hover:shadow-lg">
-      <div className="flex items-center justify-between mb-6">
+    <Card className="p-3">
+      <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
-          <TrendingUp className="h-5 w-5 text-primary" />
-          <h3 className="text-xl font-semibold">AI-modeller användning över tid</h3>
+          <TrendingUp className="h-4 w-4 text-primary" />
+          <h3 className="text-sm font-semibold">AI-modeller</h3>
         </div>
         <Tabs value={selectedMetric} onValueChange={(v) => setSelectedMetric(v as MetricType)}>
-          <TabsList>
-            <TabsTrigger value="cost" className="gap-2">
-              <DollarSign className="h-4 w-4" />
-              Kostnad
+          <TabsList className="h-7">
+            <TabsTrigger value="cost" className="gap-1 text-xs px-2 py-1">
+              <DollarSign className="h-3 w-3" />
+              $
             </TabsTrigger>
-            <TabsTrigger value="tokens" className="gap-2">
-              <Hash className="h-4 w-4" />
-              Tokens
+            <TabsTrigger value="tokens" className="gap-1 text-xs px-2 py-1">
+              <Hash className="h-3 w-3" />
+              T
             </TabsTrigger>
-            <TabsTrigger value="requests" className="gap-2">
-              <Zap className="h-4 w-4" />
-              Requests
+            <TabsTrigger value="requests" className="gap-1 text-xs px-2 py-1">
+              <Zap className="h-3 w-3" />
+              R
             </TabsTrigger>
           </TabsList>
         </Tabs>
       </div>
       
-      <ResponsiveContainer width="100%" height={450}>
-        <LineChart data={chartData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+      <ResponsiveContainer width="100%" height={250}>
+        <LineChart data={chartData} margin={{ top: 5, right: 10, left: 0, bottom: 5 }}>
           <CartesianGrid 
             strokeDasharray="3 3" 
             className="stroke-muted" 
@@ -187,27 +187,30 @@ export const ModelUsageChart = ({ activityData, isLoading }: ModelUsageChartProp
           />
           <XAxis 
             dataKey="date"
-            tickFormatter={(date) => format(new Date(date), 'dd MMM', { locale: sv })}
-            tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 12 }}
-            tickMargin={10}
+            tickFormatter={(date) => format(new Date(date), 'dd/MM', { locale: sv })}
+            tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 10 }}
+            tickMargin={5}
           />
           <YAxis 
             tickFormatter={(value) => 
               selectedMetric === 'cost' 
-                ? `$${value.toFixed(2)}` 
-                : value.toLocaleString()
+                ? `$${value.toFixed(1)}` 
+                : value > 1000 ? `${(value / 1000).toFixed(0)}k` : value.toLocaleString()
             }
-            tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 12 }}
-            tickMargin={10}
+            tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 10 }}
+            tickMargin={5}
+            width={40}
           />
           <Tooltip content={<CustomTooltip metric={selectedMetric} />} />
           <Legend 
             onClick={(e) => handleToggleModel(e.value)}
             wrapperStyle={{ 
               cursor: 'pointer',
-              paddingTop: '20px'
+              paddingTop: '10px',
+              fontSize: '10px'
             }}
             iconType="circle"
+            iconSize={8}
           />
           {uniqueModels.map((model, index) => (
             <Line
@@ -215,9 +218,9 @@ export const ModelUsageChart = ({ activityData, isLoading }: ModelUsageChartProp
               type="natural"
               dataKey={model}
               stroke={COLORS[index % COLORS.length]}
-              strokeWidth={2.5}
-              dot={{ r: 4, strokeWidth: 2 }}
-              activeDot={{ r: 6, strokeWidth: 2 }}
+              strokeWidth={1.5}
+              dot={{ r: 2, strokeWidth: 1 }}
+              activeDot={{ r: 3, strokeWidth: 1 }}
               hide={hiddenModels.has(model)}
               name={model.split('/').pop() || model}
               animationDuration={300}
@@ -225,9 +228,6 @@ export const ModelUsageChart = ({ activityData, isLoading }: ModelUsageChartProp
           ))}
         </LineChart>
       </ResponsiveContainer>
-      <p className="text-xs text-muted-foreground text-center mt-2">
-        💡 Klicka på en modell i legenden för att visa/dölja
-      </p>
     </Card>
   );
 };

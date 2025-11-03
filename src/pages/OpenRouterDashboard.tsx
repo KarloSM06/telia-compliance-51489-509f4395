@@ -3,7 +3,7 @@ import { OpenRouterHeader } from "@/components/dashboard/openrouter/OpenRouterHe
 import { ConnectionStatusBanner } from "@/components/dashboard/openrouter/ConnectionStatusBanner";
 import { AccountBalanceCards } from "@/components/dashboard/openrouter/AccountBalanceCards";
 import { APIKeysOverview } from "@/components/dashboard/openrouter/APIKeysOverview";
-import { APIKeyUsageBreakdown } from "@/components/dashboard/openrouter/APIKeyUsageBreakdown";
+
 import { ModelUsageChart } from "@/components/dashboard/openrouter/ModelUsageChart";
 import { APIKeyUsageChart } from "@/components/dashboard/openrouter/APIKeyUsageChart";
 import { useOpenRouterCredits } from "@/hooks/useOpenRouterCredits";
@@ -53,7 +53,7 @@ const OpenRouterDashboard = () => {
   const lastSnapshot = snapshots?.[0];
 
   return (
-    <div className="space-y-6 p-6">
+    <div className="space-y-3 p-4">
       <OpenRouterHeader
         lastSyncAt={lastSnapshot?.created_at}
         onSettingsClick={() => setShowSetupModal(true)}
@@ -88,30 +88,25 @@ const OpenRouterDashboard = () => {
         isLoading={isLoadingKeys}
       />
 
-      <APIKeyUsageBreakdown
-        keys={keysList}
-        isLoading={isLoadingKeys}
-      />
-
-      <Card className="p-4">
-        <div className="flex items-center justify-between mb-3">
-          <h3 className="font-medium">Tidsperiod för grafer</h3>
-        </div>
+      <Card className="p-3">
         <div className="flex gap-2">
           <Button 
             variant={dateRangeDays === 7 ? "default" : "outline"}
+            size="sm"
             onClick={() => setDateRangeDays(7)}
           >
             7 dagar
           </Button>
           <Button 
             variant={dateRangeDays === 30 ? "default" : "outline"}
+            size="sm"
             onClick={() => setDateRangeDays(30)}
           >
             30 dagar
           </Button>
           <Button 
             variant={dateRangeDays === 90 ? "default" : "outline"}
+            size="sm"
             onClick={() => setDateRangeDays(90)}
           >
             90 dagar
@@ -119,16 +114,18 @@ const OpenRouterDashboard = () => {
         </div>
       </Card>
 
-      <ModelUsageChart 
-        activityData={activityData?.data || []}
-        isLoading={isLoadingActivity}
-      />
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+        <ModelUsageChart 
+          activityData={activityData?.data || []}
+          isLoading={isLoadingActivity}
+        />
 
-      <APIKeyUsageChart 
-        activityData={activityData?.data || []}
-        keysList={keysList?.data || []}
-        isLoading={isLoadingActivity}
-      />
+        <APIKeyUsageChart 
+          activityData={activityData?.data || []}
+          keysList={keysList?.data || []}
+          isLoading={isLoadingActivity}
+        />
+      </div>
 
       <OpenRouterSetupModal
         open={showSetupModal}
