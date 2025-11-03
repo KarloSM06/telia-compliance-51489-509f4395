@@ -63,6 +63,8 @@ const OpenRouterDashboard = () => {
 
     // Group by date and model
     const modelUsageByDate = activities.reduce((acc, item) => {
+      if (!item.created_at) return acc;
+      
       const date = item.created_at.split('T')[0];
       const model = item.model || 'Unknown';
 
@@ -80,6 +82,8 @@ const OpenRouterDashboard = () => {
 
     // Group by date and API key
     const keyUsageByDate = activities.reduce((acc, item) => {
+      if (!item.created_at) return acc;
+      
       const date = item.created_at.split('T')[0];
       const keyId = item.generation_id?.split('-')[0] || 'Unknown';
 
