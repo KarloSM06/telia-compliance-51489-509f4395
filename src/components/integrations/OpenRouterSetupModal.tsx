@@ -9,13 +9,29 @@ import { useAISettings } from "@/hooks/useAISettings";
 import { useOpenRouterKeys } from "@/hooks/useOpenRouterKeys";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
-import { Check, Loader2, AlertCircle, Zap, BarChart3, Settings } from "lucide-react";
+import { Check, Loader2, AlertCircle, Zap, BarChart3, Settings, ChevronDown, ChevronUp } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
 
 interface OpenRouterSetupModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+}
+
+interface TestResult {
+  status: 'success' | 'error' | 'skipped';
+  data?: any;
+  error?: string;
+  duration?: number;
+}
+
+interface TestResults {
+  aiCall?: TestResult;
+  credits?: TestResult;
+  keyInfo?: TestResult;
+  models?: TestResult;
+  activity?: TestResult;
 }
 
 const OPENROUTER_MODELS = [
@@ -43,6 +59,8 @@ export function OpenRouterSetupModal({ open, onOpenChange }: OpenRouterSetupModa
   const [connectionStatus, setConnectionStatus] = useState<{ type: "success" | "error"; message: string } | null>(null);
   const [showApiKeyInput, setShowApiKeyInput] = useState(false);
   const [showProvisioningKeyInput, setShowProvisioningKeyInput] = useState(false);
+  const [testResults, setTestResults] = useState<TestResults | null>(null);
+  const [showTestResults, setShowTestResults] = useState(false);
 
   const isConfigured = settings?.ai_provider === "openrouter" && settings?.openrouter_api_key_encrypted;
 
@@ -83,6 +101,103 @@ export function OpenRouterSetupModal({ open, onOpenChange }: OpenRouterSetupModa
       setConnectionStatus({ type: "error", message: "Kunde inte ansluta till OpenRouter" });
     } finally {
       setIsTesting(false);
+    }
+  };
+
+  const handleFullTest = async () => {
+    setIsTesting(true);
+    setShowTestResults(true);
+    const results: TestResults = {};
+
+    // Test 1: AI Call
+    try {
+      const startTime = Date.now();
+      const { data, error } = await supabase.functions.invoke('submit-prompt', {
+        body: { 
+          messages: [{ role: 'user', content: 'Säg "Test OK" om du får detta meddelande.' }],
+          use_case: 'test'
+        }
+      });
+      const duration = Date.now() - startTime;
+
+      if (error) throw error;
+      results.aiCall = { status: 'success', data, duration };
+    } catch (error: any) {
+      results.aiCall = { status: 'error', error: error.message };
+    }
+
+    // Test 2: Credits
+    try {
+      const startTime = Date.now();
+      const { data, error } = await supabase.functions.invoke('get-openrouter-credits');
+      const duration = Date.now() - startTime;
+
+      if (error) throw error;
+      results.credits = { status: 'success', data, duration };
+    } catch (error: any) {
+      results.credits = { status: 'error', error: error.message };
+    }
+
+    // Test 3: Key Info
+    try {
+      const startTime = Date.now();
+      const { data, error } = await supabase.functions.invoke('get-openrouter-key-info');
+      const duration = Date.now() - startTime;
+
+      if (error) throw error;
+      results.keyInfo = { status: 'success', data, duration };
+    } catch (error: any) {
+      results.keyInfo = { status: 'error', error: error.message };
+    }
+
+    // Test 4: Models
+    try {
+      const startTime = Date.now();
+      const { data, error } = await supabase.functions.invoke('get-openrouter-models');
+      const duration = Date.now() - startTime;
+
+      if (error) throw error;
+      results.models = { status: 'success', data, duration };
+    } catch (error: any) {
+      results.models = { status: 'error', error: error.message };
+    }
+
+    // Test 5: Activity (only if provisioning key exists)
+    if (keyStatus?.provisioning_key_exists || provisioningKey) {
+      try {
+        const endDate = new Date();
+        const startDate = new Date();
+        startDate.setDate(startDate.getDate() - 7);
+
+        const startTime = Date.now();
+        const { data, error } = await supabase.functions.invoke('get-openrouter-activity', {
+          body: {
+            start_date: startDate.toISOString().split('T')[0],
+            end_date: endDate.toISOString().split('T')[0],
+          }
+        });
+        const duration = Date.now() - startTime;
+
+        if (error) throw error;
+        results.activity = { status: 'success', data, duration };
+      } catch (error: any) {
+        results.activity = { status: 'error', error: error.message };
+      }
+    } else {
+      results.activity = { status: 'skipped', error: 'Ingen provisioning key konfigurerad' };
+    }
+
+    setTestResults(results);
+    setIsTesting(false);
+
+    // Show summary toast
+    const successCount = Object.values(results).filter(r => r?.status === 'success').length;
+    const errorCount = Object.values(results).filter(r => r?.status === 'error').length;
+    
+    if (errorCount === 0) {
+      toast.success(`Alla tester lyckades! (${successCount}/${Object.keys(results).length})`);
+    } else {
+      toast.warning(`${successCount} tester lyckades, ${errorCount} misslyckades`);
     }
   };
 
@@ -450,6 +565,168 @@ export function OpenRouterSetupModal({ open, onOpenChange }: OpenRouterSetupModa
                 </ul>
               </div>
             </div>
+          </div>
+
+          <Separator />
+
+          {/* Test Section */}
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="text-lg font-semibold">🧪 Testa integration</h3>
+                <p className="text-sm text-muted-foreground">
+                  Kör ett fullständigt test av OpenRouter-integrationen
+                </p>
+              </div>
+              <div className="flex gap-2">
+                {testResults && (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => {
+                      setTestResults(null);
+                      setShowTestResults(false);
+                    }}
+                  >
+                    Rensa
+                  </Button>
+                )}
+                <Button
+                  onClick={handleFullTest}
+                  disabled={isTesting || (!keyStatus?.api_key_exists && !apiKey)}
+                  size="sm"
+                >
+                  {isTesting ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Testar...
+                    </>
+                  ) : (
+                    "Kör test"
+                  )}
+                </Button>
+              </div>
+            </div>
+
+            {testResults && (
+              <div className="rounded-lg border bg-card">
+                <button
+                  onClick={() => setShowTestResults(!showTestResults)}
+                  className="w-full flex items-center justify-between p-4 hover:bg-accent/50 transition-colors"
+                >
+                  <span className="font-medium">Testresultat</span>
+                  {showTestResults ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+                </button>
+
+                {showTestResults && (
+                  <div className="p-4 pt-0 space-y-3 border-t">
+                    {/* AI Call Test */}
+                    <div className="space-y-1">
+                      <div className="flex items-center gap-2">
+                        {testResults.aiCall?.status === 'success' ? '✅' : '❌'}
+                        <span className="font-medium">AI-anrop</span>
+                        {testResults.aiCall?.duration && (
+                          <span className="text-xs text-muted-foreground">({testResults.aiCall.duration}ms)</span>
+                        )}
+                      </div>
+                      {testResults.aiCall?.status === 'success' && testResults.aiCall.data && (
+                        <div className="text-sm text-muted-foreground ml-6 space-y-0.5">
+                          <div>Model: {testResults.aiCall.data.model || 'N/A'}</div>
+                          <div>Provider: {testResults.aiCall.data.provider || 'N/A'}</div>
+                          {testResults.aiCall.data.usage && (
+                            <div>Tokens: {testResults.aiCall.data.usage.prompt_tokens || 0} prompt, {testResults.aiCall.data.usage.completion_tokens || 0} completion</div>
+                          )}
+                        </div>
+                      )}
+                      {testResults.aiCall?.status === 'error' && (
+                        <div className="text-sm text-destructive ml-6">{testResults.aiCall.error}</div>
+                      )}
+                    </div>
+
+                    {/* Credits Test */}
+                    <div className="space-y-1">
+                      <div className="flex items-center gap-2">
+                        {testResults.credits?.status === 'success' ? '✅' : '❌'}
+                        <span className="font-medium">Credits</span>
+                        {testResults.credits?.duration && (
+                          <span className="text-xs text-muted-foreground">({testResults.credits.duration}ms)</span>
+                        )}
+                      </div>
+                      {testResults.credits?.status === 'success' && testResults.credits.data?.data && (
+                        <div className="text-sm text-muted-foreground ml-6 space-y-0.5">
+                          <div>Balance: ${testResults.credits.data.data.balance?.toFixed(2) || '0.00'}</div>
+                          <div>Usage: ${testResults.credits.data.data.usage?.toFixed(2) || '0.00'}</div>
+                        </div>
+                      )}
+                      {testResults.credits?.status === 'error' && (
+                        <div className="text-sm text-destructive ml-6">{testResults.credits.error}</div>
+                      )}
+                    </div>
+
+                    {/* Key Info Test */}
+                    <div className="space-y-1">
+                      <div className="flex items-center gap-2">
+                        {testResults.keyInfo?.status === 'success' ? '✅' : '❌'}
+                        <span className="font-medium">Key Info</span>
+                        {testResults.keyInfo?.duration && (
+                          <span className="text-xs text-muted-foreground">({testResults.keyInfo.duration}ms)</span>
+                        )}
+                      </div>
+                      {testResults.keyInfo?.status === 'success' && testResults.keyInfo.data?.data && (
+                        <div className="text-sm text-muted-foreground ml-6 space-y-0.5">
+                          <div>Rate limit: {testResults.keyInfo.data.data.rate_limit?.requests || 'N/A'} req/min</div>
+                          <div>Label: {testResults.keyInfo.data.data.label || 'N/A'}</div>
+                        </div>
+                      )}
+                      {testResults.keyInfo?.status === 'error' && (
+                        <div className="text-sm text-destructive ml-6">{testResults.keyInfo.error}</div>
+                      )}
+                    </div>
+
+                    {/* Models Test */}
+                    <div className="space-y-1">
+                      <div className="flex items-center gap-2">
+                        {testResults.models?.status === 'success' ? '✅' : '❌'}
+                        <span className="font-medium">Modeller</span>
+                        {testResults.models?.duration && (
+                          <span className="text-xs text-muted-foreground">({testResults.models.duration}ms)</span>
+                        )}
+                      </div>
+                      {testResults.models?.status === 'success' && testResults.models.data?.data && (
+                        <div className="text-sm text-muted-foreground ml-6">
+                          <div>{testResults.models.data.data.length || 0} tillgängliga modeller</div>
+                        </div>
+                      )}
+                      {testResults.models?.status === 'error' && (
+                        <div className="text-sm text-destructive ml-6">{testResults.models.error}</div>
+                      )}
+                    </div>
+
+                    {/* Activity Test */}
+                    <div className="space-y-1">
+                      <div className="flex items-center gap-2">
+                        {testResults.activity?.status === 'success' ? '✅' : testResults.activity?.status === 'skipped' ? '⏭️' : '❌'}
+                        <span className="font-medium">Activity</span>
+                        {testResults.activity?.duration && (
+                          <span className="text-xs text-muted-foreground">({testResults.activity.duration}ms)</span>
+                        )}
+                      </div>
+                      {testResults.activity?.status === 'success' && testResults.activity.data?.data && (
+                        <div className="text-sm text-muted-foreground ml-6">
+                          <div>Senaste 7 dagarna: {testResults.activity.data.data.length || 0} aktiviteter</div>
+                        </div>
+                      )}
+                      {testResults.activity?.status === 'skipped' && (
+                        <div className="text-sm text-muted-foreground ml-6">{testResults.activity.error}</div>
+                      )}
+                      {testResults.activity?.status === 'error' && (
+                        <div className="text-sm text-destructive ml-6">{testResults.activity.error}</div>
+                      )}
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
           </div>
 
           {connectionStatus && (
