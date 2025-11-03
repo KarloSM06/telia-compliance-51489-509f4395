@@ -182,20 +182,20 @@ export const WeekView = ({
   return <div className="flex h-full gap-4">
       {/* Main calendar area */}
       <div className="flex-1 flex flex-col min-w-0">
-        {/* Header */}
-        <div className="flex items-center justify-between p-4 border-b">
+        {/* Premium Header with Glassmorphism */}
+        <div className="flex items-center justify-between p-4 border-b bg-gradient-to-r from-background/80 to-background/60 backdrop-blur-xl">
         <div className="flex items-center gap-4">
-          <Button variant="outline" size="sm" onClick={onBackToMonth}>
+          <Button variant="outline" size="sm" onClick={onBackToMonth} className="hover:scale-105 transition-transform">
             <CalendarIcon className="h-4 w-4 mr-2" />
             Tillbaka till månad
           </Button>
           
           <div className="flex items-center gap-2">
-            <Button variant="outline" size="icon" onClick={() => onDateChange(subDays(weekStart, 7))}>
+            <Button variant="outline" size="icon" onClick={() => onDateChange(subDays(weekStart, 7))} className="hover:scale-105 transition-transform">
               <ChevronLeft className="h-4 w-4" />
             </Button>
             
-            <div className="text-lg font-semibold min-w-[300px] text-center">
+            <div className="text-lg font-semibold min-w-[300px] text-center bg-gradient-to-r from-blue-600 via-purple-600 to-blue-600 bg-clip-text text-transparent">
               Vecka {format(weekStart, 'w, yyyy', {
               locale: sv
             })}
@@ -208,22 +208,22 @@ export const WeekView = ({
               </span>
             </div>
             
-            <Button variant="outline" size="icon" onClick={() => onDateChange(addDays(weekStart, 7))}>
+            <Button variant="outline" size="icon" onClick={() => onDateChange(addDays(weekStart, 7))} className="hover:scale-105 transition-transform">
               <ChevronRight className="h-4 w-4" />
             </Button>
           </div>
 
-          <Button variant="outline" size="sm" onClick={() => onDateChange(new Date())}>
+          <Button variant="outline" size="sm" onClick={() => onDateChange(new Date())} className="hover:scale-105 transition-transform">
             Idag
           </Button>
         </div>
 
         <div className="flex gap-2">
-          {canUndo && <Button onClick={handleUndoClick} variant="outline" size="sm" className="gap-2" title="Ångra (Ctrl+Z)">
+          {canUndo && <Button onClick={handleUndoClick} variant="outline" size="sm" className="gap-2 hover:scale-105 transition-transform" title="Ångra (Ctrl+Z)">
               <Undo className="h-4 w-4" />
               Ångra
             </Button>}
-          {hasPendingChanges && <Button onClick={handleSaveChanges} variant="default" className="gap-2">
+          {hasPendingChanges && <Button onClick={handleSaveChanges} className="gap-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 shadow-lg hover:shadow-xl transition-all hover:scale-105">
               <Save className="h-4 w-4" />
               Spara ändringar ({pendingChanges.size})
             </Button>}

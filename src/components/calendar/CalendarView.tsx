@@ -70,7 +70,7 @@ export const CalendarView = ({ events, onEventClick, onDateClick }: CalendarView
         </div>
       </div>
 
-      <Card className="p-4">
+      <Card className="p-4 bg-gradient-to-br from-background/95 to-background shadow-lg hover:shadow-xl transition-all duration-300">
         <div className="grid grid-cols-7 gap-2">
           {weekDays.map(day => (
             <div key={day} className="text-center font-semibold text-sm text-muted-foreground p-2">
@@ -88,14 +88,15 @@ export const CalendarView = ({ events, onEventClick, onDateClick }: CalendarView
                 key={index}
                 onClick={() => onDateClick(day)}
                 className={cn(
-                  "min-h-24 p-2 border rounded-lg cursor-pointer transition-colors hover:bg-accent",
+                  "min-h-24 p-2 border rounded-lg cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-md",
                   !isCurrentMonth && "bg-muted/50 text-muted-foreground",
-                  isToday && "border-primary border-2"
+                  isToday && "border-2 bg-gradient-to-br from-blue-500/10 to-purple-500/10 border-blue-500 shadow-lg shadow-blue-500/20",
+                  !isToday && "hover:bg-accent hover:border-accent-foreground/20"
                 )}
               >
                 <div className={cn(
-                  "text-sm font-medium mb-1",
-                  isToday && "text-primary font-bold"
+                  "text-sm font-medium mb-1 transition-all",
+                  isToday && "text-blue-600 dark:text-blue-400 font-bold"
                 )}>
                   {format(day, 'd')}
                 </div>
@@ -109,8 +110,10 @@ export const CalendarView = ({ events, onEventClick, onDateClick }: CalendarView
                         onEventClick(event);
                       }}
                       className={cn(
-                        "text-xs p-1 rounded truncate cursor-pointer",
-                        event.source === 'internal' ? "bg-primary/20 text-primary" : "bg-accent text-accent-foreground"
+                        "text-xs p-1 rounded truncate cursor-pointer transition-all duration-200 hover:scale-105",
+                        event.source === 'internal' 
+                          ? "bg-gradient-to-r from-blue-500/20 to-purple-500/20 text-blue-700 dark:text-blue-300 hover:from-blue-500/30 hover:to-purple-500/30 shadow-sm" 
+                          : "bg-accent text-accent-foreground hover:bg-accent/80 shadow-sm"
                       )}
                       title={event.title}
                     >
@@ -118,7 +121,7 @@ export const CalendarView = ({ events, onEventClick, onDateClick }: CalendarView
                     </div>
                   ))}
                   {dayEvents.length > 3 && (
-                    <div className="text-xs text-muted-foreground">
+                    <div className="text-xs text-muted-foreground font-medium">
                       +{dayEvents.length - 3} fler
                     </div>
                   )}
