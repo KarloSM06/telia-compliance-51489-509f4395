@@ -3,7 +3,6 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ListChecks } from "lucide-react";
 import eniroLogo from "@/assets/eniro-logo-new.png";
 import linkedinLogo from "@/assets/linkedin-icon.webp";
-
 interface LeadPageHeaderProps {
   activeTab: 'eniro' | 'linkedin' | 'lists';
   onTabChange: (tab: 'eniro' | 'linkedin' | 'lists') => void;
@@ -16,19 +15,17 @@ interface LeadPageHeaderProps {
     avgAiScore: number;
   };
 }
-
-export function LeadPageHeader({ 
+export function LeadPageHeader({
   activeTab,
   onTabChange,
-  stats,
+  stats
 }: LeadPageHeaderProps) {
-  return (
-    <div className="border-b bg-background">
+  return <div className="border-b bg-background">
       <div className="px-6 py-4">
         <div className="flex items-center justify-between mb-4">
           <div>
-            <h1 className="text-3xl font-bold">Lead Management</h1>
-            <p className="text-muted-foreground">Hantera och spåra dina leads</p>
+            
+            
           </div>
         </div>
 
@@ -66,14 +63,11 @@ export function LeadPageHeader({
             <Badge variant="secondary">
               Konverteringar: {stats.conversions}
             </Badge>
-            {stats.avgAiScore > 0 && (
-              <Badge variant="secondary">
+            {stats.avgAiScore > 0 && <Badge variant="secondary">
                 Snitt AI-score: {stats.avgAiScore}
-              </Badge>
-            )}
+              </Badge>}
           </div>
         </div>
       </div>
-    </div>
-  );
+    </div>;
 }
