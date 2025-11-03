@@ -3,6 +3,7 @@ import { OpenRouterHeader } from "@/components/dashboard/openrouter/OpenRouterHe
 import { ConnectionStatusBanner } from "@/components/dashboard/openrouter/ConnectionStatusBanner";
 import { AccountBalanceCards } from "@/components/dashboard/openrouter/AccountBalanceCards";
 import { APIKeysOverview } from "@/components/dashboard/openrouter/APIKeysOverview";
+import { APIKeyUsageBreakdown } from "@/components/dashboard/openrouter/APIKeyUsageBreakdown";
 import { useOpenRouterCredits } from "@/hooks/useOpenRouterCredits";
 import { useOpenRouterKeyInfo } from "@/hooks/useOpenRouterKeyInfo";
 import { useOpenRouterKeys } from "@/hooks/useOpenRouterKeys";
@@ -60,6 +61,11 @@ const OpenRouterDashboard = () => {
       )}
 
       <APIKeysOverview
+        keys={keysList}
+        isLoading={isLoadingKeys}
+      />
+
+      <APIKeyUsageBreakdown
         keys={keysList}
         isLoading={isLoadingKeys}
       />

@@ -3,12 +3,17 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Key, AlertCircle } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
+import { formatDollarCompact, getDailyUsageColor } from "@/lib/format";
 
 interface APIKey {
   hash: string;
   name?: string;
+  label?: string;
   limit?: number;
   usage?: number;
+  usage_daily?: number;
+  usage_weekly?: number;
+  usage_monthly?: number;
   limit_remaining?: number;
   disabled?: boolean;
 }
@@ -45,10 +50,13 @@ export const APIKeysOverview = ({ keys, isLoading }: APIKeysOverviewProps) => {
     (acc, key) => ({
       limit: acc.limit + (key.limit || 0),
       usage: acc.usage + (key.usage || 0),
+      usageDaily: acc.usageDaily + (key.usage_daily || 0),
+      usageWeekly: acc.usageWeekly + (key.usage_weekly || 0),
+      usageMonthly: acc.usageMonthly + (key.usage_monthly || 0),
       remaining: acc.remaining + (key.limit_remaining || 0),
       active: acc.active + (key.disabled ? 0 : 1),
     }),
-    { limit: 0, usage: 0, remaining: 0, active: 0 }
+    { limit: 0, usage: 0, usageDaily: 0, usageWeekly: 0, usageMonthly: 0, remaining: 0, active: 0 }
   );
 
   const usagePercentage = totals.limit > 0 ? (totals.usage / totals.limit) * 100 : 0;
@@ -72,23 +80,21 @@ export const APIKeysOverview = ({ keys, isLoading }: APIKeysOverviewProps) => {
           </div>
           
           <div className="space-y-2">
-            <p className="text-sm text-muted-foreground">Total Limit</p>
-            <p className="text-2xl font-bold">{totals.limit.toLocaleString()}</p>
-            <p className="text-xs text-muted-foreground">requests</p>
-          </div>
-          
-          <div className="space-y-2">
             <p className="text-sm text-muted-foreground">Total Användning</p>
-            <p className="text-2xl font-bold">{totals.usage.toLocaleString()}</p>
-            <p className="text-xs text-muted-foreground">
-              {usagePercentage.toFixed(1)}% använt
-            </p>
+            <p className="text-2xl font-bold">{formatDollarCompact(totals.usage)}</p>
+            <p className="text-xs text-muted-foreground">all-time</p>
           </div>
           
           <div className="space-y-2">
-            <p className="text-sm text-muted-foreground">Återstående</p>
-            <p className="text-2xl font-bold">{totals.remaining.toLocaleString()}</p>
-            <p className="text-xs text-muted-foreground">requests</p>
+            <p className="text-sm text-muted-foreground">Idag</p>
+            <p className="text-2xl font-bold">{formatDollarCompact(totals.usageDaily)}</p>
+            <p className="text-xs text-muted-foreground">daily spend</p>
+          </div>
+          
+          <div className="space-y-2">
+            <p className="text-sm text-muted-foreground">Denna Månad</p>
+            <p className="text-2xl font-bold">{formatDollarCompact(totals.usageMonthly)}</p>
+            <p className="text-xs text-muted-foreground">monthly spend</p>
           </div>
         </div>
 
@@ -111,9 +117,9 @@ export const APIKeysOverview = ({ keys, isLoading }: APIKeysOverviewProps) => {
 
         <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-3 mt-4">
           {apiKeys.map((key) => {
-            const keyUsagePercentage = key.limit && key.usage 
-              ? (key.usage / key.limit) * 100 
-              : 0;
+            const displayName = key.label || key.name || 'Unnamed Key';
+            const dailyUsage = key.usage_daily || 0;
+            const dailyColorClass = getDailyUsageColor(dailyUsage);
             
             return (
               <div
@@ -123,7 +129,7 @@ export const APIKeysOverview = ({ keys, isLoading }: APIKeysOverviewProps) => {
                 <div className="flex items-start justify-between">
                   <div className="flex-1 min-w-0">
                     <p className="font-medium text-sm truncate">
-                      {key.name || 'Unnamed Key'}
+                      {displayName}
                     </p>
                     <p className="text-xs text-muted-foreground font-mono truncate">
                       {key.hash.substring(0, 8)}...{key.hash.substring(key.hash.length - 4)}
@@ -134,15 +140,26 @@ export const APIKeysOverview = ({ keys, isLoading }: APIKeysOverviewProps) => {
                   </Badge>
                 </div>
                 
-                {key.limit && (
-                  <>
-                    <Progress value={keyUsagePercentage} className="h-1" />
-                    <div className="flex justify-between text-xs text-muted-foreground">
-                      <span>{key.usage?.toLocaleString() || 0} använt</span>
-                      <span>{key.limit_remaining?.toLocaleString() || 0} kvar</span>
-                    </div>
-                  </>
-                )}
+                <div className="space-y-1 text-sm">
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">Total:</span>
+                    <span className="font-medium">{formatDollarCompact(key.usage)}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">Idag:</span>
+                    <span className={`font-medium ${dailyColorClass}`}>
+                      {formatDollarCompact(dailyUsage)}
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">Vecka:</span>
+                    <span className="font-medium">{formatDollarCompact(key.usage_weekly)}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">Månad:</span>
+                    <span className="font-medium">{formatDollarCompact(key.usage_monthly)}</span>
+                  </div>
+                </div>
               </div>
             );
           })}
