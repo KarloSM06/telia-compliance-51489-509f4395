@@ -1,0 +1,176 @@
+import { useMemo, useState } from "react";
+import { Card } from "@/components/ui/card";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
+import { format } from "date-fns";
+import { sv } from "date-fns/locale";
+import { Skeleton } from "@/components/ui/skeleton";
+import { ArrowDownToLine, ArrowUpFromLine, Phone } from "lucide-react";
+
+type MetricType = 'calls' | 'duration' | 'cost';
+
+const CustomTooltip = ({ active, payload, label, metric }: any) => {
+  if (!active || !payload) return null;
+  
+  const inbound = payload.find((p: any) => p.dataKey === 'inbound')?.value || 0;
+  const outbound = payload.find((p: any) => p.dataKey === 'outbound')?.value || 0;
+  const total = inbound + outbound;
+  
+  const metricSuffix = metric === 'cost' ? ' SEK' : metric === 'duration' ? ' min' : '';
+  
+  return (
+    <div className="bg-card/95 backdrop-blur-sm border border-border rounded-lg p-3 shadow-xl">
+      <p className="font-semibold mb-2 text-sm">
+        {format(new Date(label), 'dd MMMM yyyy', { locale: sv })}
+      </p>
+      <div className="space-y-1.5">
+        <div className="flex items-center gap-2 text-sm">
+          <div className="w-3 h-3 rounded-full bg-[hsl(158,64%,52%)] ring-2 ring-background" />
+          <span className="flex-1 text-muted-foreground">Inkommande</span>
+          <span className="font-semibold tabular-nums">
+            {inbound.toFixed(metric === 'cost' ? 2 : 0)}{metricSuffix}
+          </span>
+        </div>
+        <div className="flex items-center gap-2 text-sm">
+          <div className="w-3 h-3 rounded-full bg-[hsl(217,91%,60%)] ring-2 ring-background" />
+          <span className="flex-1 text-muted-foreground">Utgående</span>
+          <span className="font-semibold tabular-nums">
+            {outbound.toFixed(metric === 'cost' ? 2 : 0)}{metricSuffix}
+          </span>
+        </div>
+      </div>
+      <div className="border-t border-border mt-2 pt-2">
+        <div className="flex justify-between text-sm font-semibold">
+          <span>Totalt:</span>
+          <span className="tabular-nums">
+            {total.toFixed(metric === 'cost' ? 2 : 0)}{metricSuffix}
+          </span>
+        </div>
+        <div className="flex justify-between text-xs text-muted-foreground mt-1">
+          <span>Fördelning:</span>
+          <span>
+            {total > 0 ? `${((inbound / total) * 100).toFixed(0)}% / ${((outbound / total) * 100).toFixed(0)}%` : '0% / 0%'}
+          </span>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+interface CallDirectionChartProps {
+  data: any[];
+  isLoading?: boolean;
+}
+
+export const CallDirectionChart = ({ data, isLoading }: CallDirectionChartProps) => {
+  const [selectedMetric, setSelectedMetric] = useState<MetricType>('calls');
+
+  const chartData = useMemo(() => {
+    if (!data || data.length === 0) return [];
+    
+    return data.map(day => ({
+      date: day.date,
+      inbound: day[`inbound_${selectedMetric}`] || 0,
+      outbound: day[`outbound_${selectedMetric}`] || 0
+    }));
+  }, [data, selectedMetric]);
+
+  if (isLoading) {
+    return (
+      <Card className="p-4">
+        <Skeleton className="h-[350px] animate-pulse" />
+      </Card>
+    );
+  }
+
+  if (!chartData || chartData.length === 0) {
+    return (
+      <Card className="p-4">
+        <div className="flex items-center gap-2 mb-2">
+          <Phone className="h-5 w-5 text-primary" />
+          <h3 className="text-base font-semibold">Samtalsriktning</h3>
+        </div>
+        <div className="flex flex-col items-center justify-center h-48 text-muted-foreground">
+          <Phone className="h-8 w-8 mb-2 opacity-50" />
+          <p className="text-xs">Ingen data tillgänglig</p>
+        </div>
+      </Card>
+    );
+  }
+
+  return (
+    <Card className="p-4">
+      <div className="flex items-center justify-between mb-3">
+        <div className="flex items-center gap-2">
+          <Phone className="h-5 w-5 text-primary" />
+          <h3 className="text-base font-semibold">Samtalsriktning</h3>
+        </div>
+        <Tabs value={selectedMetric} onValueChange={(v) => setSelectedMetric(v as MetricType)}>
+          <TabsList className="h-7">
+            <TabsTrigger value="calls" className="gap-1 text-xs px-2 py-1">
+              <Phone className="h-3 w-3" />
+              Antal
+            </TabsTrigger>
+            <TabsTrigger value="duration" className="gap-1 text-xs px-2 py-1">
+              Min
+            </TabsTrigger>
+            <TabsTrigger value="cost" className="gap-1 text-xs px-2 py-1">
+              kr
+            </TabsTrigger>
+          </TabsList>
+        </Tabs>
+      </div>
+      
+      <ResponsiveContainer width="100%" height={350}>
+        <AreaChart data={chartData} margin={{ top: 5, right: 10, left: 0, bottom: 5 }}>
+          <CartesianGrid 
+            strokeDasharray="3 3" 
+            className="stroke-muted" 
+            strokeOpacity={0.3}
+            vertical={false}
+          />
+          <XAxis 
+            dataKey="date"
+            tickFormatter={(date) => format(new Date(date), 'dd/MM', { locale: sv })}
+            tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 10 }}
+            tickMargin={5}
+          />
+          <YAxis 
+            tickFormatter={(value) => 
+              selectedMetric === 'cost' 
+                ? `${value.toFixed(0)} kr` 
+                : value.toLocaleString()
+            }
+            tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 10 }}
+            tickMargin={5}
+            width={50}
+          />
+          <Tooltip content={<CustomTooltip metric={selectedMetric} />} />
+          <Legend 
+            wrapperStyle={{ paddingTop: '10px', fontSize: '10px' }}
+            iconType="circle"
+            iconSize={8}
+          />
+          <Area
+            type="natural"
+            dataKey="inbound"
+            stackId="1"
+            stroke="hsl(158, 64%, 52%)"
+            fill="hsl(158, 64%, 52%)"
+            fillOpacity={0.6}
+            name="Inkommande"
+          />
+          <Area
+            type="natural"
+            dataKey="outbound"
+            stackId="1"
+            stroke="hsl(217, 91%, 60%)"
+            fill="hsl(217, 91%, 60%)"
+            fillOpacity={0.6}
+            name="Utgående"
+          />
+        </AreaChart>
+      </ResponsiveContainer>
+    </Card>
+  );
+};

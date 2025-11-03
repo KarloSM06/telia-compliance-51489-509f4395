@@ -6,6 +6,7 @@ import { RefreshCw, Settings, Download, Phone, Clock, DollarSign, Loader2, Messa
 import { toast } from 'sonner';
 import { useIntegrations } from '@/hooks/useIntegrations';
 import { useTelephonyMetrics } from '@/hooks/useTelephonyMetrics';
+import { useTelephonyChartData } from '@/hooks/useTelephonyChartData';
 import { usePhoneNumbers } from '@/hooks/usePhoneNumbers';
 import { EventsTable } from '@/components/telephony/EventsTable';
 import { EventFilters, EventFilterValues } from '@/components/telephony/EventFilters';
@@ -14,6 +15,12 @@ import { EventDetailDrawer } from '@/components/telephony/EventDetailDrawer';
 import { PremiumTelephonyStatCard } from '@/components/telephony/PremiumTelephonyStatCard';
 import { AddIntegrationModal } from '@/components/integrations/AddIntegrationModal';
 import { AnimatedSection } from '@/components/shared/AnimatedSection';
+import { TelephonyActivityChart } from '@/components/telephony/charts/TelephonyActivityChart';
+import { SuccessRateChart } from '@/components/telephony/charts/SuccessRateChart';
+import { ProviderPerformanceChart } from '@/components/telephony/charts/ProviderPerformanceChart';
+import { CallDirectionChart } from '@/components/telephony/charts/CallDirectionChart';
+import { AvgDurationTrendChart } from '@/components/telephony/charts/AvgDurationTrendChart';
+import { EventTypeDistributionChart } from '@/components/telephony/charts/EventTypeDistributionChart';
 import { supabase } from '@/integrations/supabase/client';
 import { formatDuration, formatCostInSEK, getProviderDisplayName, getProviderLogo, formatRelativeTime } from '@/lib/telephonyFormatters';
 import { cn } from '@/lib/utils';
@@ -23,6 +30,7 @@ export default function TelephonyPage() {
   const [showProviderDialog, setShowProviderDialog] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState<any>(null);
+  const [dateRangeDays, setDateRangeDays] = useState(30);
   const [filters, setFilters] = useState<EventFilterValues>({
     search: '',
     provider: 'all',
@@ -34,6 +42,7 @@ export default function TelephonyPage() {
 
   const { integrations, getByCapability } = useIntegrations();
   const { metrics, isLoading, refetch } = useTelephonyMetrics();
+  const chartData = useTelephonyChartData(metrics.events || []);
   const { syncNumbers, isSyncing } = usePhoneNumbers();
 
   const telephonyProviders = getByCapability('voice').concat(getByCapability('sms'));
@@ -296,11 +305,87 @@ export default function TelephonyPage() {
         </div>
       </section>
 
+      {/* Charts Section */}
+      <section className="relative py-12 bg-gradient-to-b from-background via-primary/2 to-background">
+        <div className="container mx-auto px-6 lg:px-8">
+          <AnimatedSection delay={300}>
+            <Card className="p-6 mb-6 border-primary/20 bg-gradient-to-br from-card/80 to-card/40 backdrop-blur-md">
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-xl font-bold">Statistik & Analys</h2>
+                <div className="flex gap-2">
+                  <Button 
+                    variant={dateRangeDays === 7 ? "default" : "outline"}
+                    size="sm"
+                    onClick={() => setDateRangeDays(7)}
+                  >
+                    7 dagar
+                  </Button>
+                  <Button 
+                    variant={dateRangeDays === 30 ? "default" : "outline"}
+                    size="sm"
+                    onClick={() => setDateRangeDays(30)}
+                  >
+                    30 dagar
+                  </Button>
+                  <Button 
+                    variant={dateRangeDays === 90 ? "default" : "outline"}
+                    size="sm"
+                    onClick={() => setDateRangeDays(90)}
+                  >
+                    90 dagar
+                  </Button>
+                </div>
+              </div>
+            </Card>
+
+            <div className="space-y-6">
+              {/* Main Activity Chart - Full Width */}
+              <TelephonyActivityChart 
+                data={chartData.dailyActivity}
+                providers={chartData.providers}
+                isLoading={isLoading}
+              />
+
+              {/* Success Rate Chart - Full Width */}
+              <SuccessRateChart 
+                data={chartData.successRateData}
+                isLoading={isLoading}
+              />
+
+              {/* Two Column Charts */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <ProviderPerformanceChart 
+                  data={chartData.providerPerformance}
+                  providers={chartData.providers}
+                  isLoading={isLoading}
+                />
+                <CallDirectionChart 
+                  data={chartData.directionAnalysis}
+                  isLoading={isLoading}
+                />
+              </div>
+
+              {/* Two Column Charts */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <AvgDurationTrendChart 
+                  data={chartData.avgDurationTrend}
+                  isLoading={isLoading}
+                />
+                <EventTypeDistributionChart 
+                  data={chartData.eventTypeDistribution}
+                  isLoading={isLoading}
+                />
+              </div>
+            </div>
+          </AnimatedSection>
+        </div>
+      </section>
+
       {/* Provider Overview - Compact */}
       {Object.keys(metrics.byProvider).length > 0 && (
         <section className="relative py-6 border-y border-border/50">
           <div className="container mx-auto px-6 lg:px-8">
-            <AnimatedSection delay={300}>
+            <AnimatedSection delay={400}>
               <div className="mb-4">
                 <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">Providers</h3>
               </div>
