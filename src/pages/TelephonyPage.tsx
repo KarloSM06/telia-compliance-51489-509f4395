@@ -12,6 +12,7 @@ import { EventFilters, EventFilterValues } from '@/components/telephony/EventFil
 import { ProviderManagementDialog } from '@/components/telephony/ProviderManagementDialog';
 import { EventDetailDrawer } from '@/components/telephony/EventDetailDrawer';
 import { PremiumTelephonyStatCard } from '@/components/telephony/PremiumTelephonyStatCard';
+import { TelephonyCallsChart } from '@/components/telephony/TelephonyCallsChart';
 import { AddIntegrationModal } from '@/components/integrations/AddIntegrationModal';
 import { AnimatedSection } from '@/components/shared/AnimatedSection';
 import { supabase } from '@/integrations/supabase/client';
@@ -205,37 +206,22 @@ export default function TelephonyPage() {
 
   return (
     <div className="min-h-screen">
-      {/* Hero Section - FULL PREMIUM UPGRADE */}
-      <section className="relative py-32 bg-gradient-to-b from-background via-primary/5 to-background overflow-hidden">
-        {/* Radial gradient overlays */}
+      {/* Hero Section - Minimalistisk */}
+      <section className="relative py-12 bg-gradient-to-b from-background via-primary/5 to-background overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,hsl(var(--primary)/0.15),transparent_50%)]" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_80%,hsl(var(--primary)/0.1),transparent_50%)]" />
         
-        {/* 3 STORA snowflakes */}
-        <div className="absolute -top-32 -right-32 w-[800px] h-[800px] opacity-5 pointer-events-none">
+        <div className="absolute -top-20 -right-20 w-[300px] h-[300px] opacity-[0.03] pointer-events-none">
           <img src={hiemsLogoSnowflake} alt="" className="w-full h-full object-contain animate-[spin_60s_linear_infinite]" />
-        </div>
-        <div className="absolute -top-20 -left-20 w-[500px] h-[500px] opacity-[0.03] pointer-events-none">
-          <img src={hiemsLogoSnowflake} alt="" className="w-full h-full object-contain animate-[spin_40s_linear_infinite_reverse]" />
-        </div>
-        <div className="absolute -bottom-20 left-1/2 -translate-x-1/2 w-[400px] h-[400px] opacity-[0.04] pointer-events-none">
-          <img src={hiemsLogoSnowflake} alt="" className="w-full h-full object-contain animate-[spin_50s_linear_infinite]" />
         </div>
 
         <div className="container mx-auto px-6 lg:px-8 relative z-10">
           <AnimatedSection>
-            <div className="max-w-4xl mx-auto text-center space-y-8">
-              {/* UPPERCASE label med accent line */}
-              <div className="inline-block">
-                <span className="text-sm font-semibold tracking-wider text-primary uppercase">Realtidsövervakning</span>
-                <div className="w-32 h-1.5 bg-gradient-to-r from-primary via-primary/60 to-transparent mx-auto rounded-full shadow-lg shadow-primary/50 mt-2" />
-              </div>
-              
-              <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent leading-tight">
+            <div className="max-w-4xl mx-auto text-center space-y-4">
+              <h1 className="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent">
                 Telefoni
               </h1>
               
-              <p className="text-xl sm:text-2xl text-muted-foreground max-w-3xl mx-auto leading-relaxed font-light">
+              <p className="text-base text-muted-foreground max-w-2xl mx-auto">
                 Alla dina samtal och meddelanden i realtid
               </p>
             </div>
@@ -282,9 +268,9 @@ export default function TelephonyPage() {
       </section>
 
       {/* Stats Overview - Egen section */}
-      <section className="relative py-16 bg-gradient-to-b from-background via-primary/3 to-background">
+      <section className="relative py-8 bg-gradient-to-b from-background via-primary/3 to-background">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_50%,hsl(var(--primary)/0.12),transparent_50%)]" />
-        <div className="container mx-auto px-6 lg:px-8 relative z-10">
+        <div className="container mx-auto px-6 lg:px-8 relative z-10 space-y-6">
           <AnimatedSection delay={200}>
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
               <PremiumTelephonyStatCard title="Total Samtal" value={metrics.totalCalls} icon={Phone} color="text-blue-600" subtitle={`${completedCalls} avslutade`} />
@@ -292,6 +278,10 @@ export default function TelephonyPage() {
               <PremiumTelephonyStatCard title="Total Tid" value={formatDuration(metrics.totalDuration)} icon={Clock} color="text-purple-600" subtitle={`⌀ ${formatDuration(avgCallDuration)} per samtal`} />
               <PremiumTelephonyStatCard title="Total Kostnad" value={formatCostInSEK(metrics.totalCost)} icon={DollarSign} color="text-orange-600" subtitle={`≈ $${metrics.totalCost.toFixed(4)} USD`} />
             </div>
+          </AnimatedSection>
+          
+          <AnimatedSection delay={300}>
+            <TelephonyCallsChart events={metrics.events} isLoading={isLoading} />
           </AnimatedSection>
         </div>
       </section>
