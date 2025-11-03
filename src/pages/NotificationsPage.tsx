@@ -14,10 +14,22 @@ import { NotificationTypeDistributionChart } from '@/components/notifications/ch
 import { PriorityDistributionChart } from '@/components/notifications/charts/PriorityDistributionChart';
 import { ChannelDistributionChart } from '@/components/notifications/charts/ChannelDistributionChart';
 import { NotificationResponseTimeTrendChart } from '@/components/notifications/charts/NotificationResponseTimeTrendChart';
+import { NotificationFilters, NotificationFilterValues } from '@/components/notifications/NotificationFilters';
+import { NotificationsTable } from '@/components/notifications/NotificationsTable';
 import hiemsLogoSnowflake from '@/assets/hiems-logo-snowflake.png';
 
 export default function NotificationsPage() {
   const [dateRangeDays, setDateRangeDays] = useState(30);
+  const [filters, setFilters] = useState<NotificationFilterValues>({
+    search: '',
+    type: 'all',
+    priority: 'all',
+    status: 'all',
+    channel: 'all',
+    readStatus: 'all',
+  });
+  const [selectedNotification, setSelectedNotification] = useState<any>(null);
+  
   const { notifications, isLoading, unreadCount, markAllAsRead, markAsRead, deleteNotification } = useOwnerNotifications();
   const chartData = useNotificationChartData(notifications);
   const readCount = notifications.filter(n => n.read_at).length;
@@ -274,59 +286,18 @@ export default function NotificationsPage() {
         </div>
       </section>
 
-      {/* Notifications List */}
+      {/* Notifications Table with Filters */}
       <section className="relative py-12">
         <div className="container mx-auto px-6 lg:px-8">
           <AnimatedSection delay={500}>
-            <Card className="p-6 border border-primary/10 bg-gradient-to-br from-card/80 via-card/50 to-card/30 backdrop-blur-md hover:shadow-md transition-shadow">
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-xl font-semibold">Senaste Notifikationer</h2>
-                <p className="text-sm text-muted-foreground">
-                  Visar {notifications.length} notifikationer
-                </p>
+            <Card className="p-6 border border-primary/10 bg-gradient-to-br from-card/80 via-card/50 to-card/30 backdrop-blur-md">
+              <div className="mb-6">
+                <h2 className="text-xl font-semibold bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent mb-4">
+                  Alla notifikationer
+                </h2>
+                <NotificationFilters onFilterChange={setFilters} />
               </div>
-
-              {isLoading ? (
-                <div className="flex items-center justify-center py-12">
-                  <RefreshCw className="h-8 w-8 animate-spin text-muted-foreground" />
-                </div>
-              ) : notifications.length === 0 ? (
-                <div className="flex flex-col items-center justify-center py-12 text-center">
-                  <Bell className="h-12 w-12 text-muted-foreground mb-4" />
-                  <p className="text-muted-foreground">Inga notifikationer ännu</p>
-                </div>
-              ) : (
-                <div className="space-y-3">
-                  {notifications.slice(0, 10).map((notification) => (
-                    <Card 
-                      key={notification.id} 
-                      className={`p-4 transition-all hover:shadow-md ${!notification.read_at ? 'border-l-4 border-l-primary bg-primary/5' : ''}`}
-                    >
-                      <div className="flex items-start justify-between">
-                        <div className="flex-1">
-                          <div className="flex items-center gap-2 mb-1">
-                            <Badge variant={notification.priority === 'high' ? 'destructive' : 'secondary'} className="text-xs">
-                              {notification.priority}
-                            </Badge>
-                            <Badge variant="outline" className="text-xs">
-                              {notification.notification_type}
-                            </Badge>
-                          </div>
-                          <h3 className="font-semibold mb-1">{notification.title}</h3>
-                          <p className="text-sm text-muted-foreground mb-2">{notification.message}</p>
-                          <div className="flex items-center gap-4 text-xs text-muted-foreground">
-                            <span>Kanaler: {notification.channel?.join(', ')}</span>
-                            {notification.sent_at && <span>Skickat: {new Date(notification.sent_at).toLocaleString('sv-SE')}</span>}
-                          </div>
-                        </div>
-                        {!notification.read_at && (
-                          <div className="w-2 h-2 rounded-full bg-primary animate-pulse" />
-                        )}
-                      </div>
-                    </Card>
-                  ))}
-                </div>
-              )}
+              <NotificationsTable notifications={notifications} onViewDetails={setSelectedNotification} />
             </Card>
           </AnimatedSection>
         </div>

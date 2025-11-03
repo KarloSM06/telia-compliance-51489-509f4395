@@ -36,12 +36,18 @@ export default function ReviewsPage() {
     const allTopics: string[] = [];
     reviews.forEach(r => {
       if (r.topics && Array.isArray(r.topics)) {
-        r.topics.forEach(t => allTopics.push(typeof t === 'string' ? t : t.topic || 'other'));
+        r.topics.forEach((t: any) => {
+          const topicStr = typeof t === 'string' ? t : (t?.topic || 'other');
+          allTopics.push(topicStr);
+        });
       }
     });
     const topicCounts = allTopics.reduce((acc, t) => ({ ...acc, [t]: (acc[t] || 0) + 1 }), {} as Record<string, number>);
     const topTopics = Object.entries(topicCounts).map(([topic, count]) => ({ topic, count })).sort((a, b) => b.count - a.count);
-    const avgSentiment = reviews.filter(r => r.sentiment_score).reduce((s, r) => s + (r.sentiment_score || 0), 0) / reviews.filter(r => r.sentiment_score).length || 0;
+    const reviewsWithSentiment = reviews.filter(r => r.sentiment_score !== null && r.sentiment_score !== undefined);
+    const avgSentiment = reviewsWithSentiment.length > 0 
+      ? reviewsWithSentiment.reduce((s, r) => s + (r.sentiment_score || 0), 0) / reviewsWithSentiment.length 
+      : 0;
     return { topTopics, avgSentiment, topTopic: topTopics[0] || { topic: '-', count: 0 } };
   }, [reviews]);
 
