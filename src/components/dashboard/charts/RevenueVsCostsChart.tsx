@@ -63,7 +63,7 @@ export const RevenueVsCostsChart = ({ data, isLoading }: RevenueVsCostsChartProp
           ]}
           yAxisFormatter={(v) => `${v.toFixed(0)} kr`}
           tooltipFormatter={(v) => `${v.toFixed(2)} SEK`}
-          height={350}
+          height={400}
         />
         <p className="text-xs text-muted-foreground mt-4 text-center">
           Klicka på linjenamnen i förklaringen för att visa/dölja dem

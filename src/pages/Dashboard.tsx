@@ -16,6 +16,12 @@ import { BreakEvenCard } from '@/components/dashboard/BreakEvenCard';
 import { ProjectionTabs } from '@/components/dashboard/ProjectionTabs';
 import { RevenueVsCostsChart } from '@/components/dashboard/charts/RevenueVsCostsChart';
 import { CostBreakdownChart } from '@/components/dashboard/charts/CostBreakdownChart';
+import { ROITrendChart } from '@/components/dashboard/charts/ROITrendChart';
+import { BookingTrendChart } from '@/components/dashboard/charts/BookingTrendChart';
+import { ProfitMarginChart } from '@/components/dashboard/charts/ProfitMarginChart';
+import { ServiceRevenueChart } from '@/components/dashboard/charts/ServiceRevenueChart';
+import { CumulativeRevenueChart } from '@/components/dashboard/charts/CumulativeRevenueChart';
+import { DailyROIChart } from '@/components/dashboard/charts/DailyROIChart';
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from 'recharts';
 import hiemsLogoSnowflake from '@/assets/hiems-logo-snowflake.png';
 import { format } from 'date-fns';
@@ -107,7 +113,7 @@ const Dashboard = () => {
         
         <div className="container mx-auto px-6 lg:px-8 relative z-10">
           <AnimatedSection>
-            <div className="max-w-4xl mx-auto text-center space-y-6">
+            <div className="max-w-4xl mx-auto text-center space-y-4">
               <div className="inline-block">
                 <span className="text-sm font-semibold tracking-wider text-primary uppercase">Realtidsövervakning</span>
                 <div className="w-32 h-1.5 bg-gradient-to-r from-primary via-primary/60 to-transparent mx-auto rounded-full shadow-lg shadow-primary/50 mt-2" />
@@ -211,78 +217,46 @@ const Dashboard = () => {
 
       {/* Main Charts Section */}
       <section className="relative py-12 bg-gradient-to-b from-background via-primary/2 to-background">
-        <div className="container mx-auto px-6 lg:px-8 space-y-8">
-          {/* Revenue vs Costs - Full Width */}
+        <div className="container mx-auto px-6 lg:px-8 space-y-4">
           {data && (
-            <AnimatedSection delay={300}>
-              <RevenueVsCostsChart data={data.dailyData} isLoading={loading} />
-            </AnimatedSection>
-          )}
+            <>
+              {/* Top Row: Revenue vs Costs (2/3) + ROI Trend (1/3) */}
+              <AnimatedSection delay={300}>
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+                  <div className="lg:col-span-2">
+                    <RevenueVsCostsChart data={data.dailyData} isLoading={loading} />
+                  </div>
+                  <div className="lg:col-span-1">
+                    <ROITrendChart data={data.dailyData} isLoading={loading} />
+                  </div>
+                </div>
+              </AnimatedSection>
 
-          {/* Cost Breakdown & Revenue Sources - 2 Columns */}
-          {data && (
-            <AnimatedSection delay={350}>
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <CostBreakdownChart 
-                  dailyData={data.dailyData}
-                  telephonyData={data.telephony}
-                  messagesData={data.messages}
-                  aiUsageData={[]}
-                  hiemsMonthlyCost={businessMetrics?.hiems_monthly_support_cost || 0}
-                  isLoading={loading}
-                />
-                
-                {/* Revenue Sources Card */}
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Intäktskällor</CardTitle>
-                    <p className="text-sm text-muted-foreground">Fördelning per tjänstekategori</p>
-                  </CardHeader>
-                  <CardContent>
-                    {data.serviceMetrics && data.serviceMetrics.length > 0 ? (
-                      <>
-                        <ResponsiveContainer width="100%" height={250}>
-                          <PieChart>
-                            <Pie
-                              data={data.serviceMetrics}
-                              dataKey="revenue"
-                              nameKey="serviceName"
-                              cx="50%"
-                              cy="50%"
-                              outerRadius={80}
-                              label={(entry) => `${entry.serviceName}: ${entry.revenue.toFixed(0)} kr`}
-                            >
-                              {data.serviceMetrics.map((entry, index) => (
-                                <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                              ))}
-                            </Pie>
-                            <Tooltip formatter={(value: number) => `${value.toFixed(2)} SEK`} />
-                          </PieChart>
-                        </ResponsiveContainer>
-                        <div className="mt-6 space-y-2">
-                          {data.serviceMetrics.map((service, index) => (
-                            <div key={service.serviceName} className="flex items-center justify-between p-3 rounded-lg bg-muted/50">
-                              <div className="flex items-center gap-3">
-                                <div className="w-4 h-4 rounded-full" style={{ backgroundColor: COLORS[index % COLORS.length] }} />
-                                <span className="font-medium">{service.serviceName}</span>
-                              </div>
-                              <div className="text-right">
-                                <p className="font-semibold">{service.revenue.toFixed(0)} SEK</p>
-                                <p className="text-xs text-muted-foreground">{service.bookingCount} bokningar • {service.roi.toFixed(1)}% ROI</p>
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      </>
-                    ) : (
-                      <div className="flex items-center justify-center h-64">
-                        <p className="text-muted-foreground">Ingen data tillgänglig</p>
-                      </div>
-                    )}
-                  </CardContent>
-                </Card>
-              </div>
-            </AnimatedSection>
+              {/* Middle Row: Booking Trend, Profit Margin, Cost Breakdown */}
+              <AnimatedSection delay={350}>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  <BookingTrendChart data={data.dailyData} isLoading={loading} />
+                  <ProfitMarginChart data={data.dailyData} isLoading={loading} />
+                  <CostBreakdownChart 
+                    dailyData={data.dailyData}
+                    telephonyData={data.telephony}
+                    messagesData={data.messages}
+                    aiUsageData={[]}
+                    hiemsMonthlyCost={businessMetrics?.hiems_monthly_support_cost || 0}
+                    isLoading={loading}
+                  />
+                </div>
+              </AnimatedSection>
+
+              {/* Bottom Row: Service Revenue, Cumulative, Daily ROI */}
+              <AnimatedSection delay={400}>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  <ServiceRevenueChart data={data.serviceMetrics} isLoading={loading} />
+                  <CumulativeRevenueChart data={data.dailyData} isLoading={loading} />
+                  <DailyROIChart data={data.dailyData} isLoading={loading} />
+                </div>
+              </AnimatedSection>
+            </>
           )}
 
           {/* Financial Breakdown Detail */}
@@ -294,7 +268,7 @@ const Dashboard = () => {
                   <p className="text-sm text-muted-foreground">Översikt över alla kostnader i vald period</p>
                 </CardHeader>
                 <CardContent>
-                  <div className="space-y-6">
+                  <div className="space-y-4">
                     {/* Variable Costs */}
                     <div>
                       <h4 className="font-semibold text-lg mb-4 flex items-center gap-2">
@@ -369,7 +343,7 @@ const Dashboard = () => {
           {/* Break-Even & Projections */}
           {data && (
             <AnimatedSection delay={450}>
-              <div className="space-y-6">
+              <div className="space-y-4">
                 <BreakEvenCard breakEven={data.breakEven} />
                 <ProjectionTabs 
                   projection12={data.projection12}
