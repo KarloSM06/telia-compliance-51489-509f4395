@@ -7,9 +7,10 @@ import { sv } from "date-fns/locale";
 import { Skeleton } from "@/components/ui/skeleton";
 
 interface ActivityItem {
-  created_at: string;
-  total_cost: number;
-  generation_id?: string;
+  date: string;
+  usage: number;
+  endpoint_id?: string;
+  requests: number;
 }
 
 interface APIKey {
@@ -77,14 +78,14 @@ export const APIKeyUsageChart = ({ activityData, keysList, isLoading }: APIKeyUs
   const [selectedMetric, setSelectedMetric] = useState<MetricType>('cost');
   const [hiddenKeys, setHiddenKeys] = useState<Set<string>>(new Set());
 
-  const getKeyHashFromGenerationId = (genId: string) => {
-    if (!genId) return 'Unknown';
-    return genId.split('-')[0];
+  const getEndpointId = (endpointId: string) => {
+    if (!endpointId) return 'Unknown';
+    return endpointId;
   };
 
-  const getKeyName = (hash: string) => {
-    const key = keysList?.find(k => k.hash.startsWith(hash));
-    return key?.label || key?.name || `${hash.substring(0, 8)}...`;
+  const getKeyName = (endpointId: string) => {
+    if (!endpointId || endpointId === 'Unknown') return 'Unknown';
+    return `Endpoint ${endpointId.substring(0, 12)}`;
   };
 
   const { chartData, uniqueKeys } = useMemo(() => {
@@ -93,17 +94,17 @@ export const APIKeyUsageChart = ({ activityData, keysList, isLoading }: APIKeyUs
     }
 
     const keyDataByDate = activityData.reduce((acc, item) => {
-      const date = new Date(item.created_at).toISOString().split('T')[0];
-      const keyHash = getKeyHashFromGenerationId(item.generation_id || '');
-      const keyName = getKeyName(keyHash);
+      const date = item.date.split(' ')[0];
+      const endpointId = getEndpointId(item.endpoint_id || '');
+      const keyName = getKeyName(endpointId);
       
       if (!acc[date]) acc[date] = {};
       if (!acc[date][keyName]) {
         acc[date][keyName] = { cost: 0, requests: 0 };
       }
       
-      acc[date][keyName].cost += item.total_cost || 0;
-      acc[date][keyName].requests += 1;
+      acc[date][keyName].cost += item.usage || 0;
+      acc[date][keyName].requests += item.requests || 1;
       
       return acc;
     }, {} as Record<string, Record<string, {cost: number, requests: number}>>);
@@ -116,8 +117,8 @@ export const APIKeyUsageChart = ({ activityData, keysList, isLoading }: APIKeyUs
     })).sort((a, b) => a.date.localeCompare(b.date));
 
     const keys = Array.from(new Set(activityData.map(item => {
-      const keyHash = getKeyHashFromGenerationId(item.generation_id || '');
-      return getKeyName(keyHash);
+      const endpointId = getEndpointId(item.endpoint_id || '');
+      return getKeyName(endpointId);
     })));
 
     return { chartData: data, uniqueKeys: keys };

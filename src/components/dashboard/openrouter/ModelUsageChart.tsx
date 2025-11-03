@@ -7,10 +7,12 @@ import { sv } from "date-fns/locale";
 import { Skeleton } from "@/components/ui/skeleton";
 
 interface ActivityItem {
-  created_at: string;
+  date: string;
   model: string;
-  total_cost: number;
-  total_tokens: number;
+  usage: number;
+  prompt_tokens: number;
+  completion_tokens: number;
+  requests: number;
 }
 
 interface ModelUsageChartProps {
@@ -77,7 +79,7 @@ export const ModelUsageChart = ({ activityData, isLoading }: ModelUsageChartProp
     }
 
     const modelDataByDate = activityData.reduce((acc, item) => {
-      const date = new Date(item.created_at).toISOString().split('T')[0];
+      const date = item.date.split(' ')[0]; // Extract YYYY-MM-DD from "2025-11-02 00:00:00"
       const model = item.model || 'Unknown';
       
       if (!acc[date]) acc[date] = {};
@@ -85,9 +87,9 @@ export const ModelUsageChart = ({ activityData, isLoading }: ModelUsageChartProp
         acc[date][model] = { cost: 0, tokens: 0, requests: 0 };
       }
       
-      acc[date][model].cost += item.total_cost || 0;
-      acc[date][model].tokens += item.total_tokens || 0;
-      acc[date][model].requests += 1;
+      acc[date][model].cost += item.usage || 0;
+      acc[date][model].tokens += (item.prompt_tokens || 0) + (item.completion_tokens || 0);
+      acc[date][model].requests += item.requests || 1;
       
       return acc;
     }, {} as Record<string, Record<string, {cost: number, tokens: number, requests: number}>>);
