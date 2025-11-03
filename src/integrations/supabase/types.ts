@@ -3916,7 +3916,35 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      v_user_costs: {
+        Row: {
+          cost_sek: number | null
+          cost_type: string | null
+          date: string | null
+          event_count: number | null
+          user_id: string | null
+        }
+        Relationships: []
+      }
+      v_user_revenue: {
+        Row: {
+          actual_revenue: number | null
+          booking_count: number | null
+          date: string | null
+          expected_revenue: number | null
+          service_type: string | null
+          user_id: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "calendar_events_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Functions: {
       auto_delete_old_calls: { Args: never; Returns: undefined }
