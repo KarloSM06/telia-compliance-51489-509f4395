@@ -1,6 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { DollarSign, TrendingUp, Zap } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
+import { USD_TO_SEK } from "@/lib/constants";
 
 interface AccountBalanceCardsProps {
   totalCredits?: number;
@@ -26,6 +27,11 @@ export const AccountBalanceCards = ({
     return "text-green-500";
   };
 
+  // Convert USD to SEK for display
+  const formatSEK = (amount: number) => {
+    return (amount * USD_TO_SEK).toFixed(2);
+  };
+
   return (
     <div className="grid gap-4 grid-cols-2 md:grid-cols-4">
       <Card>
@@ -34,9 +40,9 @@ export const AccountBalanceCards = ({
           <DollarSign className="h-4 w-4 text-muted-foreground" />
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">${remaining.toFixed(2)}</div>
+          <div className="text-2xl font-bold">{formatSEK(remaining)} SEK</div>
           <p className="text-xs text-muted-foreground">
-            av ${totalCredits.toFixed(2)}
+            av {formatSEK(totalCredits)} SEK
           </p>
         </CardContent>
       </Card>
@@ -48,7 +54,7 @@ export const AccountBalanceCards = ({
         </CardHeader>
         <CardContent>
           <div className={`text-2xl font-bold ${getUsageColor()}`}>
-            ${totalUsage.toFixed(2)}
+            {formatSEK(totalUsage)} SEK
           </div>
           <p className="text-xs text-muted-foreground">
             {usagePercent.toFixed(1)}% använt
@@ -78,10 +84,10 @@ export const AccountBalanceCards = ({
         </CardHeader>
         <CardContent>
           <div className="text-2xl font-bold">
-            ${(limitRemaining != null ? limitRemaining : remaining).toFixed(2)}
+            {formatSEK(limitRemaining != null ? limitRemaining : remaining)} SEK
           </div>
           <p className="text-xs text-muted-foreground">
-            limit remaining
+            kvarvarande limit
           </p>
         </CardContent>
       </Card>

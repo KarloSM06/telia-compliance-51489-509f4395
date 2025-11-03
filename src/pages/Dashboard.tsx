@@ -25,6 +25,7 @@ import { DailyROIChart } from '@/components/dashboard/charts/DailyROIChart';
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from 'recharts';
 import hiemsLogoSnowflake from '@/assets/hiems-logo-snowflake.png';
 import { format } from 'date-fns';
+import { USD_TO_SEK } from '@/lib/constants';
 
 const COLORS = ['hsl(217, 91%, 60%)', 'hsl(271, 70%, 60%)', 'hsl(189, 94%, 43%)', 'hsl(330, 81%, 60%)', 'hsl(142, 76%, 36%)'];
 
@@ -46,7 +47,8 @@ const Dashboard = () => {
       ['Datum', 'Bokningar', 'Intäkter (SEK)', 'Kostnader (SEK)', 'Telefoni (SEK)', 'SMS (SEK)', 'Email (SEK)', 'AI (SEK)', 'Hiems (SEK)', 'Vinst (SEK)', 'ROI (%)'].join(','),
       ...data.dailyData.map(d => {
         const dayTelephony = data.telephony.filter(t => format(new Date(t.event_timestamp), 'yyyy-MM-dd') === d.date);
-        const telephonyCost = dayTelephony.reduce((sum, t) => sum + (t.aggregate_cost_amount || 0), 0);
+        // Always use cost_amount (USD) and convert to SEK - aggregate_cost_amount is incorrect in DB
+        const telephonyCost = dayTelephony.reduce((sum, t) => sum + ((parseFloat(t.cost_amount) || 0) * USD_TO_SEK), 0);
         
         const dayMessages = data.messages.filter(m => format(new Date(m.created_at), 'yyyy-MM-dd') === d.date);
         const smsCost = dayMessages.filter(m => m.message_type === 'sms').reduce((sum, m) => sum + ((m.metadata as any)?.cost_sek || 0), 0);

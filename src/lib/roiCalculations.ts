@@ -139,9 +139,9 @@ export function calculateOperationalCosts(
   businessMetrics: BusinessMetrics,
   dateRange: { from: Date; to: Date }
 ): OperationalCosts {
-  // Use aggregate_cost_amount (already in SEK) if available, otherwise convert cost_amount from USD to SEK
+  // Always use cost_amount (USD) and convert to SEK - aggregate_cost_amount is incorrect in DB
   const telephonyCost = telephonyEvents.reduce((sum, e) => {
-    const costSEK = e.aggregate_cost_amount || (parseFloat(e.cost_amount) || 0) * USD_TO_SEK;
+    const costSEK = (parseFloat(e.cost_amount) || 0) * USD_TO_SEK;
     return sum + costSEK;
   }, 0);
   
@@ -162,8 +162,9 @@ export function calculateOperationalCosts(
     }, 0);
   
   // Calculate AI costs from usage logs
+  // cost_sek is not populated in DB, use cost_usd instead
   const aiCost = aiUsageLogs.reduce((sum, log) => {
-    return sum + (parseFloat(log.cost_sek) || 0);
+    return sum + ((parseFloat(log.cost_usd) || 0) * USD_TO_SEK);
   }, 0);
   
   // Calculate prorated fixed costs based on date range

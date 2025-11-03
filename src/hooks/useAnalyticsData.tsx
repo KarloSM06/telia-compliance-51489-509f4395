@@ -160,19 +160,20 @@ export const useAnalyticsData = (dateRange?: { from: Date; to: Date }) => {
             dailyMap.set(day, { date: day, bookings: 0, revenue: 0, costs: 0 });
           }
           const dayData = dailyMap.get(day);
-          // Use aggregate_cost_amount (SEK) if available, otherwise convert cost_amount (USD) to SEK
-          const costSEK = t.aggregate_cost_amount || (parseFloat(String(t.cost_amount || 0)) * USD_TO_SEK);
+          // Always use cost_amount (USD) and convert to SEK - aggregate_cost_amount is incorrect in DB
+          const costSEK = (parseFloat(String(t.cost_amount || 0)) * USD_TO_SEK);
           dayData.costs += costSEK;
         });
 
-        // FAS 1: Add AI usage costs to daily map
+        // Add AI usage costs to daily map
         aiUsage.forEach(ai => {
           const day = format(new Date(ai.created_at), 'yyyy-MM-dd');
           if (!dailyMap.has(day)) {
             dailyMap.set(day, { date: day, bookings: 0, revenue: 0, costs: 0 });
           }
           const dayData = dailyMap.get(day);
-          dayData.costs += Number(ai.cost_sek || 0);
+          // cost_sek is not populated in DB, use cost_usd instead
+          dayData.costs += Number(ai.cost_usd || 0) * USD_TO_SEK;
         });
 
         const dailyData = Array.from(dailyMap.values()).map(d => ({
