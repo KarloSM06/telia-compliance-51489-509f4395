@@ -35,7 +35,7 @@ serve(async (req) => {
       .from('integrations')
       .select('*')
       .eq('id', integration_id)
-      .single();
+      .maybeSingle();
 
     console.log('📊 Integration query result:', { integration, error: integrationError });
 
@@ -46,7 +46,7 @@ serve(async (req) => {
 
     if (!integration) {
       console.error('❌ No integration found with ID:', integration_id);
-      throw new Error('Integration not found in database');
+      throw new Error('Integration not found or you do not have access to it');
     }
 
     // Verify ownership
