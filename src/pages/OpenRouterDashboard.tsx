@@ -53,7 +53,7 @@ const OpenRouterDashboard = () => {
   const lastSnapshot = snapshots?.[0];
 
   return (
-    <div className="space-y-3 p-4">
+    <div className="space-y-6 p-6">
       <OpenRouterHeader
         lastSyncAt={lastSnapshot?.created_at}
         onSettingsClick={() => setShowSetupModal(true)}
@@ -88,8 +88,8 @@ const OpenRouterDashboard = () => {
         isLoading={isLoadingKeys}
       />
 
-      <Card className="p-3">
-        <div className="flex gap-2">
+      <Card className="p-4">
+        <div className="flex gap-3">
           <Button 
             variant={dateRangeDays === 7 ? "default" : "outline"}
             size="sm"
@@ -114,7 +114,7 @@ const OpenRouterDashboard = () => {
         </div>
       </Card>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <ModelUsageChart 
           activityData={activityData?.data || []}
           isLoading={isLoadingActivity}

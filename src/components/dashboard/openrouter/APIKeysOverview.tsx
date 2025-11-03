@@ -32,12 +32,12 @@ export const APIKeysOverview = ({ keys, isLoading }: APIKeysOverviewProps) => {
   if (isLoading) {
     return (
       <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Key className="h-5 w-5" />
-            API-nycklar Översikt
-          </CardTitle>
-        </CardHeader>
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2 text-lg font-semibold">
+          <Key className="h-5 w-5" />
+          API-nycklar Översikt
+        </CardTitle>
+      </CardHeader>
         <CardContent>
           <div className="grid gap-4 md:grid-cols-3">
             <Skeleton className="h-24" />
@@ -69,37 +69,37 @@ export const APIKeysOverview = ({ keys, isLoading }: APIKeysOverviewProps) => {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="flex items-center gap-2 text-base">
-          <Key className="h-4 w-4" />
+        <CardTitle className="flex items-center gap-2 text-lg font-semibold">
+          <Key className="h-5 w-5" />
           API-nycklar Översikt
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="grid gap-2 grid-cols-2 md:grid-cols-4 mb-3">
-          <div className="space-y-1">
-            <p className="text-xs text-muted-foreground">Totalt Antal</p>
-            <p className="text-lg font-bold">{apiKeys.length}</p>
-            <p className="text-[10px] text-muted-foreground">
+        <div className="grid gap-4 grid-cols-2 md:grid-cols-4 mb-3">
+          <div className="space-y-2">
+            <p className="text-sm text-muted-foreground">Totalt Antal</p>
+            <p className="text-2xl font-bold">{apiKeys.length}</p>
+            <p className="text-xs text-muted-foreground">
               {totals.active} aktiva
             </p>
           </div>
           
-          <div className="space-y-1">
-            <p className="text-xs text-muted-foreground">Total Användning</p>
-            <p className="text-lg font-bold">{formatDollarCompact(totals.usage)}</p>
-            <p className="text-[10px] text-muted-foreground">all-time</p>
+          <div className="space-y-2">
+            <p className="text-sm text-muted-foreground">Total Användning</p>
+            <p className="text-2xl font-bold">{formatDollarCompact(totals.usage)}</p>
+            <p className="text-xs text-muted-foreground">all-time</p>
           </div>
           
-          <div className="space-y-1">
-            <p className="text-xs text-muted-foreground">Idag</p>
-            <p className="text-lg font-bold">{formatDollarCompact(totals.usageDaily)}</p>
-            <p className="text-[10px] text-muted-foreground">daily spend</p>
+          <div className="space-y-2">
+            <p className="text-sm text-muted-foreground">Idag</p>
+            <p className="text-2xl font-bold">{formatDollarCompact(totals.usageDaily)}</p>
+            <p className="text-xs text-muted-foreground">daily spend</p>
           </div>
           
-          <div className="space-y-1">
-            <p className="text-xs text-muted-foreground">Denna Månad</p>
-            <p className="text-lg font-bold">{formatDollarCompact(totals.usageMonthly)}</p>
-            <p className="text-[10px] text-muted-foreground">monthly spend</p>
+          <div className="space-y-2">
+            <p className="text-sm text-muted-foreground">Denna Månad</p>
+            <p className="text-2xl font-bold">{formatDollarCompact(totals.usageMonthly)}</p>
+            <p className="text-xs text-muted-foreground">monthly spend</p>
           </div>
         </div>
 
@@ -130,7 +130,7 @@ export const APIKeysOverview = ({ keys, isLoading }: APIKeysOverviewProps) => {
         )}
 
         {isExpanded && (
-          <div className="grid gap-2 md:grid-cols-2 lg:grid-cols-3 mt-3">
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 mt-3">
           {apiKeys.map((key) => {
             const displayName = (key.name?.trim() || '') || 'Namnlös';
             const dailyUsage = key.usage_daily || 0;
@@ -139,20 +139,20 @@ export const APIKeysOverview = ({ keys, isLoading }: APIKeysOverviewProps) => {
             return (
                 <div
                   key={key.hash}
-                  className="border rounded-lg p-2 space-y-1.5 hover:bg-accent/50 transition-colors"
+                  className="border rounded-lg p-3 space-y-2 hover:bg-accent/50 transition-colors"
                 >
                   <div className="flex items-start justify-between">
                     <div className="flex-1 min-w-0">
-                      <p className="font-medium text-xs truncate">
+                      <p className="font-medium text-sm truncate">
                         {displayName}
                       </p>
                     </div>
-                    <Badge variant={key.disabled ? "secondary" : "default"} className="ml-2 text-[10px] px-1.5 py-0">
+                    <Badge variant={key.disabled ? "secondary" : "default"} className="ml-2 text-xs px-2 py-0.5">
                       {key.disabled ? "Inaktiv" : "Aktiv"}
                     </Badge>
                   </div>
                   
-                  <div className="space-y-0.5 text-xs">
+                  <div className="space-y-1 text-sm">
                     <div className="flex justify-between">
                       <span className="text-muted-foreground">Total:</span>
                       <span className="font-medium">{formatDollarCompact(key.usage)}</span>

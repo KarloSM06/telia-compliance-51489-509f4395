@@ -13,7 +13,7 @@ export const OpenRouterHeader = ({ lastSyncAt, onSettingsClick }: OpenRouterHead
   const { mutate: syncAccount, isPending: isSyncing } = useSyncOpenRouterAccount();
 
   return (
-    <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+    <div className="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
       <div>
         <h1 className="text-3xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
           OpenRouter Dashboard
