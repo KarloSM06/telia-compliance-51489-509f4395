@@ -13,7 +13,47 @@ export default function Notifications() {
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-0">
 
         {/* Desktop Navigation - Minimalist Pill Design */}
-        
+        <div className="hidden lg:block sticky top-0 z-40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b border-border">
+          <div className="container mx-auto px-6 lg:px-8">
+            <TabsList className="h-14 bg-transparent border-0 p-0 gap-1">
+              <TabsTrigger 
+                value="analytics" 
+                className="gap-2 data-[state=active]:bg-primary/10 data-[state=active]:text-primary rounded-full px-6"
+              >
+                <BarChart3 className="h-4 w-4" />
+                Analys
+              </TabsTrigger>
+              <TabsTrigger 
+                value="templates" 
+                className="gap-2 data-[state=active]:bg-primary/10 data-[state=active]:text-primary rounded-full px-6"
+              >
+                <FileText className="h-4 w-4" />
+                Mallar
+              </TabsTrigger>
+              <TabsTrigger 
+                value="reminders" 
+                className="gap-2 data-[state=active]:bg-primary/10 data-[state=active]:text-primary rounded-full px-6"
+              >
+                <Bell className="h-4 w-4" />
+                Påminnelser
+              </TabsTrigger>
+              <TabsTrigger 
+                value="notifications" 
+                className="gap-2 data-[state=active]:bg-primary/10 data-[state=active]:text-primary rounded-full px-6"
+              >
+                <BellRing className="h-4 w-4" />
+                Ägarnotiser
+              </TabsTrigger>
+              <TabsTrigger 
+                value="sms-provider" 
+                className="gap-2 data-[state=active]:bg-primary/10 data-[state=active]:text-primary rounded-full px-6"
+              >
+                <MessageSquare className="h-4 w-4" />
+                SMS-leverantör
+              </TabsTrigger>
+            </TabsList>
+          </div>
+        </div>
 
         {/* Mobile Navigation */}
         <div className="lg:hidden sticky top-0 z-40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b border-border py-4">
