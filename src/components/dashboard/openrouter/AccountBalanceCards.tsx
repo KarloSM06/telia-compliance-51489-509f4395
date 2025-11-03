@@ -78,7 +78,7 @@ export const AccountBalanceCards = ({
         </CardHeader>
         <CardContent className="pb-2">
           <div className="text-lg font-bold">
-            ${limitRemaining !== undefined ? limitRemaining.toFixed(2) : remaining.toFixed(2)}
+            ${(limitRemaining != null ? limitRemaining : remaining).toFixed(2)}
           </div>
           <p className="text-[10px] text-muted-foreground">
             limit remaining
