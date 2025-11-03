@@ -3916,6 +3916,22 @@ export type Database = {
       }
     }
     Views: {
+      mv_daily_communication_stats: {
+        Row: {
+          channel: string | null
+          date: string | null
+          delivered_count: number | null
+          failed_count: number | null
+          inbound_count: number | null
+          message_count: number | null
+          outbound_count: number | null
+          provider: string | null
+          status: string | null
+          total_cost: number | null
+          user_id: string | null
+        }
+        Relationships: []
+      }
       v_user_costs: {
         Row: {
           cost_sek: number | null
@@ -3958,6 +3974,7 @@ export type Database = {
         Returns: boolean
       }
       is_admin: { Args: { user_id: string }; Returns: boolean }
+      refresh_communication_stats: { Args: never; Returns: undefined }
       user_can_access_dashboard: {
         Args: { dashboard_uuid: string; user_uuid: string }
         Returns: boolean
