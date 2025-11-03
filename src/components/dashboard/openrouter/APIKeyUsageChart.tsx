@@ -92,13 +92,17 @@ export const APIKeyUsageChart = ({ activityData, keysList, isLoading }: APIKeyUs
   const [selectedMetric, setSelectedMetric] = useState<MetricType>('cost');
   const [hiddenKeys, setHiddenKeys] = useState<Set<string>>(new Set());
 
+  // Helper to get display name, prioritizing 'name' over 'label'
+  const getDisplayName = (k: APIKey) => (k?.name?.trim() || k?.label || 'Unnamed Key');
+
   // Debug: Check if keysList is available
   if (!keysList || keysList.length === 0) {
     console.warn('⚠️ APIKeyUsageChart: keysList is empty or undefined');
   } else {
     console.log('📋 Available keys:', keysList.map(k => ({ 
-      hash: k.hash.substring(0, 20) + '...', 
-      name: k.label || k.name 
+      hash: (k.hash || '').substring(0, 20) + '...', 
+      name: k.name,
+      label: k.label
     })));
   }
 
@@ -117,13 +121,18 @@ export const APIKeyUsageChart = ({ activityData, keysList, isLoading }: APIKeyUs
     if (!keysList) return { nameByExact: exact, nameByMasked: masked, nameByPrefix: prefix };
 
     keysList.forEach(k => {
-      const display = k.label || k.name || 'Unnamed Key';
+      const display = getDisplayName(k);
       const h = k.hash || '';
       
       if (!h) return;
 
       // Exact hash mapping
       exact.set(h, display);
+
+      // Direct label mapping (k.label is the masked string from API)
+      if (k.label) {
+        masked.set(k.label, display);
+      }
 
       // Generate common masked formats
       // Format 1: sk-or-v1-xxx...yyy (3 chars each side)
@@ -206,7 +215,7 @@ export const APIKeyUsageChart = ({ activityData, keysList, isLoading }: APIKeyUs
             k.hash && k.hash.startsWith(p) && k.hash.endsWith(s)
           );
           if (match) {
-            result = match.label || match.name || 'Unnamed Key';
+            result = getDisplayName(match);
             console.log('🧩 Manual masked match:', result);
             cache.set(endpointId, result);
             return result;
@@ -230,7 +239,7 @@ export const APIKeyUsageChart = ({ activityData, keysList, isLoading }: APIKeyUs
         });
 
         if (match) {
-          result = match.label || match.name || 'Unnamed Key';
+          result = getDisplayName(match);
           console.log('🧩 Partial match:', result);
           cache.set(endpointId, result);
           return result;
@@ -240,7 +249,8 @@ export const APIKeyUsageChart = ({ activityData, keysList, isLoading }: APIKeyUs
       console.warn('❌ No match for endpoint_id:', endpointId);
       console.warn('   First 3 available keys:', keysList?.slice(0, 3).map(k => ({
         hash: k.hash?.substring(0, 20) + '...',
-        name: k.label || k.name
+        name: k.name,
+        label: k.label
       })));
       
       const fallback = `Key ${endpointId.substring(0, 8)}...`;
