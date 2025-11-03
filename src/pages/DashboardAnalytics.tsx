@@ -315,6 +315,8 @@ const DashboardAnalytics = () => {
             {/* Variable Costs */}
             <div className="space-y-2">
               <p className="text-xs font-semibold text-muted-foreground uppercase">Variabla Kostnader</p>
+              
+              {/* Telephony */}
               <div className="flex justify-between items-center">
                 <div className="flex items-center gap-2">
                   <Phone className="h-4 w-4 text-muted-foreground" />
@@ -324,15 +326,8 @@ const DashboardAnalytics = () => {
                   {data.costs.telephonyCost.toLocaleString('sv-SE', { maximumFractionDigits: 2 })} SEK
                 </span>
               </div>
-              <div className="flex justify-between items-center">
-                <div className="flex items-center gap-2">
-                  <Brain className="h-4 w-4 text-purple-500" />
-                  <span className="text-sm text-muted-foreground">OpenRouter AI (månad)</span>
-                </div>
-                <span className="font-semibold">
-                  {(aiUsage?.totalCostSEK || 0).toLocaleString('sv-SE', { maximumFractionDigits: 2 })} SEK
-                </span>
-              </div>
+
+              {/* SMS */}
               <div className="flex justify-between items-center">
                 <div className="flex items-center gap-2">
                   <Smartphone className="h-4 w-4 text-muted-foreground" />
@@ -342,6 +337,8 @@ const DashboardAnalytics = () => {
                   {data.costs.smsCost.toLocaleString('sv-SE', { maximumFractionDigits: 2 })} SEK
                 </span>
               </div>
+
+              {/* Email */}
               <div className="flex justify-between items-center">
                 <div className="flex items-center gap-2">
                   <Mail className="h-4 w-4 text-muted-foreground" />
@@ -351,9 +348,11 @@ const DashboardAnalytics = () => {
                   {data.costs.emailCost.toLocaleString('sv-SE', { maximumFractionDigits: 2 })} SEK
                 </span>
               </div>
+
+              {/* AI & Models (OpenRouter) - Main row */}
               <div className="flex justify-between items-center">
                 <div className="flex items-center gap-2">
-                  <Sparkles className="h-4 w-4 text-muted-foreground" />
+                  <Brain className="h-4 w-4 text-purple-500" />
                   <span className="text-sm text-muted-foreground">AI & Modeller (OpenRouter)</span>
                   <Button 
                     variant="ghost" 
@@ -372,35 +371,29 @@ const DashboardAnalytics = () => {
                 </span>
               </div>
               
-              {/* OpenRouter-specific breakdown */}
+              {/* OpenRouter Model Breakdown - Sub-section under AI */}
               {aiUsage && aiUsage.costByModel && aiUsage.costByModel.length > 0 && (
-                <>
-                  <Separator className="my-2" />
-                  <div className="space-y-2">
-                    <p className="text-xs font-semibold text-muted-foreground uppercase">
-                      AI-kostnader (OpenRouter)
-                    </p>
-                    {aiUsage.costByModel
-                      .filter(m => m.cost > 0)
-                      .slice(0, 3)
-                      .map(model => (
-                        <div key={model.model} className="flex justify-between items-center pl-4">
-                          <div className="flex items-center gap-2">
-                            <Brain className="h-3 w-3 text-purple-500" />
-                            <span className="text-xs text-muted-foreground">{model.model}</span>
-                          </div>
-                          <span className="text-sm font-medium">
-                            {model.cost.toLocaleString('sv-SE', { maximumFractionDigits: 2 })} SEK
-                          </span>
+                <div className="ml-6 space-y-1 pt-1">
+                  {aiUsage.costByModel
+                    .filter(m => m.cost > 0)
+                    .slice(0, 3)
+                    .map(model => (
+                      <div key={model.model} className="flex justify-between items-center text-xs">
+                        <div className="flex items-center gap-1.5">
+                          <div className="w-1 h-1 rounded-full bg-purple-400" />
+                          <span className="text-muted-foreground">{model.model}</span>
                         </div>
-                      ))}
-                    {aiUsage.costByModel.length > 3 && (
-                      <p className="text-xs text-muted-foreground pl-4">
-                        +{aiUsage.costByModel.length - 3} fler modeller
-                      </p>
-                    )}
-                  </div>
-                </>
+                        <span className="font-medium text-muted-foreground">
+                          {model.cost.toLocaleString('sv-SE', { maximumFractionDigits: 2 })} SEK
+                        </span>
+                      </div>
+                    ))}
+                  {aiUsage.costByModel.length > 3 && (
+                    <p className="text-xs text-muted-foreground italic">
+                      +{aiUsage.costByModel.length - 3} fler modeller
+                    </p>
+                  )}
+                </div>
               )}
             </div>
             
