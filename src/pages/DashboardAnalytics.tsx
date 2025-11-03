@@ -33,6 +33,7 @@ import { useAnalyticsData } from "@/hooks/useAnalyticsData";
 import { useBusinessMetrics } from "@/hooks/useBusinessMetrics";
 import { useAIUsage } from "@/hooks/useAIUsage";
 import { DateRangePicker, DateRange } from "@/components/dashboard/filters/DateRangePicker";
+import { StatCard } from "@/components/communications/StatCard";
 import { PremiumTelephonyStatCard } from "@/components/telephony/PremiumTelephonyStatCard";
 import { AnimatedSection } from "@/components/shared/AnimatedSection";
 import { AreaChartComponent } from "@/components/dashboard/charts/AreaChartComponent";
