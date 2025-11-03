@@ -1,11 +1,5 @@
 project_id = "shskknkivuewuqonjdjc"
 
-[functions.sync-openrouter-usage-cron]
-verify_jwt = false
-
-[functions.sync-openrouter-usage-cron.schedule]
-cron = "0 * * * *"
-
 [functions.send-test-message]
 verify_jwt = true
 
@@ -175,7 +169,4 @@ verify_jwt = true
 verify_jwt = true
 
 [functions.get-user-usage]
-verify_jwt = true
-
-[functions.test-openrouter-endpoints]
 verify_jwt = true

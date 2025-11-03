@@ -11,9 +11,6 @@ import { startOfMonth, endOfMonth } from "date-fns";
 import { OpenRouterSetupModal } from "./OpenRouterSetupModal";
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
-import { toast } from "sonner";
-import { Loader2, TestTube } from "lucide-react";
 
 export function AIIntegrationsTab() {
   const navigate = useNavigate();
@@ -24,9 +21,6 @@ export function AIIntegrationsTab() {
   });
   const [setupModalOpen, setSetupModalOpen] = useState(false);
   const [isRealtime, setIsRealtime] = useState(false);
-  const [testModalOpen, setTestModalOpen] = useState(false);
-  const [testResults, setTestResults] = useState<any>(null);
-  const [isTesting, setIsTesting] = useState(false);
 
   const isOpenRouterConfigured = settings?.ai_provider === 'openrouter' && settings?.openrouter_api_key_encrypted;
 
@@ -47,34 +41,6 @@ export function AIIntegrationsTab() {
       supabase.removeChannel(channel); 
     };
   }, []);
-
-  const handleTestEndpoints = async () => {
-    setIsTesting(true);
-    setTestModalOpen(true);
-    setTestResults(null);
-
-    try {
-      const { data, error } = await supabase.functions.invoke('test-openrouter-endpoints', {
-        headers: {
-          Authorization: `Bearer ${(await supabase.auth.getSession()).data.session?.access_token}`,
-        },
-      });
-
-      if (error) throw error;
-
-      setTestResults(data);
-      toast.success('Endpoint-test genomfört');
-    } catch (error) {
-      console.error('Test failed:', error);
-      toast.error('Test misslyckades');
-      setTestResults({
-        error: error instanceof Error ? error.message : 'Unknown error',
-        summary: '❌ Test kunde inte genomföras'
-      });
-    } finally {
-      setIsTesting(false);
-    }
-  };
 
   return (
     <div className="space-y-6">
@@ -107,19 +73,6 @@ export function AIIntegrationsTab() {
                   </>
                 )}
               </Button>
-              {isOpenRouterConfigured && (
-                <Button
-                  variant="outline"
-                  onClick={handleTestEndpoints}
-                  disabled={isTesting}
-                >
-                  {isTesting ? (
-                    <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Testar...</>
-                  ) : (
-                    <><TestTube className="mr-2 h-4 w-4" /> Testa Endpoints</>
-                  )}
-                </Button>
-              )}
               <Button variant="outline" onClick={() => navigate('/dashboard/settings?tab=ai')}>
                 Avancerade inställningar
               </Button>
@@ -157,23 +110,10 @@ export function AIIntegrationsTab() {
                   <span className="text-muted-foreground">Realtids-tracking (submit-prompt)</span>
                   <Badge variant="default" className="bg-green-600">Aktiv</Badge>
                 </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-muted-foreground">Backup-sync (cron, varje timme)</span>
-                  <Badge variant="default" className="bg-blue-600">Aktiv</Badge>
-                </div>
+                <p className="text-xs text-muted-foreground mt-2">
+                  All AI-användning loggas automatiskt vid varje anrop via /chat/completions.
+                </p>
               </div>
-              <p className="text-xs text-muted-foreground mt-3">
-                All AI-användning loggas automatiskt via hybrid-strategi. Se{' '}
-                <a 
-                  href="https://github.com/yourusername/hiems/blob/main/OPENROUTER_INTEGRATION.md" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="underline hover:text-primary"
-                >
-                  dokumentation
-                </a>{' '}
-                för detaljer.
-              </p>
             </div>
           )}
         </CardContent>
@@ -356,83 +296,6 @@ export function AIIntegrationsTab() {
         open={setupModalOpen} 
         onOpenChange={setSetupModalOpen}
       />
-
-      <Dialog open={testModalOpen} onOpenChange={setTestModalOpen}>
-        <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle>OpenRouter Endpoint Test</DialogTitle>
-            <DialogDescription>
-              Verifierar funktionalitet för /api/v1/generation och /api/v1/activity
-            </DialogDescription>
-          </DialogHeader>
-
-          {isTesting && (
-            <div className="flex items-center justify-center py-8">
-              <Loader2 className="h-8 w-8 animate-spin text-primary" />
-              <span className="ml-3">Testar endpoints...</span>
-            </div>
-          )}
-
-          {testResults && !isTesting && (
-            <div className="space-y-4">
-              {/* Summary */}
-              <div className="p-4 bg-muted rounded-lg">
-                <h3 className="font-semibold mb-2">Sammanfattning</h3>
-                <p className="text-sm">{testResults.summary}</p>
-                {testResults.recommendation && (
-                  <p className="text-sm mt-2">
-                    <strong>Rekommendation:</strong> {testResults.recommendation}
-                  </p>
-                )}
-              </div>
-
-              {/* Generation Endpoint */}
-              {testResults.generation_endpoint && (
-                <div className="p-4 border rounded-lg">
-                  <div className="flex items-center justify-between mb-2">
-                    <h3 className="font-semibold">/api/v1/generation</h3>
-                    <Badge variant={testResults.generation_endpoint.status === 'success' ? 'default' : 'destructive'}>
-                      {testResults.generation_endpoint.status === 'success' ? '✅ Fungerar' : '❌ Error'}
-                    </Badge>
-                  </div>
-                  {testResults.generation_endpoint.error && (
-                    <p className="text-sm text-destructive mb-2">{testResults.generation_endpoint.error}</p>
-                  )}
-                  {testResults.generation_endpoint.data_sample && (
-                    <div className="text-sm space-y-1">
-                      <p><strong>Antal poster:</strong> {testResults.generation_endpoint.data_sample.total_records}</p>
-                      <p><strong>Format:</strong> {testResults.generation_endpoint.data_format}</p>
-                      <p><strong>Svarstid:</strong> {testResults.generation_endpoint.response_time_ms}ms</p>
-                    </div>
-                  )}
-                </div>
-              )}
-
-              {/* Activity Endpoint */}
-              {testResults.activity_endpoint && (
-                <div className="p-4 border rounded-lg">
-                  <div className="flex items-center justify-between mb-2">
-                    <h3 className="font-semibold">/api/v1/activity</h3>
-                    <Badge variant={testResults.activity_endpoint.status === 'success' ? 'default' : 'destructive'}>
-                      {testResults.activity_endpoint.status === 'success' ? '✅ Fungerar' : '❌ Error'}
-                    </Badge>
-                  </div>
-                  {testResults.activity_endpoint.error && (
-                    <p className="text-sm text-destructive mb-2">{testResults.activity_endpoint.error}</p>
-                  )}
-                  {testResults.activity_endpoint.data_sample && (
-                    <div className="text-sm space-y-1">
-                      <p><strong>Antal poster:</strong> {testResults.activity_endpoint.data_sample.total_records}</p>
-                      <p><strong>Format:</strong> {testResults.activity_endpoint.data_format}</p>
-                      <p><strong>Svarstid:</strong> {testResults.activity_endpoint.response_time_ms}ms</p>
-                    </div>
-                  )}
-                </div>
-              )}
-            </div>
-          )}
-        </DialogContent>
-      </Dialog>
     </div>
   );
 }

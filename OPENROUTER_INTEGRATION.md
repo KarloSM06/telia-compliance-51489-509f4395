@@ -1,15 +1,12 @@
-# OpenRouter Integration Strategy
+# OpenRouter Integration - Real-time Tracking
 
 ## 🎯 Översikt
 
-Hiems använder en **hybrid tracking-strategi** för att spåra all OpenRouter AI-användning:
-
-1. **Primär:** Realtids-tracking via `/chat/completions`
-2. **Backup:** Aggregerad historik via `/activity`
+Hiems använder **realtids-tracking** för att spåra all OpenRouter AI-användning via `/chat/completions` endpoint. Data loggas automatiskt i `ai_usage_logs` tabellen och visas i realtid på dashboarden.
 
 ---
 
-## 📊 Primär Metod: Realtids-tracking
+## 📊 Realtids-tracking
 
 **Endpoint:** `POST /api/v1/chat/completions`  
 **Edge Function:** `submit-prompt`  
@@ -51,131 +48,114 @@ Hiems använder en **hybrid tracking-strategi** för att spåra all OpenRouter A
 - Kostnad (USD + SEK)
 - User ID
 - Session metadata
+- Timestamp
 
 ---
 
-## 🔄 Backup-Metod: Aggregerad Historik
+## 🎯 Så fungerar det
 
-**Endpoint:** `GET /api/v1/activity`  
-**Edge Function:** `sync-openrouter-usage-cron`  
-**Frekvens:** Varje timme (cron)  
-**Data:** Aggregerad per dag/modell/endpoint
-
-### Response Format:
-```json
-[
-  {
-    "date": "2025-11-01",
-    "endpoint": "chat/completions",
-    "model": "gpt-3.5-turbo",
-    "prompt_tokens": 1000,
-    "completion_tokens": 500,
-    "total_tokens": 1500,
-    "cost": 7.5,
-    "requests": 10
-  }
-]
-```
-
-### Varför behövs detta?
-- **Backup:** Om realtids-logging misslyckas
-- **Validation:** Dubbelkolla att all användning är loggad
-- **Historik:** Få data för datum innan realtids-logging implementerades
-
-### Smart Dublettfiltrering
-Cron-jobbet kontrollerar automatiskt vilka datum som redan finns från realtids-logging och synkar bara nya datum. Detta förhindrar dubbletter och onödig dataöverlappning.
-
----
-
-## 🧪 Testa Endpoints
-
-Använd `test-openrouter-endpoints` edge function för att verifiera:
-- Vilka endpoints som fungerar med din API-nyckel
-- Vilken data som returneras
-- Om provisioning key krävs för `/activity`
-
-**Kör test från UI:**
-Gå till Integrationer → AI tab → "Testa Endpoints" knapp
-
----
-
-## ⚠️ Viktigt att Veta
-
-1. **Dubbletter:** Cron-jobbet filtrerar automatiskt bort datum som redan finns från realtids-logging
-2. **Generation ID:** Finns bara i realtids-data, inte i aggregerad historik från `/activity`
-3. **Provisioning Key:** `/activity` endpoint kan kräva särskild nyckel (ej samma som API key) - om du får 401/403 fel
-4. **30 dagars limit:** `/activity` returnerar max 30 dagar bakåt
-5. **Undokumenterad endpoint:** `/api/v1/generation` är INTE dokumenterad i OpenRouter API och rekommenderas EJ
+1. **AI-anrop görs** → Användaren skickar en prompt via applikationen
+2. **submit-prompt körs** → Edge function skickar request till OpenRouter
+3. **Usage returneras** → OpenRouter returnerar tokens och kostnad
+4. **Automatisk loggning** → Data sparas direkt i `ai_usage_logs` tabell
+5. **Dashboard uppdateras** → Realtids-visualisering av kostnader och användning
 
 ---
 
 ## 📈 Dashboard Integration
 
-`AIIntegrationsTab.tsx` visar data från `ai_usage_logs` tabell som populeras av:
-- **Primärt:** `submit-prompt` (use_case = 'api_call' eller liknande)
-- **Backup:** `sync-openrouter-usage-cron` (use_case = 'activity_backup')
-- **Manuell:** `fetch-openrouter-usage` (use_case = 'manual_fetch')
+`AIIntegrationsTab.tsx` visar data från `ai_usage_logs` tabell:
+- **Total kostnad** (USD och SEK)
+- **Tokens använt** (prompt, completion, total)
+- **Antal anrop**
+- **Kostnadsfördelning** per modell (pie chart)
+- **Kostnadsfördelning** per use case (pie chart)
+- **Daglig kostnadstrend** (area chart)
+- **Detaljerad modellstatistik** (tabell)
+
+Realtids-indikator visar när nya anrop loggas.
 
 ---
 
 ## 🔧 Edge Functions
 
-### 1. submit-prompt
+### submit-prompt
 **Syfte:** Skicka prompt till OpenRouter och logga usage direkt  
 **Endpoint:** `/chat/completions`  
-**När:** Vid varje AI-anrop från applikationen
-
-### 2. sync-openrouter-usage-cron
-**Syfte:** Synka aggregerad historik som backup  
-**Endpoint:** `/activity`  
-**När:** Varje timme via Supabase cron  
-**Smart:** Filtrerar bort datum som redan finns
-
-### 3. fetch-openrouter-usage
-**Syfte:** Manuell hämtning av historik  
-**Endpoint:** `/activity`  
-**När:** På begäran från användare
-
-### 4. test-openrouter-endpoints
-**Syfte:** Testa vilka endpoints som fungerar  
-**Endpoints:** `/generation` (undokumenterad) och `/activity` (dokumenterad)  
-**När:** Vid konfiguration eller felsökning
+**När:** Vid varje AI-anrop från applikationen  
+**Funktionalitet:**
+- Hämtar och dekrypterar OpenRouter API-nyckel
+- Skickar request till OpenRouter
+- Loggar usage i `ai_usage_logs`
+- Returnerar AI-svar till klienten
 
 ---
 
 ## 🎯 Rekommenderad Workflow
 
 1. **Initial Setup:**
-   - Konfigurera OpenRouter API-nyckel i UI
-   - Kör test för att verifiera att `/activity` fungerar
-   - Aktivera cron-job för backup-sync
+   - Konfigurera OpenRouter API-nyckel i UI (Integrationer → AI)
+   - Verifiera att submit-prompt edge function fungerar
+   - Dashboard visar automatiskt realtids-data
 
 2. **Daglig Drift:**
    - All normal AI-usage loggas automatiskt via `submit-prompt`
-   - Cron synkar backup-data varje timme (bara nya datum)
-   - Dashboard visar kombinerad data från båda källor
+   - Dashboard uppdateras i realtid när nya anrop kommer in
+   - Ingen manuell synkronisering krävs
 
 3. **Troubleshooting:**
-   - Kör endpoint-test för att identifiera problem
    - Kolla edge function logs i Supabase dashboard
-   - Verifiera att både realtid och backup-sync fungerar
+   - Verifiera att OpenRouter API-nyckel är korrekt konfigurerad
+   - Kontrollera `ai_usage_logs` tabell för loggade anrop
+
+---
+
+## ⚠️ Kända Begränsningar
+
+### 1. `/api/v1/activity` endpoint
+- **Status:** Ej implementerad
+- **Anledning:** Kräver Provisioning Key (inte samma som API-nyckel)
+- **Fel:** HTTP 403 - "Only provisioning keys can fetch activity for an account"
+- **Påverkan:** Ingen aggregerad historik tillgänglig från OpenRouter
+- **Lösning:** Realtids-tracking via `submit-prompt` ger all nödvändig data
+
+### 2. `/api/v1/generation` endpoint
+- **Status:** Ej implementerad
+- **Anledning:** Undokumenterad endpoint, kräver generation_id per anrop
+- **Fel:** HTTP 400 - Bad Request
+- **Påverkan:** Kan inte hämta historik per generation_id
+- **Alternativ:** `/chat/completions` med `usage.include = true` (implementerad)
+
+### 3. Backup-sync
+- **Status:** Ej tillgänglig
+- **Anledning:** Provisioning Key krävs för `/activity` endpoint
+- **Påverkan:** Ingen automatisk backup-synkronisering av aggregerad data
+- **Kompensation:** Realtids-logging ger fullständig täckning av all användning
 
 ---
 
 ## 📚 Användbara Länkar
 
 - [OpenRouter API Documentation](https://openrouter.ai/docs)
-- [Edge Function Logs](https://supabase.com/dashboard/project/shskknkivuewuqonjdjc/functions)
+- [Edge Function Logs](https://supabase.com/dashboard/project/shskknkivuewuqonjdjc/functions/submit-prompt/logs)
 - [AI Usage Logs Table](https://supabase.com/dashboard/project/shskknkivuewuqonjdjc/editor)
 
 ---
 
 ## ✅ Sammanfattning
 
-**Fördelar med hybrid-strategin:**
-- ✅ Full detalj i realtid via `/chat/completions`
-- ✅ Aggregerad backup via `/activity`
-- ✅ Ingen risk för dubbletter
-- ✅ Använder dokumenterade endpoints
-- ✅ Automatisk synkronisering
-- ✅ Validering mellan källor möjlig
+**Implementerad funktionalitet:**
+- ✅ Full realtids-tracking via `/chat/completions`
+- ✅ Automatisk loggning i `ai_usage_logs`
+- ✅ Detaljerad dashboard med grafer och statistik
+- ✅ Realtids-uppdateringar när nya anrop kommer in
+- ✅ Kostnad per modell, use case, och dag
+- ✅ Ingen manuell synkronisering krävs
+
+**Ej implementerat:**
+- ❌ Aggregerad historik från `/activity` (kräver Provisioning Key)
+- ❌ Backup-synkronisering via cron
+- ❌ Endpoint-testning (alla tester visar 403/400 fel)
+
+**Slutsats:**  
+Realtids-tracking via `submit-prompt` ger fullständig täckning av all AI-användning. Aggregerad backup från `/activity` är inte nödvändig eftersom all data redan loggas i realtid.
