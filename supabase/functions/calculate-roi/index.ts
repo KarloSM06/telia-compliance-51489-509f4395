@@ -1,8 +1,7 @@
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import { authenticateRequest } from '../_shared/auth.ts';
-import { corsResponse } from '../_shared/cors.ts';
+import { corsResponse, corsHeaders } from '../_shared/cors.ts';
 import { createError, errorToResponse, handleUnexpectedError } from '../_shared/errors.ts';
-import { corsHeaders } from '../_shared/cors.ts';
 
 /**
  * Calculate ROI Edge Function

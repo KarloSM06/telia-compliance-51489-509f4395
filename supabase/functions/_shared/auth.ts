@@ -1,4 +1,4 @@
-import { createClient, SupabaseClient } from 'jsr:@supabase/supabase-js@2.75.0';
+import { createClient, SupabaseClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
 export interface AuthResult {
   user: {
