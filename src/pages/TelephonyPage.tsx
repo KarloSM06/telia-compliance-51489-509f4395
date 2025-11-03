@@ -1,39 +1,110 @@
-import { Phone, MessageSquare, Clock, DollarSign, Users, Settings, RefreshCw, Download } from "lucide-react";
-import { PremiumHero } from "@/components/communications/premium/PremiumHero";
-import { PremiumStatCard } from "@/components/communications/premium/PremiumStatCard";
-import { AnimatedSection } from "@/components/AnimatedSection";
-import { useTelephonyMetrics } from "@/hooks/useTelephonyMetrics";
-import { formatDollar } from "@/lib/format";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Progress } from "@/components/ui/progress";
-import { useState } from "react";
-import { AdvancedFilters } from "@/components/communications/premium/AdvancedFilters";
-import { ProviderManagementDialog } from '@/components/telephony/ProviderManagementDialog';
-import { AddIntegrationModal } from '@/components/integrations/AddIntegrationModal';
-import { useIntegrations } from '@/hooks/useIntegrations';
+import { useState, useMemo } from 'react';
+import { Button } from '@/components/ui/button';
+import { RefreshCw, Settings, Download, Phone } from 'lucide-react';
 import { toast } from 'sonner';
+import { useIntegrations } from '@/hooks/useIntegrations';
+import { useTelephonyMetrics } from '@/hooks/useTelephonyMetrics';
+import { usePhoneNumbers } from '@/hooks/usePhoneNumbers';
+import { EventsTable } from '@/components/telephony/EventsTable';
+import { EventFilters, EventFilterValues } from '@/components/telephony/EventFilters';
+import { ProviderManagementDialog } from '@/components/telephony/ProviderManagementDialog';
+import { EventDetailDrawer } from '@/components/telephony/EventDetailDrawer';
+import { StatsCards } from '@/components/telephony/StatsCards';
+import { AddIntegrationModal } from '@/components/integrations/AddIntegrationModal';
 import { supabase } from '@/integrations/supabase/client';
 
 export default function TelephonyPage() {
-  const [filters, setFilters] = useState<any>({});
   const [showProviderDialog, setShowProviderDialog] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
+  const [selectedEvent, setSelectedEvent] = useState<any>(null);
+  const [filters, setFilters] = useState<EventFilterValues>({
+    search: '',
+    provider: 'all',
+    eventType: 'all',
+    direction: 'all',
+    status: 'all',
+    callStatus: 'all',
+  });
 
-  const { metrics, isLoading, refetch } = useTelephonyMetrics(filters.dateRange);
   const { integrations, getByCapability } = useIntegrations();
-  
+  const { metrics, isLoading, refetch } = useTelephonyMetrics();
+  const { syncNumbers, isSyncing } = usePhoneNumbers();
+
   const telephonyProviders = getByCapability('voice').concat(getByCapability('sms'));
 
-  const formatDuration = (seconds: number) => {
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${mins}m ${secs}s`;
-  };
+  // Filter events based on filters
+  const filteredEvents = useMemo(() => {
+    return metrics.events.filter((event) => {
+      // Filter out child events (linked to parent)
+      if (event.parent_event_id) return false;
+      
+      // Search filter
+      if (filters.search) {
+        const searchLower = filters.search.toLowerCase();
+        const matchesSearch =
+          event.id?.toLowerCase().includes(searchLower) ||
+          event.from_number?.includes(searchLower) ||
+          event.to_number?.includes(searchLower);
+        if (!matchesSearch) return false;
+      }
 
-  const providers = Object.keys(metrics.byProvider);
-  const totalProviderCost = Object.values(metrics.byProvider).reduce((sum: number, p: any) => sum + p.cost, 0);
+      // Provider filter - check both main provider and cost breakdown
+      if (filters.provider !== 'all') {
+        const hasProvider = event.provider === filters.provider || 
+                          (event.cost_breakdown && Object.keys(event.cost_breakdown).includes(filters.provider));
+        if (!hasProvider) return false;
+      }
+
+      // Event type filter
+      if (filters.eventType !== 'all') {
+        if (filters.eventType === 'call' && !event.event_type.includes('call')) return false;
+        if (filters.eventType === 'sms' && !event.event_type.includes('sms')) return false;
+        if (filters.eventType === 'transcript' && !event.event_type.includes('transcript')) return false;
+        if (filters.eventType === 'recording' && !event.event_type.includes('recording')) return false;
+      }
+
+      // Direction filter
+      if (filters.direction !== 'all' && event.direction !== filters.direction) {
+        return false;
+      }
+
+      // Status filter
+      if (filters.status !== 'all') {
+        const status = event.status?.toLowerCase() || '';
+        if (filters.status === 'completed' && !status.includes('complet') && !status.includes('answer')) {
+          return false;
+        }
+        if (filters.status === 'failed' && !status.includes('fail')) {
+          return false;
+        }
+        if (filters.status === 'pending' && !status.includes('progress') && !status.includes('pending')) {
+          return false;
+        }
+      }
+
+      // Call status filter (in-progress vs completed)
+      if (filters.callStatus && filters.callStatus !== 'all') {
+        const normalized = event.normalized as any;
+        const isInProgress = !normalized?.endedAt && !normalized?.endedReason;
+        if (filters.callStatus === 'in-progress' && !isInProgress) return false;
+        if (filters.callStatus === 'completed' && isInProgress) return false;
+      }
+
+      // Date filters
+      if (filters.dateFrom) {
+        const eventDate = new Date(event.event_timestamp);
+        if (eventDate < filters.dateFrom) return false;
+      }
+      if (filters.dateTo) {
+        const eventDate = new Date(event.event_timestamp);
+        const endOfDay = new Date(filters.dateTo);
+        endOfDay.setHours(23, 59, 59, 999);
+        if (eventDate > endOfDay) return false;
+      }
+
+      return true;
+    });
+  }, [metrics.events, filters]);
 
   const handleRefresh = async () => {
     toast.loading('Uppdaterar data...');
@@ -43,10 +114,9 @@ export default function TelephonyPage() {
   };
 
   const handleExport = () => {
-    const events = metrics.events || [];
     const csvContent = [
       ['Provider', 'Event Type', 'Direction', 'From', 'To', 'Duration', 'Cost', 'Status', 'Timestamp'].join(','),
-      ...events.map((event) =>
+      ...filteredEvents.map((event) =>
         [
           event.provider,
           event.event_type,
@@ -113,19 +183,28 @@ export default function TelephonyPage() {
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      <PremiumHero
-        title="Telefoni & AI-agenter"
-        subtitle="Hantera och analysera all din telefonikommunikation på ett ställe"
-        icon={<Phone className="h-8 w-8 text-primary" />}
-      />
-
-      <div className="mx-auto max-w-7xl px-6 lg:px-8 py-12 space-y-8">
-        {/* Header Actions */}
-        <div className="flex justify-end gap-2">
+    <div className="p-6 space-y-6">
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold">Telefoni</h1>
+          <p className="text-muted-foreground">
+            Realtidsövervakning av alla dina samtal och meddelanden
+          </p>
+        </div>
+        <div className="flex gap-2">
           <Button variant="outline" size="sm" onClick={() => setShowProviderDialog(true)}>
             <Settings className="h-4 w-4 mr-2" />
             Providers
+          </Button>
+          <Button 
+            variant="outline" 
+            size="sm" 
+            onClick={() => syncNumbers()}
+            disabled={isSyncing}
+          >
+            <Phone className={`h-4 w-4 mr-2 ${isSyncing ? 'animate-spin' : ''}`} />
+            Synka nummer
           </Button>
           <Button variant="outline" size="sm" onClick={handleRefresh}>
             <RefreshCw className="h-4 w-4 mr-2" />
@@ -136,198 +215,53 @@ export default function TelephonyPage() {
             Export
           </Button>
         </div>
-
-        {/* Stats Grid */}
-        <AnimatedSection delay={0}>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
-            <AnimatedSection delay={0}>
-              <PremiumStatCard
-                title="Totalt antal samtal"
-                value={metrics.totalCalls}
-                subtitle="Alla samtal"
-                icon={Phone}
-                color="primary"
-                isLoading={isLoading}
-              />
-            </AnimatedSection>
-
-            <AnimatedSection delay={100}>
-              <PremiumStatCard
-                title="SMS via telefoni"
-                value={metrics.totalSMS}
-                subtitle="Telefonirelaterade SMS"
-                icon={MessageSquare}
-                color="violet"
-                isLoading={isLoading}
-              />
-            </AnimatedSection>
-
-            <AnimatedSection delay={200}>
-              <PremiumStatCard
-                title="Total samtalstid"
-                value={formatDuration(metrics.totalDuration)}
-                subtitle={`Ø ${metrics.totalCalls > 0 ? formatDuration(Math.round(metrics.totalDuration / metrics.totalCalls)) : '0s'} per samtal`}
-                icon={Clock}
-                color="success"
-                isLoading={isLoading}
-              />
-            </AnimatedSection>
-
-            <AnimatedSection delay={300}>
-              <PremiumStatCard
-                title="Aktiva agenter"
-                value={metrics.agents.length}
-                subtitle="AI-agenter"
-                icon={Users}
-                color="secondary"
-                isLoading={isLoading}
-              />
-            </AnimatedSection>
-
-            <AnimatedSection delay={400}>
-              <PremiumStatCard
-                title="Total kostnad"
-                value={formatDollar(metrics.totalCost)}
-                subtitle="SEK (inkl. alla lager)"
-                icon={DollarSign}
-                color="warning"
-                isLoading={isLoading}
-              />
-            </AnimatedSection>
-          </div>
-        </AnimatedSection>
-
-        {/* Filters */}
-        <AnimatedSection delay={500}>
-          <AdvancedFilters
-            onFilterChange={setFilters}
-            providers={providers}
-            showProviderFilter={true}
-            showStatusFilter={false}
-            showDirectionFilter={false}
-          />
-        </AnimatedSection>
-
-        {/* Provider Overview */}
-        <AnimatedSection delay={600}>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {providers.map((providerName, index) => {
-              const provider = metrics.byProvider[providerName];
-              const costPercentage = totalProviderCost > 0 ? (provider.cost / totalProviderCost) * 100 : 0;
-              
-              return (
-                <AnimatedSection key={providerName} delay={index * 100}>
-                  <Card className="hover:shadow-elegant transition-all duration-300">
-                    <CardHeader className="border-b bg-gradient-to-br from-card/80 to-card/50">
-                      <div className="flex items-center justify-between">
-                        <CardTitle className="capitalize">{providerName}</CardTitle>
-                        <Badge variant="outline">{provider.agents.length} agenter</Badge>
-                      </div>
-                      <CardDescription>
-                        {provider.calls} samtal • {provider.sms} SMS
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent className="pt-6 space-y-4">
-                      <div className="space-y-2">
-                        <div className="flex items-center justify-between text-sm">
-                          <span className="text-muted-foreground">Samtalstid</span>
-                          <span className="font-medium">{formatDuration(provider.duration)}</span>
-                        </div>
-                        <div className="flex items-center justify-between text-sm">
-                          <span className="text-muted-foreground">Kostnad</span>
-                          <span className="font-medium">{formatDollar(provider.cost)}</span>
-                        </div>
-                      </div>
-                      
-                      <div className="space-y-1">
-                        <div className="flex items-center justify-between text-xs text-muted-foreground">
-                          <span>Andel av total kostnad</span>
-                          <span>{costPercentage.toFixed(1)}%</span>
-                        </div>
-                        <Progress value={costPercentage} className="h-2" />
-                      </div>
-
-                      {provider.agents.length > 0 && (
-                        <div className="pt-4 border-t space-y-2">
-                          <p className="text-xs font-medium text-muted-foreground">Agenter</p>
-                          <div className="flex flex-wrap gap-2">
-                            {provider.agents.slice(0, 3).map((agent: any) => (
-                              <Badge key={agent.id} variant="secondary" className="text-xs">
-                                {agent.name}
-                              </Badge>
-                            ))}
-                            {provider.agents.length > 3 && (
-                              <Badge variant="outline" className="text-xs">
-                                +{provider.agents.length - 3} till
-                              </Badge>
-                            )}
-                          </div>
-                        </div>
-                      )}
-                    </CardContent>
-                  </Card>
-                </AnimatedSection>
-              );
-            })}
-          </div>
-        </AnimatedSection>
-
-        {/* Agent Performance */}
-        {Object.keys(metrics.byAgent).length > 0 && (
-          <AnimatedSection delay={700}>
-            <Card>
-              <CardHeader className="border-b">
-                <CardTitle>Agent Performance</CardTitle>
-                <CardDescription>Prestanda per AI-agent</CardDescription>
-              </CardHeader>
-              <CardContent className="pt-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {Object.entries(metrics.byAgent).map(([agentId, data]: [string, any], index) => (
-                    <AnimatedSection key={agentId} delay={index * 50}>
-                      <div className="p-4 rounded-lg border bg-gradient-to-br from-card/80 to-card/50 hover:shadow-card transition-all">
-                        <div className="flex items-center justify-between mb-3">
-                          <h4 className="font-medium">{data.agent.name}</h4>
-                          <Badge variant="outline">{data.agent.provider}</Badge>
-                        </div>
-                        <div className="space-y-2 text-sm">
-                          <div className="flex justify-between">
-                            <span className="text-muted-foreground">Samtal</span>
-                            <span className="font-medium">{data.calls}</span>
-                          </div>
-                          <div className="flex justify-between">
-                            <span className="text-muted-foreground">Samtalstid</span>
-                            <span className="font-medium">{formatDuration(data.duration)}</span>
-                          </div>
-                          <div className="flex justify-between">
-                            <span className="text-muted-foreground">Kostnad</span>
-                            <span className="font-medium">{formatDollar(data.cost)}</span>
-                          </div>
-                        </div>
-                      </div>
-                    </AnimatedSection>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-          </AnimatedSection>
-        )}
-
-        {/* Provider Management Dialog */}
-        <ProviderManagementDialog
-          open={showProviderDialog}
-          onClose={() => setShowProviderDialog(false)}
-          providers={telephonyProviders}
-          onAddProvider={() => {
-            setShowProviderDialog(false);
-            setShowAddModal(true);
-          }}
-          onRefreshProvider={handleRefreshProvider}
-          onDeleteProvider={handleDeleteProvider}
-        />
-
-        {/* Add Integration Modal */}
-        <AddIntegrationModal open={showAddModal} onOpenChange={setShowAddModal} />
       </div>
+
+      {/* Stats Cards */}
+      <StatsCards metrics={metrics} />
+
+      {/* Filters */}
+      <EventFilters onFilterChange={setFilters} providers={telephonyProviders} />
+
+      {/* Events Table */}
+      <div className="space-y-2">
+        <div className="flex items-center justify-between">
+          <h2 className="text-xl font-semibold">Events</h2>
+          <p className="text-sm text-muted-foreground">
+            Visar {filteredEvents.length} av {metrics.events.length} events
+          </p>
+        </div>
+        {isLoading ? (
+          <div className="flex items-center justify-center py-12">
+            <RefreshCw className="h-8 w-8 animate-spin text-muted-foreground" />
+          </div>
+        ) : (
+          <EventsTable events={filteredEvents} onViewDetails={setSelectedEvent} />
+        )}
+      </div>
+
+      {/* Provider Management Dialog */}
+      <ProviderManagementDialog
+        open={showProviderDialog}
+        onClose={() => setShowProviderDialog(false)}
+        providers={telephonyProviders}
+        onAddProvider={() => {
+          setShowProviderDialog(false);
+          setShowAddModal(true);
+        }}
+        onRefreshProvider={handleRefreshProvider}
+        onDeleteProvider={handleDeleteProvider}
+      />
+
+      {/* Event Detail Drawer */}
+      <EventDetailDrawer
+        event={selectedEvent}
+        open={!!selectedEvent}
+        onClose={() => setSelectedEvent(null)}
+      />
+
+      {/* Add Integration Modal */}
+      <AddIntegrationModal open={showAddModal} onOpenChange={setShowAddModal} />
     </div>
   );
 }

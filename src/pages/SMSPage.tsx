@@ -1,45 +1,70 @@
-import { MessageSquare, Send, Download, TrendingUp, ArrowUpRight, ArrowDownRight, Settings, RefreshCw } from "lucide-react";
-import { PremiumHero } from "@/components/communications/premium/PremiumHero";
-import { PremiumStatCard } from "@/components/communications/premium/PremiumStatCard";
-import { AnimatedSection } from "@/components/AnimatedSection";
-import { useMessageLogs } from "@/hooks/useMessageLogs";
-import { formatDollar } from "@/lib/format";
-import { Badge } from "@/components/ui/badge";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Button } from "@/components/ui/button";
-import { format } from "date-fns";
-import { sv } from "date-fns/locale";
-import { useState } from "react";
-import { AdvancedFilters } from "@/components/communications/premium/AdvancedFilters";
-import { useQueryClient } from '@tanstack/react-query';
-import { useAuth } from '@/hooks/useAuth';
+import { useState, useMemo } from "react";
+import { Button } from '@/components/ui/button';
+import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
+import { RefreshCw, Download, Settings, AlertCircle } from 'lucide-react';
 import { toast } from 'sonner';
+import { useQueryClient } from '@tanstack/react-query';
+import { Link } from 'react-router-dom';
+import { useAuth } from '@/hooks/useAuth';
+import { useMessageLogs } from "@/hooks/useMessageLogs";
+import { usePhoneNumbers } from "@/hooks/usePhoneNumbers";
+import { SMSStatsCards } from "@/components/messages/SMSStatsCards";
+import { SMSTable } from "@/components/messages/SMSTable";
+import { SMSFilters, SMSFilterValues } from "@/components/messages/SMSFilters";
+import { SMSDetailDrawer } from "@/components/messages/SMSDetailDrawer";
 import { MessageProvidersDialog } from "@/components/messages/MessageProvidersDialog";
 
 export default function SMSPage() {
   const { user } = useAuth();
   const queryClient = useQueryClient();
-  const [filters, setFilters] = useState<any>({});
+  const { phoneNumbers, isLoading: isLoadingNumbers } = usePhoneNumbers();
+  const [selectedMessage, setSelectedMessage] = useState<any>(null);
   const [showProvidersDialog, setShowProvidersDialog] = useState(false);
+  const [filters, setFilters] = useState<SMSFilterValues>({
+    search: '',
+    status: 'all',
+    direction: 'all',
+  });
 
-  const { logs, stats, isLoading } = useMessageLogs({ 
+  const { logs, stats, isLoading } = useMessageLogs({
     channel: 'sms',
     status: filters.status === 'all' ? undefined : filters.status,
-    dateFrom: filters.dateRange?.from?.toISOString().split('T')[0],
-    dateTo: filters.dateRange?.to?.toISOString().split('T')[0],
+    dateFrom: filters.dateFrom?.toISOString().split('T')[0],
+    dateTo: filters.dateTo?.toISOString().split('T')[0],
   });
 
-  const smsLogs = logs.filter(l => l.channel === 'sms');
-  const providers = [...new Set(smsLogs.map(l => l.provider))];
+  // Calculate provider statistics
+  const providerStats = useMemo(() => {
+    const stats = new Map<string, { count: number; cost: number }>();
+    
+    logs.forEach((log) => {
+      const provider = log.provider || 'unknown';
+      const current = stats.get(provider) || { count: 0, cost: 0 };
+      stats.set(provider, {
+        count: current.count + 1,
+        cost: current.cost + (log.cost || 0),
+      });
+    });
 
-  const providerStats = providers.map(provider => {
-    const providerLogs = smsLogs.filter(l => l.provider === provider);
-    return {
+    return Array.from(stats.entries()).map(([provider, data]) => ({
       provider,
-      count: providerLogs.length,
-      cost: providerLogs.reduce((sum, l) => sum + (l.cost || 0), 0),
-    };
-  });
+      ...data,
+    }));
+  }, [logs]);
+
+  // Filter messages based on search
+  const filteredMessages = useMemo(() => {
+    return logs.filter((message) => {
+      if (filters.search) {
+        const searchLower = filters.search.toLowerCase();
+        const matchesSearch =
+          message.recipient?.includes(searchLower) ||
+          message.message_body?.toLowerCase().includes(searchLower);
+        if (!matchesSearch) return false;
+      }
+      return true;
+    });
+  }, [logs, filters.search]);
 
   const handleRefresh = async () => {
     toast.loading('Uppdaterar data...');
@@ -50,17 +75,15 @@ export default function SMSPage() {
 
   const handleExport = () => {
     const csvContent = [
-      ['Riktning', 'Från/Till', 'Meddelande', 'Provider', 'Status', 'Typ', 'Kostnad', 'Datum'].join(','),
-      ...smsLogs.map((msg) =>
+      ['Telefonnummer', 'Status', 'Meddelande', 'Skickat', 'Levererat', 'Kostnad'].join(','),
+      ...filteredMessages.map((msg) =>
         [
-          msg.direction || '-',
           msg.recipient || '-',
-          `"${msg.message_body?.replace(/"/g, '""') || '-'}"`,
-          msg.provider || '-',
           msg.status || '-',
-          msg.message_type || '-',
-          msg.cost || 0,
+          `"${msg.message_body?.replace(/"/g, '""') || '-'}"`,
           msg.sent_at || '-',
+          msg.delivered_at || '-',
+          msg.cost || 0,
         ].join(',')
       ),
     ].join('\n');
@@ -76,16 +99,16 @@ export default function SMSPage() {
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      <PremiumHero
-        title="SMS Kommunikation"
-        subtitle="Hantera och analysera all din SMS-kommunikation på ett ställe"
-        icon={<MessageSquare className="h-8 w-8 text-primary" />}
-      />
-
-      <div className="mx-auto max-w-7xl px-6 lg:px-8 py-12 space-y-8">
-        {/* Header Actions */}
-        <div className="flex justify-end gap-2">
+    <div className="p-6 space-y-6">
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold">SMS</h1>
+          <p className="text-muted-foreground">
+            Realtidsövervakning av alla dina SMS-meddelanden
+          </p>
+        </div>
+        <div className="flex gap-2">
           <Button variant="outline" size="sm" onClick={() => setShowProvidersDialog(true)}>
             <Settings className="h-4 w-4 mr-2" />
             Leverantörer
@@ -99,168 +122,70 @@ export default function SMSPage() {
             Export
           </Button>
         </div>
-
-        {/* Stats Grid */}
-        <AnimatedSection delay={0}>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <AnimatedSection delay={0}>
-              <PremiumStatCard
-                title="Totalt antal SMS"
-                value={stats.total}
-                subtitle="Alla meddelanden"
-                icon={MessageSquare}
-                color="primary"
-                isLoading={isLoading}
-              />
-            </AnimatedSection>
-
-            <AnimatedSection delay={100}>
-              <PremiumStatCard
-                title="Skickade"
-                value={stats.sent}
-                subtitle={`${((stats.sent / stats.total) * 100 || 0).toFixed(1)}% success rate`}
-                icon={Send}
-                color="success"
-                isLoading={isLoading}
-              />
-            </AnimatedSection>
-
-            <AnimatedSection delay={200}>
-              <PremiumStatCard
-                title="Inkommande"
-                value={stats.inbound}
-                subtitle={`${stats.reviews} recensionsförfrågningar`}
-                icon={Download}
-                color="violet"
-                isLoading={isLoading}
-              />
-            </AnimatedSection>
-
-            <AnimatedSection delay={300}>
-              <PremiumStatCard
-                title="Total kostnad"
-                value={formatDollar(stats.smsCost)}
-                subtitle="USD"
-                icon={TrendingUp}
-                color="warning"
-                isLoading={isLoading}
-              />
-            </AnimatedSection>
-          </div>
-        </AnimatedSection>
-
-        {/* Filters */}
-        <AnimatedSection delay={400}>
-          <AdvancedFilters
-            onFilterChange={setFilters}
-            providers={providers}
-            showProviderFilter={true}
-            showStatusFilter={true}
-            showDirectionFilter={true}
-          />
-        </AnimatedSection>
-
-        {/* Messages Table */}
-        <AnimatedSection delay={500}>
-          <div className="bg-card rounded-lg border shadow-card overflow-hidden">
-            <div className="p-6 border-b">
-              <h2 className="text-2xl font-bold">SMS-meddelanden</h2>
-              <p className="text-sm text-muted-foreground mt-1">
-                Alla dina SMS-meddelanden i en vy
-              </p>
-            </div>
-
-            <div className="overflow-x-auto">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Riktning</TableHead>
-                    <TableHead>Från/Till</TableHead>
-                    <TableHead>Meddelande</TableHead>
-                    <TableHead>Provider</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead>Typ</TableHead>
-                    <TableHead>Kostnad</TableHead>
-                    <TableHead>Datum</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {isLoading ? (
-                    Array.from({ length: 5 }).map((_, i) => (
-                      <TableRow key={i}>
-                        {Array.from({ length: 8 }).map((_, j) => (
-                          <TableCell key={j}>
-                            <div className="h-4 bg-muted rounded animate-pulse" />
-                          </TableCell>
-                        ))}
-                      </TableRow>
-                    ))
-                  ) : smsLogs.length === 0 ? (
-                    <TableRow>
-                      <TableCell colSpan={8} className="text-center py-12 text-muted-foreground">
-                        Inga SMS-meddelanden hittades
-                      </TableCell>
-                    </TableRow>
-                  ) : (
-                    smsLogs.slice(0, 50).map((log) => (
-                      <TableRow key={log.id} className="hover:bg-muted/30">
-                        <TableCell>
-                          {log.direction === 'inbound' ? (
-                            <ArrowDownRight className="h-4 w-4 text-violet-500" />
-                          ) : (
-                            <ArrowUpRight className="h-4 w-4 text-primary" />
-                          )}
-                        </TableCell>
-                        <TableCell className="font-mono text-sm">
-                          {log.recipient}
-                        </TableCell>
-                        <TableCell className="max-w-xs truncate">
-                          {log.message_body}
-                        </TableCell>
-                        <TableCell>
-                          <Badge variant="outline">{log.provider}</Badge>
-                        </TableCell>
-                        <TableCell>
-                          <Badge 
-                            variant={
-                              log.status === 'delivered' ? 'default' : 
-                              log.status === 'failed' ? 'destructive' : 
-                              'secondary'
-                            }
-                          >
-                            {log.status}
-                          </Badge>
-                        </TableCell>
-                        <TableCell>
-                          {log.message_type && (
-                            <Badge variant="outline" className="capitalize">
-                              {log.message_type}
-                            </Badge>
-                          )}
-                        </TableCell>
-                        <TableCell className="font-mono text-sm">
-                          {formatDollar(log.cost)}
-                        </TableCell>
-                        <TableCell className="text-sm text-muted-foreground">
-                          {format(new Date(log.sent_at), "d MMM HH:mm", { locale: sv })}
-                        </TableCell>
-                      </TableRow>
-                    ))
-                  )}
-                </TableBody>
-              </Table>
-            </div>
-          </div>
-        </AnimatedSection>
-
-        {/* Providers Dialog */}
-        <MessageProvidersDialog
-          open={showProvidersDialog}
-          onClose={() => setShowProvidersDialog(false)}
-          providers={providerStats}
-          type="sms"
-        />
       </div>
+
+      {/* Warning if no phone numbers synced */}
+      {!isLoadingNumbers && (!phoneNumbers || phoneNumbers.length === 0) && (
+        <Alert className="border-amber-500/50 bg-amber-500/10">
+          <AlertCircle className="h-4 w-4 text-amber-600" />
+          <AlertTitle className="text-amber-900">Inga telefonnummer synkade</AlertTitle>
+          <AlertDescription className="text-amber-800">
+            För att korrekt klassificera inkommande/utgående SMS måste du synka dina telefonnummer.{' '}
+            <Button variant="link" className="px-0 h-auto text-amber-900 underline font-semibold" asChild>
+              <Link to="/dashboard/telephony">
+                Gå till Telefoni → Synka nummer
+              </Link>
+            </Button>
+          </AlertDescription>
+        </Alert>
+      )}
+
+      {/* Stats Cards */}
+        <SMSStatsCards
+          total={stats.total}
+          sent={stats.sent}
+          pending={stats.pending}
+          failed={stats.failed}
+          cost={stats.smsCost} // USD-värde (samma som telephony)
+          inbound={stats.inbound}
+          outbound={stats.outbound}
+          reviews={stats.reviews}
+        />
+
+      {/* Filters */}
+      <SMSFilters onFilterChange={setFilters} />
+
+      {/* Messages Table */}
+      <div className="space-y-2">
+        <div className="flex items-center justify-between">
+          <h2 className="text-xl font-semibold">Meddelanden</h2>
+          <p className="text-sm text-muted-foreground">
+            Visar {filteredMessages.length} av {logs.length} meddelanden
+          </p>
+        </div>
+        {isLoading ? (
+          <div className="flex items-center justify-center py-12">
+            <RefreshCw className="h-8 w-8 animate-spin text-muted-foreground" />
+          </div>
+        ) : (
+          <SMSTable messages={filteredMessages} onViewDetails={setSelectedMessage} />
+        )}
+      </div>
+
+      {/* Message Detail Drawer */}
+      <SMSDetailDrawer
+        message={selectedMessage}
+        open={!!selectedMessage}
+        onClose={() => setSelectedMessage(null)}
+      />
+
+      {/* Providers Dialog */}
+      <MessageProvidersDialog
+        open={showProvidersDialog}
+        onClose={() => setShowProvidersDialog(false)}
+        providers={providerStats}
+        type="sms"
+      />
     </div>
   );
 }
