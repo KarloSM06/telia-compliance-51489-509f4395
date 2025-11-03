@@ -2,10 +2,11 @@ import { useState, useMemo } from 'react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
-import { RefreshCw, Download, Bell, Clock, CheckCircle, Mail } from 'lucide-react';
+import { RefreshCw, Download, Bell, Clock, CheckCircle, Mail, Star, TrendingUp, Users, Sparkles } from 'lucide-react';
 import { toast } from 'sonner';
 import { useOwnerNotifications } from '@/hooks/useOwnerNotifications';
 import { useNotificationChartData } from '@/hooks/useNotificationChartData';
+import { useReviewInsights } from '@/hooks/useReviewInsights';
 import { PremiumTelephonyStatCard } from '@/components/telephony/PremiumTelephonyStatCard';
 import { AnimatedSection } from '@/components/shared/AnimatedSection';
 import { NotificationsActivityChart } from '@/components/notifications/charts/NotificationsActivityChart';
@@ -14,6 +15,10 @@ import { NotificationTypeDistributionChart } from '@/components/notifications/ch
 import { PriorityDistributionChart } from '@/components/notifications/charts/PriorityDistributionChart';
 import { ChannelDistributionChart } from '@/components/notifications/charts/ChannelDistributionChart';
 import { NotificationResponseTimeTrendChart } from '@/components/notifications/charts/NotificationResponseTimeTrendChart';
+import { SentimentTrend } from '@/components/reviews/SentimentTrend';
+import { TopicDistribution } from '@/components/reviews/TopicDistribution';
+import { TopDrivers } from '@/components/reviews/TopDrivers';
+import { ImprovementSuggestions } from '@/components/reviews/ImprovementSuggestions';
 import hiemsLogoSnowflake from '@/assets/hiems-logo-snowflake.png';
 import { useQueryClient } from '@tanstack/react-query';
 
@@ -21,6 +26,7 @@ export default function NotificationAnalytics() {
   const [dateRangeDays, setDateRangeDays] = useState(30);
   const { notifications, isLoading } = useOwnerNotifications();
   const chartData = useNotificationChartData(notifications);
+  const { insights, isLoading: insightsLoading } = useReviewInsights();
   const queryClient = useQueryClient();
 
   // Calculate stats
@@ -61,6 +67,26 @@ export default function NotificationAnalytics() {
       topChannel: topChannel ? topChannel[0] : 'email',
     };
   }, [notifications]);
+
+  // Calculate review insights stats
+  const reviewStats = useMemo(() => {
+    if (!insights) return null;
+    
+    const sentimentScore = ((insights.average_sentiment + 1) / 2) * 100; // Convert -1 to 1 scale to 0-100
+    const trendEmoji = {
+      improving: '📈',
+      stable: '➡️',
+      declining: '📉'
+    }[insights.sentiment_trend] || '➡️';
+    
+    return {
+      totalReviews: insights.total_reviews,
+      totalInteractions: insights.total_interactions,
+      sentimentScore: sentimentScore.toFixed(0),
+      sentimentTrend: `${trendEmoji} ${insights.sentiment_trend === 'improving' ? 'Förbättras' : insights.sentiment_trend === 'declining' ? 'Försämras' : 'Stabilt'}`,
+      confidenceScore: (insights.confidence_score * 100).toFixed(0),
+    };
+  }, [insights]);
 
   const handleRefresh = async () => {
     toast.loading('Uppdaterar data...');
@@ -168,11 +194,16 @@ export default function NotificationAnalytics() {
         </div>
       </section>
 
-      {/* Stats Overview */}
+      {/* Stats Overview - Notifications */}
       <section className="relative py-16 bg-gradient-to-b from-background via-primary/3 to-background">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_50%,hsl(var(--primary)/0.12),transparent_50%)]" />
         <div className="container mx-auto px-6 lg:px-8 relative z-10">
           <AnimatedSection delay={200}>
+            <div className="mb-6">
+              <h2 className="text-2xl font-bold bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent">
+                Notifikationsöversikt
+              </h2>
+            </div>
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
               <PremiumTelephonyStatCard 
                 title="Total Notifikationer" 
@@ -207,15 +238,67 @@ export default function NotificationAnalytics() {
         </div>
       </section>
 
-      {/* Charts Section */}
+      {/* Stats Overview - Review Insights */}
+      {reviewStats && (
+        <section className="relative py-16 bg-gradient-to-b from-primary/2 via-primary/5 to-background">
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_50%,hsl(var(--primary)/0.15),transparent_50%)]" />
+          <div className="container mx-auto px-6 lg:px-8 relative z-10">
+            <AnimatedSection delay={300}>
+              <div className="mb-6 flex items-center justify-between">
+                <div>
+                  <h2 className="text-2xl font-bold bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent flex items-center gap-2">
+                    <Sparkles className="h-6 w-6 text-primary" />
+                    AI-insikter från Recensioner
+                  </h2>
+                  <p className="text-sm text-muted-foreground mt-1">
+                    Baserat på analys av {reviewStats.totalReviews} recensioner och {reviewStats.totalInteractions} interaktioner
+                  </p>
+                </div>
+              </div>
+              <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+                <PremiumTelephonyStatCard 
+                  title="Antal Recensioner" 
+                  value={reviewStats.totalReviews} 
+                  icon={Star} 
+                  color="text-yellow-600" 
+                  subtitle={`${reviewStats.totalInteractions} totala interaktioner`} 
+                />
+                <PremiumTelephonyStatCard 
+                  title="Sentiment Score" 
+                  value={`${reviewStats.sentimentScore}%`} 
+                  icon={TrendingUp} 
+                  color="text-green-600" 
+                  subtitle={reviewStats.sentimentTrend} 
+                />
+                <PremiumTelephonyStatCard 
+                  title="AI Confidence" 
+                  value={`${reviewStats.confidenceScore}%`} 
+                  icon={Sparkles} 
+                  color="text-purple-600" 
+                  subtitle="analysens tillförlitlighet" 
+                />
+                <PremiumTelephonyStatCard 
+                  title="Totala Interaktioner" 
+                  value={reviewStats.totalInteractions} 
+                  icon={Users} 
+                  color="text-blue-600" 
+                  subtitle="meddelanden + samtal + recensioner" 
+                />
+              </div>
+            </AnimatedSection>
+          </div>
+        </section>
+      )}
+
+      {/* Charts Section - Notifications */}
       <section className="relative py-12 bg-gradient-to-b from-background via-primary/2 to-background">
         <div className="container mx-auto px-6 lg:px-8">
-          <AnimatedSection delay={300}>
+          <AnimatedSection delay={400}>
             <Card className="p-6 mb-6 border border-primary/10 bg-gradient-to-br from-card/80 via-card/50 to-card/30 backdrop-blur-md hover:shadow-xl hover:border-primary/30 transition-all duration-500">
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-3">
                   <h2 className="text-xl font-bold bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent">
-                    Statistik & Analys
+                    Notifikationsstatistik
                   </h2>
                   <div className="flex-1 h-0.5 bg-gradient-to-r from-primary/50 via-primary/20 to-transparent rounded-full" />
                 </div>
@@ -245,7 +328,7 @@ export default function NotificationAnalytics() {
               </div>
             </Card>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
               <NotificationsActivityChart data={chartData.dailyActivity} isLoading={isLoading} />
               <ReadRateChart data={chartData.readRateData} isLoading={isLoading} />
               <NotificationTypeDistributionChart data={chartData.typeDistribution} isLoading={isLoading} />
@@ -253,6 +336,37 @@ export default function NotificationAnalytics() {
               <ChannelDistributionChart data={chartData.channelDistribution} isLoading={isLoading} />
               <NotificationResponseTimeTrendChart data={chartData.responseTimeTrend} isLoading={isLoading} />
             </div>
+
+            {/* Review Insights Charts */}
+            {insights && !insightsLoading && (
+              <>
+                <Card className="p-6 mb-6 border border-primary/10 bg-gradient-to-br from-card/80 via-card/50 to-card/30 backdrop-blur-md hover:shadow-xl hover:border-primary/30 transition-all duration-500">
+                  <div className="flex items-center gap-3 mb-4">
+                    <Sparkles className="h-5 w-5 text-primary" />
+                    <h2 className="text-xl font-bold bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent">
+                      AI-analys från Recensioner & Interaktioner
+                    </h2>
+                    <div className="flex-1 h-0.5 bg-gradient-to-r from-primary/50 via-primary/20 to-transparent rounded-full" />
+                  </div>
+                </Card>
+
+                <div className="grid grid-cols-1 gap-6 mb-8">
+                  <SentimentTrend trend={insights.sentiment_trend} averageSentiment={insights.average_sentiment} />
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <TopicDistribution distribution={insights.topic_distribution} />
+                    <Card className="border border-primary/10 bg-gradient-to-br from-card/80 via-card/50 to-card/30 backdrop-blur-md hover:shadow-xl hover:border-primary/30 transition-all duration-500">
+                      <TopDrivers 
+                        positiveDrivers={insights.positive_drivers} 
+                        negativeDrivers={insights.negative_drivers} 
+                      />
+                    </Card>
+                  </div>
+                  {insights.improvement_suggestions && insights.improvement_suggestions.length > 0 && (
+                    <ImprovementSuggestions suggestions={insights.improvement_suggestions} />
+                  )}
+                </div>
+              </>
+            )}
           </AnimatedSection>
         </div>
       </section>
