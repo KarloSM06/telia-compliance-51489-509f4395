@@ -4,16 +4,32 @@ import { ConnectionStatusBanner } from "@/components/dashboard/openrouter/Connec
 import { AccountBalanceCards } from "@/components/dashboard/openrouter/AccountBalanceCards";
 import { APIKeysOverview } from "@/components/dashboard/openrouter/APIKeysOverview";
 import { APIKeyUsageBreakdown } from "@/components/dashboard/openrouter/APIKeyUsageBreakdown";
+import { ModelUsageChart } from "@/components/dashboard/openrouter/ModelUsageChart";
+import { APIKeyUsageChart } from "@/components/dashboard/openrouter/APIKeyUsageChart";
 import { useOpenRouterCredits } from "@/hooks/useOpenRouterCredits";
 import { useOpenRouterKeyInfo } from "@/hooks/useOpenRouterKeyInfo";
 import { useOpenRouterKeys } from "@/hooks/useOpenRouterKeys";
 import { useOpenRouterKeysList } from "@/hooks/useOpenRouterKeysList";
 import { useOpenRouterAccountSnapshots } from "@/hooks/useOpenRouterAccountSnapshots";
+import { useOpenRouterActivity } from "@/hooks/useOpenRouterActivity";
 import { OpenRouterSetupModal } from "@/components/integrations/OpenRouterSetupModal";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+
+interface DateRange {
+  from: Date;
+  to: Date;
+}
 
 const OpenRouterDashboard = () => {
   const [showSetupModal, setShowSetupModal] = useState(false);
+  const [dateRangeDays, setDateRangeDays] = useState(30);
+
+  const dateRange: DateRange = {
+    from: new Date(new Date().setDate(new Date().getDate() - dateRangeDays)),
+    to: new Date()
+  };
 
   // Fetch data
   const { data: keysStatus } = useOpenRouterKeys();
@@ -23,6 +39,10 @@ const OpenRouterDashboard = () => {
     keysStatus?.provisioning_key_exists || false
   );
   const { data: snapshots } = useOpenRouterAccountSnapshots();
+  const { data: activityData, isLoading: isLoadingActivity } = useOpenRouterActivity(
+    dateRange,
+    keysStatus?.provisioning_key_exists || false
+  );
 
   const apiKeyExists = keysStatus?.api_key_exists || false;
   const provisioningKeyExists = keysStatus?.provisioning_key_exists || false;
@@ -68,6 +88,43 @@ const OpenRouterDashboard = () => {
       <APIKeyUsageBreakdown
         keys={keysList}
         isLoading={isLoadingKeys}
+      />
+
+      <Card className="p-4">
+        <div className="flex items-center justify-between mb-3">
+          <h3 className="font-medium">Tidsperiod för grafer</h3>
+        </div>
+        <div className="flex gap-2">
+          <Button 
+            variant={dateRangeDays === 7 ? "default" : "outline"}
+            onClick={() => setDateRangeDays(7)}
+          >
+            7 dagar
+          </Button>
+          <Button 
+            variant={dateRangeDays === 30 ? "default" : "outline"}
+            onClick={() => setDateRangeDays(30)}
+          >
+            30 dagar
+          </Button>
+          <Button 
+            variant={dateRangeDays === 90 ? "default" : "outline"}
+            onClick={() => setDateRangeDays(90)}
+          >
+            90 dagar
+          </Button>
+        </div>
+      </Card>
+
+      <ModelUsageChart 
+        activityData={activityData?.data || []}
+        isLoading={isLoadingActivity}
+      />
+
+      <APIKeyUsageChart 
+        activityData={activityData?.data || []}
+        keysList={keysList?.data || []}
+        isLoading={isLoadingActivity}
       />
 
       <OpenRouterSetupModal
