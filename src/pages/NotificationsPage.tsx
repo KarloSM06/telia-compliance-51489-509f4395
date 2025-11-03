@@ -10,6 +10,10 @@ import { PremiumTelephonyStatCard } from '@/components/telephony/PremiumTelephon
 import { AnimatedSection } from '@/components/shared/AnimatedSection';
 import { NotificationsActivityChart } from '@/components/notifications/charts/NotificationsActivityChart';
 import { ReadRateChart } from '@/components/notifications/charts/ReadRateChart';
+import { NotificationTypeDistributionChart } from '@/components/notifications/charts/NotificationTypeDistributionChart';
+import { PriorityDistributionChart } from '@/components/notifications/charts/PriorityDistributionChart';
+import { ChannelDistributionChart } from '@/components/notifications/charts/ChannelDistributionChart';
+import { NotificationResponseTimeTrendChart } from '@/components/notifications/charts/NotificationResponseTimeTrendChart';
 import hiemsLogoSnowflake from '@/assets/hiems-logo-snowflake.png';
 
 export default function NotificationsPage() {
@@ -221,18 +225,10 @@ export default function NotificationsPage() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <NotificationsActivityChart data={chartData.dailyActivity} isLoading={isLoading} />
               <ReadRateChart data={chartData.readRateData} isLoading={isLoading} />
-              <Card className="p-6 border border-primary/10 bg-gradient-to-br from-card/80 via-card/50 to-card/30 backdrop-blur-md hover:shadow-lg hover:shadow-primary/10 hover:border-primary/30 transition-all duration-300">
-                <div className="h-[280px] flex items-center justify-center text-muted-foreground">Type Distribution</div>
-              </Card>
-              <Card className="p-6 border border-primary/10 bg-gradient-to-br from-card/80 via-card/50 to-card/30 backdrop-blur-md hover:shadow-lg hover:shadow-primary/10 hover:border-primary/30 transition-all duration-300">
-                <div className="h-[280px] flex items-center justify-center text-muted-foreground">Priority Distribution</div>
-              </Card>
-              <Card className="p-6 border border-primary/10 bg-gradient-to-br from-card/80 via-card/50 to-card/30 backdrop-blur-md hover:shadow-lg hover:shadow-primary/10 hover:border-primary/30 transition-all duration-300">
-                <div className="h-[280px] flex items-center justify-center text-muted-foreground">Channel Distribution</div>
-              </Card>
-              <Card className="p-6 border border-primary/10 bg-gradient-to-br from-card/80 via-card/50 to-card/30 backdrop-blur-md hover:shadow-lg hover:shadow-primary/10 hover:border-primary/30 transition-all duration-300">
-                <div className="h-[280px] flex items-center justify-center text-muted-foreground">Response Time</div>
-              </Card>
+              <NotificationTypeDistributionChart data={chartData.typeDistribution} isLoading={isLoading} />
+              <PriorityDistributionChart data={chartData.priorityDistribution} isLoading={isLoading} />
+              <ChannelDistributionChart data={chartData.channelDistribution} isLoading={isLoading} />
+              <NotificationResponseTimeTrendChart data={chartData.responseTimeTrend} isLoading={isLoading} />
             </div>
           </AnimatedSection>
         </div>

@@ -53,11 +53,11 @@ export const useReviewChartData = (reviews: Review[]) => {
     const ratingDistribution = Object.entries(groupedByDate)
       .map(([date, dayReviews]) => ({
         date,
-        rating1: dayReviews.filter(r => r.rating === 1).length,
-        rating2: dayReviews.filter(r => r.rating === 2).length,
-        rating3: dayReviews.filter(r => r.rating === 3).length,
-        rating4: dayReviews.filter(r => r.rating === 4).length,
-        rating5: dayReviews.filter(r => r.rating === 5).length,
+        rating_1: dayReviews.filter(r => r.rating === 1).length,
+        rating_2: dayReviews.filter(r => r.rating === 2).length,
+        rating_3: dayReviews.filter(r => r.rating === 3).length,
+        rating_4: dayReviews.filter(r => r.rating === 4).length,
+        rating_5: dayReviews.filter(r => r.rating === 5).length,
       }))
       .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
 
@@ -80,9 +80,9 @@ export const useReviewChartData = (reviews: Review[]) => {
 
         return {
           date,
-          sentimentScore: avgSentiment * 100, // Convert to percentage
+          sentiment: avgSentiment * 100, // Convert to percentage
           movingAvg: movingAvg * 100,
-          reviewCount: reviewsWithSentiment.length,
+          count: reviewsWithSentiment.length,
         };
       })
       .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
@@ -111,7 +111,7 @@ export const useReviewChartData = (reviews: Review[]) => {
       .filter(r => r.rating && r.sentiment_score !== undefined)
       .map(r => ({
         rating: r.rating,
-        sentiment: (r.sentiment_score || 0) * 100,
+        sentiment: r.sentiment_score || 0,
         customerName: r.customer_name || 'Anonymous',
       }));
 
