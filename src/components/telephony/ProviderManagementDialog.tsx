@@ -3,8 +3,11 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import { Settings, RefreshCw, Trash2, Plus } from 'lucide-react';
 import { getProviderDisplayName } from '@/lib/telephonyFormatters';
+import { cn } from '@/lib/utils';
+import hiemsLogoSnowflake from '@/assets/hiems-logo-snowflake.png';
 
 interface ProviderManagementDialogProps {
   open: boolean;
@@ -31,14 +34,27 @@ export const ProviderManagementDialog = ({
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
-        <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
-            ⚙️ Hantera Providers
+      <DialogContent className={cn(
+        "max-w-3xl max-h-[85vh] overflow-hidden",
+        "bg-gradient-to-br from-background via-background to-background/95"
+      )}>
+        {/* Snowflake background */}
+        <div className="absolute -top-10 -right-10 w-[200px] h-[200px] opacity-[0.03] pointer-events-none">
+          <img 
+            src={hiemsLogoSnowflake} 
+            alt="" 
+            className="w-full h-full object-contain animate-[spin_60s_linear_infinite]"
+          />
+        </div>
+        
+        <DialogHeader className="relative">
+          <DialogTitle className="text-2xl bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent">
+            Hantera Providers
           </DialogTitle>
         </DialogHeader>
 
-        <div className="space-y-4">
+        <ScrollArea className="max-h-[calc(85vh-120px)] pr-4">
+          <div className="space-y-4">
           <Button onClick={onAddProvider} className="w-full">
             <Plus className="h-4 w-4 mr-2" />
             Lägg till provider
@@ -129,7 +145,8 @@ export const ProviderManagementDialog = ({
               })}
             </div>
           )}
-        </div>
+          </div>
+        </ScrollArea>
       </DialogContent>
     </Dialog>
   );
