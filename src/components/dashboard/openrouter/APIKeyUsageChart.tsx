@@ -6,6 +6,7 @@ import { format } from "date-fns";
 import { sv } from "date-fns/locale";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Key, DollarSign, Zap, LineChartIcon } from "lucide-react";
+import { buildKeyResolver, type APIKey as ImportedAPIKey } from "@/lib/openrouterKeys";
 
 interface ActivityItem {
   date: string;
@@ -92,172 +93,29 @@ export const APIKeyUsageChart = ({ activityData, keysList, isLoading }: APIKeyUs
   const [selectedMetric, setSelectedMetric] = useState<MetricType>('cost');
   const [hiddenKeys, setHiddenKeys] = useState<Set<string>>(new Set());
 
-  // Helper to get display name, prioritizing 'label' over 'name' (label contains user-set display name)
-  const getDisplayName = (k: APIKey) => (k?.label || k?.name || 'Unnamed Key');
+  // Build resolver for mapping activity IDs to display names
+  const { resolve: resolveKeyName, ensureUnique } = useMemo(
+    () => buildKeyResolver(keysList as ImportedAPIKey[] || []),
+    [keysList]
+  );
 
   // Debug: Check if keysList is available
   if (!keysList || keysList.length === 0) {
-    console.warn('⚠️ APIKeyUsageChart: keysList is empty or undefined');
+    console.log('⚠️ APIKeyUsageChart: No keysList available');
   } else {
-    console.log('📋 Available keys:', keysList.map(k => ({ 
-      hash: (k.hash || '').substring(0, 20) + '...', 
-      name: k.name,
-      label: k.label
-    })));
+    console.log('✅ APIKeyUsageChart: keysList loaded', keysList.length, 'keys');
+    keysList.slice(0, 3).forEach((k: any) => {
+      console.log('  Key:', {
+        name: k.name,
+        label: k.label,
+        hash: k.hash?.substring(0, 12) + '...'
+      });
+    });
   }
 
   const getEndpointId = (item: ActivityItem): string => {
-    // Try multiple possible fields
-    const id = item.endpoint_id || item.api_key || item.key_hash || item.key_id;
-    return id || 'Unknown';
+    return item.endpoint_id || item.api_key || item.key_hash || item.key_id || 'unknown';
   };
-
-  // Build lookup maps for efficient key name resolution
-  const { nameByExact, nameByMasked, nameByPrefix } = useMemo(() => {
-    const exact = new Map<string, string>();
-    const masked = new Map<string, string>();
-    const prefix = new Map<string, string>();
-
-    if (!keysList) return { nameByExact: exact, nameByMasked: masked, nameByPrefix: prefix };
-
-    keysList.forEach(k => {
-      const display = getDisplayName(k);
-      const h = k.hash || '';
-      
-      if (!h) return;
-
-      // Exact hash mapping
-      exact.set(h, display);
-
-      // Direct label mapping (k.label is the masked string from API)
-      if (k.label) {
-        masked.set(k.label, display);
-      }
-
-      // Generate common masked formats
-      // Format 1: sk-or-v1-xxx...yyy (3 chars each side)
-      if (h.includes('sk-or-v1-')) {
-        const afterPrefix = h.split('sk-or-v1-')[1];
-        if (afterPrefix && afterPrefix.length >= 6) {
-          const masked3 = `sk-or-v1-${afterPrefix.slice(0, 3)}...${h.slice(-3)}`;
-          masked.set(masked3, display);
-          
-          // Also try 4 chars at the end
-          const masked4 = `sk-or-v1-${afterPrefix.slice(0, 3)}...${h.slice(-4)}`;
-          masked.set(masked4, display);
-        }
-      }
-
-      // Generic masked format
-      if (h.length >= 6) {
-        masked.set(`${h.slice(0, 3)}...${h.slice(-3)}`, display);
-        masked.set(`${h.slice(0, 3)}...${h.slice(-4)}`, display);
-      }
-
-      // Prefix mapping for partial matches (first 12 chars)
-      if (h.length >= 12) {
-        const prefixKey = h.slice(0, 12);
-        prefix.set(prefixKey, display);
-      }
-    });
-
-    return { nameByExact: exact, nameByMasked: masked, nameByPrefix: prefix };
-  }, [keysList]);
-
-  // Resolve endpoint_id to display name with multiple matching strategies
-  const resolveKeyName = useMemo(() => {
-    const cache = new Map<string, string>();
-    
-    return (endpointId: string): string => {
-      if (!endpointId || endpointId === 'Unknown') return 'Unknown';
-      
-      // Check cache first
-      if (cache.has(endpointId)) {
-        return cache.get(endpointId)!;
-      }
-
-      console.log('🔍 Resolving endpoint_id:', endpointId);
-
-      let result: string | undefined;
-
-      // 1) Try masked format lookup
-      result = nameByMasked.get(endpointId);
-      if (result) {
-        console.log('🔗 Masked match:', result);
-        cache.set(endpointId, result);
-        return result;
-      }
-
-      // 2) Try exact match
-      result = nameByExact.get(endpointId);
-      if (result) {
-        console.log('✅ Exact match:', result);
-        cache.set(endpointId, result);
-        return result;
-      }
-
-      // 3) Try prefix match (first 12 chars)
-      if (endpointId.length >= 12) {
-        const prefixKey = endpointId.slice(0, 12);
-        result = nameByPrefix.get(prefixKey);
-        if (result) {
-          console.log('🔗 Prefix match:', result);
-          cache.set(endpointId, result);
-          return result;
-        }
-      }
-
-      // 4) Try manual masked matching (prefix...suffix)
-      if (endpointId.includes('...')) {
-        const [p, s] = endpointId.split('...');
-        if (p && s && keysList) {
-          const match = keysList.find(k => 
-            k.hash && k.hash.startsWith(p) && k.hash.endsWith(s)
-          );
-          if (match) {
-            result = getDisplayName(match);
-            console.log('🧩 Manual masked match:', result);
-            cache.set(endpointId, result);
-            return result;
-          }
-        }
-      }
-
-      // 5) Try partial matching (longer prefix/suffix)
-      if (keysList && endpointId.length >= 8) {
-        const match = keysList.find(k => {
-          const h = k.hash || '';
-          if (!h) return false;
-          
-          const prefixLen = Math.min(10, endpointId.length, h.length);
-          const suffixLen = Math.min(8, endpointId.length, h.length);
-          
-          return (
-            h.startsWith(endpointId.slice(0, prefixLen)) ||
-            h.endsWith(endpointId.slice(-suffixLen))
-          );
-        });
-
-        if (match) {
-          result = getDisplayName(match);
-          console.log('🧩 Partial match:', result);
-          cache.set(endpointId, result);
-          return result;
-        }
-      }
-
-      console.warn('❌ No match for endpoint_id:', endpointId);
-      console.warn('   First 3 available keys:', keysList?.slice(0, 3).map(k => ({
-        hash: k.hash?.substring(0, 20) + '...',
-        name: k.name,
-        label: k.label
-      })));
-      
-      const fallback = `Key ${endpointId.substring(0, 8)}...`;
-      cache.set(endpointId, fallback);
-      return fallback;
-    };
-  }, [nameByExact, nameByMasked, nameByPrefix, keysList]);
 
   const { chartData, uniqueKeys } = useMemo(() => {
     if (!activityData || activityData.length === 0) {
@@ -294,6 +152,8 @@ export const APIKeyUsageChart = ({ activityData, keysList, isLoading }: APIKeyUs
 
     return { chartData: data, uniqueKeys: keys };
   }, [activityData, resolveKeyName, selectedMetric]);
+
+  const uniqueLegendNames = useMemo(() => ensureUnique(uniqueKeys), [uniqueKeys, ensureUnique]);
 
   const handleToggleKey = (key: string) => {
     setHiddenKeys(prev => {
@@ -393,7 +253,7 @@ export const APIKeyUsageChart = ({ activityData, keysList, isLoading }: APIKeyUs
               dot={{ r: 4, strokeWidth: 2 }}
               activeDot={{ r: 6, strokeWidth: 2 }}
               hide={hiddenKeys.has(key)}
-              name={key}
+              name={uniqueLegendNames[index]}
               animationDuration={300}
             />
           ))}

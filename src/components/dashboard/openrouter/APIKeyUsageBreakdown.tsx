@@ -13,6 +13,7 @@ import {
 import { ChevronDown, ChevronUp, Download, ArrowUpDown } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { formatDollar, getDailyUsageColor } from "@/lib/format";
+import { getKeyDisplayName } from "@/lib/openrouterKeys";
 
 interface APIKey {
   hash: string;
@@ -67,8 +68,8 @@ export const APIKeyUsageBreakdown = ({ keys, isLoading }: APIKeyUsageBreakdownPr
     let bValue: number | string = 0;
 
     if (sortField === 'name') {
-      aValue = a.label || a.name || '';
-      bValue = b.label || b.name || '';
+      aValue = getKeyDisplayName(a);
+      bValue = getKeyDisplayName(b);
     } else {
       aValue = a[sortField] || 0;
       bValue = b[sortField] || 0;
@@ -88,7 +89,7 @@ export const APIKeyUsageBreakdown = ({ keys, isLoading }: APIKeyUsageBreakdownPr
   const exportToCSV = () => {
     const headers = ['Namn', 'Hash', 'Total ($)', 'Idag ($)', 'Vecka ($)', 'Månad ($)', 'Status'];
     const rows = apiKeys.map(key => [
-      key.label || key.name || 'Unnamed',
+      getKeyDisplayName(key),
       key.hash,
       key.usage || 0,
       key.usage_daily || 0,
@@ -196,7 +197,7 @@ export const APIKeyUsageBreakdown = ({ keys, isLoading }: APIKeyUsageBreakdownPr
                   </TableRow>
                 ) : (
                   sortedKeys.map((key) => {
-                    const displayName = key.label || key.name || 'Unnamed Key';
+                    const displayName = getKeyDisplayName(key);
                     const dailyUsage = key.usage_daily || 0;
                     const dailyColorClass = getDailyUsageColor(dailyUsage);
 
