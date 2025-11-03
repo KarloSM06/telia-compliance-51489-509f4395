@@ -7,10 +7,12 @@ export interface APIKey {
 
 /**
  * Get the user-defined display name for an API key
- * Priority: name (user-set) > 'Unnamed Key'
+ * Priority: name (user-set) > label (masked but may contain user name) > 'Unnamed Key'
  */
 export const getKeyDisplayName = (key?: APIKey | null): string => {
-  return key?.name?.trim() || 'Unnamed Key';
+  if (key?.name?.trim()) return key.name.trim();
+  if (key?.label) return key.label;
+  return 'Unnamed Key';
 };
 
 /**
