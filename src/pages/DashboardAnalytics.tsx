@@ -25,8 +25,10 @@ import {
   CheckCircle,
   Info,
   Brain,
-  ExternalLink
+  ExternalLink,
+  Activity
 } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 import { useAnalyticsData } from "@/hooks/useAnalyticsData";
 import { useBusinessMetrics } from "@/hooks/useBusinessMetrics";
 import { useAIUsage } from "@/hooks/useAIUsage";
@@ -61,7 +63,7 @@ const DashboardAnalytics = () => {
     
     // Simple CSV export of daily data
     const csvData = [
-      ['Datum', 'Bokningar', 'Intäkter (SEK)', 'Kostnader (SEK)', 'AI-kostnad (SEK)', 'Vinst (SEK)', 'ROI (%)'],
+      ['Datum', 'Bokningar', 'Intäkter (SEK)', 'Kostnader (SEK)', 'AI-kostnad (SEK)', 'OpenRouter-kostnad (SEK)', 'Vinst (SEK)', 'ROI (%)'],
       ...data.dailyData.map(d => {
         const dayAICost = aiUsage?.dailyCosts.find(ai => ai.date === d.date)?.cost || 0;
         return [
@@ -70,6 +72,7 @@ const DashboardAnalytics = () => {
           d.revenue.toFixed(2),
           d.costs.toFixed(2),
           dayAICost.toFixed(2),
+          dayAICost.toFixed(2), // All AI cost is from OpenRouter
           d.profit.toFixed(2),
           d.roi.toFixed(2)
         ];
@@ -146,11 +149,28 @@ const DashboardAnalytics = () => {
     roi: d.roi
   }));
 
+  const totalVariableCost = data.costs.telephonyCost + data.costs.smsCost + data.costs.emailCost + data.costs.aiCost;
   const costBreakdownData = [
-    { name: 'Telefoni', value: data.costs.telephonyCost },
-    { name: 'SMS', value: data.costs.smsCost },
-    { name: 'Email', value: data.costs.emailCost },
-    { name: 'AI', value: data.costs.aiCost }
+    { 
+      name: 'Telefoni', 
+      value: data.costs.telephonyCost,
+      percentage: totalVariableCost > 0 ? ((data.costs.telephonyCost / totalVariableCost) * 100).toFixed(1) : '0'
+    },
+    { 
+      name: 'SMS', 
+      value: data.costs.smsCost,
+      percentage: totalVariableCost > 0 ? ((data.costs.smsCost / totalVariableCost) * 100).toFixed(1) : '0'
+    },
+    { 
+      name: 'Email', 
+      value: data.costs.emailCost,
+      percentage: totalVariableCost > 0 ? ((data.costs.emailCost / totalVariableCost) * 100).toFixed(1) : '0'
+    },
+    { 
+      name: 'AI (OpenRouter)', 
+      value: data.costs.aiCost,
+      percentage: totalVariableCost > 0 ? ((data.costs.aiCost / totalVariableCost) * 100).toFixed(1) : '0'
+    }
   ].filter(item => item.value > 0);
 
   const bookingsByWeekdayData = data.bookings.reduce((acc: any[], booking) => {
@@ -281,6 +301,7 @@ const DashboardAnalytics = () => {
                 <TooltipContent className="max-w-xs">
                   <p className="text-sm">
                     Variabla kostnader (Telefoni, SMS, Email) baseras på faktisk användning. 
+                    <strong className="block mt-1">AI-kostnader inkluderar alla OpenRouter-anrop och andra AI-providers.</strong>
                     Hiems Plattform är en fast månadskostnad. 
                     Integration är en engångsbetalning vid start.
                   </p>
@@ -324,12 +345,54 @@ const DashboardAnalytics = () => {
               <div className="flex justify-between items-center">
                 <div className="flex items-center gap-2">
                   <Sparkles className="h-4 w-4 text-muted-foreground" />
-                  <span className="text-sm text-muted-foreground">AI & Modeller</span>
+                  <span className="text-sm text-muted-foreground">AI & Modeller (OpenRouter)</span>
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    className="h-5 px-2 text-xs"
+                    asChild
+                  >
+                    <Link to="/dashboard/openrouter">
+                      <ExternalLink className="h-3 w-3 mr-1" />
+                      Detaljer
+                    </Link>
+                  </Button>
                 </div>
                 <span className="font-semibold">
                   {data.costs.aiCost.toLocaleString('sv-SE', { maximumFractionDigits: 2 })} SEK
                 </span>
               </div>
+              
+              {/* OpenRouter-specific breakdown */}
+              {aiUsage && aiUsage.costByModel && aiUsage.costByModel.length > 0 && (
+                <>
+                  <Separator className="my-2" />
+                  <div className="space-y-2">
+                    <p className="text-xs font-semibold text-muted-foreground uppercase">
+                      AI-kostnader (OpenRouter)
+                    </p>
+                    {aiUsage.costByModel
+                      .filter(m => m.cost > 0)
+                      .slice(0, 3)
+                      .map(model => (
+                        <div key={model.model} className="flex justify-between items-center pl-4">
+                          <div className="flex items-center gap-2">
+                            <Brain className="h-3 w-3 text-purple-500" />
+                            <span className="text-xs text-muted-foreground">{model.model}</span>
+                          </div>
+                          <span className="text-sm font-medium">
+                            {model.cost.toLocaleString('sv-SE', { maximumFractionDigits: 2 })} SEK
+                          </span>
+                        </div>
+                      ))}
+                    {aiUsage.costByModel.length > 3 && (
+                      <p className="text-xs text-muted-foreground pl-4">
+                        +{aiUsage.costByModel.length - 3} fler modeller
+                      </p>
+                    )}
+                  </div>
+                </>
+              )}
             </div>
             
             <Separator />
@@ -515,6 +578,78 @@ const DashboardAnalytics = () => {
           </div>
           <ConversionFunnelChart metrics={funnelMetrics} />
         </div>
+      )}
+
+      {/* OpenRouter AI Usage Section */}
+      {aiUsage && aiUsage.totalCalls > 0 && (
+        <PremiumCard>
+          <PremiumCardHeader>
+            <PremiumCardTitle className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Brain className="h-5 w-5 text-purple-500" />
+                OpenRouter AI-användning
+              </div>
+              <Button 
+                variant="outline" 
+                size="sm"
+                asChild
+              >
+                <Link to="/dashboard/openrouter">
+                  <ExternalLink className="h-4 w-4 mr-2" />
+                  Fullständig Dashboard
+                </Link>
+              </Button>
+            </PremiumCardTitle>
+          </PremiumCardHeader>
+          <PremiumCardContent>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+              <StatCard
+                title="Total AI-kostnad"
+                value={`${aiUsage.totalCostSEK.toLocaleString('sv-SE', { maximumFractionDigits: 2 })} SEK`}
+                icon={DollarSign}
+              />
+              <StatCard
+                title="Totala Anrop"
+                value={aiUsage.totalCalls.toLocaleString('sv-SE')}
+                icon={Activity}
+              />
+              <StatCard
+                title="Tokens Använda"
+                value={aiUsage.totalTokens.toLocaleString('sv-SE')}
+                icon={TrendingUp}
+              />
+            </div>
+
+            {/* Top 5 Models */}
+            {aiUsage.costByModel && aiUsage.costByModel.length > 0 && (
+              <div className="space-y-2">
+                <h4 className="text-sm font-semibold">Top 5 AI-modeller (kostnad)</h4>
+                {aiUsage.costByModel
+                  .sort((a, b) => b.cost - a.cost)
+                  .slice(0, 5)
+                  .map((model, index) => (
+                    <div 
+                      key={model.model} 
+                      className="flex items-center justify-between p-2 rounded bg-muted/50"
+                    >
+                      <div className="flex items-center gap-2">
+                        <Badge variant="outline" className="w-6 h-6 p-0 flex items-center justify-center">
+                          {index + 1}
+                        </Badge>
+                        <span className="text-sm font-medium">{model.model}</span>
+                        <span className="text-xs text-muted-foreground">
+                          ({model.calls} anrop)
+                        </span>
+                      </div>
+                      <span className="text-sm font-semibold">
+                        {model.cost.toLocaleString('sv-SE', { maximumFractionDigits: 2 })} SEK
+                      </span>
+                    </div>
+                  ))}
+              </div>
+            )}
+          </PremiumCardContent>
+        </PremiumCard>
       )}
 
       {/* Service-Based ROI */}

@@ -21,9 +21,9 @@ export function AIIntegrationsTab() {
   const apiKeyConfigured = keysStatus?.api_key_exists || false;
   const provisioningKeyConfigured = keysStatus?.provisioning_key_exists || false;
 
-  const totalCost = aiUsage?.total_cost_sek || 0;
-  const totalTokens = aiUsage?.total_tokens || 0;
-  const totalCalls = aiUsage?.total_calls || 0;
+  const totalCost = aiUsage?.totalCostSEK || 0;
+  const totalTokens = aiUsage?.totalTokens || 0;
+  const totalCalls = aiUsage?.totalCalls || 0;
   const avgCost = totalCalls > 0 ? totalCost / totalCalls : 0;
 
   return (

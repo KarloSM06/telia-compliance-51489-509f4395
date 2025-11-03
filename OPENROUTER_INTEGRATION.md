@@ -293,3 +293,93 @@ Lagrar all realtids-data från AI-anrop:
 - Krävs Provisioning Key
 - Kolla console logs för fel
 - Verifiera att datum-range är korrekt
+
+---
+
+## OpenRouter och ROI-beräkningar
+
+### Hur OpenRouter-kostnader spåras
+
+1. **Automatisk synkronisering:**
+   - Varje AI-anrop via edge functions loggas direkt i `ai_usage_logs`
+   - Data inkluderar: model, tokens, cost (USD + SEK), provider, use_case
+   - OpenRouter-provider märks med `provider = 'openrouter'`
+
+2. **ROI-inkludering:**
+   - `calculateOperationalCosts()` i `lib/roiCalculations.ts` summerar alla AI-kostnader från `ai_usage_logs`
+   - OpenRouter-kostnader ingår automatiskt i:
+     - Total driftkostnad (`totalOperatingCost`)
+     - ROI-beräkningar
+     - Break-even analys
+     - 12/24/36-månaders projektioner
+   - Kostnader prorateras baserat på vald tidsperiod
+
+3. **Visualisering:**
+   - **Analytics Dashboard** (`/dashboard/analytics`):
+     - "AI & Modeller (OpenRouter)" visas i kostnadsfördelning
+     - Top 3 modeller breakdown under AI-kostnader
+     - Länk till OpenRouter Dashboard för detaljer
+     - Pie chart med procentuell fördelning
+     - OpenRouter-specifik sektion med top 5 modeller
+   - **OpenRouter Dashboard** (`/dashboard/openrouter`):
+     - Detaljerad vy av alla AI-kostnader
+     - Model-by-model breakdown
+     - Historisk data och trender
+   - **ROI Settings** (`/dashboard/settings?tab=roi`):
+     - Information om automatisk kostnadsspårning
+     - Bekräftelse att OpenRouter ingår i ROI
+     - Länk till OpenRouter Dashboard
+
+### Manuell synkronisering (Provisioning Key)
+
+Om du har en Provisioning Key kan du synka historisk data från OpenRouter:
+
+**Automatisk synk (implementerad i backend):**
+```typescript
+// Daglig cron job körs kl 03:00
+// Synkar föregående dags data automatiskt till ai_usage_logs
+```
+
+**Manuell synk (från OpenRouter Dashboard):**
+```typescript
+// Klicka "Synka från OpenRouter" i Activity History
+// Välj datumintervall
+// Data hämtas från OpenRouter och sparas i ai_usage_logs
+```
+
+### Kostnadsberäkning i ROI
+
+**Formel:**
+```typescript
+const aiCost = ai_usage_logs
+  .filter(log => log.provider === 'openrouter' && log.created_at >= startDate && log.created_at <= endDate)
+  .reduce((sum, log) => sum + log.cost_sek, 0);
+
+const totalOperatingCost = telephonyCost + smsCost + emailCost + aiCost + hiemsSupportCost;
+const netProfit = totalRevenue - totalOperatingCost;
+const roi = (netProfit / totalOperatingCost) * 100;
+```
+
+**Period-anpassning:**
+- Kostnader prorateras baserat på vald period
+- Integrationskostnad inkluderas endast om perioden innehåller startdatum
+- AI-kostnader summeras exakt för vald period
+
+### CSV Export
+
+CSV-export inkluderar nu OpenRouter-kostnader:
+```
+Datum, Bokningar, Intäkter (SEK), Kostnader (SEK), AI-kostnad (SEK), OpenRouter-kostnad (SEK), Vinst (SEK), ROI (%)
+2025-01-01, 5, 25000, 3500, 250, 250, 21500, 614.29
+```
+
+### Viktigt att veta
+
+✅ **OpenRouter-kostnader ingår ALLTID i ROI** - ingen konfiguration behövs  
+✅ **Realtidsdata** - varje AI-anrop loggas direkt  
+✅ **Historisk data** - kan synkas med Provisioning Key  
+✅ **Procentuell fördelning** - se hur stor del AI är av totala kostnader  
+✅ **Model breakdown** - se vilka modeller som kostar mest  
+
+❌ **Ingen manuell input behövs** - allt är automatiskt  
+❌ **Ingen separat kostnadskategori** - ingår i "Variabla kostnader"

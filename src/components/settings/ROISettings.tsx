@@ -5,9 +5,12 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Plus, Trash2, Upload, FileText, DollarSign, Package, Save, Server } from "lucide-react";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Badge } from "@/components/ui/badge";
+import { Plus, Trash2, Upload, FileText, DollarSign, Package, Save, Server, Brain, Sparkles, ExternalLink } from "lucide-react";
 import { useBusinessMetrics, ServicePricing } from "@/hooks/useBusinessMetrics";
 import { toast } from "sonner";
+import { Link } from "react-router-dom";
 
 export function ROISettings() {
   const { metrics, updateMetrics, isLoading } = useBusinessMetrics();
@@ -187,6 +190,46 @@ export function ROISettings() {
               Integrationskostnaden är en engångsbetalning som endast visas om perioden inkluderar startdatumet.
             </p>
           </div>
+        </PremiumCardContent>
+      </PremiumCard>
+
+      {/* OpenRouter Information */}
+      <PremiumCard className="animate-scale-in" style={{ animationDelay: '75ms' }}>
+        <PremiumCardHeader>
+          <PremiumCardTitle className="flex items-center gap-2">
+            <Brain className="h-5 w-5 text-purple-500" />
+            OpenRouter AI-kostnader
+          </PremiumCardTitle>
+        </PremiumCardHeader>
+        <PremiumCardContent className="space-y-3">
+          <Alert>
+            <Sparkles className="h-4 w-4" />
+            <AlertDescription>
+              <strong>Automatisk kostnadsspårning</strong>
+              <p className="text-sm mt-1 text-muted-foreground">
+                OpenRouter-kostnader spåras automatiskt via <code className="px-1 py-0.5 bg-muted rounded text-xs">ai_usage_logs</code> och 
+                inkluderas i alla ROI-beräkningar. Kostnader synkas dagligen via edge functions.
+              </p>
+            </AlertDescription>
+          </Alert>
+
+          <div className="flex justify-between items-center p-3 bg-purple-50 dark:bg-purple-950 rounded">
+            <span className="text-sm font-medium">Spårad automatiskt i ROI</span>
+            <Badge variant="secondary" className="bg-purple-100 dark:bg-purple-900 text-purple-700 dark:text-purple-300">
+              ✓ Inkluderad
+            </Badge>
+          </div>
+
+          <Button 
+            variant="outline" 
+            className="w-full"
+            asChild
+          >
+            <Link to="/dashboard/openrouter">
+              <ExternalLink className="h-4 w-4 mr-2" />
+              Se fullständig OpenRouter Dashboard
+            </Link>
+          </Button>
         </PremiumCardContent>
       </PremiumCard>
 
