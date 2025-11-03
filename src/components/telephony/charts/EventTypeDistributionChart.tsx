@@ -82,7 +82,7 @@ export const EventTypeDistributionChart = ({ data, isLoading }: EventTypeDistrib
   }), { calls: 0, sms: 0, transcripts: 0, recordings: 0 });
 
   return (
-    <Card className="p-4">
+    <Card className="p-4 border border-primary/10 bg-gradient-to-br from-card/80 via-card/50 to-card/30 backdrop-blur-md hover:shadow-lg hover:shadow-primary/10 hover:border-primary/30 transition-all duration-300">
       <div className="flex items-center gap-2 mb-3">
         <PieChart className="h-5 w-5 text-primary" />
         <h3 className="text-base font-semibold">Event-fördelning</h3>

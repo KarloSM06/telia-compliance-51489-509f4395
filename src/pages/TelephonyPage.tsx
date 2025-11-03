@@ -214,37 +214,44 @@ export default function TelephonyPage() {
 
   return (
     <div className="min-h-screen">
-      {/* Hero Section - FULL PREMIUM UPGRADE */}
-      <section className="relative py-32 bg-gradient-to-b from-background via-primary/5 to-background overflow-hidden">
+      {/* Hero Section - COMPACT & MODERN */}
+      <section className="relative py-16 bg-gradient-to-b from-background via-primary/5 to-background overflow-hidden">
         {/* Radial gradient overlays */}
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,hsl(var(--primary)/0.15),transparent_50%)]" />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_80%,hsl(var(--primary)/0.1),transparent_50%)]" />
         
-        {/* 3 STORA snowflakes */}
-        <div className="absolute -top-32 -right-32 w-[800px] h-[800px] opacity-5 pointer-events-none">
+        {/* STORA snowflakes - fler för djup */}
+        <div className="absolute -top-32 -right-32 w-[700px] h-[700px] opacity-5 pointer-events-none">
           <img src={hiemsLogoSnowflake} alt="" className="w-full h-full object-contain animate-[spin_60s_linear_infinite]" />
         </div>
-        <div className="absolute -top-20 -left-20 w-[500px] h-[500px] opacity-[0.03] pointer-events-none">
+        <div className="absolute -top-20 -left-20 w-[450px] h-[450px] opacity-[0.03] pointer-events-none">
           <img src={hiemsLogoSnowflake} alt="" className="w-full h-full object-contain animate-[spin_40s_linear_infinite_reverse]" />
         </div>
-        <div className="absolute -bottom-20 left-1/2 -translate-x-1/2 w-[400px] h-[400px] opacity-[0.04] pointer-events-none">
+        <div className="absolute -bottom-20 left-1/2 -translate-x-1/2 w-[350px] h-[350px] opacity-[0.04] pointer-events-none">
           <img src={hiemsLogoSnowflake} alt="" className="w-full h-full object-contain animate-[spin_50s_linear_infinite]" />
+        </div>
+        {/* Extra små snowflakes för depth */}
+        <div className="absolute top-1/2 right-1/4 w-[200px] h-[200px] opacity-[0.02] pointer-events-none">
+          <img src={hiemsLogoSnowflake} alt="" className="w-full h-full object-contain animate-[spin_35s_linear_infinite]" />
+        </div>
+        <div className="absolute top-1/3 left-1/3 w-[180px] h-[180px] opacity-[0.025] pointer-events-none">
+          <img src={hiemsLogoSnowflake} alt="" className="w-full h-full object-contain animate-[spin_45s_linear_infinite_reverse]" />
         </div>
 
         <div className="container mx-auto px-6 lg:px-8 relative z-10">
           <AnimatedSection>
-            <div className="max-w-4xl mx-auto text-center space-y-8">
+            <div className="max-w-4xl mx-auto text-center space-y-6">
               {/* UPPERCASE label med accent line */}
               <div className="inline-block">
                 <span className="text-sm font-semibold tracking-wider text-primary uppercase">Realtidsövervakning</span>
                 <div className="w-32 h-1.5 bg-gradient-to-r from-primary via-primary/60 to-transparent mx-auto rounded-full shadow-lg shadow-primary/50 mt-2" />
               </div>
               
-              <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent leading-tight">
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent leading-tight">
                 Telefoni
               </h1>
               
-              <p className="text-xl sm:text-2xl text-muted-foreground max-w-3xl mx-auto leading-relaxed font-light">
+              <p className="text-lg sm:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed font-light">
                 Alla dina samtal och meddelanden i realtid
               </p>
             </div>
@@ -252,8 +259,10 @@ export default function TelephonyPage() {
         </div>
       </section>
 
-      {/* Quick Actions - Egen section */}
+      {/* Quick Actions - Dekorativa accenter */}
       <section className="relative py-8 border-y border-primary/10">
+        {/* Gradient accent line */}
+        <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent" />
         <div className="container mx-auto px-6 lg:px-8">
           <AnimatedSection delay={100}>
             <div className="flex items-center justify-between flex-wrap gap-4">
@@ -309,9 +318,14 @@ export default function TelephonyPage() {
       <section className="relative py-12 bg-gradient-to-b from-background via-primary/2 to-background">
         <div className="container mx-auto px-6 lg:px-8">
           <AnimatedSection delay={300}>
-            <Card className="p-6 mb-6 border-primary/20 bg-gradient-to-br from-card/80 to-card/40 backdrop-blur-md">
+            <Card className="p-6 mb-6 border border-primary/10 bg-gradient-to-br from-card/80 via-card/50 to-card/30 backdrop-blur-md hover:shadow-xl hover:border-primary/30 transition-all duration-500">
               <div className="flex items-center justify-between mb-4">
-                <h2 className="text-xl font-bold">Statistik & Analys</h2>
+                <div className="flex items-center gap-3">
+                  <h2 className="text-xl font-bold bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent">
+                    Statistik & Analys
+                  </h2>
+                  <div className="flex-1 h-0.5 bg-gradient-to-r from-primary/50 via-primary/20 to-transparent rounded-full" />
+                </div>
                 <div className="flex gap-2">
                   <Button 
                     variant={dateRangeDays === 7 ? "default" : "outline"}
@@ -379,13 +393,13 @@ export default function TelephonyPage() {
                 <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">Providers</h3>
               </div>
               <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-                {Object.entries(metrics.byProvider).map(([provider, data]: [string, any]) => {
-                  const integration = telephonyProviders.find(p => p.provider === provider);
-                  return (
-                    <Card key={provider} className="border border-border/50 bg-card hover:border-primary/30 transition-all duration-300">
-                      <CardContent className="p-4">
-                        <div className="flex items-start gap-3">
-                          <img src={getProviderLogo(provider)} alt={getProviderDisplayName(provider)} className="h-8 w-8 object-contain" />
+                  {Object.entries(metrics.byProvider).map(([provider, data]: [string, any]) => {
+                    const integration = telephonyProviders.find(p => p.provider === provider);
+                    return (
+                      <Card key={provider} className="border border-primary/10 bg-gradient-to-br from-card/80 via-card/50 to-card/30 backdrop-blur-sm hover:shadow-lg hover:shadow-primary/10 hover:-translate-y-1 hover:border-primary/30 transition-all duration-300 group">
+                        <CardContent className="p-4">
+                          <div className="flex items-start gap-3">
+                            <img src={getProviderLogo(provider)} alt={getProviderDisplayName(provider)} className="h-8 w-8 object-contain group-hover:scale-110 transition-transform duration-300" />
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center gap-2">
                               <h4 className="font-semibold text-sm truncate">{getProviderDisplayName(provider)}</h4>
@@ -433,7 +447,7 @@ export default function TelephonyPage() {
                   <Loader2 className="h-8 w-8 animate-spin text-primary" />
                 </div>
               ) : (
-                <Card className="border border-primary/10 bg-gradient-to-br from-card/80 via-card/50 to-card/30 backdrop-blur-md overflow-hidden">
+                <Card className="border border-primary/10 bg-gradient-to-br from-card/80 via-card/50 to-card/30 backdrop-blur-md overflow-hidden hover:shadow-md transition-shadow duration-300">
                   <EventsTable events={filteredEvents} onViewDetails={setSelectedEvent} />
                 </Card>
               )}
