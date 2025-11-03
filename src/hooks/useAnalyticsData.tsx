@@ -17,8 +17,7 @@ import {
   type ServiceMetrics
 } from "@/lib/roiCalculations";
 import { format, startOfDay, endOfDay, subDays } from "date-fns";
-
-const USD_TO_SEK = 10.5;
+import { USD_TO_SEK } from "@/lib/constants";
 
 export interface AnalyticsData {
   bookings: any[];

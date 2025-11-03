@@ -67,7 +67,7 @@ const CustomTooltip = ({ active, payload, label, metric }: any) => {
               <span className="flex-1 text-muted-foreground">{entry.name}</span>
               <span className="font-semibold tabular-nums">
                 {metric === 'cost' 
-                  ? `$${entry.value.toFixed(4)}`
+                  ? `${entry.value.toFixed(2)} SEK`
                   : entry.value.toLocaleString()
                 }
               </span>
@@ -79,7 +79,7 @@ const CustomTooltip = ({ active, payload, label, metric }: any) => {
           <span>Totalt:</span>
           <span className="tabular-nums">
             {metric === 'cost'
-              ? `$${payload.reduce((sum: number, p: any) => sum + p.value, 0).toFixed(4)}`
+              ? `${payload.reduce((sum: number, p: any) => sum + p.value, 0).toFixed(2)} SEK`
               : payload.reduce((sum: number, p: any) => sum + p.value, 0).toLocaleString()
             }
           </span>
@@ -251,7 +251,7 @@ export const APIKeyUsageChart = ({ activityData, keysList, isLoading }: APIKeyUs
           <TabsList className="h-7">
             <TabsTrigger value="cost" className="gap-1 text-xs px-2 py-1">
               <DollarSign className="h-3 w-3" />
-              $
+              kr
             </TabsTrigger>
             <TabsTrigger value="requests" className="gap-1 text-xs px-2 py-1">
               <Zap className="h-3 w-3" />
@@ -278,7 +278,7 @@ export const APIKeyUsageChart = ({ activityData, keysList, isLoading }: APIKeyUs
           <YAxis 
             tickFormatter={(value) => 
               selectedMetric === 'cost' 
-                ? `$${value.toFixed(1)}` 
+                ? `${value.toFixed(0)} kr` 
                 : value > 1000 ? `${(value / 1000).toFixed(0)}k` : value.toLocaleString()
             }
             tick={{ fill: 'hsl(var(--muted-foreground))', fontSize: 10 }}

@@ -11,7 +11,7 @@ import { useOpenRouterKeyInfo } from "@/hooks/useOpenRouterKeyInfo";
 import { useOpenRouterKeys } from "@/hooks/useOpenRouterKeys";
 import { useOpenRouterKeysList } from "@/hooks/useOpenRouterKeysList";
 import { useOpenRouterAccountSnapshots } from "@/hooks/useOpenRouterAccountSnapshots";
-import { useOpenRouterActivity } from "@/hooks/useOpenRouterActivity";
+import { useOpenRouterActivitySEK } from "@/hooks/useOpenRouterActivitySEK";
 import { useSyncOpenRouterActivity } from "@/hooks/useSyncOpenRouterActivity";
 import { OpenRouterSetupModal } from "@/components/integrations/OpenRouterSetupModal";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -43,7 +43,7 @@ const OpenRouterDashboard = () => {
     keysStatus?.provisioning_key_exists || false
   );
   const { data: snapshots } = useOpenRouterAccountSnapshots();
-  const { data: activityData, isLoading: isLoadingActivity } = useOpenRouterActivity(
+  const { data: activityData, isLoading: isLoadingActivity } = useOpenRouterActivitySEK(
     dateRange,
     keysStatus?.provisioning_key_exists || false
   );
@@ -139,12 +139,12 @@ const OpenRouterDashboard = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <ModelUsageChart 
-          activityData={activityData?.data || []}
+          activityData={activityData?.activity || []}
           isLoading={isLoadingActivity}
         />
 
         <APIKeyUsageChart 
-          activityData={activityData?.data || []}
+          activityData={activityData?.daily_usage || []}
           keysList={keysList?.data || []}
           isLoading={isLoadingActivity}
         />

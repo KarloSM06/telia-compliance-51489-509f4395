@@ -20,3 +20,19 @@ export const getDailyUsageColor = (daily: number): string => {
   if (daily < 1.00) return 'text-yellow-600 dark:text-yellow-400';
   return 'text-red-600 dark:text-red-400';
 };
+
+export const formatSEK = (amount: number | undefined | null): string => {
+  if (amount === undefined || amount === null) return '0,00 SEK';
+  return new Intl.NumberFormat('sv-SE', {
+    style: 'currency',
+    currency: 'SEK',
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  }).format(amount);
+};
+
+export const formatSEKCompact = (amount: number | undefined | null): string => {
+  if (amount === undefined || amount === null) return '0 kr';
+  if (amount < 1) return `${amount.toFixed(2)} kr`;
+  return `${amount.toFixed(0)} kr`;
+};

@@ -93,7 +93,7 @@ serve(async (req) => {
       completion_tokens: row.completion_tokens || 0,
       total_tokens: row.total_tokens || 0,
       cost_usd: row.cost || 0,
-      cost_sek: (row.cost || 0) * 11, // Approximate SEK conversion
+      cost_sek: (row.cost || 0) * 10.5, // USD to SEK conversion (must match frontend USD_TO_SEK constant)
       status: 'success',
       created_at: row.created_at || new Date().toISOString(),
     }));
