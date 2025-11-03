@@ -1,5 +1,20 @@
 project_id = "shskknkivuewuqonjdjc"
 
+[functions.encrypt-provisioning-key]
+verify_jwt = true
+
+[functions.get-openrouter-credits]
+verify_jwt = true
+
+[functions.get-openrouter-key-info]
+verify_jwt = true
+
+[functions.get-openrouter-models]
+verify_jwt = true
+
+[functions.get-openrouter-activity]
+verify_jwt = true
+
 [functions.send-test-message]
 verify_jwt = true
 

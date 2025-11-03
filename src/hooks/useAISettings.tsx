@@ -5,6 +5,7 @@ import { toast } from 'sonner';
 export interface AISettings {
   ai_provider: 'lovable' | 'openrouter';
   openrouter_api_key_encrypted?: string;
+  openrouter_provisioning_key_encrypted?: string;
   default_model: string;
   chat_model?: string;
   enrichment_model?: string;
@@ -36,6 +37,7 @@ export const useAISettings = () => {
     mutationFn: async ({
       provider,
       apiKey,
+      provisioningKey,
       defaultModel,
       chatModel,
       enrichmentModel,
@@ -44,6 +46,7 @@ export const useAISettings = () => {
     }: {
       provider: 'lovable' | 'openrouter';
       apiKey?: string;
+      provisioningKey?: string;
       defaultModel: string;
       chatModel?: string;
       enrichmentModel?: string;
@@ -69,6 +72,25 @@ export const useAISettings = () => {
         encryptedKey = encryptData.encrypted;
       }
 
+      // Encrypt provisioning key if provided
+      let encryptedProvisioningKey = null;
+      if (provider === 'openrouter' && provisioningKey) {
+        const { data: encryptData, error: encryptError } = await supabase.functions.invoke(
+          'encrypt-provisioning-key',
+          { body: { provisioningKey } }
+        );
+        
+        if (encryptError) {
+          throw new Error(encryptError.message || 'Failed to encrypt provisioning key');
+        }
+        
+        if (!encryptData?.encrypted) {
+          throw new Error('No encrypted provisioning key returned');
+        }
+        
+        encryptedProvisioningKey = encryptData.encrypted;
+      }
+
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error('Not authenticated');
 
@@ -78,6 +100,7 @@ export const useAISettings = () => {
           user_id: user.id,
           ai_provider: provider,
           openrouter_api_key_encrypted: encryptedKey,
+          openrouter_provisioning_key_encrypted: encryptedProvisioningKey,
           default_model: defaultModel,
           chat_model: chatModel || null,
           enrichment_model: enrichmentModel || null,

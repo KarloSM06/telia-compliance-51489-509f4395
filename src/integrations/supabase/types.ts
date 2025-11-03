@@ -3540,6 +3540,7 @@ export type Database = {
           enrichment_model: string | null
           id: string
           openrouter_api_key_encrypted: string | null
+          openrouter_provisioning_key_encrypted: string | null
           updated_at: string | null
           use_system_fallback: boolean | null
           user_id: string
@@ -3554,6 +3555,7 @@ export type Database = {
           enrichment_model?: string | null
           id?: string
           openrouter_api_key_encrypted?: string | null
+          openrouter_provisioning_key_encrypted?: string | null
           updated_at?: string | null
           use_system_fallback?: boolean | null
           user_id: string
@@ -3568,6 +3570,7 @@ export type Database = {
           enrichment_model?: string | null
           id?: string
           openrouter_api_key_encrypted?: string | null
+          openrouter_provisioning_key_encrypted?: string | null
           updated_at?: string | null
           use_system_fallback?: boolean | null
           user_id?: string

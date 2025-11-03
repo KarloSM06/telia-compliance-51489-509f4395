@@ -25,7 +25,9 @@ const AVAILABLE_MODELS = [
 export function OpenRouterSetupModal({ open, onOpenChange }: OpenRouterSetupModalProps) {
   const { settings, saveSettings, isSaving } = useAISettings();
   const [apiKey, setApiKey] = useState('');
+  const [provisioningKey, setProvisioningKey] = useState('');
   const [showKey, setShowKey] = useState(false);
+  const [showProvisioningKey, setShowProvisioningKey] = useState(false);
   const [defaultModel, setDefaultModel] = useState(settings.default_model);
   const [useFallback, setUseFallback] = useState(settings.use_system_fallback);
   const [isTesting, setIsTesting] = useState(false);
@@ -69,6 +71,7 @@ export function OpenRouterSetupModal({ open, onOpenChange }: OpenRouterSetupModa
     saveSettings({
       provider: 'openrouter',
       apiKey: apiKey || undefined,
+      provisioningKey: provisioningKey || undefined,
       defaultModel,
       useFallback,
     });
@@ -77,6 +80,7 @@ export function OpenRouterSetupModal({ open, onOpenChange }: OpenRouterSetupModa
   };
 
   const isConfigured = settings.ai_provider === 'openrouter' && settings.openrouter_api_key_encrypted;
+  const hasProvisioningKey = settings.openrouter_provisioning_key_encrypted;
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -171,6 +175,47 @@ export function OpenRouterSetupModal({ open, onOpenChange }: OpenRouterSetupModa
                 ))}
               </SelectContent>
             </Select>
+          </div>
+
+          {/* Provisioning Key Input (Optional) */}
+          <div className="space-y-2 pt-4 border-t">
+            <Label htmlFor="provisioning-key">
+              OpenRouter Provisioning Key (Valfritt)
+              {hasProvisioningKey && !provisioningKey && (
+                <span className="text-xs text-green-600 ml-2">(✓ Konfigurerad)</span>
+              )}
+            </Label>
+            <div className="relative">
+              <Input
+                id="provisioning-key"
+                type={showProvisioningKey ? 'text' : 'password'}
+                placeholder={hasProvisioningKey ? '••••••••••••••••' : 'sk-or-prov-...'}
+                value={provisioningKey}
+                onChange={(e) => setProvisioningKey(e.target.value)}
+              />
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                className="absolute right-2 top-1/2 -translate-y-1/2 h-7 w-7 p-0"
+                onClick={() => setShowProvisioningKey(!showProvisioningKey)}
+              >
+                {showProvisioningKey ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+              </Button>
+            </div>
+            <p className="text-xs text-muted-foreground">
+              Provisioning key ger tillgång till aggregerad användningshistorik via /activity endpoint.
+              Hämta från{' '}
+              <a
+                href="https://openrouter.ai/settings/keys"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-primary hover:underline inline-flex items-center gap-1"
+              >
+                openrouter.ai/settings/keys
+                <ExternalLink className="h-3 w-3" />
+              </a>
+            </p>
           </div>
 
           {/* Fallback Option */}

@@ -1,13 +1,19 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useAISettings } from "@/hooks/useAISettings";
 import { useAIUsage } from "@/hooks/useAIUsage";
-import { Settings, TrendingUp, Zap, DollarSign, Activity, Pencil } from "lucide-react";
+import { useOpenRouterCredits } from "@/hooks/useOpenRouterCredits";
+import { useOpenRouterKeyInfo } from "@/hooks/useOpenRouterKeyInfo";
+import { useOpenRouterModels } from "@/hooks/useOpenRouterModels";
+import { useOpenRouterActivity } from "@/hooks/useOpenRouterActivity";
+import { Settings, TrendingUp, Zap, DollarSign, Activity, Pencil, CreditCard, BarChart3 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { AreaChartComponent } from "@/components/dashboard/charts/AreaChartComponent";
 import { PieChartComponent } from "@/components/dashboard/charts/PieChartComponent";
-import { startOfMonth, endOfMonth } from "date-fns";
+import { BarChartComponent } from "@/components/dashboard/charts/BarChartComponent";
+import { startOfMonth, endOfMonth, subDays } from "date-fns";
 import { OpenRouterSetupModal } from "./OpenRouterSetupModal";
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
@@ -19,10 +25,22 @@ export function AIIntegrationsTab() {
     from: startOfMonth(new Date()),
     to: endOfMonth(new Date()),
   });
+  
   const [setupModalOpen, setSetupModalOpen] = useState(false);
   const [isRealtime, setIsRealtime] = useState(false);
+  const [dateRange, setDateRange] = useState({
+    from: subDays(new Date(), 30),
+    to: new Date(),
+  });
 
   const isOpenRouterConfigured = settings?.ai_provider === 'openrouter' && settings?.openrouter_api_key_encrypted;
+  const hasProvisioningKey = !!settings?.openrouter_provisioning_key_encrypted;
+
+  // Fetch OpenRouter data
+  const { data: credits } = useOpenRouterCredits();
+  const { data: keyInfo } = useOpenRouterKeyInfo();
+  const { data: models } = useOpenRouterModels();
+  const { data: activityData } = useOpenRouterActivity(dateRange, hasProvisioningKey);
 
   // Realtime indicator for new AI usage
   useEffect(() => {
@@ -110,6 +128,16 @@ export function AIIntegrationsTab() {
                   <span className="text-muted-foreground">Realtids-tracking (submit-prompt)</span>
                   <Badge variant="default" className="bg-green-600">Aktiv</Badge>
                 </div>
+                {hasProvisioningKey && (
+                  <div className="flex items-center justify-between">
+                    <span className="text-muted-foreground">Historik-tracking (/activity)</span>
+                    <Badge variant="default" className="bg-green-600">Aktiv</Badge>
+                  </div>
+                )}
+                <div className="flex items-center justify-between">
+                  <span className="text-muted-foreground">Credit Monitoring</span>
+                  <Badge variant="default" className="bg-green-600">Aktiv</Badge>
+                </div>
                 <p className="text-xs text-muted-foreground mt-2">
                   All AI-användning loggas automatiskt vid varje anrop via /chat/completions.
                 </p>
@@ -118,6 +146,63 @@ export function AIIntegrationsTab() {
           )}
         </CardContent>
       </Card>
+
+      {/* Account Overview - Only show if OpenRouter is configured */}
+      {isOpenRouterConfigured && (
+        <Card>
+          <CardHeader>
+            <CardTitle>📊 Account Overview</CardTitle>
+            <CardDescription>Din OpenRouter-kontoinformation</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="grid gap-4 md:grid-cols-3">
+              {/* Credit Balance Card */}
+              <div className="p-4 border rounded-lg">
+                <div className="flex items-center gap-2 mb-2">
+                  <CreditCard className="h-4 w-4 text-muted-foreground" />
+                  <div className="text-sm text-muted-foreground">Credit Balance</div>
+                </div>
+                <div className="text-2xl font-bold">
+                  ${credits?.limit_remaining?.toFixed(2) || '0.00'}
+                </div>
+                <div className="text-xs text-muted-foreground">
+                  of ${credits?.total_credits?.toFixed(2) || '0.00'}
+                </div>
+              </div>
+              
+              {/* Usage This Month Card */}
+              <div className="p-4 border rounded-lg">
+                <div className="flex items-center gap-2 mb-2">
+                  <TrendingUp className="h-4 w-4 text-muted-foreground" />
+                  <div className="text-sm text-muted-foreground">Usage This Month</div>
+                </div>
+                <div className="text-2xl font-bold">
+                  ${credits?.total_usage?.toFixed(2) || '0.00'}
+                </div>
+                <div className="text-xs text-muted-foreground">
+                  {credits?.limit_remaining && credits?.total_credits 
+                    ? `${((credits.total_usage / credits.total_credits) * 100).toFixed(1)}% used`
+                    : 'N/A'}
+                </div>
+              </div>
+              
+              {/* Rate Limit Card */}
+              <div className="p-4 border rounded-lg">
+                <div className="flex items-center gap-2 mb-2">
+                  <Activity className="h-4 w-4 text-muted-foreground" />
+                  <div className="text-sm text-muted-foreground">Rate Limit</div>
+                </div>
+                <div className="text-2xl font-bold">
+                  {keyInfo?.data?.rate_limit?.requests || 'N/A'}
+                </div>
+                <div className="text-xs text-muted-foreground">
+                  requests per {keyInfo?.data?.rate_limit?.interval || '10s'}
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       {/* Usage Overview */}
       <div className="grid gap-4 md:grid-cols-4">
@@ -247,6 +332,114 @@ export function AIIntegrationsTab() {
           )}
         </CardContent>
       </Card>
+
+      {/* Available Models - Only show if OpenRouter is configured */}
+      {isOpenRouterConfigured && models?.data && (
+        <Card>
+          <CardHeader>
+            <CardTitle>🤖 Available Models</CardTitle>
+            <CardDescription>
+              Alla modeller du kan använda med din OpenRouter API-nyckel
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-2 max-h-96 overflow-y-auto">
+              {models.data.slice(0, 20).map((model: any) => (
+                <div key={model.id} className="flex items-center justify-between p-3 border rounded-lg">
+                  <div>
+                    <div className="font-medium">{model.name || model.id}</div>
+                    <div className="text-xs text-muted-foreground">{model.id}</div>
+                  </div>
+                  <div className="text-right text-sm">
+                    <div className="text-muted-foreground">
+                      ${model.pricing?.prompt || 'N/A'}/token (prompt)
+                    </div>
+                    <div className="text-muted-foreground">
+                      ${model.pricing?.completion || 'N/A'}/token (completion)
+                    </div>
+                  </div>
+                </div>
+              ))}
+              {models.data.length > 20 && (
+                <p className="text-xs text-center text-muted-foreground pt-2">
+                  Visar 20 av {models.data.length} modeller
+                </p>
+              )}
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Activity History - Only show if provisioning key is configured */}
+      {hasProvisioningKey && activityData && (
+        <Card>
+          <CardHeader>
+            <CardTitle>📈 Activity History</CardTitle>
+            <CardDescription>
+              Aggregerad användning per dag och modell (kräver provisioning key)
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              {/* Activity Chart */}
+              {activityData?.data && activityData.data.length > 0 ? (
+                <>
+                  <div className="h-[300px]">
+                    <BarChartComponent
+                      title=""
+                      data={activityData.data.slice(0, 30).map((row: any) => ({
+                        name: row.date,
+                        cost: row.cost,
+                        requests: row.requests,
+                      }))}
+                      dataKeys={[
+                        { key: 'cost', color: 'hsl(var(--primary))', name: 'Cost ($)' },
+                        { key: 'requests', color: 'hsl(var(--chart-2))', name: 'Requests' },
+                      ]}
+                      height={300}
+                    />
+                  </div>
+                  
+                  {/* Activity Table */}
+                  <div className="border rounded-lg">
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead>Date</TableHead>
+                          <TableHead>Model</TableHead>
+                          <TableHead className="text-right">Requests</TableHead>
+                          <TableHead className="text-right">Tokens</TableHead>
+                          <TableHead className="text-right">Cost</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {activityData.data.slice(0, 10).map((row: any, i: number) => (
+                          <TableRow key={i}>
+                            <TableCell>{row.date}</TableCell>
+                            <TableCell className="font-mono text-xs">{row.model}</TableCell>
+                            <TableCell className="text-right">{row.requests}</TableCell>
+                            <TableCell className="text-right">{row.total_tokens?.toLocaleString()}</TableCell>
+                            <TableCell className="text-right font-medium">${row.cost?.toFixed(4)}</TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                    {activityData.data.length > 10 && (
+                      <div className="p-2 text-center text-xs text-muted-foreground border-t">
+                        Visar 10 av {activityData.data.length} rader
+                      </div>
+                    )}
+                  </div>
+                </>
+              ) : (
+                <div className="py-8 text-center text-muted-foreground">
+                  Ingen aktivitetshistorik hittades
+                </div>
+              )}
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       {/* Model Usage Table */}
       <Card>
