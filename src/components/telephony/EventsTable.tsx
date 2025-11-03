@@ -94,10 +94,10 @@ export const EventsTable = ({ events, onViewDetails }: EventsTableProps) => {
   }
 
   return (
-    <div className="rounded-lg border border-primary/10 bg-gradient-to-br from-card/80 via-card/50 to-card/30 backdrop-blur-md overflow-hidden hover:shadow-xl hover:shadow-primary/5 transition-all duration-300">
+    <div className="rounded-lg border border-primary/10 bg-gradient-to-br from-card/80 via-card/50 to-card/30 backdrop-blur-md overflow-hidden">
       <Table>
         <TableHeader>
-          <TableRow className="hover:bg-transparent border-border/50">
+          <TableRow className="hover:bg-transparent border-primary/10">
             <TableHead className="w-[120px]">Provider</TableHead>
             <TableHead className="w-[150px]">Event Type</TableHead>
             <TableHead className="w-[100px]">Riktning</TableHead>
@@ -141,7 +141,8 @@ export const EventsTable = ({ events, onViewDetails }: EventsTableProps) => {
             return (
               <TableRow 
                 key={event.id} 
-                className="border-border/50 hover:bg-muted/50 transition-colors cursor-pointer"
+                className="border-primary/5 hover:bg-primary/5 transition-colors cursor-pointer animate-fade-in"
+                style={{ animationDelay: `${sortedEvents.indexOf(event) * 30}ms` }}
               >
                 <TableCell>
                   <div className="flex items-center gap-2">
