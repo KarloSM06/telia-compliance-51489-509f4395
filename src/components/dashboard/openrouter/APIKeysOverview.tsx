@@ -1,9 +1,12 @@
+import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Key, AlertCircle } from "lucide-react";
+import { Progress } from "@/components/ui/progress";
+import { Key, AlertCircle, ChevronDown, ChevronUp } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Button } from "@/components/ui/button";
 import { formatDollarCompact, getDailyUsageColor } from "@/lib/format";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { getKeyDisplayName, getKeyMaskedLabel } from "@/lib/openrouterKeys";
 
 interface APIKey {
   hash: string;
@@ -24,6 +27,7 @@ interface APIKeysOverviewProps {
 }
 
 export const APIKeysOverview = ({ keys, isLoading }: APIKeysOverviewProps) => {
+  const [isExpanded, setIsExpanded] = useState(false);
   
   if (isLoading) {
     return (
@@ -105,43 +109,72 @@ export const APIKeysOverview = ({ keys, isLoading }: APIKeysOverviewProps) => {
             <span>Inga API-nycklar hittades</span>
           </div>
         ) : (
-          <div className="mt-3 border rounded-lg">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead className="text-xs">Namn</TableHead>
-                  <TableHead className="text-xs">Status</TableHead>
-                  <TableHead className="text-xs text-right">Total</TableHead>
-                  <TableHead className="text-xs text-right">Idag</TableHead>
-                  <TableHead className="text-xs text-right">Vecka</TableHead>
-                  <TableHead className="text-xs text-right">Månad</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {apiKeys.map((key) => {
-                  const displayName = (key.name?.trim() || '') || 'Namnlös';
-                  const dailyUsage = key.usage_daily || 0;
-                  const dailyColorClass = getDailyUsageColor(dailyUsage);
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => setIsExpanded(!isExpanded)}
+            className="w-full mt-2"
+          >
+            {isExpanded ? (
+              <>
+                <ChevronUp className="mr-2 h-4 w-4" />
+                Dölj {apiKeys.length} nycklar
+              </>
+            ) : (
+              <>
+                <ChevronDown className="mr-2 h-4 w-4" />
+                Visa {apiKeys.length} nycklar
+              </>
+            )}
+          </Button>
+        )}
+
+        {isExpanded && (
+          <div className="grid gap-2 md:grid-cols-2 lg:grid-cols-3 mt-3">
+          {apiKeys.map((key) => {
+            const displayName = (key.name?.trim() || '') || 'Namnlös';
+            const dailyUsage = key.usage_daily || 0;
+            const dailyColorClass = getDailyUsageColor(dailyUsage);
+            
+            return (
+                <div
+                  key={key.hash}
+                  className="border rounded-lg p-2 space-y-1.5 hover:bg-accent/50 transition-colors"
+                >
+                  <div className="flex items-start justify-between">
+                    <div className="flex-1 min-w-0">
+                      <p className="font-medium text-xs truncate">
+                        {displayName}
+                      </p>
+                    </div>
+                    <Badge variant={key.disabled ? "secondary" : "default"} className="ml-2 text-[10px] px-1.5 py-0">
+                      {key.disabled ? "Inaktiv" : "Aktiv"}
+                    </Badge>
+                  </div>
                   
-                  return (
-                    <TableRow key={key.hash}>
-                      <TableCell className="font-medium text-xs">{displayName}</TableCell>
-                      <TableCell>
-                        <Badge variant={key.disabled ? "secondary" : "default"} className="text-[10px] px-1.5 py-0">
-                          {key.disabled ? "Inaktiv" : "Aktiv"}
-                        </Badge>
-                      </TableCell>
-                      <TableCell className="text-xs text-right">{formatDollarCompact(key.usage)}</TableCell>
-                      <TableCell className={`text-xs text-right font-medium ${dailyColorClass}`}>
+                  <div className="space-y-0.5 text-xs">
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">Total:</span>
+                      <span className="font-medium">{formatDollarCompact(key.usage)}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">Idag:</span>
+                      <span className={`font-medium ${dailyColorClass}`}>
                         {formatDollarCompact(dailyUsage)}
-                      </TableCell>
-                      <TableCell className="text-xs text-right">{formatDollarCompact(key.usage_weekly)}</TableCell>
-                      <TableCell className="text-xs text-right">{formatDollarCompact(key.usage_monthly)}</TableCell>
-                    </TableRow>
-                  );
-                })}
-              </TableBody>
-            </Table>
+                      </span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">Vecka:</span>
+                      <span className="font-medium">{formatDollarCompact(key.usage_weekly)}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">Månad:</span>
+                      <span className="font-medium">{formatDollarCompact(key.usage_monthly)}</span>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         )}
       </CardContent>
