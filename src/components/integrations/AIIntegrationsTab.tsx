@@ -8,7 +8,7 @@ import { useOpenRouterCredits } from "@/hooks/useOpenRouterCredits";
 import { useOpenRouterKeyInfo } from "@/hooks/useOpenRouterKeyInfo";
 import { useOpenRouterModels } from "@/hooks/useOpenRouterModels";
 import { useOpenRouterActivity } from "@/hooks/useOpenRouterActivity";
-import { Settings, TrendingUp, Zap, DollarSign, Activity, Pencil, CreditCard, BarChart3 } from "lucide-react";
+import { Settings, TrendingUp, Zap, DollarSign, Activity, Pencil, CreditCard, BarChart3, RefreshCw } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { AreaChartComponent } from "@/components/dashboard/charts/AreaChartComponent";
 import { PieChartComponent } from "@/components/dashboard/charts/PieChartComponent";
@@ -17,6 +17,7 @@ import { startOfMonth, endOfMonth, subDays } from "date-fns";
 import { OpenRouterSetupModal } from "./OpenRouterSetupModal";
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 export function AIIntegrationsTab() {
   const navigate = useNavigate();
@@ -124,23 +125,51 @@ export function AIIntegrationsTab() {
             <div className="pt-3 border-t">
               <h4 className="text-sm font-semibold mb-2">📊 Tracking Status</h4>
               <div className="space-y-2 text-sm">
-                <div className="flex items-center justify-between">
-                  <span className="text-muted-foreground">Realtids-tracking (submit-prompt)</span>
+                {/* API Key tracking */}
+                <div className="flex items-center justify-between p-2 bg-blue-50 dark:bg-blue-950/20 rounded">
+                  <div>
+                    <span className="font-medium">Realtids AI-tracking</span>
+                    <p className="text-xs text-muted-foreground">
+                      Varje AI-anrop loggas direkt till ai_usage_logs
+                    </p>
+                  </div>
                   <Badge variant="default" className="bg-green-600">Aktiv</Badge>
                 </div>
-                {hasProvisioningKey && (
-                  <div className="flex items-center justify-between">
-                    <span className="text-muted-foreground">Historik-tracking (/activity)</span>
+                
+                {hasProvisioningKey ? (
+                  <div className="flex items-center justify-between p-2 bg-green-50 dark:bg-green-950/20 rounded">
+                    <div>
+                      <span className="font-medium">Historik-tracking (OpenRouter)</span>
+                      <p className="text-xs text-muted-foreground">
+                        Aggregerad data från /activity endpoint
+                      </p>
+                    </div>
                     <Badge variant="default" className="bg-green-600">Aktiv</Badge>
                   </div>
+                ) : (
+                  <div className="flex items-center justify-between p-2 bg-gray-50 dark:bg-gray-900/20 rounded">
+                    <div>
+                      <span className="font-medium">Historik-tracking</span>
+                      <p className="text-xs text-muted-foreground">
+                        Lägg till Provisioning Key för historisk data
+                      </p>
+                    </div>
+                    <Badge variant="secondary">Inaktiv</Badge>
+                  </div>
                 )}
-                <div className="flex items-center justify-between">
-                  <span className="text-muted-foreground">Credit Monitoring</span>
-                  <Badge variant="default" className="bg-green-600">Aktiv</Badge>
+                
+                {/* Credit monitoring */}
+                <div className="flex items-center justify-between p-2 bg-blue-50 dark:bg-blue-950/20 rounded">
+                  <div>
+                    <span className="font-medium">Credit Monitoring</span>
+                    <p className="text-xs text-muted-foreground">
+                      Uppdateras varje minut från /credits endpoint
+                    </p>
+                  </div>
+                  <Badge variant="default" className="bg-green-600">
+                    {credits ? `$${credits.limit_remaining?.toFixed(2)} kvar` : 'Aktiv'}
+                  </Badge>
                 </div>
-                <p className="text-xs text-muted-foreground mt-2">
-                  All AI-användning loggas automatiskt vid varje anrop via /chat/completions.
-                </p>
               </div>
             </div>
           )}
@@ -374,10 +403,38 @@ export function AIIntegrationsTab() {
       {hasProvisioningKey && activityData && (
         <Card>
           <CardHeader>
-            <CardTitle>📈 Activity History</CardTitle>
-            <CardDescription>
-              Aggregerad användning per dag och modell (kräver provisioning key)
-            </CardDescription>
+            <div className="flex items-center justify-between">
+              <div>
+                <CardTitle>📈 Activity History</CardTitle>
+                <CardDescription>
+                  Aggregerad användning per dag och modell (kräver provisioning key)
+                </CardDescription>
+              </div>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={async () => {
+                  try {
+                    const { data, error } = await supabase.functions.invoke('sync-openrouter-activity', {
+                      body: {
+                        start_date: dateRange.from.toISOString().split('T')[0],
+                        end_date: dateRange.to.toISOString().split('T')[0],
+                      }
+                    });
+                    
+                    if (error) throw error;
+                    
+                    toast.success(`Synkade ${data.synced_records} poster från OpenRouter`);
+                  } catch (error) {
+                    console.error('Sync error:', error);
+                    toast.error('Kunde inte synka data från OpenRouter');
+                  }
+                }}
+              >
+                <RefreshCw className="h-4 w-4 mr-2" />
+                Synka från OpenRouter
+              </Button>
+            </div>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
