@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { FileText, Bell, BellRing, MessageSquare, BarChart3 } from "lucide-react";
+import { PremiumHeader } from "@/components/ui/premium-header";
 import MessageTemplates from "@/pages/MessageTemplates";
 import ReminderSettings from "@/pages/ReminderSettings";
 import NotificationSettings from "@/pages/NotificationSettings";
@@ -10,10 +11,19 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 export default function Notifications() {
   const [activeTab, setActiveTab] = useState("analytics");
   return <div className="min-h-screen">
+      {/* Header Section */}
+      <div className="container mx-auto px-6 lg:px-8 pt-8 pb-6">
+        <PremiumHeader 
+          icon={<Bell className="h-6 w-6 text-primary" />}
+          title="Notifikationer" 
+          subtitle="Hantera och analysera dina notifikationer"
+        />
+      </div>
+
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-0">
 
         {/* Desktop Navigation - Minimalist Pill Design */}
-        <div className="hidden lg:block sticky top-0 z-40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b border-border">
+        <div className="hidden lg:block bg-background border-b border-border">
           <div className="container mx-auto px-6 lg:px-8">
             <TabsList className="h-14 bg-transparent border-0 p-0 gap-1">
               <TabsTrigger 
@@ -56,7 +66,7 @@ export default function Notifications() {
         </div>
 
         {/* Mobile Navigation */}
-        <div className="lg:hidden sticky top-0 z-40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b border-border py-4">
+        <div className="lg:hidden bg-background border-b border-border py-4">
           <div className="container mx-auto px-6 lg:px-8 animate-scale-in">
           <Select value={activeTab} onValueChange={setActiveTab}>
             <SelectTrigger className="w-full max-w-md bg-card border-border text-foreground">
