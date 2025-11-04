@@ -12,14 +12,15 @@ serve(async (req) => {
   }
 
   try {
-    const supabase = createClient(
+    // Create anon client for auth verification only
+    const anonClient = createClient(
       Deno.env.get('SUPABASE_URL') ?? '',
       Deno.env.get('SUPABASE_ANON_KEY') ?? ''
     );
 
     const authHeader = req.headers.get('Authorization')!;
     const token = authHeader.replace('Bearer ', '');
-    const { data: { user } } = await supabase.auth.getUser(token);
+    const { data: { user } } = await anonClient.auth.getUser(token);
 
     if (!user) {
       throw new Error('Unauthorized');
@@ -30,8 +31,14 @@ serve(async (req) => {
     console.log('🔄 Triggering manual sync for integration:', integration_id);
     console.log('👤 User ID:', user.id);
 
+    // Use service role client to bypass RLS and manually check ownership
+    const adminClient = createClient(
+      Deno.env.get('SUPABASE_URL') ?? '',
+      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
+    );
+
     // Fetch integration with detailed error logging
-    const { data: integration, error: integrationError } = await supabase
+    const { data: integration, error: integrationError } = await adminClient
       .from('integrations')
       .select('*')
       .eq('id', integration_id)
@@ -81,11 +88,6 @@ serve(async (req) => {
         { job_type: 'messages', status: 'pending' },
       ];
 
-      const adminClient = createClient(
-        Deno.env.get('SUPABASE_URL') ?? '',
-        Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
-      );
-
       for (const job of jobs) {
         const { error: jobError } = await adminClient
           .from('telephony_sync_jobs')
@@ -106,8 +108,8 @@ serve(async (req) => {
         }
       }
 
-      // Trigger telephony sync function
-      const { data: syncData, error: syncError } = await supabase.functions.invoke(
+      // Trigger telephony sync function using admin client
+      const { data: syncData, error: syncError } = await adminClient.functions.invoke(
         'telephony-account-sync',
         {
           body: { account_id: integration_id },
@@ -125,8 +127,8 @@ serve(async (req) => {
       };
 
     } else if (isCalendar) {
-      // Trigger calendar sync
-      const { data: syncData, error: syncError } = await supabase.functions.invoke(
+      // Trigger calendar sync using admin client
+      const { data: syncData, error: syncError } = await adminClient.functions.invoke(
         'sync-booking-systems',
         {
           body: { 
@@ -153,10 +155,10 @@ serve(async (req) => {
       };
     }
 
-    // Update last_sync_at
-    await supabase
+    // Update last_sync_at using admin client
+    await adminClient
       .from('integrations')
-      .update({ last_sync_at: new Date().toISOString() })
+      .update({ last_synced_at: new Date().toISOString() })
       .eq('id', integration_id);
 
     console.log('✅ Sync triggered:', result);
