@@ -6,15 +6,21 @@ interface IntegrationStatusBadgeProps {
   healthStatus?: 'healthy' | 'warning' | 'error' | null;
   showLabel?: boolean;
   className?: string;
+  isActive?: boolean;
 }
 
 export const IntegrationStatusBadge = ({
   provider,
   healthStatus,
   showLabel = true,
-  className
+  className,
+  isActive = true
 }: IntegrationStatusBadgeProps) => {
   const getStatusIcon = () => {
+    if (!isActive) {
+      return <Circle className="h-3 w-3 fill-gray-400 text-gray-400" />;
+    }
+    
     switch (healthStatus) {
       case 'healthy':
         return <Circle className="h-3 w-3 fill-green-500 text-green-500" />;
@@ -28,6 +34,10 @@ export const IntegrationStatusBadge = ({
   };
 
   const getStatusColor = () => {
+    if (!isActive) {
+      return 'text-muted-foreground';
+    }
+    
     switch (healthStatus) {
       case 'healthy':
         return 'text-green-700';

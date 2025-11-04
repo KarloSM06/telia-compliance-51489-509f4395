@@ -13,6 +13,7 @@ import { useOpenRouterAccountSnapshots } from "@/hooks/useOpenRouterAccountSnaps
 import { useOpenRouterActivitySEK } from "@/hooks/useOpenRouterActivitySEK";
 import { useSyncOpenRouterActivity } from "@/hooks/useSyncOpenRouterActivity";
 import { OpenRouterSetupModal } from "@/components/integrations/OpenRouterSetupModal";
+import { IntegrationQuickView } from "@/components/integrations/IntegrationQuickView";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -159,6 +160,12 @@ const OpenRouterDashboard = () => {
 
       <div className="space-y-6 p-6">
       <AnimatedSection delay={200}>
+      <IntegrationQuickView 
+        filterByType="ai" 
+        title="AI-integrationer"
+        highlightCategory="ai"
+      />
+      
       {isLoadingCredits || isLoadingKeyInfo ? (
         <div className="grid gap-4 md:grid-cols-3">
           <Skeleton className="h-32" />

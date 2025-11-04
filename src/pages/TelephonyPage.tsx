@@ -14,7 +14,7 @@ import { EventFilters, EventFilterValues } from '@/components/telephony/EventFil
 import { ProviderManagementDialog } from '@/components/telephony/ProviderManagementDialog';
 import { EventDetailDrawer } from '@/components/telephony/EventDetailDrawer';
 import { PremiumTelephonyStatCard } from '@/components/telephony/PremiumTelephonyStatCard';
-import { AddIntegrationModal } from '@/components/integrations/AddIntegrationModal';
+import { IntegrationQuickView } from '@/components/integrations/IntegrationQuickView';
 import { AnimatedSection } from '@/components/shared/AnimatedSection';
 import { TelephonyActivityChart } from '@/components/telephony/charts/TelephonyActivityChart';
 import { SuccessRateChart } from '@/components/telephony/charts/SuccessRateChart';
@@ -29,7 +29,6 @@ import hiemsLogoSnowflake from '@/assets/hiems-logo-snowflake.png';
 
 export default function TelephonyPage() {
   const [showProviderDialog, setShowProviderDialog] = useState(false);
-  const [showAddModal, setShowAddModal] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState<any>(null);
   const { dateRange, setPreset } = useDateRangeStore();
   const [filters, setFilters] = useState<EventFilterValues>({
@@ -310,11 +309,17 @@ export default function TelephonyPage() {
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_50%,hsl(var(--primary)/0.12),transparent_50%)]" />
         <div className="container mx-auto px-6 lg:px-8 relative z-10">
           <AnimatedSection delay={200}>
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
               <PremiumTelephonyStatCard title="Total Samtal" value={metrics.totalCalls} icon={Phone} color="text-blue-600" subtitle={`${completedCalls} avslutade`} />
               <PremiumTelephonyStatCard title="Pågående" value={inProgressCalls} icon={Loader2} color="text-green-600" subtitle="Aktiva samtal" animate={inProgressCalls > 0} />
               <PremiumTelephonyStatCard title="Total Tid" value={formatDuration(metrics.totalDuration)} icon={Clock} color="text-purple-600" subtitle={`⌀ ${formatDuration(avgCallDuration)} per samtal`} />
-              <PremiumTelephonyStatCard title="Total Kostnad" value={formatCostInSEK(metrics.totalCost)} icon={DollarSign} color="text-orange-600" subtitle={`≈ $${metrics.totalCost.toFixed(4)} USD`} />
+            </div>
+            <div className="mt-6">
+              <IntegrationQuickView 
+                filterByType="telephony" 
+                title="Telefoniintegrationer"
+                highlightCategory="telephony"
+              />
             </div>
           </AnimatedSection>
         </div>
@@ -469,7 +474,7 @@ export default function TelephonyPage() {
         providers={telephonyProviders}
         onAddProvider={() => {
           setShowProviderDialog(false);
-          setShowAddModal(true);
+          window.location.href = '/dashboard/settings?tab=integrationer&category=telephony';
         }}
         onRefreshProvider={handleRefreshProvider}
         onDeleteProvider={handleDeleteProvider}
@@ -481,9 +486,6 @@ export default function TelephonyPage() {
         open={!!selectedEvent}
         onClose={() => setSelectedEvent(null)}
       />
-
-      {/* Add Integration Modal */}
-      <AddIntegrationModal open={showAddModal} onOpenChange={setShowAddModal} />
     </div>
   );
 }

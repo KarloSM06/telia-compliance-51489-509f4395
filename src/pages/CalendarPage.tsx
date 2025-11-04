@@ -9,9 +9,9 @@ import { WeekView } from "@/components/calendar/WeekView";
 import { YearView } from "@/components/calendar/YearView";
 import { TimelineView } from "@/components/calendar/TimelineView";
 import { EventModal } from "@/components/calendar/EventModal";
-import { IntegrationSetupModal } from "@/components/calendar/IntegrationSetupModal";
 import { AvailabilitySettings } from "@/components/calendar/AvailabilitySettings";
 import { CalendarSelector } from "@/components/calendar/CalendarSelector";
+import { IntegrationQuickView } from "@/components/integrations/IntegrationQuickView";
 import { CalendarManagementModal } from "@/components/calendar/CalendarManagementModal";
 import { useCalendarEvents, CalendarEvent } from "@/hooks/useCalendarEvents";
 import { useCalendars } from "@/hooks/useCalendars";
@@ -54,7 +54,6 @@ const CalendarPage = () => {
   const [currentView, setCurrentView] = useState<'month' | 'week' | 'day' | 'year' | 'timeline'>('month');
   const [selectedDay, setSelectedDay] = useState<Date>(new Date());
   const [showEventModal, setShowEventModal] = useState(false);
-  const [showIntegrationModal, setShowIntegrationModal] = useState(false);
   const [showCalendarManagement, setShowCalendarManagement] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState<CalendarEvent | null>(null);
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
@@ -252,19 +251,6 @@ const CalendarPage = () => {
                   Hantera kalendrar
                 </Button>
 
-                <Button onClick={() => setShowIntegrationModal(true)} variant="outline" size="sm" className="gap-2 hover:bg-primary/5 hover:border-primary/30 transition-all duration-500">
-                  <Settings className="h-4 w-4" />
-                  Integrationer
-                  {integrations.length > 0 && <Badge variant="secondary" className="ml-1">{integrations.length}</Badge>}
-                </Button>
-
-                {/* Premium Integration badges */}
-                {integrations.slice(0, 3).map(int => <div key={int.id} className="flex items-center gap-2 px-4 py-2 rounded-full bg-primary/5 border border-primary/20 hover:scale-105 transition-transform duration-300 cursor-pointer" onClick={() => setShowIntegrationModal(true)}>
-                    {int.is_enabled && int.last_sync_status === 'success' && <div className="w-2.5 h-2.5 rounded-full bg-green-500 animate-pulse" />}
-                    {int.last_sync_status === 'error' && <div className="w-2.5 h-2.5 rounded-full bg-red-500" />}
-                    <span className="text-sm font-medium">{int.provider_display_name}</span>
-                  </div>)}
-
                 <Button onClick={() => {
                 setSelectedEvent(null);
                 setSelectedDate(new Date());
@@ -279,8 +265,18 @@ const CalendarPage = () => {
         </div>
       </section>
 
-      {/* Stats Overview Section */}
-      
+      {/* Stats Overview + Integration Status */}
+      <section className="relative py-12 bg-gradient-to-b from-background via-primary/2 to-background">
+        <div className="container mx-auto px-6 lg:px-8">
+          <AnimatedSection delay={250}>
+            <IntegrationQuickView 
+              filterByType="calendar" 
+              title="Kalenderintegrationer"
+              highlightCategory="calendar"
+            />
+          </AnimatedSection>
+        </div>
+      </section>
 
       {/* Year view */}
       {currentView === 'year' && <section className="relative py-12 bg-gradient-to-b from-background via-primary/2 to-background">
@@ -354,9 +350,6 @@ const CalendarPage = () => {
             </AnimatedSection>
           </div>
         </section>}
-
-      {/* Integration setup modal */}
-      <IntegrationSetupModal open={showIntegrationModal} onClose={() => setShowIntegrationModal(false)} onSave={createIntegration} existingIntegrations={integrations} />
 
       {/* Calendar management modal */}
       <CalendarManagementModal open={showCalendarManagement} onClose={() => setShowCalendarManagement(false)} calendars={calendars} onCreateCalendar={createCalendar} onUpdateCalendar={updateCalendar} onDeleteCalendar={deleteCalendar} />
