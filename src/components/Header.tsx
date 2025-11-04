@@ -93,7 +93,7 @@ export const Header = () => {
           </div>
           
           {/* Desktop Navigation */}
-          {!user && <nav className="hidden lg:flex items-center gap-1">
+          <nav className="hidden lg:flex items-center gap-1">
               {[{
             label: 'Hem',
             action: () => navigate("/")
@@ -121,7 +121,7 @@ export const Header = () => {
                     <div className="absolute inset-0 bg-gradient-gold opacity-0 group-hover:opacity-10 rounded-lg transition-all duration-300 scale-90 group-hover:scale-100" />
                     <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-0 h-0.5 bg-gradient-gold group-hover:w-1/2 transition-all duration-300" />
                   </button>)}
-            </nav>}
+            </nav>
           
           {/* Right Side Actions */}
           <div className="flex items-center gap-3">
@@ -202,7 +202,7 @@ export const Header = () => {
                 </div>
                 
                 {/* Navigation Links */}
-                {!user && <nav className="flex flex-col gap-2">
+                <nav className="flex flex-col gap-2">
                     {[{
                 label: 'Hem',
                 action: () => navigate("/")
@@ -231,7 +231,7 @@ export const Header = () => {
                           <span className="relative z-10">{item.label}</span>
                           <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-0 bg-gradient-gold group-hover:h-1/2 transition-all duration-300 rounded-r-full" />
                         </button>)}
-                  </nav>}
+                  </nav>
                 
                 {/* User Menu */}
                 {user ? <div className="space-y-4 pt-4 border-t border-border/30">
