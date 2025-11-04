@@ -134,6 +134,10 @@ export const queryKeys = {
       ['admin', 'metrics', dateRange] as const,
     userActivity: (dateRange?: { from: Date; to: Date }) =>
       ['admin', 'user-activity', dateRange] as const,
+    aggregatedData: (dateRange?: { from: Date; to: Date }) =>
+      ['admin', 'aggregated-data', dateRange] as const,
+    callTranscripts: (userId?: string) =>
+      ['admin', 'call-transcripts', userId] as const,
   },
 } as const;
 

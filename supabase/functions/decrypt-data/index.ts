@@ -61,7 +61,10 @@ serve(async (req) => {
       throw new Error('Encryption key not configured');
     }
 
-    // Verify user owns this call
+    // Check if user is admin
+    const { data: isAdminUser } = await supabase.rpc('is_admin', { user_id: user.id });
+
+    // Verify user owns this call OR is admin
     const { data: call, error: callError } = await supabase
       .from('calls')
       .select('user_id, encrypted_customer_phone, encrypted_customer_name, encrypted_agent_name, encrypted_transcript, encrypted_analysis')
@@ -75,7 +78,8 @@ serve(async (req) => {
       });
     }
 
-    if (call.user_id !== user.id) {
+    // Allow access if user owns the call OR is admin
+    if (!isAdminUser && call.user_id !== user.id) {
       return new Response(JSON.stringify({ error: 'Access denied' }), {
         status: 403,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
