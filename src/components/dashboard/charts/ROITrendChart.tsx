@@ -26,7 +26,7 @@ export const ROITrendChart = ({ data, isLoading }: ROITrendChartProps) => {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="flex items-center justify-center h-[350px]">
+          <div className="flex items-center justify-center h-[400px]">
             <p className="text-sm text-muted-foreground">Laddar...</p>
           </div>
         </CardContent>
@@ -44,7 +44,7 @@ export const ROITrendChart = ({ data, isLoading }: ROITrendChartProps) => {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="flex items-center justify-center h-[350px]">
+          <div className="flex items-center justify-center h-[400px]">
             <p className="text-sm text-muted-foreground">Ingen data tillgänglig</p>
           </div>
         </CardContent>

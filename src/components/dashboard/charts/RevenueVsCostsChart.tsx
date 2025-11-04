@@ -22,7 +22,7 @@ export const RevenueVsCostsChart = ({ data, isLoading }: RevenueVsCostsChartProp
           <CardTitle>Intäkter vs Kostnader</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="flex items-center justify-center h-80">
+          <div className="flex items-center justify-center h-[400px]">
             <p className="text-muted-foreground">Laddar...</p>
           </div>
         </CardContent>
@@ -37,7 +37,7 @@ export const RevenueVsCostsChart = ({ data, isLoading }: RevenueVsCostsChartProp
           <CardTitle>Intäkter vs Kostnader</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="flex items-center justify-center h-80">
+          <div className="flex items-center justify-center h-[400px]">
             <p className="text-muted-foreground">Ingen data tillgänglig</p>
           </div>
         </CardContent>
