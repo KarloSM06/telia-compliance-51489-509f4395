@@ -184,21 +184,21 @@ const CalendarPage = () => {
         </div>
 
         <div className="container mx-auto px-6 lg:px-8 relative z-10">
-          <AnimatedSection className="max-w-4xl mx-auto text-center">
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 mb-6">
-              <div className="w-2 h-2 rounded-full bg-primary animate-pulse" />
-              <span className="text-xs font-medium uppercase tracking-wider text-primary">
-                Realtidsövervakning
-              </span>
+          <AnimatedSection>
+            <div className="max-w-4xl mx-auto text-center space-y-6">
+              <div className="inline-block">
+                <span className="text-sm font-semibold tracking-wider text-primary uppercase">Realtidsövervakning</span>
+                <div className="w-32 h-1.5 bg-gradient-to-r from-primary via-primary/60 to-transparent mx-auto rounded-full shadow-lg shadow-primary/50 mt-2" />
+              </div>
+              
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent leading-tight">
+                Kalender & CRM
+              </h1>
+              
+              <p className="text-lg sm:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed font-light">
+                Hantera dina möten och synka med befintliga bokningssystem
+              </p>
             </div>
-            
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 bg-gradient-to-r from-foreground via-foreground to-foreground/70 bg-clip-text text-transparent">
-              Kalender & CRM
-            </h1>
-            
-            <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto">
-              Hantera dina möten och synka med befintliga bokningssystem
-            </p>
           </AnimatedSection>
         </div>
       </section>
