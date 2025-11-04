@@ -2,6 +2,13 @@ import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.75.0';
 import { encode as base64Encode } from "https://deno.land/std@0.168.0/encoding/base64.ts";
 import { verifyTwilioSignature, verifyTelnyxSignature, verifyVapiSignature, verifyRetellSignature } from '../_shared/signature-verification.ts';
+import { 
+  sanitizeText, 
+  validateAndFormatPhone, 
+  validateNumber, 
+  sanitizeMetadata, 
+  validateTimestamp 
+} from '../_shared/input-validation.ts';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -615,13 +622,26 @@ serve(async (req) => {
                         bodyData.message?.customer?.number || 
                         parseNumberFromHeader(callData.phoneCallProviderDetails?.sip?.headers?.['p-asserted-identity']);
         
-        const fromNumber = formatPhone(fromRaw);
+        const fromNumber = validateAndFormatPhone(formatPhone(fromRaw));
         
         // Extract X-Call-Sid from Vapi transport
-        const xCallSid = callData.transport?.callSid || bodyData.message?.call?.transport?.callSid;
+        const xCallSid = sanitizeText(callData.transport?.callSid || bodyData.message?.call?.transport?.callSid, 100);
         
         console.log('📞 Phone number:', { fromRaw, from: fromNumber });
         console.log('🔑 X-Call-Sid:', xCallSid);
+
+        // Validate and sanitize call data before insertion
+        const validatedStatus = sanitizeText(callData.status, 50) || 'in-progress';
+        const sanitizedNormalized = sanitizeMetadata({
+          callId: callId,
+          xCallSid: xCallSid,
+          messageType: messageType,
+          call: callData,
+          phoneNumber: bodyData.message?.phoneNumber,
+          customer: bodyData.message?.customer,
+          assistant: bodyData.message?.assistant,
+          timestamp: bodyData.message?.timestamp
+        });
 
         // Store initial call data
         const { data: newEvent, error: createError } = await supabase
@@ -630,28 +650,19 @@ serve(async (req) => {
             user_id: userId,
             integration_id: integration.id,
             provider: 'vapi',
-            provider_event_id: callId,
+            provider_event_id: sanitizeText(callId, 100),
             event_type: 'call.start',
             direction: direction,
             from_number: fromNumber,
             to_number: null,
-            status: callData.status || 'in-progress',
+            status: validatedStatus,
             provider_layer: 'agent',
             x_call_sid: xCallSid,
             cost_breakdown: {},
-            normalized: {
-              callId: callId,
-              xCallSid: xCallSid,
-              messageType: messageType,
-              call: callData,
-              phoneNumber: bodyData.message?.phoneNumber,
-              customer: bodyData.message?.customer,
-              assistant: bodyData.message?.assistant,
-              timestamp: bodyData.message?.timestamp
-            },
-            event_timestamp: convertTimestamp(bodyData.message?.call?.createdAt || bodyData.message?.timestamp),
+            normalized: sanitizedNormalized,
+            event_timestamp: validateTimestamp(bodyData.message?.call?.createdAt || bodyData.message?.timestamp),
             idempotency_key: idempotencyKey,
-            provider_payload: bodyData
+            provider_payload: sanitizeMetadata(bodyData)
           })
           .select()
           .single();
@@ -712,9 +723,35 @@ serve(async (req) => {
                           bodyData.message?.customer?.number || 
                           parseNumberFromHeader(callData.phoneCallProviderDetails?.sip?.headers?.['p-asserted-identity']);
           
-          const fromNumber = formatPhone(fromRaw);
+          const fromNumber = validateAndFormatPhone(formatPhone(fromRaw));
           
           console.log('📞 Phone number (fallback):', { fromRaw, from: fromNumber });
+
+          // Validate and sanitize data before insertion
+          const validatedDuration = validateNumber(bodyData.message?.durationSeconds, { min: 0, max: 86400, integer: true }) || 0;
+          const validatedCost = validateNumber(bodyData.message?.cost ?? bodyData.message?.costBreakdown?.total, { min: 0, max: 10000 }) || 0;
+          const validatedStatus = sanitizeText(bodyData.message?.endedReason, 50) || 'completed';
+          const sanitizedNormalized = sanitizeMetadata({
+            callId: callId,
+            messageType: messageType,
+            transcript: bodyData.message?.transcript,
+            summary: bodyData.message?.analysis?.summary,
+            successEvaluation: bodyData.message?.analysis?.successEvaluation,
+            cost: bodyData.message?.cost,
+            costBreakdown: bodyData.message?.costBreakdown,
+            durationMs: bodyData.message?.durationMs,
+            durationSeconds: bodyData.message?.durationSeconds,
+            durationMinutes: bodyData.message?.durationMinutes,
+            recordingUrl: bodyData.message?.recordingUrl,
+            stereoRecordingUrl: bodyData.message?.stereoRecordingUrl,
+            startedAt: convertTimestamp(bodyData.message?.startedAt),
+            endedAt: convertTimestamp(bodyData.message?.endedAt),
+            endedReason: bodyData.message?.endedReason,
+            messages: bodyData.message?.artifact?.messages || bodyData.message?.messages,
+            assistant: bodyData.message?.assistant,
+            call: bodyData.message?.call,
+            analysis: bodyData.message?.analysis
+          });
 
           await supabase
             .from('telephony_events')
@@ -722,39 +759,19 @@ serve(async (req) => {
               user_id: userId,
               integration_id: integration.id,
               provider: 'vapi',
-              provider_event_id: callId,
+              provider_event_id: sanitizeText(callId, 100),
               event_type: 'call.end',
               direction: direction,
               from_number: fromNumber,
               to_number: null,
-              status: bodyData.message?.endedReason || 'completed',
-              normalized: {
-                callId: callId,
-                messageType: messageType,
-                transcript: bodyData.message?.transcript,
-                summary: bodyData.message?.analysis?.summary,
-                successEvaluation: bodyData.message?.analysis?.successEvaluation,
-                cost: bodyData.message?.cost,
-                costBreakdown: bodyData.message?.costBreakdown,
-                durationMs: bodyData.message?.durationMs,
-                durationSeconds: bodyData.message?.durationSeconds,
-                durationMinutes: bodyData.message?.durationMinutes,
-                recordingUrl: bodyData.message?.recordingUrl,
-                stereoRecordingUrl: bodyData.message?.stereoRecordingUrl,
-                startedAt: convertTimestamp(bodyData.message?.startedAt),
-                endedAt: convertTimestamp(bodyData.message?.endedAt),
-                endedReason: bodyData.message?.endedReason,
-                messages: bodyData.message?.artifact?.messages || bodyData.message?.messages,
-                assistant: bodyData.message?.assistant,
-                call: bodyData.message?.call,
-                analysis: bodyData.message?.analysis
-              },
-              duration_seconds: Math.round(Number(bodyData.message?.durationSeconds) || 0),
-              cost_amount: Number(bodyData.message?.cost ?? bodyData.message?.costBreakdown?.total ?? 0),
+              status: validatedStatus,
+              normalized: sanitizedNormalized,
+              duration_seconds: validatedDuration,
+              cost_amount: validatedCost,
               cost_currency: 'USD',
-              event_timestamp: convertTimestamp(bodyData.message?.endedAt),
+              event_timestamp: validateTimestamp(bodyData.message?.endedAt),
               idempotency_key: idempotencyKey,
-              provider_payload: bodyData
+              provider_payload: sanitizeMetadata(bodyData)
             });
         } else {
           // Update existing event with end-of-call data
@@ -862,16 +879,16 @@ serve(async (req) => {
             });
           }
           
-          // Extract call data
+          // Extract and validate call data
           const payload = bodyData.data?.payload;
-          const fromNumber = payload?.from;
-          const toNumber = payload?.to;
+          const fromNumber = validateAndFormatPhone(payload?.from);
+          const toNumber = validateAndFormatPhone(payload?.to);
           const direction = payload?.direction === 'incoming' ? 'inbound' : 'outbound';
           
           // Extract X-Call-Sid from custom_headers
           const customHeaders = payload?.custom_headers || [];
           const xCallSidHeader = customHeaders.find((h: any) => h.name === 'X-Call-Sid');
-          const xCallSid = xCallSidHeader?.value;
+          const xCallSid = sanitizeText(xCallSidHeader?.value, 100);
           
           console.log('🔑 Telnyx X-Call-Sid:', xCallSid);
           
@@ -1029,6 +1046,22 @@ serve(async (req) => {
             }
           }
           
+          // Validate and sanitize data before insertion
+          const validatedStatus = sanitizeText(payload?.hangup_cause, 50) || 'completed';
+          const sanitizedNormalized = sanitizeMetadata({
+            call_session_id: callSessionId,
+            xCallSid: xCallSid,
+            start_time: payload?.start_time,
+            end_time: payload?.end_time,
+            duration_seconds: durationSeconds,
+            hangup_source: payload?.hangup_source,
+            hangup_cause: payload?.hangup_cause,
+            call_quality: payload?.call_quality_stats,
+            from: fromNumber,
+            to: toNumber,
+            direction: finalDirection
+          });
+
           // Create the aggregated Telnyx event
           const { data: newEvent, error: eventError } = await supabase
             .from('telephony_events')
@@ -1040,25 +1073,13 @@ serve(async (req) => {
               direction: finalDirection,
               from_number: fromNumber,
               to_number: toNumber,
-              status: payload?.hangup_cause || 'completed',
-              provider_event_id: callSessionId,
+              status: validatedStatus,
+              provider_event_id: sanitizeText(callSessionId, 100),
               x_call_sid: xCallSid,
-              provider_payload: bodyData,
-              normalized: {
-                call_session_id: callSessionId,
-                xCallSid: xCallSid,
-                start_time: payload?.start_time,
-                end_time: payload?.end_time,
-                duration_seconds: durationSeconds,
-                hangup_source: payload?.hangup_source,
-                hangup_cause: payload?.hangup_cause,
-                call_quality: payload?.call_quality_stats,
-                from: fromNumber,
-                to: toNumber,
-                direction: finalDirection
-              },
+              provider_payload: sanitizeMetadata(bodyData),
+              normalized: sanitizedNormalized,
               duration_seconds: durationSeconds,
-              event_timestamp: payload?.end_time || new Date().toISOString(),
+              event_timestamp: validateTimestamp(payload?.end_time),
               idempotency_key: idempotencyKey,
               parent_event_id: parentEventId,
               provider_layer: providerLayer,

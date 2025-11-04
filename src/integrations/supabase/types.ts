@@ -4204,6 +4204,10 @@ export type Database = {
         Returns: string
       }
       encrypt_text: { Args: { data: string; key: string }; Returns: string }
+      get_admin_aggregated_data: {
+        Args: { p_date_from?: string; p_date_to?: string }
+        Returns: Json
+      }
       get_admin_user_overview: {
         Args: never
         Returns: {
