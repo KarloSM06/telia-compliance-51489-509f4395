@@ -4204,6 +4204,17 @@ export type Database = {
         Returns: string
       }
       encrypt_text: { Args: { data: string; key: string }; Returns: string }
+      get_admin_user_overview: {
+        Args: never
+        Returns: {
+          active_permissions_count: number
+          created_at: string
+          email: string
+          last_sign_in_at: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }[]
+      }
       get_user_allowed_routes: {
         Args: { user_uuid: string }
         Returns: {
