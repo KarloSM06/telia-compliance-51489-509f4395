@@ -1017,6 +1017,47 @@ export type Database = {
           },
         ]
       }
+      customer_preference_audit: {
+        Row: {
+          action: string
+          changed_at: string
+          email: string | null
+          id: string
+          new_values: Json | null
+          old_values: Json | null
+          phone: string | null
+          preference_id: string | null
+        }
+        Insert: {
+          action: string
+          changed_at?: string
+          email?: string | null
+          id?: string
+          new_values?: Json | null
+          old_values?: Json | null
+          phone?: string | null
+          preference_id?: string | null
+        }
+        Update: {
+          action?: string
+          changed_at?: string
+          email?: string | null
+          id?: string
+          new_values?: Json | null
+          old_values?: Json | null
+          phone?: string | null
+          preference_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "customer_preference_audit_preference_id_fkey"
+            columns: ["preference_id"]
+            isOneToOne: false
+            referencedRelation: "customer_preferences"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       customer_preferences: {
         Row: {
           created_at: string | null
