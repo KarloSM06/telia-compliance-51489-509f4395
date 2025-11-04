@@ -312,7 +312,7 @@ const Dashboard = () => {
 
               {/* Bottom Row: Service Revenue, Cumulative, Daily ROI, Projection */}
               <AnimatedSection delay={400}>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
                   <ServiceRevenueChart data={data.serviceMetrics} isLoading={loading} />
                   <CumulativeRevenueChart data={data.dailyData} isLoading={loading} />
                   <DailyROIChart data={data.dailyData} isLoading={loading} />
