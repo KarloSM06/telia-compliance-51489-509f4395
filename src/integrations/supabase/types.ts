@@ -1212,6 +1212,36 @@ export type Database = {
           },
         ]
       }
+      default_sidebar_routes: {
+        Row: {
+          created_at: string | null
+          display_order: number
+          enabled_by_default: boolean | null
+          route_group: string
+          route_key: string
+          route_path: string
+          route_title: string
+        }
+        Insert: {
+          created_at?: string | null
+          display_order: number
+          enabled_by_default?: boolean | null
+          route_group: string
+          route_key: string
+          route_path: string
+          route_title: string
+        }
+        Update: {
+          created_at?: string | null
+          display_order?: number
+          enabled_by_default?: boolean | null
+          route_group?: string
+          route_key?: string
+          route_path?: string
+          route_title?: string
+        }
+        Relationships: []
+      }
       Hiems_Kunddata: {
         Row: {
           "Ai-voice-Id": string | null
@@ -3101,6 +3131,41 @@ export type Database = {
         }
         Relationships: []
       }
+      sidebar_permissions: {
+        Row: {
+          created_at: string | null
+          enabled: boolean | null
+          id: string
+          route_key: string
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          enabled?: boolean | null
+          id?: string
+          route_key: string
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          enabled?: boolean | null
+          id?: string
+          route_key?: string
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "sidebar_permissions_route_key_fkey"
+            columns: ["route_key"]
+            isOneToOne: false
+            referencedRelation: "default_sidebar_routes"
+            referencedColumns: ["route_key"]
+          },
+        ]
+      }
       sms_provider_settings: {
         Row: {
           created_at: string | null
@@ -3942,7 +4007,7 @@ export type Database = {
         Insert: {
           created_at?: string | null
           id?: string
-          role?: Database["public"]["Enums"]["app_role"]
+          role: Database["public"]["Enums"]["app_role"]
           user_id: string
         }
         Update: {
@@ -4139,9 +4204,23 @@ export type Database = {
         Returns: string
       }
       encrypt_text: { Args: { data: string; key: string }; Returns: string }
+      get_user_allowed_routes: {
+        Args: { user_uuid: string }
+        Returns: {
+          display_order: number
+          route_group: string
+          route_key: string
+          route_path: string
+          route_title: string
+        }[]
+      }
       has_org_role: {
         Args: { required_roles: string[]; user_uuid: string }
         Returns: boolean
+      }
+      init_default_permissions: {
+        Args: { user_uuid: string }
+        Returns: undefined
       }
       is_admin: { Args: { user_id: string }; Returns: boolean }
       refresh_communication_stats: { Args: never; Returns: undefined }
@@ -4152,7 +4231,7 @@ export type Database = {
       user_organization_id: { Args: { user_uuid: string }; Returns: string }
     }
     Enums: {
-      app_role: "admin" | "user"
+      app_role: "admin" | "client"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -4280,7 +4359,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
-      app_role: ["admin", "user"],
+      app_role: ["admin", "client"],
     },
   },
 } as const

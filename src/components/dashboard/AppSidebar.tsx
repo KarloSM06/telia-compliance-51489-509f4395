@@ -1,4 +1,4 @@
-import { Home, LayoutDashboard, Settings, BarChart3, LogOut, Phone, Users, Target, Star, Calendar, Bell, MessageSquare, Mail, Building2, Plug, Brain } from "lucide-react";
+import { Home, LayoutDashboard, Settings, LogOut, Phone, Users, Target, Star, Calendar, Bell, MessageSquare, Mail, Brain, Search, Briefcase, Zap, ShieldCheck } from "lucide-react";
 import { NavLink, useNavigate } from "react-router-dom";
 import {
   Sidebar,
@@ -15,7 +15,8 @@ import {
 } from "@/components/ui/sidebar";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { useAuth } from "@/hooks/useAuth";
-import { useUserProducts } from "@/hooks/useUserProducts";
+import { useSidebarPermissions } from "@/hooks/useSidebarPermissions";
+import { useUserRole } from "@/hooks/useUserRole";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -25,38 +26,42 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-// 4-grupps struktur för optimal användarupplevelse
-const overviewItems = [
-  { title: "Dashboard", url: "/dashboard", icon: Home },
-  // FAS 7: Analytics removed - now integrated into Dashboard
-  // Custom Dashboard - gömmer från navigation (kommer i framtiden)
-  // { title: "Custom Dashboard", url: "/dashboard/custom", icon: LayoutDashboard },
-];
-
-const businessToolsItems = [
-  { title: "Prospektering", url: "/dashboard/lead", icon: Target },
-  { title: "Rekrytering", url: "/dashboard/talent", icon: Users },
-  { title: "Kalender", url: "/dashboard/calendar", icon: Calendar },
-  { title: "OpenRouter", url: "/dashboard/openrouter", icon: Brain },
-];
-
-const communicationItems = [
-  { title: "Telefoni", url: "/dashboard/telephony", icon: Phone },
-  { title: "SMS", url: "/dashboard/sms", icon: MessageSquare },
-  { title: "Email", url: "/dashboard/email", icon: Mail },
-  { title: "Recensioner", url: "/dashboard/reviews", icon: Star },
-  { title: "Notifikationer", url: "/dashboard/notifications", icon: Bell },
-];
-
-const systemItems = [
-  { title: "Inställningar", url: "/dashboard/settings", icon: Settings },
-];
+// Map route paths to icons
+const iconMap: Record<string, any> = {
+  "/dashboard": Home,
+  "/dashboard/admin": ShieldCheck,
+  "/dashboard/lead": Search,
+  "/dashboard/talent": Briefcase,
+  "/dashboard/calendar": Calendar,
+  "/dashboard/openrouter": Zap,
+  "/dashboard/telephony": Phone,
+  "/dashboard/email": Mail,
+  "/dashboard/reviews": Star,
+  "/dashboard/notifications": Bell,
+  "/dashboard/settings": Settings,
+};
 
 export function AppSidebar() {
   const { user, signOut } = useAuth();
+  const { allowedRoutes, loading: permissionsLoading } = useSidebarPermissions();
+  const { isAdmin } = useUserRole();
   const { state } = useSidebar();
   const navigate = useNavigate();
   const isCollapsed = state === "collapsed";
+
+  // Build navigation items from allowed routes
+  const navItems = allowedRoutes.map(route => ({
+    title: route.route_title,
+    url: route.route_path,
+    icon: iconMap[route.route_path] || LayoutDashboard,
+    group: route.route_group,
+  }));
+
+  // Group navigation items
+  const overviewItems = navItems.filter(item => item.group === 'overview');
+  const businessToolsItems = navItems.filter(item => item.group === 'business');
+  const communicationItems = navItems.filter(item => item.group === 'communication');
+  const systemItems = navItems.filter(item => item.group === 'system');
 
   const getInitials = (email: string) => {
     return email.charAt(0).toUpperCase();
@@ -113,117 +118,129 @@ export function AppSidebar() {
       </SidebarHeader>
 
       <SidebarContent>
-        {/* ÖVERSIKT */}
-        <SidebarGroup>
-          <SidebarGroupLabel>Översikt</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {overviewItems.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild tooltip={item.title}>
-                    <NavLink
-                      to={item.url}
-                      className={({ isActive }) =>
-                        `flex items-center gap-3 transition-all ${
-                          isActive
-                            ? "bg-sidebar-accent text-sidebar-accent-foreground font-medium"
-                            : "hover:bg-sidebar-accent/50"
-                        }`
-                      }
-                    >
-                      <item.icon className="h-5 w-5" />
-                      <span>{item.title}</span>
-                    </NavLink>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
+        {permissionsLoading ? (
+          <div className="flex items-center justify-center p-8">
+            <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary"></div>
+          </div>
+        ) : (
+          <>
+            {overviewItems.length > 0 && (
+              <SidebarGroup>
+                <SidebarGroupLabel>Översikt</SidebarGroupLabel>
+                <SidebarGroupContent>
+                  <SidebarMenu>
+                    {overviewItems.map((item) => (
+                      <SidebarMenuItem key={item.title}>
+                        <SidebarMenuButton asChild tooltip={item.title}>
+                          <NavLink
+                            to={item.url}
+                            className={({ isActive }) =>
+                              `flex items-center gap-3 transition-all ${
+                                isActive
+                                  ? "bg-sidebar-accent text-sidebar-accent-foreground font-medium"
+                                  : "hover:bg-sidebar-accent/50"
+                              }`
+                            }
+                          >
+                            <item.icon className="h-5 w-5" />
+                            <span>{item.title}</span>
+                          </NavLink>
+                        </SidebarMenuButton>
+                      </SidebarMenuItem>
+                    ))}
+                  </SidebarMenu>
+                </SidebarGroupContent>
+              </SidebarGroup>
+            )}
 
-        {/* AFFÄRSVERKTYG */}
-        <SidebarGroup>
-          <SidebarGroupLabel>Affärsverktyg</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {businessToolsItems.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild tooltip={item.title}>
-                    <NavLink
-                      to={item.url}
-                      className={({ isActive }) =>
-                        `flex items-center gap-3 transition-all ${
-                          isActive
-                            ? "bg-sidebar-accent text-sidebar-accent-foreground font-medium"
-                            : "hover:bg-sidebar-accent/50"
-                        }`
-                      }
-                    >
-                      <item.icon className="h-5 w-5" />
-                      <span>{item.title}</span>
-                    </NavLink>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
+            {businessToolsItems.length > 0 && (
+              <SidebarGroup>
+                <SidebarGroupLabel>Affärsverktyg</SidebarGroupLabel>
+                <SidebarGroupContent>
+                  <SidebarMenu>
+                    {businessToolsItems.map((item) => (
+                      <SidebarMenuItem key={item.title}>
+                        <SidebarMenuButton asChild tooltip={item.title}>
+                          <NavLink
+                            to={item.url}
+                            className={({ isActive }) =>
+                              `flex items-center gap-3 transition-all ${
+                                isActive
+                                  ? "bg-sidebar-accent text-sidebar-accent-foreground font-medium"
+                                  : "hover:bg-sidebar-accent/50"
+                              }`
+                            }
+                          >
+                            <item.icon className="h-5 w-5" />
+                            <span>{item.title}</span>
+                          </NavLink>
+                        </SidebarMenuButton>
+                      </SidebarMenuItem>
+                    ))}
+                  </SidebarMenu>
+                </SidebarGroupContent>
+              </SidebarGroup>
+            )}
 
-        {/* KOMMUNIKATION */}
-        <SidebarGroup>
-          <SidebarGroupLabel>Kommunikation</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {communicationItems.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild tooltip={item.title}>
-                    <NavLink
-                      to={item.url}
-                      className={({ isActive }) =>
-                        `flex items-center gap-3 transition-all ${
-                          isActive
-                            ? "bg-sidebar-accent text-sidebar-accent-foreground font-medium"
-                            : "hover:bg-sidebar-accent/50"
-                        }`
-                      }
-                    >
-                      <item.icon className="h-5 w-5" />
-                      <span>{item.title}</span>
-                    </NavLink>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
+            {communicationItems.length > 0 && (
+              <SidebarGroup>
+                <SidebarGroupLabel>Kommunikation</SidebarGroupLabel>
+                <SidebarGroupContent>
+                  <SidebarMenu>
+                    {communicationItems.map((item) => (
+                      <SidebarMenuItem key={item.title}>
+                        <SidebarMenuButton asChild tooltip={item.title}>
+                          <NavLink
+                            to={item.url}
+                            className={({ isActive }) =>
+                              `flex items-center gap-3 transition-all ${
+                                isActive
+                                  ? "bg-sidebar-accent text-sidebar-accent-foreground font-medium"
+                                  : "hover:bg-sidebar-accent/50"
+                              }`
+                            }
+                          >
+                            <item.icon className="h-5 w-5" />
+                            <span>{item.title}</span>
+                          </NavLink>
+                        </SidebarMenuButton>
+                      </SidebarMenuItem>
+                    ))}
+                  </SidebarMenu>
+                </SidebarGroupContent>
+              </SidebarGroup>
+            )}
 
-        {/* SYSTEM & INSTÄLLNINGAR */}
-        <SidebarGroup>
-          <SidebarGroupLabel>System</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {systemItems.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild tooltip={item.title}>
-                    <NavLink
-                      to={item.url}
-                      className={({ isActive }) =>
-                        `flex items-center gap-3 transition-all ${
-                          isActive
-                            ? "bg-sidebar-accent text-sidebar-accent-foreground font-medium"
-                            : "hover:bg-sidebar-accent/50"
-                        }`
-                      }
-                    >
-                      <item.icon className="h-5 w-5" />
-                      <span>{item.title}</span>
-                    </NavLink>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
+            {systemItems.length > 0 && (
+              <SidebarGroup>
+                <SidebarGroupLabel>System</SidebarGroupLabel>
+                <SidebarGroupContent>
+                  <SidebarMenu>
+                    {systemItems.map((item) => (
+                      <SidebarMenuItem key={item.title}>
+                        <SidebarMenuButton asChild tooltip={item.title}>
+                          <NavLink
+                            to={item.url}
+                            className={({ isActive }) =>
+                              `flex items-center gap-3 transition-all ${
+                                isActive
+                                  ? "bg-sidebar-accent text-sidebar-accent-foreground font-medium"
+                                  : "hover:bg-sidebar-accent/50"
+                              }`
+                            }
+                          >
+                            <item.icon className="h-5 w-5" />
+                            <span>{item.title}</span>
+                          </NavLink>
+                        </SidebarMenuButton>
+                      </SidebarMenuItem>
+                    ))}
+                  </SidebarMenu>
+                </SidebarGroupContent>
+              </SidebarGroup>
+            )}
+          </>
+        )}
       </SidebarContent>
 
       <SidebarFooter className="border-t border-sidebar-border p-4">

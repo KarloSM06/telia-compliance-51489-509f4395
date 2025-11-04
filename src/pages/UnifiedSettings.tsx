@@ -11,7 +11,7 @@ import { MiniStatCard } from "@/components/settings/MiniStatCard";
 import { useAuth } from "@/hooks/useAuth";
 import { useOrganization } from "@/hooks/useOrganization";
 import { useIntegrations } from "@/hooks/useIntegrations";
-import { useHiemsAdmin } from "@/hooks/useHiemsAdmin";
+import { useUserRole } from "@/hooks/useUserRole";
 import { format } from "date-fns";
 import { sv } from "date-fns/locale";
 import { User, Shield, Building2, Plug, Package, ShieldCheck, Building, Clock, Star, Zap } from "lucide-react";
@@ -20,7 +20,7 @@ export default function UnifiedSettings() {
   const { user } = useAuth();
   const { organization } = useOrganization();
   const { integrations } = useIntegrations();
-  const { isHiemsAdmin } = useHiemsAdmin();
+  const { isAdmin } = useUserRole();
   const [searchParams, setSearchParams] = useSearchParams();
   
   const activeTab = searchParams.get('tab') || 'profil';
@@ -120,7 +120,7 @@ export default function UnifiedSettings() {
               <Package className="h-4 w-4" />
               <span className="hidden sm:inline">Produkter</span>
             </TabsTrigger>
-            {isHiemsAdmin && (
+            {isAdmin && (
               <TabsTrigger value="admin" className="gap-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-600 data-[state=active]:to-pink-600 data-[state=active]:text-white">
                 <ShieldCheck className="h-4 w-4" />
                 <span className="hidden sm:inline">Admin</span>
@@ -148,7 +148,7 @@ export default function UnifiedSettings() {
             <ProductsSettings />
           </TabsContent>
 
-          {isHiemsAdmin && (
+          {isAdmin && (
             <TabsContent value="admin" className="space-y-6 animate-enter">
               <HiemsAdminPanel />
             </TabsContent>
