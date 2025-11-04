@@ -17,7 +17,6 @@ import { AnimatedSection } from '@/components/shared/AnimatedSection';
 import { RecentActivityCompact } from '@/components/dashboard/RecentActivityCompact';
 import { DateRangePicker } from "@/components/dashboard/filters/DateRangePicker";
 import { BreakEvenCard } from '@/components/dashboard/BreakEvenCard';
-import { ProjectionTabs } from '@/components/dashboard/ProjectionTabs';
 import { RevenueVsCostsChart } from '@/components/dashboard/charts/RevenueVsCostsChart';
 import { CostBreakdownChart } from '@/components/dashboard/charts/CostBreakdownChart';
 import { ROITrendChart } from '@/components/dashboard/charts/ROITrendChart';
@@ -26,6 +25,7 @@ import { ProfitMarginChart } from '@/components/dashboard/charts/ProfitMarginCha
 import { ServiceRevenueChart } from '@/components/dashboard/charts/ServiceRevenueChart';
 import { CumulativeRevenueChart } from '@/components/dashboard/charts/CumulativeRevenueChart';
 import { DailyROIChart } from '@/components/dashboard/charts/DailyROIChart';
+import { CompactProjectionChart } from '@/components/dashboard/charts/CompactProjectionChart';
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from 'recharts';
 import hiemsLogoSnowflake from '@/assets/hiems-logo-snowflake.png';
 import { format } from 'date-fns';
@@ -314,12 +314,18 @@ const Dashboard = () => {
                 </div>
               </AnimatedSection>
 
-              {/* Bottom Row: Service Revenue, Cumulative, Daily ROI */}
+              {/* Bottom Row: Service Revenue, Cumulative, Daily ROI, Projection */}
               <AnimatedSection delay={400}>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                   <ServiceRevenueChart data={data.serviceMetrics} isLoading={loading} />
                   <CumulativeRevenueChart data={data.dailyData} isLoading={loading} />
                   <DailyROIChart data={data.dailyData} isLoading={loading} />
+                  <CompactProjectionChart 
+                    projection12={data.projection12}
+                    projection24={data.projection24}
+                    projection36={data.projection36}
+                    isLoading={loading}
+                  />
                 </div>
               </AnimatedSection>
             </>
@@ -406,17 +412,10 @@ const Dashboard = () => {
             </AnimatedSection>
           )}
 
-          {/* Break-Even & Projections */}
+          {/* Break-Even */}
           {data && (
             <AnimatedSection delay={450}>
-              <div className="space-y-4">
-                <BreakEvenCard breakEven={data.breakEven} />
-                <ProjectionTabs 
-                  projection12={data.projection12}
-                  projection24={data.projection24}
-                  projection36={data.projection36}
-                />
-              </div>
+              <BreakEvenCard breakEven={data.breakEven} />
             </AnimatedSection>
           )}
 
