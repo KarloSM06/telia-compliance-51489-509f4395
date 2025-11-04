@@ -286,15 +286,11 @@ const Dashboard = () => {
         <div className="container mx-auto px-6 lg:px-8 space-y-4">
           {data && (
             <>
-              {/* Top Row: Revenue vs Costs (2/3) + ROI Trend (1/3) */}
+              {/* Top Row: Revenue vs Costs + ROI Trend */}
               <AnimatedSection delay={300}>
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-                  <div className="lg:col-span-2">
-                    <RevenueVsCostsChart data={data.dailyData} isLoading={loading} />
-                  </div>
-                  <div className="lg:col-span-1">
-                    <ROITrendChart data={data.dailyData} isLoading={loading} />
-                  </div>
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                  <RevenueVsCostsChart data={data.dailyData} isLoading={loading} />
+                  <ROITrendChart data={data.dailyData} isLoading={loading} />
                 </div>
               </AnimatedSection>
 
