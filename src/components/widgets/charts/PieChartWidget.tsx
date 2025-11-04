@@ -19,7 +19,7 @@ export const PieChartWidget = ({ id, config, dataSource, isEditing }: WidgetProp
         <PieChartComponent
           title=""
           data={chartData}
-          height={config.height || 300}
+          height={config.height || 340}
         />
       )}
     </BaseWidget>

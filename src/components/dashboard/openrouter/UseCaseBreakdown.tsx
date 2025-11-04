@@ -32,7 +32,7 @@ export const UseCaseBreakdown = ({ useCases, isLoading }: UseCaseBreakdownProps)
           <PieChartComponent
             title=""
             data={chartData}
-            height={300}
+            height={340}
           />
         ) : (
           <div className="flex items-center justify-center h-64">

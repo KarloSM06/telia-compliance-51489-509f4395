@@ -30,7 +30,7 @@ export const ProfitMarginChart = ({ data, isLoading }: ProfitMarginChartProps) =
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="flex items-center justify-center h-[280px]">
+          <div className="flex items-center justify-center h-[320px]">
             <p className="text-sm text-muted-foreground">Laddar...</p>
           </div>
         </CardContent>
@@ -48,7 +48,7 @@ export const ProfitMarginChart = ({ data, isLoading }: ProfitMarginChartProps) =
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="flex items-center justify-center h-[280px]">
+          <div className="flex items-center justify-center h-[320px]">
             <p className="text-sm text-muted-foreground">Ingen data tillgänglig</p>
           </div>
         </CardContent>
@@ -65,7 +65,7 @@ export const ProfitMarginChart = ({ data, isLoading }: ProfitMarginChartProps) =
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <ResponsiveContainer width="100%" height={280}>
+        <ResponsiveContainer width="100%" height={320}>
           <AreaChart data={chartData}>
             <defs>
               <linearGradient id="marginGradient" x1="0" y1="0" x2="0" y2="1">

@@ -71,7 +71,7 @@ export const CostBreakdownChart = ({
           <CardTitle>Kostnadsfördelning</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="flex items-center justify-center h-80">
+          <div className="flex items-center justify-center h-[320px]">
             <p className="text-muted-foreground">Laddar...</p>
           </div>
         </CardContent>
@@ -86,7 +86,7 @@ export const CostBreakdownChart = ({
           <CardTitle>Kostnadsfördelning</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="flex items-center justify-center h-80">
+          <div className="flex items-center justify-center h-[320px]">
             <p className="text-muted-foreground">Ingen data tillgänglig</p>
           </div>
         </CardContent>
@@ -114,7 +114,7 @@ export const CostBreakdownChart = ({
           ]}
           yAxisFormatter={(v) => `${v.toFixed(0)} kr`}
           tooltipFormatter={(v) => `${v.toFixed(2)} SEK`}
-          height={280}
+          height={320}
         />
         <p className="text-xs text-muted-foreground mt-4 text-center">
           Klicka på kategorinamnen i förklaringen för att visa/dölja dem

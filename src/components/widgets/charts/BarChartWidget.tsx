@@ -23,7 +23,7 @@ export const BarChartWidget = ({ id, config, dataSource, isEditing }: WidgetProp
           data={chartData}
           dataKeys={dataKeys}
           xAxisKey={config.xAxisKey || 'name'}
-          height={config.height || 300}
+          height={config.height || 340}
         />
       )}
     </BaseWidget>

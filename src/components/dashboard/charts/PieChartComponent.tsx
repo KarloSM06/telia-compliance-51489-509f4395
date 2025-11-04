@@ -28,7 +28,7 @@ export const PieChartComponent = ({
   title,
   data,
   colors = DEFAULT_COLORS,
-  height = 300,
+  height = 340,
   innerRadius = 0,
 }: PieChartComponentProps) => {
   return (

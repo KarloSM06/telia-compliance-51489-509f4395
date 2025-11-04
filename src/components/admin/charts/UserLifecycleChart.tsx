@@ -16,7 +16,7 @@ export const UserLifecycleChart = ({ data }: UserLifecycleChartProps) => {
         <CardTitle>Användarlivscykel</CardTitle>
       </CardHeader>
       <CardContent>
-        <ResponsiveContainer width="100%" height={300}>
+        <ResponsiveContainer width="100%" height={340}>
           <PieChart>
             <Pie
               data={data}

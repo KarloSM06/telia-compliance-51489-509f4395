@@ -20,7 +20,7 @@ export const AreaChartComponent = ({
   data,
   dataKeys,
   xAxisKey = "name",
-  height = 350,
+  height = 360,
 }: AreaChartComponentProps) => {
   return (
     <Card className="transition-all hover:shadow-card">

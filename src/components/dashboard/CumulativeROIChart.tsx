@@ -29,7 +29,7 @@ export function CumulativeROIChart({ data, breakEvenMonth }: CumulativeROIChartP
           { key: "intäkter", color: "hsl(142, 76%, 36%)", name: "Intäkter" },
           { key: "vinst", color: "hsl(43, 96%, 56%)", name: "Vinst" }
         ]}
-        height={280}
+        height={320}
       />
       
       {breakEvenMonth && breakEvenMonth <= data.length && (

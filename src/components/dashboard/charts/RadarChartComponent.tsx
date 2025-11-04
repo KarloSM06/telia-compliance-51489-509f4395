@@ -18,7 +18,7 @@ export const RadarChartComponent = ({
   title,
   data,
   color = "hsl(var(--secondary))",
-  height = 350,
+  height = 360,
 }: RadarChartComponentProps) => {
   return (
     <Card>

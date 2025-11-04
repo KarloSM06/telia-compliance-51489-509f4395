@@ -16,7 +16,7 @@ export const LoginActivityTrendChart = ({ data }: LoginActivityTrendChartProps) 
         <CardTitle>Inloggningsaktivitet</CardTitle>
       </CardHeader>
       <CardContent>
-        <ResponsiveContainer width="100%" height={300}>
+        <ResponsiveContainer width="100%" height={340}>
           <LineChart data={data}>
             <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
             <XAxis 

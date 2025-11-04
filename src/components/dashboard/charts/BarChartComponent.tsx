@@ -20,7 +20,7 @@ export const BarChartComponent = ({
   data,
   dataKeys,
   xAxisKey = "name",
-  height = 300,
+  height = 340,
 }: BarChartComponentProps) => {
   return (
     <Card className="transition-all hover:shadow-card">

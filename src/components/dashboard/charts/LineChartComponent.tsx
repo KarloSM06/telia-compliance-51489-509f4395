@@ -20,7 +20,7 @@ export const LineChartComponent = ({
   data,
   dataKeys,
   xAxisKey = "name",
-  height = 300,
+  height = 340,
 }: LineChartComponentProps) => {
   return (
     <Card className="transition-all hover:shadow-card">
