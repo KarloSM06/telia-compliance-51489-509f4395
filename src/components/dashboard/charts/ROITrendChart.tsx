@@ -61,7 +61,7 @@ export const ROITrendChart = ({ data, isLoading }: ROITrendChartProps) => {
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <ResponsiveContainer width="100%" height={350}>
+        <ResponsiveContainer width="100%" height={400}>
           <AreaChart data={chartData}>
             <defs>
               <linearGradient id="roiGradient" x1="0" y1="0" x2="0" y2="1">
