@@ -1,17 +1,24 @@
-import { useEffect, useState, useMemo } from "react";
-import { useNavigate } from "react-router-dom";
-
-import { useUserRole } from "@/hooks/useUserRole";
-import { supabase } from "@/integrations/supabase/client";
-import { toast } from "sonner";
-import { UserStatsCards } from "@/components/admin/UserStatsCards";
-import { UserTable } from "@/components/admin/UserTable";
-import { UserFilters } from "@/components/admin/UserFilters";
-import { UserPermissionsDialog } from "@/components/admin/UserPermissionsDialog";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { ShieldCheck, RefreshCw, Download } from "lucide-react";
-import { AnimatedSection } from "@/components/shared/AnimatedSection";
+import { useState, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useHiemsAdmin } from '@/hooks/useHiemsAdmin';
+import { useAuth } from '@/hooks/useAuth';
+import { useAdminMetrics } from '@/hooks/useAdminMetrics';
+import { useAdminChartData } from '@/hooks/useAdminChartData';
+import { Badge } from '@/components/ui/badge';
+import { UserStatsCards } from '@/components/admin/UserStatsCards';
+import { UserFilters } from '@/components/admin/UserFilters';
+import { UserTable } from '@/components/admin/UserTable';
+import { UserPermissionsDialog } from '@/components/admin/UserPermissionsDialog';
+import { UserGrowthChart } from '@/components/admin/charts/UserGrowthChart';
+import { RoleDistributionChart } from '@/components/admin/charts/RoleDistributionChart';
+import { ActivityHeatmapChart } from '@/components/admin/charts/ActivityHeatmapChart';
+import { PermissionsAnalysisChart } from '@/components/admin/charts/PermissionsAnalysisChart';
+import { UserLifecycleChart } from '@/components/admin/charts/UserLifecycleChart';
+import { LoginActivityTrendChart } from '@/components/admin/charts/LoginActivityTrendChart';
+import { toast } from 'sonner';
+import { ShieldCheck, BarChart3, Download } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { AnimatedSection } from '@/components/shared/AnimatedSection';
 import hiemsLogoSnowflake from '@/assets/hiems-logo-snowflake.png';
 
 interface User {
@@ -24,64 +31,41 @@ interface User {
 }
 
 export default function AdminPanel() {
-  const { isAdmin, loading: roleLoading } = useUserRole();
   const navigate = useNavigate();
-  const [users, setUsers] = useState<User[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { user } = useAuth();
+  const { isHiemsAdmin, loading: adminLoading } = useHiemsAdmin();
+  
+  const { metrics, isLoading, refetch } = useAdminMetrics();
+  const chartData = useAdminChartData(metrics.users);
+  
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [permissionsDialogOpen, setPermissionsDialogOpen] = useState(false);
   const [filters, setFilters] = useState({
     search: '',
     role: 'all',
-    permissions: 'all'
+    permissions: 'all',
   });
 
-  useEffect(() => {
-    if (!roleLoading && !isAdmin) {
-      toast.error("Du har inte behörighet att se denna sida");
-      navigate("/dashboard");
-    }
-  }, [isAdmin, roleLoading, navigate]);
-
-  useEffect(() => {
-    if (isAdmin) {
-      fetchUsers();
-    }
-  }, [isAdmin]);
-
-  const fetchUsers = async () => {
-    try {
-      const { data, error } = await supabase.rpc('get_admin_user_overview');
-      
-      if (error) throw error;
-      
-      const usersWithRoles: User[] = (data || []).map((user: any) => ({
-        id: user.user_id,
-        email: user.email,
-        created_at: user.created_at,
-        last_sign_in_at: user.last_sign_in_at,
-        role: user.role,
-        permissions_count: Number(user.active_permissions_count),
-      }));
-
-      setUsers(usersWithRoles);
-    } catch (error) {
-      console.error('Error fetching users:', error);
-      toast.error('Kunde inte hämta användare');
-    } finally {
-      setLoading(false);
-    }
-  };
+  // Convert metrics.users to the User format expected by components
+  const users: User[] = useMemo(() => {
+    return metrics.users.map(u => ({
+      id: u.user_id,
+      email: u.email,
+      created_at: u.created_at,
+      last_sign_in_at: u.last_sign_in_at,
+      role: u.role,
+      permissions_count: u.active_permissions_count,
+    }));
+  }, [metrics.users]);
 
   const handleEditPermissions = (user: User) => {
     setSelectedUser(user);
     setPermissionsDialogOpen(true);
   };
 
-  const handleRefresh = async () => {
-    setLoading(true);
-    await fetchUsers();
-    toast.success('Användare uppdaterad');
+  const handleRefresh = () => {
+    refetch();
+    toast.success('Data uppdaterad');
   };
 
   const handleExport = () => {
@@ -126,10 +110,10 @@ export default function AdminPanel() {
 
       // Permissions filter
       if (filters.permissions !== 'all') {
-        if (filters.permissions === 'custom' && user.permissions_count === 11) {
+        if (filters.permissions === 'custom' && user.permissions_count === 0) {
           return false;
         }
-        if (filters.permissions === 'default' && user.permissions_count !== 11) {
+        if (filters.permissions === 'default' && user.permissions_count !== 0) {
           return false;
         }
       }
@@ -138,21 +122,23 @@ export default function AdminPanel() {
     });
   }, [users, filters]);
 
-  if (roleLoading || !isAdmin) {
+  // Show loading while checking admin status
+  if (adminLoading) {
     return (
-      <div className="flex items-center justify-center min-h-[400px]">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
-          <p>Laddar...</p>
-        </div>
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
       </div>
     );
   }
 
-  const totalUsers = users.length;
-  const adminCount = users.filter((u) => u.role === 'admin').length;
-  const clientCount = users.filter((u) => u.role === 'client').length;
-  const usersWithCustomPermissions = users.filter((u) => u.permissions_count !== 11).length;
+  // Redirect if not admin
+  if (!isHiemsAdmin) {
+    toast.error('Åtkomst nekad', {
+      description: 'Du har inte behörighet att se denna sida.',
+    });
+    navigate('/dashboard');
+    return null;
+  }
 
   return (
     <div className="min-h-screen">
@@ -218,8 +204,17 @@ export default function AdminPanel() {
                   </span>
                 </div>
                 <Badge variant="outline">
-                  {filteredUsers.length} av {totalUsers} användare
+                  {filteredUsers.length} av {metrics.totalUsers} användare
                 </Badge>
+              </div>
+              <div className="flex gap-2">
+                <Button onClick={handleRefresh} variant="outline" size="sm">
+                  Uppdatera
+                </Button>
+                <Button onClick={handleExport} variant="outline" size="sm">
+                  <Download className="h-4 w-4 mr-2" />
+                  Exportera
+                </Button>
               </div>
             </div>
           </AnimatedSection>
@@ -228,23 +223,56 @@ export default function AdminPanel() {
 
       {/* Stats Cards */}
       <UserStatsCards
-        totalUsers={totalUsers}
-        adminCount={adminCount}
-        clientCount={clientCount}
-        usersWithCustomPermissions={usersWithCustomPermissions}
+        totalUsers={metrics.totalUsers}
+        adminCount={metrics.adminCount}
+        clientCount={metrics.clientCount}
+        usersWithCustomPermissions={metrics.customPermissions}
+        activeUsers={metrics.activeUsers}
+        newUsersThisWeek={metrics.newUsersThisWeek}
+        activeUsersTrend={metrics.activeUsersTrend}
+        newUsersTrend={metrics.newUsersTrend}
       />
 
-      {/* Filters */}
-      <div className="container mx-auto px-6 lg:px-8 mb-6">
+      {/* Statistics & Analysis Section */}
+      <section className="relative py-12 bg-gradient-to-b from-background via-primary/2 to-background">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_50%,hsl(var(--primary)/0.08),transparent_50%)]" />
+        
+        <div className="container mx-auto px-6 lg:px-8 relative z-10">
+          <div className="flex items-center gap-3 mb-6">
+            <BarChart3 className="h-6 w-6 text-primary" />
+            <h2 className="text-2xl font-bold">Statistik & Analys</h2>
+          </div>
+          
+          <div className="grid gap-6 grid-cols-1 lg:grid-cols-2 mb-6">
+            <UserGrowthChart data={chartData.userGrowth} />
+            <RoleDistributionChart data={chartData.roleDistribution} />
+          </div>
+          
+          <div className="grid gap-6 grid-cols-1 lg:grid-cols-2 mb-6">
+            <LoginActivityTrendChart data={chartData.loginActivity} />
+            <PermissionsAnalysisChart data={chartData.permissionsAnalysis} />
+          </div>
+          
+          <div className="grid gap-6 grid-cols-1 lg:grid-cols-2 mb-6">
+            <UserLifecycleChart data={chartData.lifecycle} />
+            <ActivityHeatmapChart data={chartData.activityHeatmap} />
+          </div>
+        </div>
+      </section>
+
+      {/* Filters Section */}
+      <section className="container mx-auto px-6 lg:px-8 mb-8">
         <UserFilters filters={filters} onFilterChange={setFilters} />
-      </div>
+      </section>
 
-      {/* User Table */}
-      <UserTable 
-        users={filteredUsers}
-        onEditPermissions={handleEditPermissions}
-        loading={loading}
-      />
+      {/* Users Table */}
+      <section className="container mx-auto px-6 lg:px-8 pb-16">
+        <UserTable 
+          users={filteredUsers} 
+          onEditPermissions={handleEditPermissions}
+          loading={isLoading}
+        />
+      </section>
 
       {selectedUser && (
         <UserPermissionsDialog
@@ -253,7 +281,7 @@ export default function AdminPanel() {
           userId={selectedUser.id}
           userEmail={selectedUser.email}
           userRole={selectedUser.role}
-          onSuccess={fetchUsers}
+          onSuccess={refetch}
         />
       )}
     </div>

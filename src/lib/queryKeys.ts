@@ -125,6 +125,16 @@ export const queryKeys = {
     list: (userId: string) => ['agents', 'list', userId] as const,
     detail: (agentId: string) => ['agents', 'detail', agentId] as const,
   },
+
+  // Admin
+  admin: {
+    all: ['admin'] as const,
+    users: () => ['admin', 'users'] as const,
+    metrics: (dateRange?: { from: Date; to: Date }) =>
+      ['admin', 'metrics', dateRange] as const,
+    userActivity: (dateRange?: { from: Date; to: Date }) =>
+      ['admin', 'user-activity', dateRange] as const,
+  },
 } as const;
 
 export type QueryKeys = typeof queryKeys;

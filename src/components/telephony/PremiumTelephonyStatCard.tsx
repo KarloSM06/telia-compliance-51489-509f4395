@@ -1,5 +1,5 @@
 import { Card, CardContent } from '@/components/ui/card';
-import { LucideIcon } from 'lucide-react';
+import { LucideIcon, TrendingUp, TrendingDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import hiemsLogoSnowflake from '@/assets/hiems-logo-snowflake.png';
 
@@ -10,6 +10,10 @@ interface PremiumTelephonyStatCardProps {
   subtitle: string;
   color: string;
   animate?: boolean;
+  trend?: {
+    value: number;
+    isPositive: boolean;
+  };
 }
 
 export const PremiumTelephonyStatCard = ({
@@ -18,7 +22,8 @@ export const PremiumTelephonyStatCard = ({
   icon: Icon,
   subtitle,
   color,
-  animate = false
+  animate = false,
+  trend
 }: PremiumTelephonyStatCardProps) => {
   return (
     <Card className={cn(
@@ -49,6 +54,19 @@ export const PremiumTelephonyStatCard = ({
             <p className="text-sm text-muted-foreground font-medium">{title}</p>
             <div className="flex items-baseline gap-2">
               <p className="text-3xl font-bold">{value}</p>
+              {trend && (
+                <div className={cn(
+                  "flex items-center gap-1 text-xs font-medium",
+                  trend.isPositive ? "text-green-600" : "text-red-600"
+                )}>
+                  {trend.isPositive ? (
+                    <TrendingUp className="h-3 w-3" />
+                  ) : (
+                    <TrendingDown className="h-3 w-3" />
+                  )}
+                  {trend.value.toFixed(1)}%
+                </div>
+              )}
             </div>
             <p className="text-xs text-muted-foreground">{subtitle}</p>
           </div>
