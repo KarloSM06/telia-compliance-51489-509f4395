@@ -46,31 +46,34 @@ const Dashboard = () => {
 
   const { data, loading } = useAnalyticsData(dateRange);
 
-  // Auto-sync OpenRouter data when Dashboard mounts
+  // Auto-sync OpenRouter data when Dashboard mounts or dateRange changes
   useEffect(() => {
     const provisioningKeyExists = keysStatus?.provisioning_key_exists;
     
-    if (!provisioningKeyExists) return;
+    if (!provisioningKeyExists || !dateRange) return;
 
-    // Silent background sync - calculate date range for last 30 days
-    const endDate = new Date();
-    const startDate = new Date();
-    startDate.setDate(startDate.getDate() - 30);
-
+    // Use the actual dateRange from store instead of hardcoded 30 days
     const formatDate = (date: Date) => date.toISOString().split('T')[0];
 
-    // Sync activity data (for costs)
+    // Sync activity data for the selected date range
     syncActivity.mutate(
       { 
-        start_date: formatDate(startDate), 
-        end_date: formatDate(endDate) 
+        start_date: formatDate(dateRange.from), 
+        end_date: formatDate(dateRange.to) 
       },
       {
-        onSuccess: () => {
-          console.log('OpenRouter activity synced successfully in background');
+        onSuccess: (data) => {
+          console.log('OpenRouter activity synced successfully in background for selected period');
+          // Show subtle toast notification
+          if (data?.synced_records > 0) {
+            toast.success(`OpenRouter: ${data.synced_records} anrop synkade för vald period`, {
+              duration: 2000,
+            });
+          }
         },
         onError: (error) => {
           console.error('Background sync failed:', error);
+          toast.error('Kunde inte synka OpenRouter data');
         }
       }
     );
@@ -84,7 +87,7 @@ const Dashboard = () => {
         console.error('Background account sync failed:', error);
       }
     });
-  }, [keysStatus?.provisioning_key_exists]); // Only re-run if key status changes
+  }, [keysStatus?.provisioning_key_exists, dateRange, syncActivity, syncAccount]); // Re-run when key status or dateRange changes
 
   const handleRefresh = () => {
     window.location.reload();
@@ -220,6 +223,12 @@ const Dashboard = () => {
               
               <div className="flex gap-2 flex-wrap items-center">
                 <DateRangePicker value={dateRange} onChange={setDateRange} />
+                {(syncActivity.isPending || syncAccount.isPending) && (
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground px-3 py-1.5 rounded-md bg-primary/5 border border-primary/10">
+                    <RefreshCw className="h-3.5 w-3.5 animate-spin" />
+                    <span>Synkar OpenRouter...</span>
+                  </div>
+                )}
                 <Button variant="outline" size="sm" onClick={handleRefresh} className="hover:bg-primary/5 hover:border-primary/30 transition-all duration-500">
                   <RefreshCw className="h-4 w-4 mr-2" />
                   Uppdatera
