@@ -172,12 +172,16 @@ const CalendarPage = () => {
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,hsl(var(--primary)/0.15),transparent_50%)]" />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_80%,hsl(var(--primary)/0.1),transparent_50%)]" />
         
-        {/* Animated snowflakes */}
-        <img src={hiemsLogoSnowflake} alt="" className="absolute top-10 left-[10%] w-16 h-16 opacity-20 animate-[spin_20s_linear_infinite]" />
-        <img src={hiemsLogoSnowflake} alt="" className="absolute top-32 right-[15%] w-12 h-12 opacity-15 animate-[spin_25s_linear_infinite_reverse]" />
-        <img src={hiemsLogoSnowflake} alt="" className="absolute bottom-20 left-[20%] w-20 h-20 opacity-10 animate-[spin_30s_linear_infinite]" />
-        <img src={hiemsLogoSnowflake} alt="" className="absolute top-40 right-[25%] w-8 h-8 opacity-25 animate-[spin_15s_linear_infinite_reverse]" />
-        <img src={hiemsLogoSnowflake} alt="" className="absolute bottom-32 right-[10%] w-14 h-14 opacity-20 animate-[spin_22s_linear_infinite]" />
+        {/* Snowflakes */}
+        <div className="absolute -top-32 -right-32 w-[700px] h-[700px] opacity-5 pointer-events-none">
+          <img src={hiemsLogoSnowflake} alt="" className="w-full h-full object-contain animate-[spin_60s_linear_infinite]" />
+        </div>
+        <div className="absolute -top-20 -left-20 w-[450px] h-[450px] opacity-[0.03] pointer-events-none">
+          <img src={hiemsLogoSnowflake} alt="" className="w-full h-full object-contain animate-[spin_40s_linear_infinite_reverse]" />
+        </div>
+        <div className="absolute -bottom-20 left-1/2 -translate-x-1/2 w-[350px] h-[350px] opacity-[0.04] pointer-events-none">
+          <img src={hiemsLogoSnowflake} alt="" className="w-full h-full object-contain animate-[spin_50s_linear_infinite]" />
+        </div>
 
         <div className="container mx-auto px-6 lg:px-8 relative z-10">
           <AnimatedSection className="max-w-4xl mx-auto text-center">
