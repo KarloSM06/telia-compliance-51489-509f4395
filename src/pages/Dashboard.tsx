@@ -7,7 +7,11 @@ import { useAnalyticsData } from '@/hooks/useAnalyticsData';
 import { useAuth } from '@/hooks/useAuth';
 import { useBusinessMetrics } from '@/hooks/useBusinessMetrics';
 import { useOpenRouterActivitySEK } from '@/hooks/useOpenRouterActivitySEK';
+import { useSyncOpenRouterActivity } from '@/hooks/useSyncOpenRouterActivity';
+import { useSyncOpenRouterAccount } from '@/hooks/useSyncOpenRouterAccount';
+import { useOpenRouterKeys } from '@/hooks/useOpenRouterKeys';
 import { toast } from 'sonner';
+import { useEffect } from 'react';
 import { PremiumTelephonyStatCard } from '@/components/telephony/PremiumTelephonyStatCard';
 import { AnimatedSection } from '@/components/shared/AnimatedSection';
 import { RecentActivityCompact } from '@/components/dashboard/RecentActivityCompact';
@@ -36,8 +40,51 @@ const Dashboard = () => {
   const { metrics: businessMetrics } = useBusinessMetrics();
   const { dateRange, setDateRange } = useDateRangeStore();
   const { data: openrouterData } = useOpenRouterActivitySEK(dateRange, true);
+  const { data: keysStatus } = useOpenRouterKeys();
+  const syncActivity = useSyncOpenRouterActivity();
+  const syncAccount = useSyncOpenRouterAccount();
 
   const { data, loading } = useAnalyticsData(dateRange);
+
+  // Auto-sync OpenRouter data when Dashboard mounts
+  useEffect(() => {
+    const provisioningKeyExists = keysStatus?.provisioning_key_exists;
+    
+    if (!provisioningKeyExists) return;
+
+    // Silent background sync - calculate date range for last 30 days
+    const endDate = new Date();
+    const startDate = new Date();
+    startDate.setDate(startDate.getDate() - 30);
+
+    const formatDate = (date: Date) => date.toISOString().split('T')[0];
+
+    // Sync activity data (for costs)
+    syncActivity.mutate(
+      { 
+        start_date: formatDate(startDate), 
+        end_date: formatDate(endDate) 
+      },
+      {
+        onSuccess: () => {
+          console.log('OpenRouter activity synced successfully in background');
+        },
+        onError: (error) => {
+          console.error('Background sync failed:', error);
+        }
+      }
+    );
+
+    // Sync account data (for balance)
+    syncAccount.mutate(undefined, {
+      onSuccess: () => {
+        console.log('OpenRouter account synced successfully in background');
+      },
+      onError: (error) => {
+        console.error('Background account sync failed:', error);
+      }
+    });
+  }, [keysStatus?.provisioning_key_exists]); // Only re-run if key status changes
 
   const handleRefresh = () => {
     window.location.reload();
