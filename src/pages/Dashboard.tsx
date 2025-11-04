@@ -283,25 +283,21 @@ const Dashboard = () => {
 
       {/* Main Charts Section */}
       <section className="relative py-12 bg-gradient-to-b from-background via-primary/2 to-background">
-        <div className="container mx-auto px-6 lg:px-8 space-y-4">
+        <div className="container mx-auto px-6 lg:px-8 space-y-2">
           {data && (
             <>
-              {/* Top Row: Revenue vs Costs (2/3) + ROI Trend (1/3) */}
+              {/* Row 1: Three equal charts */}
               <AnimatedSection delay={300}>
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-                  <div className="lg:col-span-2">
-                    <RevenueVsCostsChart data={data.dailyData} isLoading={loading} />
-                  </div>
-                  <div className="lg:col-span-1">
-                    <ROITrendChart data={data.dailyData} isLoading={loading} />
-                  </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
+                  <RevenueVsCostsChart data={data.dailyData} isLoading={loading} />
+                  <ROITrendChart data={data.dailyData} isLoading={loading} />
+                  <BookingTrendChart data={data.dailyData} isLoading={loading} />
                 </div>
               </AnimatedSection>
 
-              {/* Middle Row: Booking Trend, Profit Margin, Cost Breakdown */}
+              {/* Row 2: Three equal charts */}
               <AnimatedSection delay={350}>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  <BookingTrendChart data={data.dailyData} isLoading={loading} />
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
                   <ProfitMarginChart data={data.dailyData} isLoading={loading} />
                   <CostBreakdownChart 
                     dailyData={data.dailyData}
@@ -311,13 +307,13 @@ const Dashboard = () => {
                     hiemsMonthlyCost={businessMetrics?.hiems_monthly_support_cost || 0}
                     isLoading={loading}
                   />
+                  <ServiceRevenueChart data={data.serviceMetrics} isLoading={loading} />
                 </div>
               </AnimatedSection>
 
-              {/* Bottom Row: Service Revenue, Cumulative, Daily ROI, Projection */}
+              {/* Row 3: Three equal charts */}
               <AnimatedSection delay={400}>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                  <ServiceRevenueChart data={data.serviceMetrics} isLoading={loading} />
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
                   <CumulativeRevenueChart data={data.dailyData} isLoading={loading} />
                   <DailyROIChart data={data.dailyData} isLoading={loading} />
                   <CompactProjectionChart 
