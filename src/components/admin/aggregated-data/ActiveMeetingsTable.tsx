@@ -50,7 +50,9 @@ export const ActiveMeetingsTable = ({ meetings }: ActiveMeetingsTableProps) => {
                   <TableRow key={meeting.id}>
                     <TableCell className="font-medium">{meeting.title}</TableCell>
                     <TableCell>
-                      {format(new Date(meeting.start_time), 'PPp', { locale: sv })}
+                      {meeting.start_time && !isNaN(new Date(meeting.start_time).getTime())
+                        ? format(new Date(meeting.start_time), 'PPp', { locale: sv })
+                        : '-'}
                     </TableCell>
                     <TableCell>{meeting.contact_person || '-'}</TableCell>
                     <TableCell>
