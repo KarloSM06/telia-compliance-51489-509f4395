@@ -20,7 +20,6 @@ export const EnhancedIntegrationsSection = () => {
     integrations,
     isLoading,
     telephonyIntegrations,
-    messagingIntegrations,
     calendarIntegrations,
     aiIntegrations,
     handleDelete,
@@ -38,7 +37,7 @@ export const EnhancedIntegrationsSection = () => {
 
   // Set active tab based on URL param
   useEffect(() => {
-    if (activeCategory && ['telephony', 'calendar', 'ai', 'messaging'].includes(activeCategory)) {
+    if (activeCategory && ['telephony', 'calendar', 'ai'].includes(activeCategory)) {
       // URL will control the active tab
     }
   }, [activeCategory]);
@@ -156,7 +155,7 @@ export const EnhancedIntegrationsSection = () => {
         </PremiumCard>
       ) : (
         <Tabs value={activeCategory} onValueChange={handleTabChange}>
-          <TabsList className="grid w-full grid-cols-5">
+          <TabsList className="grid w-full grid-cols-4">
             <TabsTrigger value="all" className="gap-2">
               <Plug className="h-4 w-4" />
               Alla
@@ -164,18 +163,13 @@ export const EnhancedIntegrationsSection = () => {
             </TabsTrigger>
             <TabsTrigger value="telephony" className="gap-2">
               <Phone className="h-4 w-4" />
-              Telefoni
+              Telefoni & SMS
               <Badge variant="secondary" className="ml-1">{telephonyIntegrations.length}</Badge>
             </TabsTrigger>
             <TabsTrigger value="calendar" className="gap-2">
               <CalendarIcon className="h-4 w-4" />
               Kalender
               <Badge variant="secondary" className="ml-1">{calendarIntegrations.length}</Badge>
-            </TabsTrigger>
-            <TabsTrigger value="messaging" className="gap-2">
-              <MessageSquare className="h-4 w-4" />
-              Meddelanden
-              <Badge variant="secondary" className="ml-1">{messagingIntegrations.length}</Badge>
             </TabsTrigger>
             <TabsTrigger value="ai" className="gap-2">
               <Brain className="h-4 w-4" />
@@ -189,11 +183,11 @@ export const EnhancedIntegrationsSection = () => {
               <div>
                 <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
                   <Phone className="h-5 w-5" />
-                  Telefoni
+                  Telefoni & SMS
                 </h3>
                 <IntegrationSection 
                   integrations={telephonyIntegrations}
-                  emptyMessage="Inga telefoniintegrationer"
+                  emptyMessage="Inga telefoni- eller SMS-integrationer"
                 />
               </div>
             )}
@@ -207,19 +201,6 @@ export const EnhancedIntegrationsSection = () => {
                 <IntegrationSection 
                   integrations={calendarIntegrations}
                   emptyMessage="Inga kalenderintegrationer"
-                />
-              </div>
-            )}
-
-            {messagingIntegrations.length > 0 && (
-              <div>
-                <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
-                  <MessageSquare className="h-5 w-5" />
-                  Meddelanden
-                </h3>
-                <IntegrationSection 
-                  integrations={messagingIntegrations}
-                  emptyMessage="Inga meddelandeintegrationer"
                 />
               </div>
             )}
@@ -263,7 +244,7 @@ export const EnhancedIntegrationsSection = () => {
           <TabsContent value="telephony" className="mt-6">
             <IntegrationSection 
               integrations={telephonyIntegrations}
-              emptyMessage="Inga telefoniintegrationer. Lägg till Twilio, Telnyx, Vapi eller Retell för att komma igång."
+              emptyMessage="Inga telefoni- eller SMS-integrationer. Lägg till Twilio eller Telnyx för samtal och meddelanden."
             />
           </TabsContent>
 
@@ -271,13 +252,6 @@ export const EnhancedIntegrationsSection = () => {
             <IntegrationSection 
               integrations={calendarIntegrations}
               emptyMessage="Inga kalenderintegrationer. Lägg till SimplyBook, Google Calendar eller andra bokningssystem."
-            />
-          </TabsContent>
-
-          <TabsContent value="messaging" className="mt-6">
-            <IntegrationSection 
-              integrations={messagingIntegrations}
-              emptyMessage="Inga meddelandeintegrationer. Lägg till Twilio eller Telnyx för SMS/MMS."
             />
           </TabsContent>
 

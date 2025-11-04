@@ -3,7 +3,7 @@ import { useBookingIntegrations } from './useBookingIntegrations';
 import { useAISettings } from './useAISettings';
 import { useOpenRouterKeys } from './useOpenRouterKeys';
 
-export type UnifiedIntegrationType = 'telephony' | 'messaging' | 'calendar' | 'ai';
+export type UnifiedIntegrationType = 'telephony' | 'calendar' | 'ai';
 
 export interface UnifiedIntegration {
   id: string;
@@ -40,14 +40,14 @@ export const useUnifiedIntegrations = () => {
   const { settings: aiSettings, isLoading: isLoadingAI } = useAISettings();
   const { data: openRouterKeys } = useOpenRouterKeys();
 
-  // Convert base integrations (telephony, messaging)
+  // Convert base integrations (telephony includes both voice and messaging)
   const telephonyIntegrations: UnifiedIntegration[] = baseIntegrations
     .filter(i => i.capabilities.some(c => ['voice', 'sms', 'mms'].includes(c)))
     .map(i => ({
       id: i.id,
       name: i.provider_display_name,
       provider: i.provider,
-      type: i.capabilities.includes('voice') ? 'telephony' as const : 'messaging' as const,
+      type: 'telephony' as const,
       isActive: i.is_active,
       isVerified: i.is_verified,
       healthStatus: (i as any).health_status as any,
@@ -124,7 +124,7 @@ export const useUnifiedIntegrations = () => {
   const handleDelete = async (integration: UnifiedIntegration) => {
     if (integration.type === 'calendar') {
       await deleteBookingIntegration(integration.id);
-    } else if (integration.type === 'telephony' || integration.type === 'messaging') {
+    } else if (integration.type === 'telephony') {
       await deleteIntegration(integration.id);
     }
     // AI integrations handled separately through settings
@@ -134,7 +134,7 @@ export const useUnifiedIntegrations = () => {
   const handleToggle = async (integration: UnifiedIntegration, isActive: boolean) => {
     if (integration.type === 'calendar') {
       await updateBookingIntegration(integration.id, { is_enabled: isActive });
-    } else if (integration.type === 'telephony' || integration.type === 'messaging') {
+    } else if (integration.type === 'telephony') {
       await toggleActive({ integrationId: integration.id, isActive });
     }
   };
@@ -145,7 +145,6 @@ export const useUnifiedIntegrations = () => {
     
     // Filtered lists
     telephonyIntegrations: getByType('telephony'),
-    messagingIntegrations: getByType('messaging'),
     calendarIntegrations: getByType('calendar'),
     aiIntegrations: getByType('ai'),
     
