@@ -30,6 +30,28 @@ export const useDateRangeStore = create<DateRangeState>()(
     }),
     {
       name: 'hiems-date-range-storage',
+      storage: {
+        getItem: (name) => {
+          const str = localStorage.getItem(name);
+          if (!str) return null;
+          const { state } = JSON.parse(str);
+          return {
+            state: {
+              ...state,
+              dateRange: {
+                from: new Date(state.dateRange.from),
+                to: new Date(state.dateRange.to),
+              },
+            },
+          };
+        },
+        setItem: (name, value) => {
+          localStorage.setItem(name, JSON.stringify(value));
+        },
+        removeItem: (name) => {
+          localStorage.removeItem(name);
+        },
+      },
     }
   )
 );
