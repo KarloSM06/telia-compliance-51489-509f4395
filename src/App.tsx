@@ -16,7 +16,7 @@ const Auth = lazy(() => import("./pages/Auth"));
 const Dashboard = lazy(() => import("./pages/Dashboard"));
 const DashboardPackages = lazy(() => import("./pages/DashboardPackages"));
 const CustomDashboard = lazy(() => import("./pages/CustomDashboard"));
-const Settings = lazy(() => import("./pages/Settings"));
+const UnifiedSettings = lazy(() => import("./pages/UnifiedSettings"));
 const Demo = lazy(() => import("./pages/Demo"));
 const AboutUs = lazy(() => import("./pages/AboutUs"));
 const GDPRSettings = lazy(() => import("./pages/GDPRSettings"));
@@ -84,7 +84,7 @@ const App = () => {
               <Route path="/dashboard/analytics" element={<DashboardLayout><Dashboard /></DashboardLayout>} />
               <Route path="/dashboard/packages" element={<DashboardLayout><DashboardPackages /></DashboardLayout>} />
               <Route path="/dashboard/custom" element={<DashboardLayout><CustomDashboard /></DashboardLayout>} />
-              <Route path="/dashboard/settings" element={<DashboardLayout><Settings /></DashboardLayout>} />
+              <Route path="/dashboard/settings" element={<DashboardLayout><UnifiedSettings /></DashboardLayout>} />
               <Route path="/dashboard/krono" element={<DashboardLayout><KronoPage /></DashboardLayout>} />
               <Route path="/dashboard/gastro" element={<DashboardLayout><GastroPage /></DashboardLayout>} />
               <Route path="/dashboard/talent" element={<DashboardLayout><TalentPage /></DashboardLayout>} />

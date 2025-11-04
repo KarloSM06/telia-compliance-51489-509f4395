@@ -36,7 +36,6 @@ const overviewItems = [
 const businessToolsItems = [
   { title: "Prospektering", url: "/dashboard/lead", icon: Target },
   { title: "Rekrytering", url: "/dashboard/talent", icon: Users },
-  { title: "Integrationer", url: "/dashboard/integrations", icon: Plug },
   { title: "Kalender", url: "/dashboard/calendar", icon: Calendar },
   { title: "OpenRouter", url: "/dashboard/openrouter", icon: Brain },
 ];
@@ -50,7 +49,6 @@ const communicationItems = [
 ];
 
 const systemItems = [
-  { title: "Företag", url: "/dashboard/company", icon: Building2 },
   { title: "Inställningar", url: "/dashboard/settings", icon: Settings },
 ];
 

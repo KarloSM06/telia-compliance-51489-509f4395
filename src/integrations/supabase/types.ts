@@ -2514,10 +2514,13 @@ export type Database = {
       profiles: {
         Row: {
           availability_enabled: boolean | null
+          avatar_url: string | null
+          company_name: string | null
           created_at: string
           data_retention_days: number
           default_tone: string | null
           email: string | null
+          full_name: string | null
           gdpr_consent: boolean | null
           gdpr_consent_date: string | null
           id: string
@@ -2527,16 +2530,21 @@ export type Database = {
           lunch_break_enabled: boolean | null
           lunch_break_end: string | null
           lunch_break_start: string | null
+          phone_number: string | null
           preferred_language: string | null
           telephony_webhook_token: string | null
           timezone: string
+          updated_at: string | null
         }
         Insert: {
           availability_enabled?: boolean | null
+          avatar_url?: string | null
+          company_name?: string | null
           created_at?: string
           data_retention_days?: number
           default_tone?: string | null
           email?: string | null
+          full_name?: string | null
           gdpr_consent?: boolean | null
           gdpr_consent_date?: string | null
           id: string
@@ -2546,16 +2554,21 @@ export type Database = {
           lunch_break_enabled?: boolean | null
           lunch_break_end?: string | null
           lunch_break_start?: string | null
+          phone_number?: string | null
           preferred_language?: string | null
           telephony_webhook_token?: string | null
           timezone?: string
+          updated_at?: string | null
         }
         Update: {
           availability_enabled?: boolean | null
+          avatar_url?: string | null
+          company_name?: string | null
           created_at?: string
           data_retention_days?: number
           default_tone?: string | null
           email?: string | null
+          full_name?: string | null
           gdpr_consent?: boolean | null
           gdpr_consent_date?: string | null
           id?: string
@@ -2565,9 +2578,11 @@ export type Database = {
           lunch_break_enabled?: boolean | null
           lunch_break_end?: string | null
           lunch_break_start?: string | null
+          phone_number?: string | null
           preferred_language?: string | null
           telephony_webhook_token?: string | null
           timezone?: string
+          updated_at?: string | null
         }
         Relationships: []
       }
