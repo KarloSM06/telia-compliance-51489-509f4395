@@ -1263,6 +1263,44 @@ export type Database = {
         }
         Relationships: []
       }
+      integration_logs: {
+        Row: {
+          created_at: string | null
+          event_type: string
+          id: string
+          integration_id: string | null
+          message: string | null
+          metadata: Json | null
+          status: string
+        }
+        Insert: {
+          created_at?: string | null
+          event_type: string
+          id?: string
+          integration_id?: string | null
+          message?: string | null
+          metadata?: Json | null
+          status: string
+        }
+        Update: {
+          created_at?: string | null
+          event_type?: string
+          id?: string
+          integration_id?: string | null
+          message?: string | null
+          metadata?: Json | null
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "integration_logs_integration_id_fkey"
+            columns: ["integration_id"]
+            isOneToOne: false
+            referencedRelation: "integrations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       integrations: {
         Row: {
           capabilities: string[]
@@ -1270,9 +1308,13 @@ export type Database = {
           created_at: string | null
           encrypted_credentials: Json
           error_message: string | null
+          failed_api_calls: number | null
+          health_status: string | null
           id: string
           is_active: boolean | null
           is_verified: boolean | null
+          last_error_message: string | null
+          last_health_check: string | null
           last_synced_at: string | null
           last_used_at: string | null
           organization_id: string | null
@@ -1282,6 +1324,7 @@ export type Database = {
           provider_display_name: string
           provider_type: string
           sync_status: string | null
+          total_api_calls: number | null
           updated_at: string | null
           user_id: string
           verification_data: Json | null
@@ -1296,9 +1339,13 @@ export type Database = {
           created_at?: string | null
           encrypted_credentials: Json
           error_message?: string | null
+          failed_api_calls?: number | null
+          health_status?: string | null
           id?: string
           is_active?: boolean | null
           is_verified?: boolean | null
+          last_error_message?: string | null
+          last_health_check?: string | null
           last_synced_at?: string | null
           last_used_at?: string | null
           organization_id?: string | null
@@ -1308,6 +1355,7 @@ export type Database = {
           provider_display_name: string
           provider_type: string
           sync_status?: string | null
+          total_api_calls?: number | null
           updated_at?: string | null
           user_id: string
           verification_data?: Json | null
@@ -1322,9 +1370,13 @@ export type Database = {
           created_at?: string | null
           encrypted_credentials?: Json
           error_message?: string | null
+          failed_api_calls?: number | null
+          health_status?: string | null
           id?: string
           is_active?: boolean | null
           is_verified?: boolean | null
+          last_error_message?: string | null
+          last_health_check?: string | null
           last_synced_at?: string | null
           last_used_at?: string | null
           organization_id?: string | null
@@ -1334,6 +1386,7 @@ export type Database = {
           provider_display_name?: string
           provider_type?: string
           sync_status?: string | null
+          total_api_calls?: number | null
           updated_at?: string | null
           user_id?: string
           verification_data?: Json | null
