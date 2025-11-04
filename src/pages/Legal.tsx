@@ -1,5 +1,5 @@
 import { Header } from "@/components/Header";
-import { FileText, Shield, Scale, Cookie, FileCheck } from "lucide-react";
+import { FileText, Shield, Scale, Cookie, FileCheck, Clock } from "lucide-react";
 
 const Legal = () => {
   const quickLinks = [
@@ -9,6 +9,7 @@ const Legal = () => {
     { id: "aup", label: "Acceptable Use Policy", icon: Scale },
     { id: "cookie-policy", label: "Cookie-policy", icon: Cookie },
     { id: "dpa", label: "Databehandlingsavtal", icon: FileCheck },
+    { id: "sla", label: "Service Level Agreement", icon: Clock },
   ];
 
   const scrollToSection = (id: string) => {
@@ -416,6 +417,133 @@ const Legal = () => {
             <h2 className="text-2xl font-semibold text-white mb-3">7. Tillämplig lag</h2>
             <p className="text-white/70 mb-3">GDPR, svensk dataskyddslag och svensk rätt. Tvister avgörs av Stockholms tingsrätt.</p>
             <p className="font-medium text-white">Kontakt: <a href="mailto:contact@hiems.se" className="text-accent hover:underline">contact@hiems.se</a></p>
+          </article>
+        </section>
+
+        <section id="sla" className="mb-12 bg-white/5 p-8 rounded-xl backdrop-blur-sm border border-white/10 hover:shadow-elegant transition-all duration-300">
+          <div className="flex items-center gap-3 mb-6 border-b border-accent/20 pb-4">
+            <div className="p-2 bg-accent/10 rounded-lg">
+              <Clock className="w-6 h-6 text-accent" />
+            </div>
+            <h1 className="text-3xl font-display font-bold text-white">Service Level Agreement (SLA)</h1>
+          </div>
+          <div className="space-y-2 text-white/70 mb-6">
+            <p><strong>Version:</strong> 1.1</p>
+            <p><strong>Gäller från och med:</strong> 2025-11-02</p>
+            <p><strong>Publicerad av:</strong> Hiems Handelsbolag</p>
+          </div>
+
+          <article className="mb-6">
+            <h2 className="text-2xl font-semibold text-white mb-3">1. Syfte</h2>
+            <p className="text-white/70">Detta Service Level Agreement ("SLA") beskriver de allmänna nivåer för tillgänglighet, support och underhåll som Hiems Handelsbolag ("Hiems", "vi", "oss") erbjuder för våra produkter och tjänster.</p>
+            <p className="text-white/70 mt-3">SLA:t gäller som tillägg till våra juridiska villkor (HAV 1.0, DPA, AUP, Integritetspolicy och Användarvillkor) och omfattar alla kunder med ett aktivt avtal eller abonnemang hos Hiems.</p>
+          </article>
+
+          <article className="mb-6">
+            <h2 className="text-2xl font-semibold text-white mb-3">2. Omfattning</h2>
+            <p className="text-white/70 mb-3">Hiems utvecklar och tillhandahåller skräddarsydda AI- och automationslösningar för företag, inklusive:</p>
+            <ul className="list-disc list-inside space-y-2 text-white/70 mb-3">
+              <li>AI-agenter för röst och text</li>
+              <li>Automatisering och systemintegrationer</li>
+              <li>Konsultation och anpassning av AI-flöden</li>
+              <li>Drift, underhåll och support för aktiva system</li>
+            </ul>
+            <p className="text-white/70">Detta SLA gäller för den del av tjänsten som drivs, underhålls eller hanteras av Hiems, i den omfattning som framgår av kundens avtal.</p>
+          </article>
+
+          <article className="mb-6">
+            <h2 className="text-2xl font-semibold text-white mb-3">3. Systemtillgänglighet</h2>
+            <p className="text-white/70 mb-3">Hiems strävar efter att hålla alla aktiva tjänster tillgängliga minst 99% per kalendermånad, exklusive planerat underhåll.</p>
+            <p className="text-white/70 mb-3">Tillgänglighet avser driftstatus för Hiems infrastruktur, molnplattformar och API-tjänster.</p>
+            <p className="text-white/70 mb-2">Hiems ansvarar inte för avbrott orsakade av:</p>
+            <ul className="list-disc list-inside space-y-2 text-white/70">
+              <li>Kundens egna system, nätverk eller integrationer</li>
+              <li>Tredjepartsleverantörer (t.ex. OpenAI, Twilio, Google Cloud)</li>
+              <li>Händelser utanför Hiems rimliga kontroll (force majeure)</li>
+            </ul>
+          </article>
+
+          <article className="mb-6">
+            <h2 className="text-2xl font-semibold text-white mb-3">4. Planerat underhåll</h2>
+            <p className="text-white/70 mb-3">Hiems kan utföra planerat underhåll för att förbättra säkerhet, prestanda och stabilitet.</p>
+            <ul className="list-disc list-inside space-y-2 text-white/70 mb-3">
+              <li>Kunder med aktiv prenumeration eller support plan informeras minst 24 timmar i förväg.</li>
+              <li>Underhåll sker normalt mellan 22:00–06:00 svensk tid.</li>
+              <li>Kortare avbrott kan förekomma under dessa perioder.</li>
+            </ul>
+          </article>
+
+          <article className="mb-6">
+            <h2 className="text-2xl font-semibold text-white mb-3">5. Support och underhåll</h2>
+            <p className="text-white/70 mb-3">Kunder som har aktiv månads- eller årsbaserad prenumeration hos Hiems har tillgång till löpande support och underhåll utan extra kostnad.</p>
+            <p className="text-white/70 mb-2">Detta inkluderar:</p>
+            <ul className="list-disc list-inside space-y-2 text-white/70 mb-3">
+              <li>Hjälp med felsökning och tekniska frågor</li>
+              <li>Mindre justeringar och optimeringar av befintliga system</li>
+              <li>Säkerhets- och stabilitet uppdateringar</li>
+              <li>Tillgång till framtida förbättringar av plattformen</li>
+            </ul>
+            <p className="text-white/70">Kunder som har betalat en engångsavgift och därmed äger sin lösning omfattas inte av löpande support eller uppdateringar. Dessa kunder kan dock beställa hjälp, uppdateringar eller vidareutveckling som separata konsulttjänster enligt offert.</p>
+          </article>
+
+          <article className="mb-6">
+            <h2 className="text-2xl font-semibold text-white mb-3">6. Incidenthantering</h2>
+            <p className="text-white/70 mb-3">Hiems hanterar incidenter och driftstörningar med prioritet baserat på hur allvarligt de påverkar tjänstens funktion. Alla rapporterade problem åtgärdas så snabbt som möjligt enligt rimlig teknisk praxis.</p>
+            <p className="text-white/70">Incidenter rapporteras till: <a href="mailto:support@hiems.se" className="text-accent hover:underline">support@hiems.se</a></p>
+          </article>
+
+          <article className="mb-6">
+            <h2 className="text-2xl font-semibold text-white mb-3">7. Uppdateringar och förbättringar</h2>
+            <p className="text-white/70">Hiems levererar löpande förbättringar och säkerhetsförbättringar för kunder med aktiv prenumeration. Kunder som äger sin lösning kan köpa till uppdateringar eller förbättringar efter behov.</p>
+          </article>
+
+          <article className="mb-6">
+            <h2 className="text-2xl font-semibold text-white mb-3">8. Ansvarsbegränsning</h2>
+            <p className="text-white/70 mb-2">Hiems Handelsbolags ansvar är begränsat till det lägsta av:</p>
+            <ul className="list-disc list-inside space-y-2 text-white/70 mb-3">
+              <li>Tre (3) månaders serviceavgift, eller</li>
+              <li>Det belopp som betalats för tjänsten under de senaste 90 dagarna.</li>
+            </ul>
+            <p className="text-white/70">Hiems ansvarar inte för indirekta skador såsom dataförlust, utebliven vinst eller avbrott i kundens verksamhet.</p>
+          </article>
+
+          <article className="mb-6">
+            <h2 className="text-2xl font-semibold text-white mb-3">9. Kundens ansvar</h2>
+            <p className="text-white/70 mb-2">Kunden ansvarar för att:</p>
+            <ul className="list-disc list-inside space-y-2 text-white/70">
+              <li>Tillhandahålla korrekt information, inloggningar och API-nycklar</li>
+              <li>Säkerställa kompatibilitet med egna system</li>
+              <li>Följa Hiems AUP och användarvillkor</li>
+              <li>Rapportera fel eller avbrott tydligt till supporten</li>
+            </ul>
+          </article>
+
+          <article className="mb-6">
+            <h2 className="text-2xl font-semibold text-white mb-3">10. Force Majeure</h2>
+            <p className="text-white/70">Hiems är inte ansvarigt för förseningar eller avbrott orsakade av händelser utanför rimlig kontroll, såsom naturkatastrofer, krig, myndighetsbeslut, cyberattacker eller fel hos tredjepartsleverantörer.</p>
+          </article>
+
+          <article className="mb-6">
+            <h2 className="text-2xl font-semibold text-white mb-3">11. Ändringar av SLA</h2>
+            <p className="text-white/70 mb-3">Hiems förbehåller sig rätten att uppdatera eller ändra detta SLA. Uppdateringar publiceras på hiems.se och träder i kraft 30 dagar efter publicering.</p>
+            <p className="text-white/70">Fortsatt användning av tjänsten innebär att Kunden godkänner den uppdaterade versionen.</p>
+          </article>
+
+          <article className="mb-6">
+            <h2 className="text-2xl font-semibold text-white mb-3">12. Tillämplig lag och tvister</h2>
+            <p className="text-white/70 mb-3">Detta SLA regleras av svensk lag.</p>
+            <p className="text-white/70">Tvister som inte kan lösas i samförstånd avgörs av Stockholms tingsrätt som första instans.</p>
+          </article>
+
+          <article>
+            <h2 className="text-2xl font-semibold text-white mb-3">Relaterade dokument</h2>
+            <ul className="list-disc list-inside space-y-2 text-white/70">
+              <li>HAV 1.0 – Allmänt Avtal</li>
+              <li>DPA – Databehandlingsavtal</li>
+              <li>AUP – Acceptable Use Policy</li>
+              <li>Integritetspolicy</li>
+              <li>Användarvillkor</li>
+            </ul>
           </article>
         </section>
 
