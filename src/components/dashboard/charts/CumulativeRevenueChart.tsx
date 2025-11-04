@@ -34,7 +34,7 @@ export const CumulativeRevenueChart = ({ data, isLoading }: CumulativeRevenueCha
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="flex items-center justify-center h-[280px]">
+          <div className="flex items-center justify-center h-[400px]">
             <p className="text-sm text-muted-foreground">Laddar...</p>
           </div>
         </CardContent>
@@ -52,7 +52,7 @@ export const CumulativeRevenueChart = ({ data, isLoading }: CumulativeRevenueCha
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="flex items-center justify-center h-[280px]">
+          <div className="flex items-center justify-center h-[400px]">
             <p className="text-sm text-muted-foreground">Ingen data tillgänglig</p>
           </div>
         </CardContent>
@@ -69,7 +69,7 @@ export const CumulativeRevenueChart = ({ data, isLoading }: CumulativeRevenueCha
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <ResponsiveContainer width="100%" height={280}>
+        <ResponsiveContainer width="100%" height={400}>
           <AreaChart data={chartData}>
             <defs>
               <linearGradient id="cumulativeRevenueGradient" x1="0" y1="0" x2="0" y2="1">

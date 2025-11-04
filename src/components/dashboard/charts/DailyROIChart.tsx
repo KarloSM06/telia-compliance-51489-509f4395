@@ -26,7 +26,7 @@ export const DailyROIChart = ({ data, isLoading }: DailyROIChartProps) => {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="flex items-center justify-center h-[280px]">
+          <div className="flex items-center justify-center h-[400px]">
             <p className="text-sm text-muted-foreground">Laddar...</p>
           </div>
         </CardContent>
@@ -44,7 +44,7 @@ export const DailyROIChart = ({ data, isLoading }: DailyROIChartProps) => {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="flex items-center justify-center h-[280px]">
+          <div className="flex items-center justify-center h-[400px]">
             <p className="text-sm text-muted-foreground">Ingen data tillgänglig</p>
           </div>
         </CardContent>
@@ -61,7 +61,7 @@ export const DailyROIChart = ({ data, isLoading }: DailyROIChartProps) => {
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <ResponsiveContainer width="100%" height={280}>
+        <ResponsiveContainer width="100%" height={400}>
           <LineChart data={chartData}>
             <CartesianGrid strokeDasharray="3 3" className="stroke-muted/50" />
             <XAxis
