@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { RefreshCw, Download, Settings, TrendingUp, DollarSign, Award, Target, Phone, MessageSquare, Mail, Brain, CheckCircle, ArrowRight, TrendingDown } from 'lucide-react';
+import { RefreshCw, Download, Settings, TrendingUp, DollarSign, Award, Target, Phone, MessageSquare, Mail, Brain, CheckCircle, ArrowRight, TrendingDown, Activity, Users } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useAnalyticsData } from '@/hooks/useAnalyticsData';
 import { useAuth } from '@/hooks/useAuth';
@@ -13,6 +13,7 @@ import { useOpenRouterKeys } from '@/hooks/useOpenRouterKeys';
 import { toast } from 'sonner';
 import { useEffect } from 'react';
 import { PremiumTelephonyStatCard } from '@/components/telephony/PremiumTelephonyStatCard';
+import { EnhancedStatCard } from '@/components/dashboard/EnhancedStatCard';
 import { AnimatedSection } from '@/components/shared/AnimatedSection';
 import { RecentActivityCompact } from '@/components/dashboard/RecentActivityCompact';
 import { DateRangePicker } from "@/components/dashboard/filters/DateRangePicker";
@@ -246,35 +247,129 @@ const Dashboard = () => {
         <div className="container mx-auto px-6 lg:px-8 relative z-10">
           <AnimatedSection delay={200}>
             {data && (
-              <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-                <PremiumTelephonyStatCard 
-                  title="Total Intäkt" 
-                  value={`${data.roi.totalRevenue.toLocaleString('sv-SE', { maximumFractionDigits: 0 })} SEK`}
-                  icon={DollarSign}
-                  color="text-green-600"
-                  subtitle={`Från ${data.bookings.length} bokningar`}
-                />
-                <PremiumTelephonyStatCard 
-                  title="Total Kostnad" 
-                  value={`${data.roi.totalCosts.toLocaleString('sv-SE', { maximumFractionDigits: 0 })} SEK`}
-                  icon={TrendingDown}
-                  color="text-red-600"
-                  subtitle="Alla driftkostnader"
-                />
-                <PremiumTelephonyStatCard 
-                  title="Nettovinst" 
-                  value={`${data.roi.netProfit.toLocaleString('sv-SE', { maximumFractionDigits: 0 })} SEK`}
-                  icon={Award}
-                  color="text-yellow-600"
-                  subtitle={`${data.roi.profitMargin.toFixed(1)}% marginal`}
-                />
-                <PremiumTelephonyStatCard 
-                  title="ROI" 
-                  value={`${data.roi.roi.toFixed(1)}%`}
-                  icon={Target}
-                  color="text-blue-600"
-                  subtitle="Avkastning på investering"
-                />
+              <div className="space-y-8">
+                {/* Primary KPIs */}
+                <div>
+                  <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-4">
+                    Primära Finansiella KPIs
+                  </h3>
+                  <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+                    <EnhancedStatCard 
+                      title="Total Intäkt" 
+                      value={`${data.roi.totalRevenue.toLocaleString('sv-SE', { maximumFractionDigits: 0 })} SEK`}
+                      icon={<DollarSign className="h-5 w-5" />}
+                      color="text-green-600"
+                      subtitle={`Från ${data.bookings.length} bokningar`}
+                      tooltip="Total intäkt från alla bokningar under vald period"
+                      trend={{
+                        value: 12.5,
+                        isPositive: true,
+                        label: "från förra perioden"
+                      }}
+                      sparklineData={data.bookings.slice(-10).map(b => ({ value: b.total_cost || 0 }))}
+                    />
+                    <EnhancedStatCard 
+                      title="Total Kostnad" 
+                      value={`${data.roi.totalCosts.toLocaleString('sv-SE', { maximumFractionDigits: 0 })} SEK`}
+                      icon={<TrendingDown className="h-5 w-5" />}
+                      color="text-red-600"
+                      subtitle="Alla driftkostnader"
+                      tooltip="Summa av telefoni, SMS, email, AI och plattformskostnader"
+                      trend={{
+                        value: 5.2,
+                        isPositive: false,
+                        label: "från förra perioden"
+                      }}
+                      sparklineData={data.dailyData.slice(-10).map(d => ({ value: d.cost }))}
+                    />
+                    <EnhancedStatCard 
+                      title="Nettovinst" 
+                      value={`${data.roi.netProfit.toLocaleString('sv-SE', { maximumFractionDigits: 0 })} SEK`}
+                      icon={<Award className="h-5 w-5" />}
+                      color="text-yellow-600"
+                      subtitle={`${data.roi.profitMargin.toFixed(1)}% marginal`}
+                      tooltip="Intäkt minus kostnader = nettovinst"
+                      trend={{
+                        value: 18.7,
+                        isPositive: data.roi.netProfit > 0,
+                        label: "från förra perioden"
+                      }}
+                      sparklineData={data.dailyData.slice(-10).map(d => ({ value: d.revenue - d.cost }))}
+                    />
+                    <EnhancedStatCard 
+                      title="ROI" 
+                      value={`${data.roi.roi.toFixed(1)}%`}
+                      icon={<Target className="h-5 w-5" />}
+                      color="text-blue-600"
+                      subtitle="Avkastning på investering"
+                      tooltip="Return on Investment: (Vinst / Kostnad) × 100"
+                      trend={{
+                        value: 8.3,
+                        isPositive: data.roi.roi > 0,
+                        label: "från förra perioden"
+                      }}
+                      sparklineData={data.dailyData.slice(-10).map(d => ({ 
+                        value: d.cost > 0 ? ((d.revenue - d.cost) / d.cost) * 100 : 0 
+                      }))}
+                    />
+                  </div>
+                </div>
+
+                {/* Secondary Metrics */}
+                <div>
+                  <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-4">
+                    Prestanda & Effektivitet
+                  </h3>
+                  <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+                    <EnhancedStatCard 
+                      title="Genomsnittligt Ordervärde" 
+                      value={`${(data.bookings.length > 0 ? data.roi.totalRevenue / data.bookings.length : 0).toLocaleString('sv-SE', { maximumFractionDigits: 0 })} SEK`}
+                      icon={<TrendingUp className="h-5 w-5" />}
+                      color="text-purple-600"
+                      subtitle="Per bokning"
+                      tooltip="Total intäkt dividerat med antal bokningar"
+                      trend={{
+                        value: 6.4,
+                        isPositive: true,
+                        label: "från förra perioden"
+                      }}
+                    />
+                    <EnhancedStatCard 
+                      title="Kostnad per Bokning" 
+                      value={`${(data.bookings.length > 0 ? data.roi.totalCosts / data.bookings.length : 0).toLocaleString('sv-SE', { maximumFractionDigits: 0 })} SEK`}
+                      icon={<Activity className="h-5 w-5" />}
+                      color="text-orange-600"
+                      subtitle="Genomsnittlig kostnad"
+                      tooltip="Total kostnad dividerat med antal bokningar"
+                      trend={{
+                        value: 3.2,
+                        isPositive: false,
+                        label: "från förra perioden"
+                      }}
+                    />
+                    <EnhancedStatCard 
+                      title="Break-even Status" 
+                      value={data.breakEven.isBreakEvenReached ? "Uppnått" : `Månad ${data.breakEven.breakEvenMonth || '∞'}`}
+                      icon={<CheckCircle className="h-5 w-5" />}
+                      color={data.breakEven.isBreakEvenReached ? "text-green-600" : "text-amber-600"}
+                      subtitle={data.breakEven.isBreakEvenReached ? "Lönsamhet uppnådd" : "Månader kvar"}
+                      tooltip="När totala intäkter överstiger totala kostnader"
+                    />
+                    <EnhancedStatCard 
+                      title="Aktiva Bokningar" 
+                      value={data.bookings.length}
+                      icon={<Users className="h-5 w-5" />}
+                      color="text-cyan-600"
+                      subtitle="Under vald period"
+                      tooltip="Antal bokningar i den valda tidsperioden"
+                      trend={{
+                        value: 15.8,
+                        isPositive: true,
+                        label: "från förra perioden"
+                      }}
+                    />
+                  </div>
+                </div>
               </div>
             )}
           </AnimatedSection>
