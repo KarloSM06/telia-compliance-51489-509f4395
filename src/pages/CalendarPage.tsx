@@ -22,6 +22,9 @@ import { sv } from "date-fns/locale";
 import { checkEventConflicts } from "@/lib/calendarUtils";
 import { toast } from "sonner";
 import { useUserTimezone } from "@/hooks/useUserTimezone";
+import { AnimatedSection } from "@/components/shared/AnimatedSection";
+import { PremiumTelephonyStatCard } from "@/components/telephony/PremiumTelephonyStatCard";
+import hiemsLogoSnowflake from '@/assets/hiems-logo-snowflake.png';
 
 const CalendarPage = () => {
   const { timezone } = useUserTimezone();
@@ -130,223 +133,379 @@ const CalendarPage = () => {
     return events;
   })();
 
+  // Calculate stats for today and this week
+  const todayEvents = events.filter(e => 
+    isSameDay(new Date(e.start_time), new Date())
+  ).length;
+
+  const thisWeekEvents = events.filter(e => {
+    const weekStart = startOfWeek(new Date(), { locale: sv, weekStartsOn: 1 });
+    const weekEnd = endOfWeek(new Date(), { locale: sv, weekStartsOn: 1 });
+    return isWithinInterval(new Date(e.start_time), { start: weekStart, end: weekEnd });
+  }).length;
+
+  const activeIntegrations = integrations.filter(i => i.is_enabled).length;
+
   return (
-    <div className="h-screen flex flex-col">
-      {/* Global header with view selector - always visible */}
-      <div className="border-b bg-background">
-        <div className="px-6 py-4">
-          <div className="flex justify-between items-center">
-            <div>
-              <h1 className="text-2xl font-bold">Kalender & CRM</h1>
-              <p className="text-sm text-muted-foreground">
-                Hantera dina möten och synka med befintliga bokningssystem
-              </p>
+    <div className="min-h-screen bg-background">
+      {/* Hero Section */}
+      <section className="relative py-16 overflow-hidden bg-gradient-to-b from-background via-primary/5 to-background">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,hsl(var(--primary)/0.15),transparent_50%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_80%,hsl(var(--primary)/0.1),transparent_50%)]" />
+        
+        {/* Animated snowflakes */}
+        <img
+          src={hiemsLogoSnowflake}
+          alt=""
+          className="absolute top-10 left-[10%] w-16 h-16 opacity-20 animate-[spin_20s_linear_infinite]"
+        />
+        <img
+          src={hiemsLogoSnowflake}
+          alt=""
+          className="absolute top-32 right-[15%] w-12 h-12 opacity-15 animate-[spin_25s_linear_infinite_reverse]"
+        />
+        <img
+          src={hiemsLogoSnowflake}
+          alt=""
+          className="absolute bottom-20 left-[20%] w-20 h-20 opacity-10 animate-[spin_30s_linear_infinite]"
+        />
+        <img
+          src={hiemsLogoSnowflake}
+          alt=""
+          className="absolute top-40 right-[25%] w-8 h-8 opacity-25 animate-[spin_15s_linear_infinite_reverse]"
+        />
+        <img
+          src={hiemsLogoSnowflake}
+          alt=""
+          className="absolute bottom-32 right-[10%] w-14 h-14 opacity-20 animate-[spin_22s_linear_infinite]"
+        />
+
+        <div className="container mx-auto px-6 lg:px-8 relative z-10">
+          <AnimatedSection className="max-w-4xl mx-auto text-center">
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 mb-6">
+              <div className="w-2 h-2 rounded-full bg-primary animate-pulse" />
+              <span className="text-xs font-medium uppercase tracking-wider text-primary">
+                Realtidsövervakning
+              </span>
             </div>
-            <div className="flex gap-2 items-center">
-              {/* Calendar selector */}
-              {calendars.length > 0 && (
-                <CalendarSelector
-                  calendars={calendars}
-                  selectedCalendarId={selectedCalendarId}
-                  onSelect={setSelectedCalendarId}
-                />
-              )}
-              
-              <Button 
-                variant="outline" 
-                size="sm"
-                onClick={() => setShowCalendarManagement(true)}
-                className="gap-2"
-              >
-                <FolderKanban className="h-4 w-4" />
-                Hantera kalendrar
-              </Button>
-              
-              {/* View selector */}
-              <div className="flex gap-1 border rounded-lg p-1 bg-muted/50">
-                <Button
-                  variant={currentView === 'year' ? 'default' : 'ghost'}
+            
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 bg-gradient-to-r from-foreground via-foreground to-foreground/70 bg-clip-text text-transparent">
+              Kalender & CRM
+            </h1>
+            
+            <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto">
+              Hantera dina möten och synka med befintliga bokningssystem
+            </p>
+          </AnimatedSection>
+        </div>
+      </section>
+
+      {/* Quick Actions Bar */}
+      <section className="relative py-8 border-y border-primary/10">
+        <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent" />
+        <div className="container mx-auto px-6 lg:px-8">
+          <AnimatedSection delay={100}>
+            <div className="flex flex-wrap items-center justify-between gap-4">
+              <div className="flex items-center gap-4">
+                <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-green-500/10 border border-green-500/20">
+                  <div className="w-2.5 h-2.5 rounded-full bg-green-500 animate-pulse" />
+                  <span className="text-sm font-medium text-green-600">Live</span>
+                </div>
+                <Badge variant="outline" className="px-4 py-2">
+                  {events.length} händelser
+                </Badge>
+              </div>
+
+              <div className="flex flex-wrap items-center gap-2">
+                {/* Calendar selector */}
+                {calendars.length > 0 && (
+                  <CalendarSelector
+                    calendars={calendars}
+                    selectedCalendarId={selectedCalendarId}
+                    onSelect={setSelectedCalendarId}
+                  />
+                )}
+
+                {/* View selector */}
+                <div className="flex gap-1">
+                  <Button
+                    variant={currentView === 'year' ? 'default' : 'outline'}
+                    size="sm"
+                    onClick={() => setCurrentView('year')}
+                    className="gap-2 hover:bg-primary/5 hover:border-primary/30 transition-all duration-500"
+                  >
+                    <CalendarClock className="h-4 w-4" />
+                    År
+                  </Button>
+                  <Button
+                    variant={currentView === 'month' ? 'default' : 'outline'}
+                    size="sm"
+                    onClick={() => setCurrentView('month')}
+                    className="gap-2 hover:bg-primary/5 hover:border-primary/30 transition-all duration-500"
+                  >
+                    <Calendar className="h-4 w-4" />
+                    Månad
+                  </Button>
+                  <Button
+                    variant={currentView === 'week' ? 'default' : 'outline'}
+                    size="sm"
+                    onClick={handleViewWeek}
+                    className="gap-2 hover:bg-primary/5 hover:border-primary/30 transition-all duration-500"
+                  >
+                    <CalendarRange className="h-4 w-4" />
+                    Vecka
+                  </Button>
+                  <Button
+                    variant={currentView === 'day' ? 'default' : 'outline'}
+                    size="sm"
+                    onClick={() => handleDateClick(selectedDay)}
+                    className="gap-2 hover:bg-primary/5 hover:border-primary/30 transition-all duration-500"
+                  >
+                    <CalendarDays className="h-4 w-4" />
+                    Dag
+                  </Button>
+                  <Button
+                    variant={currentView === 'timeline' ? 'default' : 'outline'}
+                    size="sm"
+                    onClick={() => setCurrentView('timeline')}
+                    className="gap-2 hover:bg-primary/5 hover:border-primary/30 transition-all duration-500"
+                  >
+                    <List className="h-4 w-4" />
+                    Timeline
+                  </Button>
+                </div>
+
+                <Button 
+                  variant="outline" 
                   size="sm"
-                  onClick={() => setCurrentView('year')}
-                  className="gap-2"
+                  onClick={() => setShowCalendarManagement(true)}
+                  className="gap-2 hover:bg-primary/5 hover:border-primary/30 transition-all duration-500"
                 >
-                  <CalendarClock className="h-4 w-4" />
-                  År
+                  <FolderKanban className="h-4 w-4" />
+                  Hantera kalendrar
                 </Button>
-                <Button
-                  variant={currentView === 'month' ? 'default' : 'ghost'}
+
+                <Button 
+                  onClick={() => setShowIntegrationModal(true)} 
+                  variant="outline" 
                   size="sm"
-                  onClick={() => setCurrentView('month')}
-                  className="gap-2"
+                  className="gap-2 hover:bg-primary/5 hover:border-primary/30 transition-all duration-500"
                 >
-                  <Calendar className="h-4 w-4" />
-                  Månad
+                  <Settings className="h-4 w-4" />
+                  Integrationer
+                  {integrations.length > 0 && (
+                    <Badge variant="secondary" className="ml-1">{integrations.length}</Badge>
+                  )}
                 </Button>
-                <Button
-                  variant={currentView === 'week' ? 'default' : 'ghost'}
+
+                {/* Premium Integration badges */}
+                {integrations.slice(0, 3).map(int => (
+                  <div
+                    key={int.id}
+                    className="flex items-center gap-2 px-4 py-2 rounded-full bg-primary/5 border border-primary/20 hover:scale-105 transition-transform duration-300 cursor-pointer"
+                    onClick={() => setShowIntegrationModal(true)}
+                  >
+                    {int.is_enabled && int.last_sync_status === 'success' && (
+                      <div className="w-2.5 h-2.5 rounded-full bg-green-500 animate-pulse" />
+                    )}
+                    {int.last_sync_status === 'error' && (
+                      <div className="w-2.5 h-2.5 rounded-full bg-red-500" />
+                    )}
+                    <span className="text-sm font-medium">{int.provider_display_name}</span>
+                  </div>
+                ))}
+
+                <Button 
+                  onClick={() => {
+                    setSelectedEvent(null);
+                    setSelectedDate(new Date());
+                    setShowEventModal(true);
+                  }}
                   size="sm"
-                  onClick={handleViewWeek}
                   className="gap-2"
                 >
-                  <CalendarRange className="h-4 w-4" />
-                  Vecka
-                </Button>
-                <Button
-                  variant={currentView === 'day' ? 'default' : 'ghost'}
-                  size="sm"
-                  onClick={() => handleDateClick(selectedDay)}
-                  className="gap-2"
-                >
-                  <CalendarDays className="h-4 w-4" />
-                  Dag
-                </Button>
-                <Button
-                  variant={currentView === 'timeline' ? 'default' : 'ghost'}
-                  size="sm"
-                  onClick={() => setCurrentView('timeline')}
-                  className="gap-2"
-                >
-                  <List className="h-4 w-4" />
-                  Timeline
+                  <Plus className="h-4 w-4" />
+                  Skapa händelse
                 </Button>
               </div>
-              
-              <Button onClick={() => setShowIntegrationModal(true)} variant="outline" className="gap-2">
-                <Settings className="h-4 w-4" />
-                Integrationer
-                {integrations.length > 0 && (
-                  <Badge variant="secondary" className="ml-1">{integrations.length}</Badge>
-                )}
-              </Button>
-
-              {/* Integration badges */}
-              {integrations.slice(0, 3).map(int => (
-                <Badge 
-                  key={int.id}
-                  variant={int.is_enabled && int.last_sync_status === 'success' ? 'default' : 'secondary'}
-                  className="cursor-pointer hover:opacity-80 transition-opacity"
-                  onClick={() => setShowIntegrationModal(true)}
-                >
-                  {int.provider_display_name}
-                  {!int.is_enabled && <span className="ml-1">⏸</span>}
-                  {int.last_sync_status === 'error' && <span className="ml-1">⚠️</span>}
-                </Badge>
-              ))}
-              {integrations.length > 3 && (
-                <Badge variant="outline" className="cursor-pointer" onClick={() => setShowIntegrationModal(true)}>
-                  +{integrations.length - 3}
-                </Badge>
-              )}
-
-              <Button onClick={() => {
-                setSelectedEvent(null);
-                setSelectedDate(new Date());
-                setShowEventModal(true);
-              }}>
-                <Plus className="h-4 w-4 mr-2" />
-                Skapa händelse
-              </Button>
             </div>
-          </div>
+          </AnimatedSection>
         </div>
-      </div>
+      </section>
+
+      {/* Stats Overview Section */}
+      <section className="relative py-16 bg-gradient-to-b from-background via-primary/3 to-background">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_50%,hsl(var(--primary)/0.12),transparent_50%)]" />
+        <div className="container mx-auto px-6 lg:px-8 relative z-10">
+          <AnimatedSection delay={200}>
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+              <PremiumTelephonyStatCard
+                title="Total Händelser"
+                value={events.length}
+                icon={Calendar}
+                subtitle={`${events.length} ${events.length === 1 ? 'händelse' : 'händelser'}`}
+                color="text-blue-500"
+              />
+              <PremiumTelephonyStatCard
+                title="Idag"
+                value={todayEvents}
+                icon={CalendarDays}
+                subtitle={`${todayEvents} ${todayEvents === 1 ? 'händelse' : 'händelser'}`}
+                color="text-green-500"
+              />
+              <PremiumTelephonyStatCard
+                title="Denna Vecka"
+                value={thisWeekEvents}
+                icon={CalendarRange}
+                subtitle={`${thisWeekEvents} ${thisWeekEvents === 1 ? 'händelse' : 'händelser'}`}
+                color="text-purple-500"
+              />
+              <PremiumTelephonyStatCard
+                title="Integrationer"
+                value={activeIntegrations}
+                icon={Settings}
+                subtitle={`${activeIntegrations} av ${integrations.length} aktiva`}
+                color="text-orange-500"
+              />
+            </div>
+          </AnimatedSection>
+        </div>
+      </section>
 
       {/* Year view */}
       {currentView === 'year' && (
-        <YearView
-          date={selectedDay}
-          events={events}
-          onEventClick={handleEventClick}
-          onDateChange={setSelectedDay}
-          onDayClick={(date) => {
-            setSelectedDay(date);
-            setCurrentView('day');
-          }}
-        />
+        <section className="relative py-12 bg-gradient-to-b from-background via-primary/2 to-background">
+          <div className="container mx-auto px-6 lg:px-8">
+            <AnimatedSection delay={300}>
+              <Card className="p-6 border border-primary/10 bg-gradient-to-br from-card/80 via-card/50 to-card/30 backdrop-blur-md hover:shadow-xl hover:border-primary/30 transition-all duration-500">
+                <YearView
+                  date={selectedDay}
+                  events={events}
+                  onEventClick={handleEventClick}
+                  onDateChange={setSelectedDay}
+                  onDayClick={(date) => {
+                    setSelectedDay(date);
+                    setCurrentView('day');
+                  }}
+                />
+              </Card>
+            </AnimatedSection>
+          </div>
+        </section>
       )}
 
       {/* Month view */}
       {currentView === 'month' && (
-        <div className="px-6 py-4 space-y-6 flex-1 overflow-auto">
-          <Tabs defaultValue="calendar" className="w-full">
-            <TabsList>
-              <TabsTrigger value="calendar">Kalender</TabsTrigger>
-              <TabsTrigger value="availability">Min Tillgänglighet</TabsTrigger>
-            </TabsList>
-            
-            <TabsContent value="calendar" className="space-y-6">
-              <CalendarView
-                events={events}
-                onEventClick={handleEventClick}
-                onDateClick={handleDateClick}
-              />
+        <section className="relative py-12 bg-gradient-to-b from-background via-primary/2 to-background">
+          <div className="container mx-auto px-6 lg:px-8">
+            <AnimatedSection delay={300}>
+              <Card className="p-6 border border-primary/10 bg-gradient-to-br from-card/80 via-card/50 to-card/30 backdrop-blur-md hover:shadow-xl hover:border-primary/30 transition-all duration-500">
+                <Tabs defaultValue="calendar" className="w-full">
+                  <TabsList>
+                    <TabsTrigger value="calendar">Kalender</TabsTrigger>
+                    <TabsTrigger value="availability">Min Tillgänglighet</TabsTrigger>
+                  </TabsList>
+                  
+                  <TabsContent value="calendar" className="space-y-6">
+                    <CalendarView
+                      events={events}
+                      onEventClick={handleEventClick}
+                      onDateClick={handleDateClick}
+                    />
 
-              {showEventModal && (
-                <EventModal
-                  open={showEventModal}
-                  onClose={handleCloseModal}
-                  event={selectedEvent}
-                  defaultDate={selectedDate || undefined}
-                  onSave={handleEventSave}
-                  onDelete={deleteEvent}
-                  calendars={calendars}
-                  selectedCalendarId={selectedCalendarId !== 'all' ? selectedCalendarId : defaultCalendar?.id}
-                />
-              )}
-            </TabsContent>
+                    {showEventModal && (
+                      <EventModal
+                        open={showEventModal}
+                        onClose={handleCloseModal}
+                        event={selectedEvent}
+                        defaultDate={selectedDate || undefined}
+                        onSave={handleEventSave}
+                        onDelete={deleteEvent}
+                        calendars={calendars}
+                        selectedCalendarId={selectedCalendarId !== 'all' ? selectedCalendarId : defaultCalendar?.id}
+                      />
+                    )}
+                  </TabsContent>
 
-            <TabsContent value="availability">
-              <AvailabilitySettings />
-            </TabsContent>
-          </Tabs>
-        </div>
+                  <TabsContent value="availability">
+                    <AvailabilitySettings />
+                  </TabsContent>
+                </Tabs>
+              </Card>
+            </AnimatedSection>
+          </div>
+        </section>
       )}
 
       {/* Week view */}
       {currentView === 'week' && (
-        <WeekView
-          date={selectedDay}
-          events={filteredEvents}
-          onEventClick={handleEventClick}
-          onEventUpdate={updateEvent}
-          onBackToMonth={handleBackToMonth}
-          onCreate={handleQuickCreate}
-          onDateChange={setSelectedDay}
-          onDelete={deleteEvent}
-          showEventModal={showEventModal}
-          selectedEvent={selectedEvent}
-          onCloseModal={handleCloseModal}
-          onEventSave={handleEventSave}
-          onMonthViewClick={() => setCurrentView('month')}
-        />
+        <section className="relative py-12 bg-gradient-to-b from-background via-primary/2 to-background">
+          <div className="container mx-auto px-6 lg:px-8">
+            <AnimatedSection delay={300}>
+              <Card className="p-6 border border-primary/10 bg-gradient-to-br from-card/80 via-card/50 to-card/30 backdrop-blur-md hover:shadow-xl hover:border-primary/30 transition-all duration-500">
+                <WeekView
+                  date={selectedDay}
+                  events={filteredEvents}
+                  onEventClick={handleEventClick}
+                  onEventUpdate={updateEvent}
+                  onBackToMonth={handleBackToMonth}
+                  onCreate={handleQuickCreate}
+                  onDateChange={setSelectedDay}
+                  onDelete={deleteEvent}
+                  showEventModal={showEventModal}
+                  selectedEvent={selectedEvent}
+                  onCloseModal={handleCloseModal}
+                  onEventSave={handleEventSave}
+                  onMonthViewClick={() => setCurrentView('month')}
+                />
+              </Card>
+            </AnimatedSection>
+          </div>
+        </section>
       )}
 
       {/* Timeline view */}
       {currentView === 'timeline' && (
-        <TimelineView
-          events={events}
-          onEventClick={handleEventClick}
-          onEventSave={handleEventSave}
-          onEventDelete={deleteEvent}
-        />
+        <section className="relative py-12 bg-gradient-to-b from-background via-primary/2 to-background">
+          <div className="container mx-auto px-6 lg:px-8">
+            <AnimatedSection delay={300}>
+              <Card className="p-6 border border-primary/10 bg-gradient-to-br from-card/80 via-card/50 to-card/30 backdrop-blur-md hover:shadow-xl hover:border-primary/30 transition-all duration-500">
+                <TimelineView
+                  events={events}
+                  onEventClick={handleEventClick}
+                  onEventSave={handleEventSave}
+                  onEventDelete={deleteEvent}
+                />
+              </Card>
+            </AnimatedSection>
+          </div>
+        </section>
       )}
 
       {/* Day view */}
       {currentView === 'day' && (
-        <DayView
-          date={selectedDay}
-          events={filteredEvents}
-          onEventClick={handleEventClick}
-          onEventUpdate={updateEvent}
-          onBackToMonth={handleBackToMonth}
-          onCreate={handleQuickCreate}
-          onDateChange={setSelectedDay}
-          onDelete={deleteEvent}
-          showEventModal={showEventModal}
-          selectedEvent={selectedEvent}
-          onCloseModal={handleCloseModal}
-          onEventSave={handleEventSave}
-        />
+        <section className="relative py-12 bg-gradient-to-b from-background via-primary/2 to-background">
+          <div className="container mx-auto px-6 lg:px-8">
+            <AnimatedSection delay={300}>
+              <Card className="p-6 border border-primary/10 bg-gradient-to-br from-card/80 via-card/50 to-card/30 backdrop-blur-md hover:shadow-xl hover:border-primary/30 transition-all duration-500">
+                <DayView
+                  date={selectedDay}
+                  events={filteredEvents}
+                  onEventClick={handleEventClick}
+                  onEventUpdate={updateEvent}
+                  onBackToMonth={handleBackToMonth}
+                  onCreate={handleQuickCreate}
+                  onDateChange={setSelectedDay}
+                  onDelete={deleteEvent}
+                  showEventModal={showEventModal}
+                  selectedEvent={selectedEvent}
+                  onCloseModal={handleCloseModal}
+                  onEventSave={handleEventSave}
+                />
+              </Card>
+            </AnimatedSection>
+          </div>
+        </section>
       )}
 
       {/* Integration setup modal */}
