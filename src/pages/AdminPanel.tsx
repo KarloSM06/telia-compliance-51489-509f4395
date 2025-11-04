@@ -8,9 +8,8 @@ import { UserStatsCards } from "@/components/admin/UserStatsCards";
 import { UserTable } from "@/components/admin/UserTable";
 import { UserFilters } from "@/components/admin/UserFilters";
 import { UserPermissionsDialog } from "@/components/admin/UserPermissionsDialog";
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ShieldCheck, RefreshCw, Download } from "lucide-react";
+import { ShieldCheck } from "lucide-react";
 import { AnimatedSection } from "@/components/shared/AnimatedSection";
 import hiemsLogoSnowflake from '@/assets/hiems-logo-snowflake.png';
 
@@ -76,36 +75,6 @@ export default function AdminPanel() {
   const handleEditPermissions = (user: User) => {
     setSelectedUser(user);
     setPermissionsDialogOpen(true);
-  };
-
-  const handleRefresh = async () => {
-    setLoading(true);
-    await fetchUsers();
-    toast.success('Användare uppdaterad');
-  };
-
-  const handleExport = () => {
-    const csvContent = [
-      ['Email', 'Roll', 'Rättigheter', 'Senast Inloggad', 'Skapad'].join(','),
-      ...filteredUsers.map((user) =>
-        [
-          user.email,
-          user.role,
-          user.permissions_count,
-          user.last_sign_in_at || 'Aldrig',
-          user.created_at,
-        ].join(',')
-      ),
-    ].join('\n');
-
-    const blob = new Blob([csvContent], { type: 'text/csv' });
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `användare-${new Date().toISOString().split('T')[0]}.csv`;
-    a.click();
-    window.URL.revokeObjectURL(url);
-    toast.success('Export klar');
   };
 
   // Filter users based on filters
@@ -225,16 +194,6 @@ export default function AdminPanel() {
                   </Badge>
                 </div>
                 
-                <div className="flex gap-2">
-                  <Button variant="outline" size="sm" onClick={handleRefresh} disabled={loading}>
-                    <RefreshCw className={`h-4 w-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
-                    Uppdatera
-                  </Button>
-                  <Button variant="outline" size="sm" onClick={handleExport}>
-                    <Download className="h-4 w-4 mr-2" />
-                    Exportera
-                  </Button>
-                </div>
               </div>
             </AnimatedSection>
           </div>
