@@ -23,6 +23,7 @@ import { Sparkles, Zap, Target, CheckCircle, Award, Users, Wrench, ArrowRight } 
 import { AuroraBackground } from "@/components/ui/aurora-background";
 import { AnimatedHero } from "@/components/ui/animated-hero";
 import IntegrationHero from "@/components/ui/integration-hero";
+import { ClientLogoCloud } from "@/components/ClientLogoCloud";
 
 export const ProductSelection = () => {
   const [isConsultationModalOpen, setIsConsultationModalOpen] = useState(false);
@@ -61,6 +62,9 @@ export const ProductSelection = () => {
 
         {/* Programmen vi jobbar med */}
         <IntegrationHero />
+
+        {/* Företag vi samarbetar med */}
+        <ClientLogoCloud />
 
         {/* Våra AI-paket / Lösningar */}
         <section id="paket" className="relative py-16 md:py-24">
