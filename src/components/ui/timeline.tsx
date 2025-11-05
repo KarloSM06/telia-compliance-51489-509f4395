@@ -3,6 +3,7 @@ import {
   useScroll,
   useTransform,
   motion,
+  useInView,
 } from "framer-motion";
 import React, { useEffect, useRef, useState } from "react";
 
@@ -31,6 +32,28 @@ export const Timeline = ({ data }: { data: TimelineEntry[] }) => {
   const heightTransform = useTransform(scrollYProgress, [0, 1], [0, height]);
   const opacityTransform = useTransform(scrollYProgress, [0, 0.1], [0, 1]);
 
+  const stepVariants = {
+    hidden: { opacity: 0, x: -50 },
+    visible: { 
+      opacity: 1, 
+      x: 0,
+      transition: { duration: 0.6 }
+    }
+  };
+
+  const cardVariants = {
+    hidden: { opacity: 0, x: 50, scale: 0.95 },
+    visible: { 
+      opacity: 1, 
+      x: 0,
+      scale: 1,
+      transition: { 
+        duration: 0.6,
+        delay: 0.2 
+      }
+    }
+  };
+
   return (
     <div
       className="w-full font-sans md:px-10"
@@ -46,28 +69,44 @@ export const Timeline = ({ data }: { data: TimelineEntry[] }) => {
       </div>
 
       <div ref={ref} className="relative max-w-7xl mx-auto pb-20">
-        {data.map((item, index) => (
-          <div
-            key={index}
-            className="flex justify-start pt-10 md:pt-40 md:gap-10"
-          >
-            <div className="sticky flex flex-col md:flex-row z-40 items-center top-40 self-start max-w-xs lg:max-w-sm md:w-full">
-              <div className="h-10 absolute left-3 md:left-3 w-10 rounded-full bg-background flex items-center justify-center">
-                <div className="h-4 w-4 rounded-full bg-primary border border-primary p-2" />
-              </div>
-              <h3 className="hidden md:block text-xl md:pl-20 md:text-5xl font-bold text-muted-foreground">
-                {item.title}
-              </h3>
-            </div>
+        {data.map((item, index) => {
+          const itemRef = useRef(null);
+          const isInView = useInView(itemRef, { once: true, margin: "-20%" });
+          
+          return (
+            <div
+              key={index}
+              ref={itemRef}
+              className="flex justify-start pt-10 md:pt-40 md:gap-10"
+            >
+              <motion.div 
+                className="sticky flex flex-col md:flex-row z-40 items-center top-40 self-start max-w-xs lg:max-w-sm md:w-full"
+                variants={stepVariants}
+                initial="hidden"
+                animate={isInView ? "visible" : "hidden"}
+              >
+                <div className="h-10 absolute left-3 md:left-3 w-10 rounded-full bg-background flex items-center justify-center">
+                  <div className="h-4 w-4 rounded-full bg-primary border border-primary p-2" />
+                </div>
+                <h3 className="hidden md:block text-xl md:pl-20 md:text-5xl font-bold text-muted-foreground">
+                  {item.title}
+                </h3>
+              </motion.div>
 
-            <div className="relative pl-20 pr-4 md:pl-4 w-full">
-              <h3 className="md:hidden block text-2xl mb-4 text-left font-bold text-muted-foreground">
-                {item.title}
-              </h3>
-              {item.content}
+              <motion.div 
+                className="relative pl-20 pr-4 md:pl-4 w-full"
+                variants={cardVariants}
+                initial="hidden"
+                animate={isInView ? "visible" : "hidden"}
+              >
+                <h3 className="md:hidden block text-2xl mb-4 text-left font-bold text-muted-foreground">
+                  {item.title}
+                </h3>
+                {item.content}
+              </motion.div>
             </div>
-          </div>
-        ))}
+          );
+        })}
         <div
           style={{
             height: height + "px",
