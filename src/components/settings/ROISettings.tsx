@@ -69,7 +69,62 @@ export function ROISettings() {
 
   return (
     <div className="space-y-6">
-      <PremiumCard className="animate-scale-in">
+      {/* Conversion Rate - Primary Setting */}
+      <PremiumCard className="animate-scale-in border-primary/50">
+        <PremiumCardHeader>
+          <div className="flex items-center gap-3">
+            <div className="p-2 bg-primary/10 rounded-lg">
+              <Sparkles className="h-5 w-5 text-primary" />
+            </div>
+            <div>
+              <PremiumCardTitle>Konverteringsgrad</PremiumCardTitle>
+              <PremiumCardDescription>
+                Hur stor andel av bokade möten blir betalande kunder?
+              </PremiumCardDescription>
+            </div>
+          </div>
+        </PremiumCardHeader>
+        <PremiumCardContent className="space-y-4">
+          <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <Label className="text-base font-semibold">
+                Möte → Betalning
+              </Label>
+              <div className="flex items-center gap-2">
+                <span className="text-3xl font-bold text-primary">
+                  {meetingProbability}%
+                </span>
+              </div>
+            </div>
+            
+            <Slider
+              value={[meetingProbability]}
+              onValueChange={(value) => setMeetingProbability(value[0])}
+              max={100}
+              step={5}
+              className="w-full"
+            />
+            
+            <div className="grid grid-cols-3 gap-2 text-xs text-muted-foreground">
+              <div className="text-left">0%</div>
+              <div className="text-center">50%</div>
+              <div className="text-right">100%</div>
+            </div>
+          </div>
+
+          <div className="bg-muted/50 rounded-lg p-4 space-y-2">
+            <p className="text-sm font-medium">💡 Vad betyder detta?</p>
+            <p className="text-xs text-muted-foreground">
+              Detta påverkar direkt hur ROI beräknas från dina bokningar. 
+              Om du har {meetingProbability}% konvertering betyder det att av 100 bokade möten 
+              blir {meetingProbability} betalande kunder.
+            </p>
+          </div>
+        </PremiumCardContent>
+      </PremiumCard>
+
+      {/* Business Information */}
+      <PremiumCard className="animate-scale-in" style={{ animationDelay: '50ms' }}>
         <PremiumCardHeader>
           <div className="flex items-center gap-3">
             <div className="p-2 bg-primary/10 rounded-lg">
@@ -105,22 +160,6 @@ export function ROISettings() {
                 placeholder="25000"
               />
             </div>
-          </div>
-          
-          <div className="space-y-2">
-            <Label>
-              Sannolikhet att möte leder till betalning: {meetingProbability}%
-            </Label>
-            <Slider
-              value={[meetingProbability]}
-              onValueChange={(value) => setMeetingProbability(value[0])}
-              max={100}
-              step={5}
-              className="w-full"
-            />
-            <p className="text-xs text-muted-foreground">
-              Baserat på din historiska data, hur stor är chansen att ett bokat möte blir en betalande kund?
-            </p>
           </div>
         </PremiumCardContent>
       </PremiumCard>
