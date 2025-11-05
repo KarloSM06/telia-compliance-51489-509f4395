@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import { servicesData } from "@/data/services";
 import { FeatureCard } from "@/components/ui/grid-feature-cards";
 import { EvervaultCard } from "@/components/ui/evervault-card";
-import DatabaseWithRestApi from "@/components/ui/database-with-rest-api";
 
 const AnimatedContainer = ({ 
   className, 
@@ -49,25 +48,6 @@ export const ServicesGrid = () => {
             <br />
             <span className="font-semibold text-foreground">Allt vi skapar kan ägas av dig, helt utan beroenden.</span>
           </p>
-        </AnimatedContainer>
-
-        {/* All Din AI i Ett System - Visual */}
-        <AnimatedContainer delay={0.2} className="flex justify-center py-8">
-          <DatabaseWithRestApi
-            title="All din AI i ett system"
-            circleText="AI"
-            badgeTexts={{
-              first: "RAG",
-              second: "ML",
-              third: "NLP",
-              fourth: "Vision"
-            }}
-            buttonTexts={{
-              first: "Hiems",
-              second: "AI_Suite"
-            }}
-            lightColor="hsl(var(--primary))"
-          />
         </AnimatedContainer>
 
         <AnimatedContainer
