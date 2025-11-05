@@ -118,11 +118,11 @@ export const UnifiedDashboard = () => {
 
           {/* Data Flow Visualization */}
           <AnimatedContainer delay={1.0} className="flex justify-center mt-16">
-            <DatabaseWithRestApi className="mx-auto" circleText="API" title="Centraliserad Datahantering via REST API" badgeTexts={{
-            first: "CRM Data",
-            second: "AI Agent",
-            third: "Analytics",
-            fourth: "Reports"
+            <DatabaseWithRestApi className="mx-auto scale-125" circleText="API" title="Centraliserad Datahantering via REST API" badgeTexts={{
+            first: "Samtal",
+            second: "SMS",
+            third: "Mail",
+            fourth: "AI"
           }} buttonTexts={{
             first: "Hiems",
             second: "Dashboard"
