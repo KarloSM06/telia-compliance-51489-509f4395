@@ -25,6 +25,7 @@ import { AnimatedHero } from "@/components/ui/animated-hero";
 import IntegrationHero from "@/components/ui/integration-hero";
 import { ClientLogoCloud } from "@/components/ClientLogoCloud";
 import { ServicesGrid } from "@/components/home/ServicesGrid";
+import { UnifiedDashboard } from "@/components/home/UnifiedDashboard";
 
 export const ProductSelection = () => {
   const [isConsultationModalOpen, setIsConsultationModalOpen] = useState(false);
@@ -64,6 +65,9 @@ export const ProductSelection = () => {
 
         {/* Våra Tjänster & Teknologier */}
         <ServicesGrid />
+
+        {/* All Data på Ett Ställe */}
+        <UnifiedDashboard />
 
         {/* Våra AI-paket / Lösningar */}
         <StickyPackageCards 
