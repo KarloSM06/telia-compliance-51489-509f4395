@@ -40,10 +40,10 @@ export const UnifiedEcosystem: React.FC<UnifiedEcosystemProps> = ({
   const imageOrderClass = reverseLayout ? "md:col-start-1" : "";
 
   return (
-    <section className="relative py-24 md:py-48 overflow-hidden">
-      <div className="container max-w-[1220px] w-full px-6 md:px-10 relative z-10 mx-auto">
+    <section className="relative py-32 md:py-64 overflow-hidden">
+      <div className="container max-w-[1440px] w-full px-6 md:px-10 relative z-10 mx-auto">
         <motion.div
-          className={`grid grid-cols-1 gap-16 md:gap-8 w-full items-center ${layoutClasses}`}
+          className={`grid grid-cols-1 gap-20 md:gap-12 w-full items-center ${layoutClasses}`}
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"
@@ -51,28 +51,28 @@ export const UnifiedEcosystem: React.FC<UnifiedEcosystemProps> = ({
         >
           {/* Text Content */}
           <motion.div
-            className={`flex flex-col items-start gap-4 mt-10 md:mt-0 max-w-[546px] mx-auto md:mx-0 ${textOrderClass}`}
+            className={`flex flex-col items-start gap-6 mt-10 md:mt-0 max-w-[640px] mx-auto md:mx-0 ${textOrderClass}`}
             variants={itemVariants}
           >
-            <div className="space-y-2 md:space-y-1">
-              <h2 className="text-foreground text-3xl md:text-[40px] font-semibold leading-tight md:leading-[53px]">
+            <div className="space-y-3 md:space-y-2">
+              <h2 className="text-foreground text-4xl md:text-[56px] font-bold leading-tight md:leading-[68px]">
                 Allt administrativt i ett ekosystem
               </h2>
             </div>
 
-            <p className="text-muted-foreground text-sm md:text-[15px] leading-6">
+            <p className="text-muted-foreground text-base md:text-lg leading-7 md:leading-8">
               Samla all er administration på ett ställe. Från kundhantering och fakturering till projekt och rapporter - allt integrerat i ett smidigt system som sparar tid och minskar komplexitet.
             </p>
           </motion.div>
 
           {/* App mockup/Image Content */}
           <motion.div
-            className={`relative mt-10 md:mt-0 mx-auto ${imageOrderClass} w-full max-w-[300px] md:max-w-[471px]`}
+            className={`relative mt-10 md:mt-0 mx-auto ${imageOrderClass} w-full max-w-[400px] md:max-w-[640px]`}
             variants={itemVariants}
           >
             {/* Decorative Background Element */}
             <motion.div
-              className="absolute w-[300px] h-[317px] md:w-[472px] md:h-[500px] bg-card/50 rounded-[32px] z-0 backdrop-blur-sm"
+              className="absolute w-[380px] h-[380px] md:w-[640px] md:h-[640px] bg-card/50 rounded-[32px] z-0 backdrop-blur-sm"
               style={{
                 top: reverseLayout ? 'auto' : '10%',
                 bottom: reverseLayout ? '10%' : 'auto',
@@ -96,7 +96,7 @@ export const UnifiedEcosystem: React.FC<UnifiedEcosystemProps> = ({
 
             {/* Main Mockup Card */}
             <motion.div
-              className="relative w-full h-[405px] md:h-[637px] bg-card/10 rounded-[32px] backdrop-blur-[15px] backdrop-brightness-[100%] border border-border/50 z-10 overflow-hidden"
+              className="relative w-full h-[520px] md:h-[820px] bg-card/10 rounded-[32px] backdrop-blur-[15px] backdrop-brightness-[100%] border border-border/50 z-10 overflow-hidden shadow-2xl"
               initial={{ y: reverseLayout ? 0 : 0 }}
               whileInView={{ y: reverseLayout ? 20 : 30 }}
               transition={{ duration: 1.2, delay: 0.1 }}
