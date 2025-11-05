@@ -87,6 +87,9 @@ export const ProductSelection = () => {
         <section id="process" className="relative py-12">
           <WorkflowTimeline />
         </section>
+
+        {/* Kontakt / CTA */}
+        <ConsultationCTA />
       </AuroraBackground>
 
       {/* Branschspecifika lösningar */}
@@ -128,9 +131,6 @@ export const ProductSelection = () => {
 
       {/* Blogg / Insikter */}
       
-
-      {/* Kontakt / CTA */}
-      <ConsultationCTA />
 
       <ConsultationModal open={isConsultationModalOpen} onOpenChange={setIsConsultationModalOpen} />
     </div>;
