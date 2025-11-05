@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { CardEnhanced, CardEnhancedContent } from '@/components/ui/card-enhanced';
 import { LucideIcon } from 'lucide-react';
 import { Area, AreaChart, ResponsiveContainer, Tooltip } from 'recharts';
+import { cn } from '@/lib/utils';
+import hiemsLogoSnowflake from '@/assets/hiems-logo-snowflake.png';
 
 export interface AreaChartStatCardProps {
   title: string;
@@ -29,13 +31,43 @@ export function AreaChartStatCard({
   formatValue,
   trend,
 }: AreaChartStatCardProps) {
+  const [isHovered, setIsHovered] = useState(false);
+
   return (
-    <CardEnhanced className="group transition-all duration-300 hover:shadow-card hover:scale-[1.02]">
-      <CardEnhancedContent className="space-y-5">
+    <div
+      className={cn(
+        "group relative overflow-hidden rounded-xl border bg-card shadow-sm transition-all duration-300",
+        "hover:shadow-elegant hover:scale-[1.02] hover:-translate-y-1",
+        "bg-gradient-to-br from-background via-background to-primary/5"
+      )}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
+      {/* Background snowflake decoration */}
+      <div className="absolute -top-8 -right-8 w-32 h-32 opacity-[0.03] pointer-events-none transition-all duration-500 group-hover:opacity-[0.06] group-hover:rotate-12">
+        <img src={hiemsLogoSnowflake} alt="" className="w-full h-full object-contain" />
+      </div>
+
+      {/* Gradient overlay on hover */}
+      <div className={cn(
+        "absolute inset-0 bg-gradient-to-br from-primary/0 via-primary/0 to-primary/10 opacity-0 transition-opacity duration-300",
+        isHovered && "opacity-100"
+      )} />
+
+      {/* Glow effect */}
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_120%,hsl(var(--primary)/0.1),transparent_50%)] opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+
+      <CardEnhancedContent className="space-y-5 relative z-10">
         {/* Header med ikon och titel */}
         <div className="flex items-center gap-2">
-          <Icon className="size-5" style={{ color }} />
-          <span className="text-base font-semibold text-foreground">{title}</span>
+          <div className={cn(
+            "p-2 rounded-lg transition-all duration-300",
+            "bg-gradient-to-br from-primary/10 to-primary/5",
+            "group-hover:scale-110 group-hover:rotate-3"
+          )}>
+            <Icon className="size-5" style={{ color }} />
+          </div>
+          <span className="text-base font-semibold text-foreground transition-all duration-300 group-hover:text-primary">{title}</span>
         </div>
 
         <div className="flex items-end gap-2.5 justify-between">
@@ -45,11 +77,16 @@ export function AreaChartStatCard({
             <div className="text-sm text-muted-foreground whitespace-nowrap">{period}</div>
 
             {/* Värde */}
-            <div className="text-3xl font-bold text-foreground tracking-tight">{value}</div>
+            <div className="text-3xl font-bold text-foreground tracking-tight transition-all duration-300 group-hover:text-primary">
+              {value}
+            </div>
 
             {/* Trend */}
             {trend && (
-              <div className={`text-xs font-medium ${trend.isPositive ? 'text-success' : 'text-destructive'}`}>
+              <div className={cn(
+                "text-xs font-medium transition-all duration-300",
+                trend.isPositive ? "text-success" : "text-destructive"
+              )}>
                 {trend.isPositive ? '↗' : '↘'} {Math.abs(trend.value).toFixed(1)}%
               </div>
             )}
@@ -85,7 +122,7 @@ export function AreaChartStatCard({
                       const displayValue = formatValue ? formatValue(val) : val.toLocaleString('sv-SE');
 
                       return (
-                        <div className="bg-popover/95 backdrop-blur-sm border border-border shadow-lg rounded-lg p-2 pointer-events-none">
+                        <div className="bg-popover/95 backdrop-blur-sm border border-border shadow-elegant rounded-lg p-2 pointer-events-none">
                           <p className="text-sm font-semibold text-popover-foreground">{displayValue}</p>
                         </div>
                       );
@@ -114,6 +151,13 @@ export function AreaChartStatCard({
           </div>
         </div>
       </CardEnhancedContent>
-    </CardEnhanced>
+
+      {/* Bottom gradient bar */}
+      <div className={cn(
+        "absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-primary/0 via-primary to-primary/0",
+        "opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+      )} />
+    </div>
   );
 }
+
