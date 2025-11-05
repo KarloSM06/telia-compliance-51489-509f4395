@@ -17,7 +17,7 @@ export default function IntegrationHero() {
   const row1 = ALL_PROGRAM_LOGOS.slice(0, halfLength);
   const row2 = ALL_PROGRAM_LOGOS.slice(halfLength);
 
-  return <section className="relative py-12 md:py-16 overflow-hidden">
+  return <section className="relative py-6 md:py-8 overflow-hidden">
       <div className="relative w-full px-6 md:px-12 text-center">
         
         <h1 className="text-3xl lg:text-4xl font-bold tracking-tight text-foreground mb-3">
@@ -28,7 +28,7 @@ export default function IntegrationHero() {
         </p>
         
 
-        <div className="mt-8 md:mt-10 overflow-hidden relative pb-2">
+        <div className="mt-6 md:mt-8 overflow-hidden relative pb-2">
           {/* Rad 1 - scrollar åt vänster med pause vid hover */}
           <div className="flex gap-8 md:gap-10 whitespace-nowrap animate-scroll-left hover:[animation-play-state:paused]">
             {repeatedIcons(row1, 10).map((src, i) => <div key={i} className="h-16 w-16 md:h-20 md:w-20 flex-shrink-0 rounded-xl bg-card shadow-md flex items-center justify-center border border-border p-3 transition-transform hover:scale-110">
