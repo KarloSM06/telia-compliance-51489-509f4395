@@ -21,7 +21,7 @@ import antonImage from "@/assets/anton-sallnas.png";
 import emilImage from "@/assets/emil-westerberg.png";
 import { Sparkles, Zap, Target, CheckCircle, Award, Users, Wrench, ArrowRight } from "lucide-react";
 import { AuroraBackground } from "@/components/ui/aurora-background";
-import { motion } from "framer-motion";
+import { AnimatedHero } from "@/components/ui/animated-hero";
 
 export const ProductSelection = () => {
   const [isConsultationModalOpen, setIsConsultationModalOpen] = useState(false);
@@ -51,49 +51,11 @@ export const ProductSelection = () => {
       
       {/* Hero Section and Packages with Aurora Background */}
       <AuroraBackground className="h-auto min-h-[200vh]">
-        <section id="hero" className="relative py-40 lg:py-56 min-h-screen flex items-center">
-          <motion.div
-            initial={{ opacity: 0.0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{
-              delay: 0.3,
-              duration: 0.8,
-              ease: "easeInOut",
-            }}
-            className="relative flex flex-col gap-8 items-center justify-center px-4 max-w-7xl mx-auto"
-          >
-            <h1 className="text-6xl sm:text-7xl lg:text-8xl font-extrabold text-center leading-tight">
-              <span className="text-foreground dark:text-white">
-                Skala din verksamhet -{" "}
-              </span>
-              <span className="bg-gradient-gold bg-clip-text text-transparent">
-                Utan att anställa fler
-              </span>
-            </h1>
-            
-            <p className="text-xl sm:text-2xl lg:text-3xl text-foreground/90 dark:text-neutral-200 leading-relaxed max-w-4xl mx-auto font-light text-center">
-              Hiems levererar ett komplett AI-ekosystem som automatiserar kundflöden, 
-              försäljning, bokningar, administration och dataanalys.
-            </p>
-            
-            <div className="flex flex-col sm:flex-row gap-6 justify-center mt-8">
-              <Button 
-                size="lg" 
-                className="bg-gradient-gold text-primary hover:shadow-glow transition-all duration-300 font-bold text-xl px-12 py-8 h-auto" 
-                onClick={() => scrollToSection('paket')}
-              >
-                Se våra paket
-              </Button>
-              <Button 
-                size="lg" 
-                variant="outline" 
-                className="border-2 border-foreground dark:border-white text-foreground dark:text-white bg-background/10 dark:bg-white/10 hover:bg-foreground hover:text-background dark:hover:bg-white dark:hover:text-black transition-all duration-300 font-bold text-xl px-12 py-8 h-auto" 
-                onClick={() => setIsConsultationModalOpen(true)}
-              >
-                Boka demo
-              </Button>
-            </div>
-          </motion.div>
+        <section id="hero" className="relative min-h-screen flex items-center">
+          <AnimatedHero 
+            onBookDemo={() => setIsConsultationModalOpen(true)}
+            onViewPackages={() => scrollToSection('paket')}
+          />
         </section>
 
         {/* Våra AI-paket / Lösningar */}
