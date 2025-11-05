@@ -43,7 +43,7 @@ export const UnifiedEcosystem: React.FC<UnifiedEcosystemProps> = ({
     <section className="relative py-32 md:py-64 overflow-hidden">
       <div className="container max-w-[1440px] w-full px-6 md:px-10 relative z-10 mx-auto">
         <motion.div
-          className={`grid grid-cols-1 gap-24 md:gap-20 w-full items-center ${layoutClasses}`}
+          className={`grid grid-cols-1 gap-32 md:gap-32 w-full items-center ${layoutClasses}`}
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"
@@ -76,8 +76,8 @@ export const UnifiedEcosystem: React.FC<UnifiedEcosystemProps> = ({
               style={{
                 top: reverseLayout ? 'auto' : '5%',
                 bottom: reverseLayout ? '5%' : 'auto',
-                left: reverseLayout ? 'auto' : '-30%',
-                right: reverseLayout ? '-30%' : 'auto',
+                left: reverseLayout ? 'auto' : '-15%',
+                right: reverseLayout ? '-15%' : 'auto',
                 transform: reverseLayout ? 'translate(0, 0)' : 'translateY(8%)',
                 filter: 'blur(1px)'
               }}
