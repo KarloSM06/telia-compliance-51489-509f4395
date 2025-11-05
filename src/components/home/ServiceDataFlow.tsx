@@ -59,7 +59,7 @@ export const ServiceDataFlow = () => {
     <div className="mx-auto max-w-7xl px-6 md:px-8">
       <AnimatedContainer className="mx-auto max-w-5xl text-center mb-16">
         <h2 className="text-3xl font-bold tracking-wide text-balance md:text-4xl lg:text-5xl mb-6">
-          <span className="bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent">
+          <span className="text-primary">
             Så Flödar Data Genom Våra Tjänster
           </span>
         </h2>
