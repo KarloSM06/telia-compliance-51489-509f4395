@@ -2,13 +2,10 @@ import { Timeline } from "@/components/ui/timeline";
 import { Calendar, FileText, Settings, CheckCircle, Rocket } from "lucide-react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { ReactNode } from "react";
-
 export const WorkflowTimeline = () => {
-  const data = [
-    {
-      title: "Steg 1",
-      content: (
-        <Card className="group border-0 bg-muted shadow-none">
+  const data = [{
+    title: "Steg 1",
+    content: <Card className="group border-0 bg-muted shadow-none">
           <CardHeader className="pb-3">
             <CardDecorator>
               <Calendar className="h-6 w-6 text-primary" />
@@ -32,12 +29,9 @@ export const WorkflowTimeline = () => {
             </p>
           </CardContent>
         </Card>
-      ),
-    },
-    {
-      title: "Steg 2",
-      content: (
-        <Card className="group border-0 bg-muted shadow-none">
+  }, {
+    title: "Steg 2",
+    content: <Card className="group border-0 bg-muted shadow-none">
           <CardHeader className="pb-3">
             <CardDecorator>
               <FileText className="h-6 w-6 text-primary" />
@@ -61,12 +55,9 @@ export const WorkflowTimeline = () => {
             </p>
           </CardContent>
         </Card>
-      ),
-    },
-    {
-      title: "Steg 3",
-      content: (
-        <Card className="group border-0 bg-muted shadow-none">
+  }, {
+    title: "Steg 3",
+    content: <Card className="group border-0 bg-muted shadow-none">
           <CardHeader className="pb-3">
             <CardDecorator>
               <Settings className="h-6 w-6 text-primary" />
@@ -90,12 +81,9 @@ export const WorkflowTimeline = () => {
             </p>
           </CardContent>
         </Card>
-      ),
-    },
-    {
-      title: "Steg 4",
-      content: (
-        <Card className="group border-0 bg-muted shadow-none">
+  }, {
+    title: "Steg 4",
+    content: <Card className="group border-0 bg-muted shadow-none">
           <CardHeader className="pb-3">
             <CardDecorator>
               <CheckCircle className="h-6 w-6 text-primary" />
@@ -119,12 +107,9 @@ export const WorkflowTimeline = () => {
             </p>
           </CardContent>
         </Card>
-      ),
-    },
-    {
-      title: "Steg 5",
-      content: (
-        <Card className="group border-0 bg-muted shadow-none">
+  }, {
+    title: "Steg 5",
+    content: <Card className="group border-0 bg-muted shadow-none">
           <CardHeader className="pb-3">
             <CardDecorator>
               <Rocket className="h-6 w-6 text-primary" />
@@ -148,16 +133,14 @@ export const WorkflowTimeline = () => {
             </p>
           </CardContent>
         </Card>
-      ),
-    },
-  ];
-
+  }];
   return <Timeline data={data} />;
 };
-
-const CardDecorator = ({ children }: { children: ReactNode }) => (
-  <div aria-hidden className="relative mx-auto size-24 md:size-32 [mask-image:radial-gradient(ellipse_50%_50%_at_50%_50%,#000_70%,transparent_100%)]">
-    <div className="absolute inset-0 bg-[linear-gradient(to_right,hsl(var(--border))_1px,transparent_1px),linear-gradient(to_bottom,hsl(var(--border))_1px,transparent_1px)] bg-[size:24px_24px] opacity-10"/>
-    <div className="bg-background absolute inset-0 m-auto flex size-12 items-center justify-center border-t border-l">{children}</div>
-  </div>
-);
+const CardDecorator = ({
+  children
+}: {
+  children: ReactNode;
+}) => <div aria-hidden className="relative mx-auto size-24 md:size-32 [mask-image:radial-gradient(ellipse_50%_50%_at_50%_50%,#000_70%,transparent_100%)]">
+    <div className="absolute inset-0 bg-[linear-gradient(to_right,hsl(var(--border))_1px,transparent_1px),linear-gradient(to_bottom,hsl(var(--border))_1px,transparent_1px)] bg-[size:24px_24px] opacity-10" />
+    
+  </div>;
