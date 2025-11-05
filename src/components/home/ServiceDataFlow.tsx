@@ -1,6 +1,6 @@
 import { motion, useReducedMotion } from "framer-motion";
-import { Card } from "@/components/ui/card";
-import { Phone, Brain, Mic, Workflow, BarChart3, FileText, Sparkles, Database, ArrowRight, MessageSquare, Users } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Phone, Brain, Workflow, BarChart3, FileText, Database, MessageSquare, Users, Shield, TrendingUp } from "lucide-react";
 const AnimatedContainer = ({
   className,
   delay = 0.1,
@@ -14,128 +14,212 @@ const AnimatedContainer = ({
   if (shouldReduceMotion) {
     return <div className={className}>{children}</div>;
   }
-  return;
+  return <motion.div 
+    initial={{ opacity: 0, y: 20 }}
+    whileInView={{ opacity: 1, y: 0 }}
+    viewport={{ once: true }}
+    transition={{ delay, duration: 0.5 }}
+    className={className}
+  >
+    {children}
+  </motion.div>;
 };
-interface ServiceFlowProps {
-  icon: any;
-  title: string;
-  steps: string[];
-  delay?: number;
-}
-const ServiceFlow = ({
+const FlowCard = ({
   icon: Icon,
   title,
-  steps,
-  delay = 0
-}: ServiceFlowProps) => {
-  const shouldReduceMotion = useReducedMotion();
-  return <motion.div initial={!shouldReduceMotion ? {
-    scale: 0.95,
-    opacity: 0
-  } : {}} whileInView={!shouldReduceMotion ? {
-    scale: 1,
-    opacity: 1
-  } : {}} viewport={{
-    once: true
-  }} transition={{
-    delay,
-    duration: 0.6
-  }}>
-      <Card className="p-6 bg-card/30 backdrop-blur border-primary/20 hover:border-primary/40 transition-all duration-300 h-full">
-        <div className="flex items-center gap-3 mb-4">
-          <div className="p-3 rounded-lg bg-primary/10 border border-primary/20">
-            <Icon className="size-6 text-primary" />
-          </div>
-          <h3 className="font-bold text-lg text-foreground">{title}</h3>
+  description,
+  delay = 0,
+  variant = "default"
+}: {
+  icon: any;
+  title: string;
+  description: string;
+  delay?: number;
+  variant?: "default" | "large" | "tall";
+}) => {
+  return <AnimatedContainer delay={delay}>
+    <Card className={`relative overflow-hidden ${variant === "large" ? "col-span-full sm:col-span-3 lg:col-span-2" : variant === "tall" ? "col-span-full lg:col-span-2" : "col-span-full sm:col-span-3 lg:col-span-2"}`}>
+      <CardContent className="pt-6">
+        <div className="relative flex aspect-square size-12 rounded-full border before:absolute before:-inset-2 before:rounded-full before:border dark:border-white/10 dark:before:border-white/5">
+          <Icon className="m-auto size-6 text-primary" strokeWidth={1.5} />
         </div>
-        
-        <div className="space-y-3">
-          {steps.map((step, index) => <motion.div key={index} initial={!shouldReduceMotion ? {
-          x: -20,
-          opacity: 0
-        } : {}} whileInView={!shouldReduceMotion ? {
-          x: 0,
-          opacity: 1
-        } : {}} viewport={{
-          once: true
-        }} transition={{
-          delay: delay + 0.1 * (index + 1),
-          duration: 0.5
-        }} className="flex items-start gap-3">
-              <div className="flex items-center justify-center min-w-[24px] h-6 rounded-full bg-primary/20 text-xs font-bold text-primary">
-                {index + 1}
-              </div>
-              <div className="flex items-center gap-2 flex-1">
-                <p className="text-sm text-muted-foreground">{step}</p>
-                {index < steps.length - 1 && <ArrowRight className="size-4 text-primary/40 flex-shrink-0" />}
-              </div>
-            </motion.div>)}
+        <div className="relative z-10 mt-6 space-y-2">
+          <h2 className="text-lg font-semibold text-foreground">{title}</h2>
+          <p className="text-sm text-muted-foreground">{description}</p>
         </div>
-      </Card>
-    </motion.div>;
+      </CardContent>
+    </Card>
+  </AnimatedContainer>;
 };
 export const ServiceDataFlow = () => {
-  const services = [{
-    icon: Phone,
-    title: "AI Receptionist",
-    steps: ["Kund ringer in", "AI svarar naturligt på svenska", "Samlar information & bokar", "Uppdaterar CRM automatiskt", "Skickar bekräftelse"]
-  }, {
-    icon: MessageSquare,
-    title: "Chatbot & Kommunikation",
-    steps: ["Kund skriver meddelande", "AI analyserar frågan", "Hämtar relevant info från databas", "Genererar personligt svar", "Loggar interaktion i CRM"]
-  }, {
-    icon: Brain,
-    title: "AI Modeller (LLM)",
-    steps: ["Input från användare", "AI-modell processar data", "Genererar intelligent output", "Kvalitetskontroll & validering", "Sparar resultat i system"]
-  }, {
-    icon: Workflow,
-    title: "Automation & Integration",
-    steps: ["Trigger aktiveras", "Workflow startar automatiskt", "Data synkas mellan system", "Actions körs i sekvens", "Notifiering vid slutfört"]
-  }, {
-    icon: BarChart3,
-    title: "CRM & Analytics",
-    steps: ["Data samlas från alla kanaler", "AI analyserar mönster", "Genererar insights i realtid", "Uppdaterar dashboards", "Skickar rapporter"]
-  }, {
-    icon: FileText,
-    title: "Offert & Faktura AI",
-    steps: ["Förfrågan inkommer", "AI analyserar behov", "Genererar offert automatiskt", "Kund godkänner", "Faktura skapas & skickas"]
-  }, {
-    icon: Database,
-    title: "RAG & Data-agenter",
-    steps: ["Fråga ställs i naturligt språk", "AI söker i vektordatabas", "Hämtar relevant kontext", "Genererar korrekt svar", "Lär sig från interaktionen"]
-  }, {
-    icon: Users,
-    title: "Totala Ekosystem",
-    steps: ["Kartläggning av verksamhet", "Design av smart ekosystem", "Integration av alla system", "AI optimerar flöden", "Kontinuerlig förbättring"]
-  }];
-  return <section className="relative py-24">
-      <div className="mx-auto w-full max-w-7xl space-y-12 px-4">
-        <AnimatedContainer className="mx-auto max-w-3xl text-center">
-          <h2 className="text-3xl font-bold tracking-wide text-balance md:text-4xl lg:text-5xl xl:font-extrabold mb-4">
-            <span className="bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent">
-              🔄 Så Flödar Data Genom Våra Tjänster
-            </span>
-          </h2>
-          <p className="text-muted-foreground text-sm tracking-wide text-balance md:text-base">
-            Varje AI-tjänst har sitt eget intelligenta dataflöde från kundinput till färdig action.
-            Tillsammans skapar de ett komplett ekosystem där all data samlas i er centrala dashboard.
-          </p>
-        </AnimatedContainer>
+  return <section className="bg-background/50 py-16 md:py-32">
+    <div className="mx-auto max-w-3xl lg:max-w-6xl px-6">
+      <AnimatedContainer className="mx-auto max-w-3xl text-center mb-12">
+        <h2 className="text-3xl font-bold tracking-wide text-balance md:text-4xl lg:text-5xl xl:font-extrabold mb-4">
+          <span className="bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent">
+            Så Flödar Data Genom Våra Tjänster
+          </span>
+        </h2>
+        <p className="text-muted-foreground text-sm tracking-wide text-balance md:text-base">
+          Varje AI-tjänst har sitt eget intelligenta dataflöde från kundinput till färdig action.
+          Tillsammans skapar de ett komplett ekosystem där all data samlas i er centrala dashboard.
+        </p>
+      </AnimatedContainer>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {services.map((service, index) => <ServiceFlow key={service.title} icon={service.icon} title={service.title} steps={service.steps} delay={0.1 * index} />)}
-        </div>
-
-        <AnimatedContainer delay={0.8} className="text-center">
-          <Card className="p-8 bg-gradient-to-br from-primary/10 via-primary/5 to-background border-primary/30 shadow-glow max-w-3xl mx-auto">
-            <Database className="size-12 text-primary mx-auto mb-4" />
-            <h3 className="text-2xl font-bold mb-2 text-foreground">Allt Samlas i Ett</h3>
-            <p className="text-muted-foreground">
-              Oavsett vilken tjänst som genererar data - AI-samtal, chatbot, automation eller analytics - 
-              så samlas allt i er Hiems Dashboard. En enda källa till sanning för hela verksamheten.
-            </p>
+      <div className="relative">
+        <div className="relative z-10 grid grid-cols-6 gap-3">
+          {/* Main hero card with stats */}
+          <Card className="relative col-span-full flex overflow-hidden lg:col-span-2">
+            <CardContent className="relative m-auto size-fit pt-6">
+              <div className="relative flex h-24 w-56 items-center">
+                <svg className="text-muted absolute inset-0 size-full" viewBox="0 0 254 104" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path
+                    d="M112.891 97.7022C140.366 97.0802 171.004 94.6715 201.087 87.5116C210.43 85.2881 219.615 82.6412 228.284 78.2473C232.198 76.3179 235.905 73.9942 239.348 71.3124C241.85 69.2557 243.954 66.7571 245.555 63.9408C249.34 57.3235 248.281 50.5341 242.498 45.6109C239.033 42.7237 235.228 40.2703 231.169 38.3054C219.443 32.7209 207.141 28.4382 194.482 25.534C184.013 23.1927 173.358 21.7755 162.64 21.2989C161.376 21.3512 160.113 21.181 158.908 20.796C158.034 20.399 156.857 19.1682 156.962 18.4535C157.115 17.8927 157.381 17.3689 157.743 16.9139C158.104 16.4588 158.555 16.0821 159.067 15.8066C160.14 15.4683 161.274 15.3733 162.389 15.5286C179.805 15.3566 196.626 18.8373 212.998 24.462C220.978 27.2494 228.798 30.4747 236.423 34.1232C240.476 36.1159 244.202 38.7131 247.474 41.8258C254.342 48.2578 255.745 56.9397 251.841 65.4892C249.793 69.8582 246.736 73.6777 242.921 76.6327C236.224 82.0192 228.522 85.4602 220.502 88.2924C205.017 93.7847 188.964 96.9081 172.738 99.2109C153.442 101.949 133.993 103.478 114.506 103.79C91.1468 104.161 67.9334 102.97 45.1169 97.5831C36.0094 95.5616 27.2626 92.1655 19.1771 87.5116C13.839 84.5746 9.1557 80.5802 5.41318 75.7725C-0.54238 67.7259 -1.13794 59.1763 3.25594 50.2827C5.82447 45.3918 9.29572 41.0315 13.4863 37.4319C24.2989 27.5721 37.0438 20.9681 50.5431 15.7272C68.1451 8.8849 86.4883 5.1395 105.175 2.83669C129.045 0.0992292 153.151 0.134761 177.013 2.94256C197.672 5.23215 218.04 9.01724 237.588 16.3889C240.089 17.3418 242.498 18.5197 244.933 19.6446C246.627 20.4387 247.725 21.6695 246.997 23.615C246.455 25.1105 244.814 25.5605 242.63 24.5811C230.322 18.9961 217.233 16.1904 204.117 13.4376C188.761 10.3438 173.2 8.36665 157.558 7.52174C129.914 5.70776 102.154 8.06792 75.2124 14.5228C60.6177 17.8788 46.5758 23.2977 33.5102 30.6161C26.6595 34.3329 20.4123 39.0673 14.9818 44.658C12.9433 46.8071 11.1336 49.1622 9.58207 51.6855C4.87056 59.5336 5.61172 67.2494 11.9246 73.7608C15.2064 77.0494 18.8775 79.925 22.8564 82.3236C31.6176 87.7101 41.3848 90.5291 51.3902 92.5804C70.6068 96.5773 90.0219 97.7419 112.891 97.7022Z"
+                    fill="currentColor"
+                  />
+                </svg>
+                <span className="mx-auto block w-fit text-5xl font-semibold">AI</span>
+              </div>
+              <h2 className="mt-6 text-center text-3xl font-semibold">Intelligent</h2>
+            </CardContent>
           </Card>
-        </AnimatedContainer>
+
+          {/* AI Receptionist */}
+          <FlowCard
+            icon={Phone}
+            title="AI Receptionist"
+            description="Svarar naturligt på svenska, bokar möten och uppdaterar CRM automatiskt med AI-driven konversation."
+            delay={0.1}
+          />
+
+          {/* Chatbot & Kommunikation */}
+          <FlowCard
+            icon={MessageSquare}
+            title="Chatbot & Kommunikation"
+            description="Analyserar frågor, hämtar relevant info från databas och genererar personliga svar i realtid."
+            delay={0.15}
+          />
+
+          {/* AI Modeller */}
+          <Card className="relative col-span-full overflow-hidden sm:col-span-3 lg:col-span-2">
+            <CardContent className="pt-6">
+              <div className="relative flex aspect-square size-12 rounded-full border before:absolute before:-inset-2 before:rounded-full before:border dark:border-white/10 dark:before:border-white/5">
+                <Brain className="m-auto size-6 text-primary" strokeWidth={1.5} />
+              </div>
+              <div className="relative z-10 mt-6 space-y-2">
+                <h2 className="text-lg font-semibold text-foreground">AI Modeller (LLM)</h2>
+                <p className="text-sm text-muted-foreground">Processar data med avancerade språkmodeller för intelligent output och validering.</p>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Automation & Integration */}
+          <Card className="relative col-span-full overflow-hidden sm:col-span-3 lg:col-span-2">
+            <CardContent className="pt-6">
+              <div className="relative flex aspect-square size-12 rounded-full border before:absolute before:-inset-2 before:rounded-full before:border dark:border-white/10 dark:before:border-white/5">
+                <Workflow className="m-auto size-6 text-primary" strokeWidth={1.5} />
+              </div>
+              <div className="relative z-10 mt-6 space-y-2">
+                <h2 className="text-lg font-semibold text-foreground">Automation & Integration</h2>
+                <p className="text-sm text-muted-foreground">Synkar data mellan system och kör automatiska workflows vid triggers.</p>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Analytics Card with Graph */}
+          <Card className="relative col-span-full overflow-hidden lg:col-span-3">
+            <CardContent className="grid pt-6 sm:grid-cols-2">
+              <div className="relative z-10 flex flex-col justify-between space-y-12 lg:space-y-6">
+                <div className="relative flex aspect-square size-12 rounded-full border before:absolute before:-inset-2 before:rounded-full before:border dark:border-white/10 dark:before:border-white/5">
+                  <BarChart3 className="m-auto size-6 text-primary" strokeWidth={1.5} />
+                </div>
+                <div className="space-y-2">
+                  <h2 className="text-lg font-semibold text-foreground">CRM & Analytics</h2>
+                  <p className="text-sm text-muted-foreground">Analyserar mönster från alla kanaler och genererar insights i realtid.</p>
+                </div>
+              </div>
+              <div className="rounded-tl relative -mb-6 -mr-6 mt-6 h-fit border-l border-t p-6 py-6 sm:ml-6">
+                <div className="absolute left-3 top-2 flex gap-1">
+                  <span className="block size-2 rounded-full border dark:border-white/10 dark:bg-white/10"></span>
+                  <span className="block size-2 rounded-full border dark:border-white/10 dark:bg-white/10"></span>
+                  <span className="block size-2 rounded-full border dark:border-white/10 dark:bg-white/10"></span>
+                </div>
+                <svg className="w-full" viewBox="0 0 200 100" fill="none">
+                  <path
+                    className="text-primary"
+                    d="M0 80 L20 70 L40 75 L60 50 L80 55 L100 30 L120 40 L140 20 L160 35 L180 15 L200 25"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    fill="none"
+                  />
+                  <path
+                    d="M0 80 L20 70 L40 75 L60 50 L80 55 L100 30 L120 40 L140 20 L160 35 L180 15 L200 25 L200 100 L0 100 Z"
+                    fill="url(#statsGradient)"
+                    opacity="0.2"
+                  />
+                  <defs>
+                    <linearGradient id="statsGradient" x1="0" y1="0" x2="0" y2="100">
+                      <stop offset="0%" stopColor="hsl(var(--primary))" />
+                      <stop offset="100%" stopColor="hsl(var(--primary))" stopOpacity="0" />
+                    </linearGradient>
+                  </defs>
+                </svg>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Offert & Faktura */}
+          <Card className="relative col-span-full overflow-hidden lg:col-span-3">
+            <CardContent className="grid h-full pt-6 sm:grid-cols-2">
+              <div className="relative z-10 flex flex-col justify-between space-y-12 lg:space-y-6">
+                <div className="relative flex aspect-square size-12 rounded-full border before:absolute before:-inset-2 before:rounded-full before:border dark:border-white/10 dark:before:border-white/5">
+                  <FileText className="m-auto size-6 text-primary" strokeWidth={1.5} />
+                </div>
+                <div className="space-y-2">
+                  <h2 className="text-lg font-semibold text-foreground">Offert & Faktura AI</h2>
+                  <p className="text-sm text-muted-foreground">Analyserar behov och genererar offerter automatiskt med AI-precision.</p>
+                </div>
+              </div>
+              <div className="relative mt-6 flex items-center justify-center before:absolute before:inset-0 before:mx-auto before:w-px before:bg-border sm:-my-6 sm:-mr-6">
+                <div className="relative flex flex-col space-y-4 py-6">
+                  <div className="flex items-center gap-3">
+                    <Shield className="size-8 text-primary/60" />
+                    <TrendingUp className="size-8 text-primary" />
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* RAG & Data-agenter */}
+          <FlowCard
+            icon={Database}
+            title="RAG & Data-agenter"
+            description="Söker i vektordatabas, hämtar relevant kontext och genererar korrekta svar som lär sig över tid."
+            delay={0.2}
+          />
+
+          {/* Totala Ekosystem */}
+          <FlowCard
+            icon={Users}
+            title="Totalt Ekosystem"
+            description="Kartlägger verksamhet, designar smart ekosystem och integrerar alla system för optimal AI-drift."
+            delay={0.25}
+          />
+        </div>
       </div>
-    </section>;
+
+      {/* Final Summary Card */}
+      <AnimatedContainer delay={0.8} className="text-center mt-12">
+        <Card className="p-8 bg-gradient-to-br from-primary/10 via-primary/5 to-background border-primary/30 shadow-glow max-w-3xl mx-auto">
+          <Database className="size-12 text-primary mx-auto mb-4" />
+          <h3 className="text-2xl font-bold mb-2 text-foreground">Allt Samlas i Ett</h3>
+          <p className="text-muted-foreground">
+            Oavsett vilken tjänst som genererar data - AI-samtal, chatbot, automation eller analytics - 
+            så samlas allt i er Hiems Dashboard. En enda källa till sanning för hela verksamheten.
+          </p>
+        </Card>
+      </AnimatedContainer>
+    </div>
+  </section>;
 };
