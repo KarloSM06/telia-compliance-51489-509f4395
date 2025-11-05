@@ -33,21 +33,15 @@ function AnimatedHero({ onBookDemo, onViewPackages }: AnimatedHeroProps) {
   }, [titleNumber, titles]);
 
   return (
-    <div className="w-full py-16 md:py-24 lg:py-32">
+    <div className="w-full py-20 lg:py-32">
       <div className="container mx-auto max-w-7xl px-6">
-        <div className="grid gap-12 lg:grid-cols-2 lg:gap-16 items-center">
-          {/* Left side - Text content */}
-          <div className="flex flex-col gap-6 lg:gap-8">
-            <div className="inline-flex items-center gap-2 rounded-full bg-muted px-4 py-2 text-sm font-medium w-fit">
-              <span className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-accent"></span>
+        <div className="flex gap-8 items-center justify-center flex-col">
+          <div className="flex gap-4 flex-col items-center">
+            <h1 className="text-5xl md:text-7xl lg:text-8xl max-w-5xl tracking-tight text-center font-bold leading-tight">
+              <span className="text-foreground dark:text-white block mb-2">
+                Skala din verksamhet
               </span>
-              AI-automation för tillväxt
-            </div>
-
-            <h1 className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold leading-[1.1] tracking-tight">
-              <span className="relative flex flex-col overflow-hidden min-h-[1.3em] mb-3">
+              <span className="relative flex w-full justify-center overflow-hidden text-center md:pb-4 md:pt-1 min-h-[1.2em]">
                 {titles.map((title, index) => (
                   <motion.span
                     key={index}
@@ -70,65 +64,30 @@ function AnimatedHero({ onBookDemo, onViewPackages }: AnimatedHeroProps) {
                   </motion.span>
                 ))}
               </span>
-              <span className="text-foreground dark:text-white">
-                med AI-automation
-              </span>
             </h1>
 
-            <p className="text-lg md:text-xl lg:text-2xl text-foreground/80 dark:text-neutral-300 max-w-2xl font-light leading-relaxed">
-              Låt AI hantera administration, kundkommunikation och repetitiva uppgifter 
-              medan du fokuserar på att växa ditt företag.
+            <p className="text-xl md:text-2xl lg:text-3xl leading-relaxed tracking-tight text-foreground/90 dark:text-neutral-200 max-w-4xl text-center font-light mt-6">
+              Hiems levererar ett komplett AI-ekosystem som automatiserar kundflöden, 
+              försäljning, bokningar, administration och dataanalys.
             </p>
-
-            <div className="flex flex-col sm:flex-row gap-4 mt-4">
-              <Button 
-                size="lg" 
-                className="bg-gradient-gold text-primary hover:shadow-glow transition-all duration-300 font-bold text-lg px-10 py-6 h-auto gap-3 group" 
-                onClick={onBookDemo}
-              >
-                Boka gratis demo 
-                <motion.span
-                  initial={{ x: 0 }}
-                  whileHover={{ x: 5 }}
-                  transition={{ type: "spring", stiffness: 400, damping: 10 }}
-                >
-                  <Calendar className="w-5 h-5" />
-                </motion.span>
-              </Button>
-              <Button 
-                size="lg" 
-                variant="outline" 
-                className="border-2 border-foreground/20 dark:border-white/20 text-foreground dark:text-white hover:border-foreground dark:hover:border-white hover:bg-foreground/5 dark:hover:bg-white/5 transition-all duration-300 font-semibold text-lg px-10 py-6 h-auto gap-2" 
-                onClick={onViewPackages}
-              >
-                Se paket 
-                <ArrowRight className="w-4 h-4" />
-              </Button>
-            </div>
           </div>
-
-          {/* Right side - Visual element */}
-          <div className="relative">
-            <div className="relative rounded-3xl overflow-hidden border border-border/50 shadow-elegant">
-              {/* Placeholder for hero image or visual */}
-              <div className="aspect-[4/3] bg-gradient-to-br from-primary/10 via-accent/5 to-primary/5 flex items-center justify-center">
-                <div className="text-center p-8">
-                  <div className="text-6xl mb-4">🤖</div>
-                  <p className="text-muted-foreground">AI-driven automation</p>
-                </div>
-              </div>
-            </div>
-            
-            {/* Floating stats */}
-            <div className="absolute -bottom-6 -left-6 bg-card border border-border/50 rounded-2xl p-4 shadow-card backdrop-blur-sm">
-              <div className="text-2xl font-bold text-foreground">95%</div>
-              <div className="text-sm text-muted-foreground">Tidsbesparing</div>
-            </div>
-            
-            <div className="absolute -top-6 -right-6 bg-card border border-border/50 rounded-2xl p-4 shadow-card backdrop-blur-sm">
-              <div className="text-2xl font-bold text-foreground">3x</div>
-              <div className="text-sm text-muted-foreground">Snabbare tillväxt</div>
-            </div>
+          
+          <div className="flex flex-col sm:flex-row gap-6 justify-center mt-8">
+            <Button 
+              size="lg" 
+              className="bg-gradient-gold text-primary hover:shadow-glow transition-all duration-300 font-bold text-xl px-12 py-8 h-auto gap-3" 
+              onClick={onViewPackages}
+            >
+              Se våra paket <ArrowRight className="w-5 h-5" />
+            </Button>
+            <Button 
+              size="lg" 
+              variant="outline" 
+              className="border-2 border-foreground dark:border-white text-foreground dark:text-white bg-background/10 dark:bg-white/10 hover:bg-foreground hover:text-background dark:hover:bg-white dark:hover:text-black transition-all duration-300 font-bold text-xl px-12 py-8 h-auto gap-3" 
+              onClick={onBookDemo}
+            >
+              Boka demo <Calendar className="w-5 h-5" />
+            </Button>
           </div>
         </div>
       </div>
