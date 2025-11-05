@@ -42,7 +42,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
           <AppSidebar />
         </SidebarBody>
         <div className="flex-1 flex flex-col md:ml-[60px]">
-          <header className="sticky top-0 z-50 flex h-16 items-center gap-4 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 px-6">
+          <header className="sticky top-0 z-40 flex h-16 items-center gap-4 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 px-6">
             <div className="flex-1" />
             <OwnerNotificationBell />
           </header>
