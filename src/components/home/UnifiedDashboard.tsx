@@ -1,6 +1,7 @@
 import { motion, useReducedMotion } from "framer-motion";
 import { Card } from "@/components/ui/card";
 import DatabaseWithRestApi from "@/components/ui/database-with-rest-api";
+import { ServiceDataFlow } from "./ServiceDataFlow";
 import { 
   BarChart3, 
   MessageSquare, 
@@ -241,21 +242,24 @@ export const UnifiedDashboard = () => {
             <DatabaseWithRestApi 
               className="mx-auto"
               circleText="API"
-              title="Centraliserad datahantering med REST API"
+              title="Centraliserad Datahantering via REST API"
               badgeTexts={{
-                first: "CRM",
+                first: "CRM Data",
                 second: "AI Agent",
                 third: "Analytics",
                 fourth: "Reports"
               }}
               buttonTexts={{
                 first: "Hiems",
-                second: "Dashboard_v1"
+                second: "Dashboard"
               }}
               lightColor="hsl(var(--primary))"
             />
           </AnimatedContainer>
         </AnimatedContainer>
+
+        {/* Service Data Flows */}
+        <ServiceDataFlow />
       </div>
     </section>
   );

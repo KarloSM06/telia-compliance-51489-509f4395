@@ -33,13 +33,13 @@ const DatabaseWithRestApi = ({
   return (
     <div
       className={cn(
-        "relative flex h-[350px] w-full max-w-[500px] flex-col items-center",
+        "relative flex h-[500px] w-full max-w-[900px] flex-col items-center",
         className
       )}
     >
       {/* SVG Paths  */}
       <svg
-        className="h-full sm:w-full text-muted"
+        className="h-full sm:w-full text-primary/40"
         width="100%"
         height="100%"
         viewBox="0 0 200 100"
@@ -109,7 +109,7 @@ const DatabaseWithRestApi = ({
           {/* First Button */}
           <g>
             <rect
-              fill="#18181B"
+              fill="hsl(var(--primary))"
               x="14"
               y="5"
               width="34"
@@ -123,7 +123,7 @@ const DatabaseWithRestApi = ({
               fill="white"
               stroke="none"
               fontSize="5"
-              fontWeight="500"
+              fontWeight="600"
             >
               {badgeTexts?.first || "GET"}
             </text>
@@ -131,7 +131,7 @@ const DatabaseWithRestApi = ({
           {/* Second Button */}
           <g>
             <rect
-              fill="#18181B"
+              fill="hsl(var(--primary))"
               x="60"
               y="5"
               width="34"
@@ -145,7 +145,7 @@ const DatabaseWithRestApi = ({
               fill="white"
               stroke="none"
               fontSize="5"
-              fontWeight="500"
+              fontWeight="600"
             >
               {badgeTexts?.second || "POST"}
             </text>
@@ -153,7 +153,7 @@ const DatabaseWithRestApi = ({
           {/* Third Button */}
           <g>
             <rect
-              fill="#18181B"
+              fill="hsl(var(--primary))"
               x="108"
               y="5"
               width="34"
@@ -167,7 +167,7 @@ const DatabaseWithRestApi = ({
               fill="white"
               stroke="none"
               fontSize="5"
-              fontWeight="500"
+              fontWeight="600"
             >
               {badgeTexts?.third || "PUT"}
             </text>
@@ -175,7 +175,7 @@ const DatabaseWithRestApi = ({
           {/* Fourth Button */}
           <g>
             <rect
-              fill="#18181B"
+              fill="hsl(var(--primary))"
               x="150"
               y="5"
               width="40"
@@ -189,7 +189,7 @@ const DatabaseWithRestApi = ({
               fill="white"
               stroke="none"
               fontSize="5"
-              fontWeight="500"
+              fontWeight="600"
             >
               {badgeTexts?.fourth || "DELETE"}
             </text>
@@ -240,51 +240,51 @@ const DatabaseWithRestApi = ({
         {/* bottom shadow */}
         <div className="absolute -bottom-4 h-[100px] w-[62%] rounded-lg bg-accent/30" />
         {/* box title */}
-        <div className="absolute -top-3 z-20 flex items-center justify-center rounded-lg border bg-[#101112] px-2 py-1 sm:-top-4 sm:py-1.5">
-          <SparklesIcon className="size-3" />
-          <span className="ml-2 text-[10px]">
+        <div className="absolute -top-3 z-20 flex items-center justify-center rounded-lg border border-primary/20 bg-primary/10 backdrop-blur px-3 py-2 sm:-top-4 sm:py-2.5">
+          <SparklesIcon className="size-4 text-primary" />
+          <span className="ml-2 text-xs font-semibold text-foreground">
             {title ? title : "Data exchange using a customized REST API"}
           </span>
         </div>
         {/* box outter circle */}
-        <div className="absolute -bottom-8 z-30 grid h-[60px] w-[60px] place-items-center rounded-full border-t bg-[#141516] font-semibold text-xs">
-          {circleText ? circleText : "SVG"}
+        <div className="absolute -bottom-8 z-30 grid h-[70px] w-[70px] place-items-center rounded-full border-2 border-primary/40 bg-primary/20 backdrop-blur font-bold text-sm text-foreground">
+          {circleText ? circleText : "API"}
         </div>
         {/* box content */}
-        <div className="relative z-10 flex h-[150px] w-full items-center justify-center overflow-hidden rounded-lg border bg-background shadow-md">
+        <div className="relative z-10 flex h-[200px] w-full items-center justify-center overflow-hidden rounded-lg border border-primary/20 bg-card/50 backdrop-blur shadow-glow">
           {/* Badges */}
-          <div className="absolute bottom-8 left-12 z-10 h-7 rounded-full bg-[#101112] px-3 text-xs border flex items-center gap-2 ">
-            <HeartHandshakeIcon className="size-4" />
-            <span>{buttonTexts?.first || "LegionDev"}</span>
+          <div className="absolute bottom-8 left-12 z-10 h-8 rounded-full bg-primary/20 backdrop-blur px-4 text-sm border border-primary/30 flex items-center gap-2">
+            <HeartHandshakeIcon className="size-5 text-primary" />
+            <span className="font-semibold text-foreground">{buttonTexts?.first || "Hiems"}</span>
           </div>
-          <div className="absolute right-16 z-10 hidden h-7 rounded-full bg-[#101112] px-3 text-xs sm:flex border items-center gap-2">
-            <Folder className="size-4" />
-            <span>{buttonTexts?.second || "v2_updates"}</span>
+          <div className="absolute right-16 z-10 hidden h-8 rounded-full bg-primary/20 backdrop-blur px-4 text-sm sm:flex border border-primary/30 items-center gap-2">
+            <Folder className="size-5 text-primary" />
+            <span className="font-semibold text-foreground">{buttonTexts?.second || "Dashboard"}</span>
           </div>
           {/* Circles */}
           <motion.div
-            className="absolute -bottom-14 h-[100px] w-[100px] rounded-full border-t bg-accent/5"
+            className="absolute -bottom-14 h-[130px] w-[130px] rounded-full border-t border-primary/20 bg-primary/5"
             animate={{
               scale: [0.98, 1.02, 0.98, 1, 1, 1, 1, 1, 1],
             }}
             transition={{ duration: 2, repeat: Infinity }}
           />
           <motion.div
-            className="absolute -bottom-20 h-[145px] w-[145px] rounded-full border-t bg-accent/5"
+            className="absolute -bottom-20 h-[185px] w-[185px] rounded-full border-t border-primary/20 bg-primary/5"
             animate={{
               scale: [1, 1, 1, 0.98, 1.02, 0.98, 1, 1, 1],
             }}
             transition={{ duration: 2, repeat: Infinity }}
           />
           <motion.div
-            className="absolute -bottom-[100px] h-[190px] w-[190px] rounded-full border-t bg-accent/5"
+            className="absolute -bottom-[100px] h-[240px] w-[240px] rounded-full border-t border-primary/20 bg-primary/5"
             animate={{
               scale: [1, 1, 1, 1, 1, 0.98, 1.02, 0.98, 1, 1],
             }}
             transition={{ duration: 2, repeat: Infinity }}
           />
           <motion.div
-            className="absolute -bottom-[120px] h-[235px] w-[235px] rounded-full border-t bg-accent/5"
+            className="absolute -bottom-[130px] h-[300px] w-[300px] rounded-full border-t border-primary/20 bg-primary/5"
             animate={{
               scale: [1, 1, 1, 1, 1, 1, 0.98, 1.02, 0.98, 1],
             }}
