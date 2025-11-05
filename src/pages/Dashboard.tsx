@@ -28,6 +28,8 @@ import { ServiceRevenueChart } from '@/components/dashboard/charts/ServiceRevenu
 import { CumulativeRevenueChart } from '@/components/dashboard/charts/CumulativeRevenueChart';
 import { DailyROIChart } from '@/components/dashboard/charts/DailyROIChart';
 import { CompactProjectionChart } from '@/components/dashboard/charts/CompactProjectionChart';
+import { CostTrendLineChart } from '@/components/dashboard/charts/CostTrendLineChart';
+import { CostBreakdownBarChart } from '@/components/dashboard/charts/CostBreakdownBarChart';
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from 'recharts';
 import hiemsLogoSnowflake from '@/assets/hiems-logo-snowflake.png';
 import { format } from 'date-fns';
@@ -344,82 +346,53 @@ const Dashboard = () => {
       <section className="relative py-12 bg-gradient-to-b from-background via-primary/2 to-background">
         <div className="container mx-auto px-6 lg:px-8 space-y-6">
           {data && <>
-              {/* Financial Breakdown Detail */}
+              {/* Cost Analysis Charts */}
               <AnimatedSection delay={400}>
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Detaljerad Kostnadsfördelning</CardTitle>
-                    <p className="text-sm text-muted-foreground">Översikt över alla kostnader i vald period</p>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-4">
-                      <div>
-                        <h4 className="font-semibold text-lg mb-4 flex items-center gap-2">
-                          <TrendingUp className="h-5 w-5 text-green-600" />
-                          Rörliga Kostnader
-                        </h4>
-                        <div className="grid gap-3">
-                          <div className="flex items-center justify-between p-3 rounded-lg bg-green-500/5 border border-green-500/10">
-                            <div className="flex items-center gap-3">
-                              <Phone className="h-5 w-5 text-green-600" />
-                              <span>Telefoni</span>
-                            </div>
-                            <span className="font-semibold">{data.costs.telephonyCost.toFixed(2)} SEK</span>
-                          </div>
-                          <div className="flex items-center justify-between p-3 rounded-lg bg-green-500/5 border border-green-500/10">
-                            <div className="flex items-center gap-3">
-                              <MessageSquare className="h-5 w-5 text-green-600" />
-                              <span>SMS</span>
-                            </div>
-                            <span className="font-semibold">{data.costs.smsCost.toFixed(2)} SEK</span>
-                          </div>
-                          <div className="flex items-center justify-between p-3 rounded-lg bg-green-500/5 border border-green-500/10">
-                            <div className="flex items-center gap-3">
-                              <Mail className="h-5 w-5 text-green-600" />
-                              <span>Email</span>
-                            </div>
-                            <span className="font-semibold">{data.costs.emailCost.toFixed(2)} SEK</span>
-                          </div>
-                          <div className="flex items-center justify-between p-3 rounded-lg bg-green-500/5 border border-green-500/10">
-                            <div className="flex items-center gap-3">
-                              <Brain className="h-5 w-5 text-green-600" />
-                              <span>AI & Modeller (OpenRouter)</span>
-                            </div>
-                            <div className="text-right">
-                              <p className="font-semibold">{data.costs.aiCost.toFixed(2)} SEK</p>
-                              <Link to="/dashboard/openrouter" className="text-xs text-primary hover:underline flex items-center gap-1">
-                                Se alla modeller <ArrowRight className="h-3 w-3" />
-                              </Link>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div>
-                        <h4 className="font-semibold text-lg mb-4 flex items-center gap-2">
-                          <CheckCircle className="h-5 w-5 text-green-600" />
-                          Driftkostnad
-                        </h4>
-                        <div className="flex items-center justify-between p-3 rounded-lg bg-green-500/5 border border-green-500/10">
-                          <div className="flex items-center gap-3">
-                            <CheckCircle className="h-5 w-5 text-green-600" />
-                            <span>Hiems Plattform</span>
-                          </div>
-                          <span className="font-semibold">{businessMetrics?.hiems_monthly_support_cost.toFixed(2)} SEK</span>
-                        </div>
-                      </div>
-
-                      <div className="pt-4 border-t">
-                        <div className="flex items-center justify-between p-4 rounded-lg bg-primary/5 border border-primary/20">
-                          <span className="font-bold text-lg">Total Kostnad</span>
-                          <span className="font-bold text-2xl text-primary">{data.roi.totalCosts.toLocaleString('sv-SE', {
-                          maximumFractionDigits: 0
-                        })} SEK</span>
-                        </div>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
+                <div className="grid gap-6 lg:grid-cols-2">
+                  {/* Line Chart - Cost Trends Over Time */}
+                  <CostTrendLineChart
+                    data={data.dailyData.map(d => {
+                      const dayTelephony = data.telephony
+                        .filter(t => t.provider === 'vapi')
+                        .filter(t => format(new Date(t.event_timestamp), 'yyyy-MM-dd') === d.date);
+                      const telephonyCost = dayTelephony.reduce(
+                        (sum, t) => sum + (parseFloat(t.aggregate_cost_amount) || 0) * USD_TO_SEK,
+                        0
+                      );
+                      
+                      const dayMessages = data.messages.filter(
+                        m => format(new Date(m.created_at), 'yyyy-MM-dd') === d.date
+                      );
+                      const smsCost = dayMessages
+                        .filter(m => m.message_type === 'sms')
+                        .reduce((sum, m) => sum + ((m.metadata as any)?.cost_sek || 0), 0);
+                      const emailCost = dayMessages
+                        .filter(m => m.message_type === 'email')
+                        .reduce((sum, m) => sum + ((m.metadata as any)?.cost_sek || 0), 0);
+                      
+                      const openrouterDailyCost = openrouterData?.activity?.find(item => item.date === d.date)?.usage || 0;
+                      const dailyHiems = (businessMetrics?.hiems_monthly_support_cost || 0) / 30;
+                      
+                      return {
+                        date: d.date,
+                        telephony: telephonyCost,
+                        sms: smsCost,
+                        email: emailCost,
+                        ai: openrouterDailyCost,
+                        hiems: dailyHiems,
+                      };
+                    })}
+                  />
+                  
+                  {/* Bar Chart - Total Cost Breakdown */}
+                  <CostBreakdownBarChart
+                    telephonyCost={data.costs.telephonyCost}
+                    smsCost={data.costs.smsCost}
+                    emailCost={data.costs.emailCost}
+                    aiCost={data.costs.aiCost}
+                    hiemsCost={businessMetrics?.hiems_monthly_support_cost || 0}
+                  />
+                </div>
               </AnimatedSection>
 
               {/* Break-Even */}
