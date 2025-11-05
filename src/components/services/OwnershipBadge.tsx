@@ -4,7 +4,7 @@ import { Shield, Code, HeadphonesIcon } from "lucide-react";
 export const OwnershipBadge = () => {
   return (
     <section className="py-16 md:py-24">
-      <div className="container">
+      <div className="container mx-auto">
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           whileInView={{ opacity: 1, scale: 1 }}
