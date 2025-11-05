@@ -28,6 +28,8 @@ import { ClientLogoCloud } from "@/components/ClientLogoCloud";
 import { ServicesGrid } from "@/components/home/ServicesGrid";
 import { UnifiedDashboard } from "@/components/home/UnifiedDashboard";
 import { LandingAccordionItem } from "@/components/home/LandingAccordionItem";
+import { ShaderBackground } from "@/components/ui/shader-background";
+
 export const ProductSelection = () => {
   const [isConsultationModalOpen, setIsConsultationModalOpen] = useState(false);
   const [selectedIndustry, setSelectedIndustry] = useState<string>('');
@@ -48,6 +50,8 @@ export const ProductSelection = () => {
     setIsConsultationModalOpen(true);
   };
   return <div className="relative bg-gradient-hero min-h-screen">
+      {/* Animated Shader Background at top */}
+      <ShaderBackground />
       
       {/* Hero Section and Packages with Aurora Background */}
       <AuroraBackground className="h-auto">
