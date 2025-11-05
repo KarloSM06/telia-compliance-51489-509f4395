@@ -104,12 +104,7 @@ function Header1() {
   
   return (
     <>
-      <header className={cn(
-        "w-full z-40 fixed top-0 left-0 transition-all duration-500",
-        scrollY > 20 
-          ? "bg-background/80 backdrop-blur-2xl shadow-elegant" 
-          : "bg-background/60 backdrop-blur-xl"
-      )}>
+    <header className="w-full z-40 fixed top-0 left-0 transition-all duration-500">
         <div className="container relative mx-auto min-h-20 flex gap-4 flex-row lg:grid lg:grid-cols-3 items-center">
           <div className="justify-start items-center gap-2 lg:flex hidden flex-row">
             {navigationItems.map((item) => (
