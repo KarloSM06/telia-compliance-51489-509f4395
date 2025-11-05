@@ -28,8 +28,6 @@ import { ClientLogoCloud } from "@/components/ClientLogoCloud";
 import { ServicesGrid } from "@/components/home/ServicesGrid";
 import { UnifiedDashboard } from "@/components/home/UnifiedDashboard";
 import { LandingAccordionItem } from "@/components/home/LandingAccordionItem";
-import { ShaderBackground } from "@/components/ui/shader-background";
-
 export const ProductSelection = () => {
   const [isConsultationModalOpen, setIsConsultationModalOpen] = useState(false);
   const [selectedIndustry, setSelectedIndustry] = useState<string>('');
@@ -49,14 +47,10 @@ export const ProductSelection = () => {
     setSelectedIndustry(industryId);
     setIsConsultationModalOpen(true);
   };
-  return <div className="relative min-h-screen">
-      {/* Animated Shader Background at top */}
-      <div className="fixed inset-0 z-0">
-        <ShaderBackground />
-      </div>
+  return <div className="relative bg-gradient-hero min-h-screen">
       
       {/* Hero Section and Packages with Aurora Background */}
-      <AuroraBackground className="h-auto relative z-10">
+      <AuroraBackground className="h-auto">
         <section id="hero" className="relative py-12 lg:py-16 flex items-center">
           <AnimatedHero onBookDemo={() => setIsConsultationModalOpen(true)} onViewPackages={() => scrollToSection('paket')} />
         </section>
