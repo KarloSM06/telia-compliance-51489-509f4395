@@ -5,26 +5,31 @@ import { ChartActionMenu } from "./enhanced/ChartActionMenu";
 import { ChartInsightsBox } from "./enhanced/ChartInsightsBox";
 import { InlineStatsBadge } from "./enhanced/InlineStatsBadge";
 import { useChartExport } from "@/hooks/useChartExport";
-
 interface RevenueVsCostsChartProps {
-  data: Array<{ date: string; revenue: number; costs: number }>;
+  data: Array<{
+    date: string;
+    revenue: number;
+    costs: number;
+  }>;
   isLoading?: boolean;
 }
-
-export const RevenueVsCostsChart = ({ data, isLoading }: RevenueVsCostsChartProps) => {
+export const RevenueVsCostsChart = ({
+  data,
+  isLoading
+}: RevenueVsCostsChartProps) => {
   const chartRef = useRef<HTMLDivElement>(null);
-  const { exportToPNG, exportToCSV } = useChartExport();
-  
+  const {
+    exportToPNG,
+    exportToCSV
+  } = useChartExport();
   const chartData = useMemo(() => {
     return data.map(d => ({
       ...d,
       profit: d.revenue - d.costs
     }));
   }, [data]);
-
   if (isLoading) {
-    return (
-      <Card>
+    return <Card>
         <CardHeader>
           <CardTitle>Intäkter vs Kostnader</CardTitle>
         </CardHeader>
@@ -33,13 +38,10 @@ export const RevenueVsCostsChart = ({ data, isLoading }: RevenueVsCostsChartProp
             <p className="text-muted-foreground">Laddar...</p>
           </div>
         </CardContent>
-      </Card>
-    );
+      </Card>;
   }
-
   if (data.length === 0) {
-    return (
-      <Card>
+    return <Card>
         <CardHeader>
           <CardTitle>Intäkter vs Kostnader</CardTitle>
         </CardHeader>
@@ -48,38 +50,10 @@ export const RevenueVsCostsChart = ({ data, isLoading }: RevenueVsCostsChartProp
             <p className="text-muted-foreground">Ingen data tillgänglig</p>
           </div>
         </CardContent>
-      </Card>
-    );
+      </Card>;
   }
-
-  return (
-    <Card ref={chartRef} className="col-span-full border-2 border-primary/10 shadow-lg shadow-primary/5 hover:border-primary/20 hover:shadow-xl transition-all duration-300">
-      <CardHeader className="pb-3">
-        <div className="flex items-center justify-between">
-          <CardTitle className="text-xl font-semibold">Intäkter vs Kostnader</CardTitle>
-          <ChartActionMenu
-            onExportPNG={() => exportToPNG(chartRef.current, 'intakter-vs-kostnader')}
-            onExportCSV={() => exportToCSV(chartData, 'intakter-vs-kostnader')}
-          />
-        </div>
-      </CardHeader>
-      <CardContent className="pb-6">
-        <ChartInsightsBox data={chartData} dataKey="revenue" type="revenue" />
-        <InlineStatsBadge data={chartData} dataKey="profit" />
-        
-        <MultiLineChart
-          data={chartData}
-          lines={[
-            { dataKey: 'revenue', color: 'hsl(142, 76%, 45%)', name: 'Intäkter' },
-            { dataKey: 'costs', color: 'hsl(0, 84%, 60%)', name: 'Kostnader' },
-            { dataKey: 'profit', color: 'hsl(43, 96%, 56%)', name: 'Vinst' }
-          ]}
-          yAxisFormatter={(v) => `${v.toFixed(0)} kr`}
-          tooltipFormatter={(v) => `${v.toFixed(2)} SEK`}
-          height={480}
-          showBrush
-        />
-      </CardContent>
-    </Card>
-  );
+  return <Card ref={chartRef} className="col-span-full border-2 border-primary/10 shadow-lg shadow-primary/5 hover:border-primary/20 hover:shadow-xl transition-all duration-300">
+      
+      
+    </Card>;
 };

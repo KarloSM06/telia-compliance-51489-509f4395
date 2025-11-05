@@ -9,8 +9,5 @@ interface BreakEvenCardProps {
 export function BreakEvenCard({
   breakEven
 }: BreakEvenCardProps) {
-  return <PremiumCard>
-      
-      
-    </PremiumCard>;
+  return;
 }
