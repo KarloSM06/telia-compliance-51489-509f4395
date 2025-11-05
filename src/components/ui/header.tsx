@@ -58,6 +58,37 @@ function Header1() {
     href: "/",
     description: ""
   }, {
+    title: "Tjänster",
+    description: "Våra AI-lösningar och teknologier",
+    items: [{
+      title: "AI Receptionist",
+      href: "/tjanster/ai-receptionist"
+    }, {
+      title: "AI Modeller (LLM)",
+      href: "/tjanster/ai-modeller"
+    }, {
+      title: "AI Röstsystem",
+      href: "/tjanster/ai-rostsystem"
+    }, {
+      title: "Automatisering",
+      href: "/tjanster/automatisering"
+    }, {
+      title: "CRM & Analytics",
+      href: "/tjanster/crm-analytics"
+    }, {
+      title: "Offert & Faktura",
+      href: "/tjanster/offert-faktura"
+    }, {
+      title: "Prompt Engineering",
+      href: "/tjanster/prompt-engineering"
+    }, {
+      title: "RAG Agenter",
+      href: "/tjanster/rag-agenter"
+    }, {
+      title: "Totala Ekosystem",
+      href: "/tjanster/ekosystem"
+    }]
+  }, {
     title: "Lösningar",
     description: "Våra skräddarsydda AI-system och paket",
     action: () => scrollToSection('paket'),
@@ -67,9 +98,6 @@ function Header1() {
     }, {
       title: "Branschlösningar",
       action: () => scrollToSection('branscher')
-    }, {
-      title: "Case Studies",
-      action: () => scrollToSection('case')
     }]
   }, {
     title: "Företag",

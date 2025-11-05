@@ -14,6 +14,17 @@ const Index = lazy(() => import("./pages/Index"));
 const ExampleReport = lazy(() => import("./pages/ExampleReport"));
 const Auth = lazy(() => import("./pages/Auth"));
 const Dashboard = lazy(() => import("./pages/Dashboard"));
+
+// Service pages
+const AIReceptionist = lazy(() => import("./pages/services/AIReceptionist"));
+const AIModels = lazy(() => import("./pages/services/AIModels"));
+const AIVoiceSystems = lazy(() => import("./pages/services/AIVoiceSystems"));
+const Automations = lazy(() => import("./pages/services/Automations"));
+const CRMAnalytics = lazy(() => import("./pages/services/CRMAnalytics"));
+const QuoteInvoice = lazy(() => import("./pages/services/QuoteInvoice"));
+const PromptEngineering = lazy(() => import("./pages/services/PromptEngineering"));
+const RAGAgents = lazy(() => import("./pages/services/RAGAgents"));
+const Ecosystems = lazy(() => import("./pages/services/Ecosystems"));
 const DashboardPackages = lazy(() => import("./pages/DashboardPackages"));
 const CustomDashboard = lazy(() => import("./pages/CustomDashboard"));
 const UnifiedSettings = lazy(() => import("./pages/UnifiedSettings"));
@@ -110,6 +121,18 @@ const App = () => {
               <Route path="/regelverk" element={<Legal />} />
               <Route path="/exempelrapport" element={<ExampleReport />} />
               <Route path="/checkout" element={<Checkout />} />
+              
+              {/* Service pages */}
+              <Route path="/tjanster/ai-receptionist" element={<AIReceptionist />} />
+              <Route path="/tjanster/ai-modeller" element={<AIModels />} />
+              <Route path="/tjanster/ai-rostsystem" element={<AIVoiceSystems />} />
+              <Route path="/tjanster/automatisering" element={<Automations />} />
+              <Route path="/tjanster/crm-analytics" element={<CRMAnalytics />} />
+              <Route path="/tjanster/offert-faktura" element={<QuoteInvoice />} />
+              <Route path="/tjanster/prompt-engineering" element={<PromptEngineering />} />
+              <Route path="/tjanster/rag-agenter" element={<RAGAgents />} />
+              <Route path="/tjanster/ekosystem" element={<Ecosystems />} />
+              
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>

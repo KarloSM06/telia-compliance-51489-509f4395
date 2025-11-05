@@ -24,6 +24,7 @@ import { AuroraBackground } from "@/components/ui/aurora-background";
 import { AnimatedHero } from "@/components/ui/animated-hero";
 import IntegrationHero from "@/components/ui/integration-hero";
 import { ClientLogoCloud } from "@/components/ClientLogoCloud";
+import { ServicesGrid } from "@/components/home/ServicesGrid";
 
 export const ProductSelection = () => {
   const [isConsultationModalOpen, setIsConsultationModalOpen] = useState(false);
@@ -65,6 +66,9 @@ export const ProductSelection = () => {
 
         {/* Företag vi samarbetar med */}
         <ClientLogoCloud />
+
+        {/* Våra Tjänster & Teknologier */}
+        <ServicesGrid />
 
         {/* Våra AI-paket / Lösningar */}
         <section id="paket" className="relative py-16 md:py-24">
