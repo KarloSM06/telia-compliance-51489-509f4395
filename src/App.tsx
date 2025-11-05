@@ -42,6 +42,7 @@ const TelephonyPage = lazy(() => import("./pages/TelephonyPage"));
 const OpenRouterDashboard = lazy(() => import("./pages/OpenRouterDashboard"));
 const AdminPanel = lazy(() => import("./pages/AdminPanel"));
 const DashboardLayout = lazy(() => import("./components/dashboard/DashboardLayout").then(m => ({ default: m.DashboardLayout })));
+const AnalyticsDashboardDemo = lazy(() => import("./pages/AnalyticsDashboardDemo"));
 
 // Loading fallback component
 const PageLoader = () => (
@@ -104,6 +105,7 @@ const App = () => {
               <Route path="/dashboard/admin" element={<DashboardLayout><AdminPanel /></DashboardLayout>} />
               <Route path="/unsubscribe" element={<Unsubscribe />} />
               <Route path="/demo" element={<Demo />} />
+              <Route path="/analytics-demo" element={<AnalyticsDashboardDemo />} />
               <Route path="/om-oss" element={<AboutUs />} />
               <Route path="/about" element={<AboutUs />} />
               <Route path="/gdpr" element={<GDPRSettings />} />
