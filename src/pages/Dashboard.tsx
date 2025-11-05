@@ -402,20 +402,13 @@ const Dashboard = () => {
 
       {/* Main Charts Section */}
       <section className="relative py-12 bg-gradient-to-b from-background via-primary/2 to-background">
-        <div className="container mx-auto px-6 lg:px-8 space-y-4">
+        <div className="container mx-auto px-6 lg:px-8 space-y-6">
           {data && (
             <>
-              {/* Top Row: Revenue vs Costs + ROI Trend */}
               <AnimatedSection delay={300}>
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                   <RevenueVsCostsChart data={data.dailyData} isLoading={loading} />
                   <ROITrendChart data={data.dailyData} isLoading={loading} />
-                </div>
-              </AnimatedSection>
-
-              {/* Middle Row: Booking Trend, Profit Margin, Cost Breakdown */}
-              <AnimatedSection delay={350}>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                   <BookingTrendChart data={data.dailyData} isLoading={loading} />
                   <ProfitMarginChart data={data.dailyData} isLoading={loading} />
                   <CostBreakdownChart 
@@ -426,12 +419,6 @@ const Dashboard = () => {
                     hiemsMonthlyCost={businessMetrics?.hiems_monthly_support_cost || 0}
                     isLoading={loading}
                   />
-                </div>
-              </AnimatedSection>
-
-              {/* Bottom Row: Service Revenue, Cumulative, Daily ROI, Projection */}
-              <AnimatedSection delay={400}>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                   <ServiceRevenueChart data={data.serviceMetrics} isLoading={loading} />
                   <CumulativeRevenueChart data={data.dailyData} isLoading={loading} />
                   <DailyROIChart data={data.dailyData} isLoading={loading} />
@@ -443,108 +430,98 @@ const Dashboard = () => {
                   />
                 </div>
               </AnimatedSection>
-            </>
-          )}
 
-          {/* Financial Breakdown Detail */}
-          {data && businessMetrics && (
-            <AnimatedSection delay={400}>
-              <Card>
-                <CardHeader>
-                  <CardTitle>Detaljerad Kostnadsfördelning</CardTitle>
-                  <p className="text-sm text-muted-foreground">Översikt över alla kostnader i vald period</p>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    {/* Variable Costs */}
-                    <div>
-                      <h4 className="font-semibold text-lg mb-4 flex items-center gap-2">
-                        <TrendingUp className="h-5 w-5 text-blue-600" />
-                        Rörliga Kostnader
-                      </h4>
-                      <div className="grid gap-3">
-                        <div className="flex items-center justify-between p-3 rounded-lg bg-blue-500/5 border border-blue-500/10">
-                          <div className="flex items-center gap-3">
-                            <Phone className="h-5 w-5 text-blue-600" />
-                            <span>Telefoni</span>
+              {/* Financial Breakdown Detail */}
+              <AnimatedSection delay={400}>
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Detaljerad Kostnadsfördelning</CardTitle>
+                    <p className="text-sm text-muted-foreground">Översikt över alla kostnader i vald period</p>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      <div>
+                        <h4 className="font-semibold text-lg mb-4 flex items-center gap-2">
+                          <TrendingUp className="h-5 w-5 text-green-600" />
+                          Rörliga Kostnader
+                        </h4>
+                        <div className="grid gap-3">
+                          <div className="flex items-center justify-between p-3 rounded-lg bg-green-500/5 border border-green-500/10">
+                            <div className="flex items-center gap-3">
+                              <Phone className="h-5 w-5 text-green-600" />
+                              <span>Telefoni</span>
+                            </div>
+                            <span className="font-semibold">{data.costs.telephonyCost.toFixed(2)} SEK</span>
                           </div>
-                          <span className="font-semibold">{data.costs.telephonyCost.toFixed(2)} SEK</span>
-                        </div>
-                        <div className="flex items-center justify-between p-3 rounded-lg bg-purple-500/5 border border-purple-500/10">
-                          <div className="flex items-center gap-3">
-                            <MessageSquare className="h-5 w-5 text-purple-600" />
-                            <span>SMS</span>
+                          <div className="flex items-center justify-between p-3 rounded-lg bg-green-500/5 border border-green-500/10">
+                            <div className="flex items-center gap-3">
+                              <MessageSquare className="h-5 w-5 text-green-600" />
+                              <span>SMS</span>
+                            </div>
+                            <span className="font-semibold">{data.costs.smsCost.toFixed(2)} SEK</span>
                           </div>
-                          <span className="font-semibold">{data.costs.smsCost.toFixed(2)} SEK</span>
-                        </div>
-                        <div className="flex items-center justify-between p-3 rounded-lg bg-cyan-500/5 border border-cyan-500/10">
-                          <div className="flex items-center gap-3">
-                            <Mail className="h-5 w-5 text-cyan-600" />
-                            <span>Email</span>
+                          <div className="flex items-center justify-between p-3 rounded-lg bg-green-500/5 border border-green-500/10">
+                            <div className="flex items-center gap-3">
+                              <Mail className="h-5 w-5 text-green-600" />
+                              <span>Email</span>
+                            </div>
+                            <span className="font-semibold">{data.costs.emailCost.toFixed(2)} SEK</span>
                           </div>
-                          <span className="font-semibold">{data.costs.emailCost.toFixed(2)} SEK</span>
-                        </div>
-                        <div className="flex items-center justify-between p-3 rounded-lg bg-pink-500/5 border border-pink-500/10">
-                          <div className="flex items-center gap-3">
-                            <Brain className="h-5 w-5 text-pink-600" />
-                            <span>AI & Modeller (OpenRouter)</span>
-                          </div>
-                          <div className="text-right">
-                            <p className="font-semibold">{data.costs.aiCost.toFixed(2)} SEK</p>
-                            <Link to="/dashboard/openrouter" className="text-xs text-primary hover:underline flex items-center gap-1">
-                              Se alla modeller <ArrowRight className="h-3 w-3" />
-                            </Link>
+                          <div className="flex items-center justify-between p-3 rounded-lg bg-green-500/5 border border-green-500/10">
+                            <div className="flex items-center gap-3">
+                              <Brain className="h-5 w-5 text-green-600" />
+                              <span>AI & Modeller (OpenRouter)</span>
+                            </div>
+                            <div className="text-right">
+                              <p className="font-semibold">{data.costs.aiCost.toFixed(2)} SEK</p>
+                              <Link to="/dashboard/openrouter" className="text-xs text-primary hover:underline flex items-center gap-1">
+                                Se alla modeller <ArrowRight className="h-3 w-3" />
+                              </Link>
+                            </div>
                           </div>
                         </div>
                       </div>
-                    </div>
 
-                    {/* Fixed Costs */}
-                    <div>
-                      <h4 className="font-semibold text-lg mb-4 flex items-center gap-2">
-                        <CheckCircle className="h-5 w-5 text-green-600" />
-                        Driftkostnad
-                      </h4>
-                      <div className="flex items-center justify-between p-3 rounded-lg bg-green-500/5 border border-green-500/10">
-                        <div className="flex items-center gap-3">
+                      <div>
+                        <h4 className="font-semibold text-lg mb-4 flex items-center gap-2">
                           <CheckCircle className="h-5 w-5 text-green-600" />
-                          <span>Hiems Plattform</span>
+                          Driftkostnad
+                        </h4>
+                        <div className="flex items-center justify-between p-3 rounded-lg bg-green-500/5 border border-green-500/10">
+                          <div className="flex items-center gap-3">
+                            <CheckCircle className="h-5 w-5 text-green-600" />
+                            <span>Hiems Plattform</span>
+                          </div>
+                          <span className="font-semibold">{businessMetrics?.hiems_monthly_support_cost.toFixed(2)} SEK</span>
                         </div>
-                        <span className="font-semibold">{businessMetrics.hiems_monthly_support_cost.toFixed(2)} SEK</span>
+                      </div>
+
+                      <div className="pt-4 border-t">
+                        <div className="flex items-center justify-between p-4 rounded-lg bg-primary/5 border border-primary/20">
+                          <span className="font-bold text-lg">Total Kostnad</span>
+                          <span className="font-bold text-2xl text-primary">{data.roi.totalCosts.toLocaleString('sv-SE', { maximumFractionDigits: 0 })} SEK</span>
+                        </div>
                       </div>
                     </div>
+                  </CardContent>
+                </Card>
+              </AnimatedSection>
 
-                    {/* Total */}
-                    <div className="pt-4 border-t">
-                      <div className="flex items-center justify-between p-4 rounded-lg bg-primary/5 border border-primary/20">
-                        <span className="font-bold text-lg">Total Kostnad</span>
-                        <span className="font-bold text-2xl text-primary">{data.roi.totalCosts.toLocaleString('sv-SE', { maximumFractionDigits: 0 })} SEK</span>
-                      </div>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </AnimatedSection>
-          )}
+              {/* Break-Even */}
+              <AnimatedSection delay={450}>
+                <BreakEvenCard breakEven={data.breakEven} />
+              </AnimatedSection>
 
-          {/* Break-Even */}
-          {data && (
-            <AnimatedSection delay={450}>
-              <BreakEvenCard breakEven={data.breakEven} />
-            </AnimatedSection>
-          )}
-
-
-          {/* Recent Activity */}
-          {data && (
-            <AnimatedSection delay={550}>
-              <RecentActivityCompact 
-                bookings={(data.bookings || []).slice(0, 10)}
-                messages={(data.messages || []).slice(0, 10)}
-                telephony={(data.telephony || []).slice(0, 10)}
-                reviews={(data.reviews || []).slice(0, 10)}
-              />
-            </AnimatedSection>
+              {/* Recent Activity */}
+              <AnimatedSection delay={550}>
+                <RecentActivityCompact 
+                  bookings={(data.bookings || []).slice(0, 10)}
+                  messages={(data.messages || []).slice(0, 10)}
+                  telephony={(data.telephony || []).slice(0, 10)}
+                  reviews={(data.reviews || []).slice(0, 10)}
+                />
+              </AnimatedSection>
+            </>
           )}
         </div>
       </section>
