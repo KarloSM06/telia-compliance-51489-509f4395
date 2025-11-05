@@ -175,3 +175,26 @@ All colors MUST be HSL.
     @apply font-display;
   }
 }
+
+/* Custom color variables for area charts */
+:root {
+  --color-emerald-500: 16 185 129;
+  --color-red-500: 239 68 68;
+  --color-amber-500: 245 158 11;
+  --color-blue-500: 59 130 246;
+  --color-violet-500: 139 92 246;
+  --color-orange-500: 249 115 22;
+  --color-green-500: 34 197 94;
+  --color-cyan-500: 6 182 212;
+}
+
+.dark {
+  --color-emerald-500: 16 185 129;
+  --color-red-500: 239 68 68;
+  --color-amber-500: 245 158 11;
+  --color-blue-500: 59 130 246;
+  --color-violet-500: 139 92 246;
+  --color-orange-500: 249 115 22;
+  --color-green-500: 34 197 94;
+  --color-cyan-500: 6 182 212;
+}
