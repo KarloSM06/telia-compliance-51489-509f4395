@@ -7,6 +7,8 @@ export interface BookingRevenue {
   estimatedRevenue: number;
   confidence: number;
   reasoning: string;
+  matchedFields?: string[]; // Which fields contributed to the match
+  matchDetails?: { field: string; value: string; score: number }[]; // Detailed breakdown
 }
 
 export interface OperationalCosts {
@@ -69,58 +71,142 @@ function normalizeString(str: string): string {
     .replace(/[^a-z0-9]/g, ''); // Remove all non-alphanumeric
 }
 
-// Match booking to service pricing with flexible matching
-function matchServiceType(
+// Service aliases for common variations and typos
+const serviceAliases: Record<string, string[]> = {
+  'kundmote': ['kunmote', 'kundbesok', 'klientmote', 'kundmöte', 'kunmöte'],
+  'offertmote': ['offertmöte', 'offermöte', 'offermote', 'prisoffert', 'offert'],
+  'installation': ['install', 'montage', 'uppsattning', 'montering'],
+  'support': ['hjalp', 'felanmalan', 'service', 'tekniskstod'],
+  'konsultation': ['konsult', 'radgivning', 'moterådgivning'],
+  'uppfoljning': ['uppfoljningsmöte', 'followup', 'uppföljning']
+};
+
+// Enhanced multi-field matching with scoring
+function matchServiceTypeEnhanced(
   booking: any,
   servicePricing: ServicePricing[]
-): { service: ServicePricing; confidence: number } | null {
+): { service: ServicePricing; confidence: number; matchedFields: string[]; matchDetails: { field: string; value: string; score: number }[] } | null {
   if (servicePricing.length === 0) return null;
 
-  // Primary: Use service_type if available
-  if (booking.service_type) {
-    const normalizedServiceType = normalizeString(booking.service_type);
-    
-    for (const service of servicePricing) {
-      const normalizedServiceName = normalizeString(service.service_name);
+  let bestMatch: { service: ServicePricing; totalScore: number; matchedFields: string[]; matchDetails: { field: string; value: string; score: number }[] } | null = null;
+
+  for (const service of servicePricing) {
+    const normalizedServiceName = normalizeString(service.service_name);
+    let totalScore = 0;
+    const matchedFields: string[] = [];
+    const matchDetails: { field: string; value: string; score: number }[] = [];
+
+    // Helper to check if a field matches
+    const checkFieldMatch = (fieldName: string, fieldValue: string | undefined, baseScore: number) => {
+      if (!fieldValue) return;
+      
+      const normalizedValue = normalizeString(fieldValue);
       
       // Exact match
-      if (normalizedServiceType === normalizedServiceName) {
-        console.log(`✅ Exact service_type match: "${booking.service_type}" → "${service.service_name}"`);
-        return { service, confidence: 95 };
+      if (normalizedValue === normalizedServiceName) {
+        totalScore += baseScore;
+        matchedFields.push(fieldName);
+        matchDetails.push({ field: fieldName, value: fieldValue, score: baseScore });
+        console.log(`✅ Exact ${fieldName} match: "${fieldValue}" → "${service.service_name}" (+${baseScore})`);
+        return;
       }
       
       // Partial match (one contains the other)
-      if (normalizedServiceType.includes(normalizedServiceName) || 
-          normalizedServiceName.includes(normalizedServiceType)) {
-        console.log(`✅ Partial service_type match: "${booking.service_type}" → "${service.service_name}"`);
-        return { service, confidence: 85 };
+      if (normalizedValue.includes(normalizedServiceName) || normalizedServiceName.includes(normalizedValue)) {
+        const partialScore = Math.floor(baseScore * 0.8);
+        totalScore += partialScore;
+        matchedFields.push(fieldName);
+        matchDetails.push({ field: fieldName, value: fieldValue, score: partialScore });
+        console.log(`✅ Partial ${fieldName} match: "${fieldValue}" → "${service.service_name}" (+${partialScore})`);
+        return;
       }
+      
+      // Check aliases
+      const aliases = serviceAliases[normalizedServiceName] || [];
+      for (const alias of aliases) {
+        if (normalizedValue === alias || normalizedValue.includes(alias) || alias.includes(normalizedValue)) {
+          const aliasScore = Math.floor(baseScore * 0.7);
+          totalScore += aliasScore;
+          matchedFields.push(fieldName);
+          matchDetails.push({ field: fieldName, value: fieldValue, score: aliasScore });
+          console.log(`✅ Alias ${fieldName} match: "${fieldValue}" → "${service.service_name}" via "${alias}" (+${aliasScore})`);
+          return;
+        }
+      }
+    };
+
+    // Priority 1: service_type (50 points)
+    checkFieldMatch('service_type', booking.service_type, 50);
+    
+    // Priority 2: title (40 points)
+    checkFieldMatch('title', booking.title, 40);
+    
+    // Priority 3: event_type (25 points)
+    checkFieldMatch('event_type', booking.event_type, 25);
+    
+    // Priority 4: description (20 points)
+    checkFieldMatch('description', booking.description, 20);
+    
+    // Priority 5: notes (15 points)
+    checkFieldMatch('notes', booking.notes, 15);
+    
+    // Priority 6: outcome (15 points)
+    checkFieldMatch('outcome', booking.outcome, 15);
+    
+    // Priority 7: external_resource (parse if JSON)
+    if (booking.external_resource) {
+      try {
+        const resource = typeof booking.external_resource === 'string' 
+          ? JSON.parse(booking.external_resource) 
+          : booking.external_resource;
+        
+        // Check common fields in external booking systems
+        const externalFields = [
+          resource.service_name,
+          resource.service_type,
+          resource.product_name,
+          resource.category
+        ].filter(Boolean);
+        
+        for (const extField of externalFields) {
+          checkFieldMatch('external_resource', String(extField), 30);
+        }
+      } catch (e) {
+        // Not JSON, treat as string
+        checkFieldMatch('external_resource', String(booking.external_resource), 30);
+      }
+    }
+
+    // Update best match if this service has better score
+    if (totalScore > 0 && (!bestMatch || totalScore > bestMatch.totalScore)) {
+      bestMatch = {
+        service,
+        totalScore,
+        matchedFields,
+        matchDetails
+      };
     }
   }
 
-  // Fallback: Use title if service_type didn't match
-  if (booking.title) {
-    const normalizedTitle = normalizeString(booking.title);
+  if (bestMatch) {
+    // Cap confidence at 100%
+    const confidence = Math.min(100, bestMatch.totalScore);
+    console.log(`🎯 Best match: "${bestMatch.service.service_name}" with ${confidence}% confidence from ${bestMatch.matchedFields.join(', ')}`);
     
-    for (const service of servicePricing) {
-      const normalizedServiceName = normalizeString(service.service_name);
-      
-      // Exact match
-      if (normalizedTitle === normalizedServiceName) {
-        console.log(`✅ Exact title match: "${booking.title}" → "${service.service_name}"`);
-        return { service, confidence: 80 };
-      }
-      
-      // Partial match
-      if (normalizedTitle.includes(normalizedServiceName) || 
-          normalizedServiceName.includes(normalizedTitle)) {
-        console.log(`✅ Partial title match: "${booking.title}" → "${service.service_name}"`);
-        return { service, confidence: 70 };
-      }
-    }
-    
-    console.warn(`⚠️ No match found for booking: "${booking.title}" (service_type: ${booking.service_type || 'none'})`);
+    return {
+      service: bestMatch.service,
+      confidence,
+      matchedFields: bestMatch.matchedFields,
+      matchDetails: bestMatch.matchDetails
+    };
   }
+
+  console.warn(`⚠️ No match found for booking:`, {
+    title: booking.title,
+    service_type: booking.service_type,
+    event_type: booking.event_type,
+    description: booking.description?.substring(0, 50)
+  });
   
   return null;
 }
@@ -147,15 +233,19 @@ export function calculateBookingRevenue(
   booking: any,
   businessMetrics: BusinessMetrics
 ): BookingRevenue {
-  const serviceMatch = matchServiceType(booking, businessMetrics.service_pricing);
+  const serviceMatch = matchServiceTypeEnhanced(booking, businessMetrics.service_pricing);
   
   let avgPrice: number;
   let confidence: number;
   let reasoning: string;
+  let matchedFields: string[] | undefined;
+  let matchDetails: { field: string; value: string; score: number }[] | undefined;
   
   if (serviceMatch) {
     avgPrice = serviceMatch.service.avg_price;
     confidence = serviceMatch.confidence;
+    matchedFields = serviceMatch.matchedFields;
+    matchDetails = serviceMatch.matchDetails;
     reasoning = `Baserat på specifik tjänst "${serviceMatch.service.service_name}" (${avgPrice.toLocaleString('sv-SE')} SEK)`;
   } else if (businessMetrics.avg_project_cost && businessMetrics.avg_project_cost > 0) {
     avgPrice = businessMetrics.avg_project_cost;
@@ -176,7 +266,9 @@ export function calculateBookingRevenue(
     bookingId: booking.id,
     estimatedRevenue,
     confidence,
-    reasoning: `${reasoning} × ${(conversionProb * 100).toFixed(0)}% konvertering`
+    reasoning: `${reasoning} × ${(conversionProb * 100).toFixed(0)}% konvertering`,
+    matchedFields,
+    matchDetails
   };
 }
 

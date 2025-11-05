@@ -54,15 +54,37 @@ export function ROIDebugPanel({ bookings, bookingRevenues, servicePricing }: ROI
                   <div key={idx} className="flex items-start gap-2 border-l-2 border-yellow-400 pl-2">
                     <div className="flex-1">
                       <div className="font-medium">{booking.title || 'Ingen titel'}</div>
-                      <div className="text-xs opacity-75">
-                        service_type: {booking.service_type || 'saknas'}
+                      <div className="text-xs opacity-75 space-y-0.5">
+                        <div>service_type: {booking.service_type || 'saknas'}</div>
+                        {booking.event_type && <div>event_type: {booking.event_type}</div>}
+                        {booking.description && (
+                          <div>description: {booking.description.substring(0, 50)}...</div>
+                        )}
+                        {booking.notes && <div>notes: {booking.notes.substring(0, 50)}...</div>}
                       </div>
                       {revenue && (
-                        <div className="text-xs mt-1">
-                          <Badge variant="outline" className="text-xs">
-                            {revenue.confidence}% säkerhet
-                          </Badge>
-                          <span className="ml-2">{revenue.reasoning}</span>
+                        <div className="text-xs mt-1 space-y-1">
+                          <div>
+                            <Badge variant="outline" className="text-xs">
+                              {revenue.confidence}% säkerhet
+                            </Badge>
+                            <span className="ml-2">{revenue.reasoning}</span>
+                          </div>
+                          {revenue.matchedFields && revenue.matchedFields.length > 0 && (
+                            <div className="text-xs text-green-700 dark:text-green-300">
+                              ✓ Matchade fält: {revenue.matchedFields.join(', ')}
+                            </div>
+                          )}
+                          {revenue.matchDetails && revenue.matchDetails.length > 0 && (
+                            <div className="text-xs space-y-0.5 pl-2 border-l border-green-400/30">
+                              {revenue.matchDetails.map((detail, i) => (
+                                <div key={i} className="flex justify-between">
+                                  <span className="opacity-75">{detail.field}: "{detail.value}"</span>
+                                  <Badge variant="secondary" className="text-xs ml-2">+{detail.score}</Badge>
+                                </div>
+                              ))}
+                            </div>
+                          )}
                         </div>
                       )}
                     </div>
