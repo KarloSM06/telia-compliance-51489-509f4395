@@ -2,6 +2,7 @@ import { motion, useReducedMotion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { servicesData } from "@/data/services";
 import { FeatureCard } from "@/components/ui/grid-feature-cards";
+import { EvervaultCard } from "@/components/ui/evervault-card";
 
 const AnimatedContainer = ({ 
   className, 
@@ -33,7 +34,7 @@ const AnimatedContainer = ({
 
 export const ServicesGrid = () => {
   return (
-    <section className="relative py-16 md:py-32">
+    <section className="relative py-24 md:py-40">
       <div className="mx-auto w-full max-w-7xl space-y-8 px-4">
         <AnimatedContainer className="mx-auto max-w-3xl text-center">
           <h2 className="text-3xl font-bold tracking-wide text-balance md:text-4xl lg:text-5xl xl:font-extrabold">
@@ -57,15 +58,17 @@ export const ServicesGrid = () => {
             <Link 
               key={service.id}
               to={`/tjanster/${service.slug}`}
-              className="block transition-colors hover:bg-accent/5"
+              className="block"
             >
-              <FeatureCard 
-                feature={{
-                  title: service.title,
-                  icon: service.icon,
-                  description: service.shortDescription
-                }}
-              />
+              <EvervaultCard className="aspect-auto">
+                <FeatureCard 
+                  feature={{
+                    title: service.title,
+                    icon: service.icon,
+                    description: service.shortDescription
+                  }}
+                />
+              </EvervaultCard>
             </Link>
           ))}
         </AnimatedContainer>
