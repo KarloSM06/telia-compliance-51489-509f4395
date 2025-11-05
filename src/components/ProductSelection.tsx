@@ -31,6 +31,7 @@ import { LandingAccordionItem } from "@/components/home/LandingAccordionItem";
 import { UnifiedEcosystem } from "@/components/home/UnifiedEcosystem";
 import dashboardScreenshot from "@/assets/dashboard-screenshot.png";
 import calendarScreenshot from "@/assets/calendar-screenshot.png";
+import { BookingSection } from "@/components/BookingSection";
 export const ProductSelection = () => {
   const [isConsultationModalOpen, setIsConsultationModalOpen] = useState(false);
   const [selectedIndustry, setSelectedIndustry] = useState<string>('');
@@ -131,6 +132,8 @@ export const ProductSelection = () => {
       {/* Kontakt / CTA */}
       
 
+      {/* Bokningssektion med WebGL Shader */}
+      <BookingSection />
 
       <ConsultationModal open={isConsultationModalOpen} onOpenChange={setIsConsultationModalOpen} />
     </div>;
