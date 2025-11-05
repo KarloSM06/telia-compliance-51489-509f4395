@@ -1,18 +1,6 @@
 import { Home, LayoutDashboard, Settings, LogOut, Phone, Users, Target, Star, Calendar, Bell, MessageSquare, Mail, Brain, Search, Briefcase, Zap, ShieldCheck } from "lucide-react";
-import { NavLink, useNavigate } from "react-router-dom";
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarGroup,
-  SidebarGroupContent,
-  SidebarGroupLabel,
-  SidebarMenu,
-  SidebarMenuItem,
-  SidebarMenuButton,
-  SidebarHeader,
-  SidebarFooter,
-  useSidebar,
-} from "@/components/ui/sidebar";
+import { useNavigate, useLocation } from "react-router-dom";
+import { useSidebar, SidebarLink } from "@/components/ui/animated-sidebar";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { useAuth } from "@/hooks/useAuth";
 import { useSidebarPermissions } from "@/hooks/useSidebarPermissions";
@@ -25,6 +13,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { motion } from "framer-motion";
 
 // Map route paths to icons
 const iconMap: Record<string, any> = {
@@ -45,17 +34,20 @@ export function AppSidebar() {
   const { user, signOut } = useAuth();
   const { allowedRoutes, loading: permissionsLoading } = useSidebarPermissions();
   const { isAdmin } = useUserRole();
-  const { state } = useSidebar();
+  const { open } = useSidebar();
   const navigate = useNavigate();
-  const isCollapsed = state === "collapsed";
+  const location = useLocation();
 
   // Build navigation items from allowed routes
-  const navItems = allowedRoutes.map(route => ({
-    title: route.route_title,
-    url: route.route_path,
-    icon: iconMap[route.route_path] || LayoutDashboard,
-    group: route.route_group,
-  }));
+  const navItems = allowedRoutes.map(route => {
+    const Icon = iconMap[route.route_path] || LayoutDashboard;
+    return {
+      label: route.route_title,
+      href: route.route_path,
+      icon: <Icon className="h-5 w-5 flex-shrink-0" />,
+      group: route.route_group,
+    };
+  });
 
   // Group navigation items
   const overviewItems = navItems.filter(item => item.group === 'overview');
@@ -67,27 +59,39 @@ export function AppSidebar() {
     return email.charAt(0).toUpperCase();
   };
 
+  const groups = [
+    { label: 'Översikt', items: overviewItems },
+    { label: 'Affärsverktyg', items: businessToolsItems },
+    { label: 'Kommunikation', items: communicationItems },
+    { label: 'System', items: systemItems },
+  ].filter(group => group.items.length > 0);
+
   return (
-    <Sidebar collapsible="icon" className="border-r border-sidebar-border">
-      <SidebarHeader className="border-b border-sidebar-border p-4">
+    <div className="flex flex-col h-full gap-4">
+      {/* User Header */}
+      <div className="border-b border-sidebar-border pb-4">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <div className="flex items-center gap-3 cursor-pointer hover:bg-sidebar-accent/50 rounded-md p-2 -m-2 transition-all">
-              <Avatar className="h-10 w-10 ring-2 ring-yellow-500/20 hover:ring-yellow-500/60 transition-all duration-300">
-                <AvatarFallback className="bg-yellow-500 text-primary font-semibold">
+              <Avatar className="h-10 w-10 ring-2 ring-primary/20 hover:ring-primary/60 transition-all duration-300 flex-shrink-0">
+                <AvatarFallback className="bg-primary text-primary-foreground font-semibold">
                   {getInitials(user?.email || "")}
                 </AvatarFallback>
               </Avatar>
-              {!isCollapsed && (
-                <div className="flex-1 overflow-hidden">
-                  <p className="text-sm font-semibold truncate text-sidebar-foreground">
-                    {user?.email?.split("@")[0] || "Användare"}
-                  </p>
-                  <p className="text-xs text-sidebar-foreground/60 truncate">
-                    {user?.email}
-                  </p>
-                </div>
-              )}
+              <motion.div
+                animate={{
+                  display: open ? "block" : "none",
+                  opacity: open ? 1 : 0,
+                }}
+                className="flex-1 overflow-hidden"
+              >
+                <p className="text-sm font-semibold truncate text-sidebar-foreground">
+                  {user?.email?.split("@")[0] || "Användare"}
+                </p>
+                <p className="text-xs text-sidebar-foreground/60 truncate">
+                  {user?.email}
+                </p>
+              </motion.div>
             </div>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-56">
@@ -115,141 +119,54 @@ export function AppSidebar() {
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
-      </SidebarHeader>
+      </div>
 
-      <SidebarContent>
+      {/* Navigation */}
+      <div className="flex-1 overflow-y-auto">
         {permissionsLoading ? (
           <div className="flex items-center justify-center p-8">
             <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary"></div>
           </div>
         ) : (
-          <>
-            {overviewItems.length > 0 && (
-              <SidebarGroup>
-                <SidebarGroupLabel>Översikt</SidebarGroupLabel>
-                <SidebarGroupContent>
-                  <SidebarMenu>
-                    {overviewItems.map((item) => (
-                      <SidebarMenuItem key={item.title}>
-                        <SidebarMenuButton asChild tooltip={item.title}>
-                          <NavLink
-                            to={item.url}
-                            className={({ isActive }) =>
-                              `flex items-center gap-3 transition-all ${
-                                isActive
-                                  ? "bg-sidebar-accent text-sidebar-accent-foreground font-medium"
-                                  : "hover:bg-sidebar-accent/50"
-                              }`
-                            }
-                          >
-                            <item.icon className="h-5 w-5" />
-                            <span>{item.title}</span>
-                          </NavLink>
-                        </SidebarMenuButton>
-                      </SidebarMenuItem>
-                    ))}
-                  </SidebarMenu>
-                </SidebarGroupContent>
-              </SidebarGroup>
-            )}
-
-            {businessToolsItems.length > 0 && (
-              <SidebarGroup>
-                <SidebarGroupLabel>Affärsverktyg</SidebarGroupLabel>
-                <SidebarGroupContent>
-                  <SidebarMenu>
-                    {businessToolsItems.map((item) => (
-                      <SidebarMenuItem key={item.title}>
-                        <SidebarMenuButton asChild tooltip={item.title}>
-                          <NavLink
-                            to={item.url}
-                            className={({ isActive }) =>
-                              `flex items-center gap-3 transition-all ${
-                                isActive
-                                  ? "bg-sidebar-accent text-sidebar-accent-foreground font-medium"
-                                  : "hover:bg-sidebar-accent/50"
-                              }`
-                            }
-                          >
-                            <item.icon className="h-5 w-5" />
-                            <span>{item.title}</span>
-                          </NavLink>
-                        </SidebarMenuButton>
-                      </SidebarMenuItem>
-                    ))}
-                  </SidebarMenu>
-                </SidebarGroupContent>
-              </SidebarGroup>
-            )}
-
-            {communicationItems.length > 0 && (
-              <SidebarGroup>
-                <SidebarGroupLabel>Kommunikation</SidebarGroupLabel>
-                <SidebarGroupContent>
-                  <SidebarMenu>
-                    {communicationItems.map((item) => (
-                      <SidebarMenuItem key={item.title}>
-                        <SidebarMenuButton asChild tooltip={item.title}>
-                          <NavLink
-                            to={item.url}
-                            className={({ isActive }) =>
-                              `flex items-center gap-3 transition-all ${
-                                isActive
-                                  ? "bg-sidebar-accent text-sidebar-accent-foreground font-medium"
-                                  : "hover:bg-sidebar-accent/50"
-                              }`
-                            }
-                          >
-                            <item.icon className="h-5 w-5" />
-                            <span>{item.title}</span>
-                          </NavLink>
-                        </SidebarMenuButton>
-                      </SidebarMenuItem>
-                    ))}
-                  </SidebarMenu>
-                </SidebarGroupContent>
-              </SidebarGroup>
-            )}
-
-            {systemItems.length > 0 && (
-              <SidebarGroup>
-                <SidebarGroupLabel>System</SidebarGroupLabel>
-                <SidebarGroupContent>
-                  <SidebarMenu>
-                    {systemItems.map((item) => (
-                      <SidebarMenuItem key={item.title}>
-                        <SidebarMenuButton asChild tooltip={item.title}>
-                          <NavLink
-                            to={item.url}
-                            className={({ isActive }) =>
-                              `flex items-center gap-3 transition-all ${
-                                isActive
-                                  ? "bg-sidebar-accent text-sidebar-accent-foreground font-medium"
-                                  : "hover:bg-sidebar-accent/50"
-                              }`
-                            }
-                          >
-                            <item.icon className="h-5 w-5" />
-                            <span>{item.title}</span>
-                          </NavLink>
-                        </SidebarMenuButton>
-                      </SidebarMenuItem>
-                    ))}
-                  </SidebarMenu>
-                </SidebarGroupContent>
-              </SidebarGroup>
-            )}
-          </>
+          <div className="flex flex-col gap-6">
+            {groups.map((group) => (
+              <div key={group.label} className="flex flex-col gap-2">
+                <motion.p
+                  animate={{
+                    display: open ? "block" : "none",
+                    opacity: open ? 1 : 0,
+                  }}
+                  className="text-xs font-medium text-sidebar-foreground/70 px-2"
+                >
+                  {group.label}
+                </motion.p>
+                <div className="flex flex-col gap-1">
+                  {group.items.map((item) => (
+                    <SidebarLink
+                      key={item.href}
+                      link={item}
+                      isActive={location.pathname === item.href}
+                    />
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
         )}
-      </SidebarContent>
+      </div>
 
-      <SidebarFooter className="border-t border-sidebar-border p-4">
-        <div className="flex items-center justify-between">
-          {!isCollapsed && (
-            <p className="text-xs text-sidebar-foreground/60">Hiems AI Dashboard</p>
-          )}
-        </div>
-      </SidebarFooter>
-    </Sidebar>
+      {/* Footer */}
+      <div className="border-t border-sidebar-border pt-4">
+        <motion.p
+          animate={{
+            display: open ? "block" : "none",
+            opacity: open ? 1 : 0,
+          }}
+          className="text-xs text-sidebar-foreground/60 text-center"
+        >
+          Hiems AI Dashboard
+        </motion.p>
+      </div>
+    </div>
   );
 }

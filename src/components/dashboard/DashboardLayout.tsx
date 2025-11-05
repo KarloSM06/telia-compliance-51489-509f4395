@@ -1,9 +1,9 @@
-import { SidebarProvider, SidebarInset, SidebarTrigger } from "@/components/ui/sidebar";
+import { Sidebar, SidebarBody } from "@/components/ui/animated-sidebar";
 import { AppSidebar } from "./AppSidebar";
 import { OwnerNotificationBell } from "@/components/OwnerNotificationBell";
 import { useAuth } from "@/hooks/useAuth";
 import { useNavigate } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -12,6 +12,7 @@ interface DashboardLayoutProps {
 export function DashboardLayout({ children }: DashboardLayoutProps) {
   const { user, loading } = useAuth();
   const navigate = useNavigate();
+  const [open, setOpen] = useState(true);
 
   useEffect(() => {
     if (!loading && !user) {
@@ -35,20 +36,21 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
   }
 
   return (
-    <SidebarProvider>
+    <Sidebar open={open} setOpen={setOpen}>
       <div className="flex min-h-screen w-full bg-background">
-        <AppSidebar />
-        <SidebarInset className="flex-1">
+        <SidebarBody className="justify-between gap-10">
+          <AppSidebar />
+        </SidebarBody>
+        <div className="flex-1 flex flex-col">
           <header className="sticky top-0 z-50 flex h-16 items-center gap-4 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 px-6">
-            <SidebarTrigger className="-ml-1" />
             <div className="flex-1" />
             <OwnerNotificationBell />
           </header>
-          <main className="flex-1 p-6 md:p-8">
+          <main className="flex-1 p-6 md:p-8 overflow-auto">
             {children}
           </main>
-        </SidebarInset>
+        </div>
       </div>
-    </SidebarProvider>
+    </Sidebar>
   );
 }
