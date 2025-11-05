@@ -268,10 +268,10 @@ function Header1() {
               </DropdownMenu>
             ) : (
               <Button 
-                variant="ghost" 
+                variant="outline" 
                 size="sm" 
                 onClick={handleAuthClick}
-                className="hidden md:inline hover:bg-accent/10 transition-all duration-300 hover:scale-105 font-medium"
+                className="hidden md:inline rounded-xl hover:bg-gradient-gold hover:text-primary hover:border-primary/20 transition-all duration-300 hover:scale-105 font-medium"
               >
                 Logga in
               </Button>
