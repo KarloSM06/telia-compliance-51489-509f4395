@@ -43,15 +43,6 @@ const OpenRouterDashboard = lazy(() => import("./pages/OpenRouterDashboard"));
 const AdminPanel = lazy(() => import("./pages/AdminPanel"));
 const DashboardLayout = lazy(() => import("./components/dashboard/DashboardLayout").then(m => ({ default: m.DashboardLayout })));
 
-// Service pages
-const ServicesIndex = lazy(() => import("./pages/services/Index"));
-const QuoteInvoice = lazy(() => import("./pages/services/QuoteInvoice"));
-const AIReceptionist = lazy(() => import("./pages/services/AIReceptionist"));
-const CRMAnalytics = lazy(() => import("./pages/services/CRMAnalytics"));
-const CustomDashboards = lazy(() => import("./pages/services/CustomDashboards"));
-const Automations = lazy(() => import("./pages/services/Automations"));
-const HowItWorks = lazy(() => import("./pages/HowItWorks"));
-
 // Loading fallback component
 const PageLoader = () => (
   <div className="min-h-screen flex items-center justify-center bg-background">
@@ -87,17 +78,8 @@ const App = () => {
           <BrowserRouter>
           <Suspense fallback={<PageLoader />}>
             <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/auth" element={<Auth />} />
-          
-          {/* Service routes */}
-          <Route path="/tjanster" element={<ServicesIndex />} />
-          <Route path="/tjanster/offert-faktura" element={<QuoteInvoice />} />
-          <Route path="/tjanster/ai-receptionist" element={<AIReceptionist />} />
-          <Route path="/tjanster/crm-analytics" element={<CRMAnalytics />} />
-          <Route path="/tjanster/custom-dashboards" element={<CustomDashboards />} />
-          <Route path="/tjanster/automationer" element={<Automations />} />
-          <Route path="/hur-det-funkar" element={<HowItWorks />} />
+              <Route path="/" element={<Index />} />
+              <Route path="/auth" element={<Auth />} />
               <Route path="/dashboard" element={<DashboardLayout><Dashboard /></DashboardLayout>} />
               {/* FAS 2: Redirect /analytics to /dashboard */}
               <Route path="/dashboard/analytics" element={<DashboardLayout><Dashboard /></DashboardLayout>} />

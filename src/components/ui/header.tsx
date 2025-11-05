@@ -58,36 +58,28 @@ function Header1() {
     href: "/",
     description: ""
   }, {
-    title: "Tjänster",
-    description: "Våra tjänster och lösningar",
+    title: "Lösningar",
+    description: "Våra skräddarsydda AI-system och paket",
+    action: () => scrollToSection('paket'),
     items: [{
-      title: "Alla tjänster",
-      href: "/tjanster"
+      title: "AI-Paket",
+      action: () => scrollToSection('paket')
     }, {
-      title: "Offert & Faktura",
-      href: "/tjanster/offert-faktura"
+      title: "Branschlösningar",
+      action: () => scrollToSection('branscher')
     }, {
-      title: "AI-Receptionist",
-      href: "/tjanster/ai-receptionist"
-    }, {
-      title: "CRM & Analytics",
-      href: "/tjanster/crm-analytics"
-    }, {
-      title: "Anpassade Dashboards",
-      href: "/tjanster/custom-dashboards"
-    }, {
-      title: "Automationer",
-      href: "/tjanster/automationer"
+      title: "Case Studies",
+      action: () => scrollToSection('case')
     }]
   }, {
     title: "Företag",
     description: "Mer om Hiems och vårt arbete",
     items: [{
-      title: "Hur det funkar",
-      href: "/hur-det-funkar"
-    }, {
       title: "Om oss",
       href: "/about"
+    }, {
+      title: "Kontakt",
+      action: () => scrollToSection('kontakt')
     }]
   }];
   const [isOpen, setOpen] = useState(false);
@@ -99,7 +91,9 @@ function Header1() {
                   <Button variant="outline" className="hover:bg-gradient-gold hover:text-primary hover:border-primary/20 transition-all duration-300 font-medium rounded-xl">
                     {item.title}
                   </Button>
-                </Link> : <NavigationMenu key={item.title}>
+                </Link> : item.action ? <Button key={item.title} variant="outline" onClick={item.action} className="hover:bg-gradient-gold hover:text-primary hover:border-primary/20 transition-all duration-300 font-medium rounded-xl">
+                  {item.title}
+                </Button> : <NavigationMenu key={item.title}>
                   <NavigationMenuList>
                     <NavigationMenuItem>
                       <NavigationMenuTrigger className="font-medium text-sm hover:bg-gradient-gold hover:text-primary transition-all duration-300 rounded-xl border border-input">
@@ -119,12 +113,15 @@ function Header1() {
                             </Button>
                           </div>
                           <div className="flex flex-col text-sm h-full justify-end gap-1">
-                            {item.items?.map(subItem => <Link key={subItem.title} to={subItem.href}>
+                            {item.items?.map(subItem => subItem.href ? <Link key={subItem.title} to={subItem.href}>
                                   <Button variant="ghost" className="w-full justify-between hover:bg-muted rounded-xl">
                                     <span>{subItem.title}</span>
                                     <MoveRight className="w-4 h-4 text-muted-foreground" />
                                   </Button>
-                                </Link>)}
+                                </Link> : <Button key={subItem.title} variant="ghost" onClick={subItem.action} className="w-full justify-between hover:bg-muted rounded-xl">
+                                  <span>{subItem.title}</span>
+                                  <MoveRight className="w-4 h-4 text-muted-foreground" />
+                                </Button>)}
                           </div>
                         </div>
                       </NavigationMenuContent>
@@ -214,13 +211,27 @@ function Header1() {
                       {item.href ? <Link to={item.href} onClick={() => setOpen(false)} className="flex justify-between items-center hover:bg-accent/10 p-2 rounded transition-all duration-300">
                           <span className="text-lg font-medium">{item.title}</span>
                           <MoveRight className="w-4 h-4 stroke-1 text-muted-foreground" />
-                        </Link> : <p className="text-lg font-medium p-2">{item.title}</p>}
-                      {item.items && item.items.map(subItem => <Link key={subItem.title} to={subItem.href} onClick={() => setOpen(false)} className="flex justify-between items-center hover:bg-accent/10 p-2 rounded transition-all duration-300 pl-4">
+                        </Link> : item.action ? <button onClick={() => {
+                  item.action();
+                  setOpen(false);
+                }} className="flex justify-between items-center hover:bg-accent/10 p-2 rounded transition-all duration-300 text-left">
+                          <span className="text-lg font-medium">{item.title}</span>
+                          <MoveRight className="w-4 h-4 stroke-1 text-muted-foreground" />
+                        </button> : <p className="text-lg font-medium p-2">{item.title}</p>}
+                      {item.items && item.items.map(subItem => subItem.href ? <Link key={subItem.title} to={subItem.href} onClick={() => setOpen(false)} className="flex justify-between items-center hover:bg-accent/10 p-2 rounded transition-all duration-300 pl-4">
                               <span className="text-muted-foreground">
                                 {subItem.title}
                               </span>
                               <MoveRight className="w-4 h-4 stroke-1" />
-                            </Link>)}
+                            </Link> : <button key={subItem.title} onClick={() => {
+                  subItem.action?.();
+                  setOpen(false);
+                }} className="flex justify-between items-center hover:bg-accent/10 p-2 rounded transition-all duration-300 pl-4 text-left">
+                              <span className="text-muted-foreground">
+                                {subItem.title}
+                              </span>
+                              <MoveRight className="w-4 h-4 stroke-1" />
+                            </button>)}
                     </div>
                   </div>)}
 
