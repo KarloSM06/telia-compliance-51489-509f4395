@@ -78,8 +78,17 @@ const App = () => {
           <BrowserRouter>
           <Suspense fallback={<PageLoader />}>
             <Routes>
-              <Route path="/" element={<Index />} />
-              <Route path="/auth" element={<Auth />} />
+          <Route path="/" element={<Index />} />
+          <Route path="/auth" element={<Auth />} />
+          
+          {/* Service routes */}
+          <Route path="/tjanster" element={<ServicesIndex />} />
+          <Route path="/tjanster/offert-faktura" element={<QuoteInvoice />} />
+          <Route path="/tjanster/ai-receptionist" element={<AIReceptionist />} />
+          <Route path="/tjanster/crm-analytics" element={<CRMAnalytics />} />
+          <Route path="/tjanster/custom-dashboards" element={<CustomDashboards />} />
+          <Route path="/tjanster/automationer" element={<Automations />} />
+          <Route path="/hur-det-funkar" element={<HowItWorks />} />
               <Route path="/dashboard" element={<DashboardLayout><Dashboard /></DashboardLayout>} />
               {/* FAS 2: Redirect /analytics to /dashboard */}
               <Route path="/dashboard/analytics" element={<DashboardLayout><Dashboard /></DashboardLayout>} />

@@ -58,28 +58,36 @@ function Header1() {
     href: "/",
     description: ""
   }, {
-    title: "Lösningar",
-    description: "Våra skräddarsydda AI-system och paket",
-    action: () => scrollToSection('paket'),
+    title: "Tjänster",
+    description: "Våra tjänster och lösningar",
     items: [{
-      title: "AI-Paket",
-      action: () => scrollToSection('paket')
+      title: "Alla tjänster",
+      href: "/tjanster"
     }, {
-      title: "Branschlösningar",
-      action: () => scrollToSection('branscher')
+      title: "Offert & Faktura",
+      href: "/tjanster/offert-faktura"
     }, {
-      title: "Case Studies",
-      action: () => scrollToSection('case')
+      title: "AI-Receptionist",
+      href: "/tjanster/ai-receptionist"
+    }, {
+      title: "CRM & Analytics",
+      href: "/tjanster/crm-analytics"
+    }, {
+      title: "Anpassade Dashboards",
+      href: "/tjanster/custom-dashboards"
+    }, {
+      title: "Automationer",
+      href: "/tjanster/automationer"
     }]
   }, {
     title: "Företag",
     description: "Mer om Hiems och vårt arbete",
     items: [{
+      title: "Hur det funkar",
+      href: "/hur-det-funkar"
+    }, {
       title: "Om oss",
       href: "/about"
-    }, {
-      title: "Kontakt",
-      action: () => scrollToSection('kontakt')
     }]
   }];
   const [isOpen, setOpen] = useState(false);
