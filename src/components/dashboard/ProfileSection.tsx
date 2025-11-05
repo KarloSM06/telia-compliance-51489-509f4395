@@ -97,7 +97,7 @@ export function ProfileSection() {
         <DropdownMenuContent 
           align="end" 
           className={cn(
-            "w-56 backdrop-blur-sm",
+            "w-56 backdrop-blur-sm z-50",
             "bg-gradient-to-br from-background to-background/95",
             "border-[hsl(222,47%,25%)]/20"
           )}
