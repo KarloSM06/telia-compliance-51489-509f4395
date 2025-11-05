@@ -6,9 +6,11 @@ const ALL_PROGRAM_LOGOS = expertiseCategories.flatMap(cat =>
   cat.items.map(item => item.logo).filter(Boolean)
 ) as string[];
 
-const repeatedIcons = (icons: string[], repeat = 3) => Array.from({
+// Duplicera tillräckligt många gånger för sömlös loop
+const repeatedIcons = (icons: string[], repeat = 6) => Array.from({
   length: repeat
 }).flatMap(() => icons);
+
 export default function IntegrationHero() {
   // Dela upp logotyperna i två rader
   const halfLength = Math.ceil(ALL_PROGRAM_LOGOS.length / 2);
@@ -27,14 +29,16 @@ export default function IntegrationHero() {
         
 
         <div className="mt-8 md:mt-10 overflow-hidden relative pb-2">
+          {/* Rad 1 - scrollar åt vänster */}
           <div className="flex gap-8 md:gap-10 whitespace-nowrap animate-scroll-left">
-            {repeatedIcons(row1, 3).map((src, i) => <div key={i} className="h-16 w-16 md:h-20 md:w-20 flex-shrink-0 rounded-xl bg-card shadow-md flex items-center justify-center border border-border p-3">
+            {repeatedIcons(row1, 6).map((src, i) => <div key={i} className="h-16 w-16 md:h-20 md:w-20 flex-shrink-0 rounded-xl bg-card shadow-md flex items-center justify-center border border-border p-3">
                 <img src={src} alt="integration icon" className="h-10 w-10 md:h-12 md:w-12 object-contain" />
               </div>)}
           </div>
 
+          {/* Rad 2 - scrollar åt höger */}
           <div className="flex gap-8 md:gap-10 whitespace-nowrap mt-4 md:mt-6 animate-scroll-right">
-            {repeatedIcons(row2, 3).map((src, i) => <div key={i} className="h-16 w-16 md:h-20 md:w-20 flex-shrink-0 rounded-xl bg-card shadow-md flex items-center justify-center border border-border p-3">
+            {repeatedIcons(row2, 6).map((src, i) => <div key={i} className="h-16 w-16 md:h-20 md:w-20 flex-shrink-0 rounded-xl bg-card shadow-md flex items-center justify-center border border-border p-3">
                 <img src={src} alt="integration icon" className="h-10 w-10 md:h-12 md:w-12 object-contain" />
               </div>)}
           </div>
