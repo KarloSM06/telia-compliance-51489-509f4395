@@ -94,7 +94,7 @@ export function LandingAccordionItem() {
         {/* Left Side: Text Content */}
         <div className="w-full md:w-1/2 text-center md:text-left">
           <h1 className="text-4xl md:text-6xl font-bold text-foreground leading-tight tracking-tighter">
-            Accelerate Gen-AI Tasks on Any Device
+            Oavsett branch har vi en lösning för dig
           </h1>
           <p className="mt-6 text-lg text-muted-foreground max-w-xl mx-auto md:mx-0">
             Build high-performance AI apps on-device without the hassle of model compression or edge deployment.
