@@ -73,7 +73,7 @@ export function BookingSection() {
         <div className="max-w-6xl mx-auto">
           <div className="grid lg:grid-cols-2 gap-12 items-start">
             {/* Calendar Section */}
-            <div className="bg-card/50 backdrop-blur-sm rounded-2xl p-8 border border-border/50">
+            <div className="rounded-2xl p-8 border border-border/30">
               <div className="flex items-center gap-3 mb-6">
                 <div className="p-3 bg-primary/10 rounded-xl">
                   <CalendarIcon className="w-6 h-6 text-primary" />
@@ -117,7 +117,7 @@ export function BookingSection() {
             </div>
 
             {/* Form Section */}
-            <div className="bg-card/50 backdrop-blur-sm rounded-2xl p-8 border border-border/50">
+            <div className="rounded-2xl p-8 border border-border/30">
               <div className="flex items-center gap-3 mb-6">
                 <div className="p-3 bg-primary/10 rounded-xl">
                   <User className="w-6 h-6 text-primary" />
