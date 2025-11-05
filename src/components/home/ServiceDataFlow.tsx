@@ -128,7 +128,7 @@ export const ServiceDataFlow = () => {
                   <p className="text-sm text-muted-foreground">Analyserar mönster från alla kanaler i realtid.</p>
                 </div>
               </div>
-              <div className="rounded-tl relative -mb-6 -mr-6 mt-6 h-fit border-l border-t p-6 py-6 sm:ml-6">
+              <div className="rounded-tl relative -mb-6 -mr-6 mt-6 h-fit p-6 py-6 sm:ml-6">
                 <div className="absolute left-3 top-2 flex gap-1">
                   <span className="block size-2 rounded-full border dark:border-white/10 dark:bg-white/10"></span>
                   <span className="block size-2 rounded-full border dark:border-white/10 dark:bg-white/10"></span>
