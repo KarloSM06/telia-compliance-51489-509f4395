@@ -49,12 +49,14 @@ export const ProductSelection = () => {
     setSelectedIndustry(industryId);
     setIsConsultationModalOpen(true);
   };
-  return <div className="relative bg-gradient-hero min-h-screen">
+  return <div className="relative min-h-screen">
       {/* Animated Shader Background at top */}
-      <ShaderBackground />
+      <div className="fixed inset-0 z-0">
+        <ShaderBackground />
+      </div>
       
       {/* Hero Section and Packages with Aurora Background */}
-      <AuroraBackground className="h-auto">
+      <AuroraBackground className="h-auto relative z-10">
         <section id="hero" className="relative py-12 lg:py-16 flex items-center">
           <AnimatedHero onBookDemo={() => setIsConsultationModalOpen(true)} onViewPackages={() => scrollToSection('paket')} />
         </section>
