@@ -159,7 +159,15 @@ export default {
             transform: "translateX(0)",
             opacity: "1"
           }
-        }
+        },
+        aurora: {
+          from: {
+            backgroundPosition: "50% 50%, 50% 50%",
+          },
+          to: {
+            backgroundPosition: "350% 50%, 350% 50%",
+          },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 1s ease-out",
@@ -169,8 +177,22 @@ export default {
         "shimmer": "shimmer 8s infinite linear",
         "slide-in-left": "slide-in-left 2s ease-out",
         "slide-in-right": "slide-in-right 2s ease-out",
+        aurora: "aurora 60s linear infinite",
       },
     },
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [require("tailwindcss-animate"), addVariablesForColors],
 } satisfies Config;
+
+// This plugin adds each Tailwind color as a global CSS variable, e.g. var(--gray-200).
+function addVariablesForColors({ addBase, theme }: any) {
+  const flattenColorPalette = require("tailwindcss/lib/util/flattenColorPalette").default;
+  const allColors = flattenColorPalette(theme("colors"));
+  const newVars = Object.fromEntries(
+    Object.entries(allColors).map(([key, val]) => [`--${key}`, val])
+  );
+
+  addBase({
+    ":root": newVars,
+  });
+}

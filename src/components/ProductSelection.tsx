@@ -20,6 +20,9 @@ import karloImage from "@/assets/karlo-mangione.png";
 import antonImage from "@/assets/anton-sallnas.png";
 import emilImage from "@/assets/emil-westerberg.png";
 import { Sparkles, Zap, Target, CheckCircle, Award, Users, Wrench, ArrowRight } from "lucide-react";
+import { AuroraBackground } from "@/components/ui/aurora-background";
+import { motion } from "framer-motion";
+
 export const ProductSelection = () => {
   const [isConsultationModalOpen, setIsConsultationModalOpen] = useState(false);
   const [selectedIndustry, setSelectedIndustry] = useState<string>('');
@@ -46,37 +49,52 @@ export const ProductSelection = () => {
         <div className="absolute bottom-20 right-10 w-96 h-96 bg-accent/5 rounded-full blur-3xl animate-pulse delay-1000"></div>
       </div>
       
-      {/* Hero Section */}
-      <section id="hero" className="relative py-40 lg:py-56 min-h-screen flex items-center">
-        <div className="absolute inset-0 overflow-hidden">
-          <img src={heroBackground} alt="Hero" className="w-full h-full object-cover" />
-          <div className="absolute inset-0 bg-gradient-to-b from-primary/90 via-primary/80 to-primary/95"></div>
-        </div>
-        
-        <div className="mx-auto max-w-7xl px-6 lg:px-12 relative z-10 w-full">
-          <AnimatedSection className="max-w-7xl mx-auto text-center">
-            <h1 className="text-6xl sm:text-7xl text-white mb-8 leading-tight font-extrabold text-center lg:text-8xl">
-              Skala din verksamhet -{" "}
+      {/* Hero Section with Aurora Background */}
+      <section id="hero" className="relative">
+        <AuroraBackground>
+          <motion.div
+            initial={{ opacity: 0.0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{
+              delay: 0.3,
+              duration: 0.8,
+              ease: "easeInOut",
+            }}
+            className="relative flex flex-col gap-8 items-center justify-center px-4 max-w-7xl mx-auto"
+          >
+            <h1 className="text-6xl sm:text-7xl lg:text-8xl font-extrabold text-center leading-tight">
+              <span className="text-foreground dark:text-white">
+                Skala din verksamhet -{" "}
+              </span>
               <span className="bg-gradient-gold bg-clip-text text-transparent">
                 Utan att anställa fler
               </span>
             </h1>
             
-            <p className="text-2xl sm:text-3xl text-white/95 mb-16 leading-relaxed max-w-4xl mx-auto font-light">
+            <p className="text-xl sm:text-2xl lg:text-3xl text-foreground/90 dark:text-neutral-200 leading-relaxed max-w-4xl mx-auto font-light text-center">
               Hiems levererar ett komplett AI-ekosystem som automatiserar kundflöden, 
               försäljning, bokningar, administration och dataanalys.
             </p>
             
-            <div className="flex flex-col sm:flex-row gap-6 justify-center">
-              <Button size="lg" className="bg-gradient-gold text-primary hover:shadow-glow transition-all duration-300 font-bold text-xl px-12 py-8 h-auto" onClick={() => scrollToSection('paket')}>
+            <div className="flex flex-col sm:flex-row gap-6 justify-center mt-8">
+              <Button 
+                size="lg" 
+                className="bg-gradient-gold text-primary hover:shadow-glow transition-all duration-300 font-bold text-xl px-12 py-8 h-auto" 
+                onClick={() => scrollToSection('paket')}
+              >
                 Se våra paket
               </Button>
-              <Button size="lg" variant="outline" className="border-2 border-white text-white bg-white/10 hover:bg-white hover:text-primary transition-all duration-300 font-bold text-xl px-12 py-8 h-auto" onClick={() => setIsConsultationModalOpen(true)}>
+              <Button 
+                size="lg" 
+                variant="outline" 
+                className="border-2 border-foreground dark:border-white text-foreground dark:text-white bg-background/10 dark:bg-white/10 hover:bg-foreground hover:text-background dark:hover:bg-white dark:hover:text-black transition-all duration-300 font-bold text-xl px-12 py-8 h-auto" 
+                onClick={() => setIsConsultationModalOpen(true)}
+              >
                 Boka demo
               </Button>
             </div>
-          </AnimatedSection>
-        </div>
+          </motion.div>
+        </AuroraBackground>
       </section>
 
       {/* Våra AI-paket / Lösningar */}
