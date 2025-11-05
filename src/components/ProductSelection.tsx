@@ -12,6 +12,7 @@ import { CustomerJourneyFlow } from "@/components/home/CustomerJourneyFlow";
 import { OnboardingTimeline } from "@/components/home/OnboardingTimeline";
 import { TechnicalExpertise } from "@/components/home/TechnicalExpertise";
 import { CaseStudyCard } from "@/components/home/CaseStudyCard";
+import { WorkflowTimeline } from "@/components/home/WorkflowTimeline";
 import { aiPackages } from "@/data/packages";
 import { industries } from "@/data/industries";
 import { caseStudies } from "@/data/caseStudies";
@@ -67,6 +68,11 @@ export const ProductSelection = () => {
 
         {/* Våra AI-paket / Lösningar */}
         <StickyPackageCards packages={aiPackages} onBookDemo={() => setIsConsultationModalOpen(true)} onViewDetails={() => scrollToSection('kontakt')} />
+        
+        {/* Arbetsprocess */}
+        <section id="process" className="relative py-24">
+          <WorkflowTimeline />
+        </section>
       </AuroraBackground>
 
       {/* Branschspecifika lösningar */}
