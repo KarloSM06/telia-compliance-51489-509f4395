@@ -55,7 +55,7 @@ const FlowCard = ({
   </AnimatedContainer>;
 };
 export const ServiceDataFlow = () => {
-  return <section className="bg-background/50 py-32 md:py-48">
+  return <section className="py-32 md:py-48">
     <div className="mx-auto max-w-7xl px-6 md:px-8">
       <AnimatedContainer className="mx-auto max-w-5xl text-center mb-16">
         <h2 className="text-3xl font-bold tracking-wide text-balance md:text-4xl lg:text-5xl mb-6">
