@@ -28,6 +28,7 @@ import { ClientLogoCloud } from "@/components/ClientLogoCloud";
 import { ServicesGrid } from "@/components/home/ServicesGrid";
 import { UnifiedDashboard } from "@/components/home/UnifiedDashboard";
 import { LandingAccordionItem } from "@/components/home/LandingAccordionItem";
+import { UnifiedEcosystem } from "@/components/home/UnifiedEcosystem";
 export const ProductSelection = () => {
   const [isConsultationModalOpen, setIsConsultationModalOpen] = useState(false);
   const [selectedIndustry, setSelectedIndustry] = useState<string>('');
@@ -69,6 +70,9 @@ export const ProductSelection = () => {
 
         {/* AI Capabilities Accordion */}
         <LandingAccordionItem />
+
+        {/* Allt administrativt i ett ekosystem */}
+        <UnifiedEcosystem />
 
         {/* Våra AI-paket / Lösningar */}
         <StickyPackageCards packages={aiPackages} onBookDemo={() => setIsConsultationModalOpen(true)} onViewDetails={() => scrollToSection('kontakt')} />
