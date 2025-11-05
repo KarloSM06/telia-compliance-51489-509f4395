@@ -42,17 +42,16 @@ export const ProductSelection = () => {
     setSelectedIndustry(industryId);
     setIsConsultationModalOpen(true);
   };
-  return <div className="relative overflow-hidden min-h-screen">
-      {/* Global Animated background elements */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute inset-0 bg-gradient-to-b from-background via-primary/5 to-background" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,hsl(var(--primary)/0.15),transparent_50%)]" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_80%,hsl(var(--primary)/0.1),transparent_50%)]" />
+  return <div className="relative overflow-hidden bg-gradient-hero min-h-screen">
+      {/* Animated background elements */}
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute top-20 left-10 w-72 h-72 bg-accent/10 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute bottom-20 right-10 w-96 h-96 bg-accent/5 rounded-full blur-3xl animate-pulse delay-1000"></div>
       </div>
       
-      {/* Hero Section */}
-      <section id="hero" className="relative py-40 lg:py-56 min-h-screen flex items-center">
-        <div className="mx-auto max-w-7xl px-6 lg:px-12 relative z-10 w-full">
+      {/* Hero Section with Aurora Background */}
+      <section id="hero" className="relative">
+        <AuroraBackground>
           <motion.div
             initial={{ opacity: 0.0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -61,7 +60,7 @@ export const ProductSelection = () => {
               duration: 0.8,
               ease: "easeInOut",
             }}
-            className="relative flex flex-col gap-8 items-center justify-center"
+            className="relative flex flex-col gap-8 items-center justify-center px-4 max-w-7xl mx-auto"
           >
             <h1 className="text-6xl sm:text-7xl lg:text-8xl font-extrabold text-center leading-tight">
               <span className="text-foreground dark:text-white">
@@ -95,11 +94,15 @@ export const ProductSelection = () => {
               </Button>
             </div>
           </motion.div>
-        </div>
+        </AuroraBackground>
       </section>
 
       {/* Våra AI-paket / Lösningar */}
-      <section id="paket" className="relative py-48">
+      <section id="paket" className="relative py-48 bg-gradient-to-b from-background via-primary/5 to-background">
+        {/* Animated background elements */}
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,hsl(var(--primary)/0.15),transparent_50%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_80%,hsl(var(--primary)/0.1),transparent_50%)]" />
+        
         <div className="mx-auto max-w-7xl px-6 lg:px-8 relative z-10">
           <AnimatedSection className="text-center mb-20">
             <div className="inline-block">
