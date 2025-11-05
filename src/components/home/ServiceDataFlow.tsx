@@ -41,7 +41,7 @@ const FlowCard = ({
   delay?: number;
 }) => {
   return <AnimatedContainer delay={delay}>
-    <Card className="relative overflow-hidden border-0">
+    <Card className="relative overflow-hidden bg-card/40 backdrop-blur-sm border border-border/50 hover:bg-card/60 hover:border-border/80 transition-all duration-300">
       <CardContent className="py-5 px-5">
         <div className="relative flex aspect-square size-12 rounded-full border before:absolute before:-inset-2 before:rounded-full before:border dark:border-white/10 dark:before:border-white/5">
           <Icon className="m-auto size-6 text-primary" strokeWidth={1.5} />
@@ -72,7 +72,7 @@ export const ServiceDataFlow = () => {
       <div className="relative">
         <div className="relative z-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {/* Main hero card - AI Intelligent (avlång) */}
-          <Card className="relative flex overflow-hidden sm:col-span-2 border-0">
+          <Card className="relative flex overflow-hidden sm:col-span-2 bg-card/40 backdrop-blur-sm border border-border/50 hover:bg-card/60 hover:border-border/80 transition-all duration-300">
             <CardContent className="relative flex items-center gap-6 py-6 px-6 w-full">
               <div className="relative flex h-20 w-40 items-center shrink-0">
                 <svg className="text-muted absolute inset-0 size-full" viewBox="0 0 254 104" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -91,7 +91,7 @@ export const ServiceDataFlow = () => {
           <FlowCard icon={MessageSquare} title="Chatbot & Kommunikation" description="Analyserar frågor, hämtar relevant info från databas och genererar personliga svar i realtid." delay={0.15} />
 
           {/* AI Modeller */}
-          <Card className="relative overflow-hidden border-0">
+          <Card className="relative overflow-hidden bg-card/40 backdrop-blur-sm border border-border/50 hover:bg-card/60 hover:border-border/80 transition-all duration-300">
             <CardContent className="py-5 px-5">
               <div className="relative flex aspect-square size-12 rounded-full border before:absolute before:-inset-2 before:rounded-full before:border dark:border-white/10 dark:before:border-white/5">
                 <Brain className="m-auto size-6 text-primary" strokeWidth={1.5} />
@@ -104,7 +104,7 @@ export const ServiceDataFlow = () => {
           </Card>
 
           {/* Automation & Integration - nu under AI Modeller */}
-          <Card className="relative overflow-hidden border-0">
+          <Card className="relative overflow-hidden bg-card/40 backdrop-blur-sm border border-border/50 hover:bg-card/60 hover:border-border/80 transition-all duration-300">
             <CardContent className="py-5 px-5">
               <div className="relative flex aspect-square size-12 rounded-full border before:absolute before:-inset-2 before:rounded-full before:border dark:border-white/10 dark:before:border-white/5">
                 <Workflow className="m-auto size-6 text-primary" strokeWidth={1.5} />
@@ -117,7 +117,7 @@ export const ServiceDataFlow = () => {
           </Card>
 
           {/* Analytics Card with Graph */}
-          <Card className="relative overflow-hidden sm:col-span-2 border-0">
+          <Card className="relative overflow-hidden sm:col-span-2 bg-card/40 backdrop-blur-sm border border-border/50 hover:bg-card/60 hover:border-border/80 transition-all duration-300">
             <CardContent className="grid py-6 px-6 sm:grid-cols-2">
               <div className="relative z-10 flex flex-col justify-between space-y-6">
                 <div className="relative flex aspect-square size-12 rounded-full border before:absolute before:-inset-2 before:rounded-full before:border dark:border-white/10 dark:before:border-white/5">
@@ -149,7 +149,7 @@ export const ServiceDataFlow = () => {
           </Card>
 
           {/* Offert & Faktura */}
-          <Card className="relative overflow-hidden sm:col-span-2 border-0">
+          <Card className="relative overflow-hidden sm:col-span-2 bg-card/40 backdrop-blur-sm border border-border/50 hover:bg-card/60 hover:border-border/80 transition-all duration-300">
             <CardContent className="grid h-full py-6 px-6 sm:grid-cols-2">
               <div className="relative z-10 flex flex-col justify-between space-y-6">
                 <div className="relative flex aspect-square size-12 rounded-full border before:absolute before:-inset-2 before:rounded-full before:border dark:border-white/10 dark:before:border-white/5">
