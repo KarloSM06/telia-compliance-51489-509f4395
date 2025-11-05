@@ -83,8 +83,8 @@ export function StickyPackageCards({ packages, onBookDemo, onViewDetails }: Stic
                 return (
                   <div
                     key={pkg.id}
-                    className="bg-gradient-to-br from-card/80 via-card/50 to-card/30 backdrop-blur-md border border-primary/10 grid grid-cols-1 md:grid-cols-2 items-center gap-4 md:gap-8 p-8 md:p-12 rounded-3xl mb-16 sticky hover:border-primary/30 transition-all duration-500 hover:shadow-2xl hover:shadow-primary/20"
-                    style={{ top: `${120 + index * 20}px` }}
+                    className="bg-gradient-to-br from-card/40 via-card/20 to-card/10 backdrop-blur-xl border border-primary/20 grid grid-cols-1 md:grid-cols-2 items-center gap-4 md:gap-8 p-8 md:p-12 rounded-3xl mb-16 sticky hover:border-primary/50 transition-all duration-500 hover:shadow-2xl hover:shadow-primary/30 shadow-lg"
+                    style={{ top: '200px' }}
                   >
                     {/* Card Content */}
                     <div className={`flex flex-col justify-center ${!isLeft ? 'md:order-2' : ''}`}>
