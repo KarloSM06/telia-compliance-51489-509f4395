@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import { ArrowRight, Calendar, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { RainbowButton } from "@/components/ui/rainbow-button";
 import { cn } from "@/lib/utils";
 interface AnimatedHeroProps {
   onBookDemo?: () => void;
@@ -99,14 +100,14 @@ function AnimatedHero({
           duration: 0.6,
           delay: 0.3
         }} className="flex flex-col sm:flex-row gap-4 justify-center mt-4">
-            <span className="relative inline-block overflow-hidden rounded-xl p-[2px]">
-              <span className="absolute inset-[-1000%] animate-[spin_3s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#ff0000_0%,#ff7f00_14%,#ffff00_28%,#00ff00_42%,#0000ff_57%,#4b0082_71%,#9400d3_85%,#ff0000_100%)]" />
-              <Button className="relative bg-background hover:bg-background group font-bold rounded-xl transition-all duration-300 hover:scale-105" onClick={onViewPackages}>
-                <span className="relative z-10 flex items-center gap-2 text-blue-900 dark:text-blue-900">
-                  Se våra paket <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" />
-                </span>
-              </Button>
-            </span>
+            <RainbowButton 
+              onClick={onViewPackages}
+              className="group font-bold rounded-xl transition-all duration-300 hover:scale-105"
+            >
+              <span className="flex items-center gap-2">
+                Se våra paket <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" />
+              </span>
+            </RainbowButton>
             <Button variant="outline" className="group hover:bg-gradient-gold hover:text-primary hover:border-primary/20 transition-all duration-300 font-bold rounded-xl hover:scale-105" onClick={onBookDemo}>
               <span className="flex items-center gap-2">
                 Boka demo <Calendar className="w-4 h-4 group-hover:rotate-12 transition-transform duration-300" />
