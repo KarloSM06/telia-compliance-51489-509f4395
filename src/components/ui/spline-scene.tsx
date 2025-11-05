@@ -20,6 +20,12 @@ export function SplineScene({ scene, className }: SplineSceneProps) {
       <Spline
         scene={scene}
         className={className}
+        style={{ 
+          width: '100%', 
+          height: '100%',
+          minWidth: '1920px',
+          minHeight: '1080px'
+        }}
       />
     </Suspense>
   )
