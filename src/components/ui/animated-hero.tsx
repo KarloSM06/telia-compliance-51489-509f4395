@@ -50,7 +50,7 @@ function AnimatedHero({
           }} transition={{
             duration: 0.6,
             delay: 0.1
-          }} className="text-4xl md:text-6xl lg:text-7xl max-w-4xl tracking-tight text-center font-bold leading-[1.15]">
+          }} className="text-4xl md:text-6xl lg:text-7xl max-w-6xl tracking-tight text-center font-bold leading-[1.15]">
               <span className={cn("block mb-3", "bg-clip-text text-transparent", "bg-[linear-gradient(180deg,_hsl(var(--foreground))_0%,_hsl(var(--foreground)/0.8)_100%)]", "dark:bg-[linear-gradient(180deg,_hsl(var(--foreground))_0%,_hsl(var(--foreground)/0.6)_100%)]")}>Skala din verksamhet med AI</span>
               <span className="relative flex w-full justify-center overflow-hidden text-center pb-2 min-h-[1.2em]">
                 {titles.map((title, index) => <motion.span key={index} className="absolute font-extrabold bg-gradient-gold bg-clip-text text-transparent" initial={{
