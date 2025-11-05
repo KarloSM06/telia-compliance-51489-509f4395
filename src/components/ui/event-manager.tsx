@@ -3,11 +3,13 @@
 import * as React from "react"
 import { format, startOfMonth, endOfMonth, startOfWeek, endOfWeek, addDays, isSameMonth, isSameDay, addMonths, subMonths, isToday, parseISO, isBefore, isAfter, startOfDay, endOfDay } from "date-fns"
 import { sv } from "date-fns/locale"
-import { ChevronLeft, ChevronRight, Plus, Calendar as CalendarIcon, Search, Filter, X, Clock, MapPin, User } from "lucide-react"
+import { ChevronLeft, ChevronRight, Plus, Calendar as CalendarIcon, Search, Filter, X, Clock, MapPin, User, MoreVertical, Pencil, Trash2, Copy } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator } from "@/components/ui/dropdown-menu"
 import { cn } from "@/lib/utils"
 import type { CalendarEvent } from "@/hooks/useCalendarEvents"
 import { formatInTimeZone_, toTimeZone } from "@/lib/timezoneUtils"
@@ -300,24 +302,59 @@ export function EventManager({
                   Inga händelser denna dag
                 </p>
               ) : (
-                getEventsForDay(selectedDate).map((event) => (
+                  getEventsForDay(selectedDate).map((event) => (
                   <div
                     key={event.id}
-                    onClick={() => onEventClick?.(event)}
                     className={cn(
-                      "p-4 rounded-lg border cursor-pointer transition-all",
+                      "group p-4 rounded-lg border transition-all",
                       "hover:shadow-lg hover:scale-[1.02]",
                       getEventTypeColor(event.event_type)
                     )}
                   >
                     <div className="flex items-start justify-between gap-2 mb-2">
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-2 flex-1" onClick={() => onEventClick?.(event)}>
                         <span className="text-lg">{getEventTypeIcon(event.event_type)}</span>
-                        <h4 className="font-semibold">{event.title}</h4>
+                        <h4 className="font-semibold cursor-pointer">{event.title}</h4>
                       </div>
-                      <Badge variant="outline" className="text-xs">
-                        {event.event_type}
-                      </Badge>
+                      
+                      <div className="flex items-center gap-2">
+                        <Badge variant="outline" className="text-xs">
+                          {event.event_type}
+                        </Badge>
+                        
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button 
+                              variant="ghost" 
+                              size="icon"
+                              className="h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity"
+                            >
+                              <MoreVertical className="h-4 w-4" />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end" className="w-48">
+                            <DropdownMenuItem onClick={() => onEventClick?.(event)}>
+                              <Pencil className="h-4 w-4 mr-2" />
+                              Redigera
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => {
+                              // Duplicate logic can be added here
+                              console.log("Duplicate event", event.id)
+                            }}>
+                              <Copy className="h-4 w-4 mr-2" />
+                              Duplicera
+                            </DropdownMenuItem>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem 
+                              className="text-destructive focus:text-destructive"
+                              onClick={() => onEventDelete?.(event.id)}
+                            >
+                              <Trash2 className="h-4 w-4 mr-2" />
+                              Ta bort
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </div>
                     </div>
 
                     {event.description && (
