@@ -135,12 +135,12 @@ export const ServiceDataFlow = () => {
                   <span className="block size-2 rounded-full border dark:border-white/10 dark:bg-white/10"></span>
                 </div>
                 <svg className="w-full" viewBox="0 0 200 100" fill="none">
-                  <path className="text-primary" d="M0 80 L20 70 L40 75 L60 50 L80 55 L100 30 L120 40 L140 20 L160 35 L180 15 L200 25" stroke="currentColor" strokeWidth="2" fill="none" />
-                  <path d="M0 80 L20 70 L40 75 L60 50 L80 55 L100 30 L120 40 L140 20 L160 35 L180 15 L200 25 L200 100 L0 100 Z" fill="url(#statsGradient)" opacity="0.2" />
+                  <path className="text-green-500" d="M0 80 L20 70 L40 75 L60 50 L80 55 L100 30 L120 40 L140 20 L160 35 L180 15 L200 25" stroke="currentColor" strokeWidth="2" fill="none" />
+                  <path d="M0 80 L20 70 L40 75 L60 50 L80 55 L100 30 L120 40 L140 20 L160 35 L180 15 L200 25 L200 100 L0 100 Z" fill="url(#statsGradientGreen)" opacity="0.2" />
                   <defs>
-                    <linearGradient id="statsGradient" x1="0" y1="0" x2="0" y2="100">
-                      <stop offset="0%" stopColor="hsl(var(--primary))" />
-                      <stop offset="100%" stopColor="hsl(var(--primary))" stopOpacity="0" />
+                    <linearGradient id="statsGradientGreen" x1="0" y1="0" x2="0" y2="100">
+                      <stop offset="0%" stopColor="hsl(142 76% 36%)" />
+                      <stop offset="100%" stopColor="hsl(142 76% 36%)" stopOpacity="0" />
                     </linearGradient>
                   </defs>
                 </svg>
