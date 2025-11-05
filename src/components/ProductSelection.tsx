@@ -49,9 +49,9 @@ export const ProductSelection = () => {
         <div className="absolute bottom-20 right-10 w-96 h-96 bg-accent/5 rounded-full blur-3xl animate-pulse delay-1000"></div>
       </div>
       
-      {/* Hero Section with Aurora Background */}
-      <section id="hero" className="relative">
-        <AuroraBackground>
+      {/* Hero Section and Packages with Aurora Background */}
+      <AuroraBackground className="h-auto min-h-[200vh]">
+        <section id="hero" className="relative py-40 lg:py-56 min-h-screen flex items-center">
           <motion.div
             initial={{ opacity: 0.0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -94,14 +94,10 @@ export const ProductSelection = () => {
               </Button>
             </div>
           </motion.div>
-        </AuroraBackground>
-      </section>
+        </section>
 
-      {/* Våra AI-paket / Lösningar */}
-      <section id="paket" className="relative py-48 bg-gradient-to-b from-background via-primary/5 to-background">
-        {/* Animated background elements */}
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,hsl(var(--primary)/0.15),transparent_50%)]" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_80%,hsl(var(--primary)/0.1),transparent_50%)]" />
+        {/* Våra AI-paket / Lösningar */}
+        <section id="paket" className="relative py-48">
         
         <div className="mx-auto max-w-7xl px-6 lg:px-8 relative z-10">
           <AnimatedSection className="text-center mb-20">
@@ -123,6 +119,7 @@ export const ProductSelection = () => {
         </div>
         </div>
       </section>
+      </AuroraBackground>
 
       {/* Branschspecifika lösningar */}
       <section id="branscher" className="relative py-24 overflow-hidden">
