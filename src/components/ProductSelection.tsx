@@ -12,6 +12,7 @@ import { CustomerJourneyFlow } from "@/components/home/CustomerJourneyFlow";
 import { OnboardingTimeline } from "@/components/home/OnboardingTimeline";
 import { TechnicalExpertise } from "@/components/home/TechnicalExpertise";
 import { CaseStudyCard } from "@/components/home/CaseStudyCard";
+import { TrustedCompanies } from "@/components/home/TrustedCompanies";
 import { aiPackages } from "@/data/packages";
 import { industries } from "@/data/industries";
 import { caseStudies } from "@/data/caseStudies";
@@ -78,6 +79,9 @@ export const ProductSelection = () => {
           </AnimatedSection>
         </div>
       </section>
+
+      {/* Trusted Companies Section */}
+      <TrustedCompanies />
 
       {/* Våra AI-paket / Lösningar */}
       <section id="paket" className="relative py-48 bg-gradient-to-b from-background via-primary/5 to-background">
