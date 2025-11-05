@@ -12,11 +12,11 @@ function AnimatedHero({ onBookDemo, onViewPackages }: AnimatedHeroProps) {
   const [titleNumber, setTitleNumber] = useState(0);
   const titles = useMemo(
     () => [
-      "Öka din omsättning",
-      "Spara värdefull tid",
-      "Skala din verksamhet",
-      "Minska dina bekymmer",
-      "Automatisera ditt arbete"
+      "Öka omsättningen",
+      "Spara tid",
+      "Skala verksamheten",
+      "Minska bekymmer",
+      "Automatisera arbetet"
     ],
     []
   );
