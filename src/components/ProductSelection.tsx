@@ -26,7 +26,6 @@ import IntegrationHero from "@/components/ui/integration-hero";
 import { ClientLogoCloud } from "@/components/ClientLogoCloud";
 import { ServicesGrid } from "@/components/home/ServicesGrid";
 import { UnifiedDashboard } from "@/components/home/UnifiedDashboard";
-
 export const ProductSelection = () => {
   const [isConsultationModalOpen, setIsConsultationModalOpen] = useState(false);
   const [selectedIndustry, setSelectedIndustry] = useState<string>('');
@@ -51,10 +50,7 @@ export const ProductSelection = () => {
       {/* Hero Section and Packages with Aurora Background */}
       <AuroraBackground className="h-auto">
         <section id="hero" className="relative py-20 lg:py-32 flex items-center">
-          <AnimatedHero 
-            onBookDemo={() => setIsConsultationModalOpen(true)}
-            onViewPackages={() => scrollToSection('paket')}
-          />
+          <AnimatedHero onBookDemo={() => setIsConsultationModalOpen(true)} onViewPackages={() => scrollToSection('paket')} />
         </section>
 
         {/* Programmen vi jobbar med */}
@@ -70,61 +66,14 @@ export const ProductSelection = () => {
         <UnifiedDashboard />
 
         {/* Våra AI-paket / Lösningar */}
-        <StickyPackageCards 
-          packages={aiPackages}
-          onBookDemo={() => setIsConsultationModalOpen(true)}
-          onViewDetails={() => scrollToSection('kontakt')}
-        />
+        <StickyPackageCards packages={aiPackages} onBookDemo={() => setIsConsultationModalOpen(true)} onViewDetails={() => scrollToSection('kontakt')} />
       </AuroraBackground>
 
       {/* Branschspecifika lösningar */}
-      <section id="branscher" className="relative py-32 overflow-hidden">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_40%_60%,hsl(var(--primary)/0.12),transparent_50%)]" />
-        
-        <div className="relative z-10">
-          <div className="mx-auto max-w-7xl px-6 lg:px-8 mb-8 flex flex-col md:flex-row md:items-end md:justify-between md:mb-14 lg:mb-16">
-            <AnimatedSection className="flex flex-col gap-4 mb-8 md:mb-0">
-              <h2 className="text-3xl font-medium md:text-4xl lg:text-5xl text-foreground">
-                Oavsett bransch kan Hiems bygga AI-lösningar som passar just er verksamhet
-              </h2>
-              <p className="max-w-lg text-muted-foreground">
-                Vi har erfarenhet från många olika branscher och kan anpassa våra lösningar efter era unika behov
-              </p>
-            </AnimatedSection>
-          </div>
-          
-          <AnimatedSection delay={100}>
-            <IndustryGallery 
-              industries={industries}
-              onIndustryClick={handleIndustryClick}
-            />
-          </AnimatedSection>
-        </div>
-      </section>
+      
 
       {/* Kundflöde & värde */}
-      <section id="kundflode" className="relative py-24 bg-gradient-to-b from-background via-primary/5 to-background overflow-hidden">
-        {/* Animated background elements */}
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_20%,hsl(var(--primary)/0.15),transparent_50%)]" />
-        
-        <div className="mx-auto max-w-7xl px-6 lg:px-8 relative z-10">
-          <AnimatedSection className="text-center mb-16">
-            <div className="inline-block">
-              <h2 className="text-5xl sm:text-6xl font-bold bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent mb-4">
-                Kundflöde & värde
-              </h2>
-              <div className="w-32 h-1.5 bg-gradient-to-r from-primary via-primary/60 to-transparent mx-auto rounded-full shadow-lg shadow-primary/50 mb-6" />
-            </div>
-            <p className="text-xl sm:text-2xl max-w-3xl mx-auto font-bold text-slate-800">
-              Se hur dina kunder möter Hiems AI – från första kontakten till långsiktig tillväxt
-            </p>
-          </AnimatedSection>
-          
-          <AnimatedSection delay={200}>
-            <CustomerJourneyFlow />
-          </AnimatedSection>
-        </div>
-      </section>
+      
 
       {/* Teknisk Expertis */}
       <TechnicalExpertise onBookDemo={() => setIsConsultationModalOpen(true)} />
