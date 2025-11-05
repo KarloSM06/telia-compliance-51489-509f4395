@@ -9,6 +9,7 @@ import { WeekView } from "@/components/calendar/WeekView";
 import { YearView } from "@/components/calendar/YearView";
 import { TimelineView } from "@/components/calendar/TimelineView";
 import { EventModal } from "@/components/calendar/EventModal";
+import { EventManager } from "@/components/ui/event-manager";
 import { AvailabilitySettings } from "@/components/calendar/AvailabilitySettings";
 import { CalendarSelector } from "@/components/calendar/CalendarSelector";
 import { IntegrationQuickView } from "@/components/integrations/IntegrationQuickView";
@@ -51,7 +52,7 @@ const CalendarPage = () => {
     deleteIntegration,
     triggerSync
   } = useBookingIntegrations();
-  const [currentView, setCurrentView] = useState<'month' | 'week' | 'day' | 'year' | 'timeline'>('month');
+  const [currentView, setCurrentView] = useState<'month' | 'week' | 'day' | 'year' | 'timeline' | 'manager'>('manager');
   const [selectedDay, setSelectedDay] = useState<Date>(new Date());
   const [showEventModal, setShowEventModal] = useState(false);
   const [showCalendarManagement, setShowCalendarManagement] = useState(false);
@@ -224,6 +225,10 @@ const CalendarPage = () => {
 
                 {/* View selector */}
                 <div className="flex gap-1">
+                  <Button variant={currentView === 'manager' ? 'default' : 'outline'} size="sm" onClick={() => setCurrentView('manager')} className="gap-2 hover:bg-primary/5 hover:border-primary/30 transition-all duration-500">
+                    <FolderKanban className="h-4 w-4" />
+                    Hanterare
+                  </Button>
                   <Button variant={currentView === 'year' ? 'default' : 'outline'} size="sm" onClick={() => setCurrentView('year')} className="gap-2 hover:bg-primary/5 hover:border-primary/30 transition-all duration-500">
                     <CalendarClock className="h-4 w-4" />
                     År
@@ -247,7 +252,7 @@ const CalendarPage = () => {
                 </div>
 
                 <Button variant="outline" size="sm" onClick={() => setShowCalendarManagement(true)} className="gap-2 hover:bg-primary/5 hover:border-primary/30 transition-all duration-500">
-                  <FolderKanban className="h-4 w-4" />
+                  <Calendar className="h-4 w-4" />
                   Hantera kalendrar
                 </Button>
 
@@ -277,6 +282,40 @@ const CalendarPage = () => {
           </AnimatedSection>
         </div>
       </section>
+
+      {/* Event Manager View */}
+      {currentView === 'manager' && (
+        <section className="relative py-12 bg-gradient-to-b from-background via-primary/2 to-background">
+          <div className="container mx-auto px-6 lg:px-8">
+            <AnimatedSection delay={300}>
+              <EventManager
+                events={events}
+                onEventCreate={() => {
+                  setSelectedEvent(null);
+                  setSelectedDate(new Date());
+                  setShowEventModal(true);
+                }}
+                onEventClick={handleEventClick}
+                categories={['meeting', 'call', 'demo', 'follow_up', 'personal', 'work', 'leisure', 'other']}
+                timezone={timezone}
+              />
+              
+              {showEventModal && (
+                <EventModal
+                  open={showEventModal}
+                  onClose={handleCloseModal}
+                  event={selectedEvent}
+                  defaultDate={selectedDate || undefined}
+                  onSave={handleEventSave}
+                  onDelete={deleteEvent}
+                  calendars={calendars}
+                  selectedCalendarId={selectedCalendarId !== 'all' ? selectedCalendarId : defaultCalendar?.id}
+                />
+              )}
+            </AnimatedSection>
+          </div>
+        </section>
+      )}
 
       {/* Year view */}
       {currentView === 'year' && <section className="relative py-12 bg-gradient-to-b from-background via-primary/2 to-background">
