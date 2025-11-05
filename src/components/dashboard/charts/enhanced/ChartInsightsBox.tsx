@@ -78,12 +78,7 @@ export const ChartInsightsBox = ({
         info: 'text-blue-700 dark:text-blue-300',
         danger: 'text-red-700 dark:text-red-300'
       }[insight.type];
-      return (
-        <div key={index} className={`flex items-start gap-2 p-2 rounded border ${bgColor}`}>
-          <Icon className={`h-4 w-4 mt-0.5 ${textColor}`} />
-          <p className={`text-sm ${textColor}`}>{insight.message}</p>
-        </div>
-      );
+      return;
     })}
     </div>;
 };
