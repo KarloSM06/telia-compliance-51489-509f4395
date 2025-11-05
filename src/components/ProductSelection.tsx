@@ -22,6 +22,7 @@ import emilImage from "@/assets/emil-westerberg.png";
 import { Sparkles, Zap, Target, CheckCircle, Award, Users, Wrench, ArrowRight } from "lucide-react";
 import { AuroraBackground } from "@/components/ui/aurora-background";
 import { AnimatedHero } from "@/components/ui/animated-hero";
+import IntegrationHero from "@/components/ui/integration-hero";
 
 export const ProductSelection = () => {
   const [isConsultationModalOpen, setIsConsultationModalOpen] = useState(false);
@@ -57,6 +58,9 @@ export const ProductSelection = () => {
             onViewPackages={() => scrollToSection('paket')}
           />
         </section>
+
+        {/* Programmen vi jobbar med */}
+        <IntegrationHero />
 
         {/* Våra AI-paket / Lösningar */}
         <section id="paket" className="relative py-48">

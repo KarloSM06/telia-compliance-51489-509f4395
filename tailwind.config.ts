@@ -168,6 +168,14 @@ export default {
             backgroundPosition: "350% 50%, 350% 50%",
           },
         },
+        "scroll-left": {
+          "0%": { transform: "translateX(0)" },
+          "100%": { transform: "translateX(-50%)" }
+        },
+        "scroll-right": {
+          "0%": { transform: "translateX(-50%)" },
+          "100%": { transform: "translateX(0)" }
+        },
       },
       animation: {
         "accordion-down": "accordion-down 1s ease-out",
@@ -178,6 +186,8 @@ export default {
         "slide-in-left": "slide-in-left 2s ease-out",
         "slide-in-right": "slide-in-right 2s ease-out",
         aurora: "aurora 60s linear infinite",
+        "scroll-left": "scroll-left 30s linear infinite",
+        "scroll-right": "scroll-right 30s linear infinite",
       },
     },
   },
