@@ -66,11 +66,11 @@ export const BookingTrendChart = ({ data, isLoading }: BookingTrendChartProps) =
   }
 
   return (
-    <Card ref={chartRef}>
+    <Card ref={chartRef} className="border border-border/50 shadow-md hover:border-border hover:shadow-lg transition-all duration-300">
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
-          <CardTitle className="text-base font-semibold flex items-center gap-2">
-            <Calendar className="h-4 w-4" />
+          <CardTitle className="text-lg font-semibold flex items-center gap-2">
+            <Calendar className="h-4 w-4 text-primary" />
             Bokningstrend
           </CardTitle>
           <ChartActionMenu
@@ -79,13 +79,12 @@ export const BookingTrendChart = ({ data, isLoading }: BookingTrendChartProps) =
           />
         </div>
       </CardHeader>
-      <CardContent>
-        <ChartInsightsBox data={chartData} dataKey="bokningar" type="bookings" />
+      <CardContent className="pb-5">
         <InlineStatsBadge data={chartData} dataKey="bokningar" />
         
-        <ResponsiveContainer width="100%" height={380}>
+        <ResponsiveContainer width="100%" height={400}>
           <LineChart data={chartData}>
-            <CartesianGrid strokeDasharray="3 3" className="stroke-muted/50" />
+            <CartesianGrid strokeDasharray="3 3" className="stroke-muted/20" opacity={0.5} />
             <XAxis
               dataKey="date"
               className="text-xs"
@@ -99,9 +98,12 @@ export const BookingTrendChart = ({ data, isLoading }: BookingTrendChartProps) =
             />
             <Tooltip
               contentStyle={{
-                backgroundColor: "hsl(var(--card))",
-                border: "1px solid hsl(var(--border))",
-                borderRadius: "var(--radius)",
+                backgroundColor: "hsla(var(--card), 0.95)",
+                border: "1px solid hsla(var(--border), 0.5)",
+                borderRadius: "12px",
+                backdropFilter: "blur(12px) saturate(180%)",
+                boxShadow: "0 8px 32px rgba(0, 0, 0, 0.12)",
+                padding: "12px 16px",
               }}
               formatter={(value: number) => [value, 'Bokningar']}
               labelFormatter={(label) => new Date(label).toLocaleDateString('sv-SE')}
@@ -111,27 +113,12 @@ export const BookingTrendChart = ({ data, isLoading }: BookingTrendChartProps) =
               dataKey="bokningar"
               stroke="hsl(217, 91%, 60%)"
               strokeWidth={2.5}
-              dot={{ fill: "hsl(217, 91%, 60%)", r: 3 }}
+              dot={{ fill: "hsl(217, 91%, 60%)", r: 3, strokeWidth: 0 }}
               activeDot={{ r: 6 }}
               name="Bokningar"
+              animationDuration={800}
+              animationEasing="ease-in-out"
             />
-            {maxBooking && (
-              <ReferenceDot
-                x={maxBooking.date}
-                y={maxBooking.bokningar}
-                r={8}
-                fill="hsl(43, 96%, 56%)"
-                stroke="hsl(var(--card))"
-                strokeWidth={2}
-                label={{ 
-                  value: '⭐ Högsta', 
-                  position: 'top',
-                  fill: 'hsl(43, 96%, 56%)',
-                  fontSize: 12,
-                  fontWeight: 600
-                }}
-              />
-            )}
           </LineChart>
         </ResponsiveContainer>
       </CardContent>

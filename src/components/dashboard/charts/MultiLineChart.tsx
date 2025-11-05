@@ -65,16 +65,23 @@ export const MultiLineChart = ({
     if (!active || !payload || payload.length === 0) return null;
 
     return (
-      <div className="bg-background border rounded-lg p-3 shadow-lg">
-        <p className="font-medium mb-2">{formatDate(label)}</p>
+      <div 
+        className="border rounded-xl p-3 shadow-2xl"
+        style={{
+          backgroundColor: "hsla(var(--card), 0.95)",
+          borderColor: "hsla(var(--border), 0.5)",
+          backdropFilter: "blur(12px) saturate(180%)",
+        }}
+      >
+        <p className="font-medium mb-2 text-xs text-muted-foreground">{formatDate(label)}</p>
         {payload.map((entry: any, index: number) => (
           <div key={index} className="flex items-center gap-2 text-sm">
             <div
-              className="w-3 h-3 rounded-full"
+              className="w-2.5 h-2.5 rounded-full"
               style={{ backgroundColor: entry.color }}
             />
-            <span className="text-muted-foreground">{entry.name}:</span>
-            <span className="font-semibold">{tooltipFormatter(entry.value)}</span>
+            <span className="text-foreground/80 text-xs">{entry.name}:</span>
+            <span className="font-semibold text-sm">{tooltipFormatter(entry.value)}</span>
           </div>
         ))}
       </div>
@@ -84,15 +91,17 @@ export const MultiLineChart = ({
   return (
     <ResponsiveContainer width="100%" height={height}>
       <LineChart data={data}>
-        <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
+        <CartesianGrid strokeDasharray="3 3" className="stroke-muted/20" opacity={0.5} />
         <XAxis
           dataKey={xAxisKey}
           tickFormatter={formatDate}
           className="text-xs"
+          tick={{ fill: "hsl(var(--muted-foreground))" }}
         />
         <YAxis
           className="text-xs"
           tickFormatter={yAxisFormatter}
+          tick={{ fill: "hsl(var(--muted-foreground))" }}
         />
         <Tooltip content={<CustomTooltip />} />
         <Legend
@@ -115,11 +124,13 @@ export const MultiLineChart = ({
             type="monotone"
             dataKey={line.dataKey}
             stroke={line.color || COLORS[index % COLORS.length]}
-            strokeWidth={2}
-            dot={{ r: 3 }}
+            strokeWidth={2.5}
+            dot={{ r: 3, strokeWidth: 0 }}
             activeDot={{ r: 5 }}
             hide={hiddenLines.has(line.dataKey)}
             name={line.name}
+            animationDuration={800}
+            animationEasing="ease-in-out"
           />
         ))}
         {showBrush && (
@@ -127,6 +138,7 @@ export const MultiLineChart = ({
             dataKey={xAxisKey}
             height={30} 
             stroke="hsl(var(--primary))"
+            fill="hsl(var(--muted))"
             tickFormatter={formatDate}
           />
         )}

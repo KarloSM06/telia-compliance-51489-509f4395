@@ -65,11 +65,11 @@ export const ProfitMarginChart = ({ data, isLoading }: ProfitMarginChartProps) =
   }
 
   return (
-    <Card ref={chartRef}>
+    <Card ref={chartRef} className="border border-border/50 shadow-md hover:border-border hover:shadow-lg transition-all duration-300">
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
-          <CardTitle className="text-base font-semibold flex items-center gap-2">
-            <TrendingUp className="h-4 w-4" />
+          <CardTitle className="text-lg font-semibold flex items-center gap-2">
+            <TrendingUp className="h-4 w-4 text-primary" />
             Vinstmarginal
           </CardTitle>
           <ChartActionMenu
@@ -78,25 +78,21 @@ export const ProfitMarginChart = ({ data, isLoading }: ProfitMarginChartProps) =
           />
         </div>
       </CardHeader>
-      <CardContent>
-        <ChartInsightsBox data={chartData} dataKey="margin" type="roi" />
+      <CardContent className="pb-5">
         <InlineStatsBadge data={chartData} dataKey="margin" />
         
-        <ResponsiveContainer width="100%" height={380}>
+        <ResponsiveContainer width="100%" height={400}>
           <AreaChart data={chartData}>
             <defs>
               <linearGradient id="marginGradientPositive" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="hsl(142, 76%, 36%)" stopOpacity={0.5} />
-                <stop offset="50%" stopColor="hsl(142, 76%, 36%)" stopOpacity={0.2} />
-                <stop offset="95%" stopColor="hsl(142, 76%, 36%)" stopOpacity={0.05} />
-              </linearGradient>
-              <linearGradient id="marginGradientNegative" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="hsl(0, 84%, 60%)" stopOpacity={0.5} />
-                <stop offset="50%" stopColor="hsl(0, 84%, 60%)" stopOpacity={0.2} />
-                <stop offset="95%" stopColor="hsl(0, 84%, 60%)" stopOpacity={0.05} />
+                <stop offset="0%" stopColor="hsl(43, 96%, 56%)" stopOpacity={0.6} />
+                <stop offset="20%" stopColor="hsl(43, 96%, 56%)" stopOpacity={0.4} />
+                <stop offset="50%" stopColor="hsl(43, 96%, 56%)" stopOpacity={0.2} />
+                <stop offset="80%" stopColor="hsl(38, 92%, 50%)" stopOpacity={0.08} />
+                <stop offset="100%" stopColor="hsl(38, 92%, 50%)" stopOpacity={0.02} />
               </linearGradient>
             </defs>
-            <CartesianGrid strokeDasharray="3 3" className="stroke-muted/50" />
+            <CartesianGrid strokeDasharray="3 3" className="stroke-muted/20" opacity={0.5} />
             <XAxis
               dataKey="date"
               className="text-xs"
@@ -110,11 +106,12 @@ export const ProfitMarginChart = ({ data, isLoading }: ProfitMarginChartProps) =
             />
             <Tooltip
               contentStyle={{
-                backgroundColor: "hsl(var(--card))",
-                border: "1px solid hsl(var(--border))",
-                borderRadius: "var(--radius)",
-                backdropFilter: "blur(8px)",
-                boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+                backgroundColor: "hsla(var(--card), 0.95)",
+                border: "1px solid hsla(var(--border), 0.5)",
+                borderRadius: "12px",
+                backdropFilter: "blur(12px) saturate(180%)",
+                boxShadow: "0 8px 32px rgba(0, 0, 0, 0.12)",
+                padding: "12px 16px",
               }}
               formatter={(value: number) => [`${value.toFixed(1)}%`, 'Marginal']}
               labelFormatter={(label) => new Date(label).toLocaleDateString('sv-SE')}
@@ -122,8 +119,8 @@ export const ProfitMarginChart = ({ data, isLoading }: ProfitMarginChartProps) =
             <ReferenceLine 
               y={0} 
               stroke="hsl(var(--muted-foreground))" 
-              strokeDasharray="3 3" 
-              label={{ value: 'Break-even', position: 'right', fill: 'hsl(var(--muted-foreground))' }}
+              strokeDasharray="5 5"
+              strokeWidth={1.5}
             />
             <Area
               type="monotone"
@@ -132,18 +129,11 @@ export const ProfitMarginChart = ({ data, isLoading }: ProfitMarginChartProps) =
               strokeWidth={2.5}
               fill="url(#marginGradientPositive)"
               name="Vinstmarginal %"
-            />
-            <Brush 
-              dataKey="date" 
-              height={30} 
-              stroke="hsl(var(--primary))"
-              tickFormatter={(value) => new Date(value).toLocaleDateString('sv-SE', { month: 'short' })}
+              animationDuration={800}
+              animationEasing="ease-in-out"
             />
           </AreaChart>
         </ResponsiveContainer>
-        <p className="text-xs text-muted-foreground mt-3 text-center">
-          Använd borsten nedanför grafen för att zooma in på specifika perioder
-        </p>
       </CardContent>
     </Card>
   );

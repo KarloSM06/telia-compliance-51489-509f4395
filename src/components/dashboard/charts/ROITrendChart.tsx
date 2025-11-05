@@ -72,11 +72,11 @@ export const ROITrendChart = ({ data, isLoading }: ROITrendChartProps) => {
   }
 
   return (
-    <Card ref={chartRef}>
+    <Card ref={chartRef} className="col-span-full border-2 border-primary/10 shadow-lg shadow-primary/5 hover:border-primary/20 hover:shadow-xl transition-all duration-300">
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
-          <CardTitle className="text-base font-semibold flex items-center gap-2">
-            <TrendingUp className="h-4 w-4" />
+          <CardTitle className="text-xl font-semibold flex items-center gap-2">
+            <TrendingUp className="h-5 w-5 text-primary" />
             ROI-trend
           </CardTitle>
           <ChartActionMenu
@@ -85,20 +85,22 @@ export const ROITrendChart = ({ data, isLoading }: ROITrendChartProps) => {
           />
         </div>
       </CardHeader>
-      <CardContent>
+      <CardContent className="pb-6">
         <ChartInsightsBox data={chartData} dataKey="roi" type="roi" />
         <InlineStatsBadge data={chartData} dataKey="roi" />
         
-        <ResponsiveContainer width="100%" height={450}>
+        <ResponsiveContainer width="100%" height={480}>
           <AreaChart data={chartData}>
             <defs>
               <linearGradient id="roiGradient" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="hsl(43, 96%, 56%)" stopOpacity={0.5} />
-                <stop offset="50%" stopColor="hsl(43, 96%, 56%)" stopOpacity={0.2} />
-                <stop offset="95%" stopColor="hsl(43, 96%, 56%)" stopOpacity={0.05} />
+                <stop offset="0%" stopColor="hsl(271, 70%, 60%)" stopOpacity={0.6} />
+                <stop offset="20%" stopColor="hsl(271, 70%, 60%)" stopOpacity={0.4} />
+                <stop offset="50%" stopColor="hsl(271, 70%, 60%)" stopOpacity={0.2} />
+                <stop offset="80%" stopColor="hsl(280, 78%, 65%)" stopOpacity={0.08} />
+                <stop offset="100%" stopColor="hsl(280, 78%, 65%)" stopOpacity={0.02} />
               </linearGradient>
             </defs>
-            <CartesianGrid strokeDasharray="3 3" className="stroke-muted/50" />
+            <CartesianGrid strokeDasharray="3 3" className="stroke-muted/20" opacity={0.5} />
             <XAxis
               dataKey="date"
               className="text-xs"
@@ -112,11 +114,12 @@ export const ROITrendChart = ({ data, isLoading }: ROITrendChartProps) => {
             />
             <Tooltip
               contentStyle={{
-                backgroundColor: "hsl(var(--card))",
-                border: "1px solid hsl(var(--border))",
-                borderRadius: "var(--radius)",
-                backdropFilter: "blur(8px)",
-                boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+                backgroundColor: "hsla(var(--card), 0.95)",
+                border: "1px solid hsla(var(--border), 0.5)",
+                borderRadius: "12px",
+                backdropFilter: "blur(12px) saturate(180%)",
+                boxShadow: "0 8px 32px rgba(0, 0, 0, 0.12)",
+                padding: "12px 16px",
               }}
               formatter={(value: number) => [`${value.toFixed(1)}%`, 'ROI']}
               labelFormatter={(label) => new Date(label).toLocaleDateString('sv-SE')}
@@ -124,28 +127,23 @@ export const ROITrendChart = ({ data, isLoading }: ROITrendChartProps) => {
             <ReferenceLine 
               y={0} 
               stroke="hsl(var(--muted-foreground))" 
-              strokeDasharray="3 3"
-              label={{ value: 'Break-even', position: 'insideTopRight', fill: 'hsl(var(--muted-foreground))' }}
-            />
-            <ReferenceLine 
-              y={50} 
-              stroke="hsl(142, 76%, 36%)" 
-              strokeDasharray="5 5" 
-              strokeOpacity={0.5}
-              label={{ value: 'Mål: 50%', position: 'insideTopRight', fill: 'hsl(142, 76%, 36%)', fontSize: 12 }}
+              strokeDasharray="5 5"
+              strokeWidth={1.5}
             />
             <Area
               type="monotone"
               dataKey="roi"
-              stroke="hsl(43, 96%, 56%)"
+              stroke="hsl(271, 70%, 60%)"
               strokeWidth={2.5}
               fill="url(#roiGradient)"
               name="ROI %"
+              animationDuration={800}
+              animationEasing="ease-in-out"
             />
             <Line
               type="monotone"
               dataKey="roiMA"
-              stroke="hsl(271, 70%, 60%)"
+              stroke="hsl(var(--muted-foreground))"
               strokeWidth={2}
               strokeDasharray="5 5"
               dot={false}
@@ -155,13 +153,11 @@ export const ROITrendChart = ({ data, isLoading }: ROITrendChartProps) => {
               dataKey="date" 
               height={30} 
               stroke="hsl(var(--primary))"
+              fill="hsl(var(--muted))"
               tickFormatter={(value) => new Date(value).toLocaleDateString('sv-SE', { month: 'short' })}
             />
           </AreaChart>
         </ResponsiveContainer>
-        <p className="text-xs text-muted-foreground mt-3 text-center">
-          Lila linje visar glidande medelvärde (7 dagar) • Dra i borsten för att zooma
-        </p>
       </CardContent>
     </Card>
   );

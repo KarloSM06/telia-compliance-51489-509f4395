@@ -59,11 +59,11 @@ export const DailyROIChart = ({ data, isLoading }: DailyROIChartProps) => {
   }
 
   return (
-    <Card ref={chartRef}>
+    <Card ref={chartRef} className="border border-border/30 shadow-sm hover:border-border/50 transition-all duration-200">
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
           <CardTitle className="text-base font-semibold flex items-center gap-2">
-            <Target className="h-4 w-4" />
+            <Target className="h-4 w-4 text-primary" />
             Daglig ROI
           </CardTitle>
           <ChartActionMenu
@@ -72,12 +72,10 @@ export const DailyROIChart = ({ data, isLoading }: DailyROIChartProps) => {
           />
         </div>
       </CardHeader>
-      <CardContent>
-        <ChartInsightsBox data={chartData} dataKey="roi" type="roi" />
-        
-        <ResponsiveContainer width="100%" height={380}>
+      <CardContent className="pb-4">
+        <ResponsiveContainer width="100%" height={340}>
           <LineChart data={chartData}>
-            <CartesianGrid strokeDasharray="3 3" className="stroke-muted/50" />
+            <CartesianGrid strokeDasharray="3 3" className="stroke-muted/20" opacity={0.5} />
             <XAxis
               dataKey="date"
               className="text-xs"
@@ -91,22 +89,32 @@ export const DailyROIChart = ({ data, isLoading }: DailyROIChartProps) => {
             />
             <Tooltip
               contentStyle={{
-                backgroundColor: "hsl(var(--card))",
-                border: "1px solid hsl(var(--border))",
-                borderRadius: "var(--radius)",
+                backgroundColor: "hsla(var(--card), 0.95)",
+                border: "1px solid hsla(var(--border), 0.5)",
+                borderRadius: "12px",
+                backdropFilter: "blur(12px) saturate(180%)",
+                boxShadow: "0 8px 32px rgba(0, 0, 0, 0.12)",
+                padding: "12px 16px",
               }}
               formatter={(value: number) => [`${value.toFixed(1)}%`, 'ROI']}
               labelFormatter={(label) => new Date(label).toLocaleDateString('sv-SE')}
             />
-            <ReferenceLine y={0} stroke="hsl(var(--muted-foreground))" strokeDasharray="3 3" />
+            <ReferenceLine 
+              y={0} 
+              stroke="hsl(var(--muted-foreground))" 
+              strokeDasharray="5 5"
+              strokeWidth={1.5}
+            />
             <Line
               type="monotone"
               dataKey="roi"
               stroke="hsl(271, 70%, 60%)"
-              strokeWidth={2}
-              dot={{ fill: "hsl(271, 70%, 60%)", r: 3 }}
+              strokeWidth={2.5}
+              dot={{ fill: "hsl(271, 70%, 60%)", r: 3, strokeWidth: 0 }}
               activeDot={{ r: 5 }}
               name="ROI %"
+              animationDuration={800}
+              animationEasing="ease-in-out"
             />
           </LineChart>
         </ResponsiveContainer>

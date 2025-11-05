@@ -88,17 +88,14 @@ export const CostBreakdownChart = ({
         </CardContent>
       </Card>;
   }
-  return <Card ref={chartRef}>
-      <CardHeader>
+  return <Card ref={chartRef} className="border border-border/50 shadow-md hover:border-border hover:shadow-lg transition-all duration-300">
+      <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
-          <div>
-            <CardTitle>Kostnadsfördelning per Dag</CardTitle>
-            
-          </div>
+          <CardTitle className="text-lg font-semibold">Kostnadsfördelning</CardTitle>
           <ChartActionMenu onExportPNG={() => exportToPNG(chartRef.current, 'kostnadsfordelning')} onExportCSV={() => exportToCSV(chartData, 'kostnadsfordelning')} />
         </div>
       </CardHeader>
-      <CardContent>
+      <CardContent className="pb-5">
         <MultiLineChart data={chartData} lines={[{
         dataKey: 'telephony',
         color: 'hsl(217, 91%, 60%)',
@@ -114,15 +111,12 @@ export const CostBreakdownChart = ({
       }, {
         dataKey: 'ai',
         color: 'hsl(330, 81%, 60%)',
-        name: 'AI (OpenRouter)'
+        name: 'AI'
       }, {
         dataKey: 'hiems',
-        color: 'hsl(142, 76%, 36%)',
+        color: 'hsl(142, 76%, 45%)',
         name: 'Hiems'
-      }]} yAxisFormatter={v => `${v.toFixed(0)} kr`} tooltipFormatter={v => `${v.toFixed(2)} SEK`} height={380} showBrush />
-        <p className="text-xs text-muted-foreground mt-4 text-center">
-          Klicka på kategorinamnen i förklaringen för att visa/dölja dem
-        </p>
+      }]} yAxisFormatter={v => `${v.toFixed(0)} kr`} tooltipFormatter={v => `${v.toFixed(2)} SEK`} height={400} />
       </CardContent>
     </Card>;
 };

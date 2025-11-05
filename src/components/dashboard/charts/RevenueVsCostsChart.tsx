@@ -53,40 +53,32 @@ export const RevenueVsCostsChart = ({ data, isLoading }: RevenueVsCostsChartProp
   }
 
   return (
-    <Card ref={chartRef}>
-      <CardHeader>
+    <Card ref={chartRef} className="col-span-full border-2 border-primary/10 shadow-lg shadow-primary/5 hover:border-primary/20 hover:shadow-xl transition-all duration-300">
+      <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
-          <div>
-            <CardTitle>Intäkter vs Kostnader</CardTitle>
-            <p className="text-sm text-muted-foreground">
-              Daglig jämförelse av intäkter, kostnader och vinst
-            </p>
-          </div>
+          <CardTitle className="text-xl font-semibold">Intäkter vs Kostnader</CardTitle>
           <ChartActionMenu
             onExportPNG={() => exportToPNG(chartRef.current, 'intakter-vs-kostnader')}
             onExportCSV={() => exportToCSV(chartData, 'intakter-vs-kostnader')}
           />
         </div>
       </CardHeader>
-      <CardContent>
+      <CardContent className="pb-6">
         <ChartInsightsBox data={chartData} dataKey="revenue" type="revenue" />
         <InlineStatsBadge data={chartData} dataKey="profit" />
         
         <MultiLineChart
           data={chartData}
           lines={[
-            { dataKey: 'revenue', color: 'hsl(142, 76%, 36%)', name: 'Intäkter' },
+            { dataKey: 'revenue', color: 'hsl(142, 76%, 45%)', name: 'Intäkter' },
             { dataKey: 'costs', color: 'hsl(0, 84%, 60%)', name: 'Kostnader' },
             { dataKey: 'profit', color: 'hsl(43, 96%, 56%)', name: 'Vinst' }
           ]}
           yAxisFormatter={(v) => `${v.toFixed(0)} kr`}
           tooltipFormatter={(v) => `${v.toFixed(2)} SEK`}
-          height={450}
+          height={480}
           showBrush
         />
-        <p className="text-xs text-muted-foreground mt-4 text-center">
-          Klicka på linjenamnen i förklaringen för att visa/dölja dem
-        </p>
       </CardContent>
     </Card>
   );
