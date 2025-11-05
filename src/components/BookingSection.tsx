@@ -59,6 +59,8 @@ export function BookingSection() {
       <div className="absolute inset-0 z-0 opacity-20">
         <WebGLShader />
       </div>
+      {/* White overlay behind cards */}
+      <div className="absolute inset-0 z-[1] bg-background" aria-hidden="true" />
 
       <div className="container mx-auto px-6 relative z-10">
         <div className="text-center mb-16">
