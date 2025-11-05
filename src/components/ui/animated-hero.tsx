@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
-import { ArrowRight, Calendar } from "lucide-react";
+import { ArrowRight, Calendar, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 interface AnimatedHeroProps {
   onBookDemo?: () => void;
@@ -33,15 +34,41 @@ function AnimatedHero({ onBookDemo, onViewPackages }: AnimatedHeroProps) {
   }, [titleNumber, titles]);
 
   return (
-    <div className="w-full py-32 lg:py-48">
-      <div className="container mx-auto max-w-5xl px-6">
-        <div className="flex gap-6 items-center justify-center flex-col">
-          <div className="flex gap-4 flex-col items-center">
-            <h1 className="text-3xl md:text-5xl lg:text-6xl max-w-4xl tracking-tight text-center font-bold leading-tight">
-              <span className="text-foreground dark:text-white block mb-2">
-                Skala din verksamhet
+    <div className="w-full py-32 lg:py-48 relative">
+      {/* Gradient overlay background */}
+      <div className="absolute inset-0 bg-gradient-to-b from-primary/5 via-transparent to-transparent pointer-events-none" />
+      
+      <div className="container mx-auto max-w-5xl px-6 relative z-10">
+        <div className="flex gap-8 items-center justify-center flex-col">
+          <div className="flex gap-6 flex-col items-center">
+            {/* Badge */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+            >
+              <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-primary/10 via-secondary/10 to-primary/10 border border-primary/20 text-sm font-semibold text-foreground/80 backdrop-blur-sm">
+                <Sparkles className="w-4 h-4 text-primary" />
+                AI-drivna lösningar för moderna företag
               </span>
-              <span className="relative flex w-full justify-center overflow-hidden text-center md:pb-2 md:pt-1 min-h-[1.2em]">
+            </motion.div>
+
+            {/* Main Heading */}
+            <motion.h1 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.1 }}
+              className="text-4xl md:text-6xl lg:text-7xl max-w-4xl tracking-tight text-center font-bold leading-[1.15]"
+            >
+              <span className={cn(
+                "block mb-3",
+                "bg-clip-text text-transparent",
+                "bg-[linear-gradient(180deg,_hsl(var(--foreground))_0%,_hsl(var(--foreground)/0.8)_100%)]",
+                "dark:bg-[linear-gradient(180deg,_hsl(var(--foreground))_0%,_hsl(var(--foreground)/0.6)_100%)]"
+              )}>
+                Skala din verksamhet och
+              </span>
+              <span className="relative flex w-full justify-center overflow-hidden text-center pb-2 min-h-[1.2em]">
                 {titles.map((title, index) => (
                   <motion.span
                     key={index}
@@ -64,23 +91,38 @@ function AnimatedHero({ onBookDemo, onViewPackages }: AnimatedHeroProps) {
                   </motion.span>
                 ))}
               </span>
-            </h1>
+            </motion.h1>
 
-            <p className="text-base md:text-lg leading-relaxed text-foreground/80 dark:text-neutral-300 max-w-2xl text-center font-normal mt-4">
+            {/* Description */}
+            <motion.p 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className="text-base md:text-lg leading-relaxed text-muted-foreground max-w-2xl text-center font-normal mt-2"
+            >
               Hiems levererar ett komplett AI-ekosystem som automatiserar kundflöden, 
               försäljning, bokningar, administration och dataanalys.
-            </p>
+            </motion.p>
           </div>
           
-          <div className="flex flex-col sm:flex-row gap-4 justify-center mt-4">
-            <Button 
-              className="group relative bg-gradient-gold text-primary hover:shadow-glow shadow-button transition-all duration-300 font-bold rounded-xl hover:scale-105 overflow-hidden before:absolute before:inset-0 before:bg-white/20 before:translate-x-[-100%] before:skew-x-12 before:transition-transform before:duration-700 hover:before:translate-x-[100%]" 
-              onClick={onViewPackages}
-            >
-              <span className="relative z-10 flex items-center gap-2">
-                Se våra paket <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" />
-              </span>
-            </Button>
+          {/* CTA Buttons */}
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+            className="flex flex-col sm:flex-row gap-4 justify-center mt-4"
+          >
+            <span className="relative inline-block overflow-hidden rounded-xl p-[2px]">
+              <span className="absolute inset-[-1000%] animate-[spin_3s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,hsl(var(--primary))_0%,hsl(var(--secondary))_50%,hsl(var(--primary))_100%)]" />
+              <Button 
+                className="relative bg-background hover:bg-background group font-bold rounded-xl transition-all duration-300 hover:scale-105" 
+                onClick={onViewPackages}
+              >
+                <span className="relative z-10 flex items-center gap-2 bg-gradient-gold bg-clip-text text-transparent group-hover:bg-gradient-to-r group-hover:from-primary group-hover:via-secondary group-hover:to-primary">
+                  Se våra paket <ArrowRight className="w-4 h-4 text-primary group-hover:translate-x-1 transition-transform duration-300" />
+                </span>
+              </Button>
+            </span>
             <Button 
               variant="outline" 
               className="group hover:bg-gradient-gold hover:text-primary hover:border-primary/20 transition-all duration-300 font-bold rounded-xl hover:scale-105" 
@@ -90,7 +132,7 @@ function AnimatedHero({ onBookDemo, onViewPackages }: AnimatedHeroProps) {
                 Boka demo <Calendar className="w-4 h-4 group-hover:rotate-12 transition-transform duration-300" />
               </span>
             </Button>
-          </div>
+          </motion.div>
         </div>
       </div>
     </div>
