@@ -95,7 +95,7 @@ const DataFlowLine = ({
   }} className="h-0.5 bg-gradient-to-r from-primary/20 via-primary to-primary/20 origin-left" />;
 };
 export const UnifiedDashboard = () => {
-  return <section className="relative pt-0 pb-24 md:pt-0 md:pb-40">
+  return <section className="relative pt-0 pb-0 md:pt-0 md:pb-0">
       <div className="mx-auto w-full max-w-7xl space-y-12 px-4">
         <AnimatedContainer className="mx-auto max-w-full text-center">
           <h2 className="text-3xl font-bold tracking-wide text-balance md:text-4xl lg:text-5xl xl:font-extrabold">
