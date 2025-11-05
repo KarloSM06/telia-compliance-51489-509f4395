@@ -26,6 +26,7 @@ import IntegrationHero from "@/components/ui/integration-hero";
 import { ClientLogoCloud } from "@/components/ClientLogoCloud";
 import { ServicesGrid } from "@/components/home/ServicesGrid";
 import { UnifiedDashboard } from "@/components/home/UnifiedDashboard";
+import { ZoomParallax } from "@/components/ui/zoom-parallax";
 export const ProductSelection = () => {
   const [isConsultationModalOpen, setIsConsultationModalOpen] = useState(false);
   const [selectedIndustry, setSelectedIndustry] = useState<string>('');
@@ -68,6 +69,28 @@ export const ProductSelection = () => {
         {/* Våra AI-paket / Lösningar */}
         <StickyPackageCards packages={aiPackages} onBookDemo={() => setIsConsultationModalOpen(true)} onViewDetails={() => scrollToSection('kontakt')} />
       </AuroraBackground>
+
+      {/* Oavsett Bransch finns en lösning just för er */}
+      <section className="relative">
+        <div className="relative flex h-[50vh] items-center justify-center">
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,hsl(var(--primary)/0.15),transparent_50%)]" />
+          <AnimatedSection className="relative z-10 text-center px-6">
+            <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent mb-4">
+              Oavsett bransch finns en lösning just för er
+            </h2>
+            <p className="text-xl sm:text-2xl text-muted-foreground max-w-3xl mx-auto mt-6 font-light">
+              Vi bygger AI-lösningar som passar perfekt för din verksamhet
+            </p>
+          </AnimatedSection>
+        </div>
+        <ZoomParallax 
+          images={industries.slice(0, 7).map(industry => ({
+            src: industry.image || '/placeholder.svg',
+            alt: industry.name
+          }))}
+        />
+        <div className="h-[50vh]" />
+      </section>
 
       {/* Branschspecifika lösningar */}
       
