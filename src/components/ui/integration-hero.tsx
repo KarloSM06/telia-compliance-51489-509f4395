@@ -17,9 +17,7 @@ export default function IntegrationHero() {
         <p className="mt-4 text-lg text-muted-foreground max-w-xl mx-auto">
           250+ applikationer är tillgängliga för att integreras sömlöst med ditt arbetsflöde.
         </p>
-        <Button variant="hero" className="mt-8 px-6 py-3">
-          Kom igång
-        </Button>
+        
 
         <div className="mt-12 overflow-hidden relative pb-2">
           <div className="flex gap-10 whitespace-nowrap animate-scroll-left">
