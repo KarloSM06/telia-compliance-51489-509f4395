@@ -27,6 +27,7 @@ import IntegrationHero from "@/components/ui/integration-hero";
 import { ClientLogoCloud } from "@/components/ClientLogoCloud";
 import { ServicesGrid } from "@/components/home/ServicesGrid";
 import { UnifiedDashboard } from "@/components/home/UnifiedDashboard";
+import { LandingAccordionItem } from "@/components/home/LandingAccordionItem";
 export const ProductSelection = () => {
   const [isConsultationModalOpen, setIsConsultationModalOpen] = useState(false);
   const [selectedIndustry, setSelectedIndustry] = useState<string>('');
@@ -68,6 +69,9 @@ export const ProductSelection = () => {
 
         {/* Våra AI-paket / Lösningar */}
         <StickyPackageCards packages={aiPackages} onBookDemo={() => setIsConsultationModalOpen(true)} onViewDetails={() => scrollToSection('kontakt')} />
+        
+        {/* AI Capabilities Accordion */}
+        <LandingAccordionItem />
         
         {/* Arbetsprocess */}
         <section id="process" className="relative py-24">
