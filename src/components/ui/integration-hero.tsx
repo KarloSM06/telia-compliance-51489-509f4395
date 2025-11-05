@@ -6,8 +6,8 @@ const ALL_PROGRAM_LOGOS = expertiseCategories.flatMap(cat =>
   cat.items.map(item => item.logo).filter(Boolean)
 ) as string[];
 
-// Duplicera tillräckligt många gånger för sömlös loop
-const repeatedIcons = (icons: string[], repeat = 6) => Array.from({
+// Duplicera mycket fler gånger för garanterat sömlös loop
+const repeatedIcons = (icons: string[], repeat = 10) => Array.from({
   length: repeat
 }).flatMap(() => icons);
 
@@ -29,19 +29,23 @@ export default function IntegrationHero() {
         
 
         <div className="mt-8 md:mt-10 overflow-hidden relative pb-2">
-          {/* Rad 1 - scrollar åt vänster */}
-          <div className="flex gap-8 md:gap-10 whitespace-nowrap animate-scroll-left">
-            {repeatedIcons(row1, 6).map((src, i) => <div key={i} className="h-16 w-16 md:h-20 md:w-20 flex-shrink-0 rounded-xl bg-card shadow-md flex items-center justify-center border border-border p-3">
+          {/* Rad 1 - scrollar åt vänster med pause vid hover */}
+          <div className="flex gap-8 md:gap-10 whitespace-nowrap animate-scroll-left hover:[animation-play-state:paused]">
+            {repeatedIcons(row1, 10).map((src, i) => <div key={i} className="h-16 w-16 md:h-20 md:w-20 flex-shrink-0 rounded-xl bg-card shadow-md flex items-center justify-center border border-border p-3 transition-transform hover:scale-110">
                 <img src={src} alt="integration icon" className="h-10 w-10 md:h-12 md:w-12 object-contain" />
               </div>)}
           </div>
 
-          {/* Rad 2 - scrollar åt höger */}
-          <div className="flex gap-8 md:gap-10 whitespace-nowrap mt-4 md:mt-6 animate-scroll-right">
-            {repeatedIcons(row2, 6).map((src, i) => <div key={i} className="h-16 w-16 md:h-20 md:w-20 flex-shrink-0 rounded-xl bg-card shadow-md flex items-center justify-center border border-border p-3">
+          {/* Rad 2 - scrollar åt höger med pause vid hover */}
+          <div className="flex gap-8 md:gap-10 whitespace-nowrap mt-4 md:mt-6 animate-scroll-right hover:[animation-play-state:paused]">
+            {repeatedIcons(row2, 10).map((src, i) => <div key={i} className="h-16 w-16 md:h-20 md:w-20 flex-shrink-0 rounded-xl bg-card shadow-md flex items-center justify-center border border-border p-3 transition-transform hover:scale-110">
                 <img src={src} alt="integration icon" className="h-10 w-10 md:h-12 md:w-12 object-contain" />
               </div>)}
           </div>
+
+          {/* Blur gradient overlays för elegant övergång */}
+          <div className="absolute left-0 top-0 h-full w-32 bg-gradient-to-r from-background via-background/80 to-transparent pointer-events-none backdrop-blur-[2px]" />
+          <div className="absolute right-0 top-0 h-full w-32 bg-gradient-to-l from-background via-background/80 to-transparent pointer-events-none backdrop-blur-[2px]" />
         </div>
       </div>
     </section>;
