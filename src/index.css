@@ -184,6 +184,12 @@ All colors MUST be HSL.
   .scrollbar-hide::-webkit-scrollbar {
     display: none;
   }
+
+  --color-destructive-foreground: var(--destructive-foreground);
+}
+
+.dark {
+  --destructive-foreground: oklch(1 0 0);
 }
 
 /* Custom color variables for area charts */
@@ -196,6 +202,11 @@ All colors MUST be HSL.
   --color-orange-500: 249 115 22;
   --color-green-500: 34 197 94;
   --color-cyan-500: 6 182 212;
+  
+  /* Chart colors */
+  --chart-1: 142 76% 36%;
+  --chart-2: 158 64% 52%;
+  --destructive-foreground: oklch(1 0 0);
 }
 
 .dark {
@@ -207,4 +218,9 @@ All colors MUST be HSL.
   --color-orange-500: 249 115 22;
   --color-green-500: 34 197 94;
   --color-cyan-500: 6 182 212;
+  
+  /* Chart colors */
+  --chart-1: 142 76% 36%;
+  --chart-2: 158 64% 52%;
+  --destructive-foreground: oklch(1 0 0);
 }
