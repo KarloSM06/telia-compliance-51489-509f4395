@@ -371,7 +371,6 @@ const Dashboard = () => {
                         .reduce((sum, m) => sum + ((m.metadata as any)?.cost_sek || 0), 0);
                       
                       const openrouterDailyCost = openrouterData?.activity?.find(item => item.date === d.date)?.usage || 0;
-                      const dailyHiems = (businessMetrics?.hiems_monthly_support_cost || 0) / 30;
                       
                       return {
                         date: d.date,
@@ -379,7 +378,6 @@ const Dashboard = () => {
                         sms: smsCost,
                         email: emailCost,
                         ai: openrouterDailyCost,
-                        hiems: dailyHiems,
                       };
                     })}
                   />
@@ -390,7 +388,6 @@ const Dashboard = () => {
                     smsCost={data.costs.smsCost}
                     emailCost={data.costs.emailCost}
                     aiCost={data.costs.aiCost}
-                    hiemsCost={businessMetrics?.hiems_monthly_support_cost || 0}
                   />
                 </div>
               </AnimatedSection>

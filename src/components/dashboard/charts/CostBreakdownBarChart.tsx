@@ -8,7 +8,6 @@ interface CostBreakdownBarChartProps {
   smsCost: number;
   emailCost: number;
   aiCost: number;
-  hiemsCost: number;
 }
 
 const chartConfig = {
@@ -28,10 +27,6 @@ const chartConfig = {
     label: 'AI & Modeller',
     color: 'hsl(217, 91%, 60%)',
   },
-  hiems: {
-    label: 'Hiems Plattform',
-    color: 'hsl(271, 70%, 60%)',
-  },
 } satisfies ChartConfig;
 
 export function CostBreakdownBarChart({
@@ -39,7 +34,6 @@ export function CostBreakdownBarChart({
   smsCost,
   emailCost,
   aiCost,
-  hiemsCost,
 }: CostBreakdownBarChartProps) {
   const data = [
     {
@@ -62,14 +56,9 @@ export function CostBreakdownBarChart({
       value: aiCost,
       fill: 'var(--color-ai)',
     },
-    {
-      category: 'Hiems',
-      value: hiemsCost,
-      fill: 'var(--color-hiems)',
-    },
   ];
 
-  const totalCost = telephonyCost + smsCost + emailCost + aiCost + hiemsCost;
+  const totalCost = telephonyCost + smsCost + emailCost + aiCost;
 
   return (
     <Card className="border-2 border-primary/10 shadow-lg shadow-primary/5 hover:border-primary/20 hover:shadow-xl transition-all duration-300">

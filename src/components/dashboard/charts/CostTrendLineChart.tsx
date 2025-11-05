@@ -9,7 +9,6 @@ interface CostTrendLineChartProps {
     sms: number;
     email: number;
     ai: number;
-    hiems: number;
   }>;
 }
 
@@ -29,10 +28,6 @@ const chartConfig = {
   ai: {
     label: 'AI & Modeller',
     color: 'hsl(217, 91%, 60%)',
-  },
-  hiems: {
-    label: 'Hiems Plattform',
-    color: 'hsl(271, 70%, 60%)',
   },
 } satisfies ChartConfig;
 
@@ -98,7 +93,6 @@ export function CostTrendLineChart({ data }: CostTrendLineChartProps) {
             <Line dataKey="sms" type="monotone" stroke="var(--color-sms)" strokeWidth={2} dot={false} />
             <Line dataKey="email" type="monotone" stroke="var(--color-email)" strokeWidth={2} dot={false} />
             <Line dataKey="ai" type="monotone" stroke="var(--color-ai)" strokeWidth={2} dot={false} />
-            <Line dataKey="hiems" type="monotone" stroke="var(--color-hiems)" strokeWidth={2} dot={false} />
           </LineChart>
         </ChartContainer>
       </CardContent>
