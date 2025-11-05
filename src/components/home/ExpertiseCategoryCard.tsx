@@ -1,6 +1,8 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ExpertiseCategory } from "@/data/expertise";
 import { CheckCircle } from "lucide-react";
+import { useState } from "react";
+import { cn } from "@/lib/utils";
 interface ExpertiseCategoryCardProps {
   category: ExpertiseCategory;
   imagePosition?: "left" | "right";
@@ -11,20 +13,42 @@ export const ExpertiseCategoryCard = ({
 }: ExpertiseCategoryCardProps) => {
   const Icon = category.icon;
   const isLeft = imagePosition === "left";
+  const [imageLoaded, setImageLoaded] = useState(false);
   return <Card className="group h-full overflow-hidden border border-primary/10 bg-gradient-to-br from-card/80 via-card/50 to-card/30 backdrop-blur-md hover:bg-card/90 hover:border-primary/30 transition-all duration-500 hover:shadow-2xl hover:shadow-primary/20 hover:-translate-y-1">
       <div className={`flex flex-col ${isLeft ? 'md:flex-row' : 'md:flex-row-reverse'} h-full`}>
-        {/* Image Section - 40% */}
+        {/* Image Section - 40% with Optimized Loading */}
         <div className="relative md:w-[40%] aspect-[4/3] md:aspect-auto overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-br from-primary/30 via-primary/10 to-transparent z-10" />
-          {category.image ? <>
-              <img src={category.image} alt={category.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 group-hover:brightness-110" />
+          
+          {/* Loading Placeholder */}
+          {!imageLoaded && category.image && (
+            <div className="absolute inset-0 bg-muted animate-pulse z-5" />
+          )}
+          
+          {category.image ? (
+            <>
+              <img 
+                src={category.image} 
+                alt={category.title}
+                loading="lazy"
+                decoding="async"
+                onLoad={() => setImageLoaded(true)}
+                className={cn(
+                  "w-full h-full object-cover transition-all duration-700 group-hover:scale-110 group-hover:brightness-110 transform-gpu",
+                  imageLoaded ? "opacity-100" : "opacity-0"
+                )}
+                style={{
+                  contain: 'layout style paint',
+                  contentVisibility: 'auto'
+                }}
+              />
               <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent opacity-70 z-10" />
-            </> : <div className="flex items-center justify-center h-full bg-gradient-to-br from-primary/20 to-primary/5">
+            </>
+          ) : (
+            <div className="flex items-center justify-center h-full bg-gradient-to-br from-primary/20 to-primary/5">
               <Icon className="h-32 w-32 text-primary/40 group-hover:text-primary/60 transition-colors duration-300" />
-            </div>}
-          
-          {/* Icon overlay in corner */}
-          
+            </div>
+          )}
         </div>
 
         {/* Content Section - 60% */}
@@ -43,21 +67,33 @@ export const ExpertiseCategoryCard = ({
             <div className="space-y-3">
               <h4 className="text-sm font-semibold text-primary mb-4 uppercase tracking-wide">Verktyg & Plattformar</h4>
               <div className="grid grid-cols-1 gap-2">
-                {category.items.map((item, idx) => <div key={idx} className="flex items-center gap-3 p-3 rounded-lg bg-background/50 hover:bg-primary/10 border border-border/50 hover:border-primary/30 transition-all duration-300 group/item">
-                    {item.logo ? <div className="flex-shrink-0 w-10 h-10 flex items-center justify-center bg-background rounded-lg shadow-sm group-hover/item:shadow-md transition-shadow overflow-hidden">
+                {category.items.map((item, idx) => (
+                  <div 
+                    key={idx} 
+                    className="flex items-center gap-3 p-3 rounded-lg bg-background/50 hover:bg-primary/10 border border-border/50 hover:border-primary/30 transition-all duration-300 group/item transform-gpu"
+                  >
+                    {item.logo ? (
+                      <div className="flex-shrink-0 w-10 h-10 flex items-center justify-center bg-background rounded-lg shadow-sm group-hover/item:shadow-md transition-shadow overflow-hidden">
                         <img 
                           src={item.logo} 
-                          alt={item.name} 
-                          className={`object-contain group-hover/item:scale-110 transition-transform ${
+                          alt={item.name}
+                          loading="lazy"
+                          decoding="async"
+                          className={`object-contain group-hover/item:scale-110 transition-transform transform-gpu ${
                             item.name === 'Vapi' ? 'w-14 h-14 scale-150' : 'w-7 h-7'
-                          }`} 
+                          }`}
+                          style={{ contentVisibility: 'auto' }}
                         />
-                      </div> : <CheckCircle className="flex-shrink-0 h-5 w-5 text-primary group-hover/item:scale-110 transition-transform" />}
+                      </div>
+                    ) : (
+                      <CheckCircle className="flex-shrink-0 h-5 w-5 text-primary group-hover/item:scale-110 transition-transform transform-gpu" />
+                    )}
                     <div className="flex-1 min-w-0">
                       <p className="font-semibold text-sm group-hover/item:text-primary transition-colors">{item.name}</p>
                       {item.description && <p className="text-xs text-muted-foreground">{item.description}</p>}
                     </div>
-                  </div>)}
+                  </div>
+                ))}
               </div>
             </div>
           </CardContent>

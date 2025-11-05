@@ -185,117 +185,199 @@ export const ProductSelection = () => {
         </div>
        </section> */}
 
-      {/* Blogg / Insikter */}
-      <section id="blogg" className="relative py-16">
-        <div className="mx-auto max-w-7xl px-6 lg:px-8">
+      {/* Blogg / Insikter - Redesigned with Minimal Gradient Background */}
+      <section id="blogg" className="relative py-32 overflow-hidden">
+        {/* Animated CSS-only Background */}
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-background to-primary/5" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_50%,hsl(var(--accent)/0.08),transparent_50%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_50%,hsl(var(--primary)/0.06),transparent_50%)]" />
+        
+        <div className="mx-auto max-w-7xl px-6 lg:px-8 relative z-10">
           <AnimatedSection className="text-center">
-            <h3 className="text-3xl font-bold mb-4 text-white">
-              Läs våra insikter om AI, automation och ROI
-            </h3>
-            <p className="text-lg text-white/80 mb-8 max-w-2xl mx-auto">
-              Håll dig uppdaterad med de senaste trenderna och lär dig hur AI kan transformera din verksamhet
+            <div className="inline-block mb-8">
+              <h2 className="text-4xl sm:text-5xl font-bold bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent mb-4">
+                Håll dig uppdaterad
+              </h2>
+              <div className="w-24 h-1.5 bg-gradient-to-r from-accent via-accent/60 to-transparent mx-auto rounded-full shadow-lg shadow-accent/30" />
+            </div>
+            
+            <p className="text-xl text-muted-foreground mb-12 max-w-2xl mx-auto leading-relaxed">
+              Få de senaste insikterna om AI, automation och ROI direkt till din inkorg
             </p>
             
-            <div className="max-w-md mx-auto">
-              <div className="flex gap-2">
-                <Input type="email" placeholder="Din e-postadress" className="flex-1 bg-white/10 border-white/20 text-white placeholder:text-white/60" />
-                <Button className="bg-gradient-gold text-primary hover:shadow-glow transition-all duration-300">
-                  Prenumerera
-                </Button>
-              </div>
-              <p className="text-xs text-white/70 mt-2">
-                Få våra nyhetsbrev helt gratis – ingen spam, bara värdefulla insikter
-              </p>
+            <div className="max-w-lg mx-auto">
+              <Card className="p-8 border border-primary/10 bg-gradient-to-br from-card/80 via-card/50 to-card/30 backdrop-blur-md hover:border-primary/20 transition-all duration-500 shadow-xl">
+                <div className="flex flex-col sm:flex-row gap-3">
+                  <Input 
+                    type="email" 
+                    placeholder="din@email.se" 
+                    className="flex-1 bg-background/50 border-border/50 hover:border-primary/30 focus:border-primary transition-colors"
+                  />
+                  <Button className="bg-gradient-to-r from-accent to-accent/80 hover:from-accent/90 hover:to-accent/70 text-accent-foreground font-semibold shadow-lg hover:shadow-accent/50 transition-all duration-300 hover:scale-105 whitespace-nowrap">
+                    Prenumerera
+                  </Button>
+                </div>
+                <p className="text-xs text-muted-foreground mt-4 text-left">
+                  📬 Inga spam-mails. Bara värdefulla insikter, tips och uppdateringar.
+                </p>
+              </Card>
             </div>
           </AnimatedSection>
         </div>
       </section>
 
-      {/* Kontakt / CTA */}
-      <section id="kontakt" className="relative py-24 overflow-hidden">
-        {/* Animated background elements */}
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_50%,hsl(var(--primary)/0.12),transparent_50%)]" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_50%,hsl(var(--primary)/0.08),transparent_50%)]" />
+      {/* Kontakt / CTA - Redesigned Split Screen */}
+      <section id="kontakt" className="relative py-32 overflow-hidden">
+        {/* Animated CSS background */}
+        <div className="absolute inset-0 bg-gradient-to-br from-background via-primary/5 to-background" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_30%,hsl(var(--accent)/0.08),transparent_40%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_70%,hsl(var(--primary)/0.06),transparent_40%)]" />
         
         <div className="mx-auto max-w-7xl px-6 lg:px-8 relative z-10">
           <AnimatedSection className="text-center mb-20">
-            <div className="inline-block">
-              <h2 className="text-5xl sm:text-6xl font-bold bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent mb-4">
-                Boka din gratis behovsanalys
+            <div className="inline-block mb-6">
+              <h2 className="text-5xl sm:text-6xl font-bold bg-gradient-to-r from-primary via-primary/80 to-accent/60 bg-clip-text text-transparent mb-4">
+                Ta steget mot AI-automation
               </h2>
-              <div className="w-32 h-1.5 bg-gradient-to-r from-primary via-primary/60 to-transparent mx-auto rounded-full shadow-lg shadow-primary/50" />
+              <div className="w-32 h-1.5 bg-gradient-to-r from-accent via-accent/60 to-transparent mx-auto rounded-full shadow-lg shadow-accent/30" />
             </div>
-            <p className="text-xl sm:text-2xl text-muted-foreground max-w-3xl mx-auto mt-6 font-light">
-              Vi visar hur AI och automation kan effektivisera just er verksamhet – utan förpliktelser
+            <p className="text-xl sm:text-2xl text-muted-foreground max-w-3xl mx-auto font-light leading-relaxed">
+              Boka en gratis behovsanalys och upptäck hur vi kan effektivisera er verksamhet
             </p>
           </AnimatedSection>
           
+          {/* Split Screen Layout */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-6xl mx-auto">
-            {/* Vänster: Kontaktformulär */}
-            <AnimatedSection delay={100}>
-              <Card className="group h-full p-8 border border-primary/10 bg-gradient-to-br from-card/80 via-card/50 to-card/30 backdrop-blur-md hover:bg-card/90 hover:border-primary/30 hover:-translate-y-1 hover:shadow-2xl hover:shadow-primary/20 transition-all duration-500">
-                <h3 className="text-3xl font-bold mb-6 bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent">
-                  Kontakta oss
-                </h3>
-                <form className="space-y-5">
+            
+            {/* Vänster: Kontaktformulär - Enhanced */}
+            <AnimatedSection delay={100} direction="left">
+              <Card className="group h-full p-8 border border-primary/10 bg-gradient-to-br from-card via-card/90 to-card/80 backdrop-blur-md hover:border-accent/30 hover:-translate-y-1 hover:shadow-2xl hover:shadow-accent/20 transition-all duration-500 transform-gpu">
+                <div className="space-y-6">
                   <div>
-                    <Label className="text-foreground/90 font-medium">Namn *</Label>
-                    <Input type="text" required placeholder="Ditt namn" className="mt-1.5 bg-background/50 border-border/50 hover:border-primary/30 focus:border-primary transition-colors" />
+                    <h3 className="text-3xl font-bold mb-2 bg-gradient-to-r from-primary via-primary/80 to-accent/60 bg-clip-text text-transparent">
+                      Kontakta oss
+                    </h3>
+                    <p className="text-muted-foreground">
+                      Fyll i formuläret så återkommer vi inom 24 timmar
+                    </p>
                   </div>
-                  <div>
-                    <Label className="text-foreground/90 font-medium">Företag *</Label>
-                    <Input type="text" required placeholder="Ditt företag" className="mt-1.5 bg-background/50 border-border/50 hover:border-primary/30 focus:border-primary transition-colors" />
-                  </div>
-                  <div>
-                    <Label className="text-foreground/90 font-medium">Telefon *</Label>
-                    <Input type="tel" required placeholder="070-123 45 67" className="mt-1.5 bg-background/50 border-border/50 hover:border-primary/30 focus:border-primary transition-colors" />
-                  </div>
-                  <div>
-                    <Label className="text-foreground/90 font-medium">E-post *</Label>
-                    <Input type="email" required placeholder="din@email.se" className="mt-1.5 bg-background/50 border-border/50 hover:border-primary/30 focus:border-primary transition-colors" />
-                  </div>
-                  <div>
-                    <Label className="text-foreground/90 font-medium">Bransch</Label>
-                    <Select>
-                      <SelectTrigger className="mt-1.5 bg-background/50 border-border/50 hover:border-primary/30 transition-colors">
-                        <SelectValue placeholder="Välj bransch" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {industries.map(ind => <SelectItem key={ind.id} value={ind.id}>
-                            {ind.name}
-                          </SelectItem>)}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <Button type="submit" className="w-full bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 text-primary-foreground font-semibold text-lg shadow-lg hover:shadow-primary/50 transition-all duration-300 hover:scale-105" onClick={e => {
-                  e.preventDefault();
-                  setIsConsultationModalOpen(true);
-                }}>
-                    Boka behovsanalys
-                  </Button>
-                </form>
-                
-                {/* Kontaktuppgifter */}
-                <div className="mt-8 pt-8 border-t border-border/50">
-                  <h4 className="font-semibold mb-4 text-foreground">Kontaktuppgifter</h4>
-                  <div className="space-y-2 text-sm text-muted-foreground">
-                    <p>📞 070-657 15 32</p>
-                    <p>📧 contact@hiems.se</p>
+                  
+                  <form className="space-y-5">
+                    <div className="space-y-2">
+                      <Label className="text-foreground/90 font-medium">Namn *</Label>
+                      <Input 
+                        type="text" 
+                        required 
+                        placeholder="Ditt för- och efternamn" 
+                        className="bg-background/70 border-border/50 hover:border-primary/30 focus:border-accent transition-all duration-300"
+                      />
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <Label className="text-foreground/90 font-medium">Företag *</Label>
+                      <Input 
+                        type="text" 
+                        required 
+                        placeholder="Företagsnamn" 
+                        className="bg-background/70 border-border/50 hover:border-primary/30 focus:border-accent transition-all duration-300"
+                      />
+                    </div>
+                    
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label className="text-foreground/90 font-medium">Telefon *</Label>
+                        <Input 
+                          type="tel" 
+                          required 
+                          placeholder="070-123 45 67" 
+                          className="bg-background/70 border-border/50 hover:border-primary/30 focus:border-accent transition-all duration-300"
+                        />
+                      </div>
+                      
+                      <div className="space-y-2">
+                        <Label className="text-foreground/90 font-medium">E-post *</Label>
+                        <Input 
+                          type="email" 
+                          required 
+                          placeholder="din@email.se" 
+                          className="bg-background/70 border-border/50 hover:border-primary/30 focus:border-accent transition-all duration-300"
+                        />
+                      </div>
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <Label className="text-foreground/90 font-medium">Bransch</Label>
+                      <Select>
+                        <SelectTrigger className="bg-background/70 border-border/50 hover:border-primary/30 transition-all duration-300">
+                          <SelectValue placeholder="Välj din bransch" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {industries.map(ind => (
+                            <SelectItem key={ind.id} value={ind.id}>
+                              {ind.name}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    
+                    <Button 
+                      type="submit"
+                      className="w-full bg-gradient-to-r from-accent to-accent/80 hover:from-accent/90 hover:to-accent/70 text-accent-foreground font-semibold text-lg py-6 shadow-lg hover:shadow-accent/50 transition-all duration-300 hover:scale-105 transform-gpu"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        setIsConsultationModalOpen(true);
+                      }}
+                    >
+                      Boka behovsanalys
+                    </Button>
+                  </form>
+                  
+                  {/* Kontaktuppgifter */}
+                  <div className="pt-6 border-t border-border/30">
+                    <h4 className="font-semibold mb-3 text-foreground text-sm uppercase tracking-wide">Direktkontakt</h4>
+                    <div className="space-y-2 text-sm text-muted-foreground">
+                      <p className="flex items-center gap-2">
+                        <span className="text-lg">📞</span>
+                        <a href="tel:0706571532" className="hover:text-accent transition-colors">070-657 15 32</a>
+                      </p>
+                      <p className="flex items-center gap-2">
+                        <span className="text-lg">📧</span>
+                        <a href="mailto:contact@hiems.se" className="hover:text-accent transition-colors">contact@hiems.se</a>
+                      </p>
+                    </div>
                   </div>
                 </div>
               </Card>
             </AnimatedSection>
             
-            {/* Höger: Placeholder för bokningskalender */}
-            <AnimatedSection delay={200}>
-              <Card className="group h-full p-8 border border-primary/10 bg-gradient-to-br from-card/80 via-card/50 to-card/30 backdrop-blur-md hover:bg-card/90 hover:border-primary/30 hover:-translate-y-1 hover:shadow-2xl hover:shadow-primary/20 transition-all duration-500">
-                <h3 className="text-3xl font-bold mb-6 bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent">
-                  Boka direkt
-                </h3>
-                <div className="aspect-video bg-background/30 border border-border/30 rounded-lg flex items-center justify-center group-hover:border-primary/20 transition-colors duration-500">
-                  <p className="text-muted-foreground text-center px-4">
-                    Calendly-integration kommer här
-                  </p>
+            {/* Höger: Bokningskalender - Enhanced */}
+            <AnimatedSection delay={200} direction="right">
+              <Card className="group h-full p-8 border border-primary/10 bg-gradient-to-br from-card via-card/90 to-card/80 backdrop-blur-md hover:border-accent/30 hover:-translate-y-1 hover:shadow-2xl hover:shadow-accent/20 transition-all duration-500 transform-gpu">
+                <div className="space-y-6 h-full flex flex-col">
+                  <div>
+                    <h3 className="text-3xl font-bold mb-2 bg-gradient-to-r from-primary via-primary/80 to-accent/60 bg-clip-text text-transparent">
+                      Boka direkt
+                    </h3>
+                    <p className="text-muted-foreground">
+                      Välj en tid som passar dig i vår bokningskalender
+                    </p>
+                  </div>
+                  
+                  {/* Calendly Placeholder */}
+                  <div className="flex-1 bg-gradient-to-br from-background/50 to-background/30 border border-border/30 rounded-lg flex flex-col items-center justify-center group-hover:border-accent/20 transition-all duration-500 min-h-[400px]">
+                    <div className="text-center px-6 space-y-4">
+                      <div className="w-20 h-20 mx-auto rounded-full bg-gradient-to-br from-accent/20 to-accent/5 flex items-center justify-center group-hover:scale-110 transition-transform duration-500">
+                        <span className="text-4xl">📅</span>
+                      </div>
+                      <p className="text-muted-foreground text-lg">
+                        Calendly-integration
+                      </p>
+                      <p className="text-sm text-muted-foreground/70 max-w-xs">
+                        Här kommer vår bokningskalender att visas så att du enkelt kan välja tid
+                      </p>
+                    </div>
+                  </div>
                 </div>
               </Card>
             </AnimatedSection>
