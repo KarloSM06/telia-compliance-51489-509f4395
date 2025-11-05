@@ -99,9 +99,7 @@ function Header1() {
                   <Button variant="outline" className="hover:bg-gradient-gold hover:text-primary hover:border-primary/20 transition-all duration-300 font-medium rounded-xl">
                     {item.title}
                   </Button>
-                </Link> : item.action ? <Button key={item.title} variant="outline" onClick={item.action} className="hover:bg-gradient-gold hover:text-primary hover:border-primary/20 transition-all duration-300 font-medium rounded-xl">
-                  {item.title}
-                </Button> : <NavigationMenu key={item.title}>
+                </Link> : <NavigationMenu key={item.title}>
                   <NavigationMenuList>
                     <NavigationMenuItem>
                       <NavigationMenuTrigger className="font-medium text-sm hover:bg-gradient-gold hover:text-primary transition-all duration-300 rounded-xl border border-input">
@@ -121,15 +119,12 @@ function Header1() {
                             </Button>
                           </div>
                           <div className="flex flex-col text-sm h-full justify-end gap-1">
-                            {item.items?.map(subItem => subItem.href ? <Link key={subItem.title} to={subItem.href}>
+                            {item.items?.map(subItem => <Link key={subItem.title} to={subItem.href}>
                                   <Button variant="ghost" className="w-full justify-between hover:bg-muted rounded-xl">
                                     <span>{subItem.title}</span>
                                     <MoveRight className="w-4 h-4 text-muted-foreground" />
                                   </Button>
-                                </Link> : <Button key={subItem.title} variant="ghost" onClick={subItem.action} className="w-full justify-between hover:bg-muted rounded-xl">
-                                  <span>{subItem.title}</span>
-                                  <MoveRight className="w-4 h-4 text-muted-foreground" />
-                                </Button>)}
+                                </Link>)}
                           </div>
                         </div>
                       </NavigationMenuContent>
@@ -219,27 +214,13 @@ function Header1() {
                       {item.href ? <Link to={item.href} onClick={() => setOpen(false)} className="flex justify-between items-center hover:bg-accent/10 p-2 rounded transition-all duration-300">
                           <span className="text-lg font-medium">{item.title}</span>
                           <MoveRight className="w-4 h-4 stroke-1 text-muted-foreground" />
-                        </Link> : item.action ? <button onClick={() => {
-                  item.action();
-                  setOpen(false);
-                }} className="flex justify-between items-center hover:bg-accent/10 p-2 rounded transition-all duration-300 text-left">
-                          <span className="text-lg font-medium">{item.title}</span>
-                          <MoveRight className="w-4 h-4 stroke-1 text-muted-foreground" />
-                        </button> : <p className="text-lg font-medium p-2">{item.title}</p>}
-                      {item.items && item.items.map(subItem => subItem.href ? <Link key={subItem.title} to={subItem.href} onClick={() => setOpen(false)} className="flex justify-between items-center hover:bg-accent/10 p-2 rounded transition-all duration-300 pl-4">
+                        </Link> : <p className="text-lg font-medium p-2">{item.title}</p>}
+                      {item.items && item.items.map(subItem => <Link key={subItem.title} to={subItem.href} onClick={() => setOpen(false)} className="flex justify-between items-center hover:bg-accent/10 p-2 rounded transition-all duration-300 pl-4">
                               <span className="text-muted-foreground">
                                 {subItem.title}
                               </span>
                               <MoveRight className="w-4 h-4 stroke-1" />
-                            </Link> : <button key={subItem.title} onClick={() => {
-                  subItem.action?.();
-                  setOpen(false);
-                }} className="flex justify-between items-center hover:bg-accent/10 p-2 rounded transition-all duration-300 pl-4 text-left">
-                              <span className="text-muted-foreground">
-                                {subItem.title}
-                              </span>
-                              <MoveRight className="w-4 h-4 stroke-1" />
-                            </button>)}
+                            </Link>)}
                     </div>
                   </div>)}
 

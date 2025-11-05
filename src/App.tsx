@@ -43,6 +43,15 @@ const OpenRouterDashboard = lazy(() => import("./pages/OpenRouterDashboard"));
 const AdminPanel = lazy(() => import("./pages/AdminPanel"));
 const DashboardLayout = lazy(() => import("./components/dashboard/DashboardLayout").then(m => ({ default: m.DashboardLayout })));
 
+// Service pages
+const ServicesIndex = lazy(() => import("./pages/services/Index"));
+const QuoteInvoice = lazy(() => import("./pages/services/QuoteInvoice"));
+const AIReceptionist = lazy(() => import("./pages/services/AIReceptionist"));
+const CRMAnalytics = lazy(() => import("./pages/services/CRMAnalytics"));
+const CustomDashboards = lazy(() => import("./pages/services/CustomDashboards"));
+const Automations = lazy(() => import("./pages/services/Automations"));
+const HowItWorks = lazy(() => import("./pages/HowItWorks"));
+
 // Loading fallback component
 const PageLoader = () => (
   <div className="min-h-screen flex items-center justify-center bg-background">
