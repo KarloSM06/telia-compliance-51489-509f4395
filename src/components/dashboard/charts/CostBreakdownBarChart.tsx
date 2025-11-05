@@ -1,7 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { ChartContainer, ChartTooltip, ChartTooltipContent, type ChartConfig } from '@/components/ui/line-charts-4';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer } from 'recharts';
-import { Phone, MessageSquare, Mail, Brain, CheckCircle } from 'lucide-react';
+import { ChartContainer, ChartTooltip, ChartTooltipContent, type ChartConfig } from '@/components/ui/area-charts-2';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid } from 'recharts';
 
 interface CostBreakdownBarChartProps {
   telephonyCost: number;
@@ -13,19 +12,19 @@ interface CostBreakdownBarChartProps {
 const chartConfig = {
   telephony: {
     label: 'Telefoni',
-    color: 'hsl(142, 76%, 36%)',
+    color: 'hsl(222, 47%, 25%)',
   },
   sms: {
     label: 'SMS',
-    color: 'hsl(168, 76%, 42%)',
+    color: 'hsl(222, 47%, 35%)',
   },
   email: {
     label: 'Email',
-    color: 'hsl(189, 94%, 43%)',
+    color: 'hsl(222, 47%, 45%)',
   },
   ai: {
     label: 'AI & Modeller',
-    color: 'hsl(217, 91%, 60%)',
+    color: 'hsl(222, 47%, 55%)',
   },
 } satisfies ChartConfig;
 
@@ -61,9 +60,9 @@ export function CostBreakdownBarChart({
   const totalCost = telephonyCost + smsCost + emailCost + aiCost;
 
   return (
-    <Card className="border-2 border-primary/10 shadow-lg shadow-primary/5 hover:border-primary/20 hover:shadow-xl transition-all duration-300">
+    <Card className="border border-primary/20 bg-gradient-to-br from-background to-primary/[0.02] shadow-[0_8px_30px_-8px_hsl(222_47%_11%/0.15)] hover:shadow-[0_20px_60px_-15px_hsl(222_47%_11%/0.25)] transition-all duration-500">
       <CardHeader className="border-0 pt-6 pb-4">
-        <CardTitle className="text-lg font-semibold">Kostnadsfördelning</CardTitle>
+        <CardTitle className="text-lg font-semibold text-primary">Kostnadsfördelning</CardTitle>
         <p className="text-sm text-muted-foreground">
           Totalt: {totalCost.toLocaleString('sv-SE', { maximumFractionDigits: 0 })} SEK
         </p>
@@ -81,7 +80,7 @@ export function CostBreakdownBarChart({
           >
             <CartesianGrid
               strokeDasharray="4 8"
-              stroke="var(--input)"
+              stroke="hsl(222 47% 11% / 0.1)"
               strokeOpacity={1}
               horizontal={true}
               vertical={false}
@@ -90,13 +89,13 @@ export function CostBreakdownBarChart({
               dataKey="category"
               axisLine={false}
               tickLine={false}
-              tick={{ fontSize: 11, fill: 'var(--muted-foreground)' }}
+              tick={{ fontSize: 11, fill: 'hsl(222 47% 11% / 0.6)' }}
               tickMargin={10}
             />
             <YAxis
               axisLine={false}
               tickLine={false}
-              tick={{ fontSize: 11, fill: 'var(--muted-foreground)' }}
+              tick={{ fontSize: 11, fill: 'hsl(222 47% 11% / 0.6)' }}
               tickFormatter={(value) => `${(value / 1000).toFixed(0)}k`}
               tickMargin={10}
             />
@@ -106,7 +105,7 @@ export function CostBreakdownBarChart({
                   formatter={(value) => `${Number(value).toLocaleString('sv-SE', { maximumFractionDigits: 0 })} SEK`}
                 />
               }
-              cursor={{ fill: 'var(--muted)', opacity: 0.15 }}
+              cursor={{ fill: 'hsl(222 47% 11% / 0.05)', opacity: 0.15 }}
             />
             <Bar dataKey="value" radius={[8, 8, 0, 0]} />
           </BarChart>

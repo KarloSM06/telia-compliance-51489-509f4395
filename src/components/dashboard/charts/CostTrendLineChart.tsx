@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { ChartContainer, ChartTooltip, ChartTooltipContent, type ChartConfig } from '@/components/ui/line-charts-4';
+import { ChartContainer, ChartTooltip, ChartTooltipContent, type ChartConfig } from '@/components/ui/area-charts-2';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid } from 'recharts';
 
 interface CostTrendLineChartProps {
@@ -15,27 +15,27 @@ interface CostTrendLineChartProps {
 const chartConfig = {
   telephony: {
     label: 'Telefoni',
-    color: 'hsl(142, 76%, 36%)',
+    color: 'hsl(222, 47%, 25%)',
   },
   sms: {
     label: 'SMS',
-    color: 'hsl(168, 76%, 42%)',
+    color: 'hsl(222, 47%, 35%)',
   },
   email: {
     label: 'Email',
-    color: 'hsl(189, 94%, 43%)',
+    color: 'hsl(222, 47%, 45%)',
   },
   ai: {
     label: 'AI & Modeller',
-    color: 'hsl(217, 91%, 60%)',
+    color: 'hsl(222, 47%, 55%)',
   },
 } satisfies ChartConfig;
 
 export function CostTrendLineChart({ data }: CostTrendLineChartProps) {
   return (
-    <Card className="border-2 border-primary/10 shadow-lg shadow-primary/5 hover:border-primary/20 hover:shadow-xl transition-all duration-300">
+    <Card className="border border-primary/20 bg-gradient-to-br from-background to-primary/[0.02] shadow-[0_8px_30px_-8px_hsl(222_47%_11%/0.15)] hover:shadow-[0_20px_60px_-15px_hsl(222_47%_11%/0.25)] transition-all duration-500">
       <CardHeader className="border-0 pt-6 pb-4">
-        <CardTitle className="text-lg font-semibold">Kostnadsutveckling över tid</CardTitle>
+        <CardTitle className="text-lg font-semibold text-primary">Kostnadsutveckling över tid</CardTitle>
         <p className="text-sm text-muted-foreground">Dagliga kostnader per kategori</p>
       </CardHeader>
       <CardContent className="ps-2 pe-4 pb-6">
@@ -54,7 +54,7 @@ export function CostTrendLineChart({ data }: CostTrendLineChartProps) {
           >
             <CartesianGrid
               strokeDasharray="4 8"
-              stroke="var(--input)"
+              stroke="hsl(222 47% 11% / 0.1)"
               strokeOpacity={1}
               horizontal={true}
               vertical={false}
@@ -63,7 +63,7 @@ export function CostTrendLineChart({ data }: CostTrendLineChartProps) {
               dataKey="date"
               axisLine={false}
               tickLine={false}
-              tick={{ fontSize: 11, fill: 'var(--muted-foreground)' }}
+              tick={{ fontSize: 11, fill: 'hsl(222 47% 11% / 0.6)' }}
               tickMargin={10}
               tickFormatter={(value) => {
                 const date = new Date(value);
@@ -73,7 +73,7 @@ export function CostTrendLineChart({ data }: CostTrendLineChartProps) {
             <YAxis
               axisLine={false}
               tickLine={false}
-              tick={{ fontSize: 11, fill: 'var(--muted-foreground)' }}
+              tick={{ fontSize: 11, fill: 'hsl(222 47% 11% / 0.6)' }}
               tickFormatter={(value) => `${(value / 1000).toFixed(0)}k`}
               tickMargin={10}
             />
@@ -87,7 +87,7 @@ export function CostTrendLineChart({ data }: CostTrendLineChartProps) {
                   }}
                 />
               }
-              cursor={{ strokeDasharray: '3 3', stroke: 'var(--input)' }}
+              cursor={{ strokeDasharray: '3 3', stroke: 'hsl(222 47% 11% / 0.2)' }}
             />
             <Line dataKey="telephony" type="monotone" stroke="var(--color-telephony)" strokeWidth={2} dot={false} />
             <Line dataKey="sms" type="monotone" stroke="var(--color-sms)" strokeWidth={2} dot={false} />
