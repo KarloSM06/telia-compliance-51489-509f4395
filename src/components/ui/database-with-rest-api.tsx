@@ -14,6 +14,12 @@ interface DatabaseWithRestApiProps {
     third: string;
     fourth: string;
   };
+  badgeIcons?: {
+    first: any;
+    second: any;
+    third: any;
+    fourth: any;
+  };
   buttonTexts?: {
     first: string;
     second: string;
@@ -26,10 +32,15 @@ const DatabaseWithRestApi = ({
   className,
   circleText,
   badgeTexts,
+  badgeIcons,
   buttonTexts,
   title,
   lightColor,
 }: DatabaseWithRestApiProps) => {
+  const Icon1 = badgeIcons?.first;
+  const Icon2 = badgeIcons?.second;
+  const Icon3 = badgeIcons?.third;
+  const Icon4 = badgeIcons?.fourth;
   return (
     <div
       className={cn(
@@ -116,7 +127,11 @@ const DatabaseWithRestApi = ({
               height="10"
               rx="5"
             ></rect>
-            <DatabaseIcon x="18" y="7.5"></DatabaseIcon>
+            {Icon1 && (
+              <foreignObject x="18" y="7.5" width="5" height="5">
+                <Icon1 className="size-full text-white" strokeWidth={2.5} />
+              </foreignObject>
+            )}
             <text
               x="28"
               y="12"
@@ -138,7 +153,11 @@ const DatabaseWithRestApi = ({
               height="10"
               rx="5"
             ></rect>
-            <DatabaseIcon x="64" y="7.5"></DatabaseIcon>
+            {Icon2 && (
+              <foreignObject x="64" y="7.5" width="5" height="5">
+                <Icon2 className="size-full text-white" strokeWidth={2.5} />
+              </foreignObject>
+            )}
             <text
               x="74"
               y="12"
@@ -160,7 +179,11 @@ const DatabaseWithRestApi = ({
               height="10"
               rx="5"
             ></rect>
-            <DatabaseIcon x="112" y="7.5"></DatabaseIcon>
+            {Icon3 && (
+              <foreignObject x="112" y="7.5" width="5" height="5">
+                <Icon3 className="size-full text-white" strokeWidth={2.5} />
+              </foreignObject>
+            )}
             <text
               x="122"
               y="12"
@@ -182,7 +205,11 @@ const DatabaseWithRestApi = ({
               height="10"
               rx="5"
             ></rect>
-            <DatabaseIcon x="154" y="7.5"></DatabaseIcon>
+            {Icon4 && (
+              <foreignObject x="154" y="7.5" width="5" height="5">
+                <Icon4 className="size-full text-white" strokeWidth={2.5} />
+              </foreignObject>
+            )}
             <text
               x="165"
               y="12"

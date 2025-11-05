@@ -2,7 +2,7 @@ import { motion, useReducedMotion } from "framer-motion";
 import { Card } from "@/components/ui/card";
 import DatabaseWithRestApi from "@/components/ui/database-with-rest-api";
 import { ServiceDataFlow } from "./ServiceDataFlow";
-import { BarChart3, MessageSquare, Users, TrendingUp, Phone, Mail, Calendar, DollarSign, Activity, Database } from "lucide-react";
+import { BarChart3, MessageSquare, Users, TrendingUp, Phone, Mail, Calendar, DollarSign, Activity, Database, Star } from "lucide-react";
 const AnimatedContainer = ({
   className,
   delay = 0.1,
@@ -118,15 +118,28 @@ export const UnifiedDashboard = () => {
 
           {/* Data Flow Visualization */}
           <AnimatedContainer delay={1.0} className="flex justify-center mt-16">
-            <DatabaseWithRestApi className="mx-auto scale-125" circleText="API" title="Centraliserad Datahantering via REST API" badgeTexts={{
-            first: "Samtal",
-            second: "SMS",
-            third: "Mail",
-            fourth: "AI"
-          }} buttonTexts={{
-            first: "Hiems",
-            second: "Dashboard"
-          }} lightColor="hsl(var(--primary))" />
+            <DatabaseWithRestApi 
+              className="mx-auto scale-125" 
+              circleText="Hiems" 
+              title="Centraliserad Datahantering via REST API" 
+              badgeTexts={{
+                first: "Samtal",
+                second: "SMS",
+                third: "Mail",
+                fourth: "Recensioner"
+              }} 
+              badgeIcons={{
+                first: Phone,
+                second: MessageSquare,
+                third: Mail,
+                fourth: Star
+              }}
+              buttonTexts={{
+                first: "Hiems",
+                second: "Dashboard"
+              }} 
+              lightColor="hsl(var(--primary))" 
+            />
           </AnimatedContainer>
         </AnimatedContainer>
 
