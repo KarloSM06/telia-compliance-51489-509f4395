@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useState } from "react";
 import { ConsultationModal } from "@/components/ConsultationModal";
@@ -78,26 +78,45 @@ export const ProductSelection = () => {
       </AuroraBackground>
 
       {/* Branschspecifika lösningar */}
-      <section id="branscher" className="relative py-24 overflow-hidden">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_40%_60%,hsl(var(--primary)/0.12),transparent_50%)]" />
-        <div className="mx-auto max-w-7xl px-6 lg:px-8 relative z-10">
-          <AnimatedSection className="text-center mb-16">
-            <h2 className="text-4xl font-bold mb-4 text-slate-100 sm:text-5xl">
+      <section id="branscher" className="relative py-16 md:py-32">
+        <div className="@container mx-auto max-w-7xl px-6">
+          <AnimatedSection className="text-center">
+            <h2 className="text-balance text-4xl font-semibold lg:text-5xl mb-4">
               Oavsett bransch kan Hiems bygga AI-lösningar som passar just er verksamhet
             </h2>
-            <div className="w-24 h-1 mx-auto rounded-full mb-6 bg-slate-400" />
-            <p className="text-lg max-w-3xl mx-auto text-slate-300 sm:text-2xl">
+            <p className="mt-4 text-lg text-muted-foreground max-w-3xl mx-auto">
               Vi har erfarenhet från många olika branscher och kan anpassa våra lösningar efter era unika behov
             </p>
           </AnimatedSection>
           
-          <AnimatedSection>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-12">
-              {industries.map(industry => <IndustryCard key={industry.id} industry={industry} onClick={() => handleIndustryClick(industry.id)} />)}
-            </div>
-          </AnimatedSection>
+          <div className="@min-4xl:max-w-full @min-4xl:grid-cols-4 mx-auto mt-8 grid max-w-sm gap-6 *:text-center md:mt-16 sm:grid-cols-2 lg:grid-cols-3">
+            {industries.map((industry) => {
+              const Icon = industry.icon;
+              return (
+                <AnimatedSection key={industry.id}>
+                  <Card 
+                    className="group border-0 bg-muted shadow-none cursor-pointer hover:bg-muted/80 transition-all duration-300 transform-gpu"
+                    onClick={() => handleIndustryClick(industry.id)}
+                  >
+                    <CardHeader className="pb-3">
+                      <div className="relative mx-auto size-36 [mask-image:radial-gradient(ellipse_50%_50%_at_50%_50%,#000_70%,transparent_100%)]">
+                        <div className="absolute inset-0 [--border:black] dark:[--border:white] bg-[linear-gradient(to_right,var(--border)_1px,transparent_1px),linear-gradient(to_bottom,var(--border)_1px,transparent_1px)] bg-[size:24px_24px] opacity-10"/>
+                        <div className="bg-background absolute inset-0 m-auto flex size-12 items-center justify-center border-t border-l">
+                          <Icon className="size-6" aria-hidden />
+                        </div>
+                      </div>
+                      <h3 className="mt-6 font-medium">{industry.name}</h3>
+                    </CardHeader>
+                    <CardContent>
+                      <p className="text-sm text-muted-foreground">{industry.description}</p>
+                    </CardContent>
+                  </Card>
+                </AnimatedSection>
+              );
+            })}
+          </div>
           
-          <AnimatedSection className="text-center" delay={200}>
+          <AnimatedSection className="text-center mt-12" delay={200}>
             <Button size="lg" className="bg-gradient-gold text-primary hover:shadow-glow transition-all duration-300 font-semibold" onClick={() => setIsConsultationModalOpen(true)}>
               Boka branschspecifik konsultation
             </Button>
