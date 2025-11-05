@@ -344,10 +344,6 @@ const Dashboard = () => {
       <section className="relative py-12 bg-gradient-to-b from-background via-primary/2 to-background">
         <div className="container mx-auto px-6 lg:px-8 space-y-6">
           {data && <>
-              <AnimatedSection delay={300}>
-                
-              </AnimatedSection>
-
               {/* Financial Breakdown Detail */}
               <AnimatedSection delay={400}>
                 <Card>
