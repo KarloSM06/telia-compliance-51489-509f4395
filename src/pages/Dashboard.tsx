@@ -28,6 +28,7 @@ import { ServiceRevenueChart } from '@/components/dashboard/charts/ServiceRevenu
 import { CumulativeRevenueChart } from '@/components/dashboard/charts/CumulativeRevenueChart';
 import { DailyROIChart } from '@/components/dashboard/charts/DailyROIChart';
 import { CompactProjectionChart } from '@/components/dashboard/charts/CompactProjectionChart';
+import { RevenueTrendLineChart } from '@/components/dashboard/charts/RevenueTrendLineChart';
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from 'recharts';
 import hiemsLogoSnowflake from '@/assets/hiems-logo-snowflake.png';
 import { format } from 'date-fns';
@@ -344,6 +345,18 @@ const Dashboard = () => {
       <section className="relative py-12 bg-gradient-to-b from-background via-primary/2 to-background">
         <div className="container mx-auto px-6 lg:px-8 space-y-6">
           {data && <>
+              {/* Revenue Trend Line Chart */}
+              <AnimatedSection delay={300}>
+                <RevenueTrendLineChart 
+                  data={data.dailyData.map(d => ({
+                    date: d.date,
+                    revenue: d.revenue,
+                    cost: d.costs,
+                    profit: d.profit
+                  }))} 
+                />
+              </AnimatedSection>
+
               {/* Financial Breakdown Detail */}
               <AnimatedSection delay={400}>
                 <Card>
