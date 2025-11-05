@@ -270,6 +270,7 @@ const ShaderMaterial = ({
       fragmentShader: source,
       uniforms: getUniforms(),
       glslVersion: THREE.GLSL3,
+      transparent: true,
       blending: THREE.CustomBlending,
       blendSrc: THREE.SrcAlphaFactor,
       blendDst: THREE.OneFactor,
@@ -288,7 +289,11 @@ const ShaderMaterial = ({
 
 const Shader: React.FC<ShaderProps> = ({ source, uniforms, maxFps = 60 }) => {
   return (
-    <Canvas className="absolute inset-0  h-full w-full">
+    <Canvas 
+      className="absolute inset-0 h-full w-full"
+      gl={{ alpha: true, antialias: true, premultipliedAlpha: true }}
+      onCreated={({ gl }) => { gl.setClearAlpha(0); }}
+    >
       <ShaderMaterial source={source} uniforms={uniforms} maxFps={maxFps} />
     </Canvas>
   );
