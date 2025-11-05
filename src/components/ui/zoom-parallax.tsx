@@ -1,6 +1,6 @@
 'use client';
 
-import { useScroll, useTransform, motion } from 'framer-motion';
+import { useScroll, useTransform, motion, useReducedMotion } from 'framer-motion';
 import { useRef } from 'react';
 
 interface Image {
@@ -20,19 +20,27 @@ export function ZoomParallax({ images }: ZoomParallaxProps) {
     offset: ['start start', 'end end'],
   });
 
-  const scale4 = useTransform(scrollYProgress, [0, 1], [1, 4]);
-  const scale5 = useTransform(scrollYProgress, [0, 1], [1, 5]);
-  const scale6 = useTransform(scrollYProgress, [0, 1], [1, 6]);
-  const scale8 = useTransform(scrollYProgress, [0, 1], [1, 8]);
-  const scale9 = useTransform(scrollYProgress, [0, 1], [1, 9]);
+  const prefersReducedMotion = useReducedMotion();
 
-  const scales = [scale4, scale5, scale6, scale5, scale6, scale8, scale9];
+  // Lighter scales to reduce GPU memory pressure
+  const scale2 = useTransform(scrollYProgress, [0, 1], [1, 2.2]);
+  const scale25 = useTransform(scrollYProgress, [0, 1], [1, 2.6]);
+  const scale3 = useTransform(scrollYProgress, [0, 1], [1, 3.0]);
+  const scale35 = useTransform(scrollYProgress, [0, 1], [1, 3.4]);
+  const scale38 = useTransform(scrollYProgress, [0, 1], [1, 3.8]);
+
+  const scales = prefersReducedMotion
+    ? [1, 1, 1, 1, 1, 1, 1]
+    : [scale2, scale25, scale3, scale25, scale3, scale35, scale38];
+
+  // Limit number of images to render for performance
+  const imagesToRender = images.slice(0, 5);
 
   return (
-    <div ref={container} className="relative h-[300vh]">
+    <div ref={container} className="relative h-[200vh]">
       <div className="sticky top-0 h-screen overflow-hidden">
-        {images.map(({ src, alt }, index) => {
-          const scale = scales[index % scales.length];
+        {imagesToRender.map(({ src, alt }, index) => {
+          const scale = scales[index % scales.length] as any;
 
           return (
             <motion.div
@@ -44,10 +52,13 @@ export function ZoomParallax({ images }: ZoomParallaxProps) {
                 <img
                   src={src || '/placeholder.svg'}
                   alt={alt || `Parallax image ${index + 1}`}
-                  className="h-full w-full object-cover rounded-lg"
-                  loading="lazy"
+                  className="h-full w-full object-cover rounded-lg backface-hidden"
+                  loading={index === 0 ? 'eager' : 'lazy'}
                   decoding="async"
-                  style={{ contentVisibility: 'auto' }}
+                  fetchPriority={index === 0 ? 'high' : 'low'}
+                  sizes="(max-width: 768px) 90vw, 25vw"
+                  draggable={false}
+                  style={{ contentVisibility: 'auto', transform: 'translateZ(0)' }}
                 />
               </div>
             </motion.div>
