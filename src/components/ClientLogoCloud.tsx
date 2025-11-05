@@ -25,7 +25,7 @@ export function ClientLogoCloud({
           <LogoCard className="relative border-r border-b" logo={{
           src: stockholmAirCondition,
           alt: "Stockholm Air Condition",
-          height: 200
+          height: 350
         }}>
             
           </LogoCard>
@@ -33,7 +33,7 @@ export function ClientLogoCloud({
           <LogoCard className="border-b" logo={{
           src: bremilersVvs,
           alt: "Bremilers VVS AB",
-          height: 200
+          height: 350
         }} />
 
           
@@ -65,7 +65,7 @@ function LogoCard({
   return <div className={cn("flex items-center justify-center bg-background px-8 py-16 md:p-16", className)} {...props}>
       <img alt={logo.alt} className="pointer-events-none select-none object-contain dark:brightness-0 dark:invert w-full" style={{
       height: logo.height ? `${logo.height}px` : 'auto',
-      maxHeight: logo.height ? `${logo.height}px` : '200px'
+      maxHeight: logo.height ? `${logo.height}px` : '350px'
     }} height={logo.height || "auto"} src={logo.src} width={logo.width || "auto"} />
       {children}
     </div>;
