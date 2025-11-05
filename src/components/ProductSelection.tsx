@@ -6,6 +6,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useState } from "react";
 import { ConsultationModal } from "@/components/ConsultationModal";
 import { AnimatedSection } from "@/components/AnimatedSection";
+import { ConsultationCTA } from "@/components/ConsultationCTA";
 import { StickyPackageCards } from "@/components/home/StickyPackageCards";
 import { IndustryGallery } from "@/components/home/IndustryGallery";
 import { CustomerJourneyFlow } from "@/components/home/CustomerJourneyFlow";
@@ -129,8 +130,7 @@ export const ProductSelection = () => {
       
 
       {/* Kontakt / CTA */}
-      
-
+      <ConsultationCTA />
 
       <ConsultationModal open={isConsultationModalOpen} onOpenChange={setIsConsultationModalOpen} />
     </div>;
