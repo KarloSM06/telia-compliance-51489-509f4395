@@ -33,7 +33,7 @@ function AnimatedHero({ onBookDemo, onViewPackages }: AnimatedHeroProps) {
   }, [titleNumber, titles]);
 
   return (
-    <div className="w-full py-12 lg:py-16">
+    <div className="w-full py-32 lg:py-48">
       <div className="container mx-auto max-w-5xl px-6">
         <div className="flex gap-6 items-center justify-center flex-col">
           <div className="flex gap-4 flex-col items-center">
