@@ -37,19 +37,19 @@ const AnimatedHeader = () => {
   const [pRef, pInView] = useScrollAnimation();
 
   return (
-    <div className="text-center max-w-3xl mx-auto mb-16">
+    <div className="text-center max-w-5xl mx-auto mb-20">
       <div 
         ref={headerRef}
         className={`transition-all duration-700 ease-out ${headerInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
         style={{ transformStyle: 'preserve-3d' }}
       >
-        <h2 className="text-4xl md:text-5xl font-bold text-foreground">
+        <h2 className="text-5xl md:text-6xl lg:text-7xl font-bold text-foreground">
           Välj paket för ditt företag / din bransch
         </h2>
       </div>
       <p 
         ref={pRef}
-        className={`text-lg text-muted-foreground max-w-3xl mx-auto mt-4 transition-all duration-700 ease-out delay-200 ${pInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
+        className={`text-xl md:text-2xl text-muted-foreground max-w-4xl mx-auto mt-6 transition-all duration-700 ease-out delay-200 ${pInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
         style={{ transformStyle: 'preserve-3d' }}
       >
         Vi erbjuder sex skräddarsydda AI-paket som kan anpassas efter era specifika behov
@@ -66,7 +66,7 @@ interface StickyPackageCardsProps {
 
 export function StickyPackageCards({ packages, onBookDemo, onViewDetails }: StickyPackageCardsProps) {
   return (
-    <section id="paket" className="relative py-24 md:py-48 bg-gradient-to-b from-background via-background/95 to-background">
+    <section id="paket" className="relative py-16 md:py-24">
       <div className="px-[5%]">
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-col items-center">
@@ -82,33 +82,33 @@ export function StickyPackageCards({ packages, onBookDemo, onViewDetails }: Stic
                 return (
                   <div
                     key={pkg.id}
-                    className="bg-gradient-to-br from-card/40 via-card/20 to-card/10 backdrop-blur-xl border border-primary/20 grid grid-cols-1 md:grid-cols-2 items-center gap-4 md:gap-8 p-8 md:p-12 rounded-3xl mb-16 sticky shadow-lg"
+                    className="bg-gradient-to-br from-card/40 via-card/20 to-card/10 backdrop-blur-xl border border-primary/20 grid grid-cols-1 md:grid-cols-2 items-center gap-6 md:gap-12 p-10 md:p-16 rounded-3xl mb-20 sticky shadow-lg"
                     style={{ top: '200px' }}
                   >
                     {/* Card Content */}
                     <div className={`flex flex-col justify-center ${!isLeft ? 'md:order-2' : ''}`}>
-                      <div className="flex items-center gap-3 mb-4">
-                        <Icon className="h-10 w-10 text-primary" strokeWidth={1.5} />
-                        <h3 className="text-3xl md:text-4xl font-bold text-foreground">
+                      <div className="flex items-center gap-4 mb-6">
+                        <Icon className="h-12 w-12 md:h-14 md:w-14 text-primary" strokeWidth={1.5} />
+                        <h3 className="text-4xl md:text-5xl lg:text-6xl font-bold text-foreground">
                           {pkg.name}
                         </h3>
                       </div>
                       
-                      <p className="text-sm text-muted-foreground font-medium mb-4">
+                      <p className="text-base md:text-lg text-muted-foreground font-medium mb-6">
                         {pkg.targetAudience}
                       </p>
                       
                       {pkg.tagline && (
-                        <p className="text-lg text-foreground/90 mb-6 font-light">
+                        <p className="text-xl md:text-2xl text-foreground/90 mb-8 font-light">
                           {pkg.tagline}
                         </p>
                       )}
 
                       {/* Features */}
-                      <ul className="space-y-2 mb-6">
+                      <ul className="space-y-3 mb-8">
                         {allFeatures.slice(0, 4).map((feature, idx) => (
-                          <li key={idx} className="flex items-start gap-2 text-sm text-muted-foreground">
-                            <CheckCircle className="h-4 w-4 text-primary flex-shrink-0 mt-0.5" />
+                          <li key={idx} className="flex items-start gap-3 text-base md:text-lg text-muted-foreground">
+                            <CheckCircle className="h-5 w-5 md:h-6 md:w-6 text-primary flex-shrink-0 mt-1" />
                             <span>{feature}</span>
                           </li>
                         ))}
