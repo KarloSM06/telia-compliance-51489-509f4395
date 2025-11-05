@@ -59,19 +59,67 @@ export interface ProjectionMetrics {
   cumulativeData: CumulativeMetrics[];
 }
 
-// Match booking title to service pricing
+// Normalize string for flexible matching
+function normalizeString(str: string): string {
+  return str
+    .toLowerCase()
+    .replace(/[åä]/g, 'a')
+    .replace(/[ö]/g, 'o')
+    .replace(/[\s-_]/g, '') // Remove spaces, hyphens, underscores
+    .replace(/[^a-z0-9]/g, ''); // Remove all non-alphanumeric
+}
+
+// Match booking to service pricing with flexible matching
 function matchServiceType(
   booking: any,
   servicePricing: ServicePricing[]
-): ServicePricing | null {
-  if (!booking.title || servicePricing.length === 0) return null;
+): { service: ServicePricing; confidence: number } | null {
+  if (servicePricing.length === 0) return null;
 
-  const title = booking.title.toLowerCase();
-  
-  for (const service of servicePricing) {
-    if (title.includes(service.service_name.toLowerCase())) {
-      return service;
+  // Primary: Use service_type if available
+  if (booking.service_type) {
+    const normalizedServiceType = normalizeString(booking.service_type);
+    
+    for (const service of servicePricing) {
+      const normalizedServiceName = normalizeString(service.service_name);
+      
+      // Exact match
+      if (normalizedServiceType === normalizedServiceName) {
+        console.log(`✅ Exact service_type match: "${booking.service_type}" → "${service.service_name}"`);
+        return { service, confidence: 95 };
+      }
+      
+      // Partial match (one contains the other)
+      if (normalizedServiceType.includes(normalizedServiceName) || 
+          normalizedServiceName.includes(normalizedServiceType)) {
+        console.log(`✅ Partial service_type match: "${booking.service_type}" → "${service.service_name}"`);
+        return { service, confidence: 85 };
+      }
     }
+  }
+
+  // Fallback: Use title if service_type didn't match
+  if (booking.title) {
+    const normalizedTitle = normalizeString(booking.title);
+    
+    for (const service of servicePricing) {
+      const normalizedServiceName = normalizeString(service.service_name);
+      
+      // Exact match
+      if (normalizedTitle === normalizedServiceName) {
+        console.log(`✅ Exact title match: "${booking.title}" → "${service.service_name}"`);
+        return { service, confidence: 80 };
+      }
+      
+      // Partial match
+      if (normalizedTitle.includes(normalizedServiceName) || 
+          normalizedServiceName.includes(normalizedTitle)) {
+        console.log(`✅ Partial title match: "${booking.title}" → "${service.service_name}"`);
+        return { service, confidence: 70 };
+      }
+    }
+    
+    console.warn(`⚠️ No match found for booking: "${booking.title}" (service_type: ${booking.service_type || 'none'})`);
   }
   
   return null;
@@ -106,9 +154,9 @@ export function calculateBookingRevenue(
   let reasoning: string;
   
   if (serviceMatch) {
-    avgPrice = serviceMatch.avg_price;
-    confidence = 85;
-    reasoning = `Baserat på specifik tjänst "${serviceMatch.service_name}" (${avgPrice.toLocaleString('sv-SE')} SEK)`;
+    avgPrice = serviceMatch.service.avg_price;
+    confidence = serviceMatch.confidence;
+    reasoning = `Baserat på specifik tjänst "${serviceMatch.service.service_name}" (${avgPrice.toLocaleString('sv-SE')} SEK)`;
   } else if (businessMetrics.avg_project_cost && businessMetrics.avg_project_cost > 0) {
     avgPrice = businessMetrics.avg_project_cost;
     confidence = 65;

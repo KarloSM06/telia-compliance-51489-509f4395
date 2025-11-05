@@ -45,6 +45,7 @@ import { ProjectionTabs } from "@/components/dashboard/ProjectionTabs";
 import { ServiceROIBreakdown } from "@/components/dashboard/ServiceROIBreakdown";
 import { ConversionFunnelChart } from "@/components/dashboard/ConversionFunnelChart";
 import { useConversionFunnel } from "@/hooks/useConversionFunnel";
+import { ROIDebugPanel } from "@/components/dashboard/ROIDebugPanel";
 import hiemsLogoSnowflake from '@/assets/hiems-logo-snowflake.png';
 
 const DashboardAnalytics = () => {
@@ -596,6 +597,13 @@ const DashboardAnalytics = () => {
             Simulering av intäkter, kostnader och ROI över 12, 24 och 36 månader baserat på din nuvarande data.
           </p>
         </div>
+        
+        {/* Debug Panel */}
+        <ROIDebugPanel 
+          bookings={data.bookings}
+          bookingRevenues={data.bookingRevenues}
+          servicePricing={businessMetrics?.service_pricing || []}
+        />
         
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <BreakEvenCard breakEven={data.breakEven} />

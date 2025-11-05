@@ -3,6 +3,7 @@ import { useAuth } from "./useAuth";
 import { useBusinessMetrics } from "./useBusinessMetrics";
 import { useOpenRouterActivitySEK } from "./useOpenRouterActivitySEK";
 import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 import { 
   calculateBookingRevenue, 
   calculateOperationalCosts, 
@@ -36,6 +37,7 @@ export interface AnalyticsData {
   projection24: ProjectionMetrics;
   projection36: ProjectionMetrics;
   serviceMetrics: ServiceMetrics[];
+  lastUpdated?: Date; // Track when data was last updated
 }
 
 export const useAnalyticsData = (dateRange?: { from: Date; to: Date }) => {
@@ -158,6 +160,14 @@ export const useAnalyticsData = (dateRange?: { from: Date; to: Date }) => {
           roi: roi.roi
         });
 
+        // Show toast notification when data updates
+        const unmatchedCount = bookingRevenues.filter(br => br.confidence < 70).length;
+        if (unmatchedCount > 0) {
+          toast.warning(`${unmatchedCount} bokningar matchades med låg säkerhet`, {
+            description: "Kontrollera ROI-inställningar för bättre precision"
+          });
+        }
+
         // Aggregate daily data
         const dailyMap = new Map();
         
@@ -256,7 +266,8 @@ export const useAnalyticsData = (dateRange?: { from: Date; to: Date }) => {
           projection12,
           projection24,
           projection36,
-          serviceMetrics
+          serviceMetrics,
+          lastUpdated: new Date()
         });
       } catch (error) {
         console.error("Error fetching analytics data:", error);
@@ -267,7 +278,9 @@ export const useAnalyticsData = (dateRange?: { from: Date; to: Date }) => {
 
     fetchAllData();
 
-    // Set up real-time subscription for calendar_events changes
+    // Set up real-time subscription for calendar_events changes with debouncing
+    let debounceTimer: NodeJS.Timeout;
+    
     const subscription = supabase
       .channel('analytics_calendar_changes')
       .on(
@@ -279,16 +292,22 @@ export const useAnalyticsData = (dateRange?: { from: Date; to: Date }) => {
           filter: `user_id=eq.${user.id}`
         },
         (payload) => {
-          console.log('🔄 Calendar event changed, refreshing analytics...', payload);
-          fetchAllData();
+          console.log('🔄 Calendar event changed, refreshing analytics in 500ms...', payload);
+          
+          // Debounce: wait 500ms before refetching
+          clearTimeout(debounceTimer);
+          debounceTimer = setTimeout(() => {
+            fetchAllData();
+          }, 500);
         }
       )
       .subscribe();
 
     return () => {
+      clearTimeout(debounceTimer);
       subscription.unsubscribe();
     };
-  }, [user?.id, businessMetrics, dateRange, openrouterData]);
+  }, [user?.id, businessMetrics, dateRange]); // Removed openrouterData to prevent infinite loops
 
   return { data, loading };
 };
