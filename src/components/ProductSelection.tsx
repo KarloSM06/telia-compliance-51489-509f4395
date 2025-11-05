@@ -51,7 +51,7 @@ export const ProductSelection = () => {
       
       {/* Hero Section and Packages with Aurora Background */}
       <AuroraBackground className="h-auto">
-        <section id="hero" className="relative py-20 lg:py-32 flex items-center">
+        <section id="hero" className="relative py-12 lg:py-16 flex items-center">
           <AnimatedHero onBookDemo={() => setIsConsultationModalOpen(true)} onViewPackages={() => scrollToSection('paket')} />
         </section>
 
@@ -74,7 +74,7 @@ export const ProductSelection = () => {
         <StickyPackageCards packages={aiPackages} onBookDemo={() => setIsConsultationModalOpen(true)} onViewDetails={() => scrollToSection('kontakt')} />
         
         {/* Arbetsprocess */}
-        <section id="process" className="relative py-24">
+        <section id="process" className="relative py-12">
           <WorkflowTimeline />
         </section>
       </AuroraBackground>
