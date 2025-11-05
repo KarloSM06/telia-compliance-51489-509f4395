@@ -6,7 +6,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useState } from "react";
 import { ConsultationModal } from "@/components/ConsultationModal";
 import { AnimatedSection } from "@/components/AnimatedSection";
-import { PackageCardSimplified } from "@/components/home/PackageCardSimplified";
+import { StickyPackageCards } from "@/components/home/StickyPackageCards";
 import { IndustryCard } from "@/components/home/IndustryCard";
 import { CustomerJourneyFlow } from "@/components/home/CustomerJourneyFlow";
 import { OnboardingTimeline } from "@/components/home/OnboardingTimeline";
@@ -71,37 +71,11 @@ export const ProductSelection = () => {
         <ServicesGrid />
 
       {/* Våra AI-paket / Lösningar */}
-        <section id="paket" className="relative py-24 md:py-48">
-        
-        <div className="mx-auto max-w-7xl px-6 lg:px-8 relative z-10">
-          <AnimatedSection className="text-center mb-20">
-            <div className="inline-block">
-              <h2 className="text-5xl sm:text-6xl font-bold bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent mb-4">
-                Välj paket för ditt företag / din bransch
-              </h2>
-              <div className="w-32 h-1.5 bg-gradient-to-r from-primary via-primary/60 to-transparent mx-auto rounded-full shadow-lg shadow-primary/50" />
-            </div>
-            <p className="text-xl sm:text-2xl text-muted-foreground max-w-3xl mx-auto mt-6 font-light">
-              Vi erbjuder sex skräddarsydda AI-paket som kan anpassas efter era specifika behov
-            </p>
-          </AnimatedSection>
-          
-        <div className="max-w-[1800px] mx-auto space-y-16 mb-8">
-          {aiPackages.map((pkg, index) => (
-            <PackageCardSimplified 
-              key={pkg.id}
-              package={pkg} 
-              imagePosition={index % 2 === 0 ? 'left' : 'right'}
-              stickyTop={120 + index * 20}
-              onViewDetails={() => {
-                scrollToSection('kontakt');
-              }}
-              onBookDemo={() => setIsConsultationModalOpen(true)} 
-            />
-          ))}
-        </div>
-        </div>
-      </section>
+      <StickyPackageCards 
+        packages={aiPackages}
+        onBookDemo={() => setIsConsultationModalOpen(true)}
+        onViewDetails={() => scrollToSection('kontakt')}
+      />
       </AuroraBackground>
 
       {/* Branschspecifika lösningar */}
