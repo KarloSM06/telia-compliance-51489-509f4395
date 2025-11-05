@@ -1,4 +1,3 @@
-import { PlusIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import stockholmAirCondition from "@/assets/stockholm-air-condition.png";
 import bremilersVvs from "@/assets/bremilers-vvs.png";
@@ -28,7 +27,7 @@ export function ClientLogoCloud({
           alt: "Stockholm Air Condition",
           height: 200
         }}>
-            <PlusIcon className="-right-[12.5px] -bottom-[12.5px] absolute z-10 size-6" strokeWidth={1} />
+            
           </LogoCard>
 
           <LogoCard className="border-b" logo={{
@@ -64,14 +63,10 @@ function LogoCard({
   ...props
 }: LogoCardProps) {
   return <div className={cn("flex items-center justify-center bg-background px-8 py-16 md:p-16", className)} {...props}>
-      <img 
-        alt={logo.alt} 
-        className="pointer-events-none select-none object-contain dark:brightness-0 dark:invert w-full" 
-        style={{ height: logo.height ? `${logo.height}px` : 'auto', maxHeight: logo.height ? `${logo.height}px` : '200px' }}
-        height={logo.height || "auto"} 
-        src={logo.src} 
-        width={logo.width || "auto"} 
-      />
+      <img alt={logo.alt} className="pointer-events-none select-none object-contain dark:brightness-0 dark:invert w-full" style={{
+      height: logo.height ? `${logo.height}px` : 'auto',
+      maxHeight: logo.height ? `${logo.height}px` : '200px'
+    }} height={logo.height || "auto"} src={logo.src} width={logo.width || "auto"} />
       {children}
     </div>;
 }
