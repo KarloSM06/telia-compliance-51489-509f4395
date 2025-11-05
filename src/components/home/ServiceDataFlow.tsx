@@ -75,18 +75,12 @@ export const ServiceDataFlow = () => {
         <div className="relative z-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {/* Main hero card - AI Intelligent (avlång) med Spline 3D */}
           <Card className="relative flex overflow-hidden sm:col-span-2 bg-black/[0.96]">
-            <Spotlight
-              className="-top-20 left-0 md:left-20 md:-top-10"
-              fill="hsl(var(--primary))"
-            />
+            <Spotlight className="-top-20 left-0 md:left-20 md:-top-10" fill="hsl(var(--primary))" />
             <CardContent className="relative flex items-center gap-6 py-6 px-6 w-full z-10">
               <div className="relative h-20 w-40 shrink-0">
-                <SplineScene 
-                  scene="https://prod.spline.design/kZDDjO5HuC9GJUM2/scene.splinecode"
-                  className="w-full h-full"
-                />
+                <SplineScene scene="https://prod.spline.design/kZDDjO5HuC9GJUM2/scene.splinecode" className="w-full h-full" />
               </div>
-              <h2 className="text-2xl font-semibold bg-gradient-to-b from-neutral-50 to-neutral-400 bg-clip-text text-transparent">AI Intelligent</h2>
+              
             </CardContent>
           </Card>
 
