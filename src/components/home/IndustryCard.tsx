@@ -1,5 +1,4 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { motion } from "framer-motion";
 import type { Industry } from "@/data/industries";
 interface IndustryCardProps {
   industry: Industry;
@@ -10,15 +9,7 @@ export const IndustryCard = ({
   onClick
 }: IndustryCardProps) => {
   const Icon = industry.icon;
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.5 }}
-      whileHover={{ y: -10, scale: 1.02, transition: { duration: 0.3 } }}
-    >
-      <Card className="group h-full flex flex-col overflow-hidden cursor-pointer border-border/50 bg-card/80 hover:bg-card hover:border-primary/40 transition-[transform,border-color] duration-300 hover:shadow-lg transform-gpu rounded-3xl" onClick={onClick}>
+  return <Card className="group h-full flex flex-col overflow-hidden cursor-pointer border-border/50 bg-card/80 hover:bg-card hover:border-primary/40 transition-[transform,border-color] duration-300 hover:shadow-lg hover:-translate-y-1 transform-gpu" onClick={onClick}>
       {/* Image Section */}
       <div className="relative aspect-[4/3] overflow-hidden bg-muted">
         {industry.image ? <img src={industry.image} alt={industry.name} loading="lazy" decoding="async" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 transform-gpu" /> : <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-primary/10 to-muted flex items-center justify-center">
@@ -41,7 +32,5 @@ export const IndustryCard = ({
           {industry.description}
         </CardDescription>
       </CardContent>
-      </Card>
-    </motion.div>
-  );
+    </Card>;
 };
