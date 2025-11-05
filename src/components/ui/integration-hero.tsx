@@ -17,7 +17,7 @@ export default function IntegrationHero() {
   const row1 = ALL_PROGRAM_LOGOS.slice(0, halfLength);
   const row2 = ALL_PROGRAM_LOGOS.slice(halfLength);
 
-  return <section className="relative py-6 md:py-8 overflow-hidden">
+  return <section className="relative py-8 md:py-12 overflow-hidden">
       <div className="relative w-full px-6 md:px-12 text-center">
         
         <h1 className="text-3xl lg:text-4xl font-bold tracking-tight text-foreground mb-3">

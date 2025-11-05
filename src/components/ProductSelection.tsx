@@ -51,8 +51,8 @@ export const ProductSelection = () => {
       </div>
       
       {/* Hero Section and Packages with Aurora Background */}
-      <AuroraBackground className="h-auto min-h-[200vh]">
-        <section id="hero" className="relative min-h-screen flex items-center">
+      <AuroraBackground className="h-auto">
+        <section id="hero" className="relative py-20 lg:py-32 flex items-center">
           <AnimatedHero 
             onBookDemo={() => setIsConsultationModalOpen(true)}
             onViewPackages={() => scrollToSection('paket')}
@@ -63,7 +63,7 @@ export const ProductSelection = () => {
         <IntegrationHero />
 
         {/* Våra AI-paket / Lösningar */}
-        <section id="paket" className="relative py-48">
+        <section id="paket" className="relative py-16 md:py-24">
         
         <div className="mx-auto max-w-7xl px-6 lg:px-8 relative z-10">
           <AnimatedSection className="text-center mb-20">
@@ -78,7 +78,7 @@ export const ProductSelection = () => {
             </p>
           </AnimatedSection>
           
-        <div className="max-w-[1800px] mx-auto space-y-12 mb-12">
+        <div className="max-w-[1800px] mx-auto space-y-8 mb-8">
           {aiPackages.map((pkg, index) => <AnimatedSection key={pkg.id} delay={index * 200} direction={index % 2 === 0 ? 'left' : 'right'}>
               <PackageCard package={pkg} imagePosition={index % 2 === 0 ? 'left' : 'right'} onBookDemo={() => setIsConsultationModalOpen(true)} />
             </AnimatedSection>)}
