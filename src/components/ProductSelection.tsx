@@ -28,7 +28,6 @@ import { ClientLogoCloud } from "@/components/ClientLogoCloud";
 import { ServicesGrid } from "@/components/home/ServicesGrid";
 import { UnifiedDashboard } from "@/components/home/UnifiedDashboard";
 import { LandingAccordionItem } from "@/components/home/LandingAccordionItem";
-import { ContainerScroll } from "@/components/ui/container-scroll";
 export const ProductSelection = () => {
   const [isConsultationModalOpen, setIsConsultationModalOpen] = useState(false);
   const [selectedIndustry, setSelectedIndustry] = useState<string>('');
@@ -67,19 +66,6 @@ export const ProductSelection = () => {
 
         {/* All Data på Ett Ställe */}
         <UnifiedDashboard />
-
-        {/* Container Scroll Section */}
-        <ContainerScroll
-          titleComponent={
-            <h2 className="text-4xl md:text-6xl font-bold text-foreground">
-              Scroll för att se magin
-            </h2>
-          }
-        >
-          <div className="h-full w-full bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center">
-            <p className="text-2xl text-foreground">Ditt innehåll här</p>
-          </div>
-        </ContainerScroll>
 
         {/* AI Capabilities Accordion */}
         <LandingAccordionItem />
