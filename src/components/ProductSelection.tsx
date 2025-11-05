@@ -70,8 +70,8 @@ export const ProductSelection = () => {
         {/* Våra Tjänster & Teknologier */}
         <ServicesGrid />
 
-        {/* Våra AI-paket / Lösningar */}
-        <section id="paket" className="relative py-16 md:py-24">
+      {/* Våra AI-paket / Lösningar */}
+        <section id="paket" className="relative py-24 md:py-48">
         
         <div className="mx-auto max-w-7xl px-6 lg:px-8 relative z-10">
           <AnimatedSection className="text-center mb-20">
@@ -86,18 +86,19 @@ export const ProductSelection = () => {
             </p>
           </AnimatedSection>
           
-        <div className="max-w-[1800px] mx-auto space-y-8 mb-8">
-          {aiPackages.map((pkg, index) => <AnimatedSection key={pkg.id} delay={index * 200} direction={index % 2 === 0 ? 'left' : 'right'}>
-              <PackageCardSimplified 
-                package={pkg} 
-                imagePosition={index % 2 === 0 ? 'left' : 'right'} 
-                onViewDetails={() => {
-                  // Navigate to related service page - for now just scroll to contact
-                  scrollToSection('kontakt');
-                }}
-                onBookDemo={() => setIsConsultationModalOpen(true)} 
-              />
-            </AnimatedSection>)}
+        <div className="max-w-[1800px] mx-auto space-y-16 mb-8">
+          {aiPackages.map((pkg, index) => (
+            <PackageCardSimplified 
+              key={pkg.id}
+              package={pkg} 
+              imagePosition={index % 2 === 0 ? 'left' : 'right'}
+              stickyTop={120 + index * 20}
+              onViewDetails={() => {
+                scrollToSection('kontakt');
+              }}
+              onBookDemo={() => setIsConsultationModalOpen(true)} 
+            />
+          ))}
         </div>
         </div>
       </section>

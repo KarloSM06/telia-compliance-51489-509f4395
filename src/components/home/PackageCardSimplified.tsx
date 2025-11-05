@@ -7,19 +7,24 @@ interface PackageCardSimplifiedProps {
   onViewDetails: () => void;
   onBookDemo: () => void;
   imagePosition?: 'left' | 'right';
+  stickyTop?: number;
 }
 export const PackageCardSimplified = ({
   package: pkg,
   onViewDetails,
   onBookDemo,
-  imagePosition = 'left'
+  imagePosition = 'left',
+  stickyTop
 }: PackageCardSimplifiedProps) => {
   const Icon = pkg.icon;
   const isLeft = imagePosition === 'left';
 
   // Combine all features into one list
   const allFeatures = [...(pkg.components || []), ...(pkg.valueBullets || [])];
-  return <Card className={`group overflow-hidden border border-primary/10 bg-gradient-to-br from-card/80 via-card/50 to-card/30 backdrop-blur-md hover:bg-card/90 hover:border-primary/30 transition-all duration-500 hover:shadow-2xl hover:shadow-primary/20 hover:-translate-y-1 transform-gpu`}>
+  return <Card 
+    className={`group overflow-hidden border border-primary/10 bg-gradient-to-br from-card/80 via-card/50 to-card/30 backdrop-blur-md hover:bg-card/90 hover:border-primary/30 transition-all duration-500 hover:shadow-2xl hover:shadow-primary/20 hover:-translate-y-1 transform-gpu ${stickyTop !== undefined ? 'sticky' : ''}`}
+    style={stickyTop !== undefined ? { top: `${stickyTop}px` } : undefined}
+  >
       <CardContent className="p-0">
         <div className={`flex flex-col ${isLeft ? 'lg:flex-row' : 'lg:flex-row-reverse'} gap-0`}>
           {/* Bild/Ikon sektion */}
