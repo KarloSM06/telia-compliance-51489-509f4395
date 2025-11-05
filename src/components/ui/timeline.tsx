@@ -41,18 +41,6 @@ export const Timeline = ({ data }: { data: TimelineEntry[] }) => {
     }
   };
 
-  const cardVariants = {
-    hidden: { opacity: 0, x: 50, scale: 0.95 },
-    visible: { 
-      opacity: 1, 
-      x: 0,
-      scale: 1,
-      transition: { 
-        duration: 0.6,
-        delay: 0.2 
-      }
-    }
-  };
 
   return (
     <div
@@ -95,7 +83,7 @@ export const Timeline = ({ data }: { data: TimelineEntry[] }) => {
 
               <motion.div 
                 className="relative pl-20 pr-4 md:pl-4 w-full"
-                variants={cardVariants}
+                variants={stepVariants}
                 initial="hidden"
                 animate={isInView ? "visible" : "hidden"}
               >
