@@ -67,7 +67,7 @@ interface StickyPackageCardsProps {
 
 export function StickyPackageCards({ packages, onBookDemo, onViewDetails }: StickyPackageCardsProps) {
   return (
-    <section id="paket" className="relative py-24 md:py-48">
+    <section id="paket" className="relative py-24 md:py-48 bg-gradient-to-b from-background via-background/95 to-background">
       <div className="px-[5%]">
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-col items-center">

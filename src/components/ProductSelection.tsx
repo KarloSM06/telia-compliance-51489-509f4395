@@ -69,6 +69,7 @@ export const ProductSelection = () => {
 
         {/* Våra Tjänster & Teknologier */}
         <ServicesGrid />
+      </AuroraBackground>
 
       {/* Våra AI-paket / Lösningar */}
       <StickyPackageCards 
@@ -76,7 +77,6 @@ export const ProductSelection = () => {
         onBookDemo={() => setIsConsultationModalOpen(true)}
         onViewDetails={() => scrollToSection('kontakt')}
       />
-      </AuroraBackground>
 
       {/* Branschspecifika lösningar */}
       <section id="branscher" className="relative py-24 overflow-hidden">
