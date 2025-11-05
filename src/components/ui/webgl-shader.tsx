@@ -61,7 +61,7 @@ export function WebGLShader() {
 
     const initScene = () => {
       refs.scene = new THREE.Scene()
-      refs.renderer = new THREE.WebGLRenderer({ canvas, alpha: true })
+      refs.renderer = new THREE.WebGLRenderer({ canvas, alpha: true, premultipliedAlpha: false })
       refs.renderer.setPixelRatio(window.devicePixelRatio)
       refs.renderer.setClearColor(0x000000, 0)
 
