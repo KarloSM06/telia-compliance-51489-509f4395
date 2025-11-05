@@ -82,7 +82,7 @@ export const Timeline = ({ data }: { data: TimelineEntry[] }) => {
               </motion.div>
 
               <motion.div 
-                className="relative pl-20 pr-4 md:pl-4 w-full"
+                className="sticky top-40 self-start pl-20 pr-4 md:pl-4 w-full"
                 variants={stepVariants}
                 initial="hidden"
                 animate={isInView ? "visible" : "hidden"}
