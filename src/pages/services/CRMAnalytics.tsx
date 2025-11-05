@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Header1 } from "@/components/ui/header";
 import { Footer } from "@/components/Footer";
+import { AuroraBackground } from "@/components/ui/aurora-background";
 import { ServiceHero } from "@/components/services/ServiceHero";
 import { FeaturesGrid } from "@/components/services/FeaturesGrid";
 import { TechnologyStack } from "@/components/services/TechnologyStack";
@@ -15,9 +16,10 @@ const CRMAnalytics = () => {
   const serviceData = servicesData.find(s => s.id === "crm-analytics")!;
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen">
       <Header1 />
-      <main>
+      <AuroraBackground className="min-h-screen">
+        <main className="w-full">
         <ServiceHero
           icon={serviceData.icon}
           title={serviceData.heroTitle}
@@ -29,7 +31,8 @@ const CRMAnalytics = () => {
         <UseCases useCases={serviceData.useCases} />
         <OwnershipBadge />
         <ServiceCTA onBookDemo={() => setIsConsultationModalOpen(true)} />
-      </main>
+        </main>
+      </AuroraBackground>
       <Footer />
       <ConsultationModal
         open={isConsultationModalOpen}
