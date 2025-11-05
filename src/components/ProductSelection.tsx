@@ -7,7 +7,7 @@ import { useState } from "react";
 import { ConsultationModal } from "@/components/ConsultationModal";
 import { AnimatedSection } from "@/components/AnimatedSection";
 import { StickyPackageCards } from "@/components/home/StickyPackageCards";
-import { IndustryCard } from "@/components/home/IndustryCard";
+import { IndustryGallery } from "@/components/home/IndustryGallery";
 import { CustomerJourneyFlow } from "@/components/home/CustomerJourneyFlow";
 import { OnboardingTimeline } from "@/components/home/OnboardingTimeline";
 import { TechnicalExpertise } from "@/components/home/TechnicalExpertise";
@@ -78,29 +78,26 @@ export const ProductSelection = () => {
       </AuroraBackground>
 
       {/* Branschspecifika lösningar */}
-      <section id="branscher" className="relative py-24 overflow-hidden">
+      <section id="branscher" className="relative py-32 overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_40%_60%,hsl(var(--primary)/0.12),transparent_50%)]" />
-        <div className="mx-auto max-w-7xl px-6 lg:px-8 relative z-10">
-          <AnimatedSection className="text-center mb-16">
-            <h2 className="text-4xl font-bold mb-4 text-slate-100 sm:text-5xl">
-              Oavsett bransch kan Hiems bygga AI-lösningar som passar just er verksamhet
-            </h2>
-            <div className="w-24 h-1 mx-auto rounded-full mb-6 bg-slate-400" />
-            <p className="text-lg max-w-3xl mx-auto text-slate-300 sm:text-2xl">
-              Vi har erfarenhet från många olika branscher och kan anpassa våra lösningar efter era unika behov
-            </p>
-          </AnimatedSection>
+        
+        <div className="relative z-10">
+          <div className="mx-auto max-w-7xl px-6 lg:px-8 mb-8 flex flex-col md:flex-row md:items-end md:justify-between md:mb-14 lg:mb-16">
+            <AnimatedSection className="flex flex-col gap-4 mb-8 md:mb-0">
+              <h2 className="text-3xl font-medium md:text-4xl lg:text-5xl text-foreground">
+                Oavsett bransch kan Hiems bygga AI-lösningar som passar just er verksamhet
+              </h2>
+              <p className="max-w-lg text-muted-foreground">
+                Vi har erfarenhet från många olika branscher och kan anpassa våra lösningar efter era unika behov
+              </p>
+            </AnimatedSection>
+          </div>
           
-          <AnimatedSection>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-12">
-              {industries.map(industry => <IndustryCard key={industry.id} industry={industry} onClick={() => handleIndustryClick(industry.id)} />)}
-            </div>
-          </AnimatedSection>
-          
-          <AnimatedSection className="text-center" delay={200}>
-            <Button size="lg" className="bg-gradient-gold text-primary hover:shadow-glow transition-all duration-300 font-semibold" onClick={() => setIsConsultationModalOpen(true)}>
-              Boka branschspecifik konsultation
-            </Button>
+          <AnimatedSection delay={100}>
+            <IndustryGallery 
+              industries={industries}
+              onIndustryClick={handleIndustryClick}
+            />
           </AnimatedSection>
         </div>
       </section>
