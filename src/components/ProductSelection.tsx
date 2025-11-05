@@ -68,10 +68,12 @@ export const ProductSelection = () => {
 
         {/* Våra AI-paket / Lösningar */}
         <StickyPackageCards packages={aiPackages} onBookDemo={() => setIsConsultationModalOpen(true)} onViewDetails={() => scrollToSection('kontakt')} />
+        
+        {/* Arbetsprocess */}
+        <section id="process" className="relative py-24">
+          <WorkflowTimeline />
+        </section>
       </AuroraBackground>
-
-      {/* Arbetsprocess */}
-      <WorkflowTimeline />
 
       {/* Branschspecifika lösningar */}
       
