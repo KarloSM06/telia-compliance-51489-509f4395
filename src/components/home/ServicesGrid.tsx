@@ -36,10 +36,10 @@ export const ServicesGrid = () => {
   return (
     <section className="relative py-24 md:py-40">
       <div className="mx-auto w-full max-w-7xl space-y-8 px-4">
-        <AnimatedContainer className="mx-auto max-w-3xl text-center">
+        <AnimatedContainer className="mx-auto max-w-full text-center">
           <h2 className="text-3xl font-bold tracking-wide text-balance md:text-4xl lg:text-5xl xl:font-extrabold">
             <span className="bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent">
-              🚀 Våra Tjänster & Teknologier
+              Våra Tjänster & Teknologier
             </span>
           </h2>
           <p className="text-muted-foreground mt-4 text-sm tracking-wide text-balance md:text-base">

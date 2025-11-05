@@ -95,12 +95,12 @@ const DataFlowLine = ({
   }} className="h-0.5 bg-gradient-to-r from-primary/20 via-primary to-primary/20 origin-left" />;
 };
 export const UnifiedDashboard = () => {
-  return <section className="relative py-24 md:py-40">
+  return <section className="relative pt-0 pb-24 md:pt-0 md:pb-40">
       <div className="mx-auto w-full max-w-7xl space-y-12 px-4">
-        <AnimatedContainer className="mx-auto max-w-3xl text-center">
+        <AnimatedContainer className="mx-auto max-w-full text-center">
           <h2 className="text-3xl font-bold tracking-wide text-balance md:text-4xl lg:text-5xl xl:font-extrabold">
             <span className="bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent">
-              📊 All Data på Ett och Samma Ställe
+              All Data på Ett och Samma Ställe
             </span>
           </h2>
           <p className="text-muted-foreground mt-4 text-sm tracking-wide text-balance md:text-base">
@@ -115,11 +115,6 @@ export const UnifiedDashboard = () => {
         <AnimatedContainer delay={0.3} className="relative">
           {/* Data sources flowing into central dashboard */}
           
-
-          {/* Feature highlights */}
-          <AnimatedContainer delay={0.8}>
-            
-          </AnimatedContainer>
 
           {/* Data Flow Visualization */}
           <AnimatedContainer delay={1.0} className="flex justify-center mt-16">
