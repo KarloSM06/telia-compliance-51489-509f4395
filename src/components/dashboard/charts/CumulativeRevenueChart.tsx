@@ -1,7 +1,9 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
+import { Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis, Brush } from 'recharts';
 import { TrendingUp } from 'lucide-react';
-import { useMemo } from 'react';
+import { useMemo, useRef } from 'react';
+import { ChartActionMenu } from './enhanced/ChartActionMenu';
+import { useChartExport } from '@/hooks/useChartExport';
 
 interface CumulativeRevenueChartProps {
   data: Array<{ date: string; revenue: number; costs: number }>;
@@ -9,6 +11,9 @@ interface CumulativeRevenueChartProps {
 }
 
 export const CumulativeRevenueChart = ({ data, isLoading }: CumulativeRevenueChartProps) => {
+  const chartRef = useRef<HTMLDivElement>(null);
+  const { exportToPNG, exportToCSV } = useChartExport();
+  
   const chartData = useMemo(() => {
     let cumulativeRevenue = 0;
     let cumulativeCosts = 0;
@@ -61,15 +66,21 @@ export const CumulativeRevenueChart = ({ data, isLoading }: CumulativeRevenueCha
   }
 
   return (
-    <Card>
+    <Card ref={chartRef}>
       <CardHeader className="pb-3">
-        <CardTitle className="text-base font-semibold flex items-center gap-2">
-          <TrendingUp className="h-4 w-4" />
-          Kumulativ utveckling
-        </CardTitle>
+        <div className="flex items-center justify-between">
+          <CardTitle className="text-base font-semibold flex items-center gap-2">
+            <TrendingUp className="h-4 w-4" />
+            Kumulativ utveckling
+          </CardTitle>
+          <ChartActionMenu
+            onExportPNG={() => exportToPNG(chartRef.current, 'kumulativ-utveckling')}
+            onExportCSV={() => exportToCSV(chartData, 'kumulativ-utveckling')}
+          />
+        </div>
       </CardHeader>
       <CardContent>
-        <ResponsiveContainer width="100%" height={400}>
+        <ResponsiveContainer width="100%" height={380}>
           <AreaChart data={chartData}>
             <defs>
               <linearGradient id="cumulativeRevenueGradient" x1="0" y1="0" x2="0" y2="1">
@@ -117,6 +128,12 @@ export const CumulativeRevenueChart = ({ data, isLoading }: CumulativeRevenueCha
               strokeWidth={2}
               fill="url(#cumulativeCostsGradient)"
               name="Kumulativa kostnader"
+            />
+            <Brush 
+              dataKey="date" 
+              height={30} 
+              stroke="hsl(var(--primary))"
+              tickFormatter={(value) => new Date(value).toLocaleDateString('sv-SE', { month: 'short' })}
             />
           </AreaChart>
         </ResponsiveContainer>

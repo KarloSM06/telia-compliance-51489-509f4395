@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Brush } from "recharts";
 import { format } from "date-fns";
 
 interface LineConfig {
@@ -15,6 +15,7 @@ interface MultiLineChartProps {
   yAxisFormatter?: (value: number) => string;
   tooltipFormatter?: (value: number) => string;
   height?: number;
+  showBrush?: boolean;
 }
 
 const COLORS = [
@@ -34,7 +35,8 @@ export const MultiLineChart = ({
   xAxisKey = "date",
   yAxisFormatter = (v) => `${v.toFixed(0)} kr`,
   tooltipFormatter = (v) => `${v.toFixed(2)} SEK`,
-  height = 350
+  height = 350,
+  showBrush = false
 }: MultiLineChartProps) => {
   const [hiddenLines, setHiddenLines] = useState<Set<string>>(new Set());
 
@@ -120,6 +122,14 @@ export const MultiLineChart = ({
             name={line.name}
           />
         ))}
+        {showBrush && (
+          <Brush 
+            dataKey={xAxisKey}
+            height={30} 
+            stroke="hsl(var(--primary))"
+            tickFormatter={formatDate}
+          />
+        )}
       </LineChart>
     </ResponsiveContainer>
   );

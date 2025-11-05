@@ -1,7 +1,10 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Line, LineChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis, ReferenceLine } from 'recharts';
 import { Target } from 'lucide-react';
-import { useMemo } from 'react';
+import { useMemo, useRef } from 'react';
+import { ChartActionMenu } from './enhanced/ChartActionMenu';
+import { ChartInsightsBox } from './enhanced/ChartInsightsBox';
+import { useChartExport } from '@/hooks/useChartExport';
 
 interface DailyROIChartProps {
   data: Array<{ date: string; revenue: number; costs: number }>;
@@ -9,6 +12,9 @@ interface DailyROIChartProps {
 }
 
 export const DailyROIChart = ({ data, isLoading }: DailyROIChartProps) => {
+  const chartRef = useRef<HTMLDivElement>(null);
+  const { exportToPNG, exportToCSV } = useChartExport();
+  
   const chartData = useMemo(() => {
     return data.map(d => ({
       date: d.date,
@@ -53,15 +59,23 @@ export const DailyROIChart = ({ data, isLoading }: DailyROIChartProps) => {
   }
 
   return (
-    <Card>
+    <Card ref={chartRef}>
       <CardHeader className="pb-3">
-        <CardTitle className="text-base font-semibold flex items-center gap-2">
-          <Target className="h-4 w-4" />
-          Daglig ROI
-        </CardTitle>
+        <div className="flex items-center justify-between">
+          <CardTitle className="text-base font-semibold flex items-center gap-2">
+            <Target className="h-4 w-4" />
+            Daglig ROI
+          </CardTitle>
+          <ChartActionMenu
+            onExportPNG={() => exportToPNG(chartRef.current, 'daglig-roi')}
+            onExportCSV={() => exportToCSV(chartData, 'daglig-roi')}
+          />
+        </div>
       </CardHeader>
       <CardContent>
-        <ResponsiveContainer width="100%" height={400}>
+        <ChartInsightsBox data={chartData} dataKey="roi" type="roi" />
+        
+        <ResponsiveContainer width="100%" height={380}>
           <LineChart data={chartData}>
             <CartesianGrid strokeDasharray="3 3" className="stroke-muted/50" />
             <XAxis

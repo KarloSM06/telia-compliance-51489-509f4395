@@ -1,6 +1,10 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { MultiLineChart } from "./MultiLineChart";
-import { useMemo } from "react";
+import { useMemo, useRef } from "react";
+import { ChartActionMenu } from "./enhanced/ChartActionMenu";
+import { ChartInsightsBox } from "./enhanced/ChartInsightsBox";
+import { InlineStatsBadge } from "./enhanced/InlineStatsBadge";
+import { useChartExport } from "@/hooks/useChartExport";
 
 interface RevenueVsCostsChartProps {
   data: Array<{ date: string; revenue: number; costs: number }>;
@@ -8,6 +12,9 @@ interface RevenueVsCostsChartProps {
 }
 
 export const RevenueVsCostsChart = ({ data, isLoading }: RevenueVsCostsChartProps) => {
+  const chartRef = useRef<HTMLDivElement>(null);
+  const { exportToPNG, exportToCSV } = useChartExport();
+  
   const chartData = useMemo(() => {
     return data.map(d => ({
       ...d,
@@ -46,14 +53,25 @@ export const RevenueVsCostsChart = ({ data, isLoading }: RevenueVsCostsChartProp
   }
 
   return (
-    <Card>
+    <Card ref={chartRef}>
       <CardHeader>
-        <CardTitle>Intäkter vs Kostnader</CardTitle>
-        <p className="text-sm text-muted-foreground">
-          Daglig jämförelse av intäkter, kostnader och vinst
-        </p>
+        <div className="flex items-center justify-between">
+          <div>
+            <CardTitle>Intäkter vs Kostnader</CardTitle>
+            <p className="text-sm text-muted-foreground">
+              Daglig jämförelse av intäkter, kostnader och vinst
+            </p>
+          </div>
+          <ChartActionMenu
+            onExportPNG={() => exportToPNG(chartRef.current, 'intakter-vs-kostnader')}
+            onExportCSV={() => exportToCSV(chartData, 'intakter-vs-kostnader')}
+          />
+        </div>
       </CardHeader>
       <CardContent>
+        <ChartInsightsBox data={chartData} dataKey="revenue" type="revenue" />
+        <InlineStatsBadge data={chartData} dataKey="profit" />
+        
         <MultiLineChart
           data={chartData}
           lines={[
@@ -63,7 +81,8 @@ export const RevenueVsCostsChart = ({ data, isLoading }: RevenueVsCostsChartProp
           ]}
           yAxisFormatter={(v) => `${v.toFixed(0)} kr`}
           tooltipFormatter={(v) => `${v.toFixed(2)} SEK`}
-          height={400}
+          height={450}
+          showBrush
         />
         <p className="text-xs text-muted-foreground mt-4 text-center">
           Klicka på linjenamnen i förklaringen för att visa/dölja dem

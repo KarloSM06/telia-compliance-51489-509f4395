@@ -1,6 +1,8 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { MultiLineChart } from "./MultiLineChart";
-import { useMemo } from "react";
+import { useMemo, useRef } from "react";
+import { ChartActionMenu } from "./enhanced/ChartActionMenu";
+import { useChartExport } from "@/hooks/useChartExport";
 
 interface CostBreakdownChartProps {
   dailyData: Array<{ date: string; costs: number }>;
@@ -19,6 +21,8 @@ export const CostBreakdownChart = ({
   hiemsMonthlyCost = 0,
   isLoading 
 }: CostBreakdownChartProps) => {
+  const chartRef = useRef<HTMLDivElement>(null);
+  const { exportToPNG, exportToCSV } = useChartExport();
   const chartData = useMemo(() => {
     if (!dailyData || dailyData.length === 0) return [];
 
@@ -95,12 +99,20 @@ export const CostBreakdownChart = ({
   }
 
   return (
-    <Card>
+    <Card ref={chartRef}>
       <CardHeader>
-        <CardTitle>Kostnadsfördelning per Dag</CardTitle>
-        <p className="text-sm text-muted-foreground">
-          Detaljerad uppdelning av kostnader per kategori
-        </p>
+        <div className="flex items-center justify-between">
+          <div>
+            <CardTitle>Kostnadsfördelning per Dag</CardTitle>
+            <p className="text-sm text-muted-foreground">
+              Detaljerad uppdelning av kostnader per kategori
+            </p>
+          </div>
+          <ChartActionMenu
+            onExportPNG={() => exportToPNG(chartRef.current, 'kostnadsfordelning')}
+            onExportCSV={() => exportToCSV(chartData, 'kostnadsfordelning')}
+          />
+        </div>
       </CardHeader>
       <CardContent>
         <MultiLineChart
@@ -114,7 +126,8 @@ export const CostBreakdownChart = ({
           ]}
           yAxisFormatter={(v) => `${v.toFixed(0)} kr`}
           tooltipFormatter={(v) => `${v.toFixed(2)} SEK`}
-          height={320}
+          height={380}
+          showBrush
         />
         <p className="text-xs text-muted-foreground mt-4 text-center">
           Klicka på kategorinamnen i förklaringen för att visa/dölja dem
