@@ -52,6 +52,7 @@ export const useAnalyticsData = (dateRange?: { from: Date; to: Date }) => {
     }
 
     const fetchAllData = async () => {
+      console.log('📊 Fetching analytics data...');
       setLoading(true);
       
       const from = dateRange?.from || subDays(new Date(), 30);
@@ -118,6 +119,13 @@ export const useAnalyticsData = (dateRange?: { from: Date; to: Date }) => {
         const reviews = reviewsRes.data || [];
         const aiUsage = aiUsageRes.data || [];
 
+        console.log(`📅 Found ${bookings.length} bookings in period:`, { from: fromStr, to: toStr });
+        console.log('📋 Bookings:', bookings.map(b => ({ 
+          title: b.title, 
+          start: b.start_time, 
+          service_type: b.service_type 
+        })));
+
         // Filter to only parent events (same logic as /telephony page)
         const telephony = telephonyRaw.filter(e => 
           !e.parent_event_id && (e.provider_layer === 'agent' || ['vapi', 'retell'].includes(e.provider))
@@ -127,6 +135,12 @@ export const useAnalyticsData = (dateRange?: { from: Date; to: Date }) => {
         const bookingRevenues = bookings.map(b => 
           calculateBookingRevenue(b, businessMetrics)
         );
+
+        console.log('💰 Booking revenues:', bookingRevenues.map(br => ({
+          id: br.bookingId,
+          revenue: br.estimatedRevenue,
+          reasoning: br.reasoning
+        })));
         
         // Calculate total OpenRouter cost from actual API data (already in SEK)
         const openRouterCostSEK = openrouterData?.activity?.reduce(
@@ -136,6 +150,13 @@ export const useAnalyticsData = (dateRange?: { from: Date; to: Date }) => {
         
         const costs = calculateOperationalCosts(telephony, messages, aiUsage, businessMetrics, { from, to }, openRouterCostSEK);
         const roi = calculateROI(bookingRevenues, costs);
+
+        console.log('📈 ROI Metrics:', {
+          totalRevenue: roi.totalRevenue,
+          totalCosts: roi.totalCosts,
+          netProfit: roi.netProfit,
+          roi: roi.roi
+        });
 
         // Aggregate daily data
         const dailyMap = new Map();
@@ -245,7 +266,29 @@ export const useAnalyticsData = (dateRange?: { from: Date; to: Date }) => {
     };
 
     fetchAllData();
-  }, [user?.id, businessMetrics, dateRange]);
+
+    // Set up real-time subscription for calendar_events changes
+    const subscription = supabase
+      .channel('analytics_calendar_changes')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'calendar_events',
+          filter: `user_id=eq.${user.id}`
+        },
+        (payload) => {
+          console.log('🔄 Calendar event changed, refreshing analytics...', payload);
+          fetchAllData();
+        }
+      )
+      .subscribe();
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, [user?.id, businessMetrics, dateRange, openrouterData]);
 
   return { data, loading };
 };
