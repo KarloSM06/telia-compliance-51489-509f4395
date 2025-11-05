@@ -43,7 +43,7 @@ export const UnifiedEcosystem: React.FC<UnifiedEcosystemProps> = ({
     <section className="relative py-32 md:py-64 overflow-hidden">
       <div className="container max-w-[1440px] w-full px-6 md:px-10 relative z-10 mx-auto">
         <motion.div
-          className={`grid grid-cols-1 gap-20 md:gap-12 w-full items-center ${layoutClasses}`}
+          className={`grid grid-cols-1 gap-24 md:gap-20 w-full items-center ${layoutClasses}`}
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"
@@ -67,22 +67,22 @@ export const UnifiedEcosystem: React.FC<UnifiedEcosystemProps> = ({
 
           {/* App mockup/Image Content */}
           <motion.div
-            className={`relative mt-10 md:mt-0 mx-auto ${imageOrderClass} w-full max-w-[400px] md:max-w-[640px]`}
+            className={`relative mt-16 md:mt-0 mx-auto ${imageOrderClass} w-full max-w-[400px] md:max-w-[680px]`}
             variants={itemVariants}
           >
-            {/* Decorative Background Element */}
+            {/* Decorative Background Element - Calendar */}
             <motion.div
-              className="absolute w-[380px] h-[380px] md:w-[640px] md:h-[640px] bg-card/50 rounded-[32px] z-0 backdrop-blur-sm"
+              className="absolute w-[420px] h-[420px] md:w-[700px] md:h-[700px] bg-card/50 rounded-[32px] z-0 backdrop-blur-sm shadow-xl"
               style={{
-                top: reverseLayout ? 'auto' : '10%',
-                bottom: reverseLayout ? '10%' : 'auto',
-                left: reverseLayout ? 'auto' : '-20%',
-                right: reverseLayout ? '-20%' : 'auto',
-                transform: reverseLayout ? 'translate(0, 0)' : 'translateY(10%)',
-                filter: 'blur(2px)'
+                top: reverseLayout ? 'auto' : '5%',
+                bottom: reverseLayout ? '5%' : 'auto',
+                left: reverseLayout ? 'auto' : '-30%',
+                right: reverseLayout ? '-30%' : 'auto',
+                transform: reverseLayout ? 'translate(0, 0)' : 'translateY(8%)',
+                filter: 'blur(1px)'
               }}
               initial={{ y: reverseLayout ? 0 : 0 }}
-              whileInView={{ y: reverseLayout ? -20 : -30 }}
+              whileInView={{ y: reverseLayout ? -25 : -35 }}
               transition={{ duration: 1.2 }}
               viewport={{ once: true, amount: 0.5 }}
             >
@@ -94,11 +94,11 @@ export const UnifiedEcosystem: React.FC<UnifiedEcosystemProps> = ({
               />
             </motion.div>
 
-            {/* Main Mockup Card */}
+            {/* Main Mockup Card - Dashboard */}
             <motion.div
-              className="relative w-full h-[520px] md:h-[820px] bg-card/10 rounded-[32px] backdrop-blur-[15px] backdrop-brightness-[100%] border border-border/50 z-10 overflow-hidden shadow-2xl"
+              className="relative w-full h-[520px] md:h-[860px] bg-card/10 rounded-[32px] backdrop-blur-[15px] backdrop-brightness-[100%] border border-border/50 z-10 overflow-hidden shadow-2xl"
               initial={{ y: reverseLayout ? 0 : 0 }}
-              whileInView={{ y: reverseLayout ? 20 : 30 }}
+              whileInView={{ y: reverseLayout ? 25 : 35 }}
               transition={{ duration: 1.2, delay: 0.1 }}
               viewport={{ once: true, amount: 0.5 }}
             >

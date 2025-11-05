@@ -30,6 +30,7 @@ import { UnifiedDashboard } from "@/components/home/UnifiedDashboard";
 import { LandingAccordionItem } from "@/components/home/LandingAccordionItem";
 import { UnifiedEcosystem } from "@/components/home/UnifiedEcosystem";
 import dashboardScreenshot from "@/assets/dashboard-screenshot.png";
+import calendarScreenshot from "@/assets/calendar-screenshot.png";
 export const ProductSelection = () => {
   const [isConsultationModalOpen, setIsConsultationModalOpen] = useState(false);
   const [selectedIndustry, setSelectedIndustry] = useState<string>('');
@@ -73,7 +74,10 @@ export const ProductSelection = () => {
         <LandingAccordionItem />
 
         {/* Allt administrativt i ett ekosystem */}
-        <UnifiedEcosystem primaryImageSrc={dashboardScreenshot} />
+        <UnifiedEcosystem 
+          primaryImageSrc={dashboardScreenshot} 
+          secondaryImageSrc={calendarScreenshot}
+        />
 
         {/* Våra AI-paket / Lösningar */}
         <StickyPackageCards packages={aiPackages} onBookDemo={() => setIsConsultationModalOpen(true)} onViewDetails={() => scrollToSection('kontakt')} />
