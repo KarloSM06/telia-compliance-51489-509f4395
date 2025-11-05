@@ -126,7 +126,7 @@ export const UnifiedDashboard = () => {
                 first: "Samtal",
                 second: "SMS",
                 third: "Mail",
-                fourth: "Recensioner"
+                fourth: "Reviews"
               }} 
               badgeIcons={{
                 first: Phone,
