@@ -40,17 +40,16 @@ const AnimatedHeader = () => {
     <div className="text-center max-w-3xl mx-auto mb-16">
       <div 
         ref={headerRef}
-        className={`inline-block transition-all duration-700 ease-out ${headerInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
+        className={`transition-all duration-700 ease-out ${headerInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
         style={{ transformStyle: 'preserve-3d' }}
       >
-        <h2 className="text-5xl sm:text-6xl font-bold bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent mb-4">
+        <h2 className="text-4xl md:text-5xl font-bold text-foreground">
           Välj paket för ditt företag / din bransch
         </h2>
-        <div className="w-32 h-1.5 bg-gradient-to-r from-primary via-primary/60 to-transparent mx-auto rounded-full shadow-lg shadow-primary/50" />
       </div>
       <p 
         ref={pRef}
-        className={`text-xl sm:text-2xl text-muted-foreground max-w-3xl mx-auto mt-6 font-light transition-all duration-700 ease-out delay-200 ${pInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
+        className={`text-lg text-muted-foreground max-w-3xl mx-auto mt-4 transition-all duration-700 ease-out delay-200 ${pInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
         style={{ transformStyle: 'preserve-3d' }}
       >
         Vi erbjuder sex skräddarsydda AI-paket som kan anpassas efter era specifika behov
@@ -83,7 +82,7 @@ export function StickyPackageCards({ packages, onBookDemo, onViewDetails }: Stic
                 return (
                   <div
                     key={pkg.id}
-                    className="bg-gradient-to-br from-card/40 via-card/20 to-card/10 backdrop-blur-xl border border-primary/20 grid grid-cols-1 md:grid-cols-2 items-center gap-4 md:gap-8 p-8 md:p-12 rounded-3xl mb-16 sticky hover:border-primary/50 transition-all duration-500 hover:shadow-2xl hover:shadow-primary/30 shadow-lg"
+                    className="bg-gradient-to-br from-card/40 via-card/20 to-card/10 backdrop-blur-xl border border-primary/20 grid grid-cols-1 md:grid-cols-2 items-center gap-4 md:gap-8 p-8 md:p-12 rounded-3xl mb-16 sticky shadow-lg"
                     style={{ top: '200px' }}
                   >
                     {/* Card Content */}

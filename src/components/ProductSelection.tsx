@@ -45,12 +45,7 @@ export const ProductSelection = () => {
     setSelectedIndustry(industryId);
     setIsConsultationModalOpen(true);
   };
-  return <div className="relative overflow-hidden bg-gradient-hero min-h-screen">
-      {/* Animated background elements */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-20 left-10 w-72 h-72 bg-accent/10 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute bottom-20 right-10 w-96 h-96 bg-accent/5 rounded-full blur-3xl animate-pulse delay-1000"></div>
-      </div>
+  return <div className="relative bg-gradient-hero min-h-screen">
       
       {/* Hero Section and Packages with Aurora Background */}
       <AuroraBackground className="h-auto">
