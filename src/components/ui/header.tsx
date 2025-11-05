@@ -111,85 +111,85 @@ function Header1() {
           : "bg-background/60 backdrop-blur-xl"
       )}>
         <div className="container relative mx-auto min-h-20 flex gap-4 flex-row lg:grid lg:grid-cols-3 items-center">
-          <div className="justify-start items-center gap-4 lg:flex hidden flex-row">
-            <NavigationMenu className="flex justify-start items-start">
-              <NavigationMenuList className="flex justify-start gap-4 flex-row">
-                {navigationItems.map((item) => (
-                  <NavigationMenuItem key={item.title}>
-                    {item.href ? (
-                      <>
-                        <NavigationMenuLink asChild>
-                          <Link to={item.href}>
-                            <Button variant="ghost" className="hover:bg-accent/10 transition-all duration-300">
-                              {item.title}
-                            </Button>
-                          </Link>
-                        </NavigationMenuLink>
-                      </>
-                    ) : item.action ? (
-                      <>
-                        <Button 
-                          variant="ghost" 
-                          onClick={item.action}
-                          className="hover:bg-accent/10 transition-all duration-300"
-                        >
-                          {item.title}
-                        </Button>
-                      </>
-                    ) : (
-                      <>
-                        <NavigationMenuTrigger className="font-medium text-sm hover:bg-accent/10 transition-all duration-300">
-                          {item.title}
-                        </NavigationMenuTrigger>
-                        <NavigationMenuContent className="!w-[450px] p-4">
-                          <div className="flex flex-col lg:grid grid-cols-2 gap-4">
-                            <div className="flex flex-col h-full justify-between">
-                              <div className="flex flex-col">
-                                <p className="text-base font-semibold">{item.title}</p>
-                                <p className="text-muted-foreground text-sm mt-1">
-                                  {item.description}
-                                </p>
-                              </div>
-                              <Button 
-                                size="sm" 
-                                className="mt-10 bg-gradient-gold text-primary hover:shadow-glow transition-all duration-300"
-                                onClick={() => setIsConsultationModalOpen(true)}
-                              >
-                                Boka demo
-                              </Button>
+          <div className="justify-start items-center gap-2 lg:flex hidden flex-row">
+            {navigationItems.map((item) => (
+              item.href ? (
+                <Link key={item.title} to={item.href}>
+                  <Button 
+                    variant="outline" 
+                    className="hover:bg-gradient-gold hover:text-primary hover:border-primary/20 transition-all duration-300 font-medium rounded-xl"
+                  >
+                    {item.title}
+                  </Button>
+                </Link>
+              ) : item.action ? (
+                <Button 
+                  key={item.title}
+                  variant="outline" 
+                  onClick={item.action}
+                  className="hover:bg-gradient-gold hover:text-primary hover:border-primary/20 transition-all duration-300 font-medium rounded-xl"
+                >
+                  {item.title}
+                </Button>
+              ) : (
+                <NavigationMenu key={item.title}>
+                  <NavigationMenuList>
+                    <NavigationMenuItem>
+                      <NavigationMenuTrigger className="font-medium text-sm hover:bg-gradient-gold hover:text-primary transition-all duration-300 rounded-xl border border-input">
+                        {item.title}
+                      </NavigationMenuTrigger>
+                      <NavigationMenuContent className="!w-[450px] p-4">
+                        <div className="flex flex-col lg:grid grid-cols-2 gap-4">
+                          <div className="flex flex-col h-full justify-between">
+                            <div className="flex flex-col">
+                              <p className="text-base font-semibold">{item.title}</p>
+                              <p className="text-muted-foreground text-sm mt-1">
+                                {item.description}
+                              </p>
                             </div>
-                            <div className="flex flex-col text-sm h-full justify-end">
-                              {item.items?.map((subItem) => (
-                                subItem.href ? (
-                                  <NavigationMenuLink key={subItem.title} asChild>
-                                    <Link
-                                      to={subItem.href}
-                                      className="flex flex-row justify-between items-center hover:bg-muted py-2 px-4 rounded transition-all duration-300"
-                                    >
-                                      <span>{subItem.title}</span>
-                                      <MoveRight className="w-4 h-4 text-muted-foreground" />
-                                    </Link>
-                                  </NavigationMenuLink>
-                                ) : (
-                                  <button
-                                    key={subItem.title}
-                                    onClick={subItem.action}
-                                    className="flex flex-row justify-between items-center hover:bg-muted py-2 px-4 rounded transition-all duration-300 text-left"
+                            <Button 
+                              size="sm" 
+                              className="mt-10 bg-gradient-gold text-primary hover:shadow-glow transition-all duration-300 rounded-xl"
+                              onClick={() => setIsConsultationModalOpen(true)}
+                            >
+                              Boka demo
+                            </Button>
+                          </div>
+                          <div className="flex flex-col text-sm h-full justify-end gap-1">
+                            {item.items?.map((subItem) => (
+                              subItem.href ? (
+                                <Link
+                                  key={subItem.title}
+                                  to={subItem.href}
+                                >
+                                  <Button
+                                    variant="ghost"
+                                    className="w-full justify-between hover:bg-muted rounded-xl"
                                   >
                                     <span>{subItem.title}</span>
                                     <MoveRight className="w-4 h-4 text-muted-foreground" />
-                                  </button>
-                                )
-                              ))}
-                            </div>
+                                  </Button>
+                                </Link>
+                              ) : (
+                                <Button
+                                  key={subItem.title}
+                                  variant="ghost"
+                                  onClick={subItem.action}
+                                  className="w-full justify-between hover:bg-muted rounded-xl"
+                                >
+                                  <span>{subItem.title}</span>
+                                  <MoveRight className="w-4 h-4 text-muted-foreground" />
+                                </Button>
+                              )
+                            ))}
                           </div>
-                        </NavigationMenuContent>
-                      </>
-                    )}
-                  </NavigationMenuItem>
-                ))}
-              </NavigationMenuList>
-            </NavigationMenu>
+                        </div>
+                      </NavigationMenuContent>
+                    </NavigationMenuItem>
+                  </NavigationMenuList>
+                </NavigationMenu>
+              )
+            ))}
           </div>
           
           {/* Logo */}
