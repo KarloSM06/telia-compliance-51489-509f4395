@@ -1,7 +1,6 @@
 import { AnimatedHero } from "@/components/ui/animated-hero";
 import { PackageCard } from "./home/PackageCard";
 import { IndustryCard } from "./home/IndustryCard";
-import { IndustryModal } from "./IndustryModal";
 import { ConsultationModal } from "./ConsultationModal";
 import { AuroraBackground } from "./ui/aurora-background";
 import { ServicesGrid } from "./home/ServicesGrid";
@@ -12,7 +11,7 @@ import { TechnicalExpertise } from "./home/TechnicalExpertise";
 import { OnboardingTimeline } from "./home/OnboardingTimeline";
 import { aiPackages } from "@/data/packages";
 import { industries } from "@/data/industries";
-import { AnimatedSection } from "./ui/animated-section";
+import { AnimatedSection } from "@/components/AnimatedSection";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
@@ -28,7 +27,6 @@ import {
 
 export const ProductSelection = () => {
   const [isConsultationModalOpen, setIsConsultationModalOpen] = useState(false);
-  const [selectedIndustry, setSelectedIndustry] = useState("");
 
   const scrollToSection = (id: string) => {
     const element = document.getElementById(id);
@@ -43,8 +41,7 @@ export const ProductSelection = () => {
     }
   };
 
-  const handleIndustryClick = (industryId: string) => {
-    setSelectedIndustry(industryId);
+  const handleIndustryClick = () => {
     setIsConsultationModalOpen(true);
   };
 
@@ -64,7 +61,7 @@ export const ProductSelection = () => {
         </section>
 
         {/* AI Packages Section */}
-        <AnimatedSection id="ai-paket" className="py-24 relative z-10">
+        <section id="ai-paket" className="py-24 relative z-10">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -100,14 +97,14 @@ export const ProductSelection = () => {
               ))}
             </div>
           </motion.div>
-        </AnimatedSection>
+        </section>
       </AuroraBackground>
 
       {/* Services Grid */}
       <ServicesGrid />
 
       {/* Industry Solutions */}
-      <AnimatedSection id="branschlosningar" className="py-24 bg-gradient-to-b from-background via-background to-muted/10">
+      <section id="branschlosningar" className="py-24 bg-gradient-to-b from-background via-background to-muted/10">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -137,12 +134,12 @@ export const ProductSelection = () => {
               <IndustryCard
                 key={industry.id}
                 industry={industry}
-                onClick={() => handleIndustryClick(industry.id)}
+                onClick={handleIndustryClick}
               />
             ))}
           </div>
         </motion.div>
-      </AnimatedSection>
+      </section>
 
       {/* Bento Grid */}
       <BentoGrid />
@@ -160,7 +157,7 @@ export const ProductSelection = () => {
       <TestimonialsGrid />
 
       {/* Newsletter */}
-      <AnimatedSection id="blogg" className="py-24 bg-gradient-to-b from-muted/5 to-background">
+      <section id="blogg" className="py-24 bg-gradient-to-b from-muted/5 to-background">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -200,10 +197,10 @@ export const ProductSelection = () => {
             </form>
           </div>
         </motion.div>
-      </AnimatedSection>
+      </section>
 
       {/* Contact Form */}
-      <AnimatedSection id="kontakt" className="py-24 bg-gradient-to-b from-background to-muted/20">
+      <section id="kontakt" className="py-24 bg-gradient-to-b from-background to-muted/20">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -254,10 +251,9 @@ export const ProductSelection = () => {
             </form>
           </div>
         </motion.div>
-      </AnimatedSection>
+      </section>
 
       <ConsultationModal open={isConsultationModalOpen} onOpenChange={setIsConsultationModalOpen} />
-      <IndustryModal industryId={selectedIndustry} open={!!selectedIndustry && isConsultationModalOpen} onOpenChange={(open) => !open && setSelectedIndustry("")} />
     </div>
   );
 };
