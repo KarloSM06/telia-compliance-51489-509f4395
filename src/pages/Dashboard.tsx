@@ -229,50 +229,65 @@ const Dashboard = () => {
         <div className="container mx-auto px-6 lg:px-8 relative z-10">
           <AnimatedSection delay={200}>
             {data && (() => {
-            // Prepare sparkline data for all cards
-            const revenueChartData = data.dailyData.slice(-15).map(d => ({
-              value: d.revenue
-            }));
-            const costChartData = data.dailyData.slice(-15).map(d => ({
-              value: d.costs
-            }));
-            const profitChartData = data.dailyData.slice(-15).map(d => ({
-              value: d.profit
-            }));
-            const roiChartData = data.dailyData.slice(-15).map(d => ({
-              value: d.costs > 0 ? (d.revenue - d.costs) / d.costs * 100 : 0
-            }));
+            // Helper to ensure minimum data points for charts
+            const ensureChartData = (data: { value: number }[], minPoints = 2) => {
+              if (data.length >= minPoints) return data;
+              // Pad with zeros if needed
+              const padding = Array(minPoints - data.length).fill({ value: 0 });
+              return [...padding, ...data];
+            };
 
-            // Average order value - rolling average
-            const avgOrderValueData = data.dailyData.slice(-15).map((d, idx) => {
-              const relevantDays = data.dailyData.slice(Math.max(0, idx - 7), idx + 1);
-              const totalRev = relevantDays.reduce((sum, day) => sum + day.revenue, 0);
-              const totalBookings = relevantDays.reduce((sum, day) => sum + day.bookings, 0);
+            // Prepare sparkline data for all cards (last 15 days)
+            const recentDays = data.dailyData.slice(-15);
+            
+            const revenueChartData = ensureChartData(recentDays.map(d => ({
+              value: d.revenue
+            })));
+            
+            const costChartData = ensureChartData(recentDays.map(d => ({
+              value: d.costs
+            })));
+            
+            const profitChartData = ensureChartData(recentDays.map(d => ({
+              value: d.profit
+            })));
+            
+            const roiChartData = ensureChartData(recentDays.map(d => ({
+              value: d.costs > 0 ? (d.revenue - d.costs) / d.costs * 100 : 0
+            })));
+
+            // Average order value - rolling average (7-day window)
+            const avgOrderValueData = ensureChartData(recentDays.map((d, idx) => {
+              // Get 7-day window including current day
+              const windowStart = Math.max(0, idx - 6);
+              const window = recentDays.slice(windowStart, idx + 1);
+              const totalRev = window.reduce((sum, day) => sum + day.revenue, 0);
+              const totalBookings = window.reduce((sum, day) => sum + day.bookings, 0);
               return {
                 value: totalBookings > 0 ? totalRev / totalBookings : 0
               };
-            });
-
-            // Cost per booking trend
-            const costPerBookingData = data.dailyData.slice(-15).map(d => ({
-              value: d.bookings > 0 ? d.costs / d.bookings : 0
             }));
 
+            // Cost per booking trend
+            const costPerBookingData = ensureChartData(recentDays.map(d => ({
+              value: d.bookings > 0 ? d.costs / d.bookings : 0
+            })));
+
             // Break-even - cumulative profit
-            const breakEvenData = (() => {
+            const breakEvenData = ensureChartData((() => {
               let cumulative = 0;
-              return data.dailyData.slice(-15).map(d => {
+              return recentDays.map(d => {
                 cumulative += d.profit;
                 return {
                   value: cumulative
                 };
               });
-            })();
+            })());
 
             // Active bookings - daily bookings
-            const activeBookingsData = data.dailyData.slice(-15).map(d => ({
+            const activeBookingsData = ensureChartData(recentDays.map(d => ({
               value: d.bookings
-            }));
+            })));
             return <div className="space-y-8">
                   {/* Primary KPIs */}
                   <div>

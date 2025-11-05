@@ -201,8 +201,17 @@ export const useAnalyticsData = (dateRange?: { from: Date; to: Date }) => {
           });
         }
 
-        // Aggregate daily data
+        // Aggregate daily data - Initialize ALL days in the period first
         const dailyMap = new Map();
+        
+        // Create entries for ALL days in the period (even with zero activity)
+        const currentDate = new Date(from);
+        const endDate = new Date(effectiveTo);
+        while (currentDate <= endDate) {
+          const day = format(currentDate, 'yyyy-MM-dd');
+          dailyMap.set(day, { date: day, bookings: 0, revenue: 0, costs: 0 });
+          currentDate.setDate(currentDate.getDate() + 1);
+        }
         
         bookings.forEach(b => {
           const day = format(new Date(b.start_time), 'yyyy-MM-dd');
@@ -267,11 +276,21 @@ export const useAnalyticsData = (dateRange?: { from: Date; to: Date }) => {
           dayData.costs += item.usage; // Already in SEK
         });
 
-        const dailyData = Array.from(dailyMap.values()).map(d => ({
-          ...d,
-          profit: d.revenue - d.costs,
-          roi: d.costs > 0 ? ((d.revenue - d.costs) / d.costs) * 100 : 0
-        }));
+        // Sort dailyData by date and calculate metrics
+        const dailyData = Array.from(dailyMap.values())
+          .sort((a, b) => a.date.localeCompare(b.date))
+          .map(d => ({
+            ...d,
+            profit: d.revenue - d.costs,
+            roi: d.costs > 0 ? ((d.revenue - d.costs) / d.costs) * 100 : 0
+          }));
+        
+        console.log(`📊 Daily data points: ${dailyData.length}`, {
+          firstDay: dailyData[0]?.date,
+          lastDay: dailyData[dailyData.length - 1]?.date,
+          totalBookings: dailyData.reduce((sum, d) => sum + d.bookings, 0),
+          totalRevenue: dailyData.reduce((sum, d) => sum + d.revenue, 0)
+        });
 
         // Calculate break-even and projections
         const historicalDays = Math.max(1, Math.ceil((effectiveTo.getTime() - from.getTime()) / (1000 * 60 * 60 * 24)));
