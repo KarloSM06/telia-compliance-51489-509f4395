@@ -333,7 +333,6 @@ const Dashboard = () => {
                         isPositive: true,
                         label: "från förra perioden"
                       }}
-                      sparklineData={data.bookings.slice(-10).map(b => ({ value: b.total_cost || 0 }))}
                     />
                     <EnhancedStatCard 
                       title="Kostnad per Bokning" 
@@ -347,7 +346,6 @@ const Dashboard = () => {
                         isPositive: false,
                         label: "från förra perioden"
                       }}
-                      sparklineData={data.dailyData.slice(-10).map(d => ({ value: d.costs }))}
                     />
                     <EnhancedStatCard 
                       title="Break-even Status" 
@@ -356,7 +354,6 @@ const Dashboard = () => {
                       color={data.breakEven.isBreakEvenReached ? "text-green-600" : "text-amber-600"}
                       subtitle={data.breakEven.isBreakEvenReached ? "Lönsamhet uppnådd" : "Månader kvar"}
                       tooltip="När totala intäkter överstiger totala kostnader"
-                      sparklineData={data.dailyData.slice(-10).map(d => ({ value: d.profit }))}
                     />
                     <EnhancedStatCard 
                       title="Aktiva Bokningar" 
@@ -370,7 +367,6 @@ const Dashboard = () => {
                         isPositive: true,
                         label: "från förra perioden"
                       }}
-                      sparklineData={data.dailyData.slice(-10).map(d => ({ value: d.bookings }))}
                     />
                   </div>
                 </div>
