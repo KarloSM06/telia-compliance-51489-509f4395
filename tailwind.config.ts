@@ -176,6 +176,16 @@ export default {
           "0%": { transform: "translate3d(-33.333%, 0, 0)" },
           "100%": { transform: "translate3d(0, 0, 0)" }
         },
+        spotlight: {
+          "0%": {
+            opacity: "0",
+            transform: "translate(-72%, -62%) scale(0.5)",
+          },
+          "100%": {
+            opacity: "1",
+            transform: "translate(-50%,-40%) scale(1)",
+          },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 1s ease-out",
@@ -188,6 +198,7 @@ export default {
         aurora: "aurora 60s linear infinite",
         "scroll-left": "scroll-left 60s linear infinite",
         "scroll-right": "scroll-right 60s linear infinite",
+        spotlight: "spotlight 2s ease .75s 1 forwards",
       },
     },
   },
