@@ -295,7 +295,7 @@ const Dashboard = () => {
                         period="Senaste 15 dagarna"
                         icon={DollarSign}
                         chartData={revenueChartData}
-                        color="hsl(var(--color-emerald-500))"
+                        color="hsl(142, 76%, 36%)"
                         gradientId="revenueGradient"
                         formatValue={(val) => `${(val / 1000).toFixed(1)}k SEK`}
                         trend={{ value: 12.5, isPositive: true }}
@@ -307,7 +307,7 @@ const Dashboard = () => {
                         period="Senaste 15 dagarna"
                         icon={TrendingDown}
                         chartData={costChartData}
-                        color="hsl(var(--color-red-500))"
+                        color="hsl(0, 70%, 50%)"
                         gradientId="costGradient"
                         formatValue={(val) => `${(val / 1000).toFixed(1)}k SEK`}
                         trend={{ value: 5.2, isPositive: false }}
@@ -319,7 +319,7 @@ const Dashboard = () => {
                         period="Senaste 15 dagarna"
                         icon={Award}
                         chartData={profitChartData}
-                        color="hsl(var(--color-amber-500))"
+                        color="hsl(158, 64%, 52%)"
                         gradientId="profitGradient"
                         formatValue={(val) => `${(val / 1000).toFixed(1)}k SEK`}
                         trend={{ value: 18.7, isPositive: data.roi.netProfit > 0 }}
@@ -331,7 +331,7 @@ const Dashboard = () => {
                         period="Senaste 15 dagarna"
                         icon={Target}
                         chartData={roiChartData}
-                        color="hsl(var(--color-blue-500))"
+                        color="hsl(134, 61%, 41%)"
                         gradientId="roiGradient"
                         formatValue={(val) => `${val.toFixed(1)}%`}
                         trend={{ value: 8.3, isPositive: data.roi.roi > 0 }}
@@ -351,7 +351,7 @@ const Dashboard = () => {
                         period="Senaste 15 dagarna"
                         icon={TrendingUp}
                         chartData={avgOrderValueData}
-                        color="hsl(var(--color-violet-500))"
+                        color="hsl(145, 63%, 42%)"
                         gradientId="avgOrderGradient"
                         formatValue={(val) => `${(val / 1000).toFixed(1)}k SEK`}
                         trend={{ value: 6.4, isPositive: true }}
@@ -363,7 +363,7 @@ const Dashboard = () => {
                         period="Senaste 15 dagarna"
                         icon={Activity}
                         chartData={costPerBookingData}
-                        color="hsl(var(--color-orange-500))"
+                        color="hsl(168, 76%, 42%)"
                         gradientId="costPerBookingGradient"
                         formatValue={(val) => `${val.toFixed(0)} SEK`}
                         trend={{ value: 3.2, isPositive: false }}
@@ -375,7 +375,7 @@ const Dashboard = () => {
                         period="Kumulativ vinst"
                         icon={CheckCircle}
                         chartData={breakEvenData}
-                        color={data.breakEven.isBreakEvenReached ? "hsl(var(--color-green-500))" : "hsl(var(--color-amber-500))"}
+                        color={data.breakEven.isBreakEvenReached ? "hsl(142, 71%, 45%)" : "hsl(152, 69%, 31%)"}
                         gradientId="breakEvenGradient"
                         formatValue={(val) => `${(val / 1000).toFixed(1)}k SEK`}
                       />
@@ -386,7 +386,7 @@ const Dashboard = () => {
                         period="Senaste 15 dagarna"
                         icon={Users}
                         chartData={activeBookingsData}
-                        color="hsl(var(--color-cyan-500))"
+                        color="hsl(140, 60%, 45%)"
                         gradientId="bookingsGradient"
                         formatValue={(val) => `${val} bokningar`}
                         trend={{ value: 15.8, isPositive: true }}
