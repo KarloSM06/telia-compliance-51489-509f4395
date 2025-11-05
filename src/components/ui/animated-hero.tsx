@@ -24,9 +24,6 @@ function AnimatedHero({
     return () => clearTimeout(timeoutId);
   }, [titleNumber, titles]);
   return <div className="w-full py-32 lg:py-48 relative">
-      {/* Gradient overlay background */}
-      <div className="absolute inset-0 bg-gradient-to-b from-primary/5 via-transparent to-transparent pointer-events-none" />
-      
       <div className="container mx-auto max-w-5xl px-6 relative z-10">
         <div className="flex gap-8 items-center justify-center flex-col">
           <div className="flex gap-6 flex-col items-center">
@@ -105,10 +102,10 @@ function AnimatedHero({
           delay: 0.3
         }} className="flex flex-col sm:flex-row gap-4 justify-center mt-4">
             <span className="relative inline-block overflow-hidden rounded-xl p-[2px]">
-              <span className="absolute inset-[-1000%] animate-[spin_3s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,hsl(var(--primary))_0%,hsl(var(--secondary))_50%,hsl(var(--primary))_100%)]" />
+              <span className="absolute inset-[-1000%] animate-[spin_3s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#ff0000_0%,#ff7f00_14%,#ffff00_28%,#00ff00_42%,#0000ff_57%,#4b0082_71%,#9400d3_85%,#ff0000_100%)]" />
               <Button className="relative bg-background hover:bg-background group font-bold rounded-xl transition-all duration-300 hover:scale-105" onClick={onViewPackages}>
-                <span className="relative z-10 flex items-center gap-2 bg-gradient-gold bg-clip-text text-transparent group-hover:bg-gradient-to-r group-hover:from-primary group-hover:via-secondary group-hover:to-primary">
-                  Se våra paket <ArrowRight className="w-4 h-4 text-primary group-hover:translate-x-1 transition-transform duration-300" />
+                <span className="relative z-10 flex items-center gap-2 text-blue-900 dark:text-blue-900">
+                  Se våra paket <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" />
                 </span>
               </Button>
             </span>
