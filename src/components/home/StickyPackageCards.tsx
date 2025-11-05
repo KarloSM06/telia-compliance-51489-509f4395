@@ -31,9 +31,7 @@ const AnimatedHeader = () => {
       <div ref={headerRef} className={`transition-all duration-700 ease-out ${headerInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`} style={{
       transformStyle: 'preserve-3d'
     }}>
-        <h2 className="text-5xl md:text-6xl lg:text-7xl font-bold text-foreground">
-          Välj paket för ditt företag / din bransch
-        </h2>
+        <h2 className="text-5xl md:text-6xl lg:text-7xl font-bold text-foreground">​Våra färdiga paket</h2>
       </div>
       <p ref={pRef} className={`text-xl md:text-2xl text-muted-foreground max-w-4xl mx-auto mt-6 transition-all duration-700 ease-out delay-200 ${pInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`} style={{
       transformStyle: 'preserve-3d'
