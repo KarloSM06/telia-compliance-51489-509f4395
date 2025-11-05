@@ -58,10 +58,20 @@ export const useAnalyticsData = (dateRange?: { from: Date; to: Date }) => {
       setLoading(true);
       
       const from = dateRange?.from || subDays(new Date(), 30);
-      const to = dateRange?.to || new Date();
+      const desiredTo = dateRange?.to || new Date();
+      
+      // Always include today if selected range ends in the past
+      const now = new Date();
+      const effectiveTo = desiredTo < now ? now : desiredTo;
       
       const fromStr = startOfDay(from).toISOString();
-      const toStr = endOfDay(to).toISOString();
+      const toStr = endOfDay(effectiveTo).toISOString();
+      
+      console.log('📅 Period used:', { 
+        from: format(from, 'yyyy-MM-dd'), 
+        to: format(effectiveTo, 'yyyy-MM-dd'),
+        autoAdjusted: desiredTo < now
+      });
 
       try {
         // First fetch active telephony integrations
@@ -76,12 +86,11 @@ export const useAnalyticsData = (dateRange?: { from: Date; to: Date }) => {
 
         // Fetch all data in parallel
         const [bookingsRes, messagesRes, telephonyRes, reviewsRes, aiUsageRes] = await Promise.all([
+          // Fetch calendar events without server-side date filter to avoid TEXT vs timestamptz issues
           supabase
             .from("calendar_events")
             .select("*")
             .eq("user_id", user.id)
-            .gte("start_time", fromStr)
-            .lte("start_time", toStr)
             .order("start_time", { ascending: true }),
           
           supabase
@@ -115,13 +124,37 @@ export const useAnalyticsData = (dateRange?: { from: Date; to: Date }) => {
             .lte("created_at", toStr)
         ]);
 
-        const bookings = bookingsRes.data || [];
+        const rawBookings = bookingsRes.data || [];
         const messages = messagesRes.data || [];
         const telephonyRaw = telephonyRes.data || [];
         const reviews = reviewsRes.data || [];
         const aiUsage = aiUsageRes.data || [];
 
-        console.log(`📅 Found ${bookings.length} bookings in period:`, { from: fromStr, to: toStr });
+        // Filter bookings client-side with proper date parsing
+        const fromDate = startOfDay(from);
+        const toDate = endOfDay(effectiveTo);
+        
+        const bookings = rawBookings.filter(b => {
+          const startTime = Date.parse(b.start_time);
+          if (Number.isNaN(startTime)) {
+            console.warn('⚠️ Invalid start_time for booking:', b.id, b.start_time);
+            return false;
+          }
+          const eventDate = new Date(b.start_time);
+          return eventDate >= fromDate && eventDate <= toDate;
+        });
+
+        const invalidCount = rawBookings.length - bookings.length;
+        if (invalidCount > 0) {
+          toast.warning(`${invalidCount} möten ignorerades pga ogiltigt datum (start_time)`, {
+            description: "Kontrollera kalendern för felaktiga datum"
+          });
+        }
+
+        console.log(`📅 Found ${bookings.length} bookings in period (${invalidCount} invalid):`, { 
+          from: format(fromDate, 'yyyy-MM-dd'), 
+          to: format(toDate, 'yyyy-MM-dd') 
+        });
         console.log('📋 Bookings:', bookings.map(b => ({ 
           title: b.title, 
           start: b.start_time, 
@@ -150,7 +183,7 @@ export const useAnalyticsData = (dateRange?: { from: Date; to: Date }) => {
           0
         ) || 0;
         
-        const costs = calculateOperationalCosts(telephony, messages, aiUsage, businessMetrics, { from, to }, openRouterCostSEK);
+        const costs = calculateOperationalCosts(telephony, messages, aiUsage, businessMetrics, { from, to: effectiveTo }, openRouterCostSEK);
         const roi = calculateROI(bookingRevenues, costs);
 
         console.log('📈 ROI Metrics:', {
@@ -241,7 +274,7 @@ export const useAnalyticsData = (dateRange?: { from: Date; to: Date }) => {
         }));
 
         // Calculate break-even and projections
-        const historicalDays = Math.max(1, Math.ceil((to.getTime() - from.getTime()) / (1000 * 60 * 60 * 24)));
+        const historicalDays = Math.max(1, Math.ceil((effectiveTo.getTime() - from.getTime()) / (1000 * 60 * 60 * 24)));
         const historicalRevenue = roi.totalRevenue;
         
         const breakEven = calculateBreakEven(businessMetrics, historicalRevenue, historicalDays);

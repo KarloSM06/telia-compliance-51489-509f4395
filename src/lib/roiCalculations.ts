@@ -249,14 +249,44 @@ export function calculateBookingRevenue(
     reasoning = `Baserat på specifik tjänst "${serviceMatch.service.service_name}" (${avgPrice.toLocaleString('sv-SE')} SEK)`;
   } else if (businessMetrics.avg_project_cost && businessMetrics.avg_project_cost > 0) {
     avgPrice = businessMetrics.avg_project_cost;
-    confidence = 65;
+    confidence = 40;
     reasoning = `Baserat på genomsnittlig projektkostnad (${avgPrice.toLocaleString('sv-SE')} SEK)`;
   } else {
-    avgPrice = calculateAveragePrice(businessMetrics.service_pricing);
-    confidence = 50;
-    reasoning = avgPrice > 0 
-      ? `Baserat på genomsnitt av alla tjänster (${avgPrice.toLocaleString('sv-SE')} SEK)`
-      : "Ingen prisdata tillgänglig";
+    // Try to calculate median from uploaded quotes and invoices
+    const amounts: number[] = [];
+    
+    if (businessMetrics.uploaded_quotes) {
+      businessMetrics.uploaded_quotes.forEach((doc: any) => {
+        if (doc.amount && doc.amount > 0) amounts.push(doc.amount);
+      });
+    }
+    
+    if (businessMetrics.uploaded_invoices) {
+      businessMetrics.uploaded_invoices.forEach((doc: any) => {
+        if (doc.amount && doc.amount > 0) amounts.push(doc.amount);
+      });
+    }
+    
+    if (amounts.length > 0) {
+      amounts.sort((a, b) => a - b);
+      const mid = Math.floor(amounts.length / 2);
+      avgPrice = amounts.length % 2 === 0 
+        ? (amounts[mid - 1] + amounts[mid]) / 2 
+        : amounts[mid];
+      confidence = 35;
+      reasoning = `Baserat på median av ${amounts.length} uppladdade offerter/fakturor (${avgPrice.toLocaleString('sv-SE')} SEK)`;
+    } else {
+      // Final fallback: use average of defined services or conservative base value
+      avgPrice = calculateAveragePrice(businessMetrics.service_pricing);
+      if (avgPrice > 0) {
+        confidence = 30;
+        reasoning = `Baserat på genomsnitt av alla tjänster (${avgPrice.toLocaleString('sv-SE')} SEK)`;
+      } else {
+        avgPrice = 1000;
+        confidence = 20;
+        reasoning = `Baserat på konservativt basvärde (${avgPrice.toLocaleString('sv-SE')} SEK)`;
+      }
+    }
   }
   
   const conversionProb = businessMetrics.meeting_to_payment_probability / 100;
