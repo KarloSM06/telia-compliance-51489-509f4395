@@ -19,19 +19,19 @@ export const PackageCardSimplified = ({
 
   // Combine all features into one list
   const allFeatures = [...(pkg.components || []), ...(pkg.valueBullets || [])];
-  return <Card className={`group overflow-hidden border border-primary/10 bg-gradient-to-br from-card/80 via-card/50 to-card/30 backdrop-blur-md hover:bg-card/90 hover:border-primary/30 transition-all duration-500 hover:shadow-2xl hover:shadow-primary/20 hover:-translate-y-1 transform-gpu`}>
+  return <Card className={`group overflow-hidden border border-primary/20 bg-gradient-to-br from-card/20 via-card/10 to-card/5 backdrop-blur-xl hover:backdrop-blur-2xl hover:bg-card/30 hover:border-primary/40 transition-all duration-700 hover:shadow-[0_20px_70px_-15px] hover:shadow-primary/30 transform-gpu`}>
       <CardContent className="p-0">
         <div className={`flex flex-col ${isLeft ? 'lg:flex-row' : 'lg:flex-row-reverse'} gap-0`}>
           {/* Bild/Ikon sektion */}
-          <div className="relative lg:w-1/3 aspect-[4/3] lg:aspect-auto overflow-hidden bg-gradient-to-br from-primary/5 via-primary/10 to-primary/5">
-            {pkg.image ? <img src={pkg.image} alt={pkg.name} loading="lazy" decoding="async" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 transform-gpu" /> : <div className="absolute inset-0 flex items-center justify-center">
-                <Icon className="h-32 w-32 text-primary/20 group-hover:text-primary/40 transition-colors duration-500" />
+          <div className="relative lg:w-1/3 aspect-[4/3] lg:aspect-auto overflow-hidden bg-gradient-to-br from-primary/10 via-primary/15 to-primary/5 backdrop-blur-sm">
+            {pkg.image ? <img src={pkg.image} alt={pkg.name} loading="lazy" decoding="async" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110 transform-gpu opacity-80 group-hover:opacity-100" /> : <div className="absolute inset-0 flex items-center justify-center">
+                <Icon className="h-32 w-32 text-primary/30 group-hover:text-primary/50 transition-colors duration-500" />
               </div>}
-            <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-background/20 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-t from-background/60 via-background/10 to-transparent" />
           </div>
 
           {/* Content sektion */}
-          <div className="flex-1 p-8 lg:p-10 flex flex-col">
+          <div className="flex-1 p-8 lg:p-10 flex flex-col bg-gradient-to-br from-background/5 to-transparent">
             <div className="flex items-start gap-4 mb-4">
               
               <div className="flex-1">

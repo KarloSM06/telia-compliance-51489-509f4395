@@ -71,7 +71,7 @@ export const ProductSelection = () => {
         <ServicesGrid />
 
         {/* Våra AI-paket / Lösningar */}
-        <section id="paket" className="relative py-16 md:py-24">
+        <section id="paket" className="relative py-16 md:py-48">
         
         <div className="mx-auto max-w-7xl px-6 lg:px-8 relative z-10">
           <AnimatedSection className="text-center mb-20">
@@ -86,8 +86,12 @@ export const ProductSelection = () => {
             </p>
           </AnimatedSection>
           
-        <div className="max-w-[1800px] mx-auto space-y-8 mb-8">
-          {aiPackages.map((pkg, index) => <AnimatedSection key={pkg.id} delay={index * 200} direction={index % 2 === 0 ? 'left' : 'right'}>
+        <div className="max-w-[1800px] mx-auto mb-8">
+          {aiPackages.map((pkg, index) => <div 
+              key={pkg.id}
+              className="sticky mb-16"
+              style={{ top: `${120 + index * 20}px` }}
+            >
               <PackageCardSimplified 
                 package={pkg} 
                 imagePosition={index % 2 === 0 ? 'left' : 'right'} 
@@ -97,7 +101,7 @@ export const ProductSelection = () => {
                 }}
                 onBookDemo={() => setIsConsultationModalOpen(true)} 
               />
-            </AnimatedSection>)}
+            </div>)}
         </div>
         </div>
       </section>
