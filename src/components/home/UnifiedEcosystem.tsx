@@ -72,7 +72,7 @@ export const UnifiedEcosystem: React.FC<UnifiedEcosystemProps> = ({
           >
             {/* Decorative Background Element - Calendar */}
             <motion.div
-              className="absolute w-[420px] h-[420px] md:w-[700px] md:h-[700px] bg-card/50 rounded-[32px] z-0 backdrop-blur-sm shadow-xl"
+              className="absolute w-[420px] h-[420px] md:w-[700px] md:h-[700px] bg-card/50 rounded-[32px] z-0 backdrop-blur-sm shadow-2xl transition-all duration-500 hover:scale-105 hover:shadow-[0_30px_60px_-15px_rgba(0,0,0,0.4)] cursor-pointer"
               style={{
                 top: reverseLayout ? 'auto' : '5%',
                 bottom: reverseLayout ? '5%' : 'auto',
@@ -83,6 +83,7 @@ export const UnifiedEcosystem: React.FC<UnifiedEcosystemProps> = ({
               }}
               initial={{ y: reverseLayout ? 0 : 0 }}
               whileInView={{ y: reverseLayout ? -25 : -35 }}
+              whileHover={{ scale: 1.05, filter: 'blur(0px)' }}
               transition={{ duration: 1.2 }}
               viewport={{ once: true, amount: 0.5 }}
             >
@@ -96,9 +97,10 @@ export const UnifiedEcosystem: React.FC<UnifiedEcosystemProps> = ({
 
             {/* Main Mockup Card - Dashboard */}
             <motion.div
-              className="relative w-full h-[520px] md:h-[860px] bg-card/10 rounded-[32px] backdrop-blur-[15px] backdrop-brightness-[100%] border border-border/50 z-10 overflow-hidden shadow-2xl"
+              className="relative w-full h-[520px] md:h-[860px] bg-card/10 rounded-[32px] backdrop-blur-[15px] backdrop-brightness-[100%] border border-border/50 z-10 overflow-hidden shadow-[0_20px_50px_-12px_rgba(0,0,0,0.3)] transition-all duration-500 hover:shadow-[0_35px_70px_-15px_rgba(0,0,0,0.5)] hover:scale-[1.02] hover:border-primary/30 cursor-pointer"
               initial={{ y: reverseLayout ? 0 : 0 }}
               whileInView={{ y: reverseLayout ? 25 : 35 }}
+              whileHover={{ scale: 1.02, y: -5 }}
               transition={{ duration: 1.2, delay: 0.1 }}
               viewport={{ once: true, amount: 0.5 }}
             >
