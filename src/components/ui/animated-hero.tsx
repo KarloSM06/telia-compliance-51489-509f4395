@@ -35,13 +35,10 @@ function AnimatedHero({ onBookDemo, onViewPackages }: AnimatedHeroProps) {
   return (
     <div className="w-full py-20 lg:py-32">
       <div className="container mx-auto max-w-7xl px-6">
-        <div className="flex gap-8 items-center justify-center flex-col">
-          <div className="flex gap-4 flex-col items-center">
-            <h1 className="text-5xl md:text-7xl lg:text-8xl max-w-5xl tracking-tight text-center font-bold leading-tight">
-              <span className="text-foreground dark:text-white block mb-2">
-                Skala din verksamhet
-              </span>
-              <span className="relative flex w-full justify-center overflow-hidden text-center md:pb-4 md:pt-1 min-h-[1.2em]">
+        <div className="flex gap-12 items-center justify-center flex-col">
+          <div className="flex gap-6 flex-col items-center max-w-5xl">
+            <h1 className="text-6xl md:text-8xl lg:text-9xl tracking-tight text-center font-bold leading-[1.1]">
+              <span className="relative flex w-full justify-center overflow-hidden text-center min-h-[1.3em] mb-4">
                 {titles.map((title, index) => (
                   <motion.span
                     key={index}
@@ -64,29 +61,32 @@ function AnimatedHero({ onBookDemo, onViewPackages }: AnimatedHeroProps) {
                   </motion.span>
                 ))}
               </span>
+              <span className="text-foreground dark:text-white">
+                med AI-automation
+              </span>
             </h1>
 
-            <p className="text-xl md:text-2xl lg:text-3xl leading-relaxed tracking-tight text-foreground/90 dark:text-neutral-200 max-w-4xl text-center font-light mt-6">
-              Hiems levererar ett komplett AI-ekosystem som automatiserar kundflöden, 
-              försäljning, bokningar, administration och dataanalys.
+            <p className="text-2xl md:text-3xl lg:text-4xl leading-relaxed text-foreground/80 dark:text-neutral-300 max-w-4xl text-center font-light">
+              Låt AI hantera administration, kundkommunikation och repetitiva uppgifter 
+              medan du fokuserar på att växa ditt företag.
             </p>
           </div>
           
-          <div className="flex flex-col sm:flex-row gap-6 justify-center mt-8">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mt-4">
             <Button 
               size="lg" 
-              className="bg-gradient-gold text-primary hover:shadow-glow transition-all duration-300 font-bold text-xl px-12 py-8 h-auto gap-3" 
-              onClick={onViewPackages}
-            >
-              Se våra paket <ArrowRight className="w-5 h-5" />
-            </Button>
-            <Button 
-              size="lg" 
-              variant="outline" 
-              className="border-2 border-foreground dark:border-white text-foreground dark:text-white bg-background/10 dark:bg-white/10 hover:bg-foreground hover:text-background dark:hover:bg-white dark:hover:text-black transition-all duration-300 font-bold text-xl px-12 py-8 h-auto gap-3" 
+              className="bg-gradient-gold text-primary hover:shadow-glow transition-all duration-300 font-bold text-2xl px-16 py-10 h-auto gap-3" 
               onClick={onBookDemo}
             >
-              Boka demo <Calendar className="w-5 h-5" />
+              Boka gratis demo <Calendar className="w-6 h-6" />
+            </Button>
+            <Button 
+              size="sm" 
+              variant="ghost" 
+              className="text-foreground/70 dark:text-white/70 hover:text-foreground dark:hover:text-white transition-all duration-300 font-medium text-sm gap-2 underline underline-offset-4" 
+              onClick={onViewPackages}
+            >
+              Se paket <ArrowRight className="w-3 h-3" />
             </Button>
           </div>
         </div>
