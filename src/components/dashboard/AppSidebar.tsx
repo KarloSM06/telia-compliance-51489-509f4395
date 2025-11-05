@@ -45,7 +45,6 @@ export function AppSidebar() {
   const businessToolsItems = navItems.filter(item => item.group === 'business');
   const communicationItems = navItems.filter(item => item.group === 'communication');
   const systemItems = navItems.filter(item => item.group === 'system');
-  
   const groups = [{
     label: 'Översikt',
     items: overviewItems
@@ -78,13 +77,6 @@ export function AppSidebar() {
       <ProfileSection />
 
       {/* Footer */}
-      <div className="pb-2">
-        <motion.p animate={{
-        display: open ? "block" : "none",
-        opacity: open ? 1 : 0
-      }} className="text-xs text-sidebar-foreground/60 text-center">
-          Hiems AI Dashboard
-        </motion.p>
-      </div>
+      
     </div>;
 }
