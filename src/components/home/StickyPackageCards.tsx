@@ -89,7 +89,7 @@ export function StickyPackageCards({ packages, onBookDemo, onViewDetails }: Stic
                     <div className={`flex flex-col justify-center ${!isLeft ? 'md:order-2' : ''}`}>
                       <div className="flex items-center gap-4 mb-6">
                         <Icon className="h-12 w-12 md:h-14 md:w-14 text-primary" strokeWidth={1.5} />
-                        <h3 className="text-4xl md:text-5xl lg:text-6xl font-bold text-foreground">
+                        <h3 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground">
                           {pkg.name}
                         </h3>
                       </div>
