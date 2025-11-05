@@ -100,19 +100,19 @@ function AnimatedHero({
           duration: 0.6,
           delay: 0.3
         }} className="flex flex-col sm:flex-row gap-4 justify-center mt-4">
-            <RainbowButton 
-              onClick={onViewPackages}
-              className="group font-bold rounded-xl transition-all duration-300 hover:scale-105"
-            >
+            <Button variant="outline" className="group hover:bg-gradient-gold hover:text-primary hover:border-primary/20 transition-all duration-300 font-bold rounded-xl hover:scale-105" onClick={onViewPackages}>
               <span className="flex items-center gap-2">
                 Se våra paket <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" />
               </span>
-            </RainbowButton>
-            <Button variant="outline" className="group hover:bg-gradient-gold hover:text-primary hover:border-primary/20 transition-all duration-300 font-bold rounded-xl hover:scale-105" onClick={onBookDemo}>
+            </Button>
+            <RainbowButton 
+              onClick={onBookDemo}
+              className="group font-bold rounded-xl transition-all duration-300 hover:scale-105"
+            >
               <span className="flex items-center gap-2">
                 Boka demo <Calendar className="w-4 h-4 group-hover:rotate-12 transition-transform duration-300" />
               </span>
-            </Button>
+            </RainbowButton>
           </motion.div>
         </div>
       </div>
