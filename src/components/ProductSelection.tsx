@@ -6,7 +6,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useState } from "react";
 import { ConsultationModal } from "@/components/ConsultationModal";
 import { AnimatedSection } from "@/components/AnimatedSection";
-import { PackageCard } from "@/components/home/PackageCard";
+import { PackageCardSimplified } from "@/components/home/PackageCardSimplified";
 import { IndustryCard } from "@/components/home/IndustryCard";
 import { CustomerJourneyFlow } from "@/components/home/CustomerJourneyFlow";
 import { OnboardingTimeline } from "@/components/home/OnboardingTimeline";
@@ -88,7 +88,15 @@ export const ProductSelection = () => {
           
         <div className="max-w-[1800px] mx-auto space-y-8 mb-8">
           {aiPackages.map((pkg, index) => <AnimatedSection key={pkg.id} delay={index * 200} direction={index % 2 === 0 ? 'left' : 'right'}>
-              <PackageCard package={pkg} imagePosition={index % 2 === 0 ? 'left' : 'right'} onBookDemo={() => setIsConsultationModalOpen(true)} />
+              <PackageCardSimplified 
+                package={pkg} 
+                imagePosition={index % 2 === 0 ? 'left' : 'right'} 
+                onViewDetails={() => {
+                  // Navigate to related service page - for now just scroll to contact
+                  scrollToSection('kontakt');
+                }}
+                onBookDemo={() => setIsConsultationModalOpen(true)} 
+              />
             </AnimatedSection>)}
         </div>
         </div>

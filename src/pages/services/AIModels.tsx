@@ -10,6 +10,7 @@ import { OwnershipBadge } from "@/components/services/OwnershipBadge";
 import { ServiceCTA } from "@/components/services/ServiceCTA";
 import { ConsultationModal } from "@/components/ConsultationModal";
 import { servicesData } from "@/data/services";
+import { RelatedPackages } from "@/components/services/RelatedPackages";
 
 const AIModels = () => {
   const [isConsultationModalOpen, setIsConsultationModalOpen] = useState(false);
@@ -29,6 +30,7 @@ const AIModels = () => {
         <FeaturesGrid features={serviceData.features} />
         <TechnologyStack technologies={serviceData.technologies} />
         <UseCases useCases={serviceData.useCases} />
+        <RelatedPackages serviceId="ai-models" onBookDemo={() => setIsConsultationModalOpen(true)} />
         <OwnershipBadge />
         <ServiceCTA onBookDemo={() => setIsConsultationModalOpen(true)} />
         </main>

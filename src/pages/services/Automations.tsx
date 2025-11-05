@@ -11,6 +11,7 @@ import { OwnershipBadge } from "@/components/services/OwnershipBadge";
 import { ServiceCTA } from "@/components/services/ServiceCTA";
 import { ConsultationModal } from "@/components/ConsultationModal";
 import { servicesData } from "@/data/services";
+import { RelatedPackages } from "@/components/services/RelatedPackages";
 
 const Automations = () => {
   const [isConsultationModalOpen, setIsConsultationModalOpen] = useState(false);
@@ -33,6 +34,7 @@ const Automations = () => {
           <HowItWorksTimeline steps={serviceData.howItWorks} />
         )}
         <UseCases useCases={serviceData.useCases} />
+        <RelatedPackages serviceId="automations" onBookDemo={() => setIsConsultationModalOpen(true)} />
         <OwnershipBadge />
         <ServiceCTA onBookDemo={() => setIsConsultationModalOpen(true)} />
         </main>

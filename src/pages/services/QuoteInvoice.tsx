@@ -11,6 +11,7 @@ import { OwnershipBadge } from "@/components/services/OwnershipBadge";
 import { ServiceCTA } from "@/components/services/ServiceCTA";
 import { ConsultationModal } from "@/components/ConsultationModal";
 import { servicesData } from "@/data/services";
+import { RelatedPackages } from "@/components/services/RelatedPackages";
 
 const QuoteInvoice = () => {
   const [isConsultationModalOpen, setIsConsultationModalOpen] = useState(false);
@@ -33,6 +34,7 @@ const QuoteInvoice = () => {
           <HowItWorksTimeline steps={serviceData.howItWorks} />
         )}
         <UseCases useCases={serviceData.useCases} />
+        <RelatedPackages serviceId="quote-invoice" onBookDemo={() => setIsConsultationModalOpen(true)} />
         <OwnershipBadge />
         <ServiceCTA onBookDemo={() => setIsConsultationModalOpen(true)} />
         </main>
