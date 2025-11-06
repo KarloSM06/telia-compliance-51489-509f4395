@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Button } from "@/components/ui/button";
 import { CheckCircle } from "lucide-react";
 import type { Package } from "@/data/packages";
+import { AnimatedSection } from "@/components/AnimatedSection";
 
 // Custom Hook for Scroll Animation
 const useScrollAnimation = () => {
@@ -62,9 +63,10 @@ export function StickyPackageCards({
               const Icon = pkg.icon;
               const allFeatures = [...(pkg.components || []), ...(pkg.valueBullets || [])];
               const isLeft = index % 2 === 0;
-              return <div key={pkg.id} className="bg-gradient-to-br from-card/40 via-card/20 to-card/10 backdrop-blur-xl border border-primary/20 grid grid-cols-1 md:grid-cols-2 items-center gap-6 md:gap-12 p-10 md:p-16 rounded-3xl mb-20 sticky shadow-lg" style={{
-                top: '200px'
-              }}>
+              return <AnimatedSection key={pkg.id} delay={index * 100}>
+                  <div className="bg-gradient-to-br from-card/40 via-card/20 to-card/10 backdrop-blur-xl border border-primary/20 grid grid-cols-1 md:grid-cols-2 items-center gap-6 md:gap-12 p-10 md:p-16 rounded-3xl mb-20 sticky shadow-lg" style={{
+                    top: '200px'
+                  }}>
                     {/* Card Content */}
                     <div className={`flex flex-col justify-center ${!isLeft ? 'md:order-2' : ''}`}>
                       <div className="flex items-center gap-4 mb-6">
@@ -110,7 +112,8 @@ export function StickyPackageCards({
                           <Icon className="h-32 w-32 text-primary/20" />
                         </div>}
                     </div>
-                  </div>;
+                  </div>
+                </AnimatedSection>;
             })}
             </div>
           </div>
