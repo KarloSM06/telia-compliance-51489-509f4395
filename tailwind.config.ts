@@ -170,10 +170,10 @@ export default {
         },
         "scroll-left": {
           "0%": { transform: "translate3d(0, 0, 0)" },
-          "100%": { transform: "translate3d(-33.333%, 0, 0)" }
+          "100%": { transform: "translate3d(-16.666%, 0, 0)" }
         },
         "scroll-right": {
-          "0%": { transform: "translate3d(-33.333%, 0, 0)" },
+          "0%": { transform: "translate3d(-16.666%, 0, 0)" },
           "100%": { transform: "translate3d(0, 0, 0)" }
         },
         rainbow: {
