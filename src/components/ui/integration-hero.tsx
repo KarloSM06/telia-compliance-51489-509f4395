@@ -1,22 +1,27 @@
-import React from "react";
+import React, { useState } from "react";
 import { expertiseCategories } from "@/data/expertise";
 import { AnimatedSection } from "@/components/shared/AnimatedSection";
 
-// Samla alla program-logotyper från expertise data
-const ALL_PROGRAM_LOGOS = expertiseCategories.flatMap(cat => 
-  cat.items.map(item => item.logo).filter(Boolean)
-) as string[];
+// Samla alla program-logotyper från expertise data MED namn
+const ALL_PROGRAMS = expertiseCategories.flatMap(cat => 
+  cat.items.filter(item => item.logo).map(item => ({
+    name: item.name,
+    logo: item.logo!
+  }))
+);
 
 // Optimerad repetition för sömlös loop
-const repeatedIcons = (icons: string[], repeat = 4) => Array.from({
+const repeatedIcons = (programs: typeof ALL_PROGRAMS, repeat = 4) => Array.from({
   length: repeat
-}).flatMap(() => icons);
+}).flatMap(() => programs);
 
 export default function IntegrationHero() {
-  // Dela upp logotyperna i två rader
-  const halfLength = Math.ceil(ALL_PROGRAM_LOGOS.length / 2);
-  const row1 = ALL_PROGRAM_LOGOS.slice(0, halfLength);
-  const row2 = ALL_PROGRAM_LOGOS.slice(halfLength);
+  const [hoveredProgram, setHoveredProgram] = useState<string | null>(null);
+  
+  // Dela upp programmen i två rader
+  const halfLength = Math.ceil(ALL_PROGRAMS.length / 2);
+  const row1 = ALL_PROGRAMS.slice(0, halfLength);
+  const row2 = ALL_PROGRAMS.slice(halfLength);
 
   return <section className="relative py-8 md:py-12 overflow-hidden overflow-x-hidden">
       <div className="relative w-full px-6 md:px-12 text-center">
@@ -35,9 +40,24 @@ export default function IntegrationHero() {
           {/* Rad 1 - scrollar åt vänster */}
           <AnimatedSection delay={100}>
             <div className="flex gap-8 md:gap-10 whitespace-nowrap carousel-scroll-left transform-gpu will-change-transform">
-              {repeatedIcons(row1, 4).map((src, i) => (
-                <div key={i} className="h-16 w-16 md:h-20 md:w-20 flex-shrink-0 rounded-full bg-card shadow-md flex items-center justify-center p-3 transition-transform hover:scale-110 transform-gpu">
-                  <img src={src} alt="integration icon" className="h-10 w-10 md:h-12 md:w-12 object-contain" />
+              {repeatedIcons(row1, 4).map((program, i) => (
+                <div 
+                  key={i} 
+                  className="h-16 w-16 md:h-20 md:w-20 flex-shrink-0 rounded-full bg-card shadow-md flex items-center justify-center p-3 transition-all duration-300 hover:scale-110 hover:shadow-lg transform-gpu relative group"
+                  onMouseEnter={() => setHoveredProgram(program.name)}
+                  onMouseLeave={() => setHoveredProgram(null)}
+                >
+                  <img src={program.logo} alt={program.name} className="h-10 w-10 md:h-12 md:w-12 object-contain" />
+                  
+                  {/* Tooltip */}
+                  <div className="absolute -top-12 left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-10">
+                    <div className="bg-foreground text-background px-3 py-1.5 rounded-lg text-sm font-medium whitespace-nowrap shadow-lg">
+                      {program.name}
+                      <div className="absolute top-full left-1/2 transform -translate-x-1/2 -mt-1">
+                        <div className="border-4 border-transparent border-t-foreground"></div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               ))}
             </div>
@@ -46,9 +66,24 @@ export default function IntegrationHero() {
           {/* Rad 2 - scrollar åt höger */}
           <AnimatedSection delay={200}>
             <div className="flex gap-8 md:gap-10 whitespace-nowrap mt-4 md:mt-6 carousel-scroll-right transform-gpu will-change-transform">
-              {repeatedIcons(row2, 4).map((src, i) => (
-                <div key={i} className="h-16 w-16 md:h-20 md:w-20 flex-shrink-0 rounded-full bg-card shadow-md flex items-center justify-center p-3 transition-transform hover:scale-110 transform-gpu">
-                  <img src={src} alt="integration icon" className="h-10 w-10 md:h-12 md:w-12 object-contain" />
+              {repeatedIcons(row2, 4).map((program, i) => (
+                <div 
+                  key={i} 
+                  className="h-16 w-16 md:h-20 md:w-20 flex-shrink-0 rounded-full bg-card shadow-md flex items-center justify-center p-3 transition-all duration-300 hover:scale-110 hover:shadow-lg transform-gpu relative group"
+                  onMouseEnter={() => setHoveredProgram(program.name)}
+                  onMouseLeave={() => setHoveredProgram(null)}
+                >
+                  <img src={program.logo} alt={program.name} className="h-10 w-10 md:h-12 md:w-12 object-contain" />
+                  
+                  {/* Tooltip */}
+                  <div className="absolute -top-12 left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-10">
+                    <div className="bg-foreground text-background px-3 py-1.5 rounded-lg text-sm font-medium whitespace-nowrap shadow-lg">
+                      {program.name}
+                      <div className="absolute top-full left-1/2 transform -translate-x-1/2 -mt-1">
+                        <div className="border-4 border-transparent border-t-foreground"></div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               ))}
             </div>

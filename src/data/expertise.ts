@@ -19,6 +19,7 @@ import supabaseLogo from "@/assets/integrations/supabase-new.png";
 import openrouterLogo from "@/assets/integrations/openrouter.png";
 import gohighlevelLogo from "@/assets/integrations/gohighlevel.png";
 import elevenlabsLogo from "@/assets/integrations/elevenlabs.png";
+import hostingerLogo from "@/assets/integrations/hostinger.png";
 
 export interface ExpertiseCategory {
   id: string;
@@ -78,7 +79,8 @@ export const expertiseCategories: ExpertiseCategory[] = [
       { name: "Make.com", type: "platform", description: "Integration platform", logo: makeComLogo },
       { name: "Lovable", type: "platform", description: "AI utveckling", logo: "/images/logos/lovable.png" },
       { name: "Google Sheets", type: "platform", description: "Datakoppling", logo: googleSheetsLogo },
-      { name: "Supabase", type: "platform", description: "Backend & Database", logo: supabaseLogo }
+      { name: "Supabase", type: "platform", description: "Backend & Database", logo: supabaseLogo },
+      { name: "Hostinger", type: "platform", description: "Web Hosting", logo: hostingerLogo }
     ]
   },
   {
