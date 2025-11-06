@@ -123,7 +123,6 @@ export const expertiseCategories: ExpertiseCategory[] = [
       { name: "Apify", type: "platform", description: "Data extraction", logo: "/images/logos/apify.png" },
       { name: "Eniro", type: "platform", description: "Svensk företagsdata", logo: "/images/logos/eniro.png" },
       { name: "Explorium", type: "platform", description: "Data berikning", logo: "/images/logos/explorium.png" },
-      { name: "Helicone", type: "platform", description: "AI observability", logo: heliconeLogoImg },
       { name: "GoHighLevel", type: "platform", description: "CRM & Marketing", logo: gohighlevelLogo }
     ]
   }
