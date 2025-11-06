@@ -136,14 +136,15 @@ const AboutUs = () => {
   };
 
   return (
-    <div className="relative overflow-hidden min-h-screen">
+    <div className="relative overflow-hidden min-h-screen bg-gradient-hero">
       <Header1 />
       
       <AuroraBackground>
         <main className="relative">
           {/* Hero Section */}
-          <section className="relative pt-32 pb-24 overflow-hidden">
+          <section className="relative py-12 lg:py-16 pb-32 lg:pb-48 overflow-hidden">
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,hsl(var(--primary)/0.15),transparent_50%)]" />
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_80%,hsl(var(--primary)/0.1),transparent_50%)]" />
             
             {/* Hiems Logo Backgrounds */}
             <div className="absolute -top-32 -right-32 w-[800px] h-[800px] opacity-5 pointer-events-none">
@@ -206,7 +207,7 @@ const AboutUs = () => {
           </section>
 
           {/* Vad är Hiems? */}
-          <section className="relative py-24 overflow-hidden">
+          <section className="relative py-12 md:py-16 overflow-hidden">
             <div className="mx-auto max-w-7xl px-6 lg:px-8 relative">
               <AnimatedSection delay={100}>
                 <div className="mx-auto max-w-4xl">
@@ -216,6 +217,7 @@ const AboutUs = () => {
                       <h2 className="text-4xl font-bold bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent">
                         Vad är Hiems?
                       </h2>
+                      <div className="w-32 h-1.5 bg-gradient-to-r from-primary via-primary/60 to-transparent mx-auto rounded-full shadow-lg shadow-primary/50 mt-2" />
                     </div>
                     
                     <p className="text-lg text-center leading-relaxed text-muted-foreground">
@@ -246,7 +248,8 @@ const AboutUs = () => {
           </section>
 
           {/* Vision & Mission */}
-          <section className="relative py-24 overflow-hidden">
+          <section className="relative py-12 md:py-16 overflow-hidden">
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,hsl(var(--primary)/0.08),transparent_60%)]" />
             <div className="mx-auto max-w-7xl px-6 lg:px-8 relative">
               <div className="grid lg:grid-cols-2 gap-8">
                 <AnimatedSection delay={0}>
@@ -289,7 +292,7 @@ const AboutUs = () => {
           </section>
 
           {/* Våra Värderingar */}
-          <section className="relative py-24 overflow-hidden">
+          <section className="relative py-24 md:py-32 overflow-hidden">
             <div className="mx-auto max-w-7xl px-6 lg:px-8 relative">
               <AnimatedSection delay={0}>
                 <div className="text-center space-y-4 mb-16">
@@ -299,6 +302,7 @@ const AboutUs = () => {
                   <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
                     Fyra principer som styr allt vi gör
                   </p>
+                  <div className="w-32 h-1.5 bg-gradient-to-r from-primary via-primary/60 to-transparent mx-auto rounded-full shadow-lg shadow-primary/50 mt-2 mb-4" />
                 </div>
               </AnimatedSection>
               
@@ -325,7 +329,7 @@ const AboutUs = () => {
           </section>
 
           {/* Så Arbetar Vi */}
-          <section className="relative py-24 overflow-hidden">
+          <section className="relative py-12 md:py-16 overflow-hidden">
             <div className="mx-auto max-w-7xl px-6 lg:px-8 relative">
               <AnimatedSection delay={0}>
                 <div className="text-center space-y-4 mb-16">
@@ -335,6 +339,7 @@ const AboutUs = () => {
                   <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
                     Vår beprövade process för framgångsrik AI-implementation
                   </p>
+                  <div className="w-32 h-1.5 bg-gradient-to-r from-primary via-primary/60 to-transparent mx-auto rounded-full shadow-lg shadow-primary/50 mt-2" />
                 </div>
               </AnimatedSection>
               
@@ -347,7 +352,7 @@ const AboutUs = () => {
                 ].map((step, index) => (
                   <AnimatedSection key={step.title} delay={index * 100}>
                     <div className="text-center space-y-4">
-                      <div className="inline-flex items-center justify-center w-24 h-24 rounded-full bg-gradient-to-br from-primary to-primary/60 shadow-lg shadow-primary/30 mx-auto hover:scale-110 transition-transform duration-500">
+                      <div className="inline-flex items-center justify-center w-24 h-24 rounded-full bg-gradient-to-br from-primary via-primary/80 to-primary/60 shadow-lg shadow-primary/30 mx-auto hover:scale-110 transition-transform duration-300">
                         <step.icon className="h-12 w-12 text-primary-foreground" />
                       </div>
                       <h3 className="text-2xl font-bold">{step.title}</h3>
@@ -379,7 +384,8 @@ const AboutUs = () => {
           </section>
 
           {/* Vår Resa */}
-          <section className="relative py-24 overflow-hidden">
+          <section className="relative py-12 md:py-16 overflow-hidden">
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_20%,hsl(var(--primary)/0.1),transparent_50%)]" />
             <div className="mx-auto max-w-7xl px-6 lg:px-8 relative">
               <AnimatedSection delay={0}>
                 <div className="text-center space-y-4 mb-16">
@@ -389,6 +395,7 @@ const AboutUs = () => {
                   <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
                     Från vision till verklighet
                   </p>
+                  <div className="w-32 h-1.5 bg-gradient-to-r from-primary via-primary/60 to-transparent mx-auto rounded-full shadow-lg shadow-primary/50 mt-2" />
                 </div>
               </AnimatedSection>
               
@@ -405,7 +412,7 @@ const AboutUs = () => {
                       <AnimatedSection key={milestone.year} delay={index * 100}>
                         <div className="flex gap-6 group items-center">
                           <div className="flex-shrink-0">
-                            <div className="w-24 h-24 rounded-full bg-gradient-to-br from-primary to-primary/60 flex items-center justify-center font-bold text-sm text-center text-primary-foreground px-2 shadow-lg shadow-primary/30 group-hover:scale-110 transition-transform duration-500">
+                            <div className="w-24 h-24 rounded-full bg-gradient-to-br from-primary via-primary/80 to-primary/60 flex items-center justify-center font-bold text-sm text-center text-primary-foreground px-2 shadow-lg shadow-primary/30 group-hover:scale-110 transition-transform duration-300">
                               {milestone.year}
                             </div>
                           </div>
@@ -427,13 +434,14 @@ const AboutUs = () => {
           </section>
 
           {/* Varför Välja Hiems */}
-          <section className="relative py-24 overflow-hidden">
+          <section className="relative py-12 md:py-16 overflow-hidden">
             <div className="mx-auto max-w-7xl px-6 lg:px-8 relative">
               <AnimatedSection delay={0}>
                 <div className="text-center space-y-4 mb-16">
                   <h2 className="text-4xl sm:text-5xl font-bold bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent">
                     Varför Välja Hiems?
                   </h2>
+                  <div className="w-32 h-1.5 bg-gradient-to-r from-primary via-primary/60 to-transparent mx-auto rounded-full shadow-lg shadow-primary/50 mt-2" />
                 </div>
               </AnimatedSection>
               
@@ -465,7 +473,8 @@ const AboutUs = () => {
           </section>
 
           {/* CTA */}
-          <section className="relative py-32 overflow-hidden">
+          <section className="relative py-16 md:py-24 overflow-hidden">
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,hsl(var(--primary)/0.12),transparent_60%)]" />
             <div className="mx-auto max-w-7xl px-6 lg:px-8 relative">
               <AnimatedSection delay={0}>
                 <Card className="max-w-4xl mx-auto bg-card/20 backdrop-blur-md border border-primary/20">
