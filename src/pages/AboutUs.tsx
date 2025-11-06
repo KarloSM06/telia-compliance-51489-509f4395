@@ -12,7 +12,7 @@ import svensktLokalImage from "@/assets/data-insight.jpg";
 import endToEndImage from "@/assets/service-operations.jpg";
 import bvisatRoiImage from "@/assets/growth-sales-accelerator.jpg";
 import { AuroraBackground } from "@/components/ui/aurora-background";
-import { CardSpotlight } from "@/components/ui/card-spotlight";
+import { Card, CardContent } from "@/components/ui/card";
 import { TeamSection } from "@/components/ui/team-section";
 
 interface TeamMember {
@@ -156,7 +156,8 @@ const AboutUs = () => {
             <div className="mx-auto max-w-7xl px-6 lg:px-8 relative">
               <AnimatedSection delay={100}>
                 <div className="mx-auto max-w-4xl">
-                  <CardSpotlight className="bg-card/20 backdrop-blur-md border border-primary/10 p-10 space-y-8">
+                  <Card className="bg-card/20 backdrop-blur-md border border-primary/10">
+                    <CardContent className="p-10 space-y-8">
                     <div className="text-center space-y-4">
                       <h2 className="text-4xl font-bold bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent">
                         Vad är Hiems?
@@ -183,7 +184,8 @@ const AboutUs = () => {
                         </div>
                       ))}
                     </div>
-                  </CardSpotlight>
+                    </CardContent>
+                  </Card>
                 </div>
               </AnimatedSection>
             </div>
@@ -194,7 +196,8 @@ const AboutUs = () => {
             <div className="mx-auto max-w-7xl px-6 lg:px-8 relative">
               <div className="grid lg:grid-cols-2 gap-8">
                 <AnimatedSection delay={0}>
-                  <CardSpotlight className="h-full bg-card/20 backdrop-blur-md border border-primary/10 p-10 space-y-6">
+                  <Card className="h-full bg-card/20 backdrop-blur-md border border-primary/10">
+                    <CardContent className="p-10 space-y-6">
                     <h3 className="text-3xl font-bold bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent">
                       Vår Vision
                     </h3>
@@ -206,11 +209,13 @@ const AboutUs = () => {
                         "AI är inte framtiden - det är nuet. Vi gör det tillgängligt för alla."
                       </p>
                     </div>
-                  </CardSpotlight>
+                    </CardContent>
+                  </Card>
                 </AnimatedSection>
                 
                 <AnimatedSection delay={100}>
-                  <CardSpotlight className="h-full bg-card/20 backdrop-blur-md border border-primary/10 p-10 space-y-6">
+                  <Card className="h-full bg-card/20 backdrop-blur-md border border-primary/10">
+                    <CardContent className="p-10 space-y-6">
                     <h3 className="text-3xl font-bold bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent">
                       Vår Mission
                     </h3>
@@ -222,7 +227,8 @@ const AboutUs = () => {
                         "Vi mäts på era resultat, inte våra timmar."
                       </p>
                     </div>
-                  </CardSpotlight>
+                    </CardContent>
+                  </Card>
                 </AnimatedSection>
               </div>
             </div>
@@ -250,12 +256,14 @@ const AboutUs = () => {
                   { title: "Partnerskap", desc: "Vi är er långsiktiga AI-partner, inte bara en leverantör. Vi växer tillsammans." }
                 ].map((value, index) => (
                   <AnimatedSection key={value.title} delay={index * 100}>
-                    <CardSpotlight className="h-full bg-card/20 backdrop-blur-md border border-primary/10 p-8 text-center space-y-4">
+                    <Card className="h-full bg-card/20 backdrop-blur-md border border-primary/10">
+                      <CardContent className="p-8 text-center space-y-4">
                       <h3 className="text-xl font-bold">{value.title}</h3>
                       <p className="text-sm text-muted-foreground leading-relaxed">
                         {value.desc}
                       </p>
-                    </CardSpotlight>
+                      </CardContent>
+                    </Card>
                   </AnimatedSection>
                 ))}
               </div>
@@ -331,7 +339,8 @@ const AboutUs = () => {
               </AnimatedSection>
               
               <div className="max-w-4xl mx-auto">
-                <CardSpotlight className="bg-card/20 backdrop-blur-md border border-primary/10 p-10">
+                <Card className="bg-card/20 backdrop-blur-md border border-primary/10">
+                  <CardContent className="p-10">
                   <div className="space-y-8">
                     {[
                       { year: "2024", title: "Hiems Grundas", desc: "Hiems grundas med fokus på AI-lösningar för att revolutionera svensk affärsverksamhet genom innovativ teknologi." },
@@ -357,7 +366,8 @@ const AboutUs = () => {
                       </AnimatedSection>
                     ))}
                   </div>
-                </CardSpotlight>
+                  </CardContent>
+                </Card>
               </div>
             </div>
           </section>
@@ -380,7 +390,7 @@ const AboutUs = () => {
                   { title: "Bevisat ROI", desc: "Våra kunder ser mätbar avkastning. Vi bygger system som faktiskt ökar lönsamhet och effektivitet.", image: bvisatRoiImage }
                 ].map((benefit, index) => (
                   <AnimatedSection key={benefit.title} delay={index * 100}>
-                    <CardSpotlight className="h-full bg-card/20 backdrop-blur-md border border-primary/10 overflow-hidden group">
+                    <Card className="h-full bg-card/20 backdrop-blur-md border border-primary/10 overflow-hidden group">
                       <div className="relative h-48 overflow-hidden">
                         <img 
                           src={benefit.image} 
@@ -393,7 +403,7 @@ const AboutUs = () => {
                         <h3 className="text-2xl font-bold">{benefit.title}</h3>
                         <p className="text-muted-foreground leading-relaxed">{benefit.desc}</p>
                       </div>
-                    </CardSpotlight>
+                    </Card>
                   </AnimatedSection>
                 ))}
               </div>
@@ -404,7 +414,8 @@ const AboutUs = () => {
           <section className="relative py-32 overflow-hidden">
             <div className="mx-auto max-w-7xl px-6 lg:px-8 relative">
               <AnimatedSection delay={0}>
-                <CardSpotlight className="max-w-4xl mx-auto bg-card/20 backdrop-blur-md border border-primary/20 p-12 text-center space-y-8">
+                <Card className="max-w-4xl mx-auto bg-card/20 backdrop-blur-md border border-primary/20">
+                  <CardContent className="p-12 text-center space-y-8">
                   <h2 className="text-4xl sm:text-5xl font-bold bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent">
                     Redo att transformera er verksamhet med AI?
                   </h2>
@@ -420,7 +431,8 @@ const AboutUs = () => {
                       Kontakta oss
                     </Button>
                   </div>
-                </CardSpotlight>
+                  </CardContent>
+                </Card>
               </AnimatedSection>
             </div>
           </section>
