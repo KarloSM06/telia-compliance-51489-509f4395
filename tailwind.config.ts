@@ -169,12 +169,12 @@ export default {
           },
         },
         "scroll-left": {
-          "0%": { transform: "translate3d(0, 0, 0)" },
-          "100%": { transform: "translate3d(-16.666%, 0, 0)" }
+          "0%": { transform: "translateX(0)" },
+          "100%": { transform: "translateX(-50%)" }
         },
         "scroll-right": {
-          "0%": { transform: "translate3d(-16.666%, 0, 0)" },
-          "100%": { transform: "translate3d(0, 0, 0)" }
+          "0%": { transform: "translateX(-50%)" },
+          "100%": { transform: "translateX(0)" }
         },
         rainbow: {
           "0%, 100%": {
@@ -194,8 +194,8 @@ export default {
         "slide-in-left": "slide-in-left 2s ease-out",
         "slide-in-right": "slide-in-right 2s ease-out",
         aurora: "aurora 60s linear infinite",
-        "scroll-left": "scroll-left 60s linear infinite",
-        "scroll-right": "scroll-right 60s linear infinite",
+        "scroll-left": "scroll-left 30s linear infinite",
+        "scroll-right": "scroll-right 30s linear infinite",
         rainbow: "rainbow 3s ease-in-out infinite"
       },
     },

@@ -8,7 +8,7 @@ const ALL_PROGRAM_LOGOS = expertiseCategories.flatMap(cat =>
 ) as string[];
 
 // Optimerad repetition för sömlös loop med bättre prestanda
-const repeatedIcons = (icons: string[], repeat = 6) => Array.from({
+const repeatedIcons = (icons: string[], repeat = 4) => Array.from({
   length: repeat
 }).flatMap(() => icons);
 
@@ -32,27 +32,27 @@ export default function IntegrationHero() {
         
 
         <div className="mt-6 md:mt-8 overflow-x-hidden relative pb-2">
-          {/* Rad 1 - scrollar åt vänster med pause vid hover */}
+          {/* Rad 1 - scrollar åt vänster */}
           <AnimatedSection delay={100}>
-            <div className="flex gap-8 md:gap-10 whitespace-nowrap animate-scroll-left hover:[animation-play-state:paused] transform-gpu" style={{ contain: 'layout style paint', willChange: 'transform' }}>
-              {repeatedIcons(row1, 6).map((src, i) => <div key={i} className="h-16 w-16 md:h-20 md:w-20 flex-shrink-0 rounded-xl bg-card shadow-md flex items-center justify-center border border-border p-3 transition-transform hover:scale-110 transform-gpu">
-                  <img src={src} alt="integration icon" className="h-10 w-10 md:h-12 md:w-12 object-contain" />
+            <div className="flex gap-10 whitespace-nowrap animate-scroll-left hover:[animation-play-state:paused]">
+              {repeatedIcons(row1, 4).map((src, i) => <div key={i} className="h-16 w-16 flex-shrink-0 rounded-full bg-card shadow-md flex items-center justify-center p-3 transition-transform hover:scale-110">
+                  <img src={src} alt="integration icon" className="h-10 w-10 object-contain" />
                 </div>)}
             </div>
           </AnimatedSection>
 
-          {/* Rad 2 - scrollar åt höger med pause vid hover */}
+          {/* Rad 2 - scrollar åt höger */}
           <AnimatedSection delay={200}>
-            <div className="flex gap-8 md:gap-10 whitespace-nowrap mt-4 md:mt-6 animate-scroll-right hover:[animation-play-state:paused] transform-gpu" style={{ contain: 'layout style paint', willChange: 'transform' }}>
-              {repeatedIcons(row2, 6).map((src, i) => <div key={i} className="h-16 w-16 md:h-20 md:w-20 flex-shrink-0 rounded-xl bg-card shadow-md flex items-center justify-center border border-border p-3 transition-transform hover:scale-110 transform-gpu">
-                  <img src={src} alt="integration icon" className="h-10 w-10 md:h-12 md:w-12 object-contain" />
+            <div className="flex gap-10 whitespace-nowrap mt-6 animate-scroll-right hover:[animation-play-state:paused]">
+              {repeatedIcons(row2, 4).map((src, i) => <div key={i} className="h-16 w-16 flex-shrink-0 rounded-full bg-card shadow-md flex items-center justify-center p-3 transition-transform hover:scale-110">
+                  <img src={src} alt="integration icon" className="h-10 w-10 object-contain" />
                 </div>)}
             </div>
           </AnimatedSection>
 
-          {/* Vertikal linje-effekt i båda kanterna */}
-          <div className="absolute left-0 top-0 h-full w-12 bg-gradient-to-r from-background to-transparent pointer-events-none z-10" />
-          <div className="absolute right-0 top-0 h-full w-12 bg-gradient-to-l from-background to-transparent pointer-events-none z-10" />
+          {/* Fade overlays i båda kanterna */}
+          <div className="absolute left-0 top-0 h-full w-24 bg-gradient-to-r from-background to-transparent pointer-events-none z-10" />
+          <div className="absolute right-0 top-0 h-full w-24 bg-gradient-to-l from-background to-transparent pointer-events-none z-10" />
         </div>
       </div>
     </section>;
