@@ -1,6 +1,7 @@
 import { cn } from "@/lib/utils";
 import stockholmAirCondition from "@/assets/stockholm-air-condition.png";
 import bremilersVvs from "@/assets/bremilers-vvs.png";
+import { AnimatedSection } from "@/components/shared/AnimatedSection";
 type Logo = {
   src: string;
   alt: string;
@@ -14,42 +15,46 @@ export function ClientLogoCloud({
 }: LogoCloudProps) {
   return <section className="relative py-12 md:py-16">
       <div className="mx-auto max-w-5xl px-4">
-        <h2 className="mb-12 text-center font-medium text-2xl text-muted-foreground tracking-tight md:text-3xl">
-          Företag vi{" "}
-          <span className="font-semibold text-primary">samarbetar</span> med.
-        </h2>
+        <AnimatedSection>
+          <h2 className="mb-12 text-center font-medium text-2xl text-muted-foreground tracking-tight md:text-3xl">
+            Företag vi{" "}
+            <span className="font-semibold text-primary">samarbetar</span> med.
+          </h2>
+        </AnimatedSection>
 
-        <div className={cn("relative grid grid-cols-2 border-x md:grid-cols-2", className)} {...props}>
-          <div className="-translate-x-1/2 -top-px pointer-events-none absolute left-1/2 w-screen border-t" />
+        <AnimatedSection delay={100}>
+          <div className={cn("relative grid grid-cols-2 border-x md:grid-cols-2", className)} {...props}>
+            <div className="-translate-x-1/2 -top-px pointer-events-none absolute left-1/2 w-screen border-t" />
 
-          <LogoCard className="relative border-r border-b" logo={{
-          src: stockholmAirCondition,
-          alt: "Stockholm Air Condition",
-          height: 350
-        }}>
+            <LogoCard className="relative border-r border-b" logo={{
+            src: stockholmAirCondition,
+            alt: "Stockholm Air Condition",
+            height: 350
+          }}>
+              
+            </LogoCard>
+
+            <LogoCard className="border-b" logo={{
+            src: bremilersVvs,
+            alt: "Bremilers VVS AB",
+            height: 350
+          }} />
+
             
-          </LogoCard>
 
-          <LogoCard className="border-b" logo={{
-          src: bremilersVvs,
-          alt: "Bremilers VVS AB",
-          height: 350
-        }} />
+            
 
-          
+            
 
-          
+            
 
-          
+            
 
-          
+            
 
-          
-
-          
-
-          <div className="-translate-x-1/2 -bottom-px pointer-events-none absolute left-1/2 w-screen border-b" />
-        </div>
+            <div className="-translate-x-1/2 -bottom-px pointer-events-none absolute left-1/2 w-screen border-b" />
+          </div>
+        </AnimatedSection>
       </div>
     </section>;
 }

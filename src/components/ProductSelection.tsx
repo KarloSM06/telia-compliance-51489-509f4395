@@ -84,9 +84,11 @@ export const ProductSelection = () => {
         <StickyPackageCards packages={aiPackages} onBookDemo={() => setIsConsultationModalOpen(true)} onViewDetails={() => scrollToSection('kontakt')} />
         
         {/* Arbetsprocess */}
-        <section id="process" className="relative py-12">
-          <WorkflowTimeline />
-        </section>
+        <AnimatedSection>
+          <section id="process" className="relative py-12">
+            <WorkflowTimeline />
+          </section>
+        </AnimatedSection>
 
         {/* Kontakt / CTA */}
         <ConsultationCTA />
