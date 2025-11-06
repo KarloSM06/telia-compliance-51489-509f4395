@@ -15,6 +15,10 @@ import integrationArrowsLogo from "@/assets/integrations/integration-arrows.png"
 import calComLogo from "@/assets/integrations/cal-com.png";
 import heliconeLogoImg from "@/assets/integrations/helicone.png";
 import geminiLogo from "@/assets/integrations/gemini.png";
+import supabaseLogo from "@/assets/integrations/supabase.png";
+import openrouterLogo from "@/assets/integrations/openrouter.png";
+import gohighlevelLogo from "@/assets/integrations/gohighlevel.png";
+import elevenlabsLogo from "@/assets/integrations/elevenlabs.png";
 
 export interface ExpertiseCategory {
   id: string;
@@ -45,7 +49,8 @@ export const expertiseCategories: ExpertiseCategory[] = [
       { name: "OpenAI GPT-5", type: "model", description: "Avancerad språkmodell", logo: "/images/logos/openai-new.png" },
       { name: "Claude 3.7", type: "model", description: "Anthropic AI-modell", logo: "/images/logos/claude.png" },
       { name: "Deepseek", type: "model", description: "Specialist AI-modell", logo: "/images/logos/deepseek.png" },
-      { name: "Gemini", type: "model", description: "Google AI-modell", logo: geminiLogo }
+      { name: "Gemini", type: "model", description: "Google AI-modell", logo: geminiLogo },
+      { name: "OpenRouter", type: "platform", description: "AI routing platform", logo: openrouterLogo }
     ]
   },
   {
@@ -57,7 +62,8 @@ export const expertiseCategories: ExpertiseCategory[] = [
     image: "/images/expertise/voice-systems.jpg",
     items: [
       { name: "Vapi", type: "tool", description: "Voice AI agent", logo: "/images/logos/vapi.png" },
-      { name: "Retell", type: "tool", description: "AI phone system", logo: "/images/logos/retell-backup.png" }
+      { name: "Retell", type: "tool", description: "AI phone system", logo: "/images/logos/retell-backup.png" },
+      { name: "ElevenLabs", type: "platform", description: "Voice AI & TTS", logo: elevenlabsLogo }
     ]
   },
   {
@@ -71,7 +77,8 @@ export const expertiseCategories: ExpertiseCategory[] = [
       { name: "n8n", type: "platform", description: "Workflow automation", logo: "/images/logos/n8n.png" },
       { name: "Make.com", type: "platform", description: "Integration platform", logo: makeComLogo },
       { name: "Lovable", type: "platform", description: "AI utveckling", logo: "/images/logos/lovable.png" },
-      { name: "Google Sheets", type: "platform", description: "Datakoppling", logo: googleSheetsLogo }
+      { name: "Google Sheets", type: "platform", description: "Datakoppling", logo: googleSheetsLogo },
+      { name: "Supabase", type: "platform", description: "Backend & Database", logo: supabaseLogo }
     ]
   },
   {
@@ -112,7 +119,8 @@ export const expertiseCategories: ExpertiseCategory[] = [
       { name: "Apify", type: "platform", description: "Data extraction", logo: "/images/logos/apify.png" },
       { name: "Eniro", type: "platform", description: "Svensk företagsdata", logo: "/images/logos/eniro.png" },
       { name: "Explorium", type: "platform", description: "Data berikning", logo: "/images/logos/explorium.png" },
-      { name: "Helicone", type: "platform", description: "AI observability", logo: heliconeLogoImg }
+      { name: "Helicone", type: "platform", description: "AI observability", logo: heliconeLogoImg },
+      { name: "GoHighLevel", type: "platform", description: "CRM & Marketing", logo: gohighlevelLogo }
     ]
   }
 ];
