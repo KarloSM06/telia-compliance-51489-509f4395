@@ -20,8 +20,6 @@ import openrouterLogo from "@/assets/integrations/openrouter.png";
 import gohighlevelLogo from "@/assets/integrations/gohighlevel.png";
 import elevenlabsLogo from "@/assets/integrations/elevenlabs.png";
 import hostingerLogo from "@/assets/integrations/hostinger.png";
-import outlookLogo from "@/assets/integrations/outlook.png";
-import calendlyLogo from "@/assets/integrations/calendly.png";
 
 export interface ExpertiseCategory {
   id: string;
@@ -106,8 +104,8 @@ export const expertiseCategories: ExpertiseCategory[] = [
     image: "/images/expertise/calendar.jpg",
     items: [
       { name: "Google Calendar", type: "service", description: "Kalender & bokning", logo: googleCalendarLogo },
-      { name: "Microsoft Outlook", type: "service", description: "Enterprise kalender", logo: outlookLogo },
-      { name: "Calendly", type: "service", description: "Bokningssystem", logo: calendlyLogo },
+      { name: "Microsoft Outlook", type: "service", description: "Enterprise kalender", logo: "/images/logos/outlook.png" },
+      { name: "Calendly", type: "service", description: "Bokningssystem", logo: "/images/logos/calendly.png" },
       { name: "Cal.com", type: "service", description: "Open-source bokning", logo: calComLogo }
     ]
   },
