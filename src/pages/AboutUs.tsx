@@ -143,8 +143,6 @@ const AboutUs = () => {
         <main className="relative">
           {/* Hero Section */}
           <section className="relative py-12 lg:py-16 pb-32 lg:pb-48 overflow-hidden">
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,hsl(var(--primary)/0.15),transparent_50%)]" />
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_80%,hsl(var(--primary)/0.1),transparent_50%)]" />
             
             {/* Hiems Logo Backgrounds */}
             <div className="absolute -top-32 -right-32 w-[800px] h-[800px] opacity-5 pointer-events-none">
