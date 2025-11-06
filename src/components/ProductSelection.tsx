@@ -55,11 +55,9 @@ export const ProductSelection = () => {
       
       {/* Hero Section and Packages with Aurora Background */}
       <AuroraBackground className="h-auto">
-        <AnimatedSection>
-          <section id="hero" className="relative py-12 lg:py-16 pb-32 lg:pb-48 flex items-center">
-            <AnimatedHero onBookDemo={() => setIsConsultationModalOpen(true)} onViewPackages={() => scrollToSection('paket')} />
-          </section>
-        </AnimatedSection>
+        <section id="hero" className="relative py-12 lg:py-16 pb-32 lg:pb-48 flex items-center">
+          <AnimatedHero onBookDemo={() => setIsConsultationModalOpen(true)} onViewPackages={() => scrollToSection('paket')} />
+        </section>
 
         {/* Programmen vi jobbar med */}
         <IntegrationHero />
@@ -83,16 +81,12 @@ export const ProductSelection = () => {
         />
 
         {/* Våra AI-paket / Lösningar */}
-        <AnimatedSection>
-          <StickyPackageCards packages={aiPackages} onBookDemo={() => setIsConsultationModalOpen(true)} onViewDetails={() => scrollToSection('kontakt')} />
-        </AnimatedSection>
+        <StickyPackageCards packages={aiPackages} onBookDemo={() => setIsConsultationModalOpen(true)} onViewDetails={() => scrollToSection('kontakt')} />
         
         {/* Arbetsprocess */}
-        <AnimatedSection>
-          <section id="process" className="relative py-12">
-            <WorkflowTimeline />
-          </section>
-        </AnimatedSection>
+        <section id="process" className="relative py-12">
+          <WorkflowTimeline />
+        </section>
 
         {/* Kontakt / CTA */}
         <ConsultationCTA />

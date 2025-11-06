@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { AnimatedSection } from '@/components/AnimatedSection';
 
 // --- Data for the image accordion ---
 const accordionItems = [
@@ -93,7 +92,7 @@ export function LandingAccordionItem() {
       <div className="flex flex-col md:flex-row items-center justify-between gap-12">
         
         {/* Left Side: Text Content */}
-        <AnimatedSection className="w-full md:w-1/2 text-center md:text-left">
+        <div className="w-full md:w-1/2 text-center md:text-left">
           <h1 className="text-4xl md:text-6xl font-bold text-foreground leading-tight tracking-tighter">
             Oavsett branch har vi en lösning för dig
           </h1>
@@ -108,10 +107,10 @@ export function LandingAccordionItem() {
               Contact Us
             </a>
           </div>
-        </AnimatedSection>
+        </div>
 
         {/* Right Side: Image Accordion */}
-        <AnimatedSection delay={200} className="w-full md:w-1/2">
+        <div className="w-full md:w-1/2">
           <div className="flex flex-row items-center justify-center gap-4 overflow-x-auto p-4">
             {accordionItems.map((item, index) => (
               <AccordionItem
@@ -122,7 +121,7 @@ export function LandingAccordionItem() {
               />
             ))}
           </div>
-        </AnimatedSection>
+        </div>
       </div>
     </section>
   );
