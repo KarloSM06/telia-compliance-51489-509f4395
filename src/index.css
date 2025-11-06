@@ -384,15 +384,6 @@ All colors MUST be HSL.
   animation: scroll-right 40s linear infinite;
 }
 
-/* Slow carousel animations on hover */
-.carousel-scroll-left-slow {
-  animation: scroll-left 200s linear infinite;
-}
-
-.carousel-scroll-right-slow {
-  animation: scroll-right 200s linear infinite;
-}
-
 @keyframes scroll-left {
   0% { transform: translate3d(0, 0, 0); }
   100% { transform: translate3d(-25%, 0, 0); }
