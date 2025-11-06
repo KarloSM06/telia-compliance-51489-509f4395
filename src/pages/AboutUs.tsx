@@ -1,19 +1,19 @@
-import { Header } from "@/components/Header";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Header1 } from "@/components/ui/header";
 import { Button } from "@/components/ui/button";
-import { CheckCircle, Mail, Phone, Users, Lightbulb, Rocket, TrendingUp } from "lucide-react";
-import { AnimatedSection } from "@/components/AnimatedSection";
+import { CheckCircle, Mail, Phone, Users, Lightbulb, Rocket, TrendingUp, Linkedin } from "lucide-react";
+import { AnimatedSection } from "@/components/shared/AnimatedSection";
 import { ConsultationModal } from "@/components/ConsultationModal";
 import { useState } from "react";
 import antonImage from "@/assets/anton-sallnas.png";
 import karloImage from "@/assets/karlo-mangione.png";
 import emilImage from "@/assets/emil-westerberg.png";
 import hiemsLogoSnowflake from "@/assets/hiems-logo-snowflake.png";
-
-// Expertise images - importera från assets så de enkelt kan bytas ut
 import svensktLokalImage from "@/assets/data-insight.jpg";
 import endToEndImage from "@/assets/service-operations.jpg";
 import bvisatRoiImage from "@/assets/growth-sales-accelerator.jpg";
+import { AuroraBackground } from "@/components/ui/aurora-background";
+import { CardSpotlight } from "@/components/ui/card-spotlight";
+import { TeamSection } from "@/components/ui/team-section";
 
 interface TeamMember {
   name: string;
@@ -104,88 +104,60 @@ const AboutUs = () => {
   };
 
   return (
-    <div className="relative overflow-hidden min-h-screen bg-background">
-      <Header />
+    <div className="relative overflow-hidden min-h-screen">
+      <Header1 />
       
-      <main className="relative">
-        {/* Hero Section */}
-        <section className="relative pt-32 pb-32 bg-gradient-to-b from-background via-primary/5 to-background overflow-hidden">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,hsl(var(--primary)/0.15),transparent_50%)]" />
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_80%,hsl(var(--primary)/0.1),transparent_50%)]" />
-          
-          {/* Hiems Logo Backgrounds - Multiple Snowflakes */}
-          {/* Top Right - Large Slow Rotation */}
-          <div className="absolute -top-32 -right-32 w-[800px] h-[800px] opacity-5 pointer-events-none">
-            <img 
-              src={hiemsLogoSnowflake} 
-              alt="" 
-              className="w-full h-full object-contain animate-[spin_60s_linear_infinite]"
-            />
-          </div>
-          
-          {/* Top Left - Medium Fast Rotation */}
-          <div className="absolute -top-20 -left-20 w-[500px] h-[500px] opacity-[0.03] pointer-events-none">
-            <img 
-              src={hiemsLogoSnowflake} 
-              alt="" 
-              className="w-full h-full object-contain animate-[spin_40s_linear_infinite_reverse]"
-            />
-          </div>
-          
-          {/* Bottom Center - Small Medium Rotation */}
-          <div className="absolute -bottom-20 left-1/2 -translate-x-1/2 w-[400px] h-[400px] opacity-[0.04] pointer-events-none">
-            <img 
-              src={hiemsLogoSnowflake} 
-              alt="" 
-              className="w-full h-full object-contain animate-[spin_50s_linear_infinite]"
-            />
-          </div>
-          
-          <div className="mx-auto max-w-7xl px-6 lg:px-8 relative">
-            <AnimatedSection>
-              <div className="mx-auto max-w-4xl text-center space-y-8">
-                <div className="inline-block">
-                  <span className="text-sm font-semibold tracking-wider text-primary uppercase">Om Hiems</span>
-                  <div className="w-32 h-1.5 bg-gradient-to-r from-primary via-primary/60 to-transparent mx-auto rounded-full shadow-lg shadow-primary/50 mt-2" />
+      <AuroraBackground>
+        <main className="relative">
+          {/* Hero Section */}
+          <section className="relative pt-32 pb-24 overflow-hidden">
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,hsl(var(--primary)/0.15),transparent_50%)]" />
+            
+            {/* Hiems Logo Backgrounds */}
+            <div className="absolute -top-32 -right-32 w-[800px] h-[800px] opacity-5 pointer-events-none">
+              <img 
+                src={hiemsLogoSnowflake} 
+                alt="" 
+                className="w-full h-full object-contain animate-[spin_60s_linear_infinite]"
+              />
+            </div>
+            
+            <div className="mx-auto max-w-7xl px-6 lg:px-8 relative">
+              <AnimatedSection delay={0}>
+                <div className="mx-auto max-w-4xl text-center space-y-8">
+                  <div className="inline-block">
+                    <span className="text-sm font-semibold tracking-wider text-primary uppercase">Om Hiems</span>
+                    <div className="w-32 h-1.5 bg-gradient-to-r from-primary via-primary/60 to-transparent mx-auto rounded-full shadow-lg shadow-primary/50 mt-2" />
+                  </div>
+                  
+                  <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent leading-tight">
+                    Där AI blir verklighet för svenska företag
+                  </h1>
+                  
+                  <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+                    Möt teamet som kombinerar djup teknisk expertis med affärsförståelse - ingen copy-paste, inga buzzwords, bara AI-lösningar som faktiskt levererar resultat.
+                  </p>
+                  
+                  <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
+                    <Button size="lg" onClick={scrollToTeam}>
+                      Möt teamet
+                    </Button>
+                    <Button size="lg" variant="outline" onClick={() => setIsConsultationModalOpen(true)}>
+                      Boka demo
+                    </Button>
+                  </div>
                 </div>
-                
-                <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent leading-tight">
-                  Där AI blir verklighet för svenska företag
-                </h1>
-                
-                <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-                  Möt teamet som kombinerar djup teknisk expertis med affärsförståelse - ingen copy-paste, inga buzzwords, bara AI-lösningar som faktiskt levererar resultat.
-                </p>
-                
-                <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
-                  <Button size="lg" onClick={scrollToTeam}>
-                    Möt teamet
-                  </Button>
-                  <Button size="lg" variant="outline" onClick={() => setIsConsultationModalOpen(true)}>
-                    Boka demo
-                  </Button>
-                </div>
-              </div>
-            </AnimatedSection>
-          </div>
-        </section>
+              </AnimatedSection>
+            </div>
+          </section>
 
-        {/* Vad är Hiems? Section */}
-        <section className="relative py-24 bg-gradient-to-b from-background via-primary/3 to-background overflow-hidden">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_20%,hsl(var(--primary)/0.12),transparent_50%)]" />
-          
-          <div className="mx-auto max-w-7xl px-6 lg:px-8 relative">
-            <AnimatedSection>
-              <div className="mx-auto max-w-4xl">
-                <Card className="border border-primary/10 bg-gradient-to-br from-card/80 via-card/50 to-card/30 backdrop-blur-md hover:shadow-2xl hover:shadow-primary/10 transition-all duration-500">
-                  <CardContent className="p-10 space-y-8">
+          {/* Vad är Hiems? */}
+          <section className="relative py-24 overflow-hidden">
+            <div className="mx-auto max-w-7xl px-6 lg:px-8 relative">
+              <AnimatedSection delay={100}>
+                <div className="mx-auto max-w-4xl">
+                  <CardSpotlight className="bg-card/20 backdrop-blur-md border border-primary/10 p-10 space-y-8">
                     <div className="text-center space-y-4">
-                      {/* Bildram - infoga egen bild här */}
-                      <div className="relative h-48 mx-auto overflow-hidden rounded-lg border-2 border-primary/20">
-                        <div className="w-full h-full bg-gradient-to-br from-primary/10 via-primary/5 to-background flex items-center justify-center">
-                          <span className="text-muted-foreground">Infoga bild här</span>
-                        </div>
-                      </div>
                       <h2 className="text-4xl font-bold bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent">
                         Vad är Hiems?
                       </h2>
@@ -196,373 +168,176 @@ const AboutUs = () => {
                     </p>
                     
                     <div className="grid sm:grid-cols-2 gap-6 pt-4">
-                      <div className="flex items-start gap-3 group">
-                        <CheckCircle className="h-6 w-6 text-primary flex-shrink-0 mt-0.5 group-hover:scale-110 transition-transform" />
-                        <div>
-                          <h4 className="font-semibold mb-1">Svenskt företag</h4>
-                          <p className="text-sm text-muted-foreground">Som förstår svenska marknaden och företag</p>
+                      {[
+                        { title: "Svenskt företag", desc: "Som förstår svenska marknaden och företag" },
+                        { title: "Teknisk expertis + Affärsförståelse", desc: "Vi både förstår och bygger lösningen" },
+                        { title: "End-to-End", desc: "Från strategi till implementation - allt under ett tak" },
+                        { title: "Bevisat ROI", desc: "Våra kunder ser mätbar avkastning" }
+                      ].map((item) => (
+                        <div key={item.title} className="flex items-start gap-3 group">
+                          <CheckCircle className="h-6 w-6 text-primary flex-shrink-0 mt-0.5 group-hover:scale-110 transition-transform" />
+                          <div>
+                            <h4 className="font-semibold mb-1">{item.title}</h4>
+                            <p className="text-sm text-muted-foreground">{item.desc}</p>
+                          </div>
                         </div>
-                      </div>
-                      
-                      <div className="flex items-start gap-3 group">
-                        <CheckCircle className="h-6 w-6 text-primary flex-shrink-0 mt-0.5 group-hover:scale-110 transition-transform" />
-                        <div>
-                          <h4 className="font-semibold mb-1">Teknisk expertis + Affärsförståelse</h4>
-                          <p className="text-sm text-muted-foreground">Vi både förstår och bygger lösningen</p>
-                        </div>
-                      </div>
-                      
-                      <div className="flex items-start gap-3 group">
-                        <CheckCircle className="h-6 w-6 text-primary flex-shrink-0 mt-0.5 group-hover:scale-110 transition-transform" />
-                        <div>
-                          <h4 className="font-semibold mb-1">End-to-End</h4>
-                          <p className="text-sm text-muted-foreground">Från strategi till implementation - allt under ett tak</p>
-                        </div>
-                      </div>
-                      
-                      <div className="flex items-start gap-3 group">
-                        <CheckCircle className="h-6 w-6 text-primary flex-shrink-0 mt-0.5 group-hover:scale-110 transition-transform" />
-                        <div>
-                          <h4 className="font-semibold mb-1">Bevisat ROI</h4>
-                          <p className="text-sm text-muted-foreground">Våra kunder ser mätbar avkastning</p>
-                        </div>
-                      </div>
+                      ))}
                     </div>
-                  </CardContent>
-                </Card>
-              </div>
-            </AnimatedSection>
-          </div>
-        </section>
+                  </CardSpotlight>
+                </div>
+              </AnimatedSection>
+            </div>
+          </section>
 
-        {/* Vår Vision & Mission Section */}
-        <section className="relative py-24 bg-gradient-to-b from-background via-primary/5 to-background overflow-hidden">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_50%,hsl(var(--primary)/0.15),transparent_50%)]" />
-          
-          <div className="mx-auto max-w-7xl px-6 lg:px-8 relative">
-            <div className="grid lg:grid-cols-2 gap-8">
-              <AnimatedSection delay={0}>
-                <Card className="h-full border border-primary/10 bg-gradient-to-br from-card/80 via-card/50 to-card/30 backdrop-blur-md hover:shadow-2xl hover:shadow-primary/10 hover:-translate-y-1 transition-all duration-500">
-                  <CardContent className="p-10 space-y-6 h-full flex flex-col">
-                    <div className="space-y-4">
-                      {/* Bildram - infoga egen bild här */}
-                      <div className="relative h-40 overflow-hidden rounded-lg border-2 border-primary/20">
-                        <div className="w-full h-full bg-gradient-to-br from-primary/10 via-primary/5 to-background flex items-center justify-center">
-                          <span className="text-muted-foreground">Infoga bild här</span>
-                        </div>
-                      </div>
-                      <h3 className="text-3xl font-bold bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent">
-                        Vår Vision
-                      </h3>
-                    </div>
-                    
-                    <p className="text-lg leading-relaxed text-muted-foreground flex-1">
-                      Göra AI tillgängligt och lönsamt för alla svenska företag - oavsett storlek eller bransch. AI ska inte vara förbehållet stora koncerner med djupa fickor. Det är ett verktyg som alla kan och bör använda.
+          {/* Vision & Mission */}
+          <section className="relative py-24 overflow-hidden">
+            <div className="mx-auto max-w-7xl px-6 lg:px-8 relative">
+              <div className="grid lg:grid-cols-2 gap-8">
+                <AnimatedSection delay={0}>
+                  <CardSpotlight className="h-full bg-card/20 backdrop-blur-md border border-primary/10 p-10 space-y-6">
+                    <h3 className="text-3xl font-bold bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent">
+                      Vår Vision
+                    </h3>
+                    <p className="text-lg leading-relaxed text-muted-foreground">
+                      Göra AI tillgängligt och lönsamt för alla svenska företag - oavsett storlek eller bransch. AI ska inte vara förbehållet stora koncerner med djupa fickor.
                     </p>
-                    
                     <div className="pt-4 border-t border-primary/10">
                       <p className="text-sm text-muted-foreground italic">
                         "AI är inte framtiden - det är nuet. Vi gör det tillgängligt för alla."
                       </p>
                     </div>
-                  </CardContent>
-                </Card>
-              </AnimatedSection>
-              
-              <AnimatedSection delay={100}>
-                <Card className="h-full border border-primary/10 bg-gradient-to-br from-card/80 via-card/50 to-card/30 backdrop-blur-md hover:shadow-2xl hover:shadow-primary/10 hover:-translate-y-1 transition-all duration-500">
-                  <CardContent className="p-10 space-y-6 h-full flex flex-col">
-                    <div className="space-y-4">
-                      {/* Bildram - infoga egen bild här */}
-                      <div className="relative h-40 overflow-hidden rounded-lg border-2 border-primary/20">
-                        <div className="w-full h-full bg-gradient-to-br from-primary/10 via-primary/5 to-background flex items-center justify-center">
-                          <span className="text-muted-foreground">Infoga bild här</span>
-                        </div>
-                      </div>
-                      <h3 className="text-3xl font-bold bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent">
-                        Vår Mission
-                      </h3>
-                    </div>
-                    
-                    <p className="text-lg leading-relaxed text-muted-foreground flex-1">
-                      Leverera AI-lösningar som mäts på en sak: resultatet de ger våra kunder. Inga fluffiga buzzwords. Inga tomma löften. Bara konkreta system som automatiserar processer, ökar försäljning och ger mätbar ROI.
+                  </CardSpotlight>
+                </AnimatedSection>
+                
+                <AnimatedSection delay={100}>
+                  <CardSpotlight className="h-full bg-card/20 backdrop-blur-md border border-primary/10 p-10 space-y-6">
+                    <h3 className="text-3xl font-bold bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent">
+                      Vår Mission
+                    </h3>
+                    <p className="text-lg leading-relaxed text-muted-foreground">
+                      Leverera AI-lösningar som mäts på en sak: resultatet de ger våra kunder. Inga fluffiga buzzwords. Inga tomma löften.
                     </p>
-                    
                     <div className="pt-4 border-t border-primary/10">
                       <p className="text-sm text-muted-foreground italic">
                         "Vi mäts på era resultat, inte våra timmar."
                       </p>
                     </div>
-                  </CardContent>
-                </Card>
-              </AnimatedSection>
-            </div>
-          </div>
-        </section>
-
-        {/* Våra Värderingar Section */}
-        <section className="relative py-24 bg-gradient-to-b from-background via-primary/3 to-background overflow-hidden">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_30%,hsl(var(--primary)/0.12),transparent_50%)]" />
-          
-          <div className="mx-auto max-w-7xl px-6 lg:px-8 relative">
-            <AnimatedSection>
-              <div className="text-center space-y-4 mb-16">
-                <h2 className="text-4xl sm:text-5xl font-bold bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent">
-                  Våra Värderingar
-                </h2>
-                <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-                  Fyra principer som styr allt vi gör
-                </p>
-              </div>
-            </AnimatedSection>
-            
-            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              {[
-                {
-                  title: "Transparens",
-                  description: "Inga dolda kostnader eller fluffiga löften. Vi är alltid ärliga om vad som är möjligt och vad det kostar."
-                },
-                {
-                  title: "Expertis",
-                  description: "Djup teknisk kunskap från AI-modeller till implementation. Vi vet vad vi gör."
-                },
-                {
-                  title: "Resultat",
-                  description: "Vi mäts på er framgång, inte våra timmar. Mätbara resultat är vår målsättning."
-                },
-                {
-                  title: "Partnerskap",
-                  description: "Vi är er långsiktiga AI-partner, inte bara en leverantör. Vi växer tillsammans."
-                }
-              ].map((value, index) => (
-                <AnimatedSection key={value.title} delay={index * 80}>
-                  <Card className="h-full border border-primary/10 bg-gradient-to-br from-card/80 via-card/50 to-card/30 backdrop-blur-md hover:shadow-2xl hover:shadow-primary/10 hover:-translate-y-2 transition-all duration-500 group overflow-hidden">
-                    <CardContent className="p-0 space-y-4 text-center h-full flex flex-col">
-                      {/* Bildram - infoga egen bild här */}
-                      <div className="relative h-40 overflow-hidden">
-                        <div className="w-full h-full bg-gradient-to-br from-primary/10 via-primary/5 to-background flex items-center justify-center">
-                          <span className="text-muted-foreground text-sm">Infoga bild här</span>
-                        </div>
-                      </div>
-                      <div className="px-8 pb-8 flex-1 flex flex-col">
-                        <h3 className="text-xl font-bold mb-3">{value.title}</h3>
-                        <p className="text-sm text-muted-foreground leading-relaxed flex-1">
-                          {value.description}
-                        </p>
-                      </div>
-                    </CardContent>
-                  </Card>
+                  </CardSpotlight>
                 </AnimatedSection>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* Vår Approach Section */}
-        <section className="relative py-24 bg-gradient-to-b from-background via-primary/5 to-background overflow-hidden">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_40%_60%,hsl(var(--primary)/0.15),transparent_50%)]" />
-          
-          <div className="mx-auto max-w-7xl px-6 lg:px-8 relative">
-            <AnimatedSection>
-              <div className="text-center space-y-4 mb-16">
-                <h2 className="text-4xl sm:text-5xl font-bold bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent">
-                  Så Arbetar Vi
-                </h2>
-                <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-                  Vår beprövade process för framgångsrik AI-implementation
-                </p>
               </div>
-            </AnimatedSection>
-            
-            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8 relative">
-              {/* Connecting line - hidden on mobile */}
-              <div className="hidden lg:block absolute top-12 left-0 right-0 h-0.5 bg-gradient-to-r from-primary/20 via-primary/50 to-primary/20" style={{ top: '3rem' }} />
+            </div>
+          </section>
+
+          {/* Våra Värderingar */}
+          <section className="relative py-24 overflow-hidden">
+            <div className="mx-auto max-w-7xl px-6 lg:px-8 relative">
+              <AnimatedSection delay={0}>
+                <div className="text-center space-y-4 mb-16">
+                  <h2 className="text-4xl sm:text-5xl font-bold bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent">
+                    Våra Värderingar
+                  </h2>
+                  <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+                    Fyra principer som styr allt vi gör
+                  </p>
+                </div>
+              </AnimatedSection>
               
-              {[
-                {
-                  title: "Lyssna",
-                  description: "Vi börjar alltid med att förstå era specifika utmaningar och mål.",
-                  icon: Users
-                },
-                {
-                  title: "Analysera",
-                  description: "Djup behovsanalys innan vi föreslår någon lösning.",
-                  icon: Lightbulb
-                },
-                {
-                  title: "Bygga",
-                  description: "Skräddarsydda AI-system som löser era verkliga problem.",
-                  icon: Rocket
-                },
-                {
-                  title: "Optimera",
-                  description: "Kontinuerlig förbättring baserat på data och resultat.",
-                  icon: TrendingUp
-                }
-              ].map((step, index) => (
-                <AnimatedSection key={step.title} delay={index * 100}>
-                  <div className="relative">
+              <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                {[
+                  { title: "Transparens", desc: "Inga dolda kostnader eller fluffiga löften. Vi är alltid ärliga om vad som är möjligt och vad det kostar." },
+                  { title: "Expertis", desc: "Djup teknisk kunskap från AI-modeller till implementation. Vi vet vad vi gör." },
+                  { title: "Resultat", desc: "Vi mäts på er framgång, inte våra timmar. Mätbara resultat är vår målsättning." },
+                  { title: "Partnerskap", desc: "Vi är er långsiktiga AI-partner, inte bara en leverantör. Vi växer tillsammans." }
+                ].map((value, index) => (
+                  <AnimatedSection key={value.title} delay={index * 100}>
+                    <CardSpotlight className="h-full bg-card/20 backdrop-blur-md border border-primary/10 p-8 text-center space-y-4">
+                      <h3 className="text-xl font-bold">{value.title}</h3>
+                      <p className="text-sm text-muted-foreground leading-relaxed">
+                        {value.desc}
+                      </p>
+                    </CardSpotlight>
+                  </AnimatedSection>
+                ))}
+              </div>
+            </div>
+          </section>
+
+          {/* Så Arbetar Vi */}
+          <section className="relative py-24 overflow-hidden">
+            <div className="mx-auto max-w-7xl px-6 lg:px-8 relative">
+              <AnimatedSection delay={0}>
+                <div className="text-center space-y-4 mb-16">
+                  <h2 className="text-4xl sm:text-5xl font-bold bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent">
+                    Så Arbetar Vi
+                  </h2>
+                  <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+                    Vår beprövade process för framgångsrik AI-implementation
+                  </p>
+                </div>
+              </AnimatedSection>
+              
+              <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                {[
+                  { title: "Lyssna", desc: "Vi börjar alltid med att förstå era specifika utmaningar och mål.", icon: Users },
+                  { title: "Analysera", desc: "Djup behovsanalys innan vi föreslår någon lösning.", icon: Lightbulb },
+                  { title: "Bygga", desc: "Skräddarsydda AI-system som löser era verkliga problem.", icon: Rocket },
+                  { title: "Optimera", desc: "Kontinuerlig förbättring baserat på data och resultat.", icon: TrendingUp }
+                ].map((step, index) => (
+                  <AnimatedSection key={step.title} delay={index * 100}>
                     <div className="text-center space-y-4">
                       <div className="inline-flex items-center justify-center w-24 h-24 rounded-full bg-gradient-to-br from-primary to-primary/60 shadow-lg shadow-primary/30 mx-auto hover:scale-110 transition-transform duration-500">
                         <step.icon className="h-12 w-12 text-primary-foreground" />
                       </div>
                       <h3 className="text-2xl font-bold">{step.title}</h3>
                       <p className="text-sm text-muted-foreground leading-relaxed">
-                        {step.description}
+                        {step.desc}
                       </p>
                     </div>
-                  </div>
-                </AnimatedSection>
-              ))}
+                  </AnimatedSection>
+                ))}
+              </div>
             </div>
-          </div>
-        </section>
+          </section>
 
-        {/* Team Members Section */}
-        <section id="team-section" className="relative py-24 bg-gradient-to-b from-background via-primary/3 to-background overflow-hidden">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_60%_40%,hsl(var(--primary)/0.12),transparent_50%)]" />
-          
-          <div className="mx-auto max-w-7xl px-6 lg:px-8 space-y-12 relative">
-            <AnimatedSection>
-              <div className="text-center space-y-4 mb-16">
-                <h2 className="text-4xl sm:text-5xl font-bold bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent">
-                  Möt Vårt Team
-                </h2>
-                <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-                  Människorna som gör AI-magin möjlig
-                </p>
-              </div>
-            </AnimatedSection>
-            
-            {teamMembers.map((member, index) => {
-              const isImageLeft = index % 2 === 0;
+          {/* Team Section - New Component */}
+          <section id="team-section">
+            <TeamSection
+              title="TEAM"
+              description="Människorna som gör AI-magin möjlig"
+              members={teamMembers.map(member => ({
+                name: member.name,
+                designation: member.role,
+                imageSrc: member.image || "",
+                socialLinks: [
+                  { icon: Mail, href: `mailto:${member.email}` },
+                  { icon: Phone, href: `tel:${member.phone.replace(/\s/g, '')}` }
+                ]
+              }))}
+            />
+          </section>
+
+          {/* Vår Resa */}
+          <section className="relative py-24 overflow-hidden">
+            <div className="mx-auto max-w-7xl px-6 lg:px-8 relative">
+              <AnimatedSection delay={0}>
+                <div className="text-center space-y-4 mb-16">
+                  <h2 className="text-4xl sm:text-5xl font-bold bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent">
+                    Vår Resa
+                  </h2>
+                  <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+                    Från vision till verklighet
+                  </p>
+                </div>
+              </AnimatedSection>
               
-              return (
-                <AnimatedSection key={member.name} delay={index * 100}>
-                  <Card className="flex flex-col lg:flex-row overflow-hidden border border-primary/10 bg-gradient-to-br from-card/80 via-card/50 to-card/30 backdrop-blur-md hover:bg-card/90 hover:border-primary/30 hover:-translate-y-2 hover:shadow-2xl hover:shadow-primary/20 transition-all duration-500 group">
-                    {/* Image Section */}
-                    <div className={`lg:w-2/5 relative overflow-hidden flex-shrink-0 ${isImageLeft ? 'lg:order-1' : 'lg:order-2'}`}>
-                      {member.image ? (
-                        <>
-                          <img 
-                            src={member.image} 
-                            alt={member.name} 
-                            className="w-full h-full object-cover object-center transition-transform duration-700 group-hover:scale-110" 
-                          />
-                          <div className="absolute inset-0 bg-gradient-to-br from-primary/40 via-primary/20 to-transparent transition-opacity duration-500 group-hover:opacity-70" />
-                        </>
-                      ) : (
-                        <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary/20 to-primary/5">
-                          <div className="w-48 h-48 rounded-full bg-gradient-to-br from-primary to-primary/60 flex items-center justify-center border-4 border-primary/30 shadow-lg">
-                            <span className="text-6xl font-bold text-primary-foreground">
-                              {member.name.split(' ').map(n => n[0]).join('')}
-                            </span>
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                    
-                    {/* Content Section */}
-                    <div className={`flex-1 flex flex-col ${isImageLeft ? 'lg:order-2' : 'lg:order-1'}`}>
-                      <CardContent className="flex-1 p-8 lg:p-10 space-y-6">
-                        {/* Header */}
-                        <div className="space-y-3">
-                          <h3 className="text-3xl lg:text-4xl font-bold bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent">
-                            {member.name}
-                          </h3>
-                          <p className="text-lg text-muted-foreground font-light">
-                            {member.role}
-                          </p>
-                        </div>
-                        
-                        {/* Bio */}
-                        <p className="text-base leading-relaxed text-foreground/90">
-                          {member.bio}
-                        </p>
-                        
-                        {/* Highlights List */}
-                        <div className="space-y-3">
-                          {member.highlights.slice(0, 5).map((highlight, idx) => (
-                            <div key={idx} className="flex items-start gap-3 group/item">
-                              <div className="mt-1 flex-shrink-0">
-                                <CheckCircle className="h-5 w-5 text-primary group-hover/item:scale-110 transition-transform duration-300" />
-                              </div>
-                              <span className="text-sm leading-relaxed text-muted-foreground">
-                                {highlight}
-                              </span>
-                            </div>
-                          ))}
-                        </div>
-
-                        {/* Contact Buttons */}
-                        <div className="flex flex-col sm:flex-row gap-3 pt-4">
-                          <Button
-                            variant="outline"
-                            className="flex-1 gap-2 border-primary/20 hover:border-primary/50 hover:bg-primary/10"
-                            onClick={() => window.location.href = `mailto:${member.email}`}
-                          >
-                            <Mail className="h-4 w-4" />
-                            {member.email}
-                          </Button>
-                          <Button
-                            variant="outline"
-                            className="flex-1 gap-2 border-primary/20 hover:border-primary/50 hover:bg-primary/10"
-                            onClick={() => window.location.href = `tel:${member.phone.replace(/\s/g, '')}`}
-                          >
-                            <Phone className="h-4 w-4" />
-                            {member.phone}
-                          </Button>
-                        </div>
-                      </CardContent>
-                    </div>
-                  </Card>
-                </AnimatedSection>
-              );
-            })}
-          </div>
-        </section>
-
-        {/* Vår Historia Section */}
-        <section className="relative py-24 bg-gradient-to-b from-background via-primary/5 to-background overflow-hidden">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,hsl(var(--primary)/0.15),transparent_50%)]" />
-          
-          <div className="mx-auto max-w-7xl px-6 lg:px-8 relative">
-            <AnimatedSection>
-              <div className="text-center space-y-4 mb-16">
-                <h2 className="text-4xl sm:text-5xl font-bold bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent">
-                  Vår Resa
-                </h2>
-                <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-                  Från vision till verklighet
-                </p>
-              </div>
-            </AnimatedSection>
-            
-            <div className="max-w-4xl mx-auto">
-              <Card className="border border-primary/10 bg-gradient-to-br from-card/80 via-card/50 to-card/30 backdrop-blur-md">
-                <CardContent className="p-10">
+              <div className="max-w-4xl mx-auto">
+                <CardSpotlight className="bg-card/20 backdrop-blur-md border border-primary/10 p-10">
                   <div className="space-y-8">
                     {[
-                      {
-                        year: "2024",
-                        title: "Hiems Grundas",
-                        description: "Hiems grundas med fokus på AI-lösningar för att revolutionera svensk affärsverksamhet genom innovativ teknologi."
-                      },
-                      {
-                        year: "2025",
-                        title: "ChronoDesk Grundas",
-                        description: "ChronoDesk startas med specialisering inom AI-driven automation och intelligenta system."
-                      },
-                      {
-                        year: "Okt 2025",
-                        title: "Historisk Sammanslagning",
-                        description: "Hiems och ChronoDesk slår sina krafter samman och etablerar samtidigt sitt första strategiska partnerskap med en klient. Ett otroligt snabbt växande företag föds."
-                      },
-                      {
-                        year: "2025-",
-                        title: "Explosiv Tillväxt",
-                        description: "Ett otroligt snabbt växande företag med fler kunder, fler branscher och fler framgångshistorier varje månad. AI-framtiden är här, och vi växer i raketfart."
-                      }
+                      { year: "2024", title: "Hiems Grundas", desc: "Hiems grundas med fokus på AI-lösningar för att revolutionera svensk affärsverksamhet genom innovativ teknologi." },
+                      { year: "2025", title: "ChronoDesk Grundas", desc: "ChronoDesk startas med specialisering inom AI-driven automation och intelligenta system." },
+                      { year: "Okt 2025", title: "Historisk Sammanslagning", desc: "Hiems och ChronoDesk slår sina krafter samman och etablerar samtidigt sitt första strategiska partnerskap med en klient." },
+                      { year: "2025-", title: "Explosiv Tillväxt", desc: "Ett otroligt snabbt växande företag med fler kunder, fler branscher och fler framgångshistorier varje månad." }
                     ].map((milestone, index) => (
                       <AnimatedSection key={milestone.year} delay={index * 100}>
                         <div className="flex gap-6 group items-center">
@@ -573,9 +348,7 @@ const AboutUs = () => {
                           </div>
                           <div className="flex-1">
                             <h3 className="text-2xl font-bold mb-2">{milestone.title}</h3>
-                            <p className="text-muted-foreground leading-relaxed">
-                              {milestone.description}
-                            </p>
+                            <p className="text-muted-foreground leading-relaxed">{milestone.desc}</p>
                           </div>
                         </div>
                         {index < 3 && (
@@ -584,109 +357,79 @@ const AboutUs = () => {
                       </AnimatedSection>
                     ))}
                   </div>
-                </CardContent>
-              </Card>
-            </div>
-          </div>
-        </section>
-
-        {/* Varför Välja Hiems Section - Now with Images */}
-        <section className="relative py-24 bg-gradient-to-b from-background via-primary/3 to-background overflow-hidden">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_60%,hsl(var(--primary)/0.15),transparent_50%)]" />
-          
-          <div className="mx-auto max-w-7xl px-6 lg:px-8 relative">
-            <AnimatedSection>
-              <div className="text-center space-y-4 mb-16">
-                <h2 className="text-4xl sm:text-5xl font-bold bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent">
-                  Varför Välja Hiems?
-                </h2>
+                </CardSpotlight>
               </div>
-            </AnimatedSection>
-            
-            <div className="grid md:grid-cols-3 gap-8">
-              {[
-                {
-                  title: "Svenskt & Lokalt",
-                  description: "Vi förstår svenska företag, svenska marknaden och svenska utmaningar. Ingen kulturell eller språklig barriär.",
-                  image: svensktLokalImage
-                },
-                {
-                  title: "End-to-End",
-                  description: "Från strategi till drift, vi hanterar allt. En partner för hela er AI-resa, inte bara en leverantör.",
-                  image: endToEndImage
-                },
-                {
-                  title: "Bevisat ROI",
-                  description: "Våra kunder ser mätbar avkastning. Vi bygger system som faktiskt ökar lönsamhet och effektivitet.",
-                  image: bvisatRoiImage
-                }
-              ].map((benefit, index) => (
-                <AnimatedSection key={benefit.title} delay={index * 100}>
-                  <Card className="h-full border border-primary/10 bg-gradient-to-br from-card/80 via-card/50 to-card/30 backdrop-blur-md hover:shadow-2xl hover:shadow-primary/10 hover:-translate-y-2 transition-all duration-500 group overflow-hidden">
-                    {/* Bildram - byt ut med egen bild */}
-                    <div className="relative h-48 overflow-hidden border-b-2 border-primary/20">
-                      <img 
-                        src={benefit.image} 
-                        alt={benefit.title}
-                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-br from-primary/40 via-primary/20 to-transparent" />
-                    </div>
-                    
-                    <CardContent className="p-8 space-y-4 text-center">
-                      <h3 className="text-2xl font-bold">{benefit.title}</h3>
-                      <p className="text-muted-foreground leading-relaxed">
-                        {benefit.description}
-                      </p>
-                    </CardContent>
-                  </Card>
-                </AnimatedSection>
-              ))}
             </div>
-          </div>
-        </section>
+          </section>
 
-        {/* Kontakt & CTA Section */}
-        <section className="relative py-32 bg-gradient-to-b from-background via-primary/10 to-background overflow-hidden">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,hsl(var(--primary)/0.2),transparent_50%)]" />
-          
-          <div className="mx-auto max-w-7xl px-6 lg:px-8 relative">
-            <AnimatedSection>
-              <Card className="max-w-4xl mx-auto border border-primary/20 bg-gradient-to-br from-card/90 via-card/70 to-card/50 backdrop-blur-md shadow-2xl shadow-primary/20">
-                <CardContent className="p-12 text-center space-y-8">
-                  <div className="space-y-4">
-                    <h2 className="text-4xl sm:text-5xl font-bold bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent">
-                      Redo att ta steget in i AI-framtiden?
-                    </h2>
-                    <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-                      Boka din gratis behovsanalys idag och låt oss visa hur AI kan transformera ert företag.
-                    </p>
-                  </div>
-                  
+          {/* Varför Välja Hiems */}
+          <section className="relative py-24 overflow-hidden">
+            <div className="mx-auto max-w-7xl px-6 lg:px-8 relative">
+              <AnimatedSection delay={0}>
+                <div className="text-center space-y-4 mb-16">
+                  <h2 className="text-4xl sm:text-5xl font-bold bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent">
+                    Varför Välja Hiems?
+                  </h2>
+                </div>
+              </AnimatedSection>
+              
+              <div className="grid md:grid-cols-3 gap-8">
+                {[
+                  { title: "Svenskt & Lokalt", desc: "Vi förstår svenska företag, svenska marknaden och svenska utmaningar. Ingen kulturell eller språklig barriär.", image: svensktLokalImage },
+                  { title: "End-to-End", desc: "Från strategi till drift, vi hanterar allt. En partner för hela er AI-resa, inte bara en leverantör.", image: endToEndImage },
+                  { title: "Bevisat ROI", desc: "Våra kunder ser mätbar avkastning. Vi bygger system som faktiskt ökar lönsamhet och effektivitet.", image: bvisatRoiImage }
+                ].map((benefit, index) => (
+                  <AnimatedSection key={benefit.title} delay={index * 100}>
+                    <CardSpotlight className="h-full bg-card/20 backdrop-blur-md border border-primary/10 overflow-hidden group">
+                      <div className="relative h-48 overflow-hidden">
+                        <img 
+                          src={benefit.image} 
+                          alt={benefit.title}
+                          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-br from-primary/40 via-primary/20 to-transparent" />
+                      </div>
+                      <div className="p-8 space-y-4 text-center">
+                        <h3 className="text-2xl font-bold">{benefit.title}</h3>
+                        <p className="text-muted-foreground leading-relaxed">{benefit.desc}</p>
+                      </div>
+                    </CardSpotlight>
+                  </AnimatedSection>
+                ))}
+              </div>
+            </div>
+          </section>
+
+          {/* CTA */}
+          <section className="relative py-32 overflow-hidden">
+            <div className="mx-auto max-w-7xl px-6 lg:px-8 relative">
+              <AnimatedSection delay={0}>
+                <CardSpotlight className="max-w-4xl mx-auto bg-card/20 backdrop-blur-md border border-primary/20 p-12 text-center space-y-8">
+                  <h2 className="text-4xl sm:text-5xl font-bold bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent">
+                    Redo att transformera er verksamhet med AI?
+                  </h2>
+                  <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+                    Boka ett kostnadsfritt strategimöte och få en skräddarsydd plan för hur AI kan öka er lönsamhet.
+                  </p>
                   <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
-                    <Button size="lg" variant="gold" onClick={() => setIsConsultationModalOpen(true)}>
-                      Boka Gratis Behovsanalys
+                    <Button size="lg" onClick={() => setIsConsultationModalOpen(true)}>
+                      Boka demo
                     </Button>
                     <Button size="lg" variant="outline" onClick={() => window.location.href = 'mailto:info@hiems.se'}>
-                      Kontakta Oss
+                      <Mail className="mr-2 h-4 w-4" />
+                      Kontakta oss
                     </Button>
                   </div>
-                  
-                  <div className="pt-8 border-t border-primary/20">
-                    <p className="text-sm text-muted-foreground">
-                      Eller kontakta vårt team direkt - vi svarar alltid inom 24 timmar.
-                    </p>
-                  </div>
-                </CardContent>
-              </Card>
-            </AnimatedSection>
-          </div>
-        </section>
-      </main>
-      
-      <ConsultationModal
-        open={isConsultationModalOpen}
-        onOpenChange={setIsConsultationModalOpen}
+                </CardSpotlight>
+              </AnimatedSection>
+            </div>
+          </section>
+        </main>
+      </AuroraBackground>
+
+      <ConsultationModal 
+        open={isConsultationModalOpen} 
+        onOpenChange={setIsConsultationModalOpen} 
       />
     </div>
   );
