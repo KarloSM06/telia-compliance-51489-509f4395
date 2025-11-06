@@ -10,6 +10,8 @@ import {
 import googleSheetsLogo from "@/assets/integrations/google-sheets.png";
 import googleCalendarLogo from "@/assets/integrations/google-calendar.png";
 import makeComLogo from "@/assets/integrations/make-com.png";
+import makeArrowsColorLogo from "@/assets/integrations/make-arrows-color.png";
+import integrationArrowsLogo from "@/assets/integrations/integration-arrows.png";
 import calComLogo from "@/assets/integrations/cal-com.png";
 import heliconeLogoImg from "@/assets/integrations/helicone.png";
 import geminiLogo from "@/assets/integrations/gemini.png";
