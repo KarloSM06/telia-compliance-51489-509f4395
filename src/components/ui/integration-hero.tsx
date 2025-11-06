@@ -50,9 +50,9 @@ export default function IntegrationHero() {
             </div>
           </AnimatedSection>
 
-          {/* Starkare fade-out gradients i båda kanterna */}
-          <div className="absolute left-0 top-0 h-full w-48 md:w-64 bg-gradient-to-r from-background via-background/90 to-transparent pointer-events-none z-10" />
-          <div className="absolute right-0 top-0 h-full w-48 md:w-64 bg-gradient-to-l from-background via-background/90 to-transparent pointer-events-none z-10" />
+          {/* Vertikal linje-effekt i båda kanterna */}
+          <div className="absolute left-0 top-0 h-full w-12 bg-gradient-to-r from-background to-transparent pointer-events-none z-10" />
+          <div className="absolute right-0 top-0 h-full w-12 bg-gradient-to-l from-background to-transparent pointer-events-none z-10" />
         </div>
       </div>
     </section>;
