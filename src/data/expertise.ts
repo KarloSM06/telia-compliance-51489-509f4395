@@ -7,6 +7,12 @@ import {
   Server,
   Workflow
 } from "lucide-react";
+import googleSheetsLogo from "@/assets/integrations/google-sheets.png";
+import googleCalendarLogo from "@/assets/integrations/google-calendar.png";
+import makeComLogo from "@/assets/integrations/make-com.png";
+import calComLogo from "@/assets/integrations/cal-com.png";
+import heliconeLogoImg from "@/assets/integrations/helicone.png";
+import geminiLogo from "@/assets/integrations/gemini.png";
 
 export interface ExpertiseCategory {
   id: string;
@@ -37,7 +43,7 @@ export const expertiseCategories: ExpertiseCategory[] = [
       { name: "OpenAI GPT-5", type: "model", description: "Avancerad språkmodell", logo: "/images/logos/openai-new.png" },
       { name: "Claude 3.7", type: "model", description: "Anthropic AI-modell", logo: "/images/logos/claude.png" },
       { name: "Deepseek", type: "model", description: "Specialist AI-modell", logo: "/images/logos/deepseek.png" },
-      { name: "Gemini", type: "model", description: "Google AI-modell", logo: "/images/logos/gemini.png" }
+      { name: "Gemini", type: "model", description: "Google AI-modell", logo: geminiLogo }
     ]
   },
   {
@@ -61,8 +67,9 @@ export const expertiseCategories: ExpertiseCategory[] = [
     image: "/images/n8n-workflow-background.png",
     items: [
       { name: "n8n", type: "platform", description: "Workflow automation", logo: "/images/logos/n8n.png" },
-      { name: "Make.com", type: "platform", description: "Integration platform", logo: "/images/logos/make.png" },
-      { name: "Lovable", type: "platform", description: "AI utveckling", logo: "/images/logos/lovable.png" }
+      { name: "Make.com", type: "platform", description: "Integration platform", logo: makeComLogo },
+      { name: "Lovable", type: "platform", description: "AI utveckling", logo: "/images/logos/lovable.png" },
+      { name: "Google Sheets", type: "platform", description: "Datakoppling", logo: googleSheetsLogo }
     ]
   },
   {
@@ -85,9 +92,10 @@ export const expertiseCategories: ExpertiseCategory[] = [
     color: "from-pink-500 to-purple-500",
     image: "/images/expertise/calendar.jpg",
     items: [
-      { name: "Google Calendar", type: "service", description: "Kalender & bokning", logo: "/images/logos/google-calendar.png" },
+      { name: "Google Calendar", type: "service", description: "Kalender & bokning", logo: googleCalendarLogo },
       { name: "Microsoft Outlook", type: "service", description: "Enterprise kalender", logo: "/images/logos/outlook.png" },
-      { name: "Calendly", type: "service", description: "Bokningssystem", logo: "/images/logos/calendly.png" }
+      { name: "Calendly", type: "service", description: "Bokningssystem", logo: "/images/logos/calendly.png" },
+      { name: "Cal.com", type: "service", description: "Open-source bokning", logo: calComLogo }
     ]
   },
   {
@@ -101,7 +109,8 @@ export const expertiseCategories: ExpertiseCategory[] = [
       { name: "Apollo", type: "platform", description: "B2B prospektering", logo: "/images/logos/apollo.png" },
       { name: "Apify", type: "platform", description: "Data extraction", logo: "/images/logos/apify.png" },
       { name: "Eniro", type: "platform", description: "Svensk företagsdata", logo: "/images/logos/eniro.png" },
-      { name: "Explorium", type: "platform", description: "Data berikning", logo: "/images/logos/explorium.png" }
+      { name: "Explorium", type: "platform", description: "Data berikning", logo: "/images/logos/explorium.png" },
+      { name: "Helicone", type: "platform", description: "AI observability", logo: heliconeLogoImg }
     ]
   }
 ];
