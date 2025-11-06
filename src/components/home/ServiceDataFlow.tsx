@@ -2,6 +2,7 @@ import { motion, useReducedMotion } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
 import { Phone, Brain, Workflow, BarChart3, FileText, Database, MessageSquare, Users, Shield, TrendingUp } from "lucide-react";
 import { CardSpotlight } from "@/components/ui/card-spotlight";
+import { WebGLShader } from "@/components/WebGLShader";
 const AnimatedContainer = ({
   className,
   delay = 0.1,
@@ -54,8 +55,11 @@ const FlowCard = ({
   </AnimatedContainer>;
 };
 export const ServiceDataFlow = () => {
-  return <section className="py-32 md:py-48">
-    <div className="mx-auto max-w-7xl px-6 md:px-8">
+  return <section className="relative py-32 md:py-48 overflow-hidden">
+    <div className="absolute inset-0 opacity-30 pointer-events-none">
+      <WebGLShader />
+    </div>
+    <div className="mx-auto max-w-7xl px-6 md:px-8 relative z-10">
       <AnimatedContainer className="mx-auto max-w-5xl text-center mb-16">
         <h2 className="text-3xl font-bold tracking-wide text-balance md:text-4xl lg:text-5xl mb-6">
           <span className="text-primary">
