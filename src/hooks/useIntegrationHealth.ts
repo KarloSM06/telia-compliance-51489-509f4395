@@ -19,6 +19,7 @@ export const useIntegrationHealth = (integrationId?: string) => {
       return data;
     },
     enabled: true,
-    refetchInterval: 30000, // Refetch every 30 seconds
+    staleTime: 2 * 60 * 1000, // Consider data fresh for 2 minutes
+    refetchInterval: 3 * 60 * 1000, // Refetch every 3 minutes (reduced from 30s)
   });
 };

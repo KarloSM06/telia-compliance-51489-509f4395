@@ -78,12 +78,13 @@ export const useReviewInsights = (dateRange?: { from: Date; to: Date }) => {
       } as ReviewInsight;
     },
     enabled: !!user,
+    staleTime: 3 * 60 * 1000, // Consider data fresh for 3 minutes
     refetchInterval: (query) => {
-      // Polla oftare om ingen analys finns eller är outdated
+      // Poll less frequently - optimize performance
       const data = query.state.data;
-      if (!data) return 30000; // 30 sekunder
+      if (!data) return 2 * 60 * 1000; // 2 minutes if no data
       const isOld = new Date().getTime() - new Date(data.updated_at).getTime() > 24 * 60 * 60 * 1000;
-      return isOld ? 30000 : 5 * 60 * 1000; // 30s om gammal, annars 5 min
+      return isOld ? 2 * 60 * 1000 : 5 * 60 * 1000; // 2 min if old, 5 min otherwise
     }
   });
 
@@ -105,7 +106,8 @@ export const useReviewInsights = (dateRange?: { from: Date; to: Date }) => {
       return data;
     },
     enabled: !!user,
-    refetchInterval: 10000 // Polla var 10:e sekund
+    staleTime: 60 * 1000, // Consider data fresh for 1 minute
+    refetchInterval: 2 * 60 * 1000 // Poll every 2 minutes (reduced from 10s)
   });
 
   // Count new interactions since last analysis
@@ -140,7 +142,8 @@ export const useReviewInsights = (dateRange?: { from: Date; to: Date }) => {
       return (reviewCount || 0) + (messageCount || 0) + (callCount || 0);
     },
     enabled: !!user && !!insights,
-    refetchInterval: 30000 // Check every 30 seconds
+    staleTime: 2 * 60 * 1000, // Consider data fresh for 2 minutes
+    refetchInterval: 5 * 60 * 1000 // Check every 5 minutes (reduced from 30s)
   });
 
   // Check if insights are outdated (older than 24 hours)
@@ -211,28 +214,18 @@ export const useReviewInsights = (dateRange?: { from: Date; to: Date }) => {
       ? (new Date().getTime() - new Date(insights.created_at).getTime()) / (1000 * 60)
       : Infinity;
     
-    // Smart triggering-logik:
-    const hasNewData = (newInteractionsCount || 0) >= 1; // Sänkt från 3 till 1
-    const enoughTimePassed = minutesSinceLastAnalysis >= 5; // Minst 5 min mellan analyser
-    const hasSignificantNewData = (newInteractionsCount || 0) >= 3; // Mycket ny data = trigga direkt
+    // Optimized triggering logic - less aggressive
+    const hasNewData = (newInteractionsCount || 0) >= 10; // Increased from 1 to 10
+    const enoughTimePassed = minutesSinceLastAnalysis >= 30; // Increased from 5 to 30 min
+    const hasSignificantNewData = (newInteractionsCount || 0) >= 50; // Increased from 3 to 50
     
     const shouldAutoTrigger = 
-      !insights ||                                    // Ingen tidigare analys
-      isOutdated ||                                   // Äldre än 24h
-      hasSignificantNewData ||                        // Minst 3 nya interaktioner = trigga direkt
-      (hasNewData && enoughTimePassed);               // 1+ ny interaktion OCH 5+ minuter sedan senast
+      !insights ||                                    // No previous analysis
+      isOutdated ||                                   // Older than 24h
+      hasSignificantNewData ||                        // At least 50 new interactions
+      (hasNewData && enoughTimePassed);               // 10+ new interactions AND 30+ minutes passed
     
     if (shouldAutoTrigger && !queueStatus) {
-      console.log('Auto-triggering analysis...', {
-        noInsights: !insights,
-        isOutdated,
-        hasNewData,
-        hasSignificantNewData,
-        enoughTimePassed,
-        minutesSinceLastAnalysis: minutesSinceLastAnalysis.toFixed(1),
-        newCount: newInteractionsCount
-      });
-      
       supabase.functions.invoke('analyze-reviews', {
         body: { 
           auto_triggered: true,
@@ -240,18 +233,15 @@ export const useReviewInsights = (dateRange?: { from: Date; to: Date }) => {
         }
       }).then(({ data, error }) => {
         if (error) {
-          console.error('Auto-trigger failed:', error);
           toast.error('AI-analys misslyckades: ' + error.message);
         } else {
-          console.log('Auto-trigger succeeded:', data);
           if (hasNewData) {
             toast.success('AI-insikter uppdaterade!', {
               icon: <Sparkles className="h-4 w-4" />
             });
           }
         }
-      }).catch(error => {
-        console.error('Auto-trigger network error:', error);
+      }).catch(() => {
         toast.error('Kunde inte starta AI-analys.');
       });
     }

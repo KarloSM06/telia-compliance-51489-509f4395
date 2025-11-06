@@ -53,6 +53,7 @@ export function useSyncStatus(integrationId?: string) {
       if (error) throw error;
       return data as SyncStatus[];
     },
-    refetchInterval: 10000, // Uppdatera var 10:e sekund
+    staleTime: 60 * 1000, // Consider data fresh for 1 minute
+    refetchInterval: 2 * 60 * 1000, // Update every 2 minutes (reduced from 10s)
   });
 }

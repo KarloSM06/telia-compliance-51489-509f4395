@@ -344,13 +344,13 @@ export const useAnalyticsData = (dateRange?: { from: Date; to: Date }) => {
           filter: `user_id=eq.${user.id}`
         },
         (payload) => {
-          console.log('🔄 Calendar event changed, refreshing analytics in 500ms...', payload);
+          // Optimized debounce: 3000ms instead of 500ms for better performance
           
-          // Debounce: wait 500ms before refetching
+          // Debounce: wait 3000ms before refetching
           clearTimeout(debounceTimer);
           debounceTimer = setTimeout(() => {
             fetchAllData();
-          }, 500);
+          }, 3000);
         }
       )
       .subscribe();

@@ -16,5 +16,6 @@ export const useIntegrationLogs = (integrationId: string, limit: number = 50) =>
       return data;
     },
     enabled: !!integrationId,
+    staleTime: 2 * 60 * 1000, // Consider data fresh for 2 minutes
   });
 };

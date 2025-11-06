@@ -64,8 +64,9 @@ export const useNotificationInsights = () => {
       return data as unknown as NotificationInsight | null;
     },
     enabled: !!user,
+    staleTime: 3 * 60 * 1000, // Consider data fresh for 3 minutes
     refetchInterval: (query) => {
-      // Poll more frequently if data is fresh (less than 5 minutes old)
+      // Optimized polling - less aggressive
       const data = query.state.data;
       if (!data?.created_at) return false;
       
@@ -73,8 +74,8 @@ export const useNotificationInsights = () => {
       const now = Date.now();
       const ageMinutes = (now - createdAt) / 1000 / 60;
       
-      if (ageMinutes < 5) return 10000; // 10 seconds
-      if (ageMinutes < 30) return 60000; // 1 minute
+      if (ageMinutes < 10) return 2 * 60 * 1000; // 2 minutes if fresh
+      if (ageMinutes < 60) return 5 * 60 * 1000; // 5 minutes if recent
       return false; // Don't poll if data is old
     },
   });
@@ -97,7 +98,8 @@ export const useNotificationInsights = () => {
       return data as QueueStatus | null;
     },
     enabled: !!user,
-    refetchInterval: 5000, // Poll every 5 seconds for queue status
+    staleTime: 60 * 1000, // Consider data fresh for 1 minute
+    refetchInterval: 2 * 60 * 1000, // Poll every 2 minutes (reduced from 5s)
   });
 
   // Count new notifications since last analysis
@@ -179,7 +181,7 @@ export const useNotificationInsights = () => {
       (newNotificationsCount || 0) > 100;
 
     if (shouldAutoTrigger && !queueStatus) {
-      console.log('Auto-triggering notification analysis');
+      // Removed console.log for production performance
       analyzeMutation.mutate();
     }
   }, [insights, newNotificationsCount, queueStatus, user?.id]);

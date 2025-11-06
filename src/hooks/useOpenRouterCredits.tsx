@@ -9,7 +9,8 @@ export const useOpenRouterCredits = () => {
       if (error) throw error;
       return data;
     },
-    refetchInterval: 60000, // Refresh every minute
+    staleTime: 5 * 60 * 1000, // Consider data fresh for 5 minutes
+    refetchInterval: 5 * 60 * 1000, // Refresh every 5 minutes (reduced from 1 min)
     retry: 1,
   });
 };

@@ -19,22 +19,29 @@ export default defineConfig(({ mode }) => ({
     rollupOptions: {
       output: {
         manualChunks: {
-          'react-vendor': ['react', 'react-dom', 'react-router-dom'],
-          'ui-vendor': [
-            '@radix-ui/react-accordion',
-            '@radix-ui/react-alert-dialog',
-            '@radix-ui/react-avatar',
-            '@radix-ui/react-checkbox',
+          'react-core': ['react', 'react-dom'],
+          'react-router': ['react-router-dom'],
+          'ui-radix-dialogs': [
             '@radix-ui/react-dialog',
-            '@radix-ui/react-dropdown-menu',
+            '@radix-ui/react-alert-dialog',
             '@radix-ui/react-popover',
+          ],
+          'ui-radix-forms': [
             '@radix-ui/react-select',
+            '@radix-ui/react-checkbox',
+            '@radix-ui/react-dropdown-menu',
+          ],
+          'ui-radix-display': [
+            '@radix-ui/react-accordion',
+            '@radix-ui/react-avatar',
             '@radix-ui/react-tabs',
             '@radix-ui/react-tooltip',
           ],
-          'chart-vendor': ['recharts'],
+          'charts': ['recharts'],
+          'forms': ['react-hook-form', 'zod', '@hookform/resolvers'],
           'supabase': ['@supabase/supabase-js'],
           'query': ['@tanstack/react-query'],
+          'animations': ['framer-motion', 'lenis'],
         },
       },
     },

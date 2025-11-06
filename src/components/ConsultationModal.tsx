@@ -22,7 +22,7 @@ export function ConsultationModal({ open, onOpenChange }: ConsultationModalProps
   const { toast } = useToast();
 
   // Debug logging
-  console.log('ConsultationModal open state:', open);
+  // Removed console.log for production performance
 
   // Section 1: Company info
   const [companyName, setCompanyName] = useState("");
