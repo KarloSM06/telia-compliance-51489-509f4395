@@ -58,9 +58,7 @@ export const ServiceDataFlow = () => {
     <div className="mx-auto max-w-7xl px-6 md:px-8">
       <AnimatedContainer className="mx-auto max-w-5xl text-center mb-16">
         <h2 className="text-3xl font-bold tracking-wide text-balance md:text-4xl lg:text-5xl mb-6">
-          <span className="text-primary">
-            Så Flödar Data Genom Våra Tjänster
-          </span>
+          <span className="text-primary">Så Flödar Data Genom Våra System</span>
         </h2>
         <p className="text-muted-foreground text-base tracking-wide text-balance md:text-lg">
           Varje AI-tjänst har sitt eget intelligenta dataflöde från kundinput till färdig action.
