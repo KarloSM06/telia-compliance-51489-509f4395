@@ -56,7 +56,7 @@ const FlowCard = ({
 };
 export const ServiceDataFlow = () => {
   return <section className="relative py-32 md:py-48 overflow-hidden">
-    <div className="absolute inset-0 opacity-20 pointer-events-none">
+    <div className="absolute inset-0 opacity-30 pointer-events-none">
       <WebGLShader />
     </div>
     <div className="mx-auto max-w-7xl px-6 md:px-8 relative z-10">
