@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { useTheme } from "next-themes";
 import hiems_logo from "@/assets/hiems_snowflake_logo.png";
-import { Linkedin, Sun, Moon, ArrowUp, Mail, Phone } from "lucide-react";
+import { Linkedin, Sun, Moon, ArrowUp, Mail, Phone, Instagram, Facebook } from "lucide-react";
 
 const navigation = {
   navigering: [
@@ -183,13 +183,31 @@ export const Footer = () => {
             <Mail strokeWidth={1.5} className="h-5 w-5" />
           </a>
           <a
-            href="https://www.linkedin.com/company/hiems-hb"
+            href="https://www.linkedin.com/company/hiems"
             rel="noreferrer"
             target="_blank"
             className={underlineClass}
             aria-label="LinkedIn"
           >
             <Linkedin strokeWidth={1.5} className="h-5 w-5" />
+          </a>
+          <a
+            href="https://www.instagram.com/hiems_ai/"
+            rel="noreferrer"
+            target="_blank"
+            className={underlineClass}
+            aria-label="Instagram"
+          >
+            <Instagram strokeWidth={1.5} className="h-5 w-5" />
+          </a>
+          <a
+            href="https://www.facebook.com/profile.php?id=61582105616722"
+            rel="noreferrer"
+            target="_blank"
+            className={underlineClass}
+            aria-label="Facebook"
+          >
+            <Facebook strokeWidth={1.5} className="h-5 w-5" />
           </a>
         </div>
         <ThemeToggle />
