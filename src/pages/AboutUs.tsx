@@ -3,7 +3,8 @@ import { Button } from "@/components/ui/button";
 import { CheckCircle, Mail, Phone, Users, Lightbulb, Rocket, TrendingUp, Linkedin } from "lucide-react";
 import { AnimatedSection } from "@/components/shared/AnimatedSection";
 import { ConsultationModal } from "@/components/ConsultationModal";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
 import antonImage from "@/assets/anton-sallnas.png";
 import karloImage from "@/assets/karlo-mangione.png";
 import emilImage from "@/assets/emil-westerberg.png";
@@ -96,8 +97,39 @@ const teamMembers: TeamMember[] = [
   }
 ];
 
+const industries = [
+  "VVS-firmor",
+  "Advokatbyråer", 
+  "Byggföretag",
+  "Naprapater",
+  "Skönhetskliniker",
+  "Bilverkstäder",
+  "Frisörsalonger",
+  "Industrier",
+  "Städfirmor",
+  "Takläggare",
+  "Revisionsbyråer",
+  "Redovisningsbyråer",
+  "Konsultfirmor",
+  "Tandläkare",
+  "Fysioterapeuter",
+  "Arkitektkontor",
+  "Läkarmottagningar",
+  "Kiropraktorer",
+  "E-handelsföretag",
+  "Restauranger"
+];
+
 const AboutUs = () => {
   const [isConsultationModalOpen, setIsConsultationModalOpen] = useState(false);
+  const [industryIndex, setIndustryIndex] = useState(0);
+  
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIndustryIndex((prev) => (prev + 1) % industries.length);
+    }, 2000);
+    return () => clearTimeout(timer);
+  }, [industryIndex]);
   
   const scrollToTeam = () => {
     document.getElementById('team-section')?.scrollIntoView({ behavior: 'smooth' });
@@ -130,12 +162,34 @@ const AboutUs = () => {
                     <div className="w-32 h-1.5 bg-gradient-to-r from-primary via-primary/60 to-transparent mx-auto rounded-full shadow-lg shadow-primary/50 mt-2" />
                   </div>
                   
-                  <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent leading-tight">
-                    Där AI blir verklighet för svenska företag
+                  <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold leading-tight">
+                    <span className="block mb-2 bg-clip-text text-transparent bg-[linear-gradient(180deg,_hsl(var(--foreground))_0%,_hsl(var(--foreground)/0.8)_100%)]">
+                      Där AI blir verklighet för
+                    </span>
+                    <span className="relative flex justify-center overflow-hidden min-h-[1.2em]">
+                      {industries.map((industry, index) => (
+                        <motion.span
+                          key={index}
+                          className="absolute font-extrabold bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent"
+                          initial={{ opacity: 0, y: -100 }}
+                          transition={{ type: "spring", stiffness: 50, damping: 20 }}
+                          animate={
+                            industryIndex === index
+                              ? { y: 0, opacity: 1 }
+                              : {
+                                  y: industryIndex > index ? -150 : 150,
+                                  opacity: 0,
+                                }
+                          }
+                        >
+                          {industry}
+                        </motion.span>
+                      ))}
+                    </span>
                   </h1>
                   
                   <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-                    Möt teamet som kombinerar djup teknisk expertis med affärsförståelse - ingen copy-paste, inga buzzwords, bara AI-lösningar som faktiskt levererar resultat.
+                    Vi hjälper företag inom alla branscher att implementera AI-lösningar som faktiskt levererar resultat - ingen copy-paste, bara skräddarsydda system som ökar lönsamhet.
                   </p>
                   
                   <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
