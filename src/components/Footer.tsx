@@ -22,7 +22,6 @@ const navigation = {
     { name: "Cookie-policy", href: "/regelverk#cookie-policy" },
     { name: "Databehandlingsavtal", href: "/regelverk#databehandlingsavtal" },
     { name: "Service Level Agreement", href: "/regelverk#service-level-agreement" },
-    { name: "Tilläggsavtal AI-system", href: "/regelverk#tillaggsavtal-ai-system" },
   ],
 };
 
