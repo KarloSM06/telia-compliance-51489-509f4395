@@ -36,7 +36,7 @@ export default function IntegrationHero() {
         </AnimatedSection>
         
 
-        <div className="mt-6 md:mt-8 overflow-hidden relative pb-2">
+        <div className="mt-6 md:mt-8 overflow-x-hidden relative pt-16 pb-8">
           {/* Rad 1 - scrollar åt vänster */}
           <AnimatedSection delay={100}>
             <div className="flex gap-8 md:gap-10 whitespace-nowrap carousel-scroll-left transform-gpu will-change-transform">
