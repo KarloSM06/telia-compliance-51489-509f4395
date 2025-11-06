@@ -43,14 +43,14 @@ export default function IntegrationHero() {
               {repeatedIcons(row1, 4).map((program, i) => (
                 <div 
                   key={i} 
-                  className="h-16 w-16 md:h-20 md:w-20 flex-shrink-0 rounded-full bg-card shadow-md flex items-center justify-center p-3 transition-all duration-300 hover:scale-110 hover:shadow-lg transform-gpu relative group z-30 hover:z-40"
+                  className="h-16 w-16 md:h-20 md:w-20 flex-shrink-0 rounded-full bg-card shadow-md flex items-center justify-center p-3 transition-all duration-300 hover:scale-110 hover:shadow-lg transform-gpu relative group z-30 hover:z-[100]"
                   onMouseEnter={() => setHoveredProgram(program.name)}
                   onMouseLeave={() => setHoveredProgram(null)}
                 >
                   <img src={program.logo} alt={program.name} className="h-10 w-10 md:h-12 md:w-12 object-contain" />
                   
                   {/* Tooltip */}
-                  <div className="absolute -top-12 left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-50">
+                  <div className="absolute -top-12 left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-[110]">
                     <div className="bg-foreground text-background px-3 py-1.5 rounded-lg text-sm font-medium whitespace-nowrap shadow-lg">
                       {program.name}
                       <div className="absolute top-full left-1/2 transform -translate-x-1/2 -mt-1">
@@ -69,14 +69,14 @@ export default function IntegrationHero() {
               {repeatedIcons(row2, 4).map((program, i) => (
                 <div 
                   key={i} 
-                  className="h-16 w-16 md:h-20 md:w-20 flex-shrink-0 rounded-full bg-card shadow-md flex items-center justify-center p-3 transition-all duration-300 hover:scale-110 hover:shadow-lg transform-gpu relative group"
+                  className="h-16 w-16 md:h-20 md:w-20 flex-shrink-0 rounded-full bg-card shadow-md flex items-center justify-center p-3 transition-all duration-300 hover:scale-110 hover:shadow-lg transform-gpu relative group hover:z-[100]"
                   onMouseEnter={() => setHoveredProgram(program.name)}
                   onMouseLeave={() => setHoveredProgram(null)}
                 >
                   <img src={program.logo} alt={program.name} className="h-10 w-10 md:h-12 md:w-12 object-contain" />
                   
                   {/* Tooltip */}
-                  <div className="absolute -top-12 left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-10">
+                  <div className="absolute -top-12 left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-[110]">
                     <div className="bg-foreground text-background px-3 py-1.5 rounded-lg text-sm font-medium whitespace-nowrap shadow-lg">
                       {program.name}
                       <div className="absolute top-full left-1/2 transform -translate-x-1/2 -mt-1">
