@@ -16,7 +16,7 @@ const repeatedIcons = (programs: typeof ALL_PROGRAMS, repeat = 4) => Array.from(
 }).flatMap(() => programs);
 
 export default function IntegrationHero() {
-  const [hoveredProgram, setHoveredProgram] = useState<string | null>(null);
+  const [isHovering, setIsHovering] = useState(false);
   
   // Dela upp programmen i två rader
   const halfLength = Math.ceil(ALL_PROGRAMS.length / 2);
@@ -39,18 +39,20 @@ export default function IntegrationHero() {
         <div className="mt-6 md:mt-8 overflow-hidden relative pb-2">
           {/* Rad 1 - scrollar åt vänster */}
           <AnimatedSection delay={100}>
-            <div className="flex gap-8 md:gap-10 whitespace-nowrap carousel-scroll-left transform-gpu will-change-transform">
+            <div 
+              className={`flex gap-8 md:gap-10 whitespace-nowrap transform-gpu will-change-transform ${isHovering ? 'carousel-scroll-left-slow' : 'carousel-scroll-left'}`}
+            >
               {repeatedIcons(row1, 4).map((program, i) => (
                 <div 
                   key={i} 
-                  className="h-16 w-16 md:h-20 md:w-20 flex-shrink-0 rounded-full bg-card shadow-md flex items-center justify-center p-3 transition-all duration-300 hover:scale-110 hover:shadow-lg transform-gpu relative group"
-                  onMouseEnter={() => setHoveredProgram(program.name)}
-                  onMouseLeave={() => setHoveredProgram(null)}
+                  className="h-16 w-16 md:h-20 md:w-20 flex-shrink-0 rounded-full bg-card shadow-md flex items-center justify-center p-3 transition-all duration-300 hover:scale-110 hover:shadow-lg hover:z-20 transform-gpu relative group"
+                  onMouseEnter={() => setIsHovering(true)}
+                  onMouseLeave={() => setIsHovering(false)}
                 >
                   <img src={program.logo} alt={program.name} className="h-10 w-10 md:h-12 md:w-12 object-contain" />
                   
                   {/* Tooltip */}
-                  <div className="absolute -top-12 left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-10">
+                  <div className="absolute -top-12 left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none z-30">
                     <div className="bg-foreground text-background px-3 py-1.5 rounded-lg text-sm font-medium whitespace-nowrap shadow-lg">
                       {program.name}
                       <div className="absolute top-full left-1/2 transform -translate-x-1/2 -mt-1">
@@ -65,18 +67,20 @@ export default function IntegrationHero() {
 
           {/* Rad 2 - scrollar åt höger */}
           <AnimatedSection delay={200}>
-            <div className="flex gap-8 md:gap-10 whitespace-nowrap mt-4 md:mt-6 carousel-scroll-right transform-gpu will-change-transform">
+            <div 
+              className={`flex gap-8 md:gap-10 whitespace-nowrap mt-4 md:mt-6 transform-gpu will-change-transform ${isHovering ? 'carousel-scroll-right-slow' : 'carousel-scroll-right'}`}
+            >
               {repeatedIcons(row2, 4).map((program, i) => (
                 <div 
                   key={i} 
-                  className="h-16 w-16 md:h-20 md:w-20 flex-shrink-0 rounded-full bg-card shadow-md flex items-center justify-center p-3 transition-all duration-300 hover:scale-110 hover:shadow-lg transform-gpu relative group"
-                  onMouseEnter={() => setHoveredProgram(program.name)}
-                  onMouseLeave={() => setHoveredProgram(null)}
+                  className="h-16 w-16 md:h-20 md:w-20 flex-shrink-0 rounded-full bg-card shadow-md flex items-center justify-center p-3 transition-all duration-300 hover:scale-110 hover:shadow-lg hover:z-20 transform-gpu relative group"
+                  onMouseEnter={() => setIsHovering(true)}
+                  onMouseLeave={() => setIsHovering(false)}
                 >
                   <img src={program.logo} alt={program.name} className="h-10 w-10 md:h-12 md:w-12 object-contain" />
                   
                   {/* Tooltip */}
-                  <div className="absolute -top-12 left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-10">
+                  <div className="absolute -top-12 left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none z-30">
                     <div className="bg-foreground text-background px-3 py-1.5 rounded-lg text-sm font-medium whitespace-nowrap shadow-lg">
                       {program.name}
                       <div className="absolute top-full left-1/2 transform -translate-x-1/2 -mt-1">
