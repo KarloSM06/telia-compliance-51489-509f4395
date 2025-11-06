@@ -15,7 +15,7 @@ import integrationArrowsLogo from "@/assets/integrations/integration-arrows.png"
 import calComLogo from "@/assets/integrations/cal-com.png";
 import heliconeLogoImg from "@/assets/integrations/helicone.png";
 import geminiLogo from "@/assets/integrations/gemini.png";
-import supabaseLogo from "@/assets/integrations/supabase.png";
+import supabaseLogo from "@/assets/integrations/supabase-new.png";
 import openrouterLogo from "@/assets/integrations/openrouter.png";
 import gohighlevelLogo from "@/assets/integrations/gohighlevel.png";
 import elevenlabsLogo from "@/assets/integrations/elevenlabs.png";
