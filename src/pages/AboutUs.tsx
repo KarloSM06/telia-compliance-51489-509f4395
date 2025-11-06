@@ -14,7 +14,6 @@ import bvisatRoiImage from "@/assets/growth-sales-accelerator.jpg";
 import { AuroraBackground } from "@/components/ui/aurora-background";
 import { Card, CardContent } from "@/components/ui/card";
 import { TeamSection } from "@/components/ui/team-section";
-import { BlogPostCard } from "@/components/ui/blog-post-card";
 
 interface TeamMember {
   name: string;
@@ -407,57 +406,6 @@ const AboutUs = () => {
                     </Card>
                   </AnimatedSection>
                 ))}
-              </div>
-            </div>
-          </section>
-
-          {/* Insikter & Nyheter */}
-          <section className="relative py-24 overflow-hidden">
-            <div className="mx-auto max-w-7xl px-6 lg:px-8 relative">
-              <AnimatedSection delay={0}>
-                <div className="text-center space-y-4 mb-16">
-                  <h2 className="text-4xl sm:text-5xl font-bold bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent">
-                    Senaste Insikterna
-                  </h2>
-                  <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-                    Tankar, strategier och lärdomar från vårt team
-                  </p>
-                </div>
-              </AnimatedSection>
-              
-              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <AnimatedSection delay={0}>
-                  <BlogPostCard
-                    tag="AI-Strategi"
-                    date="2025"
-                    title="Så implementerar du AI i din verksamhet"
-                    description="En steg-för-steg guide till framgångsrik AI-implementation från behovsanalys till drift."
-                    href="#"
-                    variant="default"
-                  />
-                </AnimatedSection>
-                
-                <AnimatedSection delay={100}>
-                  <BlogPostCard
-                    tag="Case Study"
-                    date="2025"
-                    title="Från 50 till 5 minuter per kundärende"
-                    description="Hur AI-automation förvandlade kundservice för ett svenskt företag."
-                    href="#"
-                    variant="default"
-                  />
-                </AnimatedSection>
-                
-                <AnimatedSection delay={200}>
-                  <BlogPostCard
-                    tag="Teknologi"
-                    date="2025"
-                    title="RAG vs Fine-tuning: Vilken AI-teknik passar dig?"
-                    description="En djupdykning i olika AI-tekniker och när du ska använda vilken."
-                    href="#"
-                    variant="default"
-                  />
-                </AnimatedSection>
               </div>
             </div>
           </section>
