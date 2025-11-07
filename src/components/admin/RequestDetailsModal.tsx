@@ -155,55 +155,20 @@ export function RequestDetailsModal({
           )}
 
           {request.type === 'ai_consultation' && request.raw_data && (
-            <div className="space-y-2">
-              <h3 className="font-semibold text-sm text-muted-foreground uppercase tracking-wide">
-                Konsultationsdetaljer
-              </h3>
-              <div className="grid gap-2 text-sm">
-                {request.raw_data.ai_goals && request.raw_data.ai_goals.length > 0 && (
-                  <div>
-                    <span className="text-muted-foreground block mb-1">AI-mål:</span>
-                    <div className="flex flex-wrap gap-1">
-                      {request.raw_data.ai_goals.map((goal: string, i: number) => (
-                        <Badge key={i} variant="secondary" className="text-xs">
-                          {goal}
-                        </Badge>
-                      ))}
-                    </div>
-                  </div>
-                )}
-                {request.raw_data.budget && (
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">Budget:</span>
-                    <span className="font-medium">{request.raw_data.budget}</span>
-                  </div>
-                )}
-                {request.raw_data.timeframe && (
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">Tidsram:</span>
-                    <span className="font-medium">{request.raw_data.timeframe}</span>
-                  </div>
-                )}
-              </div>
-            </div>
-          )}
-
-          {/* Detailed AI Consultation (from extra_info) */}
-          {request.source === 'ai_consultation_detailed' && request.raw_data?.extra_info && (
             <div className="space-y-4">
               <h3 className="font-semibold text-sm text-muted-foreground uppercase tracking-wide">
-                Detaljerad AI-konsultation
+                Detaljerad AI-Konsultation
               </h3>
-              
+
               {/* Section 2: Goals & Vision */}
-              {(request.raw_data.extra_info.ai_goals || request.raw_data.extra_info.success_definition) && (
+              {(request.raw_data.ai_goals || request.raw_data.success_definition) && (
                 <div className="space-y-2 p-4 bg-muted/30 rounded-lg">
                   <h4 className="font-semibold text-sm">Mål & Vision</h4>
-                  {request.raw_data.extra_info.ai_goals && request.raw_data.extra_info.ai_goals.length > 0 && (
+                  {request.raw_data.ai_goals && request.raw_data.ai_goals.length > 0 && (
                     <div>
                       <span className="text-xs text-muted-foreground">AI-mål:</span>
                       <div className="flex flex-wrap gap-1 mt-1">
-                        {request.raw_data.extra_info.ai_goals.map((goal: string, i: number) => (
+                        {request.raw_data.ai_goals.map((goal: string, i: number) => (
                           <Badge key={i} variant="secondary" className="text-xs">
                             {goal}
                           </Badge>
@@ -211,55 +176,55 @@ export function RequestDetailsModal({
                       </div>
                     </div>
                   )}
-                  {request.raw_data.extra_info.success_definition && (
+                  {request.raw_data.success_definition && (
                     <div>
                       <span className="text-xs text-muted-foreground">Framgångsdefinition:</span>
-                      <p className="text-sm mt-1">{request.raw_data.extra_info.success_definition}</p>
+                      <p className="text-sm mt-1">{request.raw_data.success_definition}</p>
                     </div>
                   )}
-                  {request.raw_data.extra_info.ai_priority && (
+                  {request.raw_data.ai_priority && (
                     <div className="flex justify-between text-sm">
                       <span className="text-muted-foreground">Prioritet:</span>
-                      <span className="font-medium">{request.raw_data.extra_info.ai_priority}/5</span>
+                      <span className="font-medium">{request.raw_data.ai_priority}/5</span>
                     </div>
                   )}
                 </div>
               )}
 
               {/* Section 3: Current Situation */}
-              {(request.raw_data.extra_info.manual_processes || request.raw_data.extra_info.existing_ai || request.raw_data.extra_info.current_systems) && (
+              {(request.raw_data.manual_processes || request.raw_data.existing_ai || request.raw_data.current_systems) && (
                 <div className="space-y-2 p-4 bg-muted/30 rounded-lg">
                   <h4 className="font-semibold text-sm">Nuvarande Situation</h4>
-                  {request.raw_data.extra_info.manual_processes && (
+                  {request.raw_data.manual_processes && (
                     <div>
                       <span className="text-xs text-muted-foreground">Manuella processer:</span>
-                      <p className="text-sm mt-1">{request.raw_data.extra_info.manual_processes}</p>
+                      <p className="text-sm mt-1">{request.raw_data.manual_processes}</p>
                     </div>
                   )}
-                  {request.raw_data.extra_info.existing_ai && (
+                  {request.raw_data.existing_ai && (
                     <div className="flex justify-between text-sm">
                       <span className="text-muted-foreground">Befintlig AI:</span>
-                      <span className="font-medium">{request.raw_data.extra_info.existing_ai}</span>
+                      <span className="font-medium">{request.raw_data.existing_ai}</span>
                     </div>
                   )}
-                  {request.raw_data.extra_info.current_systems && (
+                  {request.raw_data.current_systems && (
                     <div>
                       <span className="text-xs text-muted-foreground">Nuvarande system:</span>
-                      <p className="text-sm mt-1">{request.raw_data.extra_info.current_systems}</p>
+                      <p className="text-sm mt-1">{request.raw_data.current_systems}</p>
                     </div>
                   )}
                 </div>
               )}
 
               {/* Section 4: Data */}
-              {(request.raw_data.extra_info.data_types || request.raw_data.extra_info.historical_data || request.raw_data.extra_info.data_quality || request.raw_data.extra_info.gdpr_compliant) && (
+              {(request.raw_data.data_types || request.raw_data.historical_data || request.raw_data.data_quality || request.raw_data.gdpr_compliant) && (
                 <div className="space-y-2 p-4 bg-muted/30 rounded-lg">
                   <h4 className="font-semibold text-sm">Data</h4>
-                  {request.raw_data.extra_info.data_types && request.raw_data.extra_info.data_types.length > 0 && (
+                  {request.raw_data.data_types && request.raw_data.data_types.length > 0 && (
                     <div>
                       <span className="text-xs text-muted-foreground">Datatyper:</span>
                       <div className="flex flex-wrap gap-1 mt-1">
-                        {request.raw_data.extra_info.data_types.map((type: string, i: number) => (
+                        {request.raw_data.data_types.map((type: string, i: number) => (
                           <Badge key={i} variant="outline" className="text-xs">
                             {type}
                           </Badge>
@@ -267,36 +232,36 @@ export function RequestDetailsModal({
                       </div>
                     </div>
                   )}
-                  {request.raw_data.extra_info.historical_data && (
+                  {request.raw_data.historical_data && (
                     <div className="flex justify-between text-sm">
                       <span className="text-muted-foreground">Historisk data:</span>
-                      <span className="font-medium">{request.raw_data.extra_info.historical_data}</span>
+                      <span className="font-medium">{request.raw_data.historical_data}</span>
                     </div>
                   )}
-                  {request.raw_data.extra_info.data_quality && (
+                  {request.raw_data.data_quality && (
                     <div className="flex justify-between text-sm">
                       <span className="text-muted-foreground">Datakvalitet:</span>
-                      <span className="font-medium">{request.raw_data.extra_info.data_quality}/5</span>
+                      <span className="font-medium">{request.raw_data.data_quality}/5</span>
                     </div>
                   )}
-                  {request.raw_data.extra_info.gdpr_compliant && (
+                  {request.raw_data.gdpr_compliant && (
                     <div className="flex justify-between text-sm">
                       <span className="text-muted-foreground">GDPR-efterlevnad:</span>
-                      <span className="font-medium">{request.raw_data.extra_info.gdpr_compliant}</span>
+                      <span className="font-medium">{request.raw_data.gdpr_compliant}</span>
                     </div>
                   )}
                 </div>
               )}
 
               {/* Section 5: Resources & Budget */}
-              {(request.raw_data.extra_info.internal_resources || request.raw_data.extra_info.budget || request.raw_data.extra_info.timeframe) && (
+              {(request.raw_data.internal_resources || request.raw_data.budget || request.raw_data.timeframe) && (
                 <div className="space-y-2 p-4 bg-muted/30 rounded-lg">
                   <h4 className="font-semibold text-sm">Resurser & Budget</h4>
-                  {request.raw_data.extra_info.internal_resources && request.raw_data.extra_info.internal_resources.length > 0 && (
+                  {request.raw_data.internal_resources && request.raw_data.internal_resources.length > 0 && (
                     <div>
                       <span className="text-xs text-muted-foreground">Interna resurser:</span>
                       <div className="flex flex-wrap gap-1 mt-1">
-                        {request.raw_data.extra_info.internal_resources.map((resource: string, i: number) => (
+                        {request.raw_data.internal_resources.map((resource: string, i: number) => (
                           <Badge key={i} variant="outline" className="text-xs">
                             {resource}
                           </Badge>
@@ -304,30 +269,30 @@ export function RequestDetailsModal({
                       </div>
                     </div>
                   )}
-                  {request.raw_data.extra_info.budget && (
+                  {request.raw_data.budget && (
                     <div className="flex justify-between text-sm">
                       <span className="text-muted-foreground">Budget:</span>
-                      <span className="font-medium">{request.raw_data.extra_info.budget}</span>
+                      <span className="font-medium">{request.raw_data.budget}</span>
                     </div>
                   )}
-                  {request.raw_data.extra_info.timeframe && (
+                  {request.raw_data.timeframe && (
                     <div className="flex justify-between text-sm">
                       <span className="text-muted-foreground">Tidsram:</span>
-                      <span className="font-medium">{request.raw_data.extra_info.timeframe}</span>
+                      <span className="font-medium">{request.raw_data.timeframe}</span>
                     </div>
                   )}
                 </div>
               )}
 
               {/* Section 6: Users & Operations */}
-              {(request.raw_data.extra_info.ai_users || request.raw_data.extra_info.training_needed) && (
+              {(request.raw_data.ai_users || request.raw_data.training_needed) && (
                 <div className="space-y-2 p-4 bg-muted/30 rounded-lg">
                   <h4 className="font-semibold text-sm">Användare & Drift</h4>
-                  {request.raw_data.extra_info.ai_users && request.raw_data.extra_info.ai_users.length > 0 && (
+                  {request.raw_data.ai_users && request.raw_data.ai_users.length > 0 && (
                     <div>
                       <span className="text-xs text-muted-foreground">AI-användare:</span>
                       <div className="flex flex-wrap gap-1 mt-1">
-                        {request.raw_data.extra_info.ai_users.map((user: string, i: number) => (
+                        {request.raw_data.ai_users.map((user: string, i: number) => (
                           <Badge key={i} variant="outline" className="text-xs">
                             {user}
                           </Badge>
@@ -335,54 +300,54 @@ export function RequestDetailsModal({
                       </div>
                     </div>
                   )}
-                  {request.raw_data.extra_info.training_needed && (
+                  {request.raw_data.training_needed && (
                     <div className="flex justify-between text-sm">
                       <span className="text-muted-foreground">Träning behövs:</span>
-                      <span className="font-medium">{request.raw_data.extra_info.training_needed}</span>
+                      <span className="font-medium">{request.raw_data.training_needed}</span>
                     </div>
                   )}
                 </div>
               )}
 
               {/* Section 7: Risks & Limitations */}
-              {(request.raw_data.extra_info.regulatory_requirements || request.raw_data.extra_info.sensitive_data || request.raw_data.extra_info.ethical_limitations) && (
+              {(request.raw_data.regulatory_requirements || request.raw_data.sensitive_data || request.raw_data.ethical_limitations) && (
                 <div className="space-y-2 p-4 bg-muted/30 rounded-lg">
                   <h4 className="font-semibold text-sm">Risker & Begränsningar</h4>
-                  {request.raw_data.extra_info.regulatory_requirements && (
+                  {request.raw_data.regulatory_requirements && (
                     <div>
                       <span className="text-xs text-muted-foreground">Regulatoriska krav:</span>
-                      <p className="text-sm mt-1">{request.raw_data.extra_info.regulatory_requirements}</p>
+                      <p className="text-sm mt-1">{request.raw_data.regulatory_requirements}</p>
                     </div>
                   )}
-                  {request.raw_data.extra_info.sensitive_data && (
+                  {request.raw_data.sensitive_data && (
                     <div className="flex justify-between text-sm">
                       <span className="text-muted-foreground">Känslig data:</span>
-                      <span className="font-medium">{request.raw_data.extra_info.sensitive_data}</span>
+                      <span className="font-medium">{request.raw_data.sensitive_data}</span>
                     </div>
                   )}
-                  {request.raw_data.extra_info.ethical_limitations && (
+                  {request.raw_data.ethical_limitations && (
                     <div>
                       <span className="text-xs text-muted-foreground">Etiska begränsningar:</span>
-                      <p className="text-sm mt-1">{request.raw_data.extra_info.ethical_limitations}</p>
+                      <p className="text-sm mt-1">{request.raw_data.ethical_limitations}</p>
                     </div>
                   )}
                 </div>
               )}
 
               {/* Section 8: Future Vision */}
-              {(request.raw_data.extra_info.long_term_goals || request.raw_data.extra_info.open_to_experiments) && (
+              {(request.raw_data.long_term_goals || request.raw_data.open_to_experiments) && (
                 <div className="space-y-2 p-4 bg-muted/30 rounded-lg">
                   <h4 className="font-semibold text-sm">Framtidsvision</h4>
-                  {request.raw_data.extra_info.long_term_goals && (
+                  {request.raw_data.long_term_goals && (
                     <div>
                       <span className="text-xs text-muted-foreground">Långsiktiga mål:</span>
-                      <p className="text-sm mt-1">{request.raw_data.extra_info.long_term_goals}</p>
+                      <p className="text-sm mt-1">{request.raw_data.long_term_goals}</p>
                     </div>
                   )}
-                  {request.raw_data.extra_info.open_to_experiments && (
+                  {request.raw_data.open_to_experiments && (
                     <div className="flex justify-between text-sm">
                       <span className="text-muted-foreground">Öppen för experiment:</span>
-                      <span className="font-medium">{request.raw_data.extra_info.open_to_experiments}</span>
+                      <span className="font-medium">{request.raw_data.open_to_experiments}</span>
                     </div>
                   )}
                 </div>

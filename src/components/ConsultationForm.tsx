@@ -114,46 +114,38 @@ export function ConsultationForm({ showAsModal = false, onSuccess }: Consultatio
   const handleSubmit = async () => {
     setIsLoading(true);
     try {
-      // Prepare extra_info with all detailed fields
-      const extraInfo = {
-        company_name: companyName,
-        ai_goals: aiGoals,
-        ai_goals_other: aiGoalsOther,
-        success_definition: successDefinition,
-        ai_priority: aiPriority[0],
-        manual_processes: manualProcesses,
-        existing_ai: existingAI,
-        current_systems: currentSystems,
-        data_types: dataTypes,
-        data_types_other: dataTypesOther,
-        historical_data: historicalData,
-        data_quality: dataQuality[0],
-        gdpr_compliant: gdprCompliant,
-        internal_resources: internalResources,
-        internal_resources_other: internalResourcesOther,
-        budget,
-        timeframe,
-        ai_users: aiUsers,
-        ai_users_other: aiUsersOther,
-        training_needed: trainingNeeded,
-        regulatory_requirements: regulatoryRequirements,
-        sensitive_data: sensitiveData,
-        ethical_limitations: ethicalLimitations,
-        long_term_goals: longTermGoals,
-        open_to_experiments: openToExperiments,
-      };
-
       const { error } = await supabase
-        .from('bookings')
+        .from('ai_consultations')
         .insert({
-          kundnamn: contactPerson,
-          epost: email,
-          telefonnummer: phone,
-          info: businessDescription,
-          bokningstyp: 'ai_consultation_detailed',
-          source: 'ai_consultation_detailed',
-          status: 'pending',
-          extra_info: JSON.stringify(extraInfo),
+          company_name: companyName,
+          contact_person: contactPerson,
+          email: email,
+          phone: phone,
+          business_description: businessDescription,
+          ai_goals: aiGoals,
+          ai_goals_other: aiGoalsOther,
+          success_definition: successDefinition,
+          ai_priority: aiPriority[0],
+          manual_processes: manualProcesses,
+          existing_ai: existingAI,
+          current_systems: currentSystems,
+          data_types: dataTypes,
+          data_types_other: dataTypesOther,
+          historical_data: historicalData,
+          data_quality: dataQuality[0],
+          gdpr_compliant: gdprCompliant,
+          internal_resources: internalResources,
+          internal_resources_other: internalResourcesOther,
+          budget: budget,
+          timeframe: timeframe,
+          ai_users: aiUsers,
+          ai_users_other: aiUsersOther,
+          training_needed: trainingNeeded,
+          regulatory_requirements: regulatoryRequirements,
+          sensitive_data: sensitiveData,
+          ethical_limitations: ethicalLimitations,
+          long_term_goals: longTermGoals,
+          open_to_experiments: openToExperiments,
         });
 
       if (error) throw error;
