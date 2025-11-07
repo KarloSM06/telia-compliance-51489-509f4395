@@ -44,6 +44,19 @@ export function RequestsTable({ requests, loading, onViewDetails }: RequestsTabl
     return type === 'booking' ? 'Bokning' : 'AI-konsultation';
   };
 
+  const getSourceLabel = (source?: string) => {
+    switch (source) {
+      case 'enterprise_contact':
+        return { label: 'Enterprise', icon: '🏢' };
+      case 'krono_quote':
+        return { label: 'Krono AI', icon: '🤖' };
+      case 'ai_consultation':
+        return { label: 'AI-konsult', icon: '🎯' };
+      default:
+        return { label: 'Webb', icon: '📄' };
+    }
+  };
+
   return (
     <Card>
       <div className="overflow-x-auto">
@@ -51,6 +64,7 @@ export function RequestsTable({ requests, loading, onViewDetails }: RequestsTabl
           <TableHeader>
             <TableRow>
               <TableHead>Typ</TableHead>
+              <TableHead>Källa</TableHead>
               <TableHead>Namn</TableHead>
               <TableHead>Företag</TableHead>
               <TableHead>Email</TableHead>
@@ -61,38 +75,47 @@ export function RequestsTable({ requests, loading, onViewDetails }: RequestsTabl
             </TableRow>
           </TableHeader>
           <TableBody>
-            {requests.map((request) => (
-              <TableRow key={`${request.type}-${request.id}`}>
-                <TableCell>
-                  <Badge variant="outline" className="text-xs">
-                    {getTypeLabel(request.type)}
-                  </Badge>
-                </TableCell>
-                <TableCell className="font-medium">{request.name}</TableCell>
-                <TableCell>{request.company || '-'}</TableCell>
-                <TableCell className="text-sm text-muted-foreground">
-                  {request.email}
-                </TableCell>
-                <TableCell className="text-sm text-muted-foreground">
-                  {request.phone}
-                </TableCell>
-                <TableCell>
-                  <RequestStatusBadge status={request.status} />
-                </TableCell>
-                <TableCell className="text-sm text-muted-foreground">
-                  {format(new Date(request.created_at), 'PPP', { locale: sv })}
-                </TableCell>
-                <TableCell className="text-right">
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => onViewDetails(request)}
-                  >
-                    <Eye className="h-4 w-4" />
-                  </Button>
-                </TableCell>
-              </TableRow>
-            ))}
+            {requests.map((request) => {
+              const sourceInfo = getSourceLabel(request.source);
+              return (
+                <TableRow key={`${request.type}-${request.id}`}>
+                  <TableCell>
+                    <Badge variant="outline" className="text-xs">
+                      {getTypeLabel(request.type)}
+                    </Badge>
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex items-center gap-1.5">
+                      <span className="text-base">{sourceInfo.icon}</span>
+                      <span className="text-xs text-muted-foreground">{sourceInfo.label}</span>
+                    </div>
+                  </TableCell>
+                  <TableCell className="font-medium">{request.name}</TableCell>
+                  <TableCell>{request.company || '-'}</TableCell>
+                  <TableCell className="text-sm text-muted-foreground">
+                    {request.email}
+                  </TableCell>
+                  <TableCell className="text-sm text-muted-foreground">
+                    {request.phone}
+                  </TableCell>
+                  <TableCell>
+                    <RequestStatusBadge status={request.status} />
+                  </TableCell>
+                  <TableCell className="text-sm text-muted-foreground">
+                    {format(new Date(request.created_at), 'PPP', { locale: sv })}
+                  </TableCell>
+                  <TableCell className="text-right">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => onViewDetails(request)}
+                    >
+                      <Eye className="h-4 w-4" />
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              );
+            })}
           </TableBody>
         </Table>
       </div>

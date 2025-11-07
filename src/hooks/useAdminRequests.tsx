@@ -10,6 +10,7 @@ export interface RequestData {
   company?: string;
   message?: string;
   status: string;
+  source?: string; // Added to track form origin
   created_at: string;
   updated_at?: string;
   raw_data: any;
@@ -39,18 +40,28 @@ export function useAdminRequests(filters?: {
         console.error('Error fetching bookings:', bookingsError);
       } else if (bookings) {
         requests.push(
-          ...bookings.map((b) => ({
-            id: b.id,
-            type: 'booking' as const,
-            name: b.kundnamn || 'N/A',
-            email: b.epost || 'N/A',
-            phone: b.telefonnummer || 'N/A',
-            company: undefined,
-            message: b.info || b.extra_info || undefined,
-            status: b.status || 'pending',
-            created_at: b.created_at || new Date().toISOString(),
-            raw_data: b,
-          }))
+          ...bookings.map((b) => {
+            // Extract company name from info field for enterprise_contact type
+            let companyName = undefined;
+            if (b.source === 'enterprise_contact' && b.info) {
+              const companyMatch = b.info.match(/Företag:\s*([^\n]+)/);
+              companyName = companyMatch ? companyMatch[1].trim() : undefined;
+            }
+
+            return {
+              id: b.id,
+              type: 'booking' as const,
+              name: b.kundnamn || 'N/A',
+              email: b.epost || 'N/A',
+              phone: b.telefonnummer || 'N/A',
+              company: companyName,
+              message: b.info || b.extra_info || undefined,
+              status: b.status || 'pending',
+              source: b.source || 'website_form',
+              created_at: b.created_at || new Date().toISOString(),
+              raw_data: b,
+            };
+          })
         );
       }
 
@@ -75,6 +86,7 @@ export function useAdminRequests(filters?: {
             company: c.company_name || undefined,
             message: c.business_description || undefined,
             status: 'pending',
+            source: 'ai_consultation',
             created_at: c.created_at || new Date().toISOString(),
             raw_data: c,
           }))

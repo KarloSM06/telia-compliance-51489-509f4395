@@ -56,14 +56,33 @@ export function RequestDetailsModal({
   };
 
   const typeName = request.type === 'booking' ? 'Bokning' : 'AI-konsultation';
+  
+  const getSourceLabel = (source?: string) => {
+    switch (source) {
+      case 'enterprise_contact':
+        return { label: 'Enterprise Kontakt', icon: '🏢', color: 'bg-blue-500/10 text-blue-600 border-blue-500/20' };
+      case 'krono_quote':
+        return { label: 'Krono AI-assistent', icon: '🤖', color: 'bg-purple-500/10 text-purple-600 border-purple-500/20' };
+      case 'ai_consultation':
+        return { label: 'AI-konsultation', icon: '🎯', color: 'bg-green-500/10 text-green-600 border-green-500/20' };
+      default:
+        return { label: 'Webbformulär', icon: '📄', color: 'bg-gray-500/10 text-gray-600 border-gray-500/20' };
+    }
+  };
+
+  const sourceInfo = getSourceLabel(request.source);
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
+          <DialogTitle className="flex items-center gap-2 flex-wrap">
             <span>{request.name}</span>
             <Badge variant="outline">{typeName}</Badge>
+            <Badge variant="secondary" className={sourceInfo.color}>
+              <span className="mr-1">{sourceInfo.icon}</span>
+              {sourceInfo.label}
+            </Badge>
           </DialogTitle>
           <DialogDescription>
             Mottagen {format(new Date(request.created_at), 'PPP', { locale: sv })}
