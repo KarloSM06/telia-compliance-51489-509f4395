@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '@/hooks/useAuth';
 import { useHiemsAdmin } from '@/hooks/useHiemsAdmin';
 import { useAdminRequests, RequestData } from '@/hooks/useAdminRequests';
 import { RequestsTable } from '@/components/admin/RequestsTable';
@@ -14,6 +15,7 @@ import hiemsLogoSnowflake from '@/assets/hiems-logo-snowflake.png';
 
 export default function AdminRequests() {
   const navigate = useNavigate();
+  const { session } = useAuth();
   const { isHiemsAdmin, loading: adminLoading } = useHiemsAdmin();
   
   const [filters, setFilters] = useState({
@@ -28,6 +30,13 @@ export default function AdminRequests() {
   const [detailsModalOpen, setDetailsModalOpen] = useState(false);
 
   const { data: requests = [], isLoading, refetch } = useAdminRequests(filters);
+
+  // Refetch when admin status is confirmed
+  useEffect(() => {
+    if (isHiemsAdmin) {
+      refetch();
+    }
+  }, [isHiemsAdmin, refetch]);
 
   const handleViewDetails = (request: RequestData) => {
     setSelectedRequest(request);
@@ -140,6 +149,11 @@ export default function AdminRequests() {
                     Admin Access
                   </span>
                 </div>
+                {session?.user?.email && (
+                  <div className="text-sm text-muted-foreground">
+                    Inloggad som: <span className="font-medium">{session.user.email}</span>
+                  </div>
+                )}
                 <Badge variant="outline">
                   {requests.length} totalt
                 </Badge>

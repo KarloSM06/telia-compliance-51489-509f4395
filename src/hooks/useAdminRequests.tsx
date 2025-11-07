@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
+import { useAuth } from '@/hooks/useAuth';
 
 export interface RequestData {
   id: string;
@@ -23,8 +24,11 @@ export function useAdminRequests(filters?: {
   dateFrom?: string;
   dateTo?: string;
 }) {
+  const { session, loading: authLoading } = useAuth();
+
   return useQuery({
     queryKey: ['admin-requests', filters],
+    enabled: !!session && !authLoading,
     queryFn: async () => {
       // Fetch AI consultations only
       const { data: consultations, error: consultationsError } = await supabase
