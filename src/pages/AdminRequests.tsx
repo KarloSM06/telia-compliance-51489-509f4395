@@ -119,7 +119,7 @@ export default function AdminRequests() {
               </h1>
               
               <p className="text-lg sm:text-xl text-muted-foreground max-w-3xl mx-auto">
-                Hantera bokningar och AI-konsultationer från kunder
+                Hantera AI-konsultationer från kunder
               </p>
             </div>
           </AnimatedSection>

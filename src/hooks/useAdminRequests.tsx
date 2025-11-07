@@ -26,86 +26,35 @@ export function useAdminRequests(filters?: {
   return useQuery({
     queryKey: ['admin-requests', filters],
     queryFn: async () => {
-      const requests: RequestData[] = [];
-
-      // Fetch bookings
-      let bookingsQuery = supabase
-        .from('bookings')
-        .select('*')
-        .order('created_at', { ascending: false });
-
-      const { data: bookings, error: bookingsError } = await bookingsQuery;
-
-      if (bookingsError) {
-        console.error('Error fetching bookings:', bookingsError);
-      } else if (bookings) {
-        requests.push(
-          ...bookings.map((b) => {
-            // Extract company name and parse extra_info
-            let companyName = undefined;
-            let extraInfo = null;
-            
-            if (b.source === 'enterprise_contact' && b.info) {
-              const companyMatch = b.info.match(/Företag:\s*([^\n]+)/);
-              companyName = companyMatch ? companyMatch[1].trim() : undefined;
-            }
-            
-            // Parse extra_info for ai_consultation_detailed
-            if (b.source === 'ai_consultation_detailed' && b.extra_info) {
-              try {
-                extraInfo = typeof b.extra_info === 'string' 
-                  ? JSON.parse(b.extra_info) 
-                  : b.extra_info;
-                companyName = extraInfo?.company_name;
-              } catch (e) {
-                console.error('Error parsing extra_info:', e);
-              }
-            }
-
-            return {
-              id: b.id,
-              type: 'booking' as const,
-              name: b.kundnamn || 'N/A',
-              email: b.epost || 'N/A',
-              phone: b.telefonnummer || 'N/A',
-              company: companyName,
-              message: b.info || undefined,
-              status: b.status || 'pending',
-              source: b.source || 'website_form',
-              created_at: b.created_at || new Date().toISOString(),
-              raw_data: { ...b, extra_info: extraInfo },
-            };
-          })
-        );
-      }
-
-      // Fetch AI consultations
-      let consultationsQuery = supabase
+      // Fetch AI consultations only
+      const { data: consultations, error: consultationsError } = await supabase
         .from('ai_consultations')
         .select('*')
         .order('created_at', { ascending: false });
 
-      const { data: consultations, error: consultationsError } = await consultationsQuery;
-
       if (consultationsError) {
         console.error('Error fetching consultations:', consultationsError);
-      } else if (consultations) {
-        requests.push(
-          ...consultations.map((c) => ({
-            id: c.id,
-            type: 'ai_consultation' as const,
-            name: c.contact_person || 'N/A',
-            email: c.email || 'N/A',
-            phone: c.phone || 'N/A',
-            company: c.company_name || undefined,
-            message: c.business_description || undefined,
-            status: 'pending',
-            source: 'ai_consultation',
-            created_at: c.created_at || new Date().toISOString(),
-            raw_data: c,
-          }))
-        );
+        console.error('Detta kan bero på RLS-policies. Kontrollera att ditt konto har admin-behörighet.');
+        return [];
       }
+
+      if (!consultations) {
+        return [];
+      }
+
+      const requests: RequestData[] = consultations.map((c) => ({
+        id: c.id,
+        type: 'ai_consultation' as const,
+        name: c.contact_person || 'N/A',
+        email: c.email || 'N/A',
+        phone: c.phone || 'N/A',
+        company: c.company_name || undefined,
+        message: c.business_description || undefined,
+        status: 'pending',
+        source: 'ai_consultation',
+        created_at: c.created_at || new Date().toISOString(),
+        raw_data: c,
+      }))
 
       // Apply filters
       let filteredRequests = requests;
