@@ -6,7 +6,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useState } from "react";
 import { ConsultationModal } from "@/components/ConsultationModal";
 import { AnimatedSection } from "@/components/AnimatedSection";
-import { ConsultationInline } from "@/components/ConsultationInline";
+import { ConsultationCTA } from "@/components/ConsultationCTA";
 import { StickyPackageCards } from "@/components/home/StickyPackageCards";
 import { IndustryGallery } from "@/components/home/IndustryGallery";
 import { CustomerJourneyFlow } from "@/components/home/CustomerJourneyFlow";
@@ -91,7 +91,7 @@ export const ProductSelection = () => {
         </AnimatedSection>
 
         {/* Kontakt / CTA */}
-        <ConsultationInline />
+        <ConsultationCTA />
       </AuroraBackground>
 
       {/* Branschspecifika lösningar */}

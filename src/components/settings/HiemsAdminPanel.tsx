@@ -4,7 +4,6 @@ import { Badge } from "@/components/ui/badge";
 import { ShieldCheck, Users, Database, Activity } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { RecentRequestsWidget } from "@/components/admin/RecentRequestsWidget";
 
 interface AdminStats {
   totalUsers: number;
@@ -141,9 +140,7 @@ export function HiemsAdminPanel() {
         </CardContent>
       </Card>
 
-      <RecentRequestsWidget />
-
-      <Card className="hover-scale transition-all animate-scale-in" style={{ animationDelay: '150ms' }}>
+      <Card className="hover-scale transition-all animate-scale-in" style={{ animationDelay: '100ms' }}>
         <CardHeader className="animate-fade-in">
           <CardTitle>Admin-privilegier</CardTitle>
           <CardDescription>

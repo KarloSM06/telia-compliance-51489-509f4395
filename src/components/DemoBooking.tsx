@@ -6,8 +6,6 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Check, Calendar } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
-import { useToast } from "@/hooks/use-toast";
 
 interface DemoBookingProps {
   children: React.ReactNode;
@@ -16,12 +14,6 @@ interface DemoBookingProps {
 export const DemoBooking = ({ children }: DemoBookingProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState("");
-  const [company, setCompany] = useState("");
-  const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
-  const [message, setMessage] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-  const { toast } = useToast();
 
   const plans = [
     { name: "Starter", price: "699 kr", description: "1-5 agenter" },
@@ -30,58 +22,6 @@ export const DemoBooking = ({ children }: DemoBookingProps) => {
   ];
 
   const currentPlan = plans.find(plan => plan.name === selectedPlan);
-
-  const handleSubmit = async () => {
-    // Validation
-    if (!company || !email || !phone) {
-      toast({
-        title: "Fält saknas",
-        description: "Vänligen fyll i företag, e-post och telefonnummer",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    setIsLoading(true);
-
-    try {
-      const { error } = await supabase
-        .from('ai_consultations')
-        .insert({
-          company_name: company,
-          contact_person: '',
-          email: email,
-          phone: phone,
-          business_description: selectedPlan 
-            ? `Demo-bokning för ${selectedPlan}\n\n${message || 'Inget meddelande angett'}`
-            : message || 'Demo-bokning utan vald plan',
-        });
-
-      if (error) throw error;
-
-      toast({
-        title: "Tack för din bokning!",
-        description: "Vi kontaktar dig inom 24 timmar för att boka en demo.",
-      });
-
-      // Reset form
-      setCompany("");
-      setEmail("");
-      setPhone("");
-      setMessage("");
-      setSelectedPlan("");
-      setIsOpen(false);
-    } catch (error) {
-      console.error('Error submitting booking:', error);
-      toast({
-        title: "Ett fel uppstod",
-        description: "Kunde inte skicka din bokning. Försök igen.",
-        variant: "destructive",
-      });
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -127,36 +67,17 @@ export const DemoBooking = ({ children }: DemoBookingProps) => {
           <div className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="company">Företag *</Label>
-              <Input 
-                id="company" 
-                placeholder="Ditt företagsnamn" 
-                value={company}
-                onChange={(e) => setCompany(e.target.value)}
-                required 
-              />
+              <Input id="company" placeholder="Ditt företagsnamn" required />
             </div>
             
             <div className="space-y-2">
               <Label htmlFor="email">E-post *</Label>
-              <Input 
-                id="email" 
-                type="email" 
-                placeholder="din@epost.se"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required 
-              />
+              <Input id="email" type="email" placeholder="din@epost.se" required />
             </div>
             
             <div className="space-y-2">
               <Label htmlFor="phone">Telefonnummer *</Label>
-              <Input 
-                id="phone" 
-                placeholder="070-123 45 67"
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
-                required 
-              />
+              <Input id="phone" placeholder="070-123 45 67" required />
             </div>
             
             <div className="space-y-2">
@@ -165,8 +86,6 @@ export const DemoBooking = ({ children }: DemoBookingProps) => {
                 id="message" 
                 placeholder="Berätta om era behov och hur många agenter ni har..."
                 className="min-h-[80px]"
-                value={message}
-                onChange={(e) => setMessage(e.target.value)}
               />
             </div>
           </div>
@@ -190,14 +109,9 @@ export const DemoBooking = ({ children }: DemoBookingProps) => {
             </div>
           </div>
 
-          <Button 
-            className="w-full" 
-            size="lg"
-            onClick={handleSubmit}
-            disabled={isLoading}
-          >
+          <Button className="w-full" size="lg">
             <Calendar className="mr-2 h-4 w-4" />
-            {isLoading ? "Skickar..." : "Boka demo & få offert"}
+            Boka demo & få offert
           </Button>
           
           <p className="text-xs text-center text-muted-foreground">

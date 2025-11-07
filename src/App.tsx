@@ -52,7 +52,6 @@ const TelephonyPage = lazy(() => import("./pages/TelephonyPage"));
 // Removed - redirects to UnifiedSettings
 const OpenRouterDashboard = lazy(() => import("./pages/OpenRouterDashboard"));
 const AdminPanel = lazy(() => import("./pages/AdminPanel"));
-const AdminRequests = lazy(() => import("./pages/AdminRequests"));
 const DashboardLayout = lazy(() => import("./components/dashboard/DashboardLayout").then(m => ({ default: m.DashboardLayout })));
 
 // Loading fallback component
@@ -114,7 +113,6 @@ const App = () => {
               <Route path="/dashboard/integrations" element={<Navigate to="/dashboard/settings?tab=integrationer" replace />} />
               <Route path="/dashboard/openrouter" element={<DashboardLayout><OpenRouterDashboard /></DashboardLayout>} />
               <Route path="/dashboard/admin" element={<DashboardLayout><AdminPanel /></DashboardLayout>} />
-              <Route path="/dashboard/admin/requests" element={<DashboardLayout><AdminRequests /></DashboardLayout>} />
               <Route path="/unsubscribe" element={<Unsubscribe />} />
               <Route path="/demo" element={<Demo />} />
               <Route path="/om-oss" element={<AboutUs />} />

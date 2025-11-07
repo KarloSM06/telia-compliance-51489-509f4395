@@ -1,4 +1,4 @@
-import { Home, LayoutDashboard, Settings, LogOut, Phone, Users, Target, Star, Calendar, Bell, MessageSquare, Mail, Brain, Search, Briefcase, Zap, ShieldCheck, Inbox } from "lucide-react";
+import { Home, LayoutDashboard, Settings, LogOut, Phone, Users, Target, Star, Calendar, Bell, MessageSquare, Mail, Brain, Search, Briefcase, Zap, ShieldCheck } from "lucide-react";
 import { useLocation } from "react-router-dom";
 import { useSidebar, SidebarLink } from "@/components/ui/animated-sidebar";
 import { useSidebarPermissions } from "@/hooks/useSidebarPermissions";
@@ -9,7 +9,6 @@ import { motion } from "framer-motion";
 const iconMap: Record<string, any> = {
   "/dashboard": Home,
   "/dashboard/admin": ShieldCheck,
-  "/dashboard/admin/requests": Inbox,
   "/dashboard/lead": Search,
   "/dashboard/talent": Briefcase,
   "/dashboard/calendar": Calendar,

@@ -12,12 +12,9 @@ export function EmptyState() {
         <Users className="h-12 w-12 text-primary" />
       </div>
       <div className="text-center space-y-2">
-        <h3 className="text-xl font-semibold">Inga AI-konsultationer hittades</h3>
+        <h3 className="text-xl font-semibold">Inga användare hittades</h3>
         <p className="text-muted-foreground">
-          Justera dina filter eller vänta på nya konsultationer
-        </p>
-        <p className="text-xs text-muted-foreground mt-2">
-          Om du förväntar dig att se data, kontrollera att ditt konto har admin-behörighet
+          Justera dina filter eller vänta på nya registreringar
         </p>
       </div>
     </div>

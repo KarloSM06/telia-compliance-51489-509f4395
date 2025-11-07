@@ -54,7 +54,6 @@ export function EnterpriseContactModal({ open, onOpenChange, productName }: Ente
           epost: validatedData.email,
           telefonnummer: validatedData.phone,
           bokningstyp: 'enterprise_quote',
-          source: 'enterprise_contact',
           info: `Företag: ${validatedData.company}\nProdukt: ${productName}\nMeddelande: ${validatedData.message}`,
           status: 'pending'
         });

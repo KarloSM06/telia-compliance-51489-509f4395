@@ -477,7 +477,6 @@ export type Database = {
           id: string
           info: string | null
           kundnamn: string | null
-          source: string | null
           status: string | null
           telefonnummer: string | null
           user_id: string | null
@@ -491,7 +490,6 @@ export type Database = {
           id?: string
           info?: string | null
           kundnamn?: string | null
-          source?: string | null
           status?: string | null
           telefonnummer?: string | null
           user_id?: string | null
@@ -505,7 +503,6 @@ export type Database = {
           id?: string
           info?: string | null
           kundnamn?: string | null
-          source?: string | null
           status?: string | null
           telefonnummer?: string | null
           user_id?: string | null
