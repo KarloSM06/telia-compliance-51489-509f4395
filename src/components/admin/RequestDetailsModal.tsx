@@ -65,6 +65,8 @@ export function RequestDetailsModal({
         return { label: 'Krono AI-assistent', icon: '🤖', color: 'bg-purple-500/10 text-purple-600 border-purple-500/20' };
       case 'ai_consultation':
         return { label: 'AI-konsultation', icon: '🎯', color: 'bg-green-500/10 text-green-600 border-green-500/20' };
+      case 'ai_consultation_detailed':
+        return { label: 'AI-konsultation (Detaljerad)', icon: '🎯', color: 'bg-green-500/10 text-green-600 border-green-500/20' };
       default:
         return { label: 'Webbformulär', icon: '📄', color: 'bg-gray-500/10 text-gray-600 border-gray-500/20' };
     }
@@ -183,6 +185,208 @@ export function RequestDetailsModal({
                   </div>
                 )}
               </div>
+            </div>
+          )}
+
+          {/* Detailed AI Consultation (from extra_info) */}
+          {request.source === 'ai_consultation_detailed' && request.raw_data?.extra_info && (
+            <div className="space-y-4">
+              <h3 className="font-semibold text-sm text-muted-foreground uppercase tracking-wide">
+                Detaljerad AI-konsultation
+              </h3>
+              
+              {/* Section 2: Goals & Vision */}
+              {(request.raw_data.extra_info.ai_goals || request.raw_data.extra_info.success_definition) && (
+                <div className="space-y-2 p-4 bg-muted/30 rounded-lg">
+                  <h4 className="font-semibold text-sm">Mål & Vision</h4>
+                  {request.raw_data.extra_info.ai_goals && request.raw_data.extra_info.ai_goals.length > 0 && (
+                    <div>
+                      <span className="text-xs text-muted-foreground">AI-mål:</span>
+                      <div className="flex flex-wrap gap-1 mt-1">
+                        {request.raw_data.extra_info.ai_goals.map((goal: string, i: number) => (
+                          <Badge key={i} variant="secondary" className="text-xs">
+                            {goal}
+                          </Badge>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                  {request.raw_data.extra_info.success_definition && (
+                    <div>
+                      <span className="text-xs text-muted-foreground">Framgångsdefinition:</span>
+                      <p className="text-sm mt-1">{request.raw_data.extra_info.success_definition}</p>
+                    </div>
+                  )}
+                  {request.raw_data.extra_info.ai_priority && (
+                    <div className="flex justify-between text-sm">
+                      <span className="text-muted-foreground">Prioritet:</span>
+                      <span className="font-medium">{request.raw_data.extra_info.ai_priority}/5</span>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* Section 3: Current Situation */}
+              {(request.raw_data.extra_info.manual_processes || request.raw_data.extra_info.existing_ai || request.raw_data.extra_info.current_systems) && (
+                <div className="space-y-2 p-4 bg-muted/30 rounded-lg">
+                  <h4 className="font-semibold text-sm">Nuvarande Situation</h4>
+                  {request.raw_data.extra_info.manual_processes && (
+                    <div>
+                      <span className="text-xs text-muted-foreground">Manuella processer:</span>
+                      <p className="text-sm mt-1">{request.raw_data.extra_info.manual_processes}</p>
+                    </div>
+                  )}
+                  {request.raw_data.extra_info.existing_ai && (
+                    <div className="flex justify-between text-sm">
+                      <span className="text-muted-foreground">Befintlig AI:</span>
+                      <span className="font-medium">{request.raw_data.extra_info.existing_ai}</span>
+                    </div>
+                  )}
+                  {request.raw_data.extra_info.current_systems && (
+                    <div>
+                      <span className="text-xs text-muted-foreground">Nuvarande system:</span>
+                      <p className="text-sm mt-1">{request.raw_data.extra_info.current_systems}</p>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* Section 4: Data */}
+              {(request.raw_data.extra_info.data_types || request.raw_data.extra_info.historical_data || request.raw_data.extra_info.data_quality || request.raw_data.extra_info.gdpr_compliant) && (
+                <div className="space-y-2 p-4 bg-muted/30 rounded-lg">
+                  <h4 className="font-semibold text-sm">Data</h4>
+                  {request.raw_data.extra_info.data_types && request.raw_data.extra_info.data_types.length > 0 && (
+                    <div>
+                      <span className="text-xs text-muted-foreground">Datatyper:</span>
+                      <div className="flex flex-wrap gap-1 mt-1">
+                        {request.raw_data.extra_info.data_types.map((type: string, i: number) => (
+                          <Badge key={i} variant="outline" className="text-xs">
+                            {type}
+                          </Badge>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                  {request.raw_data.extra_info.historical_data && (
+                    <div className="flex justify-between text-sm">
+                      <span className="text-muted-foreground">Historisk data:</span>
+                      <span className="font-medium">{request.raw_data.extra_info.historical_data}</span>
+                    </div>
+                  )}
+                  {request.raw_data.extra_info.data_quality && (
+                    <div className="flex justify-between text-sm">
+                      <span className="text-muted-foreground">Datakvalitet:</span>
+                      <span className="font-medium">{request.raw_data.extra_info.data_quality}/5</span>
+                    </div>
+                  )}
+                  {request.raw_data.extra_info.gdpr_compliant && (
+                    <div className="flex justify-between text-sm">
+                      <span className="text-muted-foreground">GDPR-efterlevnad:</span>
+                      <span className="font-medium">{request.raw_data.extra_info.gdpr_compliant}</span>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* Section 5: Resources & Budget */}
+              {(request.raw_data.extra_info.internal_resources || request.raw_data.extra_info.budget || request.raw_data.extra_info.timeframe) && (
+                <div className="space-y-2 p-4 bg-muted/30 rounded-lg">
+                  <h4 className="font-semibold text-sm">Resurser & Budget</h4>
+                  {request.raw_data.extra_info.internal_resources && request.raw_data.extra_info.internal_resources.length > 0 && (
+                    <div>
+                      <span className="text-xs text-muted-foreground">Interna resurser:</span>
+                      <div className="flex flex-wrap gap-1 mt-1">
+                        {request.raw_data.extra_info.internal_resources.map((resource: string, i: number) => (
+                          <Badge key={i} variant="outline" className="text-xs">
+                            {resource}
+                          </Badge>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                  {request.raw_data.extra_info.budget && (
+                    <div className="flex justify-between text-sm">
+                      <span className="text-muted-foreground">Budget:</span>
+                      <span className="font-medium">{request.raw_data.extra_info.budget}</span>
+                    </div>
+                  )}
+                  {request.raw_data.extra_info.timeframe && (
+                    <div className="flex justify-between text-sm">
+                      <span className="text-muted-foreground">Tidsram:</span>
+                      <span className="font-medium">{request.raw_data.extra_info.timeframe}</span>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* Section 6: Users & Operations */}
+              {(request.raw_data.extra_info.ai_users || request.raw_data.extra_info.training_needed) && (
+                <div className="space-y-2 p-4 bg-muted/30 rounded-lg">
+                  <h4 className="font-semibold text-sm">Användare & Drift</h4>
+                  {request.raw_data.extra_info.ai_users && request.raw_data.extra_info.ai_users.length > 0 && (
+                    <div>
+                      <span className="text-xs text-muted-foreground">AI-användare:</span>
+                      <div className="flex flex-wrap gap-1 mt-1">
+                        {request.raw_data.extra_info.ai_users.map((user: string, i: number) => (
+                          <Badge key={i} variant="outline" className="text-xs">
+                            {user}
+                          </Badge>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                  {request.raw_data.extra_info.training_needed && (
+                    <div className="flex justify-between text-sm">
+                      <span className="text-muted-foreground">Träning behövs:</span>
+                      <span className="font-medium">{request.raw_data.extra_info.training_needed}</span>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* Section 7: Risks & Limitations */}
+              {(request.raw_data.extra_info.regulatory_requirements || request.raw_data.extra_info.sensitive_data || request.raw_data.extra_info.ethical_limitations) && (
+                <div className="space-y-2 p-4 bg-muted/30 rounded-lg">
+                  <h4 className="font-semibold text-sm">Risker & Begränsningar</h4>
+                  {request.raw_data.extra_info.regulatory_requirements && (
+                    <div>
+                      <span className="text-xs text-muted-foreground">Regulatoriska krav:</span>
+                      <p className="text-sm mt-1">{request.raw_data.extra_info.regulatory_requirements}</p>
+                    </div>
+                  )}
+                  {request.raw_data.extra_info.sensitive_data && (
+                    <div className="flex justify-between text-sm">
+                      <span className="text-muted-foreground">Känslig data:</span>
+                      <span className="font-medium">{request.raw_data.extra_info.sensitive_data}</span>
+                    </div>
+                  )}
+                  {request.raw_data.extra_info.ethical_limitations && (
+                    <div>
+                      <span className="text-xs text-muted-foreground">Etiska begränsningar:</span>
+                      <p className="text-sm mt-1">{request.raw_data.extra_info.ethical_limitations}</p>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* Section 8: Future Vision */}
+              {(request.raw_data.extra_info.long_term_goals || request.raw_data.extra_info.open_to_experiments) && (
+                <div className="space-y-2 p-4 bg-muted/30 rounded-lg">
+                  <h4 className="font-semibold text-sm">Framtidsvision</h4>
+                  {request.raw_data.extra_info.long_term_goals && (
+                    <div>
+                      <span className="text-xs text-muted-foreground">Långsiktiga mål:</span>
+                      <p className="text-sm mt-1">{request.raw_data.extra_info.long_term_goals}</p>
+                    </div>
+                  )}
+                  {request.raw_data.extra_info.open_to_experiments && (
+                    <div className="flex justify-between text-sm">
+                      <span className="text-muted-foreground">Öppen för experiment:</span>
+                      <span className="font-medium">{request.raw_data.extra_info.open_to_experiments}</span>
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
           )}
 

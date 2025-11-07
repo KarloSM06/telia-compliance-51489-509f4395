@@ -41,11 +41,25 @@ export function useAdminRequests(filters?: {
       } else if (bookings) {
         requests.push(
           ...bookings.map((b) => {
-            // Extract company name from info field for enterprise_contact type
+            // Extract company name and parse extra_info
             let companyName = undefined;
+            let extraInfo = null;
+            
             if (b.source === 'enterprise_contact' && b.info) {
               const companyMatch = b.info.match(/Företag:\s*([^\n]+)/);
               companyName = companyMatch ? companyMatch[1].trim() : undefined;
+            }
+            
+            // Parse extra_info for ai_consultation_detailed
+            if (b.source === 'ai_consultation_detailed' && b.extra_info) {
+              try {
+                extraInfo = typeof b.extra_info === 'string' 
+                  ? JSON.parse(b.extra_info) 
+                  : b.extra_info;
+                companyName = extraInfo?.company_name;
+              } catch (e) {
+                console.error('Error parsing extra_info:', e);
+              }
             }
 
             return {
@@ -55,11 +69,11 @@ export function useAdminRequests(filters?: {
               email: b.epost || 'N/A',
               phone: b.telefonnummer || 'N/A',
               company: companyName,
-              message: b.info || b.extra_info || undefined,
+              message: b.info || undefined,
               status: b.status || 'pending',
               source: b.source || 'website_form',
               created_at: b.created_at || new Date().toISOString(),
-              raw_data: b,
+              raw_data: { ...b, extra_info: extraInfo },
             };
           })
         );
