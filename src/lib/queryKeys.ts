@@ -134,6 +134,7 @@ export const queryKeys = {
       ['admin', 'metrics', dateRange] as const,
     userActivity: (dateRange?: { from: Date; to: Date }) =>
       ['admin', 'user-activity', dateRange] as const,
+    consultations: () => ['admin', 'consultations'] as const,
   },
 } as const;
 

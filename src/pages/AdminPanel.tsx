@@ -1,14 +1,17 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useHiemsAdmin } from '@/hooks/useHiemsAdmin';
 import { useAuth } from '@/hooks/useAuth';
 import { useAdminMetrics } from '@/hooks/useAdminMetrics';
 import { useAdminChartData } from '@/hooks/useAdminChartData';
+import { useAdminConsultations, type AiConsultation } from '@/hooks/useAdminConsultations';
 import { Badge } from '@/components/ui/badge';
 import { UserStatsCards } from '@/components/admin/UserStatsCards';
 import { UserFilters } from '@/components/admin/UserFilters';
 import { UserTable } from '@/components/admin/UserTable';
 import { UserPermissionsDialog } from '@/components/admin/UserPermissionsDialog';
+import { ConsultationsTable } from '@/components/admin/ConsultationsTable';
+import { ConsultationDetailsDialog } from '@/components/admin/ConsultationDetailsDialog';
 import { UserGrowthChart } from '@/components/admin/charts/UserGrowthChart';
 import { RoleDistributionChart } from '@/components/admin/charts/RoleDistributionChart';
 import { ActivityHeatmapChart } from '@/components/admin/charts/ActivityHeatmapChart';
@@ -38,8 +41,11 @@ export default function AdminPanel() {
   const { metrics, isLoading, refetch } = useAdminMetrics();
   const chartData = useAdminChartData(metrics.users);
   
+  const { data: consultations = [], isLoading: consultationsLoading, error: consultationsError, refetch: refetchConsultations } = useAdminConsultations();
+  
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [permissionsDialogOpen, setPermissionsDialogOpen] = useState(false);
+  const [selectedConsultation, setSelectedConsultation] = useState<AiConsultation | null>(null);
   const [filters, setFilters] = useState({
     search: '',
     role: 'all',
@@ -65,8 +71,15 @@ export default function AdminPanel() {
 
   const handleRefresh = () => {
     refetch();
+    refetchConsultations();
     toast.success('Data uppdaterad');
   };
+
+  useEffect(() => {
+    if (isHiemsAdmin) {
+      refetchConsultations();
+    }
+  }, [isHiemsAdmin, refetchConsultations]);
 
   const handleExport = () => {
     const csvContent = [
@@ -233,6 +246,39 @@ export default function AdminPanel() {
         newUsersTrend={metrics.newUsersTrend}
       />
 
+      {/* AI Consultations Section */}
+      <section className="container mx-auto px-6 lg:px-8 py-12">
+        <AnimatedSection delay={200}>
+          <div className="flex items-center justify-between mb-6">
+            <div>
+              <h2 className="text-2xl font-bold">AI-konsultationer</h2>
+              <p className="text-sm text-muted-foreground mt-1">
+                Alla konsultationsförfrågningar från kunder
+              </p>
+            </div>
+            <Button variant="outline" size="sm" onClick={() => refetchConsultations()}>
+              Uppdatera
+            </Button>
+          </div>
+
+          {consultationsLoading ? (
+            <div className="flex items-center gap-2 text-muted-foreground py-8">
+              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-primary" />
+              <span>Laddar konsultationer...</span>
+            </div>
+          ) : consultationsError ? (
+            <div className="text-sm text-destructive py-4">
+              Kunde inte hämta konsultationer. Kontrollera behörighet eller försök igen.
+            </div>
+          ) : (
+            <ConsultationsTable 
+              data={consultations.slice(0, 20)} 
+              onShowDetails={setSelectedConsultation}
+            />
+          )}
+        </AnimatedSection>
+      </section>
+
       {/* Statistics & Analysis Section */}
       <section className="relative py-12 bg-gradient-to-b from-background via-primary/2 to-background">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_50%,hsl(var(--primary)/0.08),transparent_50%)]" />
@@ -284,6 +330,12 @@ export default function AdminPanel() {
           onSuccess={refetch}
         />
       )}
+
+      <ConsultationDetailsDialog
+        open={!!selectedConsultation}
+        onOpenChange={() => setSelectedConsultation(null)}
+        consultation={selectedConsultation}
+      />
     </div>
   );
 }
