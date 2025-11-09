@@ -5,7 +5,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Check, Calendar } from "lucide-react";
+import { Check, Calendar, Loader2 } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 
 interface DemoBookingProps {
   children: React.ReactNode;
@@ -14,6 +16,14 @@ interface DemoBookingProps {
 export const DemoBooking = ({ children }: DemoBookingProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const { toast } = useToast();
+  
+  // Form fields
+  const [company, setCompany] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [message, setMessage] = useState("");
 
   const plans = [
     { name: "Starter", price: "699 kr", description: "1-5 agenter" },
@@ -22,6 +32,60 @@ export const DemoBooking = ({ children }: DemoBookingProps) => {
   ];
 
   const currentPlan = plans.find(plan => plan.name === selectedPlan);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!company || !email || !phone) {
+      toast({
+        title: "Fyll i alla obligatoriska fält",
+        description: "Företag, e-post och telefon är obligatoriska.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      const businessDescription = selectedPlan 
+        ? `Plan: ${selectedPlan} (${currentPlan?.price}/agent/månad)\n\n${message || "Ingen ytterligare information angiven"}`
+        : message || "Ingen beskrivning angiven";
+
+      const { error } = await supabase
+        .from('ai_consultations')
+        .insert({
+          company_name: company,
+          contact_person: company, // Using company name as contact person for now
+          email,
+          phone,
+          business_description: businessDescription,
+        });
+
+      if (error) throw error;
+
+      toast({
+        title: "Tack för din förfrågan!",
+        description: "Vi kontaktar dig inom 24 timmar för att boka en demo.",
+      });
+      
+      // Reset form
+      setCompany("");
+      setEmail("");
+      setPhone("");
+      setMessage("");
+      setSelectedPlan("");
+      setIsOpen(false);
+    } catch (error) {
+      console.error("Submission error:", error);
+      toast({
+        title: "Ett fel uppstod",
+        description: "Kunde inte skicka formuläret. Försök igen.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -33,7 +97,7 @@ export const DemoBooking = ({ children }: DemoBookingProps) => {
           <DialogTitle className="text-center">Boka Demo - Få Offert</DialogTitle>
         </DialogHeader>
         
-        <div className="space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-6">
           {/* Plan Selection */}
           <div className="space-y-3">
             <Label htmlFor="plan">Välj plan</Label>
@@ -67,17 +131,36 @@ export const DemoBooking = ({ children }: DemoBookingProps) => {
           <div className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="company">Företag *</Label>
-              <Input id="company" placeholder="Ditt företagsnamn" required />
+              <Input 
+                id="company" 
+                placeholder="Ditt företagsnamn" 
+                value={company}
+                onChange={(e) => setCompany(e.target.value)}
+                required 
+              />
             </div>
             
             <div className="space-y-2">
               <Label htmlFor="email">E-post *</Label>
-              <Input id="email" type="email" placeholder="din@epost.se" required />
+              <Input 
+                id="email" 
+                type="email" 
+                placeholder="din@epost.se"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required 
+              />
             </div>
             
             <div className="space-y-2">
               <Label htmlFor="phone">Telefonnummer *</Label>
-              <Input id="phone" placeholder="070-123 45 67" required />
+              <Input 
+                id="phone" 
+                placeholder="070-123 45 67"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                required 
+              />
             </div>
             
             <div className="space-y-2">
@@ -86,6 +169,8 @@ export const DemoBooking = ({ children }: DemoBookingProps) => {
                 id="message" 
                 placeholder="Berätta om era behov och hur många agenter ni har..."
                 className="min-h-[80px]"
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
               />
             </div>
           </div>
@@ -109,15 +194,29 @@ export const DemoBooking = ({ children }: DemoBookingProps) => {
             </div>
           </div>
 
-          <Button className="w-full" size="lg">
-            <Calendar className="mr-2 h-4 w-4" />
-            Boka demo & få offert
+          <Button 
+            type="submit" 
+            className="w-full" 
+            size="lg"
+            disabled={isLoading}
+          >
+            {isLoading ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Skickar...
+              </>
+            ) : (
+              <>
+                <Calendar className="mr-2 h-4 w-4" />
+                Boka demo & få offert
+              </>
+            )}
           </Button>
           
           <p className="text-xs text-center text-muted-foreground">
             Vi kontaktar dig inom 24 timmar för att boka en demo
           </p>
-        </div>
+        </form>
       </DialogContent>
     </Dialog>
   );
