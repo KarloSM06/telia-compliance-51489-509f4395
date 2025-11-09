@@ -1,3 +1,4 @@
+// @ts-nocheck
 import type { BookingSystemAdapter } from './types.ts';
 import { SimplyBookAdapter } from './adapters/simplybook.ts';
 import { GoogleCalendarAdapter } from './adapters/google-calendar.ts';

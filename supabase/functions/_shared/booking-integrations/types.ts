@@ -83,3 +83,19 @@ export interface BookingEvent {
   type: string;
   booking: Booking;
 }
+
+export interface CalendarEvent {
+  id: string;
+  summary: string;
+  description?: string;
+  start: { dateTime: string };
+  end: { dateTime: string };
+  attendees?: Array<{ email: string; displayName?: string }>;
+  status: string;
+}
+
+export interface SyncResult {
+  success: boolean;
+  synced: number;
+  errors: string[];
+}

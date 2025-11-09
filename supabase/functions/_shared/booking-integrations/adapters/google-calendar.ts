@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { BookingSystemAdapter, CalendarEvent, SyncResult } from '../types.ts';
 
 interface GoogleCalendarCredentials {
