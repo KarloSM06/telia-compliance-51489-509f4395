@@ -42,11 +42,10 @@ const ShaderBackgroundMountains = () => {
         lines += line * (1.0 - i);
       }
 
-      vec3 bg = vec3(1.0); // vit bakgrund
-      vec3 lineColor = vec3(0.1, 0.5, 1.0); // blå linjer
-      vec3 color = mix(bg, lineColor, lines * 1.5);
-
-      gl_FragColor = vec4(color, 1.0);
+      vec3 lineColor = vec3(0.2, 0.6, 1.0); // ljusblå linjer
+      float alpha = lines * 0.3; // Lägg till alpha för transparens
+      
+      gl_FragColor = vec4(lineColor, alpha);
     }
   `;
 
@@ -133,8 +132,12 @@ const ShaderBackgroundMountains = () => {
 
     const render = () => {
       const t = (Date.now() - start) / 1000;
-      gl.clearColor(1.0, 1.0, 1.0, 1.0);
+      gl.clearColor(0.0, 0.0, 0.0, 0.0); // Transparent bakgrund
       gl.clear(gl.COLOR_BUFFER_BIT);
+      
+      // Aktivera alpha blending
+      gl.enable(gl.BLEND);
+      gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
 
       gl.useProgram(programInfo.program);
       gl.uniform2f(programInfo.uniformLocations.resolution, canvas.width, canvas.height);
