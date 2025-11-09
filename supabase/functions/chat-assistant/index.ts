@@ -1,6 +1,7 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 import { callAI } from '../_shared/ai-gateway.ts';
+import { getErrorMessage } from '../_shared/errors.ts';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -176,20 +177,21 @@ Kom ihåg: Du representerar ett premium AI-företag. Var professionell men perso
     );
   } catch (error) {
     const requestId = crypto.randomUUID();
+    const errorMsg = getErrorMessage(error);
     
     console.error("Chat assistant error:", {
       request_id: requestId,
-      error: error.message,
+      error: errorMsg,
       timestamp: new Date().toISOString()
     });
     
     return new Response(JSON.stringify({ 
-      error: error.message === 'Too many messages in session' || error.message === 'Message too long' || error.message === 'Invalid messages format'
-        ? error.message 
+      error: errorMsg === 'Too many messages in session' || errorMsg === 'Message too long' || errorMsg === 'Invalid messages format'
+        ? errorMsg 
         : "Ett fel uppstod vid kommunikation med AI:n",
       request_id: requestId
     }), {
-      status: error.message.includes('Too many') ? 429 : 500,
+      status: errorMsg.includes('Too many') ? 429 : 500,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   }

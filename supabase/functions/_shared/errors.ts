@@ -94,6 +94,20 @@ export function logError(
 }
 
 /**
+ * Safely extracts error message from unknown error type
+ * @param error - Unknown error object
+ * @returns Error message string
+ */
+export function getErrorMessage(error: unknown): string {
+  if (error instanceof Error) return error.message;
+  if (typeof error === 'string') return error;
+  if (error && typeof error === 'object' && 'message' in error) {
+    return String(error.message);
+  }
+  return 'An unexpected error occurred';
+}
+
+/**
  * Handles unexpected errors and returns a standardized response
  * @param functionName - Name of the edge function
  * @param error - The error that occurred
@@ -102,7 +116,7 @@ export function logError(
  */
 export function handleUnexpectedError(
   functionName: string,
-  error: any,
+  error: unknown,
   corsHeaders: Record<string, string>
 ): Response {
   logError(functionName, error);
@@ -110,7 +124,7 @@ export function handleUnexpectedError(
   const errorDetails = createError(
     'INTERNAL_ERROR',
     'An unexpected error occurred',
-    process.env.NODE_ENV === 'development' ? error?.message : undefined
+    process.env.NODE_ENV === 'development' ? getErrorMessage(error) : undefined
   );
   
   return errorToResponse(errorDetails, corsHeaders);

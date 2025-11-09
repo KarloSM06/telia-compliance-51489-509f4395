@@ -17,8 +17,13 @@ serve(async (req) => {
   try {
     // Authenticate user
     const authResult = await authenticateRequest(req);
-    if ('error' in authResult) {
-      return errorToResponse(authResult.error, corsHeaders);
+    if ('error' in authResult && authResult.error) {
+      const errorDetails = createError(
+        'UNAUTHORIZED',
+        authResult.error.message,
+        { status: authResult.error.status }
+      );
+      return errorToResponse(errorDetails, corsHeaders);
     }
 
     const { user, supabase } = authResult;

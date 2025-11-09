@@ -2,6 +2,7 @@ import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.75.0";
 import { toZonedTime, fromZonedTime } from "https://esm.sh/date-fns-tz@3.2.0";
 import { getDay } from "https://esm.sh/date-fns@3.6.0";
+import { getErrorMessage } from '../_shared/errors.ts';
 
 const STOCKHOLM_TZ = 'Europe/Stockholm';
 
@@ -210,7 +211,7 @@ serve(async (req) => {
   } catch (error) {
     console.error('Error checking availability:', error);
     return new Response(
-      JSON.stringify({ error: error.message }),
+      JSON.stringify({ error: getErrorMessage(error) }),
       { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
   }
