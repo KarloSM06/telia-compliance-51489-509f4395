@@ -21,16 +21,22 @@ export const ConsultationCTA = () => {
         </AnimatedSection>
 
         <AnimatedSection delay={200}>
-          <div className="max-w-2xl mx-auto">
-            <DemoBooking>
-              <Button
-                size="lg"
-                className="w-full bg-gradient-gold text-primary font-bold shadow-button hover:shadow-glow transition-all duration-300 hover:scale-105 text-lg py-6 group"
-              >
-                <Calendar className="w-5 h-5 mr-2" />
-                Boka demo & få offert
-              </Button>
-            </DemoBooking>
+          <div className="max-w-2xl mx-auto bg-card/50 backdrop-blur-sm border border-border/50 rounded-2xl p-8 lg:p-12 shadow-xl">
+            <div className="text-center space-y-6">
+              <p className="text-lg text-muted-foreground">
+                Fyll i dina uppgifter så kontaktar vi dig inom kort för att boka ett möte och diskutera era behov.
+              </p>
+              
+              <DemoBooking>
+                <Button
+                  size="lg"
+                  className="w-full bg-gradient-gold text-primary font-bold shadow-button hover:shadow-glow transition-all duration-300 hover:scale-105 text-lg py-6 group"
+                >
+                  <Calendar className="w-5 h-5 mr-2" />
+                  Boka demo & få offert
+                </Button>
+              </DemoBooking>
+            </div>
           </div>
         </AnimatedSection>
       </div>
