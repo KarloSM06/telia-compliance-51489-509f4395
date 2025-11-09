@@ -1,21 +1,14 @@
 import { Button } from "@/components/ui/button";
-import { NavigationMenu, NavigationMenuContent, NavigationMenuItem, NavigationMenuLink, NavigationMenuList, NavigationMenuTrigger } from "@/components/ui/navigation-menu";
+import { NavigationMenu, NavigationMenuContent, NavigationMenuItem, NavigationMenuList, NavigationMenuTrigger } from "@/components/ui/navigation-menu";
 import { Menu, MoveRight, X } from "lucide-react";
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useCart } from "@/hooks/useCart";
-import { ShoppingCart } from "@/components/cart/ShoppingCart";
 import { ConsultationModal } from "@/components/ConsultationModal";
 import { cn } from "@/lib/utils";
 import hiems_logo from "@/assets/hiems_snowflake_logo.png";
 
 function Header1() {
   const navigate = useNavigate();
-  const {
-    items,
-    removeItem,
-    clearCart
-  } = useCart();
   const [isConsultationModalOpen, setIsConsultationModalOpen] = useState(false);
   const [scrollY, setScrollY] = useState(0);
   
@@ -181,11 +174,6 @@ function Header1() {
           </Button>
           {isOpen && 
             <div className="absolute top-20 border-t flex flex-col w-full right-0 bg-background/95 backdrop-blur-2xl shadow-lg py-4 container gap-8 animate-fade-in">
-              {/* Shopping Cart - Mobile */}
-              <div className="pb-4 border-b border-border/30">
-                <ShoppingCart items={items} onRemoveItem={removeItem} onClearCart={clearCart} />
-              </div>
-
               {navigationItems.map(item => 
                 <div key={item.title}>
                   <div className="flex flex-col gap-2">
