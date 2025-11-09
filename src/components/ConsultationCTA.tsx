@@ -1,9 +1,11 @@
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "lucide-react";
 import { AnimatedSection } from "@/components/AnimatedSection";
-import { DemoBooking } from "@/components/DemoBooking";
+import { ConsultationModal } from "@/components/ConsultationModal";
 
 export const ConsultationCTA = () => {
+  const [isConsultationModalOpen, setIsConsultationModalOpen] = useState(false);
 
   return (
     <section className="relative py-20 lg:py-32 overflow-hidden">
@@ -27,19 +29,23 @@ export const ConsultationCTA = () => {
                 Fyll i dina uppgifter så kontaktar vi dig inom kort för att boka ett möte och diskutera era behov.
               </p>
               
-              <DemoBooking>
-                <Button
-                  size="lg"
-                  className="w-full bg-gradient-gold text-primary font-bold shadow-button hover:shadow-glow transition-all duration-300 hover:scale-105 text-lg py-6 group"
-                >
-                  <Calendar className="w-5 h-5 mr-2" />
-                  Boka demo & få offert
-                </Button>
-              </DemoBooking>
+              <Button
+                size="lg"
+                className="w-full bg-gradient-gold text-primary font-bold shadow-button hover:shadow-glow transition-all duration-300 hover:scale-105 text-lg py-6 group"
+                onClick={() => setIsConsultationModalOpen(true)}
+              >
+                <Calendar className="w-5 h-5 mr-2" />
+                Boka demo & få offert
+              </Button>
             </div>
           </div>
         </AnimatedSection>
       </div>
+
+      <ConsultationModal
+        open={isConsultationModalOpen}
+        onOpenChange={setIsConsultationModalOpen}
+      />
     </section>
   );
 };
