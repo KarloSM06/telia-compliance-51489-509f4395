@@ -42,10 +42,10 @@ const ShaderBackgroundMountains = () => {
         lines += line * (1.0 - i);
       }
 
-      vec3 lineColor = vec3(0.2, 0.6, 1.0); // ljusblå linjer
-      float alpha = lines * 0.3; // Lägg till alpha för transparens
-      
-      gl_FragColor = vec4(lineColor, alpha);
+      vec3 lineColor = vec3(0.1, 0.5, 1.0); // blå linjer
+      vec3 color = lineColor * lines * 2.0;
+
+      gl_FragColor = vec4(color, lines * 0.4);
     }
   `;
 
