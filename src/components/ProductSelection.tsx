@@ -25,7 +25,6 @@ import { Sparkles, Zap, Target, CheckCircle, Award, Users, Wrench, ArrowRight } 
 import { AuroraBackground } from "@/components/ui/aurora-background";
 import { AnimatedHero } from "@/components/ui/animated-hero";
 import IntegrationHero from "@/components/ui/integration-hero";
-import ShaderBackgroundMountains from "@/components/ui/shader-background-mountains";
 import { ClientLogoCloud } from "@/components/ClientLogoCloud";
 import { ServicesGrid } from "@/components/home/ServicesGrid";
 import { UnifiedDashboard } from "@/components/home/UnifiedDashboard";
@@ -53,8 +52,6 @@ export const ProductSelection = () => {
     setIsConsultationModalOpen(true);
   };
   return <div className="relative bg-gradient-hero min-h-screen">
-      {/* Shader Background Mountains - Längst bakom */}
-      <ShaderBackgroundMountains />
       
       {/* Hero Section and Packages with Aurora Background */}
       <AuroraBackground className="h-auto">
