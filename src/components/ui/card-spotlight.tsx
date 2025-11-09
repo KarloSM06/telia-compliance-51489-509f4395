@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils";
 export const CardSpotlight = ({
   children,
   radius = 350,
-  color = "transparent",
+  color = "hsl(var(--background))",
   className,
   ...props
 }: {
@@ -44,27 +44,28 @@ export const CardSpotlight = ({
       {...props}
     >
       <motion.div
-        className="pointer-events-none absolute z-0 -inset-px rounded-md opacity-0 transition duration-300 group-hover/spotlight:opacity-100"
+        className="pointer-events-none absolute z-0 -inset-px rounded-md opacity-0 transition duration-500 group-hover/spotlight:opacity-100"
         style={{
           backgroundColor: color,
           maskImage: useMotionTemplate`
             radial-gradient(
               ${radius}px circle at ${mouseX}px ${mouseY}px,
               white,
-              transparent 80%
+              transparent 85%
             )
           `,
         }}
       >
         {isHovering && (
           <CanvasRevealEffect
-            animationSpeed={5}
-            containerClassName="absolute inset-0 pointer-events-none mix-blend-screen"
+            animationSpeed={3.5}
+            containerClassName="absolute inset-0 pointer-events-none opacity-40"
             colors={[
-              [59, 130, 246],
-              [139, 92, 246],
+              [59, 130, 246],    // Blå
+              [139, 92, 246],     // Lila
+              [236, 72, 153],     // Rosa
             ]}
-            dotSize={3}
+            dotSize={2.5}
             showGradient={false}
           />
         )}
