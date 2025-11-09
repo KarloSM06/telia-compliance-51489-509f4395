@@ -4213,10 +4213,10 @@ export type Database = {
       }
       v_user_costs: {
         Row: {
-          cost_sek: number | null
-          cost_type: string | null
           date: string | null
-          event_count: number | null
+          total_cost_sek: number | null
+          total_cost_usd: number | null
+          usage_count: number | null
           user_id: string | null
         }
         Relationships: []
@@ -4275,6 +4275,13 @@ export type Database = {
       }
       has_org_role: {
         Args: { required_roles: string[]; user_uuid: string }
+        Returns: boolean
+      }
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
         Returns: boolean
       }
       init_default_permissions: {
