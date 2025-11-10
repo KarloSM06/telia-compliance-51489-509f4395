@@ -7,8 +7,9 @@ import { FeaturesGrid } from "@/components/services/FeaturesGrid";
 import { HowItWorksTimeline } from "@/components/services/HowItWorksTimeline";
 import { UseCases } from "@/components/services/UseCases";
 import { OwnershipBadge } from "@/components/services/OwnershipBadge";
-import { ServiceCTA } from "@/components/services/ServiceCTA";
 import { ConsultationModal } from "@/components/ConsultationModal";
+import { Button } from "@/components/ui/button";
+import { Calendar } from "lucide-react";
 import { servicesData } from "@/data/services";
 import { RelatedPackages } from "@/components/services/RelatedPackages";
 
@@ -34,7 +35,26 @@ const Ecosystems = () => {
         <UseCases useCases={serviceData.useCases} />
         <RelatedPackages serviceId="ecosystems" onBookDemo={() => setIsConsultationModalOpen(true)} />
         <OwnershipBadge />
-        <ServiceCTA onBookDemo={() => setIsConsultationModalOpen(true)} />
+        
+        {/* Bokningssektion */}
+        <section className="py-20 md:py-32">
+          <div className="container mx-auto px-4 max-w-4xl text-center">
+            <h2 className="text-4xl md:text-5xl font-bold mb-6">
+              Redo att komma igång?
+            </h2>
+            <p className="text-xl text-muted-foreground mb-12 max-w-2xl mx-auto">
+              Boka ett kostnadsfritt möte med våra experter och upptäck hur vi kan transformera ditt företag med AI.
+            </p>
+            <Button
+              size="lg"
+              onClick={() => setIsConsultationModalOpen(true)}
+              className="bg-gradient-gold text-primary font-bold shadow-button hover:shadow-glow transition-all duration-300 hover:scale-105 text-lg px-10 py-7"
+            >
+              <Calendar className="w-6 h-6 mr-2" />
+              Boka kostnadsfritt demo
+            </Button>
+          </div>
+        </section>
         </main>
       </AuroraBackground>
       <Footer />
