@@ -26,12 +26,12 @@ function AnimatedHero({
     }, 2500);
     return () => clearTimeout(timeoutId);
   }, [titleNumber, titles]);
-  return <div className="w-full py-32 lg:py-48 relative min-h-screen">
+  return <div className="w-full py-32 lg:py-48 relative min-h-screen bg-transparent">
       {/* Spline 3D Animation - Behind text but in front of aurora */}
-      <div className="absolute inset-0 z-[5] pointer-events-none overflow-hidden">
+      <div className="absolute inset-0 z-[5] overflow-hidden opacity-60 mix-blend-screen">
         <Spline
           scene="https://prod.spline.design/41WHROOhXoLPl4L2/scene.splinecode"
-          style={{ width: '100%', height: '100%' }}
+          style={{ width: '100%', height: '100%', filter: 'brightness(1.3) contrast(0.9)' }}
         />
       </div>
       
