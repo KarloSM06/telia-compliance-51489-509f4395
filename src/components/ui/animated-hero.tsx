@@ -14,7 +14,6 @@ function AnimatedHero({
   onViewPackages
 }: AnimatedHeroProps) {
   const [titleNumber, setTitleNumber] = useState(0);
-  const [scrollY, setScrollY] = useState(0);
   const titles = useMemo(() => ["Öka omsättningen", "Spara tid", "Skala verksamheten", "Minska bekymmer", "Automatisera arbetet"], []);
   useEffect(() => {
     const timeoutId = setTimeout(() => {
@@ -26,29 +25,19 @@ function AnimatedHero({
     }, 2500);
     return () => clearTimeout(timeoutId);
   }, [titleNumber, titles]);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setScrollY(window.scrollY);
-    };
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
   return <div className="w-full min-h-screen relative">
-      {/* Spline 3D Animation - Näst längst bak, scrollar uppåt */}
-      <div 
-        className="absolute inset-0 w-full h-screen z-5 transition-transform duration-1000 ease-out"
-        style={{
-          transform: `translateY(-${scrollY * 0.5}px)`,
-        }}
-      >
+      {/* Spline 3D Animation - Fixed position för full coverage */}
+      <div className="fixed inset-0 w-screen h-screen z-[15]">
         <Spline 
           scene="https://prod.spline.design/dtyy9Rk8l8FAgcgA/scene.splinecode" 
-          className="w-full h-full opacity-80"
+          className="w-full h-full"
           style={{
             pointerEvents: 'none',
-            animationDuration: '20s',
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%'
           }} 
         />
       </div>
