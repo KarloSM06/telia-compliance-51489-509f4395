@@ -8,10 +8,20 @@ import { ConsultationModal } from "@/components/ConsultationModal";
 import { AnimatedSection } from "@/components/AnimatedSection";
 import { ConsultationCTA } from "@/components/ConsultationCTA";
 import { StickyPackageCards } from "@/components/home/StickyPackageCards";
+import { IndustryGallery } from "@/components/home/IndustryGallery";
+import { CustomerJourneyFlow } from "@/components/home/CustomerJourneyFlow";
+import { OnboardingTimeline } from "@/components/home/OnboardingTimeline";
+import { TechnicalExpertise } from "@/components/home/TechnicalExpertise";
+import { CaseStudyCard } from "@/components/home/CaseStudyCard";
 import { WorkflowTimeline } from "@/components/home/WorkflowTimeline";
-import { StatsBar } from "@/components/home/StatsBar";
-import { ProcessSteps } from "@/components/home/ProcessSteps";
 import { aiPackages } from "@/data/packages";
+import { industries } from "@/data/industries";
+import { caseStudies } from "@/data/caseStudies";
+import heroBackground from "@/assets/hero-background.jpg";
+import karloImage from "@/assets/karlo-mangione.png";
+import antonImage from "@/assets/anton-sallnas.png";
+import emilImage from "@/assets/emil-westerberg.png";
+import { Sparkles, Zap, Target, CheckCircle, Award, Users, Wrench, ArrowRight } from "lucide-react";
 import { AuroraBackground } from "@/components/ui/aurora-background";
 import { AnimatedHero } from "@/components/ui/animated-hero";
 import IntegrationHero from "@/components/ui/integration-hero";
@@ -45,28 +55,18 @@ export const ProductSelection = () => {
       
       {/* Hero Section and Packages with Aurora Background */}
       <AuroraBackground className="h-auto">
-        {/* Hero Section */}
         <section id="hero" className="relative py-12 lg:py-16 pb-16 lg:pb-24 flex items-center">
           <AnimatedHero onBookDemo={() => setIsConsultationModalOpen(true)} onViewPackages={() => scrollToSection('paket')} />
         </section>
 
-        {/* Social Proof Stats */}
-        
-
-        {/* Så fungerar det */}
-        <ProcessSteps />
+        {/* Programmen vi jobbar med */}
+        <IntegrationHero />
 
         {/* Företag vi samarbetar med */}
         <ClientLogoCloud />
 
         {/* Våra Tjänster & Teknologier */}
         <ServicesGrid />
-
-        {/* Våra AI-paket / Lösningar */}
-        <StickyPackageCards packages={aiPackages} onBookDemo={() => setIsConsultationModalOpen(true)} onViewDetails={() => scrollToSection('kontakt')} />
-
-        {/* Programmen vi jobbar med */}
-        <IntegrationHero />
 
         {/* All Data på Ett Ställe */}
         <UnifiedDashboard />
@@ -75,7 +75,13 @@ export const ProductSelection = () => {
         <LandingAccordionItem />
 
         {/* Allt administrativt i ett ekosystem */}
-        <UnifiedEcosystem primaryImageSrc={dashboardScreenshot} secondaryImageSrc={calendarScreenshot} />
+        <UnifiedEcosystem 
+          primaryImageSrc={dashboardScreenshot} 
+          secondaryImageSrc={calendarScreenshot}
+        />
+
+        {/* Våra AI-paket / Lösningar */}
+        <StickyPackageCards packages={aiPackages} onBookDemo={() => setIsConsultationModalOpen(true)} onViewDetails={() => scrollToSection('kontakt')} />
         
         {/* Arbetsprocess */}
         <AnimatedSection>
@@ -87,6 +93,21 @@ export const ProductSelection = () => {
         {/* Kontakt / CTA */}
         <ConsultationCTA />
       </AuroraBackground>
+
+      {/* Branschspecifika lösningar */}
+      
+
+      {/* Kundflöde & värde */}
+      
+
+      {/* Teknisk Expertis */}
+      
+
+      {/* Onboarding-process */}
+      
+
+      {/* Blogg / Insikter */}
+      
 
       <ConsultationModal open={isConsultationModalOpen} onOpenChange={setIsConsultationModalOpen} />
     </div>;

@@ -16,8 +16,11 @@ export interface Package {
   components: string[];
   valueBullets: string[];
   image?: string;
-  startingPrice: string;
-  isPopular?: boolean;
+  pricing: {
+    starter: string;
+    growth: string;
+    enterprise: string;
+  };
 }
 
 export const aiPackages: Package[] = [
@@ -40,8 +43,11 @@ export const aiPackages: Package[] = [
       'Högre konvertering',
       'Full kontroll över säljflödet'
     ],
-    startingPrice: 'Från 9 995 kr/mån',
-    isPopular: true
+    pricing: {
+      starter: 'Från 9 995 kr/mån',
+      growth: 'Från 19 995 kr/mån',
+      enterprise: 'Kontakta oss'
+    }
   },
   {
     id: 'marketing-automation',
@@ -61,7 +67,11 @@ export const aiPackages: Package[] = [
       'Sömlös integration',
       'Automatiserat lead-flöde'
     ],
-    startingPrice: 'Från 12 995 kr/mån'
+    pricing: {
+      starter: 'Från 12 995 kr/mån',
+      growth: 'Från 24 995 kr/mån',
+      enterprise: 'Kontakta oss'
+    }
   },
   {
     id: 'service-operations',
@@ -81,8 +91,11 @@ export const aiPackages: Package[] = [
       'Mindre administration',
       'Högre kundnöjdhet'
     ],
-    startingPrice: 'Från 7 995 kr/mån',
-    isPopular: true
+    pricing: {
+      starter: 'Från 7 995 kr/mån',
+      growth: 'Från 14 995 kr/mån',
+      enterprise: 'Kontakta oss'
+    }
   },
   {
     id: 'ecommerce-retail',
@@ -102,7 +115,11 @@ export const aiPackages: Package[] = [
       'Bättre retention',
       'Mindre manuellt arbete'
     ],
-    startingPrice: 'Från 11 995 kr/mån'
+    pricing: {
+      starter: 'Från 11 995 kr/mån',
+      growth: 'Från 21 995 kr/mån',
+      enterprise: 'Kontakta oss'
+    }
   },
   {
     id: 'data-insight',
@@ -122,7 +139,11 @@ export const aiPackages: Package[] = [
       'Nya affärsmöjligheter',
       'Proaktivt arbete'
     ],
-    startingPrice: 'Från 13 995 kr/mån'
+    pricing: {
+      starter: 'Från 13 995 kr/mån',
+      growth: 'Från 25 995 kr/mån',
+      enterprise: 'Kontakta oss'
+    }
   },
   {
     id: 'enterprise-custom',
@@ -142,6 +163,10 @@ export const aiPackages: Package[] = [
       'Skräddarsytt för dina behov',
       'Direkt ROI'
     ],
-    startingPrice: 'Från 49 995 kr/mån'
+    pricing: {
+      starter: 'Från 49 995 kr/mån',
+      growth: 'Från 99 995 kr/mån',
+      enterprise: 'Skräddarsydd offert'
+    }
   }
 ];

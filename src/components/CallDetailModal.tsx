@@ -43,7 +43,7 @@ export const CallDetailModal = ({ call, isOpen, onClose }: CallDetailModalProps)
   const getSeverityColor = (severity: string) => {
     switch (severity) {
       case 'high': return 'border-red-500 bg-red-50 text-red-700';
-      case 'medium': return 'border-amber-500 bg-amber-50 text-amber-700';
+      case 'medium': return 'border-yellow-500 bg-yellow-50 text-yellow-700';
       case 'low': return 'border-orange-500 bg-orange-50 text-orange-700';
       default: return 'border-gray-500 bg-gray-50 text-gray-700';
     }
@@ -52,7 +52,7 @@ export const CallDetailModal = ({ call, isOpen, onClose }: CallDetailModalProps)
   const getSeverityIcon = (severity: string) => {
     switch (severity) {
       case 'high': return <AlertCircle className="h-4 w-4 text-red-500" />;
-      case 'medium': return <AlertCircle className="h-4 w-4 text-amber-500" />;
+      case 'medium': return <AlertCircle className="h-4 w-4 text-yellow-500" />;
       case 'low': return <AlertCircle className="h-4 w-4 text-orange-500" />;
       default: return <AlertCircle className="h-4 w-4 text-gray-500" />;
     }
