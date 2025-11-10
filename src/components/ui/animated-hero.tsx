@@ -28,11 +28,11 @@ function AnimatedHero({
   }, [titleNumber, titles]);
   return <div className="w-full py-32 lg:py-48 relative">
       {/* Hero Waves Background */}
-      <div className="absolute inset-0 z-0 flex items-end justify-center overflow-hidden opacity-30">
+      <div className="absolute bottom-0 left-0 right-0 z-0 overflow-hidden opacity-30 h-full">
         <img 
           src={heroWaves} 
           alt="" 
-          className="w-full h-auto object-cover object-bottom"
+          className="absolute bottom-0 left-0 w-full h-auto object-cover min-w-full"
           loading="eager"
           decoding="async"
         />
