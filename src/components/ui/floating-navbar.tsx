@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
-import { Menu, X } from "lucide-react";
-import { useState } from "react";
+import { Menu, X, Calendar } from "lucide-react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { ConsultationModal } from "@/components/ConsultationModal";
 import hiems_logo from "@/assets/hiems_snowflake_logo.png";
@@ -9,6 +9,16 @@ export function FloatingNavbar() {
   const navigate = useNavigate();
   const [isConsultationModalOpen, setIsConsultationModalOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 100);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   const scrollToSection = (sectionId: string) => {
     const section = document.getElementById(sectionId);
@@ -34,13 +44,25 @@ export function FloatingNavbar() {
 
   return (
     <>
-      <nav className="fixed left-0 right-0 top-0 z-50 px-4 py-4">
-        <div className="mx-auto max-w-7xl rounded-2xl border-2 border-white/10 bg-white/5 px-6 py-4 backdrop-blur-sm shadow-elegant">
+    <nav className="fixed left-0 right-0 top-4 z-50 px-4">
+      <div 
+        className={`mx-auto rounded-2xl border-2 border-white/10 bg-white/5 backdrop-blur-sm shadow-elegant transition-all duration-300 ${
+          isScrolled ? "max-w-5xl px-4 py-3" : "max-w-7xl px-6 py-4"
+        }`}
+        style={{
+          willChange: "transform",
+          transform: "translateZ(0)",
+          backfaceVisibility: "hidden",
+          perspective: "1000px",
+        }}
+      >
           <div className="flex items-center justify-between">
             {/* Logo */}
             <button 
               onClick={() => navigateToPage("/")} 
-              className="cursor-pointer group flex items-center gap-3 transition-all duration-300 hover:scale-105"
+              className={`cursor-pointer group flex items-center gap-3 transition-all duration-300 hover:scale-105 ${
+                isScrolled ? "ml-2" : ""
+              }`}
             >
               <div className="relative">
                 <div className="absolute inset-0 bg-gradient-gold opacity-0 group-hover:opacity-30 blur-xl transition-opacity duration-500 rounded-xl" />
@@ -103,59 +125,88 @@ export function FloatingNavbar() {
             {/* Mobile Menu Toggle */}
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="md:hidden text-primary p-2 hover:bg-white/10 rounded-lg transition-colors"
-              aria-label={isMobileMenuOpen ? "Stäng meny" : "Öppna meny"}
+              className="md:hidden flex items-center justify-center w-10 h-10 rounded-full bg-white/5 border border-white/10 transition-colors hover:bg-white/10"
+              aria-label="Toggle menu"
             >
-              {isMobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+              <div className="flex flex-col items-center justify-center w-5 h-5 space-y-1">
+                <span className={`block w-4 h-0.5 bg-primary transition-all duration-300 ${isMobileMenuOpen ? "rotate-45 translate-y-1.5" : ""}`}></span>
+                <span className={`block w-4 h-0.5 bg-primary transition-all duration-300 ${isMobileMenuOpen ? "opacity-0" : ""}`}></span>
+                <span className={`block w-4 h-0.5 bg-primary transition-all duration-300 ${isMobileMenuOpen ? "-rotate-45 -translate-y-1.5" : ""}`}></span>
+              </div>
             </button>
           </div>
+        </div>
+      </nav>
 
-          {/* Mobile Menu */}
-          {isMobileMenuOpen && (
-            <div className="md:hidden mt-4 pt-4 border-t border-white/10 flex flex-col gap-3 animate-fade-in">
+      {/* Mobile Menu Overlay */}
+      {isMobileMenuOpen && (
+        <div className="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm md:hidden animate-fade-in" onClick={() => setIsMobileMenuOpen(false)}>
+          <div className="absolute top-20 left-4 right-4 rounded-2xl border-2 border-white/10 bg-white/5 backdrop-blur-md shadow-2xl p-6 animate-scale-in" onClick={(e) => e.stopPropagation()}>
+            <nav className="flex flex-col gap-2">
               <button
-                onClick={() => scrollToSection("tjanster")}
-                className="text-left text-sm font-medium text-primary/80 hover:text-primary transition-colors py-2 px-3 hover:bg-white/5 rounded-lg"
+                onClick={() => {
+                  setIsMobileMenuOpen(false);
+                  scrollToSection("tjanster");
+                }}
+                className="text-left px-4 py-3 text-lg font-medium text-primary hover:text-primary/80 transition-colors rounded-lg hover:bg-white/10"
               >
                 Tjänster
               </button>
               <button
-                onClick={() => scrollToSection("paket")}
-                className="text-left text-sm font-medium text-primary/80 hover:text-primary transition-colors py-2 px-3 hover:bg-white/5 rounded-lg"
+                onClick={() => {
+                  setIsMobileMenuOpen(false);
+                  scrollToSection("paket");
+                }}
+                className="text-left px-4 py-3 text-lg font-medium text-primary hover:text-primary/80 transition-colors rounded-lg hover:bg-white/10"
               >
                 Paket
               </button>
               <button
-                onClick={() => scrollToSection("branscher")}
-                className="text-left text-sm font-medium text-primary/80 hover:text-primary transition-colors py-2 px-3 hover:bg-white/5 rounded-lg"
+                onClick={() => {
+                  setIsMobileMenuOpen(false);
+                  scrollToSection("branscher");
+                }}
+                className="text-left px-4 py-3 text-lg font-medium text-primary hover:text-primary/80 transition-colors rounded-lg hover:bg-white/10"
               >
                 Branscher
               </button>
               <button
-                onClick={() => navigateToPage("/about")}
-                className="text-left text-sm font-medium text-primary/80 hover:text-primary transition-colors py-2 px-3 hover:bg-white/5 rounded-lg"
+                onClick={() => {
+                  setIsMobileMenuOpen(false);
+                  navigateToPage("/about");
+                }}
+                className="text-left px-4 py-3 text-lg font-medium text-primary hover:text-primary/80 transition-colors rounded-lg hover:bg-white/10"
               >
                 Om oss
               </button>
               <button
-                onClick={() => scrollToSection("kontakt")}
-                className="text-left text-sm font-medium text-primary/80 hover:text-primary transition-colors py-2 px-3 hover:bg-white/5 rounded-lg"
+                onClick={() => {
+                  setIsMobileMenuOpen(false);
+                  scrollToSection("kontakt");
+                }}
+                className="text-left px-4 py-3 text-lg font-medium text-primary hover:text-primary/80 transition-colors rounded-lg hover:bg-white/10"
               >
                 Kontakt
               </button>
-              <Button
-                size="sm"
-                onClick={() => setIsConsultationModalOpen(true)}
-                className="mt-2 bg-white text-black hover:bg-gray-100 font-medium w-full"
-              >
-                Boka demo
-              </Button>
-            </div>
-          )}
+              <div className="border-t border-white/10 pt-4 mt-4">
+                <Button
+                  size="lg"
+                  className="w-full bg-gradient-gold text-primary font-bold shadow-button hover:shadow-glow hover:-translate-y-0.5 transition-all duration-300"
+                  onClick={() => {
+                    setIsMobileMenuOpen(false);
+                    setIsConsultationModalOpen(true);
+                  }}
+                >
+                  <Calendar className="w-5 h-5 mr-2" />
+                  Boka demo
+                </Button>
+              </div>
+            </nav>
+          </div>
         </div>
-      </nav>
+      )}
 
-      <ConsultationModal 
+      <ConsultationModal
         open={isConsultationModalOpen} 
         onOpenChange={setIsConsultationModalOpen} 
       />
