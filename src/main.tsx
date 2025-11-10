@@ -5,23 +5,46 @@ import "./index.css";
 // Web Vitals tracking for performance monitoring
 const reportWebVitals = () => {
   if (typeof window !== 'undefined' && 'performance' in window) {
-    // Track Core Web Vitals
+    // Track Core Web Vitals with enhanced metrics
     const observer = new PerformanceObserver((list) => {
       for (const entry of list.getEntries()) {
-        // Log metrics in development, send to analytics in production
+        const metricName = entry.name;
+        const metricValue = ('value' in entry ? entry.value : entry.startTime) as number;
+        
+        // Log metrics in development
         if (import.meta.env.DEV) {
-          console.log(`[Web Vitals] ${entry.name}:`, entry);
+          console.log(`[Web Vitals] ${metricName}:`, {
+            value: metricValue,
+            rating: metricValue < 2500 ? 'good' : metricValue < 4000 ? 'needs-improvement' : 'poor'
+          });
         }
-        // In production, you could send to analytics service:
-        // analytics.track(entry.name, { value: entry.value });
+        
+        // In production, send to analytics
+        if (import.meta.env.PROD && (window as any).fbq) {
+          (window as any).fbq('trackCustom', 'WebVital', {
+            metric: metricName,
+            value: metricValue,
+            page: window.location.pathname
+          });
+        }
       }
     });
 
-    // Observe paint timings, layout shifts, and input delays
+    // Observe Core Web Vitals
     try {
-      observer.observe({ entryTypes: ['paint', 'largest-contentful-paint', 'layout-shift', 'first-input'] });
+      observer.observe({ 
+        entryTypes: ['paint', 'largest-contentful-paint', 'layout-shift', 'first-input'] 
+      });
+      
+      // Track Time to First Byte (TTFB)
+      const navigationTiming = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming;
+      if (navigationTiming) {
+        const ttfb = navigationTiming.responseStart - navigationTiming.requestStart;
+        if (import.meta.env.DEV) {
+          console.log('[Web Vitals] TTFB:', ttfb, 'ms');
+        }
+      }
     } catch (e) {
-      // Some metrics might not be supported in all browsers
       console.warn('Performance observer not fully supported:', e);
     }
   }

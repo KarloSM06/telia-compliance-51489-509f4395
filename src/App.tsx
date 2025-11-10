@@ -5,7 +5,6 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { lazy, Suspense } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useLenis } from "@/hooks/useLenis";
 
 // Lazy load routes
 const Index = lazy(() => import("./pages/Index"));
@@ -50,8 +49,6 @@ const queryClient = new QueryClient({
 });
 
 const App = () => {
-  useLenis();
-  
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
