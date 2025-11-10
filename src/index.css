@@ -8,29 +8,28 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    /* Mörk blå bakgrund som om-oss sidan */
-    --background: 222 47% 11%;
-    --foreground: 210 40% 98%;
+    --background: 0 0% 100%;
+    --foreground: 220 13% 13%;
 
-    --card: 222 47% 15%;
-    --card-foreground: 210 40% 98%;
+    --card: 0 0% 100%;
+    --card-foreground: 220 13% 13%;
 
-    --popover: 222 47% 15%;
-    --popover-foreground: 210 40% 98%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 220 13% 13%;
 
     /* Premium dark blue - luxury & trust */
-    --primary: 220 60% 50%;
+    --primary: 222 47% 11%;
     --primary-foreground: 0 0% 100%;
     
-    /* Blå accent istället för gul */
-    --secondary: 220 60% 50%;
-    --secondary-foreground: 0 0% 100%;
+    /* Gold accent - premium & exclusive */
+    --secondary: 43 96% 56%;
+    --secondary-foreground: 222 47% 11%;
 
-    --muted: 222 40% 20%;
-    --muted-foreground: 210 40% 85%;
+    --muted: 220 13% 95%;
+    --muted-foreground: 220 9% 46%;
 
-    --accent: 220 60% 50%;
-    --accent-foreground: 0 0% 100%;
+    --accent: 43 96% 56%;
+    --accent-foreground: 222 47% 11%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
@@ -45,21 +44,21 @@ All colors MUST be HSL.
     --violation: 0 84% 60%;
     --violation-foreground: 0 0% 98%;
 
-    --border: 222 40% 25%;
-    --input: 222 40% 25%;
-    --ring: 220 60% 50%;
+    --border: 220 13% 91%;
+    --input: 220 13% 91%;
+    --ring: 222 47% 11%;
 
-    /* Premium gradients - mörk blå till ljusare blå */
-    --gradient-primary: linear-gradient(135deg, hsl(222 47% 11%), hsl(220 50% 25%));
-    --gradient-hero: linear-gradient(135deg, hsl(222 47% 11%) 0%, hsl(222 45% 18%) 50%, hsl(220 50% 25%) 100%);
-    --gradient-card: linear-gradient(145deg, hsl(222 47% 15%) 0%, hsl(222 45% 18%) 100%);
-    --gradient-gold: linear-gradient(135deg, hsl(220 60% 50%), hsl(220 60% 60%));
+    /* Premium gradients - deep navy to lighter navy */
+    --gradient-primary: linear-gradient(135deg, hsl(222 47% 11%), hsl(222 47% 18%));
+    --gradient-hero: linear-gradient(135deg, hsl(222 47% 11%) 0%, hsl(222 40% 20%) 50%, hsl(222 35% 28%) 100%);
+    --gradient-card: linear-gradient(145deg, hsl(0 0% 100%) 0%, hsl(220 13% 98%) 100%);
+    --gradient-gold: linear-gradient(135deg, hsl(43 96% 56%), hsl(43 96% 66%));
     
     /* Luxury shadows - deeper and more dramatic */
     --shadow-elegant: 0 20px 60px -15px hsl(222 47% 11% / 0.3);
     --shadow-card: 0 8px 30px -8px hsl(222 47% 11% / 0.15);
-    --shadow-button: 0 8px 24px -4px hsl(220 60% 50% / 0.4);
-    --shadow-glow: 0 0 40px hsl(220 60% 50% / 0.3);
+    --shadow-button: 0 8px 24px -4px hsl(43 96% 56% / 0.4);
+    --shadow-glow: 0 0 40px hsl(43 96% 56% / 0.3);
 
     /* Smooth transitions - optimized for performance */
     --transition-smooth: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
@@ -83,12 +82,12 @@ All colors MUST be HSL.
 
     --sidebar-ring: 217.2 91.2% 59.8%;
     
-    /* Rainbow button colors - blå toner */
-    --color-1: 210 100% 50%;
-    --color-2: 220 100% 50%;
-    --color-3: 230 100% 50%;
-    --color-4: 200 100% 50%;
-    --color-5: 240 100% 50%;
+    /* Rainbow button colors */
+    --color-1: 0 100% 63%;
+    --color-2: 270 100% 63%;
+    --color-3: 210 100% 63%;
+    --color-4: 195 100% 63%;
+    --color-5: 90 100% 63%;
   }
 
   .dark {
@@ -128,12 +127,12 @@ All colors MUST be HSL.
     --sidebar-border: 240 3.7% 15.9%;
     --sidebar-ring: 217.2 91.2% 59.8%;
     
-    /* Rainbow button colors - blå toner */
-    --color-1: 210 100% 50%;
-    --color-2: 220 100% 50%;
-    --color-3: 230 100% 50%;
-    --color-4: 200 100% 50%;
-    --color-5: 240 100% 50%;
+    /* Rainbow button colors */
+    --color-1: 0 100% 63%;
+    --color-2: 270 100% 63%;
+    --color-3: 210 100% 63%;
+    --color-4: 195 100% 63%;
+    --color-5: 90 100% 63%;
   }
 }
 
