@@ -161,11 +161,22 @@ export default {
           }
         },
         aurora: {
-          from: {
+          "0%": {
             backgroundPosition: "50% 50%, 50% 50%",
           },
-          to: {
+          "50%": {
             backgroundPosition: "350% 50%, 350% 50%",
+          },
+          "100%": {
+            backgroundPosition: "50% 50%, 50% 50%",
+          },
+        },
+        "subtle-float": {
+          "0%, 100%": {
+            transform: "translateY(0px) scale(1)",
+          },
+          "50%": {
+            transform: "translateY(-20px) scale(1.02)",
           },
         },
         "scroll-left": {
@@ -193,7 +204,8 @@ export default {
         "shimmer": "shimmer 8s infinite linear",
         "slide-in-left": "slide-in-left 2s ease-out",
         "slide-in-right": "slide-in-right 2s ease-out",
-        aurora: "aurora 60s linear infinite",
+        aurora: "aurora 180s ease-in-out infinite",
+        "subtle-float": "subtle-float 120s ease-in-out infinite",
         "scroll-left": "scroll-left 40s linear infinite",
         "scroll-right": "scroll-right 40s linear infinite",
         rainbow: "rainbow 3s ease-in-out infinite"
