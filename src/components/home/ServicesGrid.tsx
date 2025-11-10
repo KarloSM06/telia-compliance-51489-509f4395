@@ -39,11 +39,14 @@ export const ServicesGrid = () => {
         <AnimatedContainer className="mx-auto max-w-full text-center">
           <h2 className="text-3xl font-bold tracking-wide text-balance md:text-4xl lg:text-5xl xl:font-extrabold">
             <span className="bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent">
-              Våra Tjänster
+              Våra Tjänster & Teknologier
             </span>
           </h2>
           <p className="text-muted-foreground mt-4 text-sm tracking-wide text-balance md:text-base">
-            Fyra fokusområden där AI gör verklig skillnad
+            Vi bygger intelligenta ekosystem som kopplar samman AI, automation och affärsdata – 
+            för att göra ditt företag snabbare, smartare och mer lönsamt.
+            <br />
+            <span className="font-semibold text-foreground">Allt vi skapar kan ägas av dig, helt utan beroenden.</span>
           </p>
         </AnimatedContainer>
 

@@ -57,7 +57,7 @@ function AnimatedHero({
             transition={{ duration: 0.8, ease: "easeOut" }}
             className="text-6xl md:text-7xl lg:text-8xl font-display font-normal leading-[1.1] tracking-tighter text-gray-900 dark:text-white"
           >
-            Vi bygger intelligenta system som gör jobbet åt dig
+            Skala din verksamhet med intelligent automation
           </motion.h1>
 
           {/* Subheadline */}
@@ -67,39 +67,19 @@ function AnimatedHero({
             transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
             className="text-lg md:text-xl lg:text-2xl text-gray-600 dark:text-gray-300 max-w-2xl leading-relaxed"
           >
-            Hiems hjälper företag att implementera verkliga AI-lösningar — röstagenter, automationer och dashboards som ger resultat, inte bara rapporter.
+            Hiems levererar AI-lösningar som automatiserar kundflöden och ökar din försäljning.
           </motion.p>
 
-          {/* CTA Buttons */}
-          <motion.div
+          {/* CTA Button */}
+          <motion.button
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.6, delay: 0.4, ease: "easeOut" }}
-            className="flex flex-col sm:flex-row gap-4 mt-2"
+            onClick={onBookDemo}
+            className="mt-2 px-12 py-4 bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded-full text-base font-medium transition-all duration-300 hover:bg-gray-800 dark:hover:bg-gray-100 hover:scale-105"
           >
-            <button
-              onClick={onBookDemo}
-              className="px-12 py-4 bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded-full text-base font-medium transition-all duration-300 hover:bg-gray-800 dark:hover:bg-gray-100 hover:scale-105"
-            >
-              Boka ett möte
-            </button>
-            <button
-              onClick={onBookDemo}
-              className="px-12 py-4 bg-transparent border-2 border-gray-900 dark:border-white text-gray-900 dark:text-white rounded-full text-base font-medium transition-all duration-300 hover:bg-gray-900 hover:text-white dark:hover:bg-white dark:hover:text-gray-900 hover:scale-105"
-            >
-              Kontakta oss
-            </button>
-          </motion.div>
-
-          {/* Social Proof */}
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.6, delay: 0.6, ease: "easeOut" }}
-            className="text-sm text-gray-600 dark:text-gray-400 mt-6"
-          >
-            Över 50 företag litar redan på Hiems för sina AI-lösningar
-          </motion.p>
+            Boka Demo
+          </motion.button>
         </div>
       </div>
     </div>

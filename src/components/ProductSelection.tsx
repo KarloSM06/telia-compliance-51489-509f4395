@@ -8,13 +8,12 @@ import { ConsultationModal } from "@/components/ConsultationModal";
 import { AnimatedSection } from "@/components/AnimatedSection";
 import { ConsultationCTA } from "@/components/ConsultationCTA";
 import { StickyPackageCards } from "@/components/home/StickyPackageCards";
+import { IndustryGallery } from "@/components/home/IndustryGallery";
+import { CustomerJourneyFlow } from "@/components/home/CustomerJourneyFlow";
+import { OnboardingTimeline } from "@/components/home/OnboardingTimeline";
+import { TechnicalExpertise } from "@/components/home/TechnicalExpertise";
+import { CaseStudyCard } from "@/components/home/CaseStudyCard";
 import { WorkflowTimeline } from "@/components/home/WorkflowTimeline";
-import { TrustMetricsBar } from "@/components/home/TrustMetricsBar";
-import { CaseStudiesGrid } from "@/components/home/CaseStudiesGrid";
-import { WhyHiemsSection } from "@/components/home/WhyHiemsSection";
-import { PricingSection } from "@/components/home/PricingSection";
-import { TestimonialsCarousel } from "@/components/home/TestimonialsCarousel";
-import { FAQSection } from "@/components/home/FAQSection";
 import { aiPackages } from "@/data/packages";
 import { industries } from "@/data/industries";
 import { caseStudies } from "@/data/caseStudies";
@@ -54,63 +53,58 @@ export const ProductSelection = () => {
   };
   return <div className="relative bg-gradient-hero min-h-screen">
       
-      {/* Hero Section and All Sections with Aurora Background */}
+      {/* Hero Section and Packages with Aurora Background */}
       <AuroraBackground className="h-auto">
-        {/* 1. Hero */}
         <AnimatedHero 
           onBookDemo={() => setIsConsultationModalOpen(true)}
           onViewPackages={() => scrollToSection('paket')}
         />
 
-        {/* 2. Trust Metrics Bar */}
-        <TrustMetricsBar />
-
-        {/* 3. Programmen vi jobbar med */}
+        {/* Programmen vi jobbar med */}
         <IntegrationHero />
 
-        {/* 4. Företag vi samarbetar med */}
+        {/* Företag vi samarbetar med */}
         <ClientLogoCloud />
 
-        {/* 5. Våra Tjänster */}
+        {/* Våra Tjänster & Teknologier */}
         <ServicesGrid />
 
-        {/* 6. All Data på Ett Ställe */}
+        {/* All Data på Ett Ställe */}
         <UnifiedDashboard />
 
-        {/* 7. AI Capabilities Accordion */}
+        {/* AI Capabilities Accordion */}
         <LandingAccordionItem />
 
-        {/* 8. Allt administrativt i ett ekosystem */}
+        {/* Allt administrativt i ett ekosystem */}
         <UnifiedEcosystem primaryImageSrc={dashboardScreenshot} secondaryImageSrc={calendarScreenshot} />
 
-        {/* 9. Våra AI-paket / Lösningar */}
+        {/* Våra AI-paket / Lösningar */}
         <StickyPackageCards packages={aiPackages} onBookDemo={() => setIsConsultationModalOpen(true)} onViewDetails={() => scrollToSection('kontakt')} />
         
-        {/* 10. Arbetsprocess */}
+        {/* Arbetsprocess */}
         <AnimatedSection>
           <section id="process" className="relative py-12">
             <WorkflowTimeline />
           </section>
         </AnimatedSection>
 
-        {/* 11. Case Studies */}
-        <CaseStudiesGrid />
-
-        {/* 12. Varför Hiems */}
-        <WhyHiemsSection />
-
-        {/* 13. Priser */}
-        <PricingSection onBookDemo={() => setIsConsultationModalOpen(true)} />
-
-        {/* 14. Kundberättelser */}
-        <TestimonialsCarousel />
-
-        {/* 15. FAQ */}
-        <FAQSection />
-
-        {/* 16. Kontakt / CTA */}
+        {/* Kontakt / CTA */}
         <ConsultationCTA />
       </AuroraBackground>
+
+      {/* Branschspecifika lösningar */}
+      
+
+      {/* Kundflöde & värde */}
+      
+
+      {/* Teknisk Expertis */}
+      
+
+      {/* Onboarding-process */}
+      
+
+      {/* Blogg / Insikter */}
       
 
       <ConsultationModal open={isConsultationModalOpen} onOpenChange={setIsConsultationModalOpen} />

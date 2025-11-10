@@ -12,20 +12,20 @@ export const WorkflowTimeline = () => {
             </CardDecorator>
             
             <h4 className="mt-6 text-2xl md:text-3xl font-bold text-foreground text-center">
-              Analys & Kartläggning
+              Gratis behovsanalys
             </h4>
             
             <p className="text-sm text-primary font-semibold text-center">
-              Vi identifierar flaskhalsar, manuella processer och AI-potential
+              Dag 1 – Startmöte & förväntanssättning
             </p>
           </CardHeader>
           
           <CardContent className="space-y-2">
             <p className="text-sm text-muted-foreground leading-relaxed text-center">
-              Vi börjar med att förstå era behov, mål och nuvarande arbetssätt genom intervjuer med nyckelpersoner.
+              Vi börjar med att förstå era behov, mål och nuvarande arbetssätt.
             </p>
             <p className="text-sm text-muted-foreground leading-relaxed text-center">
-              Vi analyserar nuvarande flöden och identifierar områden där AI kan göra störst skillnad.
+              Du får en onboarding-guide och en tydlig tidsplan för hela processen.
             </p>
           </CardContent>
         </Card>
@@ -34,24 +34,24 @@ export const WorkflowTimeline = () => {
     content: <Card className="group border-0 bg-muted shadow-none">
           <CardHeader className="pb-3">
             <CardDecorator>
-              <Settings className="h-6 w-6 text-primary" />
+              <FileText className="h-6 w-6 text-primary" />
             </CardDecorator>
             
             <h4 className="mt-6 text-2xl md:text-3xl font-bold text-foreground text-center">
-              Utveckling & Design
+              Offertmöte
             </h4>
             
             <p className="text-sm text-primary font-semibold text-center">
-              Våra ingenjörer skapar anpassade AI-agenter, automationer och datamodeller
+              Dag 3–5 – Insamling av kunddata
             </p>
           </CardHeader>
           
           <CardContent className="space-y-2">
             <p className="text-sm text-muted-foreground leading-relaxed text-center">
-              Vi utvecklar första versionen av er AI-lösning baserat på behovsanalysen.
+              Tillsammans går vi igenom lösningsförslaget och samlar in den information som behövs.
             </p>
             <p className="text-sm text-muted-foreground leading-relaxed text-center">
-              Kontinuerliga feedback-sessioner säkerställer att lösningen möter era förväntningar.
+              Ni fyller i vårt onboardingformulär – och vi säkerställer ett komplett dataunderlag för implementation.
             </p>
           </CardContent>
         </Card>
@@ -60,24 +60,24 @@ export const WorkflowTimeline = () => {
     content: <Card className="group border-0 bg-muted shadow-none">
           <CardHeader className="pb-3">
             <CardDecorator>
-              <CheckCircle className="h-6 w-6 text-primary" />
+              <Settings className="h-6 w-6 text-primary" />
             </CardDecorator>
             
             <h4 className="mt-6 text-2xl md:text-3xl font-bold text-foreground text-center">
-              Integrering i ditt system
+              Onboarding & teknisk implementation
             </h4>
             
             <p className="text-sm text-primary font-semibold text-center">
-              Vi kopplar ihop AI:n med era befintliga verktyg – utan att störa den dagliga driften
+              Dag 7–14 – Konfiguration & integration
             </p>
           </CardHeader>
           
           <CardContent className="space-y-2">
             <p className="text-sm text-muted-foreground leading-relaxed text-center">
-              Vi integrerar AI-lösningen sömlöst med era befintliga system och verktyg.
+              Vi anpassar AI-receptionisten efter era behov och integrerar den med era befintliga system.
             </p>
             <p className="text-sm text-muted-foreground leading-relaxed text-center">
-              Pilot i produktion startar och vi säkerställer att allt fungerar perfekt.
+              Resultatet: en färdig AI-lösning redo för test.
             </p>
           </CardContent>
         </Card>
@@ -86,24 +86,50 @@ export const WorkflowTimeline = () => {
     content: <Card className="group border-0 bg-muted shadow-none">
           <CardHeader className="pb-3">
             <CardDecorator>
-              <Rocket className="h-6 w-6 text-primary" />
+              <CheckCircle className="h-6 w-6 text-primary" />
             </CardDecorator>
             
             <h4 className="mt-6 text-2xl md:text-3xl font-bold text-foreground text-center">
-              Optimering & Skalning
+              Test & justering
             </h4>
             
             <p className="text-sm text-primary font-semibold text-center">
-              Vi mäter, förbättrar och expanderar – så att AI-lösningen växer med er verksamhet
+              Dag 15 – Live-demo & feedback
             </p>
           </CardHeader>
           
           <CardContent className="space-y-2">
             <p className="text-sm text-muted-foreground leading-relaxed text-center">
-              Full rollout med kontinuerlig övervakning och optimering baserat på verklig data.
+              Ni får testa lösningen i realtid.
             </p>
             <p className="text-sm text-muted-foreground leading-relaxed text-center">
-              Vi följer upp regelbundet och skalerar lösningen efter era behov och tillväxt.
+              Vi går igenom resultatet tillsammans och gör eventuella justeringar tills allt känns perfekt.
+            </p>
+          </CardContent>
+        </Card>
+  }, {
+    title: "Steg 5",
+    content: <Card className="group border-0 bg-muted shadow-none">
+          <CardHeader className="pb-3">
+            <CardDecorator>
+              <Rocket className="h-6 w-6 text-primary" />
+            </CardDecorator>
+            
+            <h4 className="mt-6 text-2xl md:text-3xl font-bold text-foreground text-center">
+              Driftstart & uppföljning
+            </h4>
+            
+            <p className="text-sm text-primary font-semibold text-center">
+              Dag 16+ – Aktiv pilot & kontinuerlig optimering
+            </p>
+          </CardHeader>
+          
+          <CardContent className="space-y-2">
+            <p className="text-sm text-muted-foreground leading-relaxed text-center">
+              AI-receptionisten går live!
+            </p>
+            <p className="text-sm text-muted-foreground leading-relaxed text-center">
+              Vi följer upp efter 7 dagar, ger löpande support och optimerar systemet baserat på verklig användning.
             </p>
           </CardContent>
         </Card>
