@@ -1,7 +1,6 @@
 "use client"
 
 import React, { useState, useEffect, useRef } from "react";
-import { motion } from "framer-motion";
 import { expertiseCategories } from "@/data/expertise";
 
 // Samla alla program-logotyper från expertise data MED namn
@@ -64,31 +63,14 @@ export default function IntegrationHero() {
   }, []);
 
   return (
-    <section className="relative py-8 md:py-12 overflow-hidden overflow-x-hidden">
-      <div className="relative w-full px-6 md:px-12 text-center">
-        {/* Header with motion animation */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.6, ease: "easeOut" }}
-          className="flex flex-col items-center"
-        >
-          <h1 className="text-3xl lg:text-4xl font-bold tracking-tight text-foreground mb-3">
-            Våra favoritverktyg för att skapa resultat
-          </h1>
-          <p className="mt-2 text-base lg:text-lg text-muted-foreground max-w-2xl mx-auto">
-            Vi integrerar sömlöst med alla era befintliga system och verktyg.
-          </p>
-        </motion.div>
-
-        {/* Carousel container */}
-        <div className="mt-6 md:mt-8 overflow-x-hidden relative h-[280px]">
-          {/* Rad 1 - scrollar åt vänster */}
-          <div
-            ref={topRowRef}
-            className="flex gap-6 md:gap-8 whitespace-nowrap absolute top-6"
-            style={{ willChange: "transform" }}
+    <section className="relative w-full min-h-screen overflow-hidden flex items-center justify-center">
+      {/* Carousel container - fullscreen */}
+      <div className="relative w-full h-[400px] overflow-x-hidden">
+        {/* Rad 1 - scrollar åt vänster */}
+        <div
+          ref={topRowRef}
+          className="flex gap-6 md:gap-8 whitespace-nowrap absolute top-20"
+          style={{ willChange: "transform" }}
           >
             {repeatedIcons(row1, 4).map((program, i) => (
               <div
@@ -121,11 +103,11 @@ export default function IntegrationHero() {
             ))}
           </div>
 
-          {/* Rad 2 - scrollar åt höger */}
-          <div
-            ref={bottomRowRef}
-            className="flex gap-6 md:gap-8 whitespace-nowrap absolute top-[148px]"
-            style={{ willChange: "transform" }}
+        {/* Rad 2 - scrollar åt höger */}
+        <div
+          ref={bottomRowRef}
+          className="flex gap-6 md:gap-8 whitespace-nowrap absolute top-[220px]"
+          style={{ willChange: "transform" }}
           >
             {repeatedIcons(row2, 4).map((program, i) => (
               <div
@@ -158,20 +140,19 @@ export default function IntegrationHero() {
             ))}
           </div>
 
-          {/* Fade overlays - förbättrade */}
-          <div 
-            className="absolute top-0 left-0 bottom-0 w-60 h-[280px] z-10 pointer-events-none"
-            style={{
-              backgroundImage: "linear-gradient(90deg, hsl(var(--background)), rgba(0, 0, 0, 0))"
-            }}
-          />
-          <div 
-            className="absolute top-0 right-0 bottom-0 w-60 h-[280px] z-10 pointer-events-none"
-            style={{
-              backgroundImage: "linear-gradient(90deg, rgba(0, 0, 0, 0), hsl(var(--background)))"
-            }}
-          />
-        </div>
+        {/* Fade overlays - förbättrade */}
+        <div 
+          className="absolute top-0 left-0 bottom-0 w-60 h-[400px] z-10 pointer-events-none"
+          style={{
+            backgroundImage: "linear-gradient(90deg, hsl(var(--background)), rgba(0, 0, 0, 0))"
+          }}
+        />
+        <div 
+          className="absolute top-0 right-0 bottom-0 w-60 h-[400px] z-10 pointer-events-none"
+          style={{
+            backgroundImage: "linear-gradient(90deg, rgba(0, 0, 0, 0), hsl(var(--background)))"
+          }}
+        />
       </div>
     </section>
   );
