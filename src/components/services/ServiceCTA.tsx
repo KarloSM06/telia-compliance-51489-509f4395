@@ -1,12 +1,31 @@
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Calendar } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 interface ServiceCTAProps {
   onBookDemo?: () => void;
 }
 
 export const ServiceCTA = ({ onBookDemo }: ServiceCTAProps) => {
+  const navigate = useNavigate();
+
+  const handleContactClick = () => {
+    navigate("/");
+    setTimeout(() => {
+      const element = document.getElementById("kontakt");
+      if (element) {
+        const offset = 80;
+        const elementPosition = element.getBoundingClientRect().top;
+        const offsetPosition = elementPosition + window.pageYOffset - offset;
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: 'smooth'
+        });
+      }
+    }, 100);
+  };
+
   return (
     <section className="py-16 md:py-24">
       <div className="container mx-auto">
@@ -40,7 +59,7 @@ export const ServiceCTA = ({ onBookDemo }: ServiceCTAProps) => {
               size="lg"
               variant="outline"
               className="text-lg px-8 py-6 border-2 hover:bg-accent/10"
-              onClick={() => window.location.href = "/#kontakt"}
+              onClick={handleContactClick}
             >
               Kontakta oss
             </Button>
