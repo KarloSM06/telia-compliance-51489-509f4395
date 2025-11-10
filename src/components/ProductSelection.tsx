@@ -51,7 +51,7 @@ export const ProductSelection = () => {
         </section>
 
         {/* Social Proof Stats */}
-        <StatsBar />
+        
 
         {/* Så fungerar det */}
         <ProcessSteps />
@@ -75,10 +75,7 @@ export const ProductSelection = () => {
         <LandingAccordionItem />
 
         {/* Allt administrativt i ett ekosystem */}
-        <UnifiedEcosystem 
-          primaryImageSrc={dashboardScreenshot} 
-          secondaryImageSrc={calendarScreenshot}
-        />
+        <UnifiedEcosystem primaryImageSrc={dashboardScreenshot} secondaryImageSrc={calendarScreenshot} />
         
         {/* Arbetsprocess */}
         <AnimatedSection>
