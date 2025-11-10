@@ -80,7 +80,7 @@ export const AlternatingServicesSection = () => {
       <div className="max-w-7xl mx-auto px-6 space-y-16 md:space-y-24">
         {servicesData.map((service, index) => (
           <AnimatedSection key={service.id} delay={index * 100}>
-            <div className="bg-white/80 backdrop-blur-xl border border-gray-100 rounded-3xl p-10 md:p-16 shadow-lg hover:shadow-xl transition-all">
+            <div className="border-2 border-white/10 bg-white/5 backdrop-blur-sm rounded-3xl p-10 md:p-16 shadow-lg hover:shadow-xl transition-all">
               <div className={`grid md:grid-cols-2 gap-12 items-center ${service.isReversed ? 'md:grid-flow-dense' : ''}`}>
                 {/* Text side */}
                 <div className={service.isReversed ? 'md:col-start-2' : ''}>
