@@ -84,10 +84,7 @@ export const ProductSelection = () => {
         {/* 8. Unified Ecosystem */}
         <UnifiedEcosystem primaryImageSrc={dashboardScreenshot} secondaryImageSrc={calendarScreenshot} />
 
-        {/* 9. Process Grid (4 steg) */}
-        <ProcessGrid />
-
-        {/* 10. Workflow Timeline */}
+        {/* 9. Workflow Timeline */}
         <AnimatedSection>
           <section id="process" className="relative py-12">
             <WorkflowTimeline />
@@ -97,7 +94,10 @@ export const ProductSelection = () => {
         {/* 11. Sticky Package Cards */}
         <StickyPackageCards packages={aiPackages} onBookDemo={() => setIsConsultationModalOpen(true)} onViewDetails={() => scrollToSection('kontakt')} />
 
-        {/* 12. Case Study Showcase */}
+        {/* 12. Process Grid (4 steg) */}
+        <ProcessGrid />
+
+        {/* 13. Case Study Showcase */}
         <CaseStudyShowcase />
 
         {/* 13. Benefits Grid */}
