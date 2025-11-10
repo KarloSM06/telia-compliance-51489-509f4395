@@ -77,7 +77,18 @@ const servicesData = [
 export const AlternatingServicesSection = () => {
   return (
     <section className="py-16 md:py-24">
-      <div className="max-w-7xl mx-auto px-6 space-y-16 md:space-y-24">
+      <div className="max-w-7xl mx-auto px-6">
+        {/* Section Header */}
+        <div className="text-center mb-16 md:mb-24">
+          <h2 className="text-4xl md:text-5xl lg:text-6xl font-display font-normal text-gray-900 mb-6">
+            AI-Lösningar som Levererar
+          </h2>
+          <p className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto">
+            Live KPI-tavlor, prognoser och tydliga handlingsrekommendationer—så teamet agerar, inte gissar.
+          </p>
+        </div>
+
+        <div className="space-y-16 md:space-y-24">
         {servicesData.map((service, index) => (
           <AnimatedSection key={service.id} delay={index * 100}>
             <div className="border-2 border-white/10 bg-white/5 backdrop-blur-sm rounded-3xl p-10 md:p-16 shadow-lg hover:shadow-xl transition-all">
@@ -131,6 +142,7 @@ export const AlternatingServicesSection = () => {
             </div>
           </AnimatedSection>
         ))}
+        </div>
       </div>
     </section>
   );
