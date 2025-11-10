@@ -310,10 +310,17 @@ serve(async (req) => {
 
   try {
     const url = new URL(req.url);
-    const webhookToken = url.searchParams.get('token');
+    
+    // SECURITY: Prefer X-Webhook-Token header, fallback to URL param (deprecated)
+    const webhookToken = req.headers.get('X-Webhook-Token') || url.searchParams.get('token');
     
     if (!webhookToken) {
-      throw new Error('Missing webhook token');
+      throw new Error('Missing webhook token. Use X-Webhook-Token header for authentication.');
+    }
+    
+    // Warn if using deprecated URL parameter
+    if (!req.headers.get('X-Webhook-Token') && url.searchParams.get('token')) {
+      console.warn('⚠️ DEPRECATED: Webhook token in URL parameter. Use X-Webhook-Token header instead.');
     }
 
     const supabase = createClient(
@@ -461,8 +468,16 @@ serve(async (req) => {
     try {
       credentials = await decryptCredentials(integration.encrypted_credentials);
     } catch (error) {
-      console.error('⚠️ Failed to decrypt credentials:', error);
-      // Continue without verification if decryption fails
+      console.error('❌ Failed to decrypt credentials for signature verification:', error);
+      // SECURITY: Fail securely - reject webhook if credentials can't be decrypted
+      // Only providers with signature verification require this
+      if (['twilio', 'telnyx', 'vapi', 'retell'].includes(provider)) {
+        console.error('❌ Rejecting webhook - signature verification required but credentials unavailable');
+        return new Response(
+          JSON.stringify({ error: 'Authentication required - signature verification failed' }),
+          { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      }
     }
 
     // Verify webhook signature

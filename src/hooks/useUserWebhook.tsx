@@ -15,13 +15,19 @@ export const useUserWebhook = () => {
     },
   });
 
+  // SECURITY: Webhook token should be sent in X-Webhook-Token header, not URL
   const webhookUrl = webhookToken 
-    ? `https://shskknkivuewuqonjdjc.supabase.co/functions/v1/user-webhook?token=${webhookToken}`
+    ? `https://shskknkivuewuqonjdjc.supabase.co/functions/v1/user-webhook`
+    : null;
+  
+  const webhookInstructions = webhookToken
+    ? `Send requests to: ${webhookUrl}\nInclude header: X-Webhook-Token: ${webhookToken}`
     : null;
 
   return {
     webhookUrl,
     webhookToken,
+    webhookInstructions,
     isLoading,
   };
 };
