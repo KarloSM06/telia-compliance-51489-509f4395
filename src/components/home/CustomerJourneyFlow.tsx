@@ -34,7 +34,7 @@ export const CustomerJourneyFlow = () => {
       {/* Grid Layout - Responsive and Symmetrical */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
         {journeySteps.map((step, index) => (
-          <Card key={index} className="group h-full overflow-hidden border border-primary/10 bg-gradient-to-br from-card/80 via-card/50 to-card/30 backdrop-blur-md hover:bg-card/90 hover:border-primary/30 transition-transform duration-300 hover:shadow-2xl hover:shadow-primary/20 hover:-translate-y-2 transform-gpu will-change-transform" style={{ contain: 'layout', contentVisibility: 'auto' }}>
+          <Card key={index} className="group h-full overflow-hidden border-2 border-white/10 bg-white/5 backdrop-blur-sm hover:border-white/20 hover:bg-white/10 transition-all duration-300 hover:shadow-xl hover:shadow-white/5 hover:-translate-y-2 transform-gpu will-change-transform" style={{ contain: 'layout', contentVisibility: 'auto' }}>
               <CardContent className="p-0 flex flex-col h-full">
                 <div className="relative aspect-square overflow-hidden">
                   <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent z-10 opacity-70 group-hover:opacity-50 transition-opacity duration-500" />
@@ -53,11 +53,11 @@ export const CustomerJourneyFlow = () => {
                     {index + 1}
                   </div>
                 </div>
-                <div className="p-6 flex flex-col flex-1 bg-gradient-to-br from-card/5 to-transparent">
-                  <h3 className="font-bold text-xl mb-3 text-foreground group-hover:text-primary transition-colors duration-300">
+                <div className="p-6 flex flex-col flex-1">
+                  <h3 className="font-bold text-xl mb-3 text-primary group-hover:text-primary transition-colors duration-300">
                     {step.title}
                   </h3>
-                  <p className="text-sm text-muted-foreground leading-relaxed flex-1">
+                  <p className="text-sm text-primary/80 leading-relaxed flex-1">
                     {step.description}
                   </p>
                 </div>

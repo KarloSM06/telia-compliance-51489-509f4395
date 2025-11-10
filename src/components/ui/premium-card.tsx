@@ -8,8 +8,7 @@ const PremiumCard = React.forwardRef<
   <div
     ref={ref}
     className={cn(
-      "rounded-xl border bg-card text-card-foreground shadow-sm hover:shadow-md transition-all duration-300 hover-scale",
-      "bg-gradient-to-br from-background to-background/95",
+      "rounded-2xl border-2 border-white/10 bg-white/5 backdrop-blur-sm text-primary shadow-elegant hover:shadow-xl hover:shadow-white/5 transition-all duration-300 hover:border-white/20 hover:bg-white/10 hover-scale",
       className
     )}
     {...props}
@@ -36,7 +35,7 @@ const PremiumCardTitle = React.forwardRef<
   <h3
     ref={ref}
     className={cn(
-      "text-2xl font-semibold leading-none tracking-tight",
+      "text-2xl font-semibold leading-none tracking-tight text-primary",
       className
     )}
     {...props}
@@ -50,7 +49,7 @@ const PremiumCardDescription = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <p
     ref={ref}
-    className={cn("text-sm text-muted-foreground", className)}
+    className={cn("text-sm text-primary/80", className)}
     {...props}
   />
 ));

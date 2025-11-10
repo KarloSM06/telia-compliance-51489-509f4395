@@ -9,14 +9,14 @@ interface EngagementChartProps {
 
 export const EngagementChart = ({ data, isLoading }: EngagementChartProps) => {
   if (isLoading) {
-    return <Card className="p-6 border border-primary/10 bg-gradient-to-br from-card/80 via-card/50 to-card/30 backdrop-blur-md"><Skeleton className="h-[280px]" /></Card>;
+    return <Card className="p-6 border-2 border-white/10 bg-white/5 backdrop-blur-sm"><Skeleton className="h-[280px]" /></Card>;
   }
 
   if (!data || data.length === 0) {
     return (
-      <Card className="p-6 border border-primary/10 bg-gradient-to-br from-card/80 via-card/50 to-card/30 backdrop-blur-md hover:shadow-lg hover:shadow-primary/10 hover:border-primary/30 transition-all duration-300">
-        <h3 className="text-sm font-medium mb-4">Engagement (Öppnings & Klickgrad)</h3>
-        <div className="h-[280px] flex items-center justify-center text-muted-foreground">
+      <Card className="p-6 border-2 border-white/10 bg-white/5 backdrop-blur-sm hover:border-white/20 hover:bg-white/10 transition-all duration-300">
+        <h3 className="text-sm font-medium mb-4 text-primary">Engagement (Öppnings & Klickgrad)</h3>
+        <div className="h-[280px] flex items-center justify-center text-primary/80">
           Ingen data att visa
         </div>
       </Card>
@@ -27,16 +27,16 @@ export const EngagementChart = ({ data, isLoading }: EngagementChartProps) => {
   const avgClickRate = data.reduce((sum, d) => sum + d.clickRate, 0) / data.length;
 
   return (
-    <Card className="p-6 border border-primary/10 bg-gradient-to-br from-card/80 via-card/50 to-card/30 backdrop-blur-md hover:shadow-lg hover:shadow-primary/10 hover:border-primary/30 transition-all duration-300">
+    <Card className="p-6 border-2 border-white/10 bg-white/5 backdrop-blur-sm hover:border-white/20 hover:bg-white/10 transition-all duration-300">
       <div className="flex justify-between items-start mb-4">
-        <h3 className="text-sm font-medium">Engagement</h3>
+        <h3 className="text-sm font-medium text-primary">Engagement</h3>
         <div className="text-right space-y-1">
           <div className="flex items-center gap-2">
-            <div className="text-sm text-muted-foreground">Öppningsgrad:</div>
+            <div className="text-sm text-primary/80">Öppningsgrad:</div>
             <div className="text-lg font-bold text-blue-600">{avgOpenRate.toFixed(1)}%</div>
           </div>
           <div className="flex items-center gap-2">
-            <div className="text-sm text-muted-foreground">Klickgrad:</div>
+            <div className="text-sm text-primary/80">Klickgrad:</div>
             <div className="text-lg font-bold text-purple-600">{avgClickRate.toFixed(1)}%</div>
           </div>
         </div>

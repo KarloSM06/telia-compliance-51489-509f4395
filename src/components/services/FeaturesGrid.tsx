@@ -34,17 +34,17 @@ export const FeaturesGrid = ({ features }: FeaturesGridProps) => {
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
               whileHover={{ y: -5 }}
-              className="group p-6 rounded-3xl border border-border bg-card hover:shadow-elegant transition-all duration-300"
+              className="group p-6 rounded-2xl border-2 border-white/10 bg-white/5 backdrop-blur-sm hover:border-white/20 hover:bg-white/10 hover:shadow-xl hover:shadow-white/5 transition-all duration-300"
             >
               <div className="flex items-start gap-4">
                 <div className="flex-shrink-0 w-10 h-10 rounded-2xl bg-gradient-gold flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
                   <CheckCircle className="w-5 h-5 text-primary" />
                 </div>
                 <div>
-                  <h3 className="text-lg font-semibold mb-2 group-hover:text-primary transition-colors">
+                  <h3 className="text-lg font-semibold mb-2 text-primary group-hover:text-primary transition-colors">
                     {feature.title}
                   </h3>
-                  <p className="text-sm text-muted-foreground">
+                  <p className="text-sm text-primary/80">
                     {feature.description}
                   </p>
                 </div>

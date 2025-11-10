@@ -37,12 +37,12 @@ export const UseCases = ({ useCases }: UseCasesProps) => {
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
               whileHover={{ scale: 1.02 }}
-              className="p-8 rounded-3xl border border-border bg-card hover:shadow-elegant transition-all duration-300"
+              className="p-8 rounded-2xl border-2 border-white/10 bg-white/5 backdrop-blur-sm hover:border-white/20 hover:bg-white/10 hover:shadow-xl hover:shadow-white/5 transition-all duration-300"
             >
               <h3 className="text-xl font-bold mb-3 text-primary">
                 {useCase.title}
               </h3>
-              <p className="text-muted-foreground leading-relaxed">
+              <p className="text-primary/80 leading-relaxed">
                 {useCase.description}
               </p>
             </motion.div>

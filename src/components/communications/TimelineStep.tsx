@@ -27,8 +27,8 @@ export function TimelineStep({
   return (
     <div className="relative">
       <Card className={cn(
-        "transition-all duration-300",
-        enabled && "ring-2 ring-primary/20 shadow-card"
+        "border-2 border-white/10 bg-white/5 backdrop-blur-sm transition-all duration-300",
+        enabled && "border-white/20 bg-white/10 shadow-xl shadow-white/5"
       )}>
         <CardContent className="pt-6">
           <div className="flex items-start gap-4">
@@ -42,14 +42,14 @@ export function TimelineStep({
             <div className="flex-1 space-y-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <h3 className="font-semibold text-lg">{title}</h3>
-                  <p className="text-sm text-muted-foreground">{description}</p>
+                  <h3 className="font-semibold text-lg text-primary">{title}</h3>
+                  <p className="text-sm text-primary/80">{description}</p>
                 </div>
                 <Switch checked={enabled} onCheckedChange={onToggle} />
               </div>
               
               {enabled && children && (
-                <div className="animate-fade-in space-y-4 pl-2 border-l-2 border-primary/20">
+                <div className="animate-fade-in space-y-4 pl-2 border-l-2 border-white/10">
                   {children}
                 </div>
               )}

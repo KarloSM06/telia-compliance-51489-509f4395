@@ -23,9 +23,9 @@ export const ConsultationCTA = () => {
         </AnimatedSection>
 
         <AnimatedSection delay={200}>
-          <div className="max-w-2xl mx-auto bg-card/50 backdrop-blur-sm border border-border/50 rounded-2xl p-8 lg:p-12 shadow-xl">
+          <div className="max-w-2xl mx-auto border-2 border-white/10 bg-white/5 backdrop-blur-sm rounded-2xl p-8 lg:p-12 shadow-elegant hover:border-white/20 hover:bg-white/10 transition-all duration-300">
             <div className="text-center space-y-6">
-              <p className="text-lg text-muted-foreground">
+              <p className="text-lg text-primary/80">
                 Fyll i dina uppgifter så kontaktar vi dig inom kort för att boka ett möte och diskutera era behov.
               </p>
               

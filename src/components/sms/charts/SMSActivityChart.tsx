@@ -17,14 +17,14 @@ interface SMSActivityChartProps {
 
 export const SMSActivityChart = ({ data, providers, isLoading }: SMSActivityChartProps) => {
   if (isLoading) {
-    return <Card className="p-6 border border-primary/10 bg-gradient-to-br from-card/80 via-card/50 to-card/30 backdrop-blur-md"><Skeleton className="h-[280px]" /></Card>;
+    return <Card className="p-6 border-2 border-white/10 bg-white/5 backdrop-blur-sm"><Skeleton className="h-[280px]" /></Card>;
   }
 
   if (!data || data.length === 0) {
     return (
-      <Card className="p-6 border border-primary/10 bg-gradient-to-br from-card/80 via-card/50 to-card/30 backdrop-blur-md hover:shadow-lg hover:shadow-primary/10 hover:border-primary/30 transition-all duration-300">
-        <h3 className="text-sm font-medium mb-4">SMS Aktivitet</h3>
-        <div className="h-[280px] flex items-center justify-center text-muted-foreground">
+      <Card className="p-6 border-2 border-white/10 bg-white/5 backdrop-blur-sm hover:border-white/20 hover:bg-white/10 transition-all duration-300">
+        <h3 className="text-sm font-medium mb-4 text-primary">SMS Aktivitet</h3>
+        <div className="h-[280px] flex items-center justify-center text-primary/80">
           Ingen data att visa
         </div>
       </Card>
@@ -32,8 +32,8 @@ export const SMSActivityChart = ({ data, providers, isLoading }: SMSActivityChar
   }
 
   return (
-    <Card className="p-6 border border-primary/10 bg-gradient-to-br from-card/80 via-card/50 to-card/30 backdrop-blur-md hover:shadow-lg hover:shadow-primary/10 hover:border-primary/30 transition-all duration-300">
-      <h3 className="text-sm font-medium mb-4">SMS Aktivitet per Provider</h3>
+    <Card className="p-6 border-2 border-white/10 bg-white/5 backdrop-blur-sm hover:border-white/20 hover:bg-white/10 transition-all duration-300">
+      <h3 className="text-sm font-medium mb-4 text-primary">SMS Aktivitet per Provider</h3>
       <ResponsiveContainer width="100%" height={280}>
         <LineChart data={data}>
           <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" opacity={0.3} />

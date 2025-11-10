@@ -23,15 +23,14 @@ export function PremiumStatCard({
   return (
     <div
       className={cn(
-        "relative overflow-hidden rounded-xl border bg-card p-6 shadow-sm transition-all hover:shadow-md hover-scale",
-        "bg-gradient-to-br from-background to-background/95",
+        "relative overflow-hidden rounded-2xl border-2 border-white/10 bg-white/5 backdrop-blur-sm p-6 shadow-elegant transition-all hover:shadow-xl hover:shadow-white/5 hover:border-white/20 hover:bg-white/10 hover-scale",
         className
       )}
     >
       <div className="flex items-start justify-between">
         <div className="space-y-2">
-          <p className="text-sm font-medium text-muted-foreground">{title}</p>
-          <p className="text-3xl font-bold">{value}</p>
+          <p className="text-sm font-medium text-primary/80">{title}</p>
+          <p className="text-3xl font-bold text-primary">{value}</p>
           {trend && (
             <div className={cn(
               "flex items-center gap-1 text-xs font-medium",
