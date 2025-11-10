@@ -76,7 +76,7 @@ export const Footer = () => {
       <div className="relative mx-auto grid max-w-7xl items-center justify-center gap-6 p-10 pb-0 md:flex">
         <Link to="/" className="flex-shrink-0">
           <div className="flex items-center justify-center rounded-full">
-            <img src={hiems_logo} alt="Hiems" className="h-16 w-16" />
+            <img src={hiems_logo} alt="Hiems" loading="lazy" decoding="async" className="h-16 w-16" />
           </div>
         </Link>
         <p className="bg-transparent text-center text-xs leading-4 text-muted-foreground md:text-left">

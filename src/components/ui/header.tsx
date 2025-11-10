@@ -155,7 +155,7 @@ function Header1() {
           <button onClick={() => navigate("/")} className="flex items-center gap-3 group transition-all duration-500 hover:scale-[1.03]">
             <div className="relative">
               <div className="absolute inset-0 bg-gradient-gold opacity-0 group-hover:opacity-20 blur-xl transition-opacity duration-500 rounded-2xl" />
-              <img src={hiems_logo} alt="Hiems logo" className={cn("rounded-2xl shadow-card transition-all duration-500", "group-hover:shadow-glow group-hover:rotate-6", scrollY > 20 ? "h-10 w-10" : "h-12 w-12")} />
+              <img src={hiems_logo} alt="Hiems logo" loading="eager" decoding="async" className={cn("rounded-2xl shadow-card transition-all duration-500", "group-hover:shadow-glow group-hover:rotate-6", scrollY > 20 ? "h-10 w-10" : "h-12 w-12")} />
             </div>
             <span className={cn("font-bold bg-gradient-primary bg-clip-text text-transparent", "transition-all duration-500 group-hover:tracking-wider", scrollY > 20 ? "text-xl" : "text-2xl")}>
               Hiems
@@ -172,7 +172,12 @@ function Header1() {
 
         {/* Mobile menu toggle */}
         <div className="flex w-12 shrink lg:hidden items-end justify-end">
-          <Button variant="ghost" onClick={() => setOpen(!isOpen)}>
+          <Button 
+            variant="ghost" 
+            onClick={() => setOpen(!isOpen)}
+            aria-label={isOpen ? "Stäng meny" : "Öppna meny"}
+            aria-expanded={isOpen}
+          >
             {isOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </Button>
           {isOpen && 

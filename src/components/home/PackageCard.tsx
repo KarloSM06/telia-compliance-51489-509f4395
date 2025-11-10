@@ -21,7 +21,7 @@ export const PackageCard = ({
       {/* Image Section */}
       <div className={`lg:w-2/5 relative overflow-hidden flex-shrink-0 ${isImageLeft ? 'lg:order-1' : 'lg:order-2'}`}>
         {pkg.image ? <>
-            <img src={pkg.image} alt={pkg.name} className="w-full h-full object-cover object-center transition-transform duration-700 group-hover:scale-110" />
+            <img src={pkg.image} alt={pkg.name} loading="lazy" decoding="async" className="w-full h-full object-cover object-center transition-transform duration-700 group-hover:scale-110" />
             <div className="absolute inset-0 bg-gradient-to-br from-primary/40 via-primary/20 to-transparent transition-opacity duration-500 group-hover:opacity-70" />
             
             {/* Icon Overlay */}

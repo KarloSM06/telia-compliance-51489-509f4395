@@ -185,28 +185,34 @@ export function ConsultationModal({ open, onOpenChange }: ConsultationModalProps
     switch (currentStep) {
       case 1:
         return (
-          <div className="space-y-4">
+            <div className="space-y-6">
             <h3 className="text-xl font-semibold text-foreground">Om företaget</h3>
-            <div className="space-y-2">
+            <div className="space-y-3">
               <Label htmlFor="company">Företagsnamn *</Label>
               <Input
                 id="company"
                 value={companyName}
                 onChange={(e) => setCompanyName(e.target.value)}
                 placeholder="Ditt företag AB"
+                autoComplete="organization"
+                inputMode="text"
+                enterKeyHint="next"
               />
             </div>
-            <div className="space-y-2">
+            <div className="space-y-3">
               <Label htmlFor="contact">Kontaktperson & roll *</Label>
               <Input
                 id="contact"
                 value={contactPerson}
                 onChange={(e) => setContactPerson(e.target.value)}
                 placeholder="Anna Andersson, VD"
+                autoComplete="name"
+                inputMode="text"
+                enterKeyHint="next"
               />
             </div>
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-4">
+              <div className="space-y-3">
                 <Label htmlFor="email">E-post *</Label>
                 <Input
                   id="email"
@@ -214,9 +220,12 @@ export function ConsultationModal({ open, onOpenChange }: ConsultationModalProps
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="anna@foretag.se"
+                  autoComplete="email"
+                  inputMode="email"
+                  enterKeyHint="next"
                 />
               </div>
-              <div className="space-y-2">
+              <div className="space-y-3">
                 <Label htmlFor="phone">Telefon *</Label>
                 <Input
                   id="phone"
@@ -224,10 +233,13 @@ export function ConsultationModal({ open, onOpenChange }: ConsultationModalProps
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
                   placeholder="070-123 45 67"
+                  autoComplete="tel"
+                  inputMode="tel"
+                  enterKeyHint="next"
                 />
               </div>
             </div>
-            <div className="space-y-2">
+            <div className="space-y-3">
               <Label htmlFor="description">Kort beskrivning av verksamheten *</Label>
               <Textarea
                 id="description"
@@ -235,6 +247,7 @@ export function ConsultationModal({ open, onOpenChange }: ConsultationModalProps
                 onChange={(e) => setBusinessDescription(e.target.value)}
                 placeholder="Beskriv er verksamhet..."
                 rows={4}
+                enterKeyHint="done"
               />
             </div>
           </div>
@@ -598,9 +611,9 @@ export function ConsultationModal({ open, onOpenChange }: ConsultationModalProps
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[700px] max-h-[90vh] overflow-y-auto bg-background/95 backdrop-blur-sm border-white/10">
+      <DialogContent className="sm:max-w-[700px] max-h-[90vh] overflow-y-auto bg-background/95 backdrop-blur-sm border-white/10" aria-labelledby="consultation-title">
         <DialogHeader>
-          <DialogTitle className="text-3xl font-display font-bold bg-gradient-gold bg-clip-text text-transparent">
+          <DialogTitle id="consultation-title" className="text-2xl md:text-3xl font-display font-bold bg-gradient-gold bg-clip-text text-transparent">
             AI Konsultation
           </DialogTitle>
           <div className="flex items-center gap-2 mt-4">
@@ -620,11 +633,13 @@ export function ConsultationModal({ open, onOpenChange }: ConsultationModalProps
           {renderStep()}
         </div>
 
-        <div className="flex justify-between gap-4 pt-4 border-t">
+        <div className="flex justify-between gap-3 pt-4 border-t">
           <Button
             onClick={handleBack}
             disabled={currentStep === 1}
             variant="outline"
+            aria-label="Gå tillbaka till föregående steg"
+            className="min-w-[100px]"
           >
             <ChevronLeft className="mr-2 h-4 w-4" />
             Tillbaka
@@ -633,7 +648,8 @@ export function ConsultationModal({ open, onOpenChange }: ConsultationModalProps
           {currentStep < totalSteps ? (
             <Button
               onClick={handleNext}
-              className="bg-gradient-gold hover:shadow-glow transition-all duration-300"
+              className="bg-gradient-gold hover:shadow-glow transition-all duration-300 min-w-[100px]"
+              aria-label="Gå vidare till nästa steg"
             >
               Nästa
               <ChevronRight className="ml-2 h-4 w-4" />
@@ -642,7 +658,8 @@ export function ConsultationModal({ open, onOpenChange }: ConsultationModalProps
             <Button
               onClick={handleSubmit}
               disabled={isLoading}
-              className="bg-gradient-gold hover:shadow-glow transition-all duration-300"
+              className="bg-gradient-gold hover:shadow-glow transition-all duration-300 min-w-[140px]"
+              aria-label="Skicka in konsultationsansökan"
             >
               {isLoading ? (
                 <>

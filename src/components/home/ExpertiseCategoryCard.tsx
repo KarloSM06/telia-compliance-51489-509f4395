@@ -17,7 +17,7 @@ export const ExpertiseCategoryCard = ({
         <div className="relative md:w-[40%] aspect-[4/3] md:aspect-auto overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-br from-primary/30 via-primary/10 to-transparent z-10" />
           {category.image ? <>
-              <img src={category.image} alt={category.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 group-hover:brightness-110" />
+              <img src={category.image} alt={category.title} loading="lazy" decoding="async" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 group-hover:brightness-110" />
               <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent opacity-70 z-10" />
             </> : <div className="flex items-center justify-center h-full bg-gradient-to-br from-primary/20 to-primary/5">
               <Icon className="h-32 w-32 text-primary/40 group-hover:text-primary/60 transition-colors duration-300" />
