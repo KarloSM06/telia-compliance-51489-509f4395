@@ -56,7 +56,7 @@ export const ProductSelection = () => {
       {/* Hero Section and Packages with Aurora Background */}
       <AuroraBackground className="h-auto">
         <section id="hero" className="relative py-12 lg:py-16 pb-16 lg:pb-24 flex items-center">
-          <AnimatedHero onBookDemo={() => setIsConsultationModalOpen(true)} onViewPackages={() => scrollToSection('paket')} />
+          
         </section>
 
         {/* Programmen vi jobbar med */}
@@ -75,10 +75,7 @@ export const ProductSelection = () => {
         <LandingAccordionItem />
 
         {/* Allt administrativt i ett ekosystem */}
-        <UnifiedEcosystem 
-          primaryImageSrc={dashboardScreenshot} 
-          secondaryImageSrc={calendarScreenshot}
-        />
+        <UnifiedEcosystem primaryImageSrc={dashboardScreenshot} secondaryImageSrc={calendarScreenshot} />
 
         {/* Våra AI-paket / Lösningar */}
         <StickyPackageCards packages={aiPackages} onBookDemo={() => setIsConsultationModalOpen(true)} onViewDetails={() => scrollToSection('kontakt')} />
