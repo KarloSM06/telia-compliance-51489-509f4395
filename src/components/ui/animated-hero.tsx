@@ -43,7 +43,7 @@ function AnimatedHero({
             }} className="text-4xl md:text-6xl lg:text-7xl max-w-6xl tracking-tight text-center font-bold leading-[1.15]">
                 <span className={cn("block mb-3", "bg-clip-text text-transparent", "bg-[linear-gradient(180deg,_hsl(var(--foreground))_0%,_hsl(var(--foreground)/0.8)_100%)]", "dark:bg-[linear-gradient(180deg,_hsl(var(--foreground))_0%,_hsl(var(--foreground)/0.6)_100%)]")}>Skala din verksamhet med AI</span>
                 <span className="relative flex w-full justify-center overflow-hidden text-center pb-2 min-h-[1.2em]">
-                  {titles.map((title, index) => <motion.span key={index} className="absolute font-extrabold bg-gradient-gold bg-clip-text text-transparent" initial={{
+                  {titles.map((title, index) => <motion.span key={index} className="absolute font-extrabold bg-gradient-accent bg-clip-text text-transparent" initial={{
                   opacity: 0,
                   y: -100
                 }} transition={{
@@ -92,18 +92,23 @@ function AnimatedHero({
           }} transition={{
             duration: 0.6,
             delay: 0.3
-          }} className="flex flex-col sm:flex-row gap-4 justify-center mt-4">
-              <Button variant="outline" className="group hover:bg-gradient-gold hover:text-primary hover:border-primary/20 transition-all duration-300 font-bold rounded-xl hover:scale-105" onClick={onViewPackages}>
+          }} className="flex flex-col sm:flex-row gap-4 justify-center mt-6">
+              <Button 
+                size="lg"
+                variant="outline" 
+                className="group h-14 px-8 text-lg hover:bg-accent/10 hover:text-accent hover:border-accent/50 transition-all duration-300 font-bold rounded-xl hover:scale-105 shadow-card" 
+                onClick={onViewPackages}
+              >
                 <span className="flex items-center gap-2">
-                  Se våra paket <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" />
+                  Se våra paket <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
                 </span>
               </Button>
               <RainbowButton 
                 onClick={onBookDemo}
-                className="group font-bold rounded-xl transition-all duration-300 hover:scale-105"
+                className="group h-14 px-8 text-lg font-bold rounded-xl transition-all duration-300 hover:scale-105 shadow-button"
               >
                 <span className="flex items-center gap-2">
-                  Boka demo <Calendar className="w-4 h-4 group-hover:rotate-12 transition-transform duration-300" />
+                  Boka demo <Calendar className="w-5 h-5 group-hover:rotate-12 transition-transform duration-300" />
                 </span>
               </RainbowButton>
             </motion.div>

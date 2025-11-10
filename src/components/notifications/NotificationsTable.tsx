@@ -87,7 +87,7 @@ export function NotificationsTable({ notifications, onViewDetails }: Notificatio
 
   const getStatusBadge = (status: string) => {
     const badges: Record<string, { label: string; className: string }> = {
-      pending: { label: 'Väntande', className: 'bg-yellow-500/20 text-yellow-700 border-yellow-500/30' },
+      pending: { label: 'Väntande', className: 'bg-amber-500/20 text-amber-700 border-amber-500/30' },
       sent: { label: 'Skickad', className: 'bg-green-500/20 text-green-700 border-green-500/30' },
       failed: { label: 'Misslyckad', className: 'bg-red-500/20 text-red-700 border-red-500/30' },
     };

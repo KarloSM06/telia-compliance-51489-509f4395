@@ -17,7 +17,7 @@ export const formatDollarCompact = (amount: number | undefined | null): string =
 
 export const getDailyUsageColor = (daily: number): string => {
   if (daily < 0.10) return 'text-green-600 dark:text-green-400';
-  if (daily < 1.00) return 'text-yellow-600 dark:text-yellow-400';
+  if (daily < 1.00) return 'text-amber-600 dark:text-amber-400';
   return 'text-red-600 dark:text-red-400';
 };
 

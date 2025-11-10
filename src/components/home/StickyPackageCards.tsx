@@ -31,12 +31,12 @@ const AnimatedHeader = () => {
       <div ref={headerRef} className={`transition-all duration-700 ease-out ${headerInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`} style={{
       transformStyle: 'preserve-3d'
     }}>
-        <h2 className="text-5xl md:text-6xl lg:text-7xl font-bold text-foreground">​Våra färdiga paket</h2>
+        <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-foreground">​Våra AI-paket</h2>
       </div>
       <p ref={pRef} className={`text-xl md:text-2xl text-muted-foreground max-w-4xl mx-auto mt-6 transition-all duration-700 ease-out delay-200 ${pInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`} style={{
       transformStyle: 'preserve-3d'
     }}>
-        Vi erbjuder sex skräddarsydda AI-paket som kan anpassas efter era specifika behov
+        Skräddarsydda lösningar som kan anpassas efter era unika behov
       </p>
     </div>;
 };
@@ -62,52 +62,80 @@ export function StickyPackageCards({
               const Icon = pkg.icon;
               const allFeatures = [...(pkg.components || []), ...(pkg.valueBullets || [])];
               const isLeft = index % 2 === 0;
-              return <div key={pkg.id} className="bg-gradient-to-br from-card/40 via-card/20 to-card/10 backdrop-blur-xl border border-primary/20 grid grid-cols-1 md:grid-cols-2 items-center gap-6 md:gap-12 p-10 md:p-16 rounded-3xl mb-20 sticky shadow-lg" style={{
-                top: '200px'
+              return <div key={pkg.id} className="relative bg-gradient-to-br from-card/50 via-card/30 to-card/20 backdrop-blur-xl border border-border/50 hover:border-accent/30 grid grid-cols-1 md:grid-cols-2 items-center gap-6 md:gap-12 p-8 md:p-14 rounded-3xl mb-16 sticky shadow-card hover:shadow-elegant transition-all duration-500 group" style={{
+                top: `${120 + index * 20}px`
               }}>
+                    {/* Popular Badge */}
+                    {pkg.isPopular && (
+                      <div className="absolute -top-4 left-1/2 -translate-x-1/2 z-10">
+                        <div className="bg-gradient-accent text-white px-6 py-2 rounded-full text-sm font-bold shadow-button">
+                          Populärast
+                        </div>
+                      </div>
+                    )}
+
                     {/* Card Content */}
                     <div className={`flex flex-col justify-center ${!isLeft ? 'md:order-2' : ''}`}>
-                      <div className="flex items-center gap-4 mb-6">
-                        
-                        <h3 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground">
+                      <div className="flex items-center gap-4 mb-4">
+                        <div className="p-3 rounded-2xl bg-gradient-to-br from-accent/20 to-accent/5 border border-accent/30">
+                          <Icon className="h-8 w-8 text-accent" />
+                        </div>
+                        <h3 className="text-2xl md:text-3xl lg:text-4xl font-bold text-foreground">
                           {pkg.name}
                         </h3>
                       </div>
                       
-                      <p className="text-base md:text-lg text-muted-foreground font-medium mb-6">
+                      <p className="text-base md:text-lg text-muted-foreground font-medium mb-4">
                         {pkg.targetAudience}
                       </p>
                       
-                      {pkg.tagline && <p className="text-xl md:text-2xl text-foreground/90 mb-8 font-light">
+                      {pkg.tagline && <p className="text-lg md:text-xl text-foreground/90 mb-6 font-light">
                           {pkg.tagline}
                         </p>}
 
+                      {/* Starting Price */}
+                      <div className="mb-6 pb-6 border-b border-border/50">
+                        <p className="text-sm text-muted-foreground mb-1">Startpris</p>
+                        <p className="text-2xl md:text-3xl font-bold text-accent">
+                          {pkg.startingPrice}
+                        </p>
+                      </div>
+
                       {/* Features */}
                       <ul className="space-y-3 mb-8">
-                        {allFeatures.slice(0, 4).map((feature, idx) => <li key={idx} className="flex items-start gap-3 text-base md:text-lg text-muted-foreground">
-                            <CheckCircle className="h-5 w-5 md:h-6 md:w-6 text-primary flex-shrink-0 mt-1" />
+                        {allFeatures.slice(0, 4).map((feature, idx) => <li key={idx} className="flex items-start gap-3 text-sm md:text-base text-muted-foreground">
+                            <CheckCircle className="h-5 w-5 text-accent flex-shrink-0 mt-0.5" />
                             <span>{feature}</span>
                           </li>)}
                       </ul>
 
                       {/* CTA Buttons */}
                       <div className="flex flex-col sm:flex-row gap-3">
-                        <Button onClick={() => onViewDetails(pkg)} variant="outline" className="flex-1 border-primary/20 hover:border-primary/40 hover:bg-primary/5">
-                          Läs mer
-                        </Button>
-                        <Button onClick={onBookDemo} className="flex-1 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 text-primary-foreground shadow-lg hover:shadow-primary/50 transition-all duration-300">
+                        <Button 
+                          onClick={onBookDemo} 
+                          size="lg"
+                          className="flex-1 bg-gradient-accent hover:opacity-90 text-white shadow-button hover:shadow-glow transition-all duration-300 hover:scale-105 font-bold"
+                        >
                           Boka demo
+                        </Button>
+                        <Button 
+                          onClick={() => onViewDetails(pkg)} 
+                          variant="outline" 
+                          size="lg"
+                          className="flex-1 border-border hover:border-accent/50 hover:bg-accent/5 transition-all duration-300"
+                        >
+                          Läs mer
                         </Button>
                       </div>
                     </div>
                     
                     {/* Card Image */}
                     <div className={`mt-8 md:mt-0 ${!isLeft ? 'md:order-1' : ''}`}>
-                      {pkg.image ? <img src={pkg.image} alt={pkg.name} loading="lazy" className="w-full h-auto rounded-lg shadow-lg object-cover aspect-[4/3]" onError={e => {
+                      {pkg.image ? <img src={pkg.image} alt={pkg.name} loading="lazy" className="w-full h-auto rounded-2xl shadow-elegant object-cover aspect-[4/3] group-hover:scale-[1.02] transition-transform duration-500" onError={e => {
                     e.currentTarget.onerror = null;
                     e.currentTarget.src = "https://placehold.co/600x400/cccccc/ffffff?text=Image+Not+Found";
-                  }} /> : <div className="w-full aspect-[4/3] rounded-lg bg-gradient-to-br from-primary/5 via-primary/10 to-primary/5 flex items-center justify-center">
-                          <Icon className="h-32 w-32 text-primary/20" />
+                  }} /> : <div className="w-full aspect-[4/3] rounded-2xl bg-gradient-to-br from-accent/5 via-accent/10 to-accent/5 flex items-center justify-center border border-border/50">
+                          <Icon className="h-32 w-32 text-accent/20" />
                         </div>}
                     </div>
                   </div>;
