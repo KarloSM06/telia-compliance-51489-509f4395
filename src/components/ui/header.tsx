@@ -11,14 +11,26 @@ function Header1() {
   const navigate = useNavigate();
   const [isConsultationModalOpen, setIsConsultationModalOpen] = useState(false);
   const [scrollY, setScrollY] = useState(0);
+  const [scrollDirection, setScrollDirection] = useState<'up' | 'down'>('up');
+  const [lastScrollY, setLastScrollY] = useState(0);
   
   useEffect(() => {
     const handleScroll = () => {
-      setScrollY(window.scrollY);
+      const currentScrollY = window.scrollY;
+      
+      if (currentScrollY > lastScrollY && currentScrollY > 50) {
+        setScrollDirection('down');
+      } else if (currentScrollY < lastScrollY) {
+        setScrollDirection('up');
+      }
+      
+      setScrollY(currentScrollY);
+      setLastScrollY(currentScrollY);
     };
+    
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  }, [lastScrollY]);
   
   const scrollToSection = (id: string) => {
     const element = document.getElementById(id);
@@ -99,17 +111,26 @@ function Header1() {
         <div className="justify-start items-center gap-2 lg:flex hidden flex-row">
           {navigationItems.map(item => item.href ? 
             <Link key={item.title} to={item.href}>
-              <Button variant="outline" className="hover:bg-gradient-gold hover:text-primary hover:border-primary/20 transition-all duration-300 font-medium rounded-xl">
+              <Button variant="outline" className={cn(
+                "hover:bg-gradient-gold hover:text-primary hover:border-primary/20 transition-all duration-500 font-medium rounded-xl",
+                scrollDirection === 'down' ? 'scale-90' : 'scale-100'
+              )}>
                 {item.title}
               </Button>
             </Link> : item.action ? 
-            <Button key={item.title} variant="outline" onClick={item.action} className="hover:bg-gradient-gold hover:text-primary hover:border-primary/20 transition-all duration-300 font-medium rounded-xl">
+            <Button key={item.title} variant="outline" onClick={item.action} className={cn(
+              "hover:bg-gradient-gold hover:text-primary hover:border-primary/20 transition-all duration-500 font-medium rounded-xl",
+              scrollDirection === 'down' ? 'scale-90' : 'scale-100'
+            )}>
               {item.title}
             </Button> : 
             <NavigationMenu key={item.title}>
               <NavigationMenuList>
                 <NavigationMenuItem>
-                  <NavigationMenuTrigger className="font-medium text-sm hover:bg-gradient-gold hover:text-primary transition-all duration-300 rounded-xl border border-input">
+                  <NavigationMenuTrigger className={cn(
+                    "font-medium text-sm hover:bg-gradient-gold hover:text-primary transition-all duration-500 rounded-xl border border-input",
+                    scrollDirection === 'down' ? 'scale-90' : 'scale-100'
+                  )}>
                     {item.title}
                   </NavigationMenuTrigger>
                   <NavigationMenuContent className="!w-[450px] p-4">
@@ -162,7 +183,16 @@ function Header1() {
         
         {/* Right side actions */}
         <div className="flex justify-end w-full gap-4">
-          <Button className={cn("hidden md:inline relative overflow-hidden bg-gradient-gold text-primary font-bold", "shadow-button hover:shadow-glow", "transition-all duration-500 hover:scale-105", "before:absolute before:inset-0 before:bg-white/30", "before:translate-x-[-100%] before:skew-x-12", "before:transition-transform before:duration-700", "hover:before:translate-x-[100%]")} onClick={() => setIsConsultationModalOpen(true)}>
+          <Button className={cn(
+            "hidden md:inline relative overflow-hidden bg-gradient-gold text-primary font-bold",
+            "shadow-button hover:shadow-glow",
+            "transition-all duration-500 hover:scale-105",
+            "before:absolute before:inset-0 before:bg-white/30",
+            "before:translate-x-[-100%] before:skew-x-12",
+            "before:transition-transform before:duration-700",
+            "hover:before:translate-x-[100%]",
+            scrollDirection === 'down' ? 'scale-90' : 'scale-100'
+          )} onClick={() => setIsConsultationModalOpen(true)}>
             <span className="relative z-10">Boka demo</span>
           </Button>
         </div>
