@@ -106,31 +106,6 @@ export const ProductSelection = () => {
       {/* Onboarding-process */}
       
 
-      {/* Case / Kundreferenser - DOLD (Ta bort kommentarerna för att visa igen) */}
-      {/* <section id="case" className="relative py-24 bg-gradient-to-b from-background via-primary/5 to-background overflow-hidden">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_60%_40%,hsl(var(--primary)/0.15),transparent_50%)]" />
-        
-        <div className="mx-auto max-w-7xl px-6 lg:px-8 relative z-10">
-          <AnimatedSection className="text-center mb-16">
-            <div className="inline-block">
-              <h2 className="text-5xl sm:text-6xl font-bold bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent mb-4">
-                Verkliga resultat från våra kunder
-              </h2>
-              <div className="w-32 h-1.5 bg-gradient-to-r from-primary via-primary/60 to-transparent mx-auto rounded-full shadow-lg shadow-primary/50" />
-            </div>
-            <p className="text-xl sm:text-2xl text-muted-foreground max-w-3xl mx-auto mt-6 font-light">
-              Se hur andra företag har transformerat sin verksamhet med Hiems AI-lösningar
-            </p>
-          </AnimatedSection>
-          
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {caseStudies.map((caseStudy, index) => <AnimatedSection key={caseStudy.id} delay={index * 150}>
-                <CaseStudyCard caseStudy={caseStudy} onBookDemo={() => setIsConsultationModalOpen(true)} />
-              </AnimatedSection>)}
-          </div>
-        </div>
-       </section> */}
-
       {/* Blogg / Insikter */}
       
 

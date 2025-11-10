@@ -1,4 +1,4 @@
-import { Header } from "@/components/Header";
+import { Header1 } from "@/components/ui/header";
 import { FileText, Shield, Scale, Cookie, FileCheck, Clock } from "lucide-react";
 
 const Legal = () => {
@@ -26,7 +26,7 @@ const Legal = () => {
         <div className="absolute top-20 left-10 w-72 h-72 bg-accent/10 rounded-full blur-3xl animate-pulse"></div>
         <div className="absolute bottom-20 right-10 w-96 h-96 bg-accent/5 rounded-full blur-3xl animate-pulse delay-1000"></div>
       </div>
-      <Header />
+      <Header1 />
       
       {/* Premium Quick Links Section */}
       <div className="sticky top-0 z-40 bg-white/5 backdrop-blur-lg border-b border-white/10 shadow-elegant">

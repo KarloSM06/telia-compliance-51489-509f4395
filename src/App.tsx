@@ -9,8 +9,6 @@ import { useLenis } from "@/hooks/useLenis";
 
 // Lazy load routes
 const Index = lazy(() => import("./pages/Index"));
-const ExampleReport = lazy(() => import("./pages/ExampleReport"));
-const Demo = lazy(() => import("./pages/Demo"));
 const AboutUs = lazy(() => import("./pages/AboutUs"));
 const GDPRSettings = lazy(() => import("./pages/GDPRSettings"));
 const Legal = lazy(() => import("./pages/Legal"));
@@ -63,12 +61,10 @@ const App = () => {
           <Suspense fallback={<PageLoader />}>
             <Routes>
               <Route path="/" element={<Index />} />
-              <Route path="/demo" element={<Demo />} />
               <Route path="/om-oss" element={<AboutUs />} />
               <Route path="/about" element={<AboutUs />} />
               <Route path="/gdpr" element={<GDPRSettings />} />
               <Route path="/regelverk" element={<Legal />} />
-              <Route path="/exempelrapport" element={<ExampleReport />} />
               <Route path="/unsubscribe" element={<Unsubscribe />} />
               
               {/* Service pages */}
