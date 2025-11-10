@@ -66,25 +66,28 @@ export const ProductSelection = () => {
         {/* 2. Alternating Services */}
         <AlternatingServicesSection />
 
-        {/* 3. Client Logos */}
+        {/* 3. Process Grid (4 steg) */}
+        <ProcessGrid />
+
+        {/* 4. Client Logos */}
         <ClientLogoCloud />
 
-        {/* 4. Integration Hero (verktygskarusell) */}
+        {/* 5. Integration Hero (verktygskarusell) */}
         <IntegrationHero />
 
-        {/* 5. Services Grid */}
+        {/* 6. Services Grid */}
         <ServicesGrid />
 
-        {/* 6. Unified Dashboard */}
+        {/* 7. Unified Dashboard */}
         <UnifiedDashboard />
 
-        {/* 7. AI Capabilities Accordion */}
+        {/* 8. AI Capabilities Accordion */}
         <LandingAccordionItem />
 
-        {/* 8. Unified Ecosystem */}
+        {/* 9. Unified Ecosystem */}
         <UnifiedEcosystem primaryImageSrc={dashboardScreenshot} secondaryImageSrc={calendarScreenshot} />
 
-        {/* 9. Workflow Timeline */}
+        {/* 10. Workflow Timeline */}
         <AnimatedSection>
           <section id="process" className="relative py-12">
             <WorkflowTimeline />
@@ -94,10 +97,7 @@ export const ProductSelection = () => {
         {/* 11. Sticky Package Cards */}
         <StickyPackageCards packages={aiPackages} onBookDemo={() => setIsConsultationModalOpen(true)} onViewDetails={() => scrollToSection('kontakt')} />
 
-        {/* 12. Process Grid (4 steg) */}
-        <ProcessGrid />
-
-        {/* 13. Case Study Showcase */}
+        {/* 12. Case Study Showcase */}
         <CaseStudyShowcase />
 
         {/* 13. Benefits Grid */}
