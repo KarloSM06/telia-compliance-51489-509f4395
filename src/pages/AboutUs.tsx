@@ -87,10 +87,7 @@ const AboutUs = () => {
             <div className="mx-auto max-w-7xl px-6 lg:px-8 relative">
               <AnimatedSection delay={0}>
                 <div className="mx-auto max-w-4xl text-center space-y-8">
-                  <div className="inline-block">
-                    <span className="text-sm font-semibold tracking-wider text-primary uppercase">Om Hiems</span>
-                    <div className="w-32 h-1.5 bg-gradient-to-r from-primary via-primary/60 to-transparent mx-auto rounded-full shadow-lg shadow-primary/50 mt-2" />
-                  </div>
+                  
                   
                   <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold leading-tight">
                     <span className="block mb-2 bg-clip-text text-transparent bg-[linear-gradient(180deg,_hsl(var(--foreground))_0%,_hsl(var(--foreground)/0.8)_100%)]">
