@@ -2,7 +2,6 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react-swc";
 import path from "path";
 import { componentTagger } from "lovable-tagger";
-import viteCompression from 'vite-plugin-compression';
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
@@ -10,24 +9,7 @@ export default defineConfig(({ mode }) => ({
     host: "::",
     port: 8080,
   },
-  plugins: [
-    react(), 
-    mode === "development" && componentTagger(),
-    // Brotli compression for production
-    mode === "production" && viteCompression({
-      algorithm: 'brotliCompress',
-      ext: '.br',
-      threshold: 10240, // Only compress files > 10KB
-      deleteOriginFile: false,
-    }),
-    // Gzip compression as fallback
-    mode === "production" && viteCompression({
-      algorithm: 'gzip',
-      ext: '.gz',
-      threshold: 10240,
-      deleteOriginFile: false,
-    })
-  ].filter(Boolean),
+  plugins: [react(), mode === "development" && componentTagger()].filter(Boolean),
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
@@ -55,26 +37,12 @@ export default defineConfig(({ mode }) => ({
             '@radix-ui/react-tabs',
             '@radix-ui/react-tooltip',
           ],
-          'ui-radix-misc': [
-            '@radix-ui/react-slider',
-            '@radix-ui/react-switch',
-            '@radix-ui/react-scroll-area',
-            '@radix-ui/react-separator',
-          ],
           'charts': ['recharts'],
           'forms': ['react-hook-form', 'zod', '@hookform/resolvers'],
           'supabase': ['@supabase/supabase-js'],
           'query': ['@tanstack/react-query'],
-          'animations': ['framer-motion'],
-          'icons': ['lucide-react'],
-          'date-utils': ['date-fns', 'date-fns-tz'],
+          'animations': ['framer-motion', 'lenis'],
         },
-        // Improve long-term caching
-        entryFileNames: 'assets/[name].[hash].js',
-        chunkFileNames: 'assets/[name].[hash].js',
-        assetFileNames: 'assets/[name].[hash].[ext]',
-        // Better tree-shaking
-        experimentalMinChunkSize: 10000,
       },
     },
     minify: 'terser',
@@ -82,17 +50,10 @@ export default defineConfig(({ mode }) => ({
       compress: {
         drop_console: mode === 'production',
         drop_debugger: true,
-        passes: 2, // Multiple passes for better compression
-        pure_funcs: mode === 'production' ? ['console.log', 'console.info'] : [],
-      },
-      mangle: {
-        safari10: true, // Fix Safari 10 issues
       },
     },
     cssCodeSplit: true,
-    cssMinify: 'lightningcss', // Faster CSS minification
     chunkSizeWarningLimit: 600,
     sourcemap: mode === 'development',
-    reportCompressedSize: true, // Monitor bundle sizes
   },
 }));

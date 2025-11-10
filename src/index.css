@@ -144,8 +144,7 @@ All colors MUST be HSL.
   html {
     scroll-padding-top: 80px;
     overflow-x: clip;
-    /* Native smooth scrolling - hardware accelerated */
-    scroll-behavior: smooth;
+    /* Lenis handles scroll-behavior via JS */
   }
   
   html.lenis, html.lenis body {
@@ -158,6 +157,29 @@ All colors MUST be HSL.
 
   .lenis.lenis-smooth [data-lenis-prevent] {
     overscroll-behavior: contain;
+  }
+
+  /* Branch section performance optimizations */
+  #branscher {
+    contain: layout style;
+  }
+  
+  #branscher .group {
+    backface-visibility: hidden;
+    transform: translateZ(0);
+  }
+  
+  #branscher img {
+    backface-visibility: hidden;
+    transform: translateZ(0);
+  }
+
+  .lenis.lenis-stopped {
+    overflow: hidden;
+  }
+
+  .lenis.lenis-scrolling iframe {
+    pointer-events: none;
   }
 
   body {
