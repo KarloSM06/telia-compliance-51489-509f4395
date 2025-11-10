@@ -74,7 +74,7 @@ function AnimatedHero({
             }} transition={{
               duration: 0.6,
               delay: 0.2
-            }} className="text-base md:text-lg leading-relaxed text-muted-foreground max-w-2xl text-center font-normal mt-2">
+            }} className="text-base md:text-lg leading-relaxed text-foreground/90 max-w-2xl text-center font-normal mt-2">
                 Hiems levererar ett komplett AI-ekosystem som automatiserar kundflöden, 
                 försäljning, bokningar, administration och dataanalys.
               </motion.p>

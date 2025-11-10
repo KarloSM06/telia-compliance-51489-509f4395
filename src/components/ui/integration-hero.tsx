@@ -24,7 +24,7 @@ export default function IntegrationHero() {
         
         <AnimatedSection>
           <h1 className="text-3xl lg:text-4xl font-bold tracking-tight text-foreground mb-3">​Våra favoritverktyg för att skapa resultat</h1>
-          <p className="mt-2 text-base lg:text-lg text-muted-foreground max-w-2xl mx-auto">
+          <p className="mt-2 text-base lg:text-lg text-foreground/90 max-w-2xl mx-auto">
             Vi integrerar sömlöst med alla era befintliga system och verktyg.
           </p>
         </AnimatedSection>

@@ -64,7 +64,7 @@ const DashboardMetric = ({
           <div className="space-y-2">
             <div className="flex items-center gap-2">
               <Icon className="size-5 text-primary" />
-              <span className="text-sm text-muted-foreground">{label}</span>
+              <span className="text-sm text-foreground/90">{label}</span>
             </div>
             <div className="text-2xl font-bold text-foreground">{value}</div>
             {trend && <div className="text-xs text-green-500 flex items-center gap-1">
@@ -103,7 +103,7 @@ export const UnifiedDashboard = () => {
               All Data på Ett och Samma Ställe
             </span>
           </h2>
-          <p className="text-muted-foreground mt-4 text-sm tracking-wide text-balance md:text-base">
+          <p className="text-foreground/90 mt-4 text-sm tracking-wide text-balance md:text-base">
             Med Hiems samlas all er data från AI-receptionist, CRM, försäljning, kommunikation och automation
             i en enda, överskådlig dashboard. Få insikter i realtid och fatta bättre beslut snabbare.
             <br />
