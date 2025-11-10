@@ -1,4 +1,4 @@
-import { Header1 } from "@/components/ui/header";
+import { FloatingNavbar } from "@/components/ui/floating-navbar";
 import { ProductSelection } from "@/components/ProductSelection";
 import { Footer } from "@/components/Footer";
 import { useEffect } from "react";
@@ -12,7 +12,7 @@ const Index = () => {
       setTimeout(() => {
         const element = document.getElementById(hash);
         if (element) {
-          const offset = 80;
+          const offset = 100;
           const elementPosition = element.getBoundingClientRect().top;
           const offsetPosition = elementPosition + window.pageYOffset - offset;
           window.scrollTo({
@@ -30,7 +30,7 @@ const Index = () => {
   
   return (
     <div className="min-h-screen bg-background">
-      <Header1 />
+      <FloatingNavbar />
       <main>
         <ProductSelection />
       </main>
