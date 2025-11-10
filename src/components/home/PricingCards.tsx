@@ -56,7 +56,7 @@ export const PricingCards = () => {
       <div className="max-w-7xl mx-auto px-6">
         <AnimatedSection>
           <div className="text-center mb-16">
-            <p className="text-sm text-purple-600 uppercase tracking-wider mb-2">Pricing</p>
+            <p className="text-sm text-gray-900 uppercase tracking-wider mb-2 font-medium">Pricing</p>
             <h2 className="text-4xl md:text-5xl font-display font-normal text-gray-900 mb-4">
               The Best AI Automation, at the Right Price
             </h2>
@@ -70,10 +70,10 @@ export const PricingCards = () => {
           {pricingPlans.map((plan, index) => (
             <AnimatedSection key={plan.id} delay={index * 100}>
               <div className={`bg-white/80 backdrop-blur-xl border rounded-2xl p-8 shadow-lg transition-all ${
-                plan.popular ? 'border-purple-600 scale-105' : 'border-gray-100'
+                plan.popular ? 'border-gray-900 scale-105' : 'border-gray-100'
               }`}>
                 {plan.popular && (
-                  <div className="bg-purple-600 text-white px-4 py-1 rounded-full text-sm inline-block mb-4">
+                  <div className="bg-gray-900 text-white px-4 py-1 rounded-full text-sm inline-block mb-4 font-medium">
                     Popular
                   </div>
                 )}
@@ -98,7 +98,7 @@ export const PricingCards = () => {
                 </ul>
                 
                 <button className={plan.popular 
-                  ? "w-full bg-purple-600 hover:bg-purple-700 text-white py-3 rounded-full transition-colors"
+                  ? "w-full bg-gray-900 hover:bg-gray-800 text-white py-3 rounded-full transition-colors"
                   : "w-full border border-gray-300 text-gray-900 py-3 rounded-full hover:bg-gray-50 transition-colors"
                 }>
                   {plan.cta}

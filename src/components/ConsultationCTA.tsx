@@ -8,7 +8,7 @@ export const ConsultationCTA = () => {
   const [isConsultationModalOpen, setIsConsultationModalOpen] = useState(false);
 
   return (
-    <section id="kontakt" className="relative py-32 overflow-hidden bg-gradient-to-br from-purple-50 to-violet-50">
+    <section id="kontakt" className="relative py-32 overflow-hidden bg-gradient-to-br from-gray-50 to-gray-100">
       <div className="mx-auto max-w-4xl px-6 text-center relative z-10">
         <AnimatedSection>
           <h2 className="text-5xl md:text-6xl font-display font-normal text-gray-900 mb-6">
@@ -20,7 +20,7 @@ export const ConsultationCTA = () => {
           <div className="flex gap-4 justify-center">
             <button
               onClick={() => setIsConsultationModalOpen(true)}
-              className="bg-purple-600 hover:bg-purple-700 text-white px-10 py-4 rounded-full text-lg transition-colors"
+              className="bg-gray-900 hover:bg-gray-800 text-white px-10 py-4 rounded-full text-lg transition-colors"
             >
               Book a call
             </button>

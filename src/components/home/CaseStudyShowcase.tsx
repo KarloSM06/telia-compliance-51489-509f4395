@@ -10,7 +10,7 @@ export const CaseStudyShowcase = () => {
       <div className="max-w-7xl mx-auto px-6">
         <AnimatedSection>
           <div className="text-center mb-12">
-            <p className="text-sm text-purple-600 uppercase tracking-wider mb-2">
+            <p className="text-sm text-gray-900 uppercase tracking-wider mb-2 font-medium">
               Case Study
             </p>
             <h2 className="text-4xl md:text-5xl font-display font-normal text-gray-900">
@@ -42,7 +42,7 @@ export const CaseStudyShowcase = () => {
               <div className="space-y-4">
                 {caseStudy.results.map((metric, idx) => (
                   <div key={idx} className="bg-gray-50 border border-gray-200 rounded-xl p-6">
-                    <div className="text-4xl md:text-5xl font-display font-normal text-purple-600 mb-2">
+                    <div className="text-4xl md:text-5xl font-display font-normal text-gray-900 mb-2">
                       {metric.value}
                     </div>
                     <div className="text-gray-700">

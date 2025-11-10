@@ -70,7 +70,7 @@ export function StickyPackageCards({
                     <div className={`flex flex-col justify-center ${!isLeft ? 'md:order-2' : ''}`}>
                       <div className="flex items-center gap-4 mb-6">
                         {isPopular && (
-                          <div className="bg-purple-600 text-white px-4 py-1 rounded-full text-sm">
+                          <div className="bg-gray-900 text-white px-4 py-1 rounded-full text-sm font-medium">
                             Populär
                           </div>
                         )}
@@ -90,17 +90,17 @@ export function StickyPackageCards({
                       {/* Features */}
                       <ul className="space-y-3 mb-8">
                         {allFeatures.slice(0, 4).map((feature, idx) => <li key={idx} className="flex items-start gap-3 text-base md:text-lg text-gray-700">
-                            <CheckCircle className="h-5 w-5 md:h-6 md:w-6 text-purple-600 flex-shrink-0 mt-1" />
+                            <CheckCircle className="h-5 w-5 md:h-6 md:w-6 text-gray-900 flex-shrink-0 mt-1" />
                             <span>{feature}</span>
                           </li>)}
                       </ul>
 
                       {/* CTA Buttons */}
                       <div className="flex flex-col sm:flex-row gap-3">
-                        <Button onClick={() => onViewDetails(pkg)} variant="outline" className="flex-1 border-gray-300 hover:border-purple-600/40 hover:bg-purple-600/5">
+                        <Button onClick={() => onViewDetails(pkg)} variant="outline" className="flex-1 border-gray-300 hover:border-gray-400 hover:bg-gray-50">
                           Läs mer
                         </Button>
-                        <Button onClick={onBookDemo} className="flex-1 bg-purple-600 hover:bg-purple-700 text-white shadow-lg transition-all duration-300">
+                        <Button onClick={onBookDemo} className="flex-1 bg-gray-900 hover:bg-gray-800 text-white shadow-lg transition-all duration-300">
                           Boka demo
                         </Button>
                       </div>

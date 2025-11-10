@@ -96,7 +96,7 @@ export const AlternatingServicesSection = () => {
                     <button className="border border-gray-300 text-gray-900 px-6 py-3 rounded-full hover:bg-gray-50 transition-colors">
                       Learn More
                     </button>
-                    <button className="bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-full transition-colors">
+                    <button className="bg-gray-900 hover:bg-gray-800 text-white px-6 py-3 rounded-full transition-colors">
                       Request a demo
                     </button>
                   </div>
