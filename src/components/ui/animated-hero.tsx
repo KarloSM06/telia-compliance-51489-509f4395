@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { RainbowButton } from "@/components/ui/rainbow-button";
 import { cn } from "@/lib/utils";
 import { AnimatedSection } from "@/components/shared/AnimatedSection";
+import heroWaves from "@/assets/hero-waves.png";
 interface AnimatedHeroProps {
   onBookDemo?: () => void;
   onViewPackages?: () => void;
@@ -26,6 +27,17 @@ function AnimatedHero({
     return () => clearTimeout(timeoutId);
   }, [titleNumber, titles]);
   return <div className="w-full py-32 lg:py-48 relative">
+      {/* Hero Waves Background */}
+      <div className="absolute inset-0 z-0 flex items-end justify-center overflow-hidden opacity-30">
+        <img 
+          src={heroWaves} 
+          alt="" 
+          className="w-full h-auto object-cover object-bottom"
+          loading="eager"
+          decoding="async"
+        />
+      </div>
+      
       <div className="container mx-auto max-w-5xl px-6 relative z-10">
         <div className="flex gap-8 items-center justify-center flex-col">
           <div className="flex gap-6 flex-col items-center">
