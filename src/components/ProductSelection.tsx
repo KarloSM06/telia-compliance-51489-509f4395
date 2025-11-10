@@ -8,12 +8,14 @@ import { ConsultationModal } from "@/components/ConsultationModal";
 import { AnimatedSection } from "@/components/AnimatedSection";
 import { ConsultationCTA } from "@/components/ConsultationCTA";
 import { StickyPackageCards } from "@/components/home/StickyPackageCards";
-import { IndustryGallery } from "@/components/home/IndustryGallery";
-import { CustomerJourneyFlow } from "@/components/home/CustomerJourneyFlow";
-import { OnboardingTimeline } from "@/components/home/OnboardingTimeline";
-import { TechnicalExpertise } from "@/components/home/TechnicalExpertise";
-import { CaseStudyCard } from "@/components/home/CaseStudyCard";
 import { WorkflowTimeline } from "@/components/home/WorkflowTimeline";
+import { AlternatingServicesSection } from "@/components/home/AlternatingServicesSection";
+import { ProcessGrid } from "@/components/home/ProcessGrid";
+import { CaseStudyShowcase } from "@/components/home/CaseStudyShowcase";
+import { BenefitsGrid } from "@/components/home/BenefitsGrid";
+import { PricingCards } from "@/components/home/PricingCards";
+import { TestimonialsGrid } from "@/components/home/TestimonialsGrid";
+import { FAQAccordion } from "@/components/home/FAQAccordion";
 import { aiPackages } from "@/data/packages";
 import { industries } from "@/data/industries";
 import { caseStudies } from "@/data/caseStudies";
@@ -53,42 +55,64 @@ export const ProductSelection = () => {
   };
   return <div className="relative bg-gradient-hero min-h-screen">
       
-      {/* Hero Section and Packages with Aurora Background */}
+      {/* Hero Section and All Content with Aurora Background */}
       <AuroraBackground className="h-auto">
+        {/* 1. Hero */}
         <AnimatedHero 
           onBookDemo={() => setIsConsultationModalOpen(true)}
           onViewPackages={() => scrollToSection('paket')}
         />
 
-        {/* Programmen vi jobbar med */}
-        <IntegrationHero />
+        {/* 2. Alternating Services */}
+        <AlternatingServicesSection />
 
-        {/* Företag vi samarbetar med */}
+        {/* 3. Client Logos */}
         <ClientLogoCloud />
 
-        {/* Våra Tjänster & Teknologier */}
+        {/* 4. Integration Hero (verktygskarusell) */}
+        <IntegrationHero />
+
+        {/* 5. Services Grid */}
         <ServicesGrid />
 
-        {/* All Data på Ett Ställe */}
+        {/* 6. Unified Dashboard */}
         <UnifiedDashboard />
 
-        {/* AI Capabilities Accordion */}
+        {/* 7. AI Capabilities Accordion */}
         <LandingAccordionItem />
 
-        {/* Allt administrativt i ett ekosystem */}
+        {/* 8. Unified Ecosystem */}
         <UnifiedEcosystem primaryImageSrc={dashboardScreenshot} secondaryImageSrc={calendarScreenshot} />
 
-        {/* Våra AI-paket / Lösningar */}
-        <StickyPackageCards packages={aiPackages} onBookDemo={() => setIsConsultationModalOpen(true)} onViewDetails={() => scrollToSection('kontakt')} />
-        
-        {/* Arbetsprocess */}
+        {/* 9. Process Grid (4 steg) */}
+        <ProcessGrid />
+
+        {/* 10. Workflow Timeline */}
         <AnimatedSection>
           <section id="process" className="relative py-12">
             <WorkflowTimeline />
           </section>
         </AnimatedSection>
 
-        {/* Kontakt / CTA */}
+        {/* 11. Sticky Package Cards */}
+        <StickyPackageCards packages={aiPackages} onBookDemo={() => setIsConsultationModalOpen(true)} onViewDetails={() => scrollToSection('kontakt')} />
+
+        {/* 12. Case Study Showcase */}
+        <CaseStudyShowcase />
+
+        {/* 13. Benefits Grid */}
+        <BenefitsGrid />
+
+        {/* 14. Pricing Cards */}
+        <PricingCards />
+
+        {/* 15. Testimonials Grid */}
+        <TestimonialsGrid />
+
+        {/* 16. FAQ Accordion */}
+        <FAQAccordion />
+
+        {/* 17. Consultation CTA */}
         <ConsultationCTA />
       </AuroraBackground>
 

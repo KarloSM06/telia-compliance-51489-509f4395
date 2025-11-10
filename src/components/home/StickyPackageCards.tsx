@@ -31,9 +31,9 @@ const AnimatedHeader = () => {
       <div ref={headerRef} className={`transition-all duration-700 ease-out ${headerInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`} style={{
       transformStyle: 'preserve-3d'
     }}>
-        <h2 className="text-5xl md:text-6xl lg:text-7xl font-bold text-foreground">​Våra färdiga paket</h2>
+        <h2 className="text-5xl md:text-6xl lg:text-7xl font-bold text-gray-900">​Våra färdiga paket</h2>
       </div>
-      <p ref={pRef} className={`text-xl md:text-2xl text-muted-foreground max-w-4xl mx-auto mt-6 transition-all duration-700 ease-out delay-200 ${pInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`} style={{
+      <p ref={pRef} className={`text-xl md:text-2xl text-gray-600 max-w-4xl mx-auto mt-6 transition-all duration-700 ease-out delay-200 ${pInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`} style={{
       transformStyle: 'preserve-3d'
     }}>
         Vi erbjuder sex skräddarsydda AI-paket som kan anpassas efter era specifika behov
@@ -50,7 +50,7 @@ export function StickyPackageCards({
   onBookDemo,
   onViewDetails
 }: StickyPackageCardsProps) {
-  return <section id="paket" className="relative py-16 md:py-24">
+  return <section id="paket" className="relative py-16 md:py-24 bg-white">
       <div className="px-[5%]">
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-col items-center">
@@ -62,40 +62,45 @@ export function StickyPackageCards({
               const Icon = pkg.icon;
               const allFeatures = [...(pkg.components || []), ...(pkg.valueBullets || [])];
               const isLeft = index % 2 === 0;
-              return <div key={pkg.id} className="bg-gradient-to-br from-card/40 via-card/20 to-card/10 backdrop-blur-xl border border-primary/20 grid grid-cols-1 md:grid-cols-2 items-center gap-6 md:gap-12 p-10 md:p-16 rounded-3xl mb-20 sticky shadow-lg" style={{
+              const isPopular = index === 1 || index === 4; // Mark 2nd and 5th as popular
+              return <div key={pkg.id} className="bg-white/80 backdrop-blur-xl border border-gray-100 grid grid-cols-1 md:grid-cols-2 items-center gap-6 md:gap-12 p-10 md:p-16 rounded-3xl mb-20 sticky shadow-lg hover:shadow-xl transition-all" style={{
                 top: '200px'
               }}>
                     {/* Card Content */}
                     <div className={`flex flex-col justify-center ${!isLeft ? 'md:order-2' : ''}`}>
                       <div className="flex items-center gap-4 mb-6">
-                        
-                        <h3 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground">
+                        {isPopular && (
+                          <div className="bg-purple-600 text-white px-4 py-1 rounded-full text-sm">
+                            Populär
+                          </div>
+                        )}
+                        <h3 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900">
                           {pkg.name}
                         </h3>
                       </div>
                       
-                      <p className="text-base md:text-lg text-muted-foreground font-medium mb-6">
+                      <p className="text-base md:text-lg text-gray-600 font-medium mb-6">
                         {pkg.targetAudience}
                       </p>
                       
-                      {pkg.tagline && <p className="text-xl md:text-2xl text-foreground/90 mb-8 font-light">
+                      {pkg.tagline && <p className="text-xl md:text-2xl text-gray-900 mb-8 font-light">
                           {pkg.tagline}
                         </p>}
 
                       {/* Features */}
                       <ul className="space-y-3 mb-8">
-                        {allFeatures.slice(0, 4).map((feature, idx) => <li key={idx} className="flex items-start gap-3 text-base md:text-lg text-muted-foreground">
-                            <CheckCircle className="h-5 w-5 md:h-6 md:w-6 text-primary flex-shrink-0 mt-1" />
+                        {allFeatures.slice(0, 4).map((feature, idx) => <li key={idx} className="flex items-start gap-3 text-base md:text-lg text-gray-700">
+                            <CheckCircle className="h-5 w-5 md:h-6 md:w-6 text-purple-600 flex-shrink-0 mt-1" />
                             <span>{feature}</span>
                           </li>)}
                       </ul>
 
                       {/* CTA Buttons */}
                       <div className="flex flex-col sm:flex-row gap-3">
-                        <Button onClick={() => onViewDetails(pkg)} variant="outline" className="flex-1 border-primary/20 hover:border-primary/40 hover:bg-primary/5">
+                        <Button onClick={() => onViewDetails(pkg)} variant="outline" className="flex-1 border-gray-300 hover:border-purple-600/40 hover:bg-purple-600/5">
                           Läs mer
                         </Button>
-                        <Button onClick={onBookDemo} className="flex-1 bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 text-primary-foreground shadow-lg hover:shadow-primary/50 transition-all duration-300">
+                        <Button onClick={onBookDemo} className="flex-1 bg-purple-600 hover:bg-purple-700 text-white shadow-lg transition-all duration-300">
                           Boka demo
                         </Button>
                       </div>

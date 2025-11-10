@@ -40,7 +40,7 @@ export const UnifiedEcosystem: React.FC<UnifiedEcosystemProps> = ({
   const imageOrderClass = reverseLayout ? "md:col-start-1" : "";
 
   return (
-    <section className="relative py-32 md:py-64 overflow-hidden">
+    <section className="relative py-32 md:py-64 overflow-hidden bg-white">
       <div className="container max-w-[1440px] w-full px-6 md:px-10 relative z-10 mx-auto">
         <motion.div
           className={`grid grid-cols-1 gap-32 md:gap-32 w-full items-center ${layoutClasses}`}
@@ -55,12 +55,12 @@ export const UnifiedEcosystem: React.FC<UnifiedEcosystemProps> = ({
             variants={itemVariants}
           >
             <div className="space-y-3 md:space-y-2">
-              <h2 className="text-foreground text-4xl md:text-[56px] font-bold leading-tight md:leading-[68px]">
+              <h2 className="text-gray-900 text-4xl md:text-[56px] font-bold leading-tight md:leading-[68px]">
                 Allt administrativt i ett ekosystem
               </h2>
             </div>
 
-            <p className="text-muted-foreground text-base md:text-lg leading-7 md:leading-8">
+            <p className="text-gray-600 text-base md:text-lg leading-7 md:leading-8">
               Samla all er administration på ett ställe. Från kundhantering och fakturering till projekt och rapporter - allt integrerat i ett smidigt system som sparar tid och minskar komplexitet.
             </p>
           </motion.div>
@@ -72,7 +72,7 @@ export const UnifiedEcosystem: React.FC<UnifiedEcosystemProps> = ({
           >
             {/* Decorative Background Element - Calendar */}
             <motion.div
-              className="absolute w-[420px] h-[420px] md:w-[700px] md:h-[700px] bg-card/50 rounded-[32px] z-0 backdrop-blur-sm shadow-2xl transition-all duration-200 hover:scale-105 hover:shadow-[0_30px_60px_-15px_rgba(0,0,0,0.4)] cursor-pointer"
+              className="absolute w-[420px] h-[420px] md:w-[700px] md:h-[700px] bg-white/80 backdrop-blur-xl border border-gray-100 rounded-[32px] z-0 shadow-lg transition-all duration-200 hover:scale-105 hover:shadow-xl cursor-pointer"
               style={{
                 top: reverseLayout ? 'auto' : '5%',
                 bottom: reverseLayout ? '5%' : 'auto',
@@ -97,7 +97,7 @@ export const UnifiedEcosystem: React.FC<UnifiedEcosystemProps> = ({
 
             {/* Main Mockup Card - Dashboard */}
             <motion.div
-              className="relative w-full h-[520px] md:h-[860px] bg-card/10 rounded-[32px] backdrop-blur-[15px] backdrop-brightness-[100%] border border-border/50 z-10 overflow-hidden shadow-[0_20px_50px_-12px_rgba(0,0,0,0.3)] transition-all duration-200 hover:shadow-[0_35px_70px_-15px_rgba(0,0,0,0.5)] hover:scale-[1.02] hover:border-primary/30 cursor-pointer"
+              className="relative w-full h-[520px] md:h-[860px] bg-white/80 rounded-[32px] backdrop-blur-xl border border-gray-100 z-10 overflow-hidden shadow-lg transition-all duration-200 hover:shadow-xl hover:scale-[1.02] hover:border-purple-600/30 cursor-pointer"
               initial={{ y: reverseLayout ? 0 : 0 }}
               whileInView={{ y: reverseLayout ? 25 : 35 }}
               whileHover={{ scale: 1.02, y: -5 }}

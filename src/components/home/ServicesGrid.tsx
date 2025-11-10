@@ -34,19 +34,17 @@ const AnimatedContainer = ({
 
 export const ServicesGrid = () => {
   return (
-    <section className="relative py-24 md:py-40">
-      <div className="mx-auto w-full max-w-7xl space-y-8 px-4 md:px-8 py-12 md:py-16 border-2 border-white/10 bg-white/5 backdrop-blur-md rounded-2xl shadow-elegant transition-all duration-300 hover:border-white/20 hover:bg-white/10">
+    <section className="relative py-24 md:py-40 bg-white">
+      <div className="mx-auto w-full max-w-7xl space-y-8 px-4 md:px-8 py-12 md:py-16 border border-gray-100 bg-white/80 backdrop-blur-xl rounded-3xl shadow-lg transition-all duration-300 hover:shadow-xl">
         <AnimatedContainer className="mx-auto max-w-full text-center">
-          <h2 className="text-3xl font-bold tracking-wide text-balance md:text-4xl lg:text-5xl xl:font-extrabold">
-            <span className="bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent">
-              Våra Tjänster & Teknologier
-            </span>
+          <h2 className="text-3xl font-bold tracking-wide text-balance md:text-4xl lg:text-5xl xl:font-extrabold text-gray-900">
+            Våra Tjänster & Teknologier
           </h2>
-          <p className="text-muted-foreground mt-4 text-sm tracking-wide text-balance md:text-base">
+          <p className="text-gray-600 mt-4 text-sm tracking-wide text-balance md:text-base">
             Vi bygger intelligenta ekosystem som kopplar samman AI, automation och affärsdata – 
             för att göra ditt företag snabbare, smartare och mer lönsamt.
             <br />
-            <span className="font-semibold text-foreground">Allt vi skapar kan ägas av dig, helt utan beroenden.</span>
+            <span className="font-semibold text-gray-900">Allt vi skapar kan ägas av dig, helt utan beroenden.</span>
           </p>
         </AnimatedContainer>
 

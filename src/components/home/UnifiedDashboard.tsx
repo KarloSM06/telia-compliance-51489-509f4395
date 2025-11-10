@@ -59,14 +59,14 @@ const DashboardMetric = ({
     delay,
     duration: 0.5
   }}>
-      <Card className="p-4 bg-card/50 backdrop-blur border-primary/20 hover:border-primary/40 transition-all duration-300">
+      <Card className="p-4 bg-white/80 backdrop-blur-xl border border-gray-100 hover:border-purple-600/40 transition-all duration-300">
         <div className="flex items-start justify-between">
           <div className="space-y-2">
             <div className="flex items-center gap-2">
-              <Icon className="size-5 text-primary" />
-              <span className="text-sm text-muted-foreground">{label}</span>
+              <Icon className="size-5 text-purple-600" />
+              <span className="text-sm text-gray-600">{label}</span>
             </div>
-            <div className="text-2xl font-bold text-foreground">{value}</div>
+            <div className="text-2xl font-bold text-gray-900">{value}</div>
             {trend && <div className="text-xs text-green-500 flex items-center gap-1">
                 <TrendingUp className="size-3" />
                 {trend}
@@ -95,19 +95,17 @@ const DataFlowLine = ({
   }} className="h-0.5 bg-gradient-to-r from-primary/20 via-primary to-primary/20 origin-left" />;
 };
 export const UnifiedDashboard = () => {
-  return <section className="relative pt-0 pb-0 md:pt-0 md:pb-0">
+  return <section className="relative pt-0 pb-0 md:pt-0 md:pb-0 bg-white">
       <div className="mx-auto w-full max-w-7xl space-y-12 px-4">
         <AnimatedContainer className="mx-auto max-w-full text-center">
-          <h2 className="text-3xl font-bold tracking-wide text-balance md:text-4xl lg:text-5xl xl:font-extrabold">
-            <span className="bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent">
-              All Data på Ett och Samma Ställe
-            </span>
+          <h2 className="text-3xl font-bold tracking-wide text-balance md:text-4xl lg:text-5xl xl:font-extrabold text-gray-900">
+            All Data på Ett och Samma Ställe
           </h2>
-          <p className="text-muted-foreground mt-4 text-sm tracking-wide text-balance md:text-base">
+          <p className="text-gray-600 mt-4 text-sm tracking-wide text-balance md:text-base">
             Med Hiems samlas all er data från AI-receptionist, CRM, försäljning, kommunikation och automation
             i en enda, överskådlig dashboard. Få insikter i realtid och fatta bättre beslut snabbare.
             <br />
-            <span className="font-semibold text-foreground">En plattform. All data. Total kontroll.</span>
+            <span className="font-semibold text-gray-900">En plattform. All data. Total kontroll.</span>
           </p>
         </AnimatedContainer>
 
