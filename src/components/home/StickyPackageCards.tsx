@@ -33,7 +33,7 @@ const AnimatedHeader = () => {
     }}>
         <h2 className="text-5xl md:text-6xl lg:text-7xl font-bold text-foreground">​Våra färdiga paket</h2>
       </div>
-      <p ref={pRef} className={`text-xl md:text-2xl text-foreground/90 max-w-4xl mx-auto mt-6 transition-all duration-700 ease-out delay-200 ${pInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`} style={{
+      <p ref={pRef} className={`text-xl md:text-2xl text-muted-foreground max-w-4xl mx-auto mt-6 transition-all duration-700 ease-out delay-200 ${pInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`} style={{
       transformStyle: 'preserve-3d'
     }}>
         Vi erbjuder sex skräddarsydda AI-paket som kan anpassas efter era specifika behov
@@ -74,7 +74,7 @@ export function StickyPackageCards({
                         </h3>
                       </div>
                       
-                      <p className="text-base md:text-lg text-foreground/90 font-medium mb-6">
+                      <p className="text-base md:text-lg text-muted-foreground font-medium mb-6">
                         {pkg.targetAudience}
                       </p>
                       
@@ -84,7 +84,7 @@ export function StickyPackageCards({
 
                       {/* Features */}
                       <ul className="space-y-3 mb-8">
-                        {allFeatures.slice(0, 4).map((feature, idx) => <li key={idx} className="flex items-start gap-3 text-base md:text-lg text-foreground/90">
+                        {allFeatures.slice(0, 4).map((feature, idx) => <li key={idx} className="flex items-start gap-3 text-base md:text-lg text-muted-foreground">
                             <CheckCircle className="h-5 w-5 md:h-6 md:w-6 text-primary flex-shrink-0 mt-1" />
                             <span>{feature}</span>
                           </li>)}

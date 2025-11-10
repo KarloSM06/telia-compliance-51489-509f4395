@@ -17,7 +17,7 @@ export const ConsultationCTA = () => {
             </h2>
             <div className="w-32 h-1.5 bg-gradient-to-r from-primary via-primary/60 to-transparent mx-auto rounded-full shadow-lg shadow-primary/50 mt-4" />
           </div>
-          <p className="text-xl sm:text-2xl text-foreground/90 max-w-3xl mx-auto font-light">
+          <p className="text-xl sm:text-2xl text-muted-foreground max-w-3xl mx-auto font-light">
             Låt oss hjälpa dig att transformera din verksamhet med AI och automation. Fyll i formuläret så kontaktar vi dig inom kort.
           </p>
         </AnimatedSection>
@@ -25,7 +25,7 @@ export const ConsultationCTA = () => {
         <AnimatedSection delay={200}>
           <div className="max-w-2xl mx-auto bg-card/50 backdrop-blur-sm border border-border/50 rounded-2xl p-8 lg:p-12 shadow-xl">
             <div className="text-center space-y-6">
-              <p className="text-lg text-foreground/90">
+              <p className="text-lg text-muted-foreground">
                 Fyll i dina uppgifter så kontaktar vi dig inom kort för att boka ett möte och diskutera era behov.
               </p>
               

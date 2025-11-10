@@ -21,10 +21,10 @@ export const WorkflowTimeline = () => {
           </CardHeader>
           
           <CardContent className="space-y-2">
-            <p className="text-sm text-foreground/90 leading-relaxed text-center">
+            <p className="text-sm text-muted-foreground leading-relaxed text-center">
               Vi börjar med att förstå era behov, mål och nuvarande arbetssätt.
             </p>
-            <p className="text-sm text-foreground/90 leading-relaxed text-center">
+            <p className="text-sm text-muted-foreground leading-relaxed text-center">
               Du får en onboarding-guide och en tydlig tidsplan för hela processen.
             </p>
           </CardContent>
@@ -47,10 +47,10 @@ export const WorkflowTimeline = () => {
           </CardHeader>
           
           <CardContent className="space-y-2">
-            <p className="text-sm text-foreground/90 leading-relaxed text-center">
+            <p className="text-sm text-muted-foreground leading-relaxed text-center">
               Tillsammans går vi igenom lösningsförslaget och samlar in den information som behövs.
             </p>
-            <p className="text-sm text-foreground/90 leading-relaxed text-center">
+            <p className="text-sm text-muted-foreground leading-relaxed text-center">
               Ni fyller i vårt onboardingformulär – och vi säkerställer ett komplett dataunderlag för implementation.
             </p>
           </CardContent>
@@ -73,10 +73,10 @@ export const WorkflowTimeline = () => {
           </CardHeader>
           
           <CardContent className="space-y-2">
-            <p className="text-sm text-foreground/90 leading-relaxed text-center">
+            <p className="text-sm text-muted-foreground leading-relaxed text-center">
               Vi anpassar AI-receptionisten efter era behov och integrerar den med era befintliga system.
             </p>
-            <p className="text-sm text-foreground/90 leading-relaxed text-center">
+            <p className="text-sm text-muted-foreground leading-relaxed text-center">
               Resultatet: en färdig AI-lösning redo för test.
             </p>
           </CardContent>
@@ -99,10 +99,10 @@ export const WorkflowTimeline = () => {
           </CardHeader>
           
           <CardContent className="space-y-2">
-            <p className="text-sm text-foreground/90 leading-relaxed text-center">
+            <p className="text-sm text-muted-foreground leading-relaxed text-center">
               Ni får testa lösningen i realtid.
             </p>
-            <p className="text-sm text-foreground/90 leading-relaxed text-center">
+            <p className="text-sm text-muted-foreground leading-relaxed text-center">
               Vi går igenom resultatet tillsammans och gör eventuella justeringar tills allt känns perfekt.
             </p>
           </CardContent>
@@ -125,10 +125,10 @@ export const WorkflowTimeline = () => {
           </CardHeader>
           
           <CardContent className="space-y-2">
-            <p className="text-sm text-foreground/90 leading-relaxed text-center">
+            <p className="text-sm text-muted-foreground leading-relaxed text-center">
               AI-receptionisten går live!
             </p>
-            <p className="text-sm text-foreground/90 leading-relaxed text-center">
+            <p className="text-sm text-muted-foreground leading-relaxed text-center">
               Vi följer upp efter 7 dagar, ger löpande support och optimerar systemet baserat på verklig användning.
             </p>
           </CardContent>

@@ -42,7 +42,7 @@ export const ServicesGrid = () => {
               Våra Tjänster & Teknologier
             </span>
           </h2>
-          <p className="text-foreground/90 mt-4 text-sm tracking-wide text-balance md:text-base">
+          <p className="text-muted-foreground mt-4 text-sm tracking-wide text-balance md:text-base">
             Vi bygger intelligenta ekosystem som kopplar samman AI, automation och affärsdata – 
             för att göra ditt företag snabbare, smartare och mer lönsamt.
             <br />

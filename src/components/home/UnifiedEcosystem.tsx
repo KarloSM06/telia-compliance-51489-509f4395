@@ -60,7 +60,7 @@ export const UnifiedEcosystem: React.FC<UnifiedEcosystemProps> = ({
               </h2>
             </div>
 
-            <p className="text-foreground/90 text-base md:text-lg leading-7 md:leading-8">
+            <p className="text-muted-foreground text-base md:text-lg leading-7 md:leading-8">
               Samla all er administration på ett ställe. Från kundhantering och fakturering till projekt och rapporter - allt integrerat i ett smidigt system som sparar tid och minskar komplexitet.
             </p>
           </motion.div>

@@ -16,7 +16,7 @@ export function ClientLogoCloud({
   return <section className="relative py-12 md:py-16">
       <div className="mx-auto max-w-5xl px-4">
         <AnimatedSection>
-          <h2 className="mb-12 text-center font-medium text-2xl text-foreground/90 tracking-tight md:text-3xl">Senaste projekt vi är stolta över {" "}
+          <h2 className="mb-12 text-center font-medium text-2xl text-muted-foreground tracking-tight md:text-3xl">Senaste projekt vi är stolta över {" "}
             <span className="font-semibold text-primary">samarbetar</span> med.
           </h2>
         </AnimatedSection>
