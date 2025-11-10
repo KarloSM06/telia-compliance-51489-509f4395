@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import { RainbowButton } from "@/components/ui/rainbow-button";
 import { cn } from "@/lib/utils";
 import { AnimatedSection } from "@/components/shared/AnimatedSection";
-import Spline from '@splinetool/react-spline';
 interface AnimatedHeroProps {
   onBookDemo?: () => void;
   onViewPackages?: () => void;
@@ -26,15 +25,7 @@ function AnimatedHero({
     }, 2500);
     return () => clearTimeout(timeoutId);
   }, [titleNumber, titles]);
-  return <div className="w-full py-32 lg:py-48 relative min-h-screen bg-transparent">
-      {/* Spline 3D Animation - Behind text but in front of aurora */}
-      <div className="absolute inset-0 z-[5] overflow-hidden opacity-60 mix-blend-screen">
-        <Spline
-          scene="https://prod.spline.design/41WHROOhXoLPl4L2/scene.splinecode"
-          style={{ width: '100%', height: '100%', filter: 'brightness(1.3) contrast(0.9)' }}
-        />
-      </div>
-      
+  return <div className="w-full py-32 lg:py-48 relative">
       <div className="container mx-auto max-w-5xl px-6 relative z-10">
         <div className="flex gap-8 items-center justify-center flex-col">
           <div className="flex gap-6 flex-col items-center">
