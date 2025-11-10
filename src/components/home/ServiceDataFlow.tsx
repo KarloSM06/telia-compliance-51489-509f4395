@@ -42,7 +42,7 @@ const FlowCard = ({
   delay?: number;
 }) => {
   return <AnimatedContainer delay={delay}>
-    <CardSpotlight className="bg-card/20 backdrop-blur-md border border-border/30 hover:bg-card/30 hover:border-primary/30 transition-all duration-300 p-5 rounded-2xl">
+    <CardSpotlight className="border-2 border-white/10 bg-white/5 backdrop-blur-md hover:bg-white/10 hover:border-white/20 transition-all duration-300 p-5 rounded-2xl">
       <div className="relative flex aspect-square size-12 rounded-full border before:absolute before:-inset-2 before:rounded-full before:border dark:border-white/10 dark:before:border-white/5">
         <Icon className="m-auto size-6 text-primary" strokeWidth={1.5} />
       </div>
@@ -69,7 +69,7 @@ export const ServiceDataFlow = () => {
       <div className="relative">
         <div className="relative z-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {/* Main hero card - AI Intelligent (avlång) */}
-          <CardSpotlight className="relative flex sm:col-span-2 bg-card/20 backdrop-blur-md border border-border/30 hover:bg-card/30 hover:border-primary/30 transition-all duration-300 p-6 rounded-2xl">
+          <CardSpotlight className="relative flex sm:col-span-2 border-2 border-white/10 bg-white/5 backdrop-blur-md hover:bg-white/10 hover:border-white/20 transition-all duration-300 p-6 rounded-2xl">
             <div className="relative flex items-center gap-6 w-full">
               <div className="relative flex h-20 w-40 items-center shrink-0">
                 <svg className="text-muted absolute inset-0 size-full" viewBox="0 0 254 104" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -88,7 +88,7 @@ export const ServiceDataFlow = () => {
           <FlowCard icon={MessageSquare} title="Chatbot & Kommunikation" description="Analyserar frågor, hämtar relevant info från databas och genererar personliga svar i realtid." delay={0.15} />
 
           {/* AI Modeller */}
-          <CardSpotlight className="relative bg-card/20 backdrop-blur-md border border-border/30 hover:bg-card/30 hover:border-primary/30 transition-all duration-300 p-5 rounded-2xl">
+          <CardSpotlight className="relative border-2 border-white/10 bg-white/5 backdrop-blur-md hover:bg-white/10 hover:border-white/20 transition-all duration-300 p-5 rounded-2xl">
             <div className="relative flex aspect-square size-12 rounded-full border before:absolute before:-inset-2 before:rounded-full before:border dark:border-white/10 dark:before:border-white/5">
               <Brain className="m-auto size-6 text-primary" strokeWidth={1.5} />
             </div>
@@ -99,7 +99,7 @@ export const ServiceDataFlow = () => {
           </CardSpotlight>
 
           {/* Automation & Integration - nu under AI Modeller */}
-          <CardSpotlight className="relative bg-card/20 backdrop-blur-md border border-border/30 hover:bg-card/30 hover:border-primary/30 transition-all duration-300 p-5 rounded-2xl">
+          <CardSpotlight className="relative border-2 border-white/10 bg-white/5 backdrop-blur-md hover:bg-white/10 hover:border-white/20 transition-all duration-300 p-5 rounded-2xl">
             <div className="relative flex aspect-square size-12 rounded-full border before:absolute before:-inset-2 before:rounded-full before:border dark:border-white/10 dark:before:border-white/5">
               <Workflow className="m-auto size-6 text-primary" strokeWidth={1.5} />
             </div>
@@ -110,7 +110,7 @@ export const ServiceDataFlow = () => {
           </CardSpotlight>
 
           {/* Analytics Card with Graph */}
-          <CardSpotlight className="relative sm:col-span-2 bg-card/20 backdrop-blur-md border border-border/30 hover:bg-card/30 hover:border-primary/30 transition-all duration-300 p-6 rounded-2xl">
+          <CardSpotlight className="relative sm:col-span-2 border-2 border-white/10 bg-white/5 backdrop-blur-md hover:bg-white/10 hover:border-white/20 transition-all duration-300 p-6 rounded-2xl">
             <div className="grid sm:grid-cols-2">
               <div className="relative z-10 flex flex-col justify-between space-y-6">
                 <div className="relative flex aspect-square size-12 rounded-full border before:absolute before:-inset-2 before:rounded-full before:border dark:border-white/10 dark:before:border-white/5">
@@ -142,7 +142,7 @@ export const ServiceDataFlow = () => {
           </CardSpotlight>
 
           {/* Offert & Faktura */}
-          <CardSpotlight className="relative sm:col-span-2 bg-card/20 backdrop-blur-md border border-border/30 hover:bg-card/30 hover:border-primary/30 transition-all duration-300 p-6 rounded-2xl">
+          <CardSpotlight className="relative sm:col-span-2 border-2 border-white/10 bg-white/5 backdrop-blur-md hover:bg-white/10 hover:border-white/20 transition-all duration-300 p-6 rounded-2xl">
             <div className="grid h-full sm:grid-cols-2">
               <div className="relative z-10 flex flex-col justify-between space-y-6">
                 <div className="relative flex aspect-square size-12 rounded-full border before:absolute before:-inset-2 before:rounded-full before:border dark:border-white/10 dark:before:border-white/5">
