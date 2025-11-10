@@ -3,48 +3,52 @@ import { AnimatedSection } from "@/components/shared/AnimatedSection";
 const benefits = [
   {
     id: 1,
-    title: "Increased Productivity",
+    title: "Ökad Produktivitet",
     description: "Automatisera repetitiva uppgifter och frigör tid för strategiskt arbete. Teamet fokuserar på värdeskapande aktiviteter."
   },
   {
     id: 2,
-    title: "Better Customer Experience",
+    title: "Bättre Kundupplevelse",
     description: "24/7 tillgänglighet via AI-agenter. Snabbare svar, bättre service och nöjdare kunder."
   },
   {
     id: 3,
-    title: "24/7 Availability",
+    title: "24/7 Tillgänglighet",
     description: "AI:n sover aldrig. Hantera samtal, bokningar och ärenden dygnet runt utan extra personalkostnader."
   },
   {
     id: 4,
-    title: "Cost Reduction",
+    title: "Kostnadsminskning",
     description: "Minska operational overhead med upp till 60%. AI gör mer med mindre resurser."
   },
   {
     id: 5,
-    title: "Data-Driven Insights",
+    title: "Datadrivna Insikter",
     description: "Få live-insikter och prognoser som driver bättre beslut. Data blir actionable intelligence."
   },
   {
     id: 6,
-    title: "Scalability & Growth",
+    title: "Skalbarhet & Tillväxt",
     description: "Väx utan att anställa fler. AI-system skalar med din verksamhet utan extra kostnader."
   }
 ];
 
 export const BenefitsGrid = () => {
   return (
-    <section className="py-20 bg-white">
+    <section className="py-16 md:py-24 bg-white">
       <div className="max-w-7xl mx-auto px-6">
         <AnimatedSection>
           <div className="text-center mb-16">
-            <p className="text-sm text-purple-600 uppercase tracking-wider mb-2">Benefits</p>
-            <h2 className="text-4xl md:text-5xl font-display font-normal text-gray-900 mb-4">
-              AI isn't just a tool — it's the new infrastructure of business
+            <div className="mb-4">
+              <span className="text-xs uppercase tracking-wider text-gray-900 bg-white/60 backdrop-blur-sm border border-gray-200 px-4 py-2 rounded-full">
+                Fördelar
+              </span>
+            </div>
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-display font-normal text-gray-900 mb-6">
+              AI är inte bara ett verktyg — det är den nya infrastrukturen för företag
             </h2>
-            <p className="text-lg text-gray-600">
-              The future of work is AI-enhanced, not AI-replaced
+            <p className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto">
+              Vi hjälper er att utnyttja det för att röra sig snabbare, tänka smartare och skala bortom gränser
             </p>
           </div>
         </AnimatedSection>
@@ -52,7 +56,7 @@ export const BenefitsGrid = () => {
         <div className="grid md:grid-cols-3 gap-6">
           {benefits.map((benefit, index) => (
             <AnimatedSection key={benefit.id} delay={index * 100}>
-              <div className="bg-white/80 backdrop-blur-xl border border-gray-100 rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all">
+              <div className="border-2 border-white/10 bg-white/5 backdrop-blur-sm rounded-3xl p-8 shadow-lg hover:shadow-xl transition-all">
                 <h3 className="text-xl font-display font-normal text-gray-900 mb-3">
                   {benefit.title}
                 </h3>

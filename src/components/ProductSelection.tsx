@@ -69,42 +69,42 @@ export const ProductSelection = () => {
         {/* 3. Process Grid (4 steg) */}
         <ProcessGrid />
 
-        {/* 4. Client Logos */}
+        {/* 4. Benefits Grid */}
+        <BenefitsGrid />
+
+        {/* 5. Pricing Cards */}
+        <PricingCards />
+
+        {/* 6. Client Logos */}
         <ClientLogoCloud />
 
-        {/* 5. Integration Hero (verktygskarusell) */}
+        {/* 7. Integration Hero (verktygskarusell) */}
         <IntegrationHero />
 
-        {/* 6. Services Grid */}
+        {/* 8. Services Grid */}
         <ServicesGrid />
 
-        {/* 7. Unified Dashboard */}
+        {/* 9. Unified Dashboard */}
         <UnifiedDashboard />
 
-        {/* 8. AI Capabilities Accordion */}
+        {/* 10. AI Capabilities Accordion */}
         <LandingAccordionItem />
 
-        {/* 9. Unified Ecosystem */}
+        {/* 11. Unified Ecosystem */}
         <UnifiedEcosystem primaryImageSrc={dashboardScreenshot} secondaryImageSrc={calendarScreenshot} />
 
-        {/* 10. Workflow Timeline */}
+        {/* 12. Workflow Timeline */}
         <AnimatedSection>
           <section id="process" className="relative py-12">
             <WorkflowTimeline />
           </section>
         </AnimatedSection>
 
-        {/* 11. Sticky Package Cards */}
+        {/* 13. Sticky Package Cards */}
         <StickyPackageCards packages={aiPackages} onBookDemo={() => setIsConsultationModalOpen(true)} onViewDetails={() => scrollToSection('kontakt')} />
 
-        {/* 12. Case Study Showcase */}
+        {/* 14. Case Study Showcase */}
         <CaseStudyShowcase />
-
-        {/* 13. Benefits Grid */}
-        <BenefitsGrid />
-
-        {/* 14. Pricing Cards */}
-        <PricingCards />
 
         {/* 15. Testimonials Grid */}
         <TestimonialsGrid />

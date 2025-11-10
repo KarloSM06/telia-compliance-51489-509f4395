@@ -4,64 +4,68 @@ const pricingPlans = [
   {
     id: 1,
     name: "Starter",
-    subtitle: "For startups and small teams",
-    price: "Request for pricing",
+    subtitle: "För startups och små team",
+    price: "Begär offert",
     features: [
-      "1 AI agent (voice eller chat)",
-      "Basic dashboard",
-      "Email support",
-      "Setup assistance",
-      "Monthly optimization"
+      "1 AI-agent (röst eller chat)",
+      "Grundläggande dashboard",
+      "E-postsupport",
+      "Implementeringshjälp",
+      "Månatlig optimering"
     ],
-    cta: "Request for pricing",
+    cta: "Begär offert",
     popular: false
   },
   {
     id: 2,
     name: "Professional",
-    subtitle: "For growing businesses",
-    price: "Request for pricing",
+    subtitle: "För växande företag",
+    price: "Begär offert",
     features: [
-      "3 AI agents",
-      "Advanced analytics",
-      "Priority support",
-      "Custom integrations",
-      "Weekly optimization calls",
-      "Dedicated account manager"
+      "3 AI-agenter",
+      "Avancerad analys",
+      "Prioriterad support",
+      "Skräddarsydda integrationer",
+      "Veckovisa optimeringssamtal",
+      "Dedikerad account manager"
     ],
-    cta: "Request for pricing",
+    cta: "Begär offert",
     popular: true
   },
   {
     id: 3,
     name: "Enterprise",
-    subtitle: "For large organizations",
-    price: "Custom",
+    subtitle: "För stora organisationer",
+    price: "Anpassad",
     features: [
-      "Unlimited AI agents",
+      "Obegränsat antal AI-agenter",
       "Enterprise dashboard",
-      "24/7 VIP support",
-      "Full system integration",
-      "On-premise deployment option",
-      "Dedicated AI consultant"
+      "24/7 VIP-support",
+      "Full systemintegration",
+      "On-premise deployment-möjlighet",
+      "Dedikerad AI-konsult"
     ],
-    cta: "Request for pricing",
+    cta: "Begär offert",
     popular: false
   }
 ];
 
 export const PricingCards = () => {
   return (
-    <section className="py-20 bg-white">
+    <section className="py-16 md:py-24 bg-white">
       <div className="max-w-7xl mx-auto px-6">
         <AnimatedSection>
           <div className="text-center mb-16">
-            <p className="text-sm text-gray-900 uppercase tracking-wider mb-2 font-medium">Pricing</p>
-            <h2 className="text-4xl md:text-5xl font-display font-normal text-gray-900 mb-4">
-              The Best AI Automation, at the Right Price
+            <div className="mb-4">
+              <span className="text-xs uppercase tracking-wider text-gray-900 bg-white/60 backdrop-blur-sm border border-gray-200 px-4 py-2 rounded-full">
+                Priser
+              </span>
+            </div>
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-display font-normal text-gray-900 mb-6">
+              Bästa AI-Automation till Rätt Pris
             </h2>
-            <p className="text-lg text-gray-600">
-              Choose a plan that fits your needs. All plans include support and continuous optimization.
+            <p className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto">
+              Välj en plan som passar era affärsbehov och börja automatisera med AI
             </p>
           </div>
         </AnimatedSection>
@@ -69,12 +73,12 @@ export const PricingCards = () => {
         <div className="grid md:grid-cols-3 gap-6">
           {pricingPlans.map((plan, index) => (
             <AnimatedSection key={plan.id} delay={index * 100}>
-              <div className={`bg-white/80 backdrop-blur-xl border rounded-2xl p-8 shadow-lg transition-all ${
-                plan.popular ? 'border-gray-900 scale-105' : 'border-gray-100'
+              <div className={`border-2 backdrop-blur-sm rounded-3xl p-8 shadow-lg hover:shadow-xl transition-all ${
+                plan.popular ? 'border-gray-900 bg-white/10 scale-105' : 'border-white/10 bg-white/5'
               }`}>
                 {plan.popular && (
                   <div className="bg-gray-900 text-white px-4 py-1 rounded-full text-sm inline-block mb-4 font-medium">
-                    Popular
+                    Populär
                   </div>
                 )}
                 
