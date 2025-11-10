@@ -25,16 +25,25 @@ function AnimatedHero({
     }, 2500);
     return () => clearTimeout(timeoutId);
   }, [titleNumber, titles]);
-  return <div className="w-full h-screen relative overflow-hidden">
-      {/* Spline 3D Animation - Main Visual Focus */}
-      <div className="absolute inset-0 z-[15]">
-        <Spline scene="https://prod.spline.design/dtyy9Rk8l8FAgcgA/scene.splinecode" className="w-full h-full" style={{
-        pointerEvents: 'none'
-      }} />
+  return <div className="w-full min-h-screen relative">
+      {/* Spline 3D Animation - Fixed position för full coverage */}
+      <div className="fixed inset-0 w-screen h-screen z-[15]">
+        <Spline 
+          scene="https://prod.spline.design/dtyy9Rk8l8FAgcgA/scene.splinecode" 
+          className="w-full h-full"
+          style={{
+            pointerEvents: 'none',
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%'
+          }} 
+        />
       </div>
 
       {/* Content Overlay */}
-      <div className="container mx-auto max-w-7xl px-6 relative z-20 h-full flex items-center justify-center py-32">
+      <div className="container mx-auto max-w-7xl px-6 relative z-20 min-h-screen flex items-center justify-center py-32">
         <div className="text-center space-y-8 max-w-4xl backdrop-blur-md bg-white/10 rounded-2xl p-12">
           {/* Animated Headline */}
           <motion.div initial={{
