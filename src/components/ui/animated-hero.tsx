@@ -26,18 +26,20 @@ function AnimatedHero({
     return () => clearTimeout(timeoutId);
   }, [titleNumber, titles]);
   return <div className="w-full min-h-screen relative">
-      {/* Spline 3D Animation - Fixed position för full coverage */}
-      <div className="fixed inset-0 w-screen h-screen z-[15]">
+      {/* Spline 3D Animation - Scrollar med sidan, näst längst bak */}
+      <div className="absolute inset-0 w-screen h-screen z-5">
         <Spline 
           scene="https://prod.spline.design/dtyy9Rk8l8FAgcgA/scene.splinecode" 
-          className="w-full h-full"
+          className="w-full h-full opacity-70"
           style={{
             pointerEvents: 'none',
             position: 'absolute',
             top: 0,
             left: 0,
             width: '100%',
-            height: '100%'
+            height: '100%',
+            animationDuration: '30s',
+            animationTimingFunction: 'linear'
           }} 
         />
       </div>
