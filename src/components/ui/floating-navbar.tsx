@@ -52,7 +52,7 @@ export function FloatingNavbar() {
                   decoding="async"
                 />
               </div>
-              <span className="text-xl font-bold text-white [text-shadow:_0_2px_8px_rgb(0_0_0_/_40%)] group-hover:tracking-wider transition-all duration-300">
+              <span className="text-xl font-bold text-primary group-hover:tracking-wider transition-all duration-300">
                 Hiems
               </span>
             </button>
@@ -61,31 +61,31 @@ export function FloatingNavbar() {
             <div className="hidden items-center gap-8 md:flex">
               <button
                 onClick={() => scrollToSection("tjanster")}
-                className="text-sm font-medium text-gray-300 transition-colors hover:text-white [text-shadow:_0_2px_6px_rgb(0_0_0_/_40%)]"
+                className="text-sm font-medium text-primary/80 transition-colors hover:text-primary"
               >
                 Tjänster
               </button>
               <button
                 onClick={() => scrollToSection("paket")}
-                className="text-sm font-medium text-gray-300 transition-colors hover:text-white [text-shadow:_0_2px_6px_rgb(0_0_0_/_40%)]"
+                className="text-sm font-medium text-primary/80 transition-colors hover:text-primary"
               >
                 Paket
               </button>
               <button
                 onClick={() => scrollToSection("branscher")}
-                className="text-sm font-medium text-gray-300 transition-colors hover:text-white [text-shadow:_0_2px_6px_rgb(0_0_0_/_40%)]"
+                className="text-sm font-medium text-primary/80 transition-colors hover:text-primary"
               >
                 Branscher
               </button>
               <button
                 onClick={() => navigateToPage("/about")}
-                className="text-sm font-medium text-gray-300 transition-colors hover:text-white [text-shadow:_0_2px_6px_rgb(0_0_0_/_40%)]"
+                className="text-sm font-medium text-primary/80 transition-colors hover:text-primary"
               >
                 Om oss
               </button>
               <button
                 onClick={() => scrollToSection("kontakt")}
-                className="text-sm font-medium text-gray-300 transition-colors hover:text-white [text-shadow:_0_2px_6px_rgb(0_0_0_/_40%)]"
+                className="text-sm font-medium text-primary/80 transition-colors hover:text-primary"
               >
                 Kontakt
               </button>
@@ -103,7 +103,7 @@ export function FloatingNavbar() {
             {/* Mobile Menu Toggle */}
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="md:hidden text-white p-2 hover:bg-white/10 rounded-lg transition-colors"
+              className="md:hidden text-primary p-2 hover:bg-white/10 rounded-lg transition-colors"
               aria-label={isMobileMenuOpen ? "Stäng meny" : "Öppna meny"}
             >
               {isMobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -115,31 +115,31 @@ export function FloatingNavbar() {
             <div className="md:hidden mt-4 pt-4 border-t border-white/10 flex flex-col gap-3 animate-fade-in">
               <button
                 onClick={() => scrollToSection("tjanster")}
-                className="text-left text-sm font-medium text-gray-300 hover:text-white transition-colors py-2 px-3 hover:bg-white/5 rounded-lg"
+                className="text-left text-sm font-medium text-primary/80 hover:text-primary transition-colors py-2 px-3 hover:bg-white/5 rounded-lg"
               >
                 Tjänster
               </button>
               <button
                 onClick={() => scrollToSection("paket")}
-                className="text-left text-sm font-medium text-gray-300 hover:text-white transition-colors py-2 px-3 hover:bg-white/5 rounded-lg"
+                className="text-left text-sm font-medium text-primary/80 hover:text-primary transition-colors py-2 px-3 hover:bg-white/5 rounded-lg"
               >
                 Paket
               </button>
               <button
                 onClick={() => scrollToSection("branscher")}
-                className="text-left text-sm font-medium text-gray-300 hover:text-white transition-colors py-2 px-3 hover:bg-white/5 rounded-lg"
+                className="text-left text-sm font-medium text-primary/80 hover:text-primary transition-colors py-2 px-3 hover:bg-white/5 rounded-lg"
               >
                 Branscher
               </button>
               <button
                 onClick={() => navigateToPage("/about")}
-                className="text-left text-sm font-medium text-gray-300 hover:text-white transition-colors py-2 px-3 hover:bg-white/5 rounded-lg"
+                className="text-left text-sm font-medium text-primary/80 hover:text-primary transition-colors py-2 px-3 hover:bg-white/5 rounded-lg"
               >
                 Om oss
               </button>
               <button
                 onClick={() => scrollToSection("kontakt")}
-                className="text-left text-sm font-medium text-gray-300 hover:text-white transition-colors py-2 px-3 hover:bg-white/5 rounded-lg"
+                className="text-left text-sm font-medium text-primary/80 hover:text-primary transition-colors py-2 px-3 hover:bg-white/5 rounded-lg"
               >
                 Kontakt
               </button>
