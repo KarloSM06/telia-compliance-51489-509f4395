@@ -4,6 +4,7 @@ import dashboardScreenshot from "@/assets/dashboard-screenshot.png";
 const servicesData = [
   {
     id: 1,
+    category: "Our Services",
     title: "Dashboards & Decision Intelligence",
     description: "Live CRM insights, forecasts, automated reporting med AI. Gör data actionable så att teamet kan agera direkt.",
     bullets: [
@@ -17,6 +18,7 @@ const servicesData = [
   },
   {
     id: 2,
+    category: "Workflow Automation",
     title: "Automate repetitive tasks",
     description: "Låt AI hantera fakturering, mejl-uppföljning, rapportering och mer. Släpp administrationen och fokusera på tillväxt.",
     bullets: [
@@ -30,6 +32,7 @@ const servicesData = [
   },
   {
     id: 3,
+    category: "AI Assistant",
     title: "AI Voice Agents",
     description: "Virtuella receptionister som svarar, bokar möten och följer upp 24/7. Missa aldrig ett samtal igen.",
     bullets: [
@@ -43,6 +46,7 @@ const servicesData = [
   },
   {
     id: 4,
+    category: "Sales & Marketing",
     title: "Accelerate Sales Growth",
     description: "AI-driven lead generation, qualification och nurturing. Kortare säljcykler och högre conversion rates.",
     bullets: [
@@ -56,6 +60,7 @@ const servicesData = [
   },
   {
     id: 5,
+    category: "Custom Projects",
     title: "Build Smarter Systems",
     description: "Custom AI-lösningar som integreras med era befintliga system. Skalbar automation som växer med er.",
     bullets: [
@@ -79,19 +84,29 @@ export const AlternatingServicesSection = () => {
               <div className={`grid md:grid-cols-2 gap-12 items-center ${service.isReversed ? 'md:grid-flow-dense' : ''}`}>
                 {/* Text side */}
                 <div className={service.isReversed ? 'md:col-start-2' : ''}>
+                  {/* Category Badge */}
+                  <div className="mb-4">
+                    <span className="text-xs uppercase tracking-wider text-gray-900 bg-white/60 backdrop-blur-sm border border-gray-200 px-4 py-2 rounded-full">
+                      {service.category}
+                    </span>
+                  </div>
+                  
                   <h2 className="text-4xl md:text-5xl font-display font-normal text-gray-900 mb-4">
                     {service.title}
                   </h2>
                   <p className="text-lg text-gray-600 mb-6">
                     {service.description}
                   </p>
-                  <ul className="space-y-3 mb-8">
+                  
+                  {/* Pill-formade tags istället för bullets */}
+                  <div className="flex flex-wrap gap-2 mb-8">
                     {service.bullets.map((bullet, idx) => (
-                      <li key={idx} className="text-gray-700">
+                      <span key={idx} className="text-sm text-gray-700 bg-white/60 backdrop-blur-sm border border-gray-200 px-4 py-2 rounded-full">
                         {bullet}
-                      </li>
+                      </span>
                     ))}
-                  </ul>
+                  </div>
+                  
                   <div className="flex gap-4">
                     <button className="border border-gray-300 text-gray-900 px-6 py-3 rounded-full hover:bg-gray-50 transition-colors">
                       Learn More
@@ -102,8 +117,8 @@ export const AlternatingServicesSection = () => {
                   </div>
                 </div>
                 
-                {/* Mockup side */}
-                <div className={`bg-gray-50 rounded-2xl p-8 border border-gray-200 ${service.isReversed ? 'md:col-start-1' : ''}`}>
+                {/* Mockup side - Glassmorphism container */}
+                <div className={`bg-white/80 backdrop-blur-xl border border-gray-100 rounded-2xl p-8 shadow-lg ${service.isReversed ? 'md:col-start-1' : ''}`}>
                   <img 
                     src={service.mockup} 
                     alt={service.title} 
