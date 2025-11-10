@@ -55,9 +55,10 @@ export const ProductSelection = () => {
       
       {/* Hero Section and Packages with Aurora Background */}
       <AuroraBackground className="h-auto">
-        <section id="hero" className="relative py-12 lg:py-16 pb-16 lg:pb-24 flex items-center">
-          
-        </section>
+        <AnimatedHero 
+          onBookDemo={() => setIsConsultationModalOpen(true)}
+          onViewPackages={() => scrollToSection('paket')}
+        />
 
         {/* Programmen vi jobbar med */}
         <IntegrationHero />
