@@ -1,10 +1,10 @@
 import { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
-import { ArrowRight, Calendar } from "lucide-react";
+import { ArrowRight, Calendar, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { RainbowButton } from "@/components/ui/rainbow-button";
 import { cn } from "@/lib/utils";
-import Spline from '@splinetool/react-spline';
+import { AnimatedSection } from "@/components/shared/AnimatedSection";
 interface AnimatedHeroProps {
   onBookDemo?: () => void;
   onViewPackages?: () => void;
@@ -25,81 +25,89 @@ function AnimatedHero({
     }, 2500);
     return () => clearTimeout(timeoutId);
   }, [titleNumber, titles]);
-  return <div className="w-full min-h-screen relative">
-      {/* Spline 3D Animation - Scrollar med sidan, näst längst bak */}
-      <div className="absolute inset-0 w-screen h-screen z-5">
-        <Spline 
-          scene="https://prod.spline.design/dtyy9Rk8l8FAgcgA/scene.splinecode" 
-          className="w-full h-full opacity-70"
-          style={{
-            pointerEvents: 'none',
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            width: '100%',
-            height: '100%',
-            animationDuration: '30s',
-            animationTimingFunction: 'linear'
-          }} 
-        />
-      </div>
-
-      {/* Content Overlay */}
-      <div className="container mx-auto max-w-7xl px-6 relative z-20 min-h-screen flex items-center justify-center py-32">
-        <div className="text-center space-y-8 max-w-4xl backdrop-blur-md bg-white/10 rounded-2xl p-12">
-          {/* Animated Headline */}
-          <motion.div initial={{
-          opacity: 0,
-          y: 20
-        }} animate={{
-          opacity: 1,
-          y: 0
-        }} transition={{
-          duration: 0.8
-        }} className="space-y-4">
-            <h1 className="text-5xl md:text-7xl font-bold text-black drop-shadow-lg">
-              <motion.span key={titleNumber} initial={{
+  return <div className="w-full py-32 lg:py-48 relative">
+      <div className="container mx-auto max-w-5xl px-6 relative z-10">
+        <div className="flex gap-8 items-center justify-center flex-col">
+          <div className="flex gap-6 flex-col items-center">
+            {/* Main Heading */}
+            <AnimatedSection>
+              <motion.h1 initial={{
               opacity: 0,
               y: 20
             }} animate={{
               opacity: 1,
               y: 0
-            }} exit={{
-              opacity: 0,
-              y: -20
             }} transition={{
-              duration: 0.5
-            }} className="inline-block bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">
-                {titles[titleNumber]}
-              </motion.span>
-              <br />
-              <span className="text-black">med AI-drivna lösningar</span>
-            </h1>
-            <p className="text-xl md:text-2xl text-black/90 drop-shadow-md max-w-3xl mx-auto">
-              Automatisera kundkommunikation, öka försäljning och effektivisera er verksamhet med vår expertis inom AI, röstassistenter och intelligenta system.
-            </p>
-          </motion.div>
+              duration: 0.6,
+              delay: 0.1
+            }} className="text-4xl md:text-6xl lg:text-7xl max-w-6xl tracking-tight text-center font-bold leading-[1.15]">
+                <span className={cn("block mb-3", "bg-clip-text text-transparent", "bg-[linear-gradient(180deg,_hsl(var(--foreground))_0%,_hsl(var(--foreground)/0.8)_100%)]", "dark:bg-[linear-gradient(180deg,_hsl(var(--foreground))_0%,_hsl(var(--foreground)/0.6)_100%)]")}>Skala din verksamhet med AI</span>
+                <span className="relative flex w-full justify-center overflow-hidden text-center pb-2 min-h-[1.2em]">
+                  {titles.map((title, index) => <motion.span key={index} className="absolute font-extrabold bg-gradient-gold bg-clip-text text-transparent" initial={{
+                  opacity: 0,
+                  y: -100
+                }} transition={{
+                  type: "spring",
+                  stiffness: 50,
+                  damping: 20
+                }} animate={titleNumber === index ? {
+                  y: 0,
+                  opacity: 1
+                } : {
+                  y: titleNumber > index ? -150 : 150,
+                  opacity: 0
+                }}>
+                      {title}
+                    </motion.span>)}
+                </span>
+              </motion.h1>
+            </AnimatedSection>
 
+            {/* Description */}
+            <AnimatedSection delay={100}>
+              <motion.p initial={{
+              opacity: 0,
+              y: 20
+            }} animate={{
+              opacity: 1,
+              y: 0
+            }} transition={{
+              duration: 0.6,
+              delay: 0.2
+            }} className="text-base md:text-lg leading-relaxed text-muted-foreground max-w-2xl text-center font-normal mt-2">
+                Hiems levererar ett komplett AI-ekosystem som automatiserar kundflöden, 
+                försäljning, bokningar, administration och dataanalys.
+              </motion.p>
+            </AnimatedSection>
+          </div>
+          
           {/* CTA Buttons */}
-          <motion.div initial={{
-          opacity: 0,
-          y: 20
-        }} animate={{
-          opacity: 1,
-          y: 0
-        }} transition={{
-          duration: 0.8,
-          delay: 0.2
-        }} className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            {onBookDemo && <RainbowButton onClick={onBookDemo} className="w-full sm:w-auto text-lg px-8 py-6 drop-shadow-xl">
-                <Calendar className="mr-2 h-5 w-5" />
-                Boka en demo
-              </RainbowButton>}
-            {onViewPackages && <Button onClick={onViewPackages} variant="outline" size="lg" className="w-full sm:w-auto text-lg px-8 py-6 border-2 border-black/20 bg-white/80 backdrop-blur-sm text-black hover:bg-white hover:border-black/40 drop-shadow-xl">
-                Se våra paket
-                <ArrowRight className="ml-2 h-5 w-5" />
-              </Button>}
-          </motion.div>
+          <AnimatedSection delay={200}>
+            <motion.div initial={{
+            opacity: 0,
+            y: 20
+          }} animate={{
+            opacity: 1,
+            y: 0
+          }} transition={{
+            duration: 0.6,
+            delay: 0.3
+          }} className="flex flex-col sm:flex-row gap-4 justify-center mt-4">
+              <Button variant="outline" className="group hover:bg-gradient-gold hover:text-primary hover:border-primary/20 transition-all duration-300 font-bold rounded-xl hover:scale-105" onClick={onViewPackages}>
+                <span className="flex items-center gap-2">
+                  Se våra paket <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" />
+                </span>
+              </Button>
+              <RainbowButton 
+                onClick={onBookDemo}
+                className="group font-bold rounded-xl transition-all duration-300 hover:scale-105"
+              >
+                <span className="flex items-center gap-2">
+                  Boka demo <Calendar className="w-4 h-4 group-hover:rotate-12 transition-transform duration-300" />
+                </span>
+              </RainbowButton>
+            </motion.div>
+          </AnimatedSection>
         </div>
       </div>
     </div>;
