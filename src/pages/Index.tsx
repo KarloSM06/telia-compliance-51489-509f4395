@@ -8,26 +8,26 @@ const Index = () => {
     const scrollToHash = () => {
       const hash = window.location.hash?.replace("#", "");
       if (!hash) return;
-      
+
       setTimeout(() => {
         const element = document.getElementById(hash);
         if (element) {
-          const offset = 100;
+          const offset = 0;
           const elementPosition = element.getBoundingClientRect().top;
           const offsetPosition = elementPosition + window.pageYOffset - offset;
           window.scrollTo({
             top: offsetPosition,
-            behavior: 'smooth'
+            behavior: "smooth",
           });
         }
       }, 100);
     };
-    
+
     scrollToHash();
     window.addEventListener("hashchange", scrollToHash);
     return () => window.removeEventListener("hashchange", scrollToHash);
   }, []);
-  
+
   return (
     <div className="min-h-screen bg-background">
       <FloatingNavbar />
