@@ -16,9 +16,9 @@ function AnimatedHero({
   const [splineError, setSplineError] = useState<string | null>(null);
 
   return (
-    <div className="relative w-full min-h-[140vh] overflow-hidden">
+    <div className="relative w-full min-h-[140vh] overflow-hidden pb-24 md:pb-40">
       {/* Spline 3D Animation - Behind content but in front of Aurora */}
-      <div className="absolute inset-0 w-screen h-screen z-5">
+      <div className="absolute inset-0 z-5">
         {isSplineLoading && (
           <div className="absolute inset-0 flex items-center justify-center">
             <p className="text-muted-foreground">Laddar 3D-animation...</p>
