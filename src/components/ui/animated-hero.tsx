@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import { Calendar } from "lucide-react";
 import { RainbowButton } from "@/components/ui/rainbow-button";
 import Spline from '@splinetool/react-spline';
+import { useState } from "react";
 
 interface AnimatedHeroProps {
   onBookDemo?: () => void;
@@ -11,17 +12,39 @@ interface AnimatedHeroProps {
 function AnimatedHero({
   onBookDemo,
 }: AnimatedHeroProps) {
+  const [isSplineLoading, setIsSplineLoading] = useState(true);
+  const [splineError, setSplineError] = useState<string | null>(null);
+
   return (
-    <div className="relative w-full min-h-screen overflow-hidden">
+    <div className="relative w-full min-h-[140vh] overflow-hidden">
       {/* Spline 3D Animation - Behind content but in front of Aurora */}
       <div className="absolute inset-0 w-screen h-screen z-5">
+        {isSplineLoading && (
+          <div className="absolute inset-0 flex items-center justify-center">
+            <p className="text-muted-foreground">Laddar 3D-animation...</p>
+          </div>
+        )}
+        {splineError && (
+          <div className="absolute inset-0 flex items-center justify-center">
+            <p className="text-destructive">Kunde inte ladda 3D-animation: {splineError}</p>
+          </div>
+        )}
         <Spline
           scene="https://prod.spline.design/dtyy9Rk8l8FAgcgA/scene.splinecode"
+          onLoad={() => {
+            console.log('✅ Spline loaded successfully');
+            setIsSplineLoading(false);
+          }}
+          onError={(error) => {
+            console.error('❌ Spline error:', error);
+            setSplineError('Kunde inte ladda 3D-scenen');
+            setIsSplineLoading(false);
+          }}
           style={{
             width: '100%',
             height: '100%',
             pointerEvents: 'none',
-            opacity: 0.8,
+            opacity: 1.0,
           }}
         />
       </div>
