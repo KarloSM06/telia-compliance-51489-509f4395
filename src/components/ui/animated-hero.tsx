@@ -25,7 +25,7 @@ function AnimatedHero({
     }, 2500);
     return () => clearTimeout(timeoutId);
   }, [titleNumber, titles]);
-  return <div className="w-full min-h-screen relative overflow-hidden">
+  return <div className="w-full h-screen relative overflow-hidden">
       {/* Spline 3D Animation - Main Visual Focus */}
       <div className="absolute inset-0 z-[15]">
         <Spline scene="https://prod.spline.design/dtyy9Rk8l8FAgcgA/scene.splinecode" className="w-full h-full" style={{
@@ -34,8 +34,62 @@ function AnimatedHero({
       </div>
 
       {/* Content Overlay */}
-      <div className="container mx-auto max-w-5xl px-6 relative z-20 min-h-screen flex items-center justify-center py-32">
-        
+      <div className="container mx-auto max-w-7xl px-6 relative z-20 h-full flex items-center justify-center py-32">
+        <div className="text-center space-y-8 max-w-4xl backdrop-blur-md bg-white/10 rounded-2xl p-12">
+          {/* Animated Headline */}
+          <motion.div initial={{
+          opacity: 0,
+          y: 20
+        }} animate={{
+          opacity: 1,
+          y: 0
+        }} transition={{
+          duration: 0.8
+        }} className="space-y-4">
+            <h1 className="text-5xl md:text-7xl font-bold text-black drop-shadow-lg">
+              <motion.span key={titleNumber} initial={{
+              opacity: 0,
+              y: 20
+            }} animate={{
+              opacity: 1,
+              y: 0
+            }} exit={{
+              opacity: 0,
+              y: -20
+            }} transition={{
+              duration: 0.5
+            }} className="inline-block bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">
+                {titles[titleNumber]}
+              </motion.span>
+              <br />
+              <span className="text-black">med AI-drivna lösningar</span>
+            </h1>
+            <p className="text-xl md:text-2xl text-black/90 drop-shadow-md max-w-3xl mx-auto">
+              Automatisera kundkommunikation, öka försäljning och effektivisera er verksamhet med vår expertis inom AI, röstassistenter och intelligenta system.
+            </p>
+          </motion.div>
+
+          {/* CTA Buttons */}
+          <motion.div initial={{
+          opacity: 0,
+          y: 20
+        }} animate={{
+          opacity: 1,
+          y: 0
+        }} transition={{
+          duration: 0.8,
+          delay: 0.2
+        }} className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+            {onBookDemo && <RainbowButton onClick={onBookDemo} className="w-full sm:w-auto text-lg px-8 py-6 drop-shadow-xl">
+                <Calendar className="mr-2 h-5 w-5" />
+                Boka en demo
+              </RainbowButton>}
+            {onViewPackages && <Button onClick={onViewPackages} variant="outline" size="lg" className="w-full sm:w-auto text-lg px-8 py-6 border-2 border-black/20 bg-white/80 backdrop-blur-sm text-black hover:bg-white hover:border-black/40 drop-shadow-xl">
+                Se våra paket
+                <ArrowRight className="ml-2 h-5 w-5" />
+              </Button>}
+          </motion.div>
+        </div>
       </div>
     </div>;
 }
