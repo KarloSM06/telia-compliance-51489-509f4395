@@ -8,7 +8,7 @@ export const ConsultationCTA = () => {
   const [isConsultationModalOpen, setIsConsultationModalOpen] = useState(false);
 
   return (
-    <section className="relative py-20 lg:py-32 overflow-hidden">
+    <section id="kontakt" className="relative py-20 lg:py-32 overflow-hidden">
       <div className="mx-auto max-w-7xl px-6 lg:px-8 relative z-10">
         <AnimatedSection className="text-center mb-12 lg:mb-16">
           <div className="inline-block mb-6">

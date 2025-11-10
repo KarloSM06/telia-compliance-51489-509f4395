@@ -30,6 +30,9 @@ function Header1() {
         top: offsetPosition,
         behavior: 'smooth'
       });
+    } else {
+      // Om sektionen inte finns på aktuell sida -> navigera till startsidan med hash
+      navigate(`/#${id}`);
     }
   };
 

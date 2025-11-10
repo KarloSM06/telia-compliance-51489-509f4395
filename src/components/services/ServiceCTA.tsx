@@ -11,19 +11,7 @@ export const ServiceCTA = ({ onBookDemo }: ServiceCTAProps) => {
   const navigate = useNavigate();
 
   const handleContactClick = () => {
-    navigate("/");
-    setTimeout(() => {
-      const element = document.getElementById("kontakt");
-      if (element) {
-        const offset = 80;
-        const elementPosition = element.getBoundingClientRect().top;
-        const offsetPosition = elementPosition + window.pageYOffset - offset;
-        window.scrollTo({
-          top: offsetPosition,
-          behavior: 'smooth'
-        });
-      }
-    }, 100);
+    navigate("/#kontakt");
   };
 
   return (
