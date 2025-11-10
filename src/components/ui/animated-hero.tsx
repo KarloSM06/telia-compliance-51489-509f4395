@@ -16,7 +16,7 @@ function AnimatedHero({
   const [splineError, setSplineError] = useState<string | null>(null);
 
   return (
-    <div className="relative w-full min-h-[140vh] overflow-hidden pb-24 md:pb-40">
+    <div className="relative w-full min-h-screen overflow-hidden">
       {/* Spline 3D Animation - Behind content but in front of Aurora */}
       <div className="absolute inset-0 z-5">
         {isSplineLoading && (
@@ -50,7 +50,7 @@ function AnimatedHero({
       </div>
 
       {/* Hero Content - On top of everything */}
-      <div className="relative z-20 container mx-auto max-w-4xl px-6 py-32 lg:py-48">
+      <div className="relative z-20 container mx-auto max-w-4xl px-6 py-16 lg:py-24">
         <div className="flex flex-col items-center justify-center gap-6 lg:gap-8 text-center">
           {/* Main Headline */}
           <motion.h1
