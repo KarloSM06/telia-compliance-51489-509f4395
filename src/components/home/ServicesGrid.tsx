@@ -35,7 +35,7 @@ const AnimatedContainer = ({
 export const ServicesGrid = () => {
   return (
     <section className="relative py-24 md:py-40">
-      <div className="mx-auto w-full max-w-7xl space-y-8 px-4">
+      <div className="mx-auto w-full max-w-7xl space-y-8 px-4 md:px-8 py-12 md:py-16 border-2 border-white/10 bg-white/5 backdrop-blur-md rounded-2xl shadow-elegant transition-all duration-300 hover:border-white/20 hover:bg-white/10">
         <AnimatedContainer className="mx-auto max-w-full text-center">
           <h2 className="text-3xl font-bold tracking-wide text-balance md:text-4xl lg:text-5xl xl:font-extrabold">
             <span className="bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent">
