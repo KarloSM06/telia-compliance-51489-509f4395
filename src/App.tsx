@@ -8,8 +8,10 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 // Lazy load routes
 const Index = lazy(() => import("./pages/Index"));
-const Paket = lazy(() => import("./pages/Paket"));
 const NotFound = lazy(() => import("./pages/NotFound"));
+
+// Direct import for Paket to avoid React hook race condition
+import Paket from "./pages/Paket";
 
 // Loading fallback component
 const PageLoader = () => (
