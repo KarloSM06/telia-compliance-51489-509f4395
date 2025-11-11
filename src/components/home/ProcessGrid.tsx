@@ -1,5 +1,8 @@
 import { AnimatedSection } from "@/components/shared/AnimatedSection";
 import AnimatedBeamIntegration from "@/components/ui/animated-beam-integration";
+import DataAnalysisVisual from "@/components/ui/data-analysis-visual";
+import AIBuildVisual from "@/components/ui/ai-build-visual";
+import GrowthScaleVisual from "@/components/ui/growth-scale-visual";
 
 const processSteps = [
   {
@@ -72,15 +75,10 @@ export const ProcessGrid = () => {
                 </p>
                 
                 {/* Visual Mockup Area */}
-                {step.id === 3 ? (
-                  <AnimatedBeamIntegration />
-                ) : (
-                  <div className="bg-white/40 backdrop-blur-sm border border-gray-200 rounded-xl p-6 h-[280px] flex items-center justify-center">
-                    <span className="text-sm text-gray-400">
-                      [Illustration - {step.title}]
-                    </span>
-                  </div>
-                )}
+                {step.id === 1 && <DataAnalysisVisual />}
+                {step.id === 2 && <AIBuildVisual />}
+                {step.id === 3 && <AnimatedBeamIntegration />}
+                {step.id === 4 && <GrowthScaleVisual />}
               </div>
             </AnimatedSection>
           ))}
