@@ -29,8 +29,8 @@ const processSteps = [
 
 export const ProcessGrid = () => {
   return (
-    <section className="py-16 md:py-24">
-      <div className="max-w-7xl mx-auto px-6">
+    <section className="relative py-24 md:py-40 bg-white">
+      <div className="mx-auto w-full max-w-7xl space-y-8 px-4 md:px-8 py-12 md:py-16 border border-gray-100 bg-white/80 backdrop-blur-xl rounded-3xl shadow-lg transition-all duration-300 hover:shadow-xl">
         {/* Section Header */}
         <div className="text-center mb-16 md:mb-24">
           {/* Category Badge */}
@@ -52,7 +52,7 @@ export const ProcessGrid = () => {
         <div className="grid md:grid-cols-2 gap-6 md:gap-8">
           {processSteps.map((step, index) => (
             <AnimatedSection key={step.id} delay={index * 100}>
-              <div className="border-2 border-white/10 bg-white/5 backdrop-blur-sm rounded-3xl p-10 md:p-12 shadow-lg hover:shadow-xl transition-all">
+              <div className="border border-gray-100 bg-white/80 backdrop-blur-xl rounded-3xl p-10 md:p-12 shadow-lg hover:shadow-xl transition-all duration-300">
                 {/* Step Badge */}
                 <div className="mb-4">
                   <span className="text-xs uppercase tracking-wider text-gray-900 bg-white/60 backdrop-blur-sm border border-gray-200 px-3 py-1 rounded-full">
@@ -71,7 +71,7 @@ export const ProcessGrid = () => {
                 </p>
                 
                 {/* Visual Mockup Area - Placeholder */}
-                <div className="bg-white/40 backdrop-blur-sm border border-gray-200 rounded-xl p-6 min-h-[200px] flex items-center justify-center">
+                <div className="bg-white/60 backdrop-blur-sm border border-gray-200 rounded-xl p-6 min-h-[200px] flex items-center justify-center">
                   <span className="text-sm text-gray-400">
                     [Illustration - {step.title}]
                   </span>

@@ -52,8 +52,8 @@ const pricingPlans = [
 
 export const PricingCards = () => {
   return (
-    <section className="py-16 md:py-24 bg-white">
-      <div className="max-w-7xl mx-auto px-6">
+    <section className="relative py-24 md:py-40 bg-white">
+      <div className="mx-auto w-full max-w-7xl space-y-8 px-4 md:px-8 py-12 md:py-16 border border-gray-100 bg-white/80 backdrop-blur-xl rounded-3xl shadow-lg transition-all duration-300 hover:shadow-xl">
         <AnimatedSection>
           <div className="text-center mb-16">
             <div className="mb-4">
@@ -73,9 +73,15 @@ export const PricingCards = () => {
         <div className="grid md:grid-cols-3 gap-6">
           {pricingPlans.map((plan, index) => (
             <AnimatedSection key={plan.id} delay={index * 100}>
-              <div className={`border-2 backdrop-blur-sm rounded-3xl p-8 shadow-lg hover:shadow-xl transition-all ${
-                plan.popular ? 'border-gray-900 bg-white/10 scale-105' : 'border-white/10 bg-white/5'
-              }`}>
+              <div
+              className={`
+                relative
+                ${plan.popular 
+                  ? 'border-2 border-gray-900 bg-white/90 backdrop-blur-xl scale-105' 
+                  : 'border border-gray-100 bg-white/80 backdrop-blur-xl'
+                }
+                rounded-3xl p-8 shadow-lg hover:shadow-xl transition-all duration-300
+              `}>
                 {plan.popular && (
                   <div className="bg-gray-900 text-white px-4 py-1 rounded-full text-sm inline-block mb-4 font-medium">
                     Populär

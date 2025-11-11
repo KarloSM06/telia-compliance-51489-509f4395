@@ -76,8 +76,8 @@ const servicesData = [
 
 export const AlternatingServicesSection = () => {
   return (
-    <section className="py-16 md:py-24">
-      <div className="max-w-7xl mx-auto px-6">
+    <section className="relative py-24 md:py-40 bg-white">
+      <div className="mx-auto w-full max-w-7xl space-y-12 px-4 md:px-8 py-12 md:py-16 border border-gray-100 bg-white/80 backdrop-blur-xl rounded-3xl shadow-lg transition-all duration-300 hover:shadow-xl">
         {/* Section Header */}
         <div className="text-center mb-16 md:mb-24">
           <h2 className="text-4xl md:text-5xl lg:text-6xl font-display font-normal text-gray-900 mb-6">
@@ -91,7 +91,7 @@ export const AlternatingServicesSection = () => {
         <div className="space-y-16 md:space-y-24">
         {servicesData.map((service, index) => (
           <AnimatedSection key={service.id} delay={index * 100}>
-            <div className="border-2 border-white/10 bg-white/5 backdrop-blur-sm rounded-3xl p-10 md:p-16 shadow-lg hover:shadow-xl transition-all">
+            <div className="border border-gray-100 bg-white/80 backdrop-blur-xl rounded-3xl p-10 md:p-16 shadow-lg hover:shadow-xl transition-all duration-300">
               <div className={`grid md:grid-cols-2 gap-12 items-center ${service.isReversed ? 'md:grid-flow-dense' : ''}`}>
                 {/* Text side */}
                 <div className={service.isReversed ? 'md:col-start-2' : ''}>
@@ -119,10 +119,10 @@ export const AlternatingServicesSection = () => {
                   </div>
                   
                   <div className="flex gap-4">
-                    <button className="border border-gray-300 text-gray-900 px-6 py-3 rounded-full hover:bg-gray-50 transition-colors">
+                    <button className="border border-gray-200 bg-white/60 backdrop-blur-sm text-gray-900 px-6 py-3 rounded-full hover:bg-white/80 transition-all">
                       Learn More
                     </button>
-                    <button className="bg-gray-900 hover:bg-gray-800 text-white px-6 py-3 rounded-full transition-colors">
+                    <button className="bg-gray-900 hover:bg-gray-800 text-white px-6 py-3 rounded-full transition-all">
                       Request a demo
                     </button>
                   </div>
