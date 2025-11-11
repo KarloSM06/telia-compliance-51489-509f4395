@@ -1,6 +1,7 @@
 import { AnimatedSection } from "@/components/shared/AnimatedSection";
 import dashboardScreenshot from "@/assets/dashboard-screenshot.png";
 import DatabaseWithRestApi from "@/components/ui/database-with-rest-api";
+import { SiriOrb } from "@/components/ui/siri-orb";
 import { Phone, MessageSquare, Mail, Star } from "lucide-react";
 
 const servicesData = [
@@ -157,6 +158,23 @@ export const AlternatingServicesSection = () => {
                         }} 
                         lightColor="hsl(var(--primary))" 
                       />
+                    </div>
+                  ) : service.id === 3 ? (
+                    // SiriOrb för AI Voice Agents
+                    <div className="w-full flex flex-col items-center justify-center py-8">
+                      <SiriOrb 
+                        size="220px"
+                        animationDuration={25}
+                        className="drop-shadow-2xl mb-6"
+                      />
+                      <div className="text-center max-w-md">
+                        <p className="text-lg font-medium text-gray-900 mb-2">
+                          Vad kan jag hjälpa dig med?
+                        </p>
+                        <p className="text-sm text-gray-600">
+                          Oavsett om du vill ha hjälp med kundhantering eller göra ändringar i ditt system, ge mig bara ett kommando.
+                        </p>
+                      </div>
                     </div>
                   ) : (
                     // Standard screenshot för alla andra tjänster
