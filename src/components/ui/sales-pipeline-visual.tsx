@@ -46,10 +46,10 @@ export const SalesPipelineVisual = ({
 
   return (
     <div className={cn("h-[500px] w-full max-w-[900px] mx-auto", className)}>
-      <div className="relative h-full w-full border-2 border-primary/20 bg-primary/5 backdrop-blur rounded-3xl p-8 shadow-lg overflow-hidden">
+      <div className="relative h-full w-full overflow-hidden">
         
         {/* Top Badges Row */}
-        <div className="flex justify-center gap-4 mb-8">
+        <div className="flex justify-center gap-4 mb-8 pt-8">
           <div className="flex items-center gap-2 px-4 py-2 rounded-full border border-primary/20 bg-primary/10 backdrop-blur">
             <IconFirst className="w-4 h-4 text-primary" />
             <span className="text-sm font-medium text-gray-900">{badgeTexts.first}</span>
