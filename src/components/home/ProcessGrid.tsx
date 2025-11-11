@@ -74,7 +74,7 @@ export const ProcessGrid = () => {
                 
                 {/* Visual Mockup Area */}
                 {step.id === 3 ? (
-                  <div className="bg-white/40 backdrop-blur-sm border border-gray-200 rounded-xl p-2 h-[280px] flex items-center justify-center overflow-hidden">
+                  <div className="bg-white/40 backdrop-blur-sm border border-gray-200 rounded-xl p-2 flex items-center justify-center overflow-hidden">
                     <div className="w-full flex justify-center -my-8">
                       <DatabaseWithRestApi 
                         className="scale-90 md:scale-100" 
@@ -101,7 +101,7 @@ export const ProcessGrid = () => {
                     </div>
                   </div>
                 ) : (
-                  <div className="bg-white/40 backdrop-blur-sm border border-gray-200 rounded-xl p-6 h-[280px] flex items-center justify-center">
+                  <div className="bg-white/40 backdrop-blur-sm border border-gray-200 rounded-xl p-6 min-h-[200px] flex items-center justify-center">
                     <span className="text-sm text-gray-400">
                       [Illustration - {step.title}]
                     </span>
