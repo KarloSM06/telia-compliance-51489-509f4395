@@ -1,15 +1,12 @@
 import { AnimatedSection } from "@/components/shared/AnimatedSection";
 import dashboardScreenshot from "@/assets/dashboard-screenshot.png";
 import DatabaseWithRestApi from "@/components/ui/database-with-rest-api";
-import { SiriOrb } from "@/components/ui/siri-orb";
-import { AutomationFlowVisual } from "@/components/ui/automation-flow-visual";
-import { SalesPipelineVisual } from "@/components/ui/sales-pipeline-visual";
-import { IntegrationHubVisual } from "@/components/ui/integration-hub-visual";
+import { WorkflowChecklistVisual } from "@/components/ui/workflow-checklist-visual";
+import { AIVoiceAgentVisual } from "@/components/ui/ai-voice-agent-visual";
+import { EmailBriefingVisual } from "@/components/ui/email-briefing-visual";
+import { ProjectManagementVisual } from "@/components/ui/project-management-visual";
 import { 
-  Phone, MessageSquare, Mail, Star,
-  FileText, Calendar, FolderOpen,
-  Users, Target, TrendingUp, BarChart3,
-  Puzzle, Link2, Workflow, ArrowUpRight
+  Phone, MessageSquare, Mail, Star
 } from "lucide-react";
 
 const servicesData = [
@@ -168,84 +165,24 @@ export const AlternatingServicesSection = () => {
                       />
                     </div>
                   ) : service.id === 2 ? (
-                    // AutomationFlowVisual för Automate repetitive tasks
+                    // WorkflowChecklistVisual för Automate repetitive tasks
                     <div className="w-full flex justify-center">
-                      <AutomationFlowVisual
-                        className="scale-90 md:scale-100"
-                        circleText="Auto"
-                        badgeTexts={{
-                          first: "Faktura",
-                          second: "Email",
-                          third: "Kalender",
-                          fourth: "Dokument"
-                        }}
-                        badgeIcons={{
-                          first: FileText,
-                          second: Mail,
-                          third: Calendar,
-                          fourth: FolderOpen
-                        }}
-                        lightColor="hsl(var(--primary))"
-                      />
+                      <WorkflowChecklistVisual className="scale-90 md:scale-100" />
                     </div>
                   ) : service.id === 3 ? (
-                    // SiriOrb för AI Voice Agents
-                    <div className="w-full flex flex-col items-center justify-center py-8">
-                      <SiriOrb 
-                        size="220px"
-                        animationDuration={25}
-                        className="drop-shadow-2xl mb-6"
-                      />
-                      <div className="text-center max-w-md">
-                        <p className="text-lg font-medium text-gray-900 mb-2">
-                          Vad kan jag hjälpa dig med?
-                        </p>
-                        <p className="text-sm text-gray-600">
-                          Oavsett om du vill ha hjälp med kundhantering eller göra ändringar i ditt system, ge mig bara ett kommando.
-                        </p>
-                      </div>
+                    // AIVoiceAgentVisual för AI Voice Agents
+                    <div className="w-full flex justify-center">
+                      <AIVoiceAgentVisual className="scale-90 md:scale-100" />
                     </div>
                   ) : service.id === 4 ? (
-                    // SalesPipelineVisual för Accelerate Sales Growth
+                    // EmailBriefingVisual för Accelerate Sales Growth
                     <div className="w-full flex justify-center">
-                      <SalesPipelineVisual
-                        className="scale-90 md:scale-100"
-                        circleText="Sälj"
-                        badgeTexts={{
-                          first: "Leads",
-                          second: "Kvalificera",
-                          third: "Prognos",
-                          fourth: "Pipeline"
-                        }}
-                        badgeIcons={{
-                          first: Users,
-                          second: Target,
-                          third: TrendingUp,
-                          fourth: BarChart3
-                        }}
-                        lightColor="hsl(var(--primary))"
-                      />
+                      <EmailBriefingVisual className="scale-90 md:scale-100" />
                     </div>
                   ) : service.id === 5 ? (
-                    // IntegrationHubVisual för Build Smarter Systems
+                    // ProjectManagementVisual för Build Smarter Systems
                     <div className="w-full flex justify-center">
-                      <IntegrationHubVisual
-                        className="scale-90 md:scale-100"
-                        circleText="Hub"
-                        badgeTexts={{
-                          first: "Anpassad",
-                          second: "API",
-                          third: "Arbetsflöde",
-                          fourth: "Skala"
-                        }}
-                        badgeIcons={{
-                          first: Puzzle,
-                          second: Link2,
-                          third: Workflow,
-                          fourth: ArrowUpRight
-                        }}
-                        lightColor="hsl(var(--primary))"
-                      />
+                      <ProjectManagementVisual className="scale-90 md:scale-100" />
                     </div>
                   ) : (
                     // Fallback för eventuella andra tjänster
