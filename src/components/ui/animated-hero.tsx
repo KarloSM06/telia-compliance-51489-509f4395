@@ -91,19 +91,6 @@ function AnimatedHero({
               Boka ett möte
             </button>
           </motion.div>
-
-          {/* Social Proof */}
-          <motion.p initial={{
-          opacity: 0
-        }} animate={{
-          opacity: 1
-        }} transition={{
-          duration: 0.6,
-          delay: 0.6,
-          ease: "easeOut"
-        }} className="text-sm text-gray-500 mt-6">
-            Förtrodd av 50+ företag i Sverige
-          </motion.p>
         </div>
       </div>
     </div>;
