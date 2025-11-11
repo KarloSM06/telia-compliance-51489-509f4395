@@ -74,8 +74,8 @@ export const ProcessGrid = () => {
                 
                 {/* Visual Mockup Area */}
                 {step.id === 3 ? (
-                  <div className="bg-white/40 backdrop-blur-sm border border-gray-200 rounded-xl p-0 flex items-center justify-center overflow-hidden -mt-8 h-auto">
-                    <div className="w-full flex justify-center -my-16 -mb-20">
+                  <div className="bg-white/40 backdrop-blur-sm border border-gray-200 rounded-xl p-0 flex items-center justify-center overflow-hidden -mt-12 h-auto">
+                    <div className="w-full flex justify-center -my-20 -mb-24">
                       <DatabaseWithRestApi 
                         className="scale-90 md:scale-100" 
                         circleText="Hiems" 
