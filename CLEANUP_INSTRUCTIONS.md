@@ -1,13 +1,13 @@
-# 🧹 MANUAL CLEANUP INSTRUCTIONS
+# 🧹 CLEANUP SUMMARY
 
-Total rensning genomförd! Följande steg måste göras manuellt i Supabase Dashboard.
+Edge Functions rensning genomförd! Databastabeller behålls för annan hemsida.
 
 ## ✅ GENOMFÖRT (Automatiskt)
 
 - ✅ Alla 67 Edge Functions raderade
 - ✅ Alla _shared utility files raderade  
 - ✅ `config.toml` uppdaterad (endast project_id)
-- ✅ Database migration skapad (väntar på godkännande)
+- ✅ Databastabeller BEHÅLLNA (används för annan hemsida)
 
 ---
 
@@ -32,24 +32,7 @@ Radera följande secrets (BEHÅLL INTE):
 
 ---
 
-### 2. KÖR DATABASE MIGRATION (5 min)
-
-1. Gå till Lovable chat
-2. När migration-dialogen dyker upp → **Klicka "Approve & Run Migration"**
-3. Vänta på att alla tabeller droppas
-4. Verifiera i Supabase Dashboard → Table Editor att endast dessa tabeller finns kvar:
-   - ✅ `profiles`
-   - ✅ `user_roles`
-   - ✅ `booking_requests` ⭐
-   - ✅ `customer_preferences`
-   - ✅ `customer_preference_audit`
-   - ✅ `data_access_log`
-   - ✅ `default_sidebar_routes`
-   - ✅ `sidebar_permissions`
-
----
-
-### 3. TESTA BOKNINGSFORMULÄR (3 min)
+### 2. TESTA BOKNINGSFORMULÄR (3 min)
 
 1. Öppna webbplatsen: https://hiems.se
 2. Klicka på "Boka ett möte"
@@ -65,7 +48,7 @@ Radera följande secrets (BEHÅLL INTE):
 
 ---
 
-### 4. KOLLA LIGHTHOUSE SCORE (2 min)
+### 3. KOLLA LIGHTHOUSE SCORE (2 min)
 
 1. Öppna webbplatsen i Chrome
 2. Högerklicka → Inspect → Lighthouse
@@ -89,15 +72,10 @@ Radera följande secrets (BEHÅLL INTE):
 - Analytics/Review functions (6)
 - Övriga utility functions (8)
 
-### Database Tables (kommer att droppas vid migration)
-- Payment/Subscription tables
-- AI/OpenRouter tables
-- Telephony tables
-- Webhook/Integration tables
-- Calendar/Booking tables
-- Analytics/Review tables
-- Lead/CRM tables
-- Dashboard/Widget tables
+### Database Tables
+- ✅ BEHÅLLNA (används för annan hemsida)
+- Alla tabeller finns kvar i databasen
+- Inga RLS policies ändrade
 
 ### Secrets (manuell radering)
 - Payment credentials
@@ -115,11 +93,11 @@ Radera följande secrets (BEHÅLL INTE):
 - Aurora Background optimerad
 - Alla visualiseringar behållna
 
-**Backend:** ✅ Minimalt
-- Endast authentication
+**Backend:** ✅ Databas intakt
+- Alla tabeller behållna
 - Booking submissions via RLS
 - Inga edge functions
-- Clean database schema
+- Schema behållet för annan hemsida
 
 **Performance:** ✅ Optimal
 - Lighthouse Score 95+
@@ -144,9 +122,9 @@ Allt kommer tillbaka! 🎉
 ## 📝 NOTES
 
 - Tomma `supabase/functions/` mappar kan finnas kvar (gör inget)
-- RLS policies för `booking_requests` fungerar perfekt
-- Ingen data förlorad (bara struktur borttagen)
+- RLS policies fungerar som tidigare
+- Alla databastabeller behållna för annan hemsida
 - Frontend 100% intakt och optimerad
 
-**Total implementationstid:** ~25 minuter
-**Status:** ✅ FÄRDIG (väntar på migration-godkännande)
+**Total implementationstid:** ~15 minuter
+**Status:** ✅ FÄRDIG
