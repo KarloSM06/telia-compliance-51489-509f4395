@@ -1,4 +1,5 @@
 import { AnimatedSection } from "@/components/shared/AnimatedSection";
+import AnimatedBeamIntegration from "@/components/ui/animated-beam-integration";
 
 const processSteps = [
   {
@@ -71,11 +72,15 @@ export const ProcessGrid = () => {
                 </p>
                 
                 {/* Visual Mockup Area */}
-                <div className="bg-white/40 backdrop-blur-sm border border-gray-200 rounded-xl p-6 h-[280px] flex items-center justify-center">
-                  <span className="text-sm text-gray-400">
-                    [Illustration - {step.title}]
-                  </span>
-                </div>
+                {step.id === 3 ? (
+                  <AnimatedBeamIntegration />
+                ) : (
+                  <div className="bg-white/40 backdrop-blur-sm border border-gray-200 rounded-xl p-6 h-[280px] flex items-center justify-center">
+                    <span className="text-sm text-gray-400">
+                      [Illustration - {step.title}]
+                    </span>
+                  </div>
+                )}
               </div>
             </AnimatedSection>
           ))}
