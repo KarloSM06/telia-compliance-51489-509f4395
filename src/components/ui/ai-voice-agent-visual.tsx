@@ -37,7 +37,23 @@ export const AIVoiceAgentVisual: React.FC<AIVoiceAgentVisualProps> = ({
 
           {/* Conversation Bubbles */}
           <div className="space-y-4">
-            {conversation.map((message, idx) => {})}
+            {conversation.map((message, idx) => (
+              <motion.div
+                key={idx}
+                initial={{ opacity: 0, x: message.type === "user" ? 20 : -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: idx * 0.5 }}
+                className={`flex ${message.type === "user" ? "justify-end" : "justify-start"}`}
+              >
+                <div className={`px-4 py-2 rounded-2xl max-w-[80%] ${
+                  message.type === "user" 
+                    ? "bg-white/80 backdrop-blur-md border border-gray-200 text-gray-900" 
+                    : "bg-gradient-to-r from-indigo-500 via-purple-500 to-purple-600 text-white"
+                }`}>
+                  {message.text}
+                </div>
+              </motion.div>
+            ))}
           </div>
 
           {/* Status Indicator */}

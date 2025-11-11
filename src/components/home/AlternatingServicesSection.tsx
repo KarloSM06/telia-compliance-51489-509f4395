@@ -5,6 +5,7 @@ import { WorkflowChecklistVisual } from "@/components/ui/workflow-checklist-visu
 import { AIVoiceAgentVisual } from "@/components/ui/ai-voice-agent-visual";
 import { EmailBriefingVisual } from "@/components/ui/email-briefing-visual";
 import { ProjectManagementVisual } from "@/components/ui/project-management-visual";
+import { AIVoiceInput } from "@/components/ui/ai-voice-input";
 import { 
   Phone, MessageSquare, Mail, Star
 } from "lucide-react";
@@ -180,8 +181,9 @@ export const AlternatingServicesSection = () => {
                     </div>
                   ) : service.id === 3 ? (
                     // AIVoiceAgentVisual för AI Voice Agents
-                    <div className="w-full flex justify-center">
+                    <div className="w-full flex flex-col items-center justify-center gap-4">
                       <AIVoiceAgentVisual className="scale-90 md:scale-100" />
+                      <AIVoiceInput demoMode={true} className="mt-4" />
                     </div>
                   ) : service.id === 4 ? (
                     // EmailBriefingVisual för Accelerate Sales Growth
