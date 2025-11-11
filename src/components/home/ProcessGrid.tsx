@@ -1,6 +1,5 @@
 import { AnimatedSection } from "@/components/shared/AnimatedSection";
 import AnimatedBeamIntegration from "@/components/ui/animated-beam-integration";
-import { ScanningAnalysisVisual } from "@/components/ui/scanning-analysis-visual";
 
 const processSteps = [
   {
@@ -73,9 +72,7 @@ export const ProcessGrid = () => {
                 </p>
                 
                 {/* Visual Mockup Area */}
-                {step.id === 1 ? (
-                  <ScanningAnalysisVisual />
-                ) : step.id === 3 ? (
+                {step.id === 3 ? (
                   <AnimatedBeamIntegration />
                 ) : (
                   <div className="bg-white/40 backdrop-blur-sm border border-gray-200 rounded-xl p-6 h-[280px] flex items-center justify-center">
