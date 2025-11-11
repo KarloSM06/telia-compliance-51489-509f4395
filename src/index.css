@@ -162,66 +162,22 @@ All colors MUST be HSL.
     @apply border-border;
   }
 
-  /* Native smooth scroll with momentum */
   html {
     scroll-padding-top: 80px;
-    scroll-behavior: smooth;
     overflow-x: clip;
-    overflow-y: auto;
+    /* Lenis handles scroll-behavior via JS */
+  }
+  
+  html.lenis, html.lenis body {
+    height: auto;
   }
 
-  /* Enhanced momentum on desktop */
-  @media (min-width: 768px) {
-    html {
-      scroll-snap-type: y proximity;
-    }
+  .lenis.lenis-smooth {
+    scroll-behavior: auto !important;
   }
 
-  /* Overscroll behavior for iOS-like feel */
-  body {
-    overscroll-behavior-y: contain;
-    -webkit-overflow-scrolling: touch;
-  }
-
-  /* GPU-accelerated scroll containers */
-  .smooth-scroll-container {
-    will-change: scroll-position;
-    transform: translateZ(0);
-    backface-visibility: hidden;
-  }
-
-  /* Visual feedback during scrolling */
-  html.is-scrolling {
-    cursor: grabbing;
-  }
-
-  html.is-scrolling * {
-    pointer-events: none;
-  }
-
-  /* Mobile optimization */
-  @media (max-width: 768px) {
-    html {
-      -webkit-overflow-scrolling: touch;
-      scroll-behavior: smooth;
-    }
-    
-    html.is-scrolling * {
-      pointer-events: auto !important;
-    }
-    
-    * {
-      scroll-behavior: smooth;
-      transition: scroll 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
-    }
-  }
-
-  /* Touch gesture optimization */
-  @media (hover: none) and (pointer: coarse) {
-    body {
-      touch-action: pan-y;
-      overscroll-behavior-y: contain;
-    }
+  .lenis.lenis-smooth [data-lenis-prevent] {
+    overscroll-behavior: contain;
   }
 
   /* Branch section performance optimizations */
@@ -237,6 +193,10 @@ All colors MUST be HSL.
   #branscher img {
     backface-visibility: hidden;
     transform: translateZ(0);
+  }
+
+  .lenis.lenis-stopped {
+    overflow: hidden;
   }
 
   .lenis.lenis-scrolling iframe {

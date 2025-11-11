@@ -5,7 +5,6 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { lazy, Suspense } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useSmoothScroll } from "@/hooks/useSmoothScroll";
 
 // Lazy load routes
 const Index = lazy(() => import("./pages/Index"));
@@ -40,8 +39,6 @@ const queryClient = new QueryClient({
 });
 
 const App = () => {
-  useSmoothScroll(); // Enable enhanced smooth scroll
-  
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
