@@ -76,13 +76,6 @@
   will-change: transform;
 }
 
-/* Remove blur on mobile */
-@media (max-width: 768px) {
-  .siri-orb::before {
-    filter: blur(0px) contrast(var(--contrast-amount)) saturate(1.2);
-  }
-}
-
 .siri-orb::after {
   content: "";
   display: block;

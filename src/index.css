@@ -2,7 +2,28 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here.
+/* Mobile Aurora Optimization */
+@media (max-width: 768px) {
+  .aurora-background::before,
+  .aurora-background::after {
+    filter: blur(2px) !important;
+    opacity: 0.3 !important;
+    animation-duration: 300s !important;
+  }
+  
+  /* Conditional backdrop-blur reduction on mobile */
+  .backdrop-blur-sm {
+    backdrop-filter: blur(4px) !important;
+  }
+  .backdrop-blur-md {
+    backdrop-filter: blur(6px) !important;
+  }
+  .backdrop-blur-xl {
+    backdrop-filter: blur(8px) !important;
+  }
+}
+
+/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
 All colors MUST be HSL.
 */
 

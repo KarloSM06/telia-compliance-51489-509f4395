@@ -1,5 +1,6 @@
 import { LazySpline } from './spline-lazy';
 import { useState } from "react";
+import { useIsMobile } from "@/hooks/use-mobile";
 interface AnimatedHeroProps {
   onBookDemo?: () => void;
   onViewPackages?: () => void;
@@ -7,42 +8,47 @@ interface AnimatedHeroProps {
 function AnimatedHero({
   onBookDemo
 }: AnimatedHeroProps) {
+  const isMobile = useIsMobile();
   const [isSplineLoading, setIsSplineLoading] = useState(true);
   const [splineError, setSplineError] = useState<string | null>(null);
   return <div className="relative w-full min-h-[85vh] md:min-h-screen lg:min-h-[140vh] overflow-hidden pb-24 md:pb-40">
-      {/* Spline 3D Animation - Edge-to-edge på mobil, mindre storlek */}
-      <div className="absolute inset-0 md:inset-0 z-5 animate-subtle-float scale-75 md:scale-100 origin-center">
-        {isSplineLoading && <div className="absolute inset-0 flex items-center justify-center">
-            <p className="text-muted-foreground">Laddar 3D-animation...</p>
-          </div>}
-        {splineError && <div className="absolute inset-0 flex items-center justify-center">
-            <p className="text-destructive">Kunde inte ladda 3D-animation: {splineError}</p>
-          </div>}
-        <LazySpline 
-          scene="https://prod.spline.design/dtyy9Rk8l8FAgcgA/scene.splinecode" 
-          onLoad={() => {
-            console.log('✅ Spline loaded successfully');
-            setIsSplineLoading(false);
-          }} 
-          onError={error => {
-            console.error('❌ Spline error:', error);
-            setSplineError('Kunde inte ladda 3D-scenen');
-            setIsSplineLoading(false);
-          }} 
-          style={{
-            width: '100%',
-            height: '100%',
-            pointerEvents: 'none',
-            opacity: 1.0,
-            willChange: 'opacity, transform',
-            transform: 'translateZ(0)',
-            backfaceVisibility: 'hidden'
-          }}
-          fallback={
-            <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/10 via-purple-500/10 to-violet-600/10 animate-pulse" />
-          }
-        />
-      </div>
+      {/* Spline 3D Animation - Only on desktop */}
+      {!isMobile && (
+        <div className="absolute inset-0 z-5 animate-subtle-float">
+          {isSplineLoading && <div className="absolute inset-0 flex items-center justify-center">
+              <p className="text-muted-foreground">Laddar 3D-animation...</p>
+            </div>}
+          {splineError && <div className="absolute inset-0 flex items-center justify-center">
+              <p className="text-destructive">Kunde inte ladda 3D-animation: {splineError}</p>
+            </div>}
+          <LazySpline 
+            scene="https://prod.spline.design/dtyy9Rk8l8FAgcgA/scene.splinecode" 
+            onLoad={() => {
+              console.log('✅ Spline loaded successfully');
+              setIsSplineLoading(false);
+            }} 
+            onError={error => {
+              console.error('❌ Spline error:', error);
+              setSplineError('Kunde inte ladda 3D-scenen');
+              setIsSplineLoading(false);
+            }} 
+            style={{
+              width: '100%',
+              height: '100%',
+              pointerEvents: 'none',
+              opacity: 1.0
+            }}
+            fallback={
+              <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/10 via-purple-500/10 to-violet-600/10 animate-pulse" />
+            }
+          />
+        </div>
+      )}
+
+      {/* Fallback gradient för mobil */}
+      {isMobile && (
+        <div className="absolute inset-0 z-5 bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 opacity-60" />
+      )}
 
       {/* Hero Content - On top of everything */}
       <div className="relative z-20 container mx-auto max-w-4xl px-6 py-32 lg:py-48">
