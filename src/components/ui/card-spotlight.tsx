@@ -1,31 +1,23 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { LiquidGlass } from "./liquid-glass";
 
 export const CardSpotlight = ({
   children,
   className,
-  onClick,
   ...props
 }: {
   children: React.ReactNode;
 } & React.HTMLAttributes<HTMLDivElement>) => {
   return (
-    <LiquidGlass
-      variant="card"
-      intensity="strong"
-      rippleEffect={true}
-      flowOnHover={true}
-      onClick={onClick}
+    <div
       className={cn(
-        "group/spotlight p-10 text-primary shadow-elegant relative",
+        "group/spotlight p-10 rounded-2xl border-2 border-white/10 bg-white/5 backdrop-blur-md text-primary shadow-elegant transition-all duration-300 hover:border-white/20 hover:bg-white/10 relative",
         className
       )}
+      {...props}
     >
-      <div {...props}>
-        {children}
-      </div>
-    </LiquidGlass>
+      {children}
+    </div>
   );
 };

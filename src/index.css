@@ -533,21 +533,3 @@ All colors MUST be HSL.
   }
 }
 
-@layer utilities {
-  /* Liquid Glass specific animations */
-  .liquid-wobble-active {
-    animation: liquid-wobble 1.8s cubic-bezier(0.36, 0.07, 0.19, 0.97);
-  }
-  
-  .liquid-pressed {
-    transform: scale(0.95);
-    transition: transform 0.1s ease-out;
-  }
-  
-  /* Smooth transitions for liquid glass */
-  .liquid-glass {
-    transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
-  }
-}
-
-
