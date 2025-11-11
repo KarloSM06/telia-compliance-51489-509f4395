@@ -1,7 +1,6 @@
 import { motion, useReducedMotion } from "framer-motion";
 import { Card } from "@/components/ui/card";
 import DatabaseWithRestApi from "@/components/ui/database-with-rest-api";
-import { ServiceDataFlow } from "./ServiceDataFlow";
 import { BarChart3, MessageSquare, Users, TrendingUp, Phone, Mail, Calendar, DollarSign, Activity, Database, Star } from "lucide-react";
 const AnimatedContainer = ({
   className,
@@ -140,9 +139,6 @@ export const UnifiedDashboard = () => {
             />
           </AnimatedContainer>
         </AnimatedContainer>
-
-        {/* Service Data Flows */}
-        <ServiceDataFlow />
       </div>
     </section>;
 };
