@@ -160,7 +160,7 @@ export const WorkflowTimeline = () => {
           </CardContent>
         </Card>
   }];
-  return;
+  return <SimpleTimeline data={data} />;
 };
 const CardDecorator = ({
   children

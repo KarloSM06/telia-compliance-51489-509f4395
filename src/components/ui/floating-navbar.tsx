@@ -88,7 +88,7 @@ export function FloatingNavbar() {
                 Tjänster
               </button>
               <button
-                onClick={() => scrollToSection("paket")}
+                onClick={() => navigateToPage("/paket")}
                 className="text-sm font-medium text-primary/80 transition-colors hover:text-primary"
               >
                 Paket
@@ -155,7 +155,7 @@ export function FloatingNavbar() {
               <button
                 onClick={() => {
                   setIsMobileMenuOpen(false);
-                  scrollToSection("paket");
+                  navigateToPage("/paket");
                 }}
                 className="text-left px-4 py-3 text-lg font-medium text-primary hover:text-primary/80 transition-colors rounded-lg hover:bg-white/10"
               >

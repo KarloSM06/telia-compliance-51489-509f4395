@@ -7,7 +7,6 @@ import { useState } from "react";
 import { ConsultationModal } from "@/components/ConsultationModal";
 import { AnimatedSection } from "@/components/AnimatedSection";
 import { ConsultationCTA } from "@/components/ConsultationCTA";
-import { StickyPackageCards } from "@/components/home/StickyPackageCards";
 import { WorkflowTimeline } from "@/components/home/WorkflowTimeline";
 import { AlternatingServicesSection } from "@/components/home/AlternatingServicesSection";
 import { ProcessGrid } from "@/components/home/ProcessGrid";
@@ -16,7 +15,6 @@ import { BenefitsGrid } from "@/components/home/BenefitsGrid";
 import { PricingCards } from "@/components/home/PricingCards";
 import { TestimonialsGrid } from "@/components/home/TestimonialsGrid";
 import { FAQAccordion } from "@/components/home/FAQAccordion";
-import { aiPackages } from "@/data/packages";
 import { industries } from "@/data/industries";
 import { caseStudies } from "@/data/caseStudies";
 import heroBackground from "@/assets/hero-background.jpg";
@@ -71,31 +69,22 @@ export const ProductSelection = () => {
         {/* 5. Benefits Grid */}
         <BenefitsGrid />
 
-        {/* 6. Pricing Cards */}
+        {/* 6. Case Study Showcase */}
+        <CaseStudyShowcase />
+
+        {/* 7. Pricing Cards */}
         <PricingCards />
 
-        {/* 7. Services Grid */}
+        {/* 8. Services Grid */}
         <ServicesGrid />
 
         {/* 9. Unified Dashboard */}
         <UnifiedDashboard />
 
-        {/* 10. AI Capabilities Accordion */}
-        
-
-        {/* 11. Unified Ecosystem */}
-        
-
-        {/* 12. Workflow Timeline */}
+        {/* 10. Workflow Timeline */}
         <WorkflowTimeline />
 
-        {/* 13. Sticky Package Cards */}
-        <StickyPackageCards packages={aiPackages} onBookDemo={() => setIsConsultationModalOpen(true)} onViewDetails={() => scrollToSection('kontakt')} />
-
-        {/* 14. Case Study Showcase */}
-        <CaseStudyShowcase />
-
-        {/* 15. Testimonials Grid */}
+        {/* 11. Testimonials Grid */}
         <TestimonialsGrid />
 
         {/* 16. FAQ Accordion */}
