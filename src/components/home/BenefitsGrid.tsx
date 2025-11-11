@@ -35,8 +35,8 @@ const benefits = [
 
 export const BenefitsGrid = () => {
   return (
-    <section className="relative py-24 md:py-40 bg-white">
-      <div className="mx-auto w-full max-w-7xl space-y-8 px-4 md:px-8 py-12 md:py-16 border border-gray-100 bg-white/80 backdrop-blur-xl rounded-3xl shadow-lg transition-all duration-300 hover:shadow-xl">
+    <section className="py-16 md:py-24 bg-white">
+      <div className="max-w-7xl mx-auto px-6">
         <AnimatedSection>
           <div className="text-center mb-16">
             <div className="mb-4">
@@ -56,7 +56,7 @@ export const BenefitsGrid = () => {
         <div className="grid md:grid-cols-3 gap-6">
           {benefits.map((benefit, index) => (
             <AnimatedSection key={benefit.id} delay={index * 100}>
-              <div className="border border-gray-100 bg-white/80 backdrop-blur-xl rounded-3xl p-8 shadow-lg hover:shadow-xl transition-all duration-300">
+              <div className="border-2 border-white/10 bg-white/5 backdrop-blur-sm rounded-3xl p-8 shadow-lg hover:shadow-xl transition-all">
                 <h3 className="text-xl font-display font-normal text-gray-900 mb-3">
                   {benefit.title}
                 </h3>
