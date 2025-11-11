@@ -86,6 +86,9 @@ function Header1() {
     title: "Företag",
     description: "Mer om Hiems och vårt arbete",
     items: [{
+      title: "Om oss",
+      href: "/about"
+    }, {
       title: "Kontakt",
       action: () => scrollToSection('kontakt')
     }]

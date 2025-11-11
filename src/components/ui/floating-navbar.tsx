@@ -103,6 +103,12 @@ export function FloatingNavbar() {
                 Branscher
               </button>
               <button
+                onClick={() => navigateToPage("/about")}
+                className="text-sm font-medium text-primary/80 transition-colors hover:text-primary"
+              >
+                Om oss
+              </button>
+              <button
                 onClick={() => scrollToSection("kontakt")}
                 className="text-sm font-medium text-primary/80 transition-colors hover:text-primary"
               >
@@ -166,6 +172,15 @@ export function FloatingNavbar() {
                 className="text-left px-4 py-3 text-lg font-medium text-primary hover:text-primary/80 transition-colors rounded-lg hover:bg-white/10"
               >
                 Branscher
+              </button>
+              <button
+                onClick={() => {
+                  setIsMobileMenuOpen(false);
+                  navigateToPage("/about");
+                }}
+                className="text-left px-4 py-3 text-lg font-medium text-primary hover:text-primary/80 transition-colors rounded-lg hover:bg-white/10"
+              >
+                Om oss
               </button>
               <button
                 onClick={() => {
