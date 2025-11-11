@@ -81,6 +81,9 @@ function AnimatedHero({
             <button onClick={onBookDemo} className="px-10 py-4 bg-gray-900 hover:bg-gray-800 text-white rounded-full text-base font-medium transition-all duration-300 hover:scale-105">
               Boka ett möte
             </button>
+            <button onClick={onBookDemo} className="px-8 py-4 border border-gray-300 text-gray-900 rounded-full text-base font-medium transition-all duration-300 hover:bg-gray-50">
+              Kontakta oss
+            </button>
           </motion.div>
 
           {/* Social Proof */}

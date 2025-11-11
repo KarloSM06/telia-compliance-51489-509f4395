@@ -1,6 +1,4 @@
-import { useState } from "react";
 import { AnimatedSection } from "@/components/shared/AnimatedSection";
-import { ConsultationModal } from "@/components/ConsultationModal";
 
 const pricingPlans = [
   {
@@ -53,8 +51,6 @@ const pricingPlans = [
 ];
 
 export const PricingCards = () => {
-  const [isConsultationModalOpen, setIsConsultationModalOpen] = useState(false);
-
   return (
     <section className="py-16 md:py-24 bg-white">
       <div className="max-w-7xl mx-auto px-6">
@@ -105,13 +101,10 @@ export const PricingCards = () => {
                   ))}
                 </ul>
                 
-                <button 
-                  onClick={() => setIsConsultationModalOpen(true)}
-                  className={plan.popular 
-                    ? "w-full bg-gray-900 hover:bg-gray-800 text-white py-3 rounded-full transition-colors"
-                    : "w-full border border-gray-300 text-gray-900 py-3 rounded-full hover:bg-gray-50 transition-colors"
-                  }
-                >
+                <button className={plan.popular 
+                  ? "w-full bg-gray-900 hover:bg-gray-800 text-white py-3 rounded-full transition-colors"
+                  : "w-full border border-gray-300 text-gray-900 py-3 rounded-full hover:bg-gray-50 transition-colors"
+                }>
                   {plan.cta}
                 </button>
               </div>
@@ -119,11 +112,6 @@ export const PricingCards = () => {
           ))}
         </div>
       </div>
-
-      <ConsultationModal
-        open={isConsultationModalOpen}
-        onOpenChange={setIsConsultationModalOpen}
-      />
     </section>
   );
 };

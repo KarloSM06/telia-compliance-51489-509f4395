@@ -12,17 +12,23 @@ export const ConsultationCTA = () => {
       <div className="mx-auto max-w-4xl px-6 text-center relative z-10">
         <AnimatedSection>
           <h2 className="text-5xl md:text-6xl font-display font-normal text-gray-900 mb-6">
-            Låt AI göra jobbet så du kan skala snabbare
+            Let AI do the Work so you can Scale Faster
           </h2>
           <p className="text-xl text-gray-600 mb-8">
-            Boka ett 20-minuters samtal idag och se hur snabbt AI kan transformera din verksamhet
+            Book a 20-minute call today and see how fast AI can transform your business
           </p>
           <div className="flex gap-4 justify-center">
             <button
               onClick={() => setIsConsultationModalOpen(true)}
               className="bg-gray-900 hover:bg-gray-800 text-white px-10 py-4 rounded-full text-lg transition-colors"
             >
-              Boka ett möte
+              Book a call
+            </button>
+            <button
+              onClick={() => setIsConsultationModalOpen(true)}
+              className="border border-gray-300 text-gray-900 px-8 py-4 rounded-full text-lg hover:bg-gray-50 transition-colors"
+            >
+              Contact us
             </button>
           </div>
         </AnimatedSection>

@@ -128,19 +128,10 @@ export const AlternatingServicesSection = () => {
                   
                   <div className="flex gap-4">
                     <button className="border border-gray-300 text-gray-900 px-6 py-3 rounded-full hover:bg-gray-50 transition-colors">
-                      Läs mer
+                      Learn More
                     </button>
-                    <button 
-                      onClick={() => {
-                        const modal = document.querySelector('[role="dialog"]');
-                        if (!modal) {
-                          const bookButton = document.querySelector('button[class*="bg-gray-900"]') as HTMLButtonElement;
-                          bookButton?.click();
-                        }
-                      }}
-                      className="bg-gray-900 hover:bg-gray-800 text-white px-6 py-3 rounded-full transition-colors"
-                    >
-                      Boka ett möte
+                    <button className="bg-gray-900 hover:bg-gray-800 text-white px-6 py-3 rounded-full transition-colors">
+                      Request a demo
                     </button>
                   </div>
                 </div>
