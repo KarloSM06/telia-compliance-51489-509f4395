@@ -26,26 +26,22 @@ export const CaseStudyShowcase = () => {
             {/* Client Logos Grid */}
             <div className="grid grid-cols-2 gap-8 max-w-2xl mx-auto mb-16">
               <div className="group relative animate-fade-in-up">
-                <div className="border border-gray-100 bg-white/80 backdrop-blur-xl rounded-3xl p-8 shadow-lg hover:shadow-xl transition-all duration-300">
-                  <img 
-                    src={stockholmAC} 
-                    alt="Stockholm AC" 
-                    className="w-full h-40 object-cover filter grayscale hover:grayscale-0 transition-all duration-300 scale-125"
-                    loading="lazy"
-                    decoding="async"
-                  />
-                </div>
+                <img 
+                  src={stockholmAC} 
+                  alt="Stockholm AC" 
+                  className="w-full h-40 object-cover filter grayscale hover:grayscale-0 transition-all duration-300 scale-125"
+                  loading="lazy"
+                  decoding="async"
+                />
               </div>
               <div className="group relative animate-fade-in-up" style={{ animationDelay: '150ms' }}>
-                <div className="border border-gray-100 bg-white/80 backdrop-blur-xl rounded-3xl p-8 shadow-lg hover:shadow-xl transition-all duration-300">
-                  <img 
-                    src={bremilersVVS} 
-                    alt="Bremilers VVS" 
-                    className="w-full h-24 object-contain filter grayscale hover:grayscale-0 transition-all duration-300"
-                    loading="lazy"
-                    decoding="async"
-                  />
-                </div>
+                <img 
+                  src={bremilersVVS} 
+                  alt="Bremilers VVS" 
+                  className="w-full h-24 object-contain filter grayscale hover:grayscale-0 transition-all duration-300"
+                  loading="lazy"
+                  decoding="async"
+                />
               </div>
             </div>
           </div>

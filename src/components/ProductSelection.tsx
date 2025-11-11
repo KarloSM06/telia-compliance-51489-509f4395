@@ -87,9 +87,7 @@ export const ProductSelection = () => {
         
 
         {/* 12. Workflow Timeline */}
-        <AnimatedSection>
-          
-        </AnimatedSection>
+        <WorkflowTimeline />
 
         {/* 13. Sticky Package Cards */}
         <StickyPackageCards packages={aiPackages} onBookDemo={() => setIsConsultationModalOpen(true)} onViewDetails={() => scrollToSection('kontakt')} />
