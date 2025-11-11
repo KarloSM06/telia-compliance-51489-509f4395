@@ -19,22 +19,22 @@ export interface CaseStudy {
 
 export const caseStudies: CaseStudy[] = [
   {
-    id: 'vvs-foretag',
-    company: 'Nordisk VVS AB',
-    industry: 'Service & Hantverk',
+    id: 'stockholm-ac-bremilers',
+    company: 'Stockholm AC & Bremilers VVS',
+    industry: 'VVS & Luftbehandling',
     packageUsed: 'Service & Operations Optimizer',
-    problem: 'Missade 30% av inkommande samtal och tappade värdefulla leads. Mycket tid gick åt till att ringa upp kunder och boka tider manuellt.',
-    solution: 'Vi implementerade Krono AI-receptionist som tar emot alla samtal 24/7, bokar tider automatiskt och skickar bekräftelser via SMS.',
+    problem: 'Missade 30% av inkommande samtal och tappade värdefulla uppdrag. Mycket tid gick åt till att manuellt ringa upp kunder och boka tider.',
+    solution: 'Vi installerade en AI-receptionist som tar emot alla samtal 24/7, bokar tider automatiskt och skickar bekräftelser via SMS.',
     results: [
       { metric: 'Missade samtal', value: '0%' },
       { metric: 'Fler bokade jobb', value: '+45%' },
-      { metric: 'Tid sparad per vecka', value: '12 timmar' },
+      { metric: 'Tid sparad per vecka', value: '15 timmar' },
       { metric: 'ROI efter', value: '2 månader' }
     ],
     testimonial: {
-      text: 'Hiems AI-lösning har transformerat vår verksamhet. Vi missar inga jobb längre och har mer tid för det vi är bra på - VVS-arbete.',
-      author: 'Anders Svensson',
-      role: 'VD, Nordisk VVS AB'
+      text: 'AI-lösningen från Hiems har revolutionerat vår kundkontakt. Vi missar inga samtal längre och kan fokusera på det vi är bäst på.',
+      author: 'Anton Sällnäs',
+      role: 'VD, Stockholm AC & Bremilers VVS'
     }
   },
   {

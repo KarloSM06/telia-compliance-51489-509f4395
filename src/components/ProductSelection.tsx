@@ -27,7 +27,6 @@ import { Sparkles, Zap, Target, CheckCircle, Award, Users, Wrench, ArrowRight } 
 import { AuroraBackground } from "@/components/ui/aurora-background";
 import { AnimatedHero } from "@/components/ui/animated-hero";
 import IntegrationHero from "@/components/ui/integration-hero";
-import { ClientLogoCloud } from "@/components/ClientLogoCloud";
 import { ServicesGrid } from "@/components/home/ServicesGrid";
 import { UnifiedDashboard } from "@/components/home/UnifiedDashboard";
 import { LandingAccordionItem } from "@/components/home/LandingAccordionItem";
@@ -75,10 +74,7 @@ export const ProductSelection = () => {
         {/* 6. Pricing Cards */}
         <PricingCards />
 
-        {/* 7. Client Logos */}
-        <ClientLogoCloud />
-
-        {/* 8. Services Grid */}
+        {/* 7. Services Grid */}
         <ServicesGrid />
 
         {/* 9. Unified Dashboard */}
