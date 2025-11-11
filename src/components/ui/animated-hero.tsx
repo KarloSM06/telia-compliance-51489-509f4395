@@ -10,8 +10,8 @@ function AnimatedHero({
   const [isSplineLoading, setIsSplineLoading] = useState(true);
   const [splineError, setSplineError] = useState<string | null>(null);
   return <div className="relative w-full min-h-[85vh] md:min-h-screen lg:min-h-[140vh] overflow-hidden pb-24 md:pb-40">
-      {/* Spline 3D Animation - Nu även på mobil */}
-      <div className="absolute inset-0 z-5 animate-subtle-float">
+      {/* Spline 3D Animation - Edge-to-edge på mobil, mindre storlek */}
+      <div className="absolute inset-0 md:inset-0 z-5 animate-subtle-float scale-75 md:scale-100 origin-center">
         {isSplineLoading && <div className="absolute inset-0 flex items-center justify-center">
             <p className="text-muted-foreground">Laddar 3D-animation...</p>
           </div>}
