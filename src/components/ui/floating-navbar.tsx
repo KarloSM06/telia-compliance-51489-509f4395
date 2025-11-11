@@ -128,13 +128,13 @@ export function FloatingNavbar() {
             {/* Mobile Menu Toggle */}
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="md:hidden flex items-center justify-center w-10 h-10 rounded-full bg-white/5 border border-white/10 transition-colors hover:bg-white/10"
+              className="md:hidden flex items-center justify-center w-12 h-12 rounded-full bg-white/5 border border-white/10 transition-colors hover:bg-white/10"
               aria-label="Toggle menu"
             >
               <div className="flex flex-col items-center justify-center w-5 h-5 space-y-1">
-                <span className={`block w-4 h-0.5 bg-primary transition-all duration-300 ${isMobileMenuOpen ? "rotate-45 translate-y-1.5" : ""}`}></span>
-                <span className={`block w-4 h-0.5 bg-primary transition-all duration-300 ${isMobileMenuOpen ? "opacity-0" : ""}`}></span>
-                <span className={`block w-4 h-0.5 bg-primary transition-all duration-300 ${isMobileMenuOpen ? "-rotate-45 -translate-y-1.5" : ""}`}></span>
+                <span className={`block w-5 h-0.5 bg-primary transition-all duration-300 ${isMobileMenuOpen ? "rotate-45 translate-y-1.5" : ""}`}></span>
+                <span className={`block w-5 h-0.5 bg-primary transition-all duration-300 ${isMobileMenuOpen ? "opacity-0" : ""}`}></span>
+                <span className={`block w-5 h-0.5 bg-primary transition-all duration-300 ${isMobileMenuOpen ? "-rotate-45 -translate-y-1.5" : ""}`}></span>
               </div>
             </button>
           </div>

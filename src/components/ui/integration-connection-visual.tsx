@@ -18,10 +18,10 @@ export const IntegrationConnectionVisual = () => {
     return () => clearInterval(interval);
   }, []);
   const currentProgram = ALL_PROGRAMS[currentIndex];
-  return <div className="relative h-[280px] w-full flex items-center justify-center gap-16 px-8 bg-white/60 backdrop-blur-md border border-gray-300 rounded-xl shadow-lg">
+  return <div className="relative h-auto min-h-[200px] md:h-[280px] w-full flex items-center justify-center gap-8 md:gap-16 px-4 md:px-8 bg-white/60 backdrop-blur-md border border-gray-300 rounded-xl shadow-lg">
       {/* Left: Animated Orb - "Our Solution" */}
       <div className="flex flex-col items-center gap-3">
-        <div className="relative w-[80px] h-[80px]">
+        <div className="relative w-[60px] h-[60px] md:w-[80px] md:h-[80px]">
           {/* Outer expanding rings */}
           <motion.div className="absolute inset-0 rounded-full border-2 border-indigo-400" animate={{
           scale: [1, 1.5, 2],
@@ -141,7 +141,7 @@ export const IntegrationConnectionVisual = () => {
 
       {/* Right: Rotating Integration Logos */}
       <div className="flex flex-col items-center gap-3">
-        <div className="relative w-[80px] h-[80px]">
+        <div className="relative w-[60px] h-[60px] md:w-[80px] md:h-[80px]">
           <AnimatePresence mode="wait">
             <motion.div key={currentIndex} initial={{
             opacity: 0,

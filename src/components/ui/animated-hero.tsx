@@ -12,7 +12,7 @@ function AnimatedHero({
   const isMobile = useIsMobile();
   const [isSplineLoading, setIsSplineLoading] = useState(true);
   const [splineError, setSplineError] = useState<string | null>(null);
-  return <div className="relative w-full min-h-screen md:min-h-[140vh] overflow-hidden pb-24 md:pb-40">
+  return <div className="relative w-full min-h-[85vh] md:min-h-screen lg:min-h-[140vh] overflow-hidden pb-24 md:pb-40">
       {/* Spline 3D Animation - Only on desktop */}
       {!isMobile && (
         <div className="absolute inset-0 z-5 animate-subtle-float">
@@ -56,7 +56,7 @@ function AnimatedHero({
         }} transition={{
           duration: 0.8,
           ease: "easeOut"
-        }} className="text-5xl md:text-6xl lg:text-7xl font-display font-normal leading-[1.1] tracking-tighter text-gray-900">
+        }} className="text-5xl md:text-6xl lg:text-7xl font-display font-normal leading-tight md:leading-[1.1] tracking-tighter text-gray-900">
             Vi bygger intelligenta system som gör jobbet åt dig
           </motion.h1>
 

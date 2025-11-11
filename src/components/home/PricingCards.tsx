@@ -79,7 +79,7 @@ export const PricingCards = () => {
             <div 
               key={plan.id}
               className={`animate-[fadeInUp_0.6s_ease-out] border-2 backdrop-blur-sm rounded-3xl p-6 md:p-8 shadow-lg hover:shadow-xl transition-all ${
-                plan.popular ? 'border-gray-900 bg-white/10 md:scale-105' : 'border-white/10 bg-white/5'
+                plan.popular ? 'border-gray-900 bg-white/10 lg:scale-105' : 'border-white/10 bg-white/5'
               }`}
               style={{ animationDelay: `${index * 100}ms` }}
             >

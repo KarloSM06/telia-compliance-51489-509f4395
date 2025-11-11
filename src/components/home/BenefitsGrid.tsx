@@ -1,4 +1,3 @@
-import { AnimatedSection } from "@/components/shared/AnimatedSection";
 import { TrendingUp, Heart, Clock, DollarSign, BarChart3, Rocket } from "lucide-react";
 
 const benefits = [
@@ -44,7 +43,7 @@ export const BenefitsGrid = () => {
   return (
     <section className="py-12 md:py-16 lg:py-24 bg-white">
       <div className="max-w-7xl mx-auto px-4 md:px-6">
-        <AnimatedSection>
+        <div className="animate-[fadeIn_0.6s_ease-out]">
           <div className="text-center mb-12 md:mb-16">
             <div className="mb-4">
               <span className="text-xs uppercase tracking-wider text-gray-900 bg-white/60 backdrop-blur-sm border border-gray-200 px-4 py-2 rounded-full">
@@ -58,7 +57,7 @@ export const BenefitsGrid = () => {
               Vi hjälper er att utnyttja det för att röra sig snabbare, tänka smartare och skala bortom gränser
             </p>
           </div>
-        </AnimatedSection>
+        </div>
         
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
           {benefits.map((benefit, index) => {

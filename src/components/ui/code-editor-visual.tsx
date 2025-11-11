@@ -68,7 +68,7 @@ export const CodeEditorVisual = () => {
   };
 
   return (
-    <div className="relative h-[280px] w-full flex bg-white/60 backdrop-blur-md border border-gray-300 rounded-xl overflow-hidden shadow-lg">
+    <div className="relative h-auto min-h-[200px] md:h-[280px] w-full flex bg-white/60 backdrop-blur-md border border-gray-300 rounded-xl overflow-hidden shadow-lg">
       {/* Sidebar */}
       <div className="w-12 bg-white/20 border-r border-gray-200 flex flex-col items-center gap-4 py-4">
         <motion.div whileHover={{ scale: 1.1 }} className="cursor-pointer">

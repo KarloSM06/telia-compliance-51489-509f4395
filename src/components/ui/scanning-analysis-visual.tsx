@@ -17,9 +17,9 @@ export const ScanningAnalysisVisual = () => {
     label: "Repetitive task",
     status: "error"
   }];
-  return <div className="relative h-[280px] w-full flex items-center justify-between gap-8 px-10 bg-white/60 backdrop-blur-md border border-gray-300 rounded-xl shadow-lg">
+  return <div className="relative h-auto min-h-[200px] md:h-[280px] w-full flex items-center justify-between gap-4 md:gap-8 px-4 md:px-10 bg-white/60 backdrop-blur-md border border-gray-300 rounded-xl shadow-lg">
       {/* Left side: Circular radar scanner - LARGER */}
-      <div className="relative w-[180px] h-[180px] flex-shrink-0">
+      <div className="relative w-[120px] h-[120px] md:w-[180px] md:h-[180px] flex-shrink-0">
         {/* Concentric circles - 4 rings with thicker strokes */}
         <svg className="w-full h-full absolute inset-0">
           <circle cx="90" cy="90" r="85" fill="none" stroke="currentColor" strokeWidth="2" className="text-indigo-200/40" />
@@ -55,7 +55,7 @@ export const ScanningAnalysisVisual = () => {
       </div>
 
       {/* Right side: Workflow checklist - IMPROVED SPACING */}
-      <div className="flex-1 space-y-4">
+      <div className="flex-1 space-y-2 md:space-y-4">
         {checklist.map((item, index) => <motion.div key={item.label} className="flex items-center gap-4 transition-transform duration-200 hover:scale-105" initial={{
         opacity: 0,
         x: 20

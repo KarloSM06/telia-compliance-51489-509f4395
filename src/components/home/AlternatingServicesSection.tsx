@@ -1,14 +1,15 @@
-import { AnimatedSection } from "@/components/shared/AnimatedSection";
-import dashboardScreenshot from "@/assets/dashboard-screenshot.png";
-import DatabaseWithRestApi from "@/components/ui/database-with-rest-api";
-import { WorkflowChecklistVisual } from "@/components/ui/workflow-checklist-visual";
-import { AIVoiceAgentVisual } from "@/components/ui/ai-voice-agent-visual";
-import { EmailBriefingVisual } from "@/components/ui/email-briefing-visual";
-import { ProjectManagementVisual } from "@/components/ui/project-management-visual";
-import { AIVoiceInput } from "@/components/ui/ai-voice-input";
+import { Suspense, lazy } from "react";
 import { 
   Phone, MessageSquare, Mail, Star
 } from "lucide-react";
+
+// Lazy load visualizations för bättre performance
+const DatabaseWithRestApi = lazy(() => import("@/components/ui/database-with-rest-api"));
+const WorkflowChecklistVisual = lazy(() => import("@/components/ui/workflow-checklist-visual").then(m => ({ default: m.WorkflowChecklistVisual })));
+const AIVoiceAgentVisual = lazy(() => import("@/components/ui/ai-voice-agent-visual").then(m => ({ default: m.AIVoiceAgentVisual })));
+const EmailBriefingVisual = lazy(() => import("@/components/ui/email-briefing-visual").then(m => ({ default: m.EmailBriefingVisual })));
+const ProjectManagementVisual = lazy(() => import("@/components/ui/project-management-visual").then(m => ({ default: m.ProjectManagementVisual })));
+const AIVoiceInput = lazy(() => import("@/components/ui/ai-voice-input").then(m => ({ default: m.AIVoiceInput })));
 
 const servicesData = [
   {
@@ -22,7 +23,6 @@ const servicesData = [
       "Automatiserad rapportering",
       "Anpassade dataintegrationer"
     ],
-    mockup: dashboardScreenshot,
     isReversed: false
   },
   {
@@ -36,7 +36,6 @@ const servicesData = [
       "Kalenderhantering",
       "Dokumentbearbetning"
     ],
-    mockup: dashboardScreenshot,
     isReversed: true
   },
   {
@@ -50,7 +49,6 @@ const servicesData = [
       "Samtalsutskrift & analys",
       "Flerspråksstöd"
     ],
-    mockup: dashboardScreenshot,
     isReversed: false
   },
   {
@@ -64,7 +62,6 @@ const servicesData = [
       "Försäljningsprognos",
       "Pipeline-analys"
     ],
-    mockup: dashboardScreenshot,
     isReversed: true
   },
   {
@@ -78,7 +75,6 @@ const servicesData = [
       "Arbetsflödesoptimering",
       "Systemskalbarhet"
     ],
-    mockup: dashboardScreenshot,
     isReversed: false
   }
 ];
@@ -89,7 +85,7 @@ export const AlternatingServicesSection = () => {
       <div className="max-w-7xl mx-auto px-4 md:px-6">
         {/* Section Header */}
         <div className="text-center mb-12 md:mb-16">
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-display font-normal text-gray-900 mb-6">
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-display font-normal leading-tight text-gray-900 mb-6">
             AI-Lösningar som Levererar
           </h2>
           <p className="text-base md:text-lg text-gray-600 max-w-3xl mx-auto">
@@ -114,7 +110,7 @@ export const AlternatingServicesSection = () => {
                     </span>
                   </div>
                   
-                  <h2 className="text-2xl md:text-3xl lg:text-4xl font-display font-normal text-gray-900 mb-4">
+                  <h2 className="text-2xl md:text-3xl lg:text-4xl font-display font-normal leading-tight text-gray-900 mb-4">
                     {service.title}
                   </h2>
                   <p className="text-base md:text-lg text-gray-600 mb-6">
@@ -153,60 +149,64 @@ export const AlternatingServicesSection = () => {
                 <div className={service.isReversed ? 'lg:col-start-1' : ''}>
                   {service.id === 1 ? (
                     // DatabaseWithRestApi figur för Dashboards & Decision Intelligence
-                    <div className="w-full flex justify-center">
-                      <DatabaseWithRestApi 
-                        className="scale-90 md:scale-100" 
-                        circleText="Hiems" 
-                        title="" 
-                        badgeTexts={{
-                          first: "Samtal",
-                          second: "SMS",
-                          third: "Mail",
-                          fourth: "Reviews"
-                        }} 
-                        badgeIcons={{
-                          first: Phone,
-                          second: MessageSquare,
-                          third: Mail,
-                          fourth: Star
-                        }}
-                        buttonTexts={{
-                          first: "Hiems",
-                          second: "Dashboard"
-                        }} 
-                        lightColor="hsl(var(--primary))" 
-                      />
-                    </div>
+                    <Suspense fallback={<div className="h-[300px] md:h-[500px] bg-white/60 rounded-2xl animate-pulse" />}>
+                      <div className="w-full flex justify-center">
+                        <DatabaseWithRestApi 
+                          className="scale-90 md:scale-100" 
+                          circleText="Hiems" 
+                          title="" 
+                          badgeTexts={{
+                            first: "Samtal",
+                            second: "SMS",
+                            third: "Mail",
+                            fourth: "Reviews"
+                          }} 
+                          badgeIcons={{
+                            first: Phone,
+                            second: MessageSquare,
+                            third: Mail,
+                            fourth: Star
+                          }}
+                          buttonTexts={{
+                            first: "Hiems",
+                            second: "Dashboard"
+                          }} 
+                          lightColor="hsl(var(--primary))" 
+                        />
+                      </div>
+                    </Suspense>
                   ) : service.id === 2 ? (
                     // WorkflowChecklistVisual för Automate repetitive tasks
-                    <div className="w-full flex justify-center">
-                      <WorkflowChecklistVisual className="scale-90 md:scale-100" />
-                    </div>
+                    <Suspense fallback={<div className="h-[300px] md:h-[500px] bg-white/60 rounded-2xl animate-pulse" />}>
+                      <div className="w-full flex justify-center">
+                        <WorkflowChecklistVisual className="scale-90 md:scale-100" />
+                      </div>
+                    </Suspense>
                   ) : service.id === 3 ? (
                     // AIVoiceAgentVisual för AI Voice Agents
-                    <div className="w-full flex flex-col items-center justify-center gap-2">
-                      <AIVoiceAgentVisual className="scale-90 md:scale-100" />
-                      <AIVoiceInput demoMode={true} className="-mt-6" />
-                    </div>
+                    <Suspense fallback={<div className="h-[300px] md:h-[500px] bg-white/60 rounded-2xl animate-pulse" />}>
+                      <div className="w-full flex flex-col items-center justify-center gap-2">
+                        <AIVoiceAgentVisual className="scale-90 md:scale-100" />
+                        <AIVoiceInput demoMode={true} className="-mt-6" />
+                      </div>
+                    </Suspense>
                   ) : service.id === 4 ? (
                     // EmailBriefingVisual för Accelerate Sales Growth
-                    <div className="w-full flex justify-center">
-                      <EmailBriefingVisual className="scale-90 md:scale-100" />
-                    </div>
+                    <Suspense fallback={<div className="h-[300px] md:h-[500px] bg-white/60 rounded-2xl animate-pulse" />}>
+                      <div className="w-full flex justify-center">
+                        <EmailBriefingVisual className="scale-90 md:scale-100" />
+                      </div>
+                    </Suspense>
                   ) : service.id === 5 ? (
                     // ProjectManagementVisual för Build Smarter Systems
-                    <div className="w-full flex justify-center">
-                      <ProjectManagementVisual className="scale-90 md:scale-100" />
-                    </div>
+                    <Suspense fallback={<div className="h-[300px] md:h-[500px] bg-white/60 rounded-2xl animate-pulse" />}>
+                      <div className="w-full flex justify-center">
+                        <ProjectManagementVisual className="scale-90 md:scale-100" />
+                      </div>
+                    </Suspense>
                   ) : (
-                    // Fallback för eventuella andra tjänster
-                    <img 
-                      src={service.mockup} 
-                      alt={service.title} 
-                      className="w-full rounded-lg"
-                      loading="lazy"
-                      decoding="async"
-                    />
+                    // Fallback - ska aldrig nås med nuvarande services
+                    <div className="h-[300px] md:h-[500px] bg-white/60 rounded-2xl" />
                   )}
                 </div>
               </div>

@@ -25,7 +25,7 @@ export const SystemScalingVisual = () => {
   ];
 
   return (
-    <div className="relative h-[280px] w-full flex flex-col justify-center gap-6 px-8 bg-white/50 backdrop-blur-md border border-gray-300 rounded-xl shadow-lg">
+    <div className="relative h-auto min-h-[200px] md:h-[280px] w-full flex flex-col justify-center gap-6 px-8 bg-white/50 backdrop-blur-md border border-gray-300 rounded-xl shadow-lg">
       {systems.map((system, index) => (
         <motion.div
           key={system.label}

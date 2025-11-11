@@ -1,8 +1,10 @@
-import { AnimatedSection } from "@/components/shared/AnimatedSection";
+import { Suspense, lazy } from "react";
 import IntegrationConnectionVisual from "@/components/ui/integration-connection-visual";
-import ScanningAnalysisVisual from "@/components/ui/scanning-analysis-visual";
-import CodeEditorVisual from "@/components/ui/code-editor-visual";
-import SystemScalingVisual from "@/components/ui/system-scaling-visual";
+
+// Lazy load visualizations för bättre performance
+const ScanningAnalysisVisual = lazy(() => import("@/components/ui/scanning-analysis-visual"));
+const CodeEditorVisual = lazy(() => import("@/components/ui/code-editor-visual"));
+const SystemScalingVisual = lazy(() => import("@/components/ui/system-scaling-visual"));
 
 const processSteps = [
   {
@@ -44,7 +46,7 @@ export const ProcessGrid = () => {
             </span>
           </div>
           
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-display font-normal text-gray-900 mb-6">
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-display font-normal leading-tight text-gray-900 mb-6">
             Vår Enkla, Smarta och Skalbara Process
           </h2>
           <p className="text-base md:text-lg text-gray-600 max-w-3xl mx-auto">
@@ -68,7 +70,7 @@ export const ProcessGrid = () => {
                 </div>
                 
                 {/* Title */}
-                <h3 className="text-xl md:text-2xl lg:text-3xl font-display font-normal text-gray-900 mb-3">
+                <h3 className="text-xl md:text-2xl lg:text-3xl font-display font-normal leading-tight text-gray-900 mb-3">
                   {step.title}
                 </h3>
                 
@@ -78,10 +80,22 @@ export const ProcessGrid = () => {
                 </p>
                 
                 {/* Visual Mockup Area */}
-              {step.id === 1 && <ScanningAnalysisVisual />}
-              {step.id === 2 && <CodeEditorVisual />}
+              {step.id === 1 && (
+                <Suspense fallback={<div className="h-[200px] md:h-[280px] bg-white/60 rounded-xl animate-pulse" />}>
+                  <ScanningAnalysisVisual />
+                </Suspense>
+              )}
+              {step.id === 2 && (
+                <Suspense fallback={<div className="h-[200px] md:h-[280px] bg-white/60 rounded-xl animate-pulse" />}>
+                  <CodeEditorVisual />
+                </Suspense>
+              )}
               {step.id === 3 && <IntegrationConnectionVisual />}
-              {step.id === 4 && <SystemScalingVisual />}
+              {step.id === 4 && (
+                <Suspense fallback={<div className="h-[200px] md:h-[280px] bg-white/60 rounded-xl animate-pulse" />}>
+                  <SystemScalingVisual />
+                </Suspense>
+              )}
             </div>
           ))}
         </div>
