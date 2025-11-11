@@ -30,7 +30,7 @@ export const CaseStudyShowcase = () => {
                   <img 
                     src={stockholmAC} 
                     alt="Stockholm AC" 
-                    className="w-full h-24 object-contain filter grayscale hover:grayscale-0 transition-all duration-300"
+                    className="w-full h-40 object-cover filter grayscale hover:grayscale-0 transition-all duration-300 scale-125"
                     loading="lazy"
                     decoding="async"
                   />
