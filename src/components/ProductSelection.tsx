@@ -66,20 +66,20 @@ export const ProductSelection = () => {
         {/* 2. Alternating Services */}
         <AlternatingServicesSection />
 
-        {/* 3. Process Grid (4 steg) */}
+        {/* 3. Integration Hero (verktygskarusell) */}
+        <IntegrationHero />
+
+        {/* 4. Process Grid (4 steg) */}
         <ProcessGrid />
 
-        {/* 4. Benefits Grid */}
+        {/* 5. Benefits Grid */}
         <BenefitsGrid />
 
-        {/* 5. Pricing Cards */}
+        {/* 6. Pricing Cards */}
         <PricingCards />
 
-        {/* 6. Client Logos */}
+        {/* 7. Client Logos */}
         <ClientLogoCloud />
-
-        {/* 7. Integration Hero (verktygskarusell) */}
-        <IntegrationHero />
 
         {/* 8. Services Grid */}
         <ServicesGrid />
