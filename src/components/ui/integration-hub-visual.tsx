@@ -64,34 +64,89 @@ export const IntegrationHubVisual = ({
   const angles = [0, 45, 90, 135, 180, 225, 270, 315]
 
   return (
-    <div className={cn("h-[500px] w-full max-w-[900px] mx-auto p-8", className)}>
-      <div className="relative h-full w-full overflow-visible">
+    <div className={cn("h-[500px] w-full max-w-[900px] mx-auto", className)}>
+      <div className="relative h-full w-full overflow-hidden">
         
         {/* Top Badges Row */}
-        <div className="flex justify-center gap-4 mb-12 pt-8">
-          <div className="flex items-center gap-2 px-4 py-2 rounded-full border border-primary/40 bg-primary/15 backdrop-blur-xl shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-200">
+        <div className="flex justify-center gap-4 mb-8 pt-8">
+          <div className="flex items-center gap-2 px-4 py-2 rounded-full border border-primary/20 bg-primary/10 backdrop-blur">
             <IconFirst className="w-4 h-4 text-primary" />
             <span className="text-sm font-medium text-gray-900">{badgeTexts.first}</span>
           </div>
-          <div className="flex items-center gap-2 px-4 py-2 rounded-full border border-primary/40 bg-primary/15 backdrop-blur-xl shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-200">
+          <div className="flex items-center gap-2 px-4 py-2 rounded-full border border-primary/20 bg-primary/10 backdrop-blur">
             <IconSecond className="w-4 h-4 text-primary" />
             <span className="text-sm font-medium text-gray-900">{badgeTexts.second}</span>
           </div>
-          <div className="flex items-center gap-2 px-4 py-2 rounded-full border border-primary/40 bg-primary/15 backdrop-blur-xl shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-200">
+          <div className="flex items-center gap-2 px-4 py-2 rounded-full border border-primary/20 bg-primary/10 backdrop-blur">
             <IconThird className="w-4 h-4 text-primary" />
             <span className="text-sm font-medium text-gray-900">{badgeTexts.third}</span>
           </div>
-          <div className="flex items-center gap-2 px-4 py-2 rounded-full border border-primary/40 bg-primary/15 backdrop-blur-xl shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-200">
+          <div className="flex items-center gap-2 px-4 py-2 rounded-full border border-primary/20 bg-primary/10 backdrop-blur">
             <IconFourth className="w-4 h-4 text-primary" />
             <span className="text-sm font-medium text-gray-900">{badgeTexts.fourth}</span>
           </div>
         </div>
 
         {/* Hub and Spoke Layout with AnimatedBeam */}
-        <div ref={containerRef} className="absolute inset-0 flex items-center justify-center px-8">
-          <div className="relative w-[650px] h-[650px] max-w-full">
+        <div ref={containerRef} className="absolute inset-0 flex items-center justify-center">
+          <div className="relative w-[600px] h-[600px] max-w-full">
             
-            {/* AnimatedBeams connecting peripheral nodes to center - RENDER FIRST (background layer) */}
+            {/* Peripheral nodes positioned in a circle */}
+            {nodeRefs.map((ref, index) => {
+              const angle = angles[index]
+              const radius = 45 // percentage from center
+              const x = 50 + radius * Math.cos((angle - 90) * Math.PI / 180)
+              const y = 50 + radius * Math.sin((angle - 90) * Math.PI / 180)
+              const NodeIcon = nodeIcons[index]
+              
+              return (
+                <div
+                  key={index}
+                  ref={ref}
+                  className="absolute flex items-center justify-center w-16 h-16 border-2 border-primary/30 bg-primary/10 backdrop-blur-md rounded-xl shadow-lg"
+                  style={{
+                    left: `${x}%`,
+                    top: `${y}%`,
+                    transform: 'translate(-50%, -50%)'
+                  }}
+                >
+                  <NodeIcon className="w-6 h-6 text-primary" />
+                </div>
+              )
+            })}
+
+            {/* Central Hub with concentric circles */}
+            <div className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 pointer-events-none">
+              {/* Pulsing concentric rings */}
+              {[0, 1, 2, 3].map((index) => (
+                <motion.div
+                  key={index}
+                  className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-primary/20"
+                  style={{
+                    width: `${112 + index * 32}px`,
+                    height: `${112 + index * 32}px`
+                  }}
+                  initial={{ scale: 0.8, opacity: 0 }}
+                  animate={{ scale: 1, opacity: [0, 0.5, 0] }}
+                  transition={{
+                    duration: 3,
+                    repeat: Infinity,
+                    delay: index * 0.7,
+                    ease: "easeInOut"
+                  }}
+                />
+              ))}
+              
+              <div
+                ref={centerRef}
+                className="relative flex items-center justify-center w-28 h-28 border-2 border-primary/30 bg-primary/20 backdrop-blur-md rounded-2xl shadow-lg pointer-events-auto"
+              >
+                <div className="absolute inset-0 rounded-2xl bg-primary/10 blur-xl" />
+                <span className="relative text-sm font-medium text-gray-900 text-center px-2">{circleText}</span>
+              </div>
+            </div>
+
+            {/* AnimatedBeams connecting peripheral nodes to center */}
             {nodeRefs.map((ref, index) => (
               <AnimatedBeam
                 key={index}
@@ -107,70 +162,15 @@ export const IntegrationHubVisual = ({
                 reverse={index >= 4}
               />
             ))}
-            
-            {/* Peripheral nodes positioned in a circle - RENDER SECOND (foreground layer) */}
-            {nodeRefs.map((ref, index) => {
-              const angle = angles[index]
-              const radius = 45 // percentage from center
-              const x = 50 + radius * Math.cos((angle - 90) * Math.PI / 180)
-              const y = 50 + radius * Math.sin((angle - 90) * Math.PI / 180)
-              const NodeIcon = nodeIcons[index]
-              
-              return (
-                <div
-                  key={index}
-                  ref={ref}
-                  className="absolute flex items-center justify-center w-20 h-20 border-2 border-primary/40 bg-white/90 backdrop-blur-xl rounded-xl shadow-xl hover:shadow-2xl hover:scale-110 transition-all duration-300 relative z-10"
-                  style={{
-                    left: `${x}%`,
-                    top: `${y}%`,
-                    transform: 'translate(-50%, -50%)'
-                  }}
-                >
-                  <NodeIcon className="w-7 h-7 text-primary" />
-                </div>
-              )
-            })}
-
-            {/* Central Hub with concentric circles - RENDER LAST (top layer) */}
-            <div className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 pointer-events-none z-20">
-              {/* Pulsing concentric rings */}
-              {[0, 1, 2, 3].map((index) => (
-                <motion.div
-                  key={index}
-                  className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-primary/20"
-                  style={{
-                    width: `${128 + index * 32}px`,
-                    height: `${128 + index * 32}px`
-                  }}
-                  initial={{ scale: 0.8, opacity: 0 }}
-                  animate={{ scale: 1, opacity: [0, 0.5, 0] }}
-                  transition={{
-                    duration: 3,
-                    repeat: Infinity,
-                    delay: index * 0.7,
-                    ease: "easeInOut"
-                  }}
-                />
-              ))}
-              
-              <div
-                ref={centerRef}
-                className="relative flex items-center justify-center w-32 h-32 border-2 border-primary/40 bg-primary/20 backdrop-blur-xl rounded-2xl shadow-xl pointer-events-auto"
-              >
-                <div className="absolute inset-0 rounded-2xl bg-primary/10 blur-xl" />
-                <span className="relative text-sm font-medium text-gray-900 text-center px-2">{circleText}</span>
-              </div>
-            </div>
           </div>
         </div>
 
         {/* Bottom Badges */}
         <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex gap-4">
-          <div className="px-4 py-2 rounded-full border border-primary/40 bg-primary/15 backdrop-blur-xl shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-200">
+          <div className="px-4 py-2 rounded-full border border-primary/20 bg-primary/10 backdrop-blur">
             <span className="text-sm font-medium text-gray-900">Real-time Sync</span>
           </div>
-          <div className="px-4 py-2 rounded-full border border-primary/40 bg-primary/15 backdrop-blur-xl shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-200">
+          <div className="px-4 py-2 rounded-full border border-primary/20 bg-primary/10 backdrop-blur">
             <span className="text-sm font-medium text-gray-900">API First</span>
           </div>
         </div>

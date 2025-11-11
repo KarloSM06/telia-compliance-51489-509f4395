@@ -74,102 +74,86 @@ export const SalesPipelineVisual = ({
   }, [])
 
   return (
-    <div className={cn("h-[500px] w-full max-w-[900px] mx-auto p-8", className)}>
-      <div className="relative h-full w-full overflow-visible">
+    <div className={cn("h-[500px] w-full max-w-[900px] mx-auto", className)}>
+      <div className="relative h-full w-full overflow-hidden">
         
         {/* Top Badges Row */}
-        <div className="flex justify-center gap-4 mb-12 pt-8">
-          <div className="flex items-center gap-2 px-4 py-2 rounded-full border border-primary/40 bg-primary/15 backdrop-blur-xl shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-200">
+        <div className="flex justify-center gap-4 mb-8 pt-8">
+          <div className="flex items-center gap-2 px-4 py-2 rounded-full border border-primary/20 bg-primary/10 backdrop-blur">
             <IconFirst className="w-4 h-4 text-primary" />
             <span className="text-sm font-medium text-gray-900">{badgeTexts.first}</span>
           </div>
-          <div className="flex items-center gap-2 px-4 py-2 rounded-full border border-primary/40 bg-primary/15 backdrop-blur-xl shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-200">
+          <div className="flex items-center gap-2 px-4 py-2 rounded-full border border-primary/20 bg-primary/10 backdrop-blur">
             <IconSecond className="w-4 h-4 text-primary" />
             <span className="text-sm font-medium text-gray-900">{badgeTexts.second}</span>
           </div>
-          <div className="flex items-center gap-2 px-4 py-2 rounded-full border border-primary/40 bg-primary/15 backdrop-blur-xl shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-200">
+          <div className="flex items-center gap-2 px-4 py-2 rounded-full border border-primary/20 bg-primary/10 backdrop-blur">
             <IconThird className="w-4 h-4 text-primary" />
             <span className="text-sm font-medium text-gray-900">{badgeTexts.third}</span>
           </div>
-          <div className="flex items-center gap-2 px-4 py-2 rounded-full border border-primary/40 bg-primary/15 backdrop-blur-xl shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-200">
+          <div className="flex items-center gap-2 px-4 py-2 rounded-full border border-primary/20 bg-primary/10 backdrop-blur">
             <IconFourth className="w-4 h-4 text-primary" />
             <span className="text-sm font-medium text-gray-900">{badgeTexts.fourth}</span>
           </div>
         </div>
 
         {/* SVG Curved Funnel with flowing dots and metrics */}
-        <div className="absolute inset-0 flex items-center justify-center py-8">
-          <svg viewBox="0 0 200 145" className="w-full h-full" style={{ maxWidth: '800px' }}>
+        <div className="absolute inset-0 flex items-center justify-center">
+          <svg viewBox="0 0 200 120" className="w-full h-full" style={{ maxWidth: '800px' }}>
             <defs>
-              {/* Drop Shadow Filter */}
-              <filter id="dropShadow">
-                <feGaussianBlur in="SourceAlpha" stdDeviation="2"/>
-                <feOffset dx="0" dy="2" result="offsetblur"/>
-                <feComponentTransfer>
-                  <feFuncA type="linear" slope="0.3"/>
-                </feComponentTransfer>
-                <feMerge>
-                  <feMergeNode/>
-                  <feMergeNode in="SourceGraphic"/>
-                </feMerge>
-              </filter>
-              <linearGradient id="leadGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-                <stop offset="0%" stopColor={lightColor} stopOpacity="0.7" />
-                <stop offset="100%" stopColor={lightColor} stopOpacity="0.5" />
+              <linearGradient id="funnelGradient1" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stopColor="hsl(220, 90%, 60%)" stopOpacity="0.4" />
+                <stop offset="100%" stopColor="hsl(220, 90%, 50%)" stopOpacity="0.2" />
               </linearGradient>
-              <linearGradient id="qualifyGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-                <stop offset="0%" stopColor={lightColor} stopOpacity="0.6" />
-                <stop offset="100%" stopColor={lightColor} stopOpacity="0.4" />
+              <linearGradient id="funnelGradient2" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stopColor="hsl(230, 85%, 55%)" stopOpacity="0.4" />
+                <stop offset="100%" stopColor="hsl(230, 85%, 45%)" stopOpacity="0.2" />
               </linearGradient>
-              <linearGradient id="oppGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-                <stop offset="0%" stopColor={lightColor} stopOpacity="0.5" />
-                <stop offset="100%" stopColor={lightColor} stopOpacity="0.3" />
+              <linearGradient id="funnelGradient3" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stopColor="hsl(240, 80%, 50%)" stopOpacity="0.4" />
+                <stop offset="100%" stopColor="hsl(240, 80%, 40%)" stopOpacity="0.2" />
               </linearGradient>
-              <linearGradient id="closedGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-                <stop offset="0%" stopColor={lightColor} stopOpacity="0.4" />
-                <stop offset="100%" stopColor={lightColor} stopOpacity="0.2" />
+              <linearGradient id="funnelGradient4" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stopColor="hsl(250, 75%, 45%)" stopOpacity="0.5" />
+                <stop offset="100%" stopColor="hsl(250, 75%, 35%)" stopOpacity="0.3" />
               </linearGradient>
             </defs>
             
-            {/* Funnel Sections - Curved shapes with drop shadows */}
+            {/* Curved funnel sections with metrics */}
             {/* Stage 1: Leads */}
             <path
-              d="M 50 20 Q 50 20, 50 20 L 150 20 Q 150 20, 150 20 L 140 45 Q 100 47, 60 45 Z"
-              fill="url(#leadGradient)"
-              stroke={lightColor}
-              strokeWidth="1"
-              strokeOpacity="0.3"
-              filter="url(#dropShadow)"
+              d="M 50 25 Q 50 25, 50 25 L 150 25 Q 150 25, 150 25 L 140 42 Q 100 43, 60 42 Z"
+              fill="url(#funnelGradient1)"
+              stroke="hsl(var(--primary))"
+              strokeWidth="0.5"
+              opacity="0.6"
             />
             
             {/* Stage 2: Qualified */}
             <path
-              d="M 60 45 Q 100 47, 140 45 L 130 70 Q 100 72, 70 70 Z"
-              fill="url(#qualifyGradient)"
-              stroke={lightColor}
-              strokeWidth="1"
-              strokeOpacity="0.3"
-              filter="url(#dropShadow)"
+              d="M 60 42 Q 100 43, 140 42 L 130 59 Q 100 60, 70 59 Z"
+              fill="url(#funnelGradient2)"
+              stroke="hsl(var(--primary))"
+              strokeWidth="0.5"
+              opacity="0.6"
             />
             
             {/* Stage 3: Opportunity */}
             <path
-              d="M 70 70 Q 100 72, 130 70 L 120 95 Q 100 97, 80 95 Z"
-              fill="url(#oppGradient)"
-              stroke={lightColor}
-              strokeWidth="1"
-              strokeOpacity="0.3"
-              filter="url(#dropShadow)"
+              d="M 70 59 Q 100 60, 130 59 L 120 76 Q 100 77, 80 76 Z"
+              fill="url(#funnelGradient3)"
+              stroke="hsl(var(--primary))"
+              strokeWidth="0.5"
+              opacity="0.6"
             />
             
             {/* Stage 4: Closed */}
             <path
-              d="M 80 95 Q 100 97, 120 95 L 110 115 Q 100 116, 90 115 Z"
-              fill="url(#closedGradient)"
-              stroke={lightColor}
-              strokeWidth="1"
-              strokeOpacity="0.3"
-              filter="url(#dropShadow)"
+              d="M 80 76 Q 100 77, 120 76 L 110 93 Q 100 94, 90 93 Z"
+              fill="url(#funnelGradient4)"
+              stroke="hsl(var(--primary))"
+              strokeWidth="0.5"
+              opacity="0.7"
             />
             
             {/* Stage icons and labels with metrics */}
@@ -226,47 +210,47 @@ export const SalesPipelineVisual = ({
               </text>
             </g>
             
-            {/* Animated Flowing Dots (Leads moving through stages) - Higher z-index layer */}
-            <g style={{ zIndex: 10 }}>
-              {[...Array(20)].map((_, i) => {
-                const startY = 20
-                const endY = 115
-                const duration = 4 + (i % 3) * 0.5
-                const delay = i * 0.3
-                const baseX = 100
-                const xVariation = (Math.sin(i * 0.5) * 15)
-                
-                return (
-                  <motion.circle
-                    key={i}
-                    cx={baseX + xVariation}
-                    cy={startY}
-                    r="1.5"
-                    fill={lightColor}
-                    initial={{ cy: startY, opacity: 0.8 }}
-                    animate={{
-                      cy: endY,
-                      opacity: [0.8, 1, 0.5, 0]
-                    }}
-                    transition={{
-                      duration,
-                      repeat: Infinity,
-                      delay,
-                      ease: "linear"
-                    }}
-                  />
-                )
-              })}
-            </g>
+            {/* Multiple animated dots flowing through funnel with random X positions */}
+            {Array.from({ length: 20 }).map((_, index) => {
+              const randomOffset = (Math.random() - 0.5) * 30
+              const startDelay = index * 0.3
+              const shouldDropOff = Math.random() > 0.7
+              
+              return (
+                <motion.circle
+                  key={index}
+                  cx={100 + randomOffset * 0.3}
+                  cy="25"
+                  r="1.5"
+                  fill={lightColor}
+                  initial={{ cy: 25, cx: 100 + randomOffset * 0.3, opacity: 0.8 }}
+                  animate={shouldDropOff ? {
+                    cy: [25, 50, 50],
+                    cx: [100 + randomOffset * 0.3, 100 + randomOffset * 0.6, 100 + randomOffset * 0.6 + 30],
+                    opacity: [0.8, 0.6, 0]
+                  } : {
+                    cy: 93,
+                    cx: 100 + randomOffset * 0.8,
+                    opacity: [0.8, 0.6, 0.4, 0.2]
+                  }}
+                  transition={{
+                    duration: shouldDropOff ? 2 : 3.5,
+                    repeat: Infinity,
+                    delay: startDelay,
+                    ease: "easeInOut"
+                  }}
+                />
+              )
+            })}
           </svg>
         </div>
 
         {/* Bottom Badges */}
         <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex gap-4">
-          <div className="px-4 py-2 rounded-full border border-primary/40 bg-primary/15 backdrop-blur-xl shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-200">
+          <div className="px-4 py-2 rounded-full border border-primary/20 bg-primary/10 backdrop-blur">
             <span className="text-sm font-medium text-gray-900">AI Scoring</span>
           </div>
-          <div className="px-4 py-2 rounded-full border border-primary/40 bg-primary/15 backdrop-blur-xl shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-200">
+          <div className="px-4 py-2 rounded-full border border-primary/20 bg-primary/10 backdrop-blur">
             <span className="text-sm font-medium text-gray-900">Auto Nurture</span>
           </div>
         </div>
