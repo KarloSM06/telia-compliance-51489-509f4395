@@ -96,21 +96,6 @@ const DataFlowLine = ({
 };
 export const UnifiedDashboard = () => {
   return <section className="relative pt-0 pb-0 md:pt-0 md:pb-0 bg-white">
-      <div className="mx-auto w-full max-w-7xl space-y-12 px-4">
-        <AnimatedContainer className="mx-auto max-w-full text-center">
-          <h2 className="text-3xl font-bold tracking-wide text-balance md:text-4xl lg:text-5xl xl:font-extrabold text-gray-900">
-            All Data på Ett och Samma Ställe
-          </h2>
-          <p className="text-gray-600 mt-4 text-sm tracking-wide text-balance md:text-base">
-            Med Hiems samlas all er data från AI-receptionist, CRM, försäljning, kommunikation och automation
-            i en enda, överskådlig dashboard. Få insikter i realtid och fatta bättre beslut snabbare.
-            <br />
-            <span className="font-semibold text-gray-900">En plattform. All data. Total kontroll.</span>
-          </p>
-        </AnimatedContainer>
-
-        {/* Service Data Flows */}
-        <ServiceDataFlow />
-      </div>
+      
     </section>;
 };

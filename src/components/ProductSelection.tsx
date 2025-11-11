@@ -58,10 +58,7 @@ export const ProductSelection = () => {
       {/* Hero Section and All Content with Aurora Background */}
       <AuroraBackground className="h-auto">
         {/* 1. Hero */}
-        <AnimatedHero 
-          onBookDemo={() => setIsConsultationModalOpen(true)}
-          onViewPackages={() => scrollToSection('paket')}
-        />
+        <AnimatedHero onBookDemo={() => setIsConsultationModalOpen(true)} onViewPackages={() => scrollToSection('paket')} />
 
         {/* 2. Alternating Services */}
         <AlternatingServicesSection />
@@ -88,7 +85,7 @@ export const ProductSelection = () => {
         <UnifiedDashboard />
 
         {/* 10. AI Capabilities Accordion */}
-        <LandingAccordionItem />
+        
 
         {/* 11. Unified Ecosystem */}
         <UnifiedEcosystem primaryImageSrc={dashboardScreenshot} secondaryImageSrc={calendarScreenshot} />
