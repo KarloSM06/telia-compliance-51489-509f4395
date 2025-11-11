@@ -64,8 +64,11 @@ export const BenefitsGrid = () => {
           {benefits.map((benefit, index) => {
             const Icon = benefit.icon;
             return (
-              <AnimatedSection key={benefit.id} delay={index * 100}>
-                <div className="border-2 border-white/10 bg-white/5 backdrop-blur-sm rounded-3xl p-8 shadow-lg hover:shadow-xl transition-all h-[280px] flex flex-col">
+              <div 
+                key={benefit.id}
+                className="animate-[fadeInUp_0.6s_ease-out] border-2 border-white/10 bg-white/5 backdrop-blur-sm rounded-3xl p-8 shadow-lg hover:shadow-xl transition-all h-[280px] flex flex-col"
+                style={{ animationDelay: `${index * 100}ms` }}
+              >
                   <div className="mb-4">
                     <Icon className="w-8 h-8 md:w-10 md:h-10 text-gray-900 stroke-[1]" />
                   </div>
@@ -76,10 +79,9 @@ export const BenefitsGrid = () => {
                     {benefit.description}
                   </p>
                 </div>
-              </AnimatedSection>
-            );
-          })}
-        </div>
+              );
+            })}
+          </div>
       </div>
     </section>
   );

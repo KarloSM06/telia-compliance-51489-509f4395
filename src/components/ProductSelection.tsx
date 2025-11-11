@@ -75,19 +75,7 @@ export const ProductSelection = () => {
         {/* 7. Pricing Cards */}
         <PricingCards />
 
-        {/* 8. Services Grid */}
-        <ServicesGrid />
-
-        {/* 9. Unified Dashboard */}
-        <UnifiedDashboard />
-
-        {/* 10. Workflow Timeline */}
-        <WorkflowTimeline />
-
-        {/* 11. Testimonials Grid */}
-        {/* <TestimonialsGrid /> */}
-
-        {/* 16. FAQ Accordion */}
+        {/* 8. FAQ Accordion */}
         <FAQAccordion />
 
         {/* 17. Consultation CTA */}

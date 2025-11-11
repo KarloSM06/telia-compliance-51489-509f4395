@@ -119,7 +119,7 @@ export function FloatingNavbar() {
               onClick={() => setIsConsultationModalOpen(true)}
               className="hidden md:inline-flex bg-white text-black hover:bg-gray-100 [text-shadow:_0_1px_2px_rgb(0_0_0_/_10%)] font-medium transition-all duration-300 hover:scale-105 shadow-button"
             >
-              Boka demo
+              Boka ett möte
             </Button>
 
             {/* Mobile Menu Toggle */}
@@ -198,7 +198,7 @@ export function FloatingNavbar() {
                   }}
                 >
                   <Calendar className="w-5 h-5 mr-2" />
-                  Boka demo
+                  Boka ett möte
                 </Button>
               </div>
             </nav>

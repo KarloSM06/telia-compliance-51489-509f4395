@@ -15,12 +15,12 @@ const servicesData = [
     id: 1,
     category: "Our Services",
     title: "Dashboards & Decision Intelligence",
-    description: "Live CRM insights, forecasts, automated reporting med AI. Gör data actionable så att teamet kan agera direkt.",
+    description: "Få live-insikter, prognoser och KPI:er i realtid från alla era system. Gör data begriplig så att teamet kan agera direkt.",
     bullets: [
-      "Real-time KPI dashboards",
-      "Predictive analytics",
-      "Automated reporting",
-      "Custom data integrations"
+      "Realtids KPI-tavlor",
+      "Prediktiv analys",
+      "Automatiserad rapportering",
+      "Anpassade dataintegrationer"
     ],
     mockup: dashboardScreenshot,
     isReversed: false
@@ -29,12 +29,12 @@ const servicesData = [
     id: 2,
     category: "Workflow Automation",
     title: "Automate repetitive tasks",
-    description: "Låt AI hantera fakturering, mejl-uppföljning, rapportering och mer. Släpp administrationen och fokusera på tillväxt.",
+    description: "Eliminera manuella moment som fakturering, mejl-uppföljning och rapportering. Effektivare processer, färre fel och mer tid för tillväxt.",
     bullets: [
-      "Invoice automation",
-      "Email follow-ups",
-      "Calendar management",
-      "Document processing"
+      "Automatisk fakturering",
+      "E-postuppföljning",
+      "Kalenderhantering",
+      "Dokumentbearbetning"
     ],
     mockup: dashboardScreenshot,
     isReversed: true
@@ -43,12 +43,12 @@ const servicesData = [
     id: 3,
     category: "AI Assistant",
     title: "AI Voice Agents",
-    description: "Virtuella receptionister som svarar, bokar möten och följer upp 24/7. Missa aldrig ett samtal igen.",
+    description: "Virtuella receptionister som svarar, bokar möten och följer upp 24/7. Perfekt för kundservice, sälj eller intern support.",
     bullets: [
-      "24/7 phone reception",
-      "Automatic meeting booking",
-      "Call transcription & analysis",
-      "Multi-language support"
+      "24/7 telefonmottagning",
+      "Automatisk mötesbokning",
+      "Samtalsutskrift & analys",
+      "Flerspråksstöd"
     ],
     mockup: dashboardScreenshot,
     isReversed: false
@@ -57,12 +57,12 @@ const servicesData = [
     id: 4,
     category: "Sales & Marketing",
     title: "Accelerate Sales Growth",
-    description: "AI-driven lead generation, qualification och nurturing. Kortare säljcykler och högre conversion rates.",
+    description: "Automatisera leadgenerering, mejlutskick och innehållsproduktion. Kortare säljcykler och högre conversion rates.",
     bullets: [
-      "Lead enrichment",
-      "Auto qualification",
-      "Sales forecasting",
-      "Pipeline analytics"
+      "Leadberikning",
+      "Automatisk kvalificering",
+      "Försäljningsprognos",
+      "Pipeline-analys"
     ],
     mockup: dashboardScreenshot,
     isReversed: true
@@ -71,12 +71,12 @@ const servicesData = [
     id: 5,
     category: "Custom Projects",
     title: "Build Smarter Systems",
-    description: "Custom AI-lösningar som integreras med era befintliga system. Skalbar automation som växer med er.",
+    description: "Skräddarsydda AI-lösningar som integreras med era befintliga system. Skalbar automation som växer med er verksamhet.",
     bullets: [
-      "Custom integrations",
-      "API connections",
-      "Workflow optimization",
-      "System scalability"
+      "Anpassade integrationer",
+      "API-kopplingar",
+      "Arbetsflödesoptimering",
+      "Systemskalbarhet"
     ],
     mockup: dashboardScreenshot,
     isReversed: false
@@ -99,8 +99,11 @@ export const AlternatingServicesSection = () => {
 
         <div className="space-y-16 md:space-y-24">
         {servicesData.map((service, index) => (
-          <AnimatedSection key={service.id} delay={index * 100}>
-            <div className="border-2 border-white/10 bg-white/5 backdrop-blur-sm rounded-3xl p-10 md:p-16 shadow-lg hover:shadow-xl transition-all">
+          <div 
+            key={service.id}
+            className="animate-[fadeInUp_0.6s_ease-out] border-2 border-white/10 bg-white/5 backdrop-blur-sm rounded-3xl p-10 md:p-16 shadow-lg hover:shadow-xl transition-all"
+            style={{ animationDelay: `${index * 100}ms` }}
+          >
               <div className={`grid md:grid-cols-2 gap-12 items-center ${service.isReversed ? 'md:grid-flow-dense' : ''}`}>
                 {/* Text side */}
                 <div className={service.isReversed ? 'md:col-start-2' : ''}>
@@ -208,8 +211,7 @@ export const AlternatingServicesSection = () => {
                 </div>
               </div>
             </div>
-          </AnimatedSection>
-        ))}
+          ))}
         </div>
       </div>
     </section>

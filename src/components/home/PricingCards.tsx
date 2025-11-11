@@ -76,10 +76,13 @@ export const PricingCards = () => {
         
         <div className="grid md:grid-cols-3 gap-6">
           {pricingPlans.map((plan, index) => (
-            <AnimatedSection key={plan.id} delay={index * 100}>
-              <div className={`border-2 backdrop-blur-sm rounded-3xl p-8 shadow-lg hover:shadow-xl transition-all ${
+            <div 
+              key={plan.id}
+              className={`animate-[fadeInUp_0.6s_ease-out] border-2 backdrop-blur-sm rounded-3xl p-8 shadow-lg hover:shadow-xl transition-all ${
                 plan.popular ? 'border-gray-900 bg-white/10 scale-105' : 'border-white/10 bg-white/5'
-              }`}>
+              }`}
+              style={{ animationDelay: `${index * 100}ms` }}
+            >
                 {plan.popular && (
                   <div className="bg-gray-900 text-white px-4 py-1 rounded-full text-sm inline-block mb-4 font-medium">
                     Populär
@@ -115,15 +118,14 @@ export const PricingCards = () => {
                   {plan.cta}
                 </button>
               </div>
-            </AnimatedSection>
-          ))}
+            ))}
+          </div>
         </div>
-      </div>
 
-      <ConsultationModal
-        open={isConsultationModalOpen}
-        onOpenChange={setIsConsultationModalOpen}
-      />
-    </section>
-  );
-};
+        <ConsultationModal
+          open={isConsultationModalOpen}
+          onOpenChange={setIsConsultationModalOpen}
+        />
+      </section>
+    );
+  };

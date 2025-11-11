@@ -92,7 +92,9 @@ function AnimatedHero({
           duration: 0.6,
           delay: 0.6,
           ease: "easeOut"
-        }} className="text-sm text-gray-500 mt-6">​  </motion.p>
+        }} className="text-sm text-gray-500 mt-6">
+            Förtrodd av 50+ företag i Sverige
+          </motion.p>
         </div>
       </div>
     </div>;
