@@ -3,26 +3,21 @@ import { useState, useEffect } from "react";
 import { expertiseCategories } from "@/data/expertise";
 
 // Samla alla program-logotyper från expertise data
-const ALL_PROGRAMS = expertiseCategories.flatMap(cat => 
-  cat.items.filter(item => item.logo).map(item => ({
-    name: item.name,
-    logo: item.logo!
-  }))
-);
+const ALL_PROGRAMS = expertiseCategories.flatMap(cat => cat.items.filter(item => item.logo).map(item => ({
+  name: item.name,
+  logo: item.logo!
+})));
 export const IntegrationConnectionVisual = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   // Rotera mellan olika integrationer var 3:e sekund
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentIndex((prev) => (prev + 1) % ALL_PROGRAMS.length);
+      setCurrentIndex(prev => (prev + 1) % ALL_PROGRAMS.length);
     }, 3000);
-
     return () => clearInterval(interval);
   }, []);
-
   const currentProgram = ALL_PROGRAMS[currentIndex];
-
   return <div className="relative h-[280px] w-full flex items-center justify-center gap-16 px-8 bg-white/60 backdrop-blur-md border border-gray-300 rounded-xl shadow-lg">
       {/* Left: Animated Orb - "Our Solution" */}
       <div className="flex flex-col items-center gap-3">
@@ -140,15 +135,7 @@ export const IntegrationConnectionVisual = () => {
 
         {/* Animated particles on paths */}
         
-        <motion.div className="absolute w-3 h-3 rounded-full bg-purple-500" animate={{
-        x: [0, 240]
-      }} style={{
-        top: "140px"
-      }} transition={{
-        duration: 1.5,
-        repeat: Infinity,
-        ease: "linear"
-      }} />
+        
         
       </div>
 
@@ -156,33 +143,39 @@ export const IntegrationConnectionVisual = () => {
       <div className="flex flex-col items-center gap-3">
         <div className="relative w-[80px] h-[80px]">
           <AnimatePresence mode="wait">
-            <motion.div
-              key={currentIndex}
-              initial={{ opacity: 0, scale: 0.8, rotateY: -90 }}
-              animate={{ opacity: 1, scale: 1, rotateY: 0 }}
-              exit={{ opacity: 0, scale: 0.8, rotateY: 90 }}
-              transition={{ duration: 0.5, ease: "easeInOut" }}
-              className="absolute inset-0 rounded-xl bg-white/80 backdrop-blur-md border border-gray-200 flex items-center justify-center shadow-lg p-3"
-            >
-              <img 
-                src={currentProgram.logo} 
-                alt={currentProgram.name}
-                className="w-full h-full object-contain"
-                loading="lazy"
-                decoding="async"
-              />
+            <motion.div key={currentIndex} initial={{
+            opacity: 0,
+            scale: 0.8,
+            rotateY: -90
+          }} animate={{
+            opacity: 1,
+            scale: 1,
+            rotateY: 0
+          }} exit={{
+            opacity: 0,
+            scale: 0.8,
+            rotateY: 90
+          }} transition={{
+            duration: 0.5,
+            ease: "easeInOut"
+          }} className="absolute inset-0 rounded-xl bg-white/80 backdrop-blur-md border border-gray-200 flex items-center justify-center shadow-lg p-3">
+              <img src={currentProgram.logo} alt={currentProgram.name} className="w-full h-full object-contain" loading="lazy" decoding="async" />
             </motion.div>
           </AnimatePresence>
         </div>
         <AnimatePresence mode="wait">
-          <motion.span 
-            key={currentIndex}
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.3 }}
-            className="text-sm font-medium text-gray-900"
-          >
+          <motion.span key={currentIndex} initial={{
+          opacity: 0,
+          y: 10
+        }} animate={{
+          opacity: 1,
+          y: 0
+        }} exit={{
+          opacity: 0,
+          y: -10
+        }} transition={{
+          duration: 0.3
+        }} className="text-sm font-medium text-gray-900">
             {currentProgram.name}
           </motion.span>
         </AnimatePresence>
