@@ -1,126 +1,140 @@
-import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
+import { FileText, Search, Settings } from "lucide-react";
 
 export const CodeEditorVisual = () => {
-  const [showCursor, setShowCursor] = useState(true);
+  const [displayedCode, setDisplayedCode] = useState<string[]>([]);
+  const [cursorLine, setCursorLine] = useState(0);
+  const [cursorVisible, setCursorVisible] = useState(true);
 
-  // Blinking cursor effect
+  const codeLines = [
+    'def analyze_workflow(data):',
+    '    """Analyze and optimize business workflows"""',
+    '    metrics = calculate_efficiency(data)',
+    '    if metrics.manual_tasks > threshold:',
+    '        automation = build_ai_solution(metrics)',
+    '        return automation.deploy()',
+    '    else:',
+    '        return optimize_existing(metrics)',
+    '',
+    '# AI-driven automation engine',
+    'result = analyze_workflow(business_data)',
+    'deploy_smart_automation(result)',
+  ];
+
+  // Typewriter effect
+  useEffect(() => {
+    if (displayedCode.length < codeLines.length) {
+      const timer = setTimeout(() => {
+        setDisplayedCode([...displayedCode, codeLines[displayedCode.length]]);
+        setCursorLine(displayedCode.length);
+      }, 200);
+      return () => clearTimeout(timer);
+    }
+  }, [displayedCode, codeLines]);
+
+  // Blinking cursor
   useEffect(() => {
     const interval = setInterval(() => {
-      setShowCursor((prev) => !prev);
+      setCursorVisible((prev) => !prev);
     }, 530);
     return () => clearInterval(interval);
   }, []);
 
+  const highlightSyntax = (line: string) => {
+    const keywords = ['def', 'if', 'else', 'return'];
+    const strings = /(".*?"|'.*?')/g;
+    const functions = /\b([a-z_]+)\(/g;
+    const comments = /(#.*$)/;
+
+    let highlighted = line;
+
+    // Strings
+    highlighted = highlighted.replace(strings, '<span class="text-emerald-600">$1</span>');
+    
+    // Keywords
+    keywords.forEach(keyword => {
+      const regex = new RegExp(`\\b${keyword}\\b`, 'g');
+      highlighted = highlighted.replace(regex, `<span class="text-indigo-700 font-bold">${keyword}</span>`);
+    });
+
+    // Functions
+    highlighted = highlighted.replace(functions, '<span class="text-blue-700">$1</span>(');
+
+    // Comments
+    highlighted = highlighted.replace(comments, '<span class="text-gray-500 italic">$1</span>');
+
+    return highlighted;
+  };
+
   return (
-    <div className="relative h-[280px] w-full bg-white/60 backdrop-blur-md border border-gray-200 rounded-xl overflow-hidden shadow-lg">
-      {/* Editor Header */}
-      <div className="flex items-center gap-2 px-4 py-3 border-b border-gray-200 bg-white/40">
-        {/* Window controls */}
-        <div className="flex items-center gap-1.5">
-          <div className="w-3 h-3 rounded-full bg-red-400/60" />
-          <div className="w-3 h-3 rounded-full bg-yellow-400/60" />
-          <div className="w-3 h-3 rounded-full bg-green-400/60" />
-        </div>
-        
-        {/* Filename */}
-        <span className="ml-2 text-xs font-mono text-gray-600">ai_system.py</span>
-      </div>
-
-      {/* Code Area */}
-      <div className="p-4 font-mono text-sm leading-relaxed">
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.5 }}
-        >
-          {/* Line 1 */}
-          <div className="flex">
-            <span className="text-gray-400 select-none mr-4">1</span>
-            <span className="text-indigo-600 font-semibold">def</span>
-            <span className="text-gray-900 ml-1">analyze_workflow</span>
-            <span className="text-gray-600">(</span>
-            <span className="text-gray-900">data</span>
-            <span className="text-gray-600">):</span>
-          </div>
-
-          {/* Line 2 */}
-          <div className="flex mt-1">
-            <span className="text-gray-400 select-none mr-4">2</span>
-            <span className="ml-6 text-indigo-600 font-semibold">if</span>
-            <span className="text-gray-900 ml-1">data.status</span>
-            <span className="text-gray-600 ml-1">==</span>
-            <span className="text-green-600 ml-1">"inefficient"</span>
-            <span className="text-gray-600">:</span>
-          </div>
-
-          {/* Line 3 */}
-          <div className="flex mt-1">
-            <span className="text-gray-400 select-none mr-4">3</span>
-            <span className="ml-12 text-indigo-600 font-semibold">return</span>
-            <span className="text-blue-600 ml-1">optimize_process</span>
-            <span className="text-gray-600">()</span>
-          </div>
-
-          {/* Line 4 */}
-          <div className="flex mt-1">
-            <span className="text-gray-400 select-none mr-4">4</span>
-            <span className="ml-6 text-indigo-600 font-semibold">else</span>
-            <span className="text-gray-600">:</span>
-          </div>
-
-          {/* Line 5 */}
-          <div className="flex mt-1">
-            <span className="text-gray-400 select-none mr-4">5</span>
-            <span className="ml-12 text-indigo-600 font-semibold">return</span>
-            <span className="text-green-600 ml-1">"No action needed"</span>
-          </div>
-
-          {/* Line 6 - empty */}
-          <div className="flex mt-1">
-            <span className="text-gray-400 select-none mr-4">6</span>
-          </div>
-
-          {/* Line 7 */}
-          <div className="flex mt-1">
-            <span className="text-gray-400 select-none mr-4">7</span>
-            <span className="text-gray-400 italic"># AI-driven automation</span>
-          </div>
-
-          {/* Line 8 with blinking cursor */}
-          <div className="flex mt-1">
-            <span className="text-gray-400 select-none mr-4">8</span>
-            <span className="text-blue-600">run_automation</span>
-            <span className="text-gray-600">(</span>
-            <span className="text-gray-900">workflow_data</span>
-            <span className="text-gray-600">)</span>
-            {showCursor && (
-              <motion.span
-                className="inline-block w-[2px] h-4 bg-indigo-600 ml-0.5"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-              />
-            )}
-          </div>
+    <div className="relative h-[280px] w-full flex bg-white/60 backdrop-blur-md border border-gray-300 rounded-xl overflow-hidden shadow-lg">
+      {/* Sidebar */}
+      <div className="w-12 bg-white/20 border-r border-gray-200 flex flex-col items-center gap-4 py-4">
+        <motion.div whileHover={{ scale: 1.1 }} className="cursor-pointer">
+          <FileText className="w-5 h-5 text-indigo-600" />
+        </motion.div>
+        <motion.div whileHover={{ scale: 1.1 }} className="cursor-pointer">
+          <Search className="w-5 h-5 text-gray-500" />
+        </motion.div>
+        <motion.div whileHover={{ scale: 1.1 }} className="cursor-pointer">
+          <Settings className="w-5 h-5 text-gray-500" />
         </motion.div>
       </div>
 
-      {/* Bottom status bar */}
-      <div className="absolute bottom-0 left-0 right-0 px-4 py-2 border-t border-gray-200 bg-white/40 flex items-center justify-between">
-        <span className="text-xs text-gray-500 font-mono">Python 3.11</span>
-        <div className="flex items-center gap-2">
-          <motion.div
-            className="w-2 h-2 bg-green-500 rounded-full"
-            animate={{
-              opacity: [1, 0.5, 1],
-            }}
-            transition={{
-              duration: 2,
-              ease: "easeInOut",
-              repeat: Infinity,
-            }}
-          />
-          <span className="text-xs text-gray-500">AI Engine Active</span>
+      {/* Main editor area */}
+      <div className="flex-1 flex flex-col">
+        {/* Editor header */}
+        <div className="flex items-center justify-between px-4 py-2 bg-white/30 border-b border-gray-200">
+          {/* Window controls */}
+          <div className="flex gap-2">
+            <motion.div whileHover={{ scale: 1.2 }} className="w-3 h-3 rounded-full bg-red-400" />
+            <motion.div whileHover={{ scale: 1.2 }} className="w-3 h-3 rounded-full bg-yellow-400" />
+            <motion.div whileHover={{ scale: 1.2 }} className="w-3 h-3 rounded-full bg-green-400" />
+          </div>
+
+          {/* Filename */}
+          <span className="text-xs font-medium text-gray-700">ai_system.py</span>
+
+          {/* Line info */}
+          <span className="text-xs text-gray-500">Line {cursorLine + 1}</span>
+        </div>
+
+        {/* Code area */}
+        <div className="flex-1 p-4 font-mono text-xs overflow-auto leading-normal">
+          <div className="space-y-0.5">
+            {displayedCode.map((line, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.3 }}
+                className="flex gap-3"
+              >
+                <span className="text-gray-400 select-none w-6 text-right">{index + 1}</span>
+                <span 
+                  className="flex-1"
+                  dangerouslySetInnerHTML={{ __html: highlightSyntax(line) }}
+                />
+                {index === cursorLine && cursorVisible && displayedCode.length === codeLines.length && (
+                  <span className="inline-block w-2 h-3.5 bg-indigo-600" />
+                )}
+              </motion.div>
+            ))}
+          </div>
+        </div>
+
+        {/* Status bar */}
+        <div className="flex items-center justify-between px-4 py-2 bg-white/30 border-t border-gray-200 text-xs text-gray-600">
+          <span>Python 3.11</span>
+          <div className="flex items-center gap-2">
+            <motion.div
+              className="w-2 h-2 rounded-full bg-green-500"
+              animate={{ opacity: [1, 0.5, 1], scale: [1, 1.2, 1] }}
+              transition={{ duration: 2, repeat: Infinity }}
+            />
+            <span className="font-medium">AI Engine Active</span>
+          </div>
         </div>
       </div>
     </div>
