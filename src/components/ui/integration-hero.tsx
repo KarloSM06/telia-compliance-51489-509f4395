@@ -23,7 +23,7 @@ export default function IntegrationHero() {
       <div className="relative w-full px-6 md:px-12 text-center">
         
         <AnimatedSection>
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-display font-normal text-gray-900 mb-3">Sömlös Integration med er Techstack</h1>
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-display font-normal text-gray-900 mb-3">Sömlös Integration med hundratals Tjänster</h1>
         </AnimatedSection>
         
 
