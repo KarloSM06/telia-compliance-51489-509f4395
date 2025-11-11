@@ -14,7 +14,6 @@ import endToEndImage from "@/assets/service-operations.jpg";
 import bvisatRoiImage from "@/assets/growth-sales-accelerator.jpg";
 import { AuroraBackground } from "@/components/ui/aurora-background";
 import { Card, CardContent } from "@/components/ui/card";
-import { TeamSection } from "@/components/ui/team-section";
 
 interface TeamMember {
   name: string;
@@ -364,21 +363,65 @@ const AboutUs = () => {
             </div>
           </section>
 
-          {/* Team Section - New Component */}
-          <section id="team-section">
-            <TeamSection
-              title="TEAM"
-              description="Människorna som gör AI-magin möjlig"
-              members={teamMembers.map(member => ({
-                name: member.name,
-                designation: member.role,
-                imageSrc: member.image || "",
-                socialLinks: [
-                  { icon: Mail, href: `mailto:${member.email}` },
-                  { icon: Phone, href: `tel:${member.phone.replace(/\s/g, '')}` }
-                ]
-              }))}
-            />
+          {/* Team Section */}
+          <section id="team-section" className="relative py-24 md:py-32 overflow-hidden">
+            <div className="mx-auto max-w-7xl px-6 lg:px-8 relative">
+              <AnimatedSection delay={0}>
+                <div className="text-center space-y-4 mb-16">
+                  <h2 className="text-4xl sm:text-5xl font-bold bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent">
+                    TEAM
+                  </h2>
+                  <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+                    Människorna som gör AI-magin möjlig
+                  </p>
+                  <div className="w-32 h-1.5 bg-gradient-to-r from-primary via-primary/60 to-transparent mx-auto rounded-full shadow-lg shadow-primary/50 mt-2" />
+                </div>
+              </AnimatedSection>
+
+              <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                {teamMembers.map((member, index) => (
+                  <AnimatedSection key={member.name} delay={index * 100}>
+                    <Card className="h-full bg-card/20 backdrop-blur-md border border-primary/10 overflow-hidden">
+                      <CardContent className="p-6 text-center space-y-4">
+                        {member.image && (
+                          <div className="mx-auto w-32 h-32 rounded-full overflow-hidden border-2 border-primary/20">
+                            <img 
+                              src={member.image} 
+                              alt={member.name}
+                              className="w-full h-full object-cover"
+                            />
+                          </div>
+                        )}
+                        <div>
+                          <h3 className="text-xl font-bold">{member.name}</h3>
+                          <p className="text-sm text-primary font-semibold">{member.role}</p>
+                        </div>
+                        <div className="flex justify-center gap-4">
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            asChild
+                          >
+                            <a href={`mailto:${member.email}`}>
+                              <Mail className="h-4 w-4" />
+                            </a>
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            asChild
+                          >
+                            <a href={`tel:${member.phone.replace(/\s/g, '')}`}>
+                              <Phone className="h-4 w-4" />
+                            </a>
+                          </Button>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </AnimatedSection>
+                ))}
+              </div>
+            </div>
           </section>
 
           {/* Vår Resa */}

@@ -1,7 +1,6 @@
 import { motion, useReducedMotion } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
 import { Phone, Brain, Workflow, BarChart3, FileText, Database, MessageSquare, Users, Shield, TrendingUp } from "lucide-react";
-import { CardSpotlight } from "@/components/ui/card-spotlight";
 const AnimatedContainer = ({
   className,
   delay = 0.1,
@@ -42,7 +41,7 @@ const FlowCard = ({
   delay?: number;
 }) => {
   return <AnimatedContainer delay={delay}>
-    <CardSpotlight className="border-2 border-white/10 bg-white/5 backdrop-blur-md hover:bg-white/10 hover:border-white/20 transition-all duration-300 p-5 rounded-2xl">
+    <Card className="border-2 border-white/10 bg-white/5 backdrop-blur-md hover:bg-white/10 hover:border-white/20 transition-all duration-300 p-5 rounded-2xl">
       <div className="relative flex aspect-square size-12 rounded-full border before:absolute before:-inset-2 before:rounded-full before:border dark:border-white/10 dark:before:border-white/5">
         <Icon className="m-auto size-6 text-primary" strokeWidth={1.5} />
       </div>
@@ -50,7 +49,7 @@ const FlowCard = ({
         <h2 className="text-lg font-semibold text-foreground">{title}</h2>
         <p className="text-sm text-muted-foreground">{description}</p>
       </div>
-    </CardSpotlight>
+    </Card>
   </AnimatedContainer>;
 };
 export const ServiceDataFlow = () => {
@@ -69,7 +68,7 @@ export const ServiceDataFlow = () => {
       <div className="relative">
         <div className="relative z-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {/* Main hero card - AI Intelligent (avlång) */}
-          <CardSpotlight className="relative flex sm:col-span-2 border-2 border-white/10 bg-white/5 backdrop-blur-md hover:bg-white/10 hover:border-white/20 transition-all duration-300 p-6 rounded-2xl">
+          <Card className="relative flex sm:col-span-2 border-2 border-white/10 bg-white/5 backdrop-blur-md hover:bg-white/10 hover:border-white/20 transition-all duration-300 p-6 rounded-2xl">
             <div className="relative flex items-center gap-6 w-full">
               <div className="relative flex h-20 w-40 items-center shrink-0">
                 <svg className="text-muted absolute inset-0 size-full" viewBox="0 0 254 104" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -79,7 +78,7 @@ export const ServiceDataFlow = () => {
               </div>
               <h2 className="text-2xl font-semibold">Intelligent</h2>
             </div>
-          </CardSpotlight>
+          </Card>
 
           {/* AI Receptionist */}
           <FlowCard icon={Phone} title="AI Receptionist" description="Svarar naturligt på svenska, bokar möten och uppdaterar CRM automatiskt med AI-driven konversation." delay={0.1} />
@@ -88,7 +87,7 @@ export const ServiceDataFlow = () => {
           <FlowCard icon={MessageSquare} title="Chatbot & Kommunikation" description="Analyserar frågor, hämtar relevant info från databas och genererar personliga svar i realtid." delay={0.15} />
 
           {/* AI Modeller */}
-          <CardSpotlight className="relative border-2 border-white/10 bg-white/5 backdrop-blur-md hover:bg-white/10 hover:border-white/20 transition-all duration-300 p-5 rounded-2xl">
+          <Card className="relative border-2 border-white/10 bg-white/5 backdrop-blur-md hover:bg-white/10 hover:border-white/20 transition-all duration-300 p-5 rounded-2xl">
             <div className="relative flex aspect-square size-12 rounded-full border before:absolute before:-inset-2 before:rounded-full before:border dark:border-white/10 dark:before:border-white/5">
               <Brain className="m-auto size-6 text-primary" strokeWidth={1.5} />
             </div>
@@ -96,10 +95,10 @@ export const ServiceDataFlow = () => {
               <h2 className="text-lg font-semibold text-foreground">AI Modeller (LLM)</h2>
               <p className="text-sm text-muted-foreground">Processar data med avancerade språkmodeller för intelligent output.</p>
             </div>
-          </CardSpotlight>
+          </Card>
 
           {/* Automation & Integration - nu under AI Modeller */}
-          <CardSpotlight className="relative border-2 border-white/10 bg-white/5 backdrop-blur-md hover:bg-white/10 hover:border-white/20 transition-all duration-300 p-5 rounded-2xl">
+          <Card className="relative border-2 border-white/10 bg-white/5 backdrop-blur-md hover:bg-white/10 hover:border-white/20 transition-all duration-300 p-5 rounded-2xl">
             <div className="relative flex aspect-square size-12 rounded-full border before:absolute before:-inset-2 before:rounded-full before:border dark:border-white/10 dark:before:border-white/5">
               <Workflow className="m-auto size-6 text-primary" strokeWidth={1.5} />
             </div>
@@ -107,10 +106,10 @@ export const ServiceDataFlow = () => {
               <h2 className="text-lg font-semibold text-foreground">Automation & Integration</h2>
               <p className="text-sm text-muted-foreground">Synkar data mellan system och kör automatiska workflows vid triggers.</p>
             </div>
-          </CardSpotlight>
+          </Card>
 
           {/* Analytics Card with Graph */}
-          <CardSpotlight className="relative sm:col-span-2 border-2 border-white/10 bg-white/5 backdrop-blur-md hover:bg-white/10 hover:border-white/20 transition-all duration-300 p-6 rounded-2xl">
+          <Card className="relative sm:col-span-2 border-2 border-white/10 bg-white/5 backdrop-blur-md hover:bg-white/10 hover:border-white/20 transition-all duration-300 p-6 rounded-2xl">
             <div className="grid sm:grid-cols-2">
               <div className="relative z-10 flex flex-col justify-between space-y-6">
                 <div className="relative flex aspect-square size-12 rounded-full border before:absolute before:-inset-2 before:rounded-full before:border dark:border-white/10 dark:before:border-white/5">
@@ -139,10 +138,10 @@ export const ServiceDataFlow = () => {
                 </svg>
               </div>
             </div>
-          </CardSpotlight>
+          </Card>
 
           {/* Offert & Faktura */}
-          <CardSpotlight className="relative sm:col-span-2 border-2 border-white/10 bg-white/5 backdrop-blur-md hover:bg-white/10 hover:border-white/20 transition-all duration-300 p-6 rounded-2xl">
+          <Card className="relative sm:col-span-2 border-2 border-white/10 bg-white/5 backdrop-blur-md hover:bg-white/10 hover:border-white/20 transition-all duration-300 p-6 rounded-2xl">
             <div className="grid h-full sm:grid-cols-2">
               <div className="relative z-10 flex flex-col justify-between space-y-6">
                 <div className="relative flex aspect-square size-12 rounded-full border before:absolute before:-inset-2 before:rounded-full before:border dark:border-white/10 dark:before:border-white/5">
@@ -162,7 +161,7 @@ export const ServiceDataFlow = () => {
                 </div>
               </div>
             </div>
-          </CardSpotlight>
+          </Card>
 
           {/* RAG & Data-agenter */}
           <FlowCard icon={Database} title="RAG & Data-agenter" description="Söker i vektordatabas, hämtar relevant kontext och genererar korrekta svar som lär sig över tid." delay={0.2} />

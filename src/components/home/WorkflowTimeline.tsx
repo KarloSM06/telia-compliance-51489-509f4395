@@ -1,7 +1,28 @@
-import { Timeline } from "@/components/ui/timeline";
 import { Calendar, FileText, Settings, CheckCircle, Rocket } from "lucide-react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { ReactNode } from "react";
+import { motion, useReducedMotion } from "framer-motion";
+const SimpleTimeline = ({ data }: { data: { title: string; content: ReactNode }[] }) => {
+  const shouldReduceMotion = useReducedMotion();
+  
+  return (
+    <div className="relative mx-auto w-full max-w-5xl space-y-12 py-12">
+      {data.map((item, index) => (
+        <motion.div
+          key={index}
+          initial={shouldReduceMotion ? {} : { opacity: 0, y: 20 }}
+          whileInView={shouldReduceMotion ? {} : { opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: index * 0.1, duration: 0.5 }}
+          className="relative"
+        >
+          {item.content}
+        </motion.div>
+      ))}
+    </div>
+  );
+};
+
 export const WorkflowTimeline = () => {
   const data = [{
     title: "Steg 1",
@@ -134,7 +155,7 @@ export const WorkflowTimeline = () => {
           </CardContent>
         </Card>
   }];
-  return <Timeline data={data} />;
+  return <SimpleTimeline data={data} />;
 };
 const CardDecorator = ({
   children
