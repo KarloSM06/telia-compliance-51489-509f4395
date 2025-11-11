@@ -50,7 +50,7 @@ const DatabaseWithRestApi = ({
     >
       {/* SVG Paths  */}
       <svg
-        className="h-full sm:w-full text-purple-500/40"
+        className="h-full sm:w-full text-primary/40"
         width="100%"
         height="100%"
         viewBox="0 0 200 100"
@@ -120,7 +120,7 @@ const DatabaseWithRestApi = ({
           {/* First Button */}
           <g>
             <rect
-              fill="url(#badge-gradient)"
+              fill="hsl(var(--primary))"
               x="14"
               y="5"
               width="34"
@@ -146,7 +146,7 @@ const DatabaseWithRestApi = ({
           {/* Second Button */}
           <g>
             <rect
-              fill="url(#badge-gradient)"
+              fill="hsl(var(--primary))"
               x="60"
               y="5"
               width="34"
@@ -172,7 +172,7 @@ const DatabaseWithRestApi = ({
           {/* Third Button */}
           <g>
             <rect
-              fill="url(#badge-gradient)"
+              fill="hsl(var(--primary))"
               x="108"
               y="5"
               width="34"
@@ -198,7 +198,7 @@ const DatabaseWithRestApi = ({
           {/* Fourth Button */}
           <g>
             <rect
-              fill="url(#badge-gradient)"
+              fill="hsl(var(--primary))"
               x="150"
               y="5"
               width="40"
@@ -255,17 +255,11 @@ const DatabaseWithRestApi = ({
               stroke="white"
             />
           </mask>
-          {/* Purple Grad for lights */}
+          {/* Blue Grad */}
           <radialGradient id="db-blue-grad" fx="1">
-            <stop offset="0%" stopColor={lightColor || "#a855f7"} />
+            <stop offset="0%" stopColor={lightColor || "#00A6F5"} />
             <stop offset="100%" stopColor="transparent" />
           </radialGradient>
-          {/* Purple gradient for badges */}
-          <linearGradient id="badge-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor="#6366f1" />
-            <stop offset="50%" stopColor="#a855f7" />
-            <stop offset="100%" stopColor="#9333ea" />
-          </linearGradient>
         </defs>
       </svg>
       {/* Main Box */}
@@ -273,51 +267,51 @@ const DatabaseWithRestApi = ({
         {/* bottom shadow */}
         <div className="absolute -bottom-4 h-[100px] w-[62%] rounded-lg bg-accent/30" />
         {/* box title */}
-        <div className="absolute -top-3 z-20 flex items-center justify-center rounded-lg border border-purple-500/20 bg-purple-500/10 backdrop-blur px-3 py-2 sm:-top-4 sm:py-2.5">
-          <SparklesIcon className="size-4 text-purple-600" />
+        <div className="absolute -top-3 z-20 flex items-center justify-center rounded-lg border border-primary/20 bg-primary/10 backdrop-blur px-3 py-2 sm:-top-4 sm:py-2.5">
+          <SparklesIcon className="size-4 text-primary" />
           <span className="ml-2 text-xs font-semibold text-foreground">
             {title ? title : "Data exchange using a customized REST API"}
           </span>
         </div>
         {/* box outter circle */}
-        <div className="absolute -bottom-8 z-30 grid h-[70px] w-[70px] place-items-center rounded-full border-2 border-purple-500/40 bg-gradient-to-br from-indigo-500/20 via-purple-500/20 to-purple-600/20 backdrop-blur font-bold text-sm text-foreground">
+        <div className="absolute -bottom-8 z-30 grid h-[70px] w-[70px] place-items-center rounded-full border-2 border-primary/40 bg-primary/20 backdrop-blur font-bold text-sm text-foreground">
           {circleText ? circleText : "API"}
         </div>
         {/* box content */}
-        <div className="relative z-10 flex h-[200px] w-full items-center justify-center overflow-hidden rounded-lg border border-purple-500/20 bg-card/50 backdrop-blur shadow-glow">
+        <div className="relative z-10 flex h-[200px] w-full items-center justify-center overflow-hidden rounded-lg border border-primary/20 bg-card/50 backdrop-blur shadow-glow">
           {/* Badges */}
-          <div className="absolute bottom-8 left-12 z-10 h-8 rounded-full bg-gradient-to-r from-indigo-500/20 via-purple-500/20 to-purple-600/20 backdrop-blur px-4 text-sm border border-purple-500/30 flex items-center gap-2">
-            <HeartHandshakeIcon className="size-5 text-purple-600" />
+          <div className="absolute bottom-8 left-12 z-10 h-8 rounded-full bg-primary/20 backdrop-blur px-4 text-sm border border-primary/30 flex items-center gap-2">
+            <HeartHandshakeIcon className="size-5 text-primary" />
             <span className="font-semibold text-foreground">{buttonTexts?.first || "Hiems"}</span>
           </div>
-          <div className="absolute right-16 z-10 hidden h-8 rounded-full bg-gradient-to-r from-indigo-500/20 via-purple-500/20 to-purple-600/20 backdrop-blur px-4 text-sm sm:flex border border-purple-500/30 items-center gap-2">
-            <Folder className="size-5 text-purple-600" />
+          <div className="absolute right-16 z-10 hidden h-8 rounded-full bg-primary/20 backdrop-blur px-4 text-sm sm:flex border border-primary/30 items-center gap-2">
+            <Folder className="size-5 text-primary" />
             <span className="font-semibold text-foreground">{buttonTexts?.second || "Dashboard"}</span>
           </div>
           {/* Circles */}
           <motion.div
-            className="absolute -bottom-14 h-[130px] w-[130px] rounded-full border-t border-purple-500/20 bg-purple-500/5"
+            className="absolute -bottom-14 h-[130px] w-[130px] rounded-full border-t border-primary/20 bg-primary/5"
             animate={{
               scale: [0.98, 1.02, 0.98, 1, 1, 1, 1, 1, 1],
             }}
             transition={{ duration: 2, repeat: Infinity }}
           />
           <motion.div
-            className="absolute -bottom-20 h-[185px] w-[185px] rounded-full border-t border-purple-500/20 bg-purple-500/5"
+            className="absolute -bottom-20 h-[185px] w-[185px] rounded-full border-t border-primary/20 bg-primary/5"
             animate={{
               scale: [1, 1, 1, 0.98, 1.02, 0.98, 1, 1, 1],
             }}
             transition={{ duration: 2, repeat: Infinity }}
           />
           <motion.div
-            className="absolute -bottom-[100px] h-[240px] w-[240px] rounded-full border-t border-purple-500/20 bg-purple-500/5"
+            className="absolute -bottom-[100px] h-[240px] w-[240px] rounded-full border-t border-primary/20 bg-primary/5"
             animate={{
               scale: [1, 1, 1, 1, 1, 0.98, 1.02, 0.98, 1, 1],
             }}
             transition={{ duration: 2, repeat: Infinity }}
           />
           <motion.div
-            className="absolute -bottom-[130px] h-[300px] w-[300px] rounded-full border-t border-purple-500/20 bg-purple-500/5"
+            className="absolute -bottom-[130px] h-[300px] w-[300px] rounded-full border-t border-primary/20 bg-primary/5"
             animate={{
               scale: [1, 1, 1, 1, 1, 1, 0.98, 1.02, 0.98, 1],
             }}
