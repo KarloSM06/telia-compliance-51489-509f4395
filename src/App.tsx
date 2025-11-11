@@ -6,12 +6,12 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { lazy, Suspense } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 
-// Lazy load routes
-const Index = lazy(() => import("./pages/Index"));
-const NotFound = lazy(() => import("./pages/NotFound"));
-
-// Direct import for Paket to avoid React hook race condition
+// Direct imports to avoid React hook race condition
+import Index from "./pages/Index";
 import Paket from "./pages/Paket";
+
+// Lazy load only NotFound
+const NotFound = lazy(() => import("./pages/NotFound"));
 
 // Loading fallback component
 const PageLoader = () => (
