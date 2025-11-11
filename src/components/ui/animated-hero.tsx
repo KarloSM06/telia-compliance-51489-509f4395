@@ -33,7 +33,10 @@ function AnimatedHero({
             width: '100%',
             height: '100%',
             pointerEvents: 'none',
-            opacity: 1.0
+            opacity: 1.0,
+            willChange: 'opacity, transform',
+            transform: 'translateZ(0)',
+            backfaceVisibility: 'hidden'
           }}
           fallback={
             <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/10 via-purple-500/10 to-violet-600/10 animate-pulse" />
