@@ -109,38 +109,6 @@ export const UnifiedDashboard = () => {
           </p>
         </AnimatedContainer>
 
-        {/* Central Dashboard Visualization */}
-        <AnimatedContainer delay={0.3} className="relative">
-          {/* Data sources flowing into central dashboard */}
-          
-
-          {/* Data Flow Visualization */}
-          <AnimatedContainer delay={1.0} className="flex justify-center mt-16">
-            <DatabaseWithRestApi 
-              className="mx-auto scale-125" 
-              circleText="Hiems" 
-              title="Centraliserad Datahantering via REST API" 
-              badgeTexts={{
-                first: "Samtal",
-                second: "SMS",
-                third: "Mail",
-                fourth: "Reviews"
-              }} 
-              badgeIcons={{
-                first: Phone,
-                second: MessageSquare,
-                third: Mail,
-                fourth: Star
-              }}
-              buttonTexts={{
-                first: "Hiems",
-                second: "Dashboard"
-              }} 
-              lightColor="hsl(var(--primary))" 
-            />
-          </AnimatedContainer>
-        </AnimatedContainer>
-
         {/* Service Data Flows */}
         <ServiceDataFlow />
       </div>

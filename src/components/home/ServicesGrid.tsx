@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import { servicesData } from "@/data/services";
 import { FeatureCard } from "@/components/ui/grid-feature-cards";
 import { EvervaultCard } from "@/components/ui/evervault-card";
+import DatabaseWithRestApi from "@/components/ui/database-with-rest-api";
+import { Phone, MessageSquare, Mail, Star } from "lucide-react";
 
 const AnimatedContainer = ({ 
   className, 
@@ -46,6 +48,34 @@ export const ServicesGrid = () => {
             <br />
             <span className="font-semibold text-gray-900">Allt vi skapar kan ägas av dig, helt utan beroenden.</span>
           </p>
+        </AnimatedContainer>
+
+        {/* Compact Data Flow Visualization */}
+        <AnimatedContainer delay={0.3} className="flex justify-center my-8">
+          <div className="max-w-2xl w-full">
+            <DatabaseWithRestApi 
+              className="mx-auto scale-75 md:scale-90" 
+              circleText="Hiems" 
+              title="Centraliserad Datahantering" 
+              badgeTexts={{
+                first: "Samtal",
+                second: "SMS",
+                third: "Mail",
+                fourth: "Reviews"
+              }} 
+              badgeIcons={{
+                first: Phone,
+                second: MessageSquare,
+                third: Mail,
+                fourth: Star
+              }}
+              buttonTexts={{
+                first: "Hiems",
+                second: "Dashboard"
+              }} 
+              lightColor="hsl(var(--primary))" 
+            />
+          </div>
         </AnimatedContainer>
 
         <AnimatedContainer
