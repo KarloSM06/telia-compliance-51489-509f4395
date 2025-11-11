@@ -1,6 +1,4 @@
 import { AnimatedSection } from "@/components/shared/AnimatedSection";
-import DatabaseWithRestApi from "@/components/ui/database-with-rest-api";
-import { Phone, MessageSquare, Mail, Star } from "lucide-react";
 
 const processSteps = [
   {
@@ -73,40 +71,11 @@ export const ProcessGrid = () => {
                 </p>
                 
                 {/* Visual Mockup Area */}
-                {step.id === 3 ? (
-                  <div className="bg-white/40 backdrop-blur-sm border border-gray-200 rounded-xl p-2 h-[280px] flex items-center justify-center overflow-hidden">
-                    <div className="w-full flex justify-center -my-8">
-                      <DatabaseWithRestApi 
-                        className="scale-90 md:scale-100" 
-                        circleText="Hiems" 
-                        title="" 
-                        badgeTexts={{
-                          first: "Samtal",
-                          second: "SMS",
-                          third: "Mail",
-                          fourth: "Reviews"
-                        }} 
-                        badgeIcons={{
-                          first: Phone,
-                          second: MessageSquare,
-                          third: Mail,
-                          fourth: Star
-                        }}
-                        buttonTexts={{
-                          first: "Hiems",
-                          second: "Dashboard"
-                        }} 
-                        lightColor="hsl(var(--primary))" 
-                      />
-                    </div>
-                  </div>
-                ) : (
-                  <div className="bg-white/40 backdrop-blur-sm border border-gray-200 rounded-xl p-6 h-[280px] flex items-center justify-center">
-                    <span className="text-sm text-gray-400">
-                      [Illustration - {step.title}]
-                    </span>
-                  </div>
-                )}
+                <div className="bg-white/40 backdrop-blur-sm border border-gray-200 rounded-xl p-6 h-[280px] flex items-center justify-center">
+                  <span className="text-sm text-gray-400">
+                    [Illustration - {step.title}]
+                  </span>
+                </div>
               </div>
             </AnimatedSection>
           ))}

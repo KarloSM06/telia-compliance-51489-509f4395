@@ -1,5 +1,7 @@
 import { AnimatedSection } from "@/components/shared/AnimatedSection";
 import dashboardScreenshot from "@/assets/dashboard-screenshot.png";
+import DatabaseWithRestApi from "@/components/ui/database-with-rest-api";
+import { Phone, MessageSquare, Mail, Star } from "lucide-react";
 
 const servicesData = [
   {
@@ -130,13 +132,42 @@ export const AlternatingServicesSection = () => {
                 
                 {/* Mockup side - Glassmorphism container */}
                 <div className={`bg-white/80 backdrop-blur-xl border border-gray-100 rounded-2xl p-8 shadow-lg ${service.isReversed ? 'md:col-start-1' : ''}`}>
-                  <img 
-                    src={service.mockup} 
-                    alt={service.title} 
-                    className="w-full rounded-lg"
-                    loading="lazy"
-                    decoding="async"
-                  />
+                  {service.id === 1 ? (
+                    // DatabaseWithRestApi figur för Dashboards & Decision Intelligence
+                    <div className="w-full flex justify-center -my-8">
+                      <DatabaseWithRestApi 
+                        className="scale-90 md:scale-100" 
+                        circleText="Hiems" 
+                        title="" 
+                        badgeTexts={{
+                          first: "Samtal",
+                          second: "SMS",
+                          third: "Mail",
+                          fourth: "Reviews"
+                        }} 
+                        badgeIcons={{
+                          first: Phone,
+                          second: MessageSquare,
+                          third: Mail,
+                          fourth: Star
+                        }}
+                        buttonTexts={{
+                          first: "Hiems",
+                          second: "Dashboard"
+                        }} 
+                        lightColor="hsl(var(--primary))" 
+                      />
+                    </div>
+                  ) : (
+                    // Standard screenshot för alla andra tjänster
+                    <img 
+                      src={service.mockup} 
+                      alt={service.title} 
+                      className="w-full rounded-lg"
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  )}
                 </div>
               </div>
             </div>
