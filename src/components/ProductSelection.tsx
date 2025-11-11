@@ -88,9 +88,7 @@ export const ProductSelection = () => {
 
         {/* 12. Workflow Timeline */}
         <AnimatedSection>
-          <section id="process" className="relative py-12">
-            <WorkflowTimeline />
-          </section>
+          
         </AnimatedSection>
 
         {/* 13. Sticky Package Cards */}
