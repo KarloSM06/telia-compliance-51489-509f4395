@@ -9,8 +9,8 @@ const ALL_PROGRAMS = expertiseCategories.flatMap(cat => cat.items.filter(item =>
   logo: item.logo!
 })));
 
-// Optimerad repetition för sömlös loop
-const repeatedIcons = (programs: typeof ALL_PROGRAMS, repeat = 4) => Array.from({
+// Optimerad repetition för sömlös loop - reducerad på mobil
+const repeatedIcons = (programs: typeof ALL_PROGRAMS, repeat = 2) => Array.from({
   length: repeat
 }).flatMap(() => programs);
 export default function IntegrationHero() {
@@ -21,6 +21,9 @@ export default function IntegrationHero() {
   const halfLength = Math.ceil(ALL_PROGRAMS.length / 2);
   const row1 = ALL_PROGRAMS.slice(0, halfLength);
   const row2 = ALL_PROGRAMS.slice(halfLength);
+  
+  // Reducera repetition på mobil för bättre prestanda
+  const iconRepeat = isMobile ? 1 : 2;
   return <section className="relative py-12 md:py-16 overflow-hidden overflow-x-hidden">
       <div className="relative w-full px-4 md:px-6 text-center">
         
@@ -29,11 +32,11 @@ export default function IntegrationHero() {
         </AnimatedSection>
         
 
-        <div className="mt-6 md:mt-8 overflow-x-hidden relative pt-16 pb-8">
+        <div className="mt-6 md:mt-8 overflow-x-hidden relative pt-16 pb-8" style={{ contentVisibility: 'auto' }}>
           {/* Rad 1 - scrollar åt vänster */}
           <AnimatedSection delay={100}>
             <div className="flex gap-8 md:gap-10 whitespace-nowrap carousel-scroll-left transform-gpu will-change-transform">
-              {repeatedIcons(row1, 2).map((program, i) => <div key={i} className="h-20 w-20 md:h-24 md:w-24 flex-shrink-0 rounded-full bg-white/80 backdrop-blur-xl border border-gray-100 shadow-md flex items-center justify-center p-3 transition-all duration-300 hover:scale-110 hover:shadow-lg transform-gpu relative group z-30 hover:z-[100]" onMouseEnter={() => setHoveredProgram(program.name)} onMouseLeave={() => setHoveredProgram(null)}>
+              {repeatedIcons(row1, iconRepeat).map((program, i) => <div key={i} className="h-20 w-20 md:h-24 md:w-24 flex-shrink-0 rounded-full bg-white/80 backdrop-blur-xl border border-gray-100 shadow-md flex items-center justify-center p-3 transition-all duration-300 hover:scale-110 hover:shadow-lg transform-gpu relative group z-30 hover:z-[100]" onMouseEnter={() => setHoveredProgram(program.name)} onMouseLeave={() => setHoveredProgram(null)}>
                   <img src={program.logo} alt={program.name} loading="lazy" decoding="async" className="h-14 w-14 md:h-16 md:w-16 object-contain" />
                   
                   {/* Tooltip - Only show on desktop */}
@@ -54,7 +57,7 @@ export default function IntegrationHero() {
           {/* Rad 2 - scrollar åt höger */}
           <AnimatedSection delay={200}>
             <div className="flex gap-8 md:gap-10 whitespace-nowrap mt-4 md:mt-6 carousel-scroll-right transform-gpu will-change-transform">
-              {repeatedIcons(row2, 2).map((program, i) => <div key={i} className="h-20 w-20 md:h-24 md:w-24 flex-shrink-0 rounded-full bg-white/80 backdrop-blur-xl border border-gray-100 shadow-md flex items-center justify-center p-3 transition-all duration-300 hover:scale-110 hover:shadow-lg transform-gpu relative group hover:z-[100]" onMouseEnter={() => setHoveredProgram(program.name)} onMouseLeave={() => setHoveredProgram(null)}>
+              {repeatedIcons(row2, iconRepeat).map((program, i) => <div key={i} className="h-20 w-20 md:h-24 md:w-24 flex-shrink-0 rounded-full bg-white/80 backdrop-blur-xl border border-gray-100 shadow-md flex items-center justify-center p-3 transition-all duration-300 hover:scale-110 hover:shadow-lg transform-gpu relative group hover:z-[100]" onMouseEnter={() => setHoveredProgram(program.name)} onMouseLeave={() => setHoveredProgram(null)}>
                   <img src={program.logo} alt={program.name} loading="lazy" decoding="async" className="h-14 w-14 md:h-16 md:w-16 object-contain" />
                   
                   {/* Tooltip - Only show on desktop */}

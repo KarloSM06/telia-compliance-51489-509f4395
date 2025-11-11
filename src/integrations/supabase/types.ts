@@ -274,6 +274,42 @@ export type Database = {
         }
         Relationships: []
       }
+      booking_requests: {
+        Row: {
+          company_name: string
+          contact_person: string
+          created_at: string | null
+          email: string
+          id: string
+          message: string | null
+          phone: string
+          status: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          company_name: string
+          contact_person: string
+          created_at?: string | null
+          email: string
+          id?: string
+          message?: string | null
+          phone: string
+          status?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          company_name?: string
+          contact_person?: string
+          created_at?: string | null
+          email?: string
+          id?: string
+          message?: string | null
+          phone?: string
+          status?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       booking_sync_queue: {
         Row: {
           attempts: number | null
