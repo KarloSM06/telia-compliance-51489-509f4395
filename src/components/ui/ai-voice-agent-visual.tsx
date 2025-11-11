@@ -37,35 +37,7 @@ export const AIVoiceAgentVisual: React.FC<AIVoiceAgentVisualProps> = ({
 
           {/* Conversation Bubbles */}
           <div className="space-y-4">
-            {conversation.map((message, idx) => <motion.div key={idx} initial={{
-            opacity: 0,
-            x: message.type === 'user' ? 20 : -20
-          }} animate={{
-            opacity: 1,
-            x: 0
-          }} transition={{
-            duration: 0.5,
-            delay: idx * 0.8
-          }} className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}>
-                <div className={`flex items-start gap-3 max-w-[80%] ${message.type === 'user' ? 'flex-row-reverse' : ''}`}>
-                  {/* Avatar */}
-                  <div className={`w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 ${message.type === 'user' ? 'bg-white/80 border border-gray-200' : 'bg-gradient-to-br from-indigo-500 via-purple-500 to-purple-600'}`}>
-                    {message.type === 'user' ? <User className="size-5 text-foreground/75" strokeWidth={1.5} /> : <Mic className="size-5 text-white" strokeWidth={1.5} />}
-                  </div>
-
-                  {/* Message Bubble */}
-                  <motion.div initial={{
-                scale: 0.9
-              }} animate={{
-                scale: 1
-              }} transition={{
-                duration: 0.3,
-                delay: idx * 0.8 + 0.2
-              }} className="px-5 py-3 rounded-2xl bg-white/80 backdrop-blur-sm border border-gray-200 text-gray-900">
-                    <p className="text-sm font-medium">{message.text}</p>
-                  </motion.div>
-                </div>
-              </motion.div>)}
+            {conversation.map((message, idx) => {})}
           </div>
 
           {/* Status Indicator */}
