@@ -1,4 +1,6 @@
 import { AnimatedSection } from "@/components/shared/AnimatedSection";
+import DatabaseWithRestApi from "@/components/ui/database-with-rest-api";
+import { Phone, MessageSquare, Mail, Star } from "lucide-react";
 
 const processSteps = [
   {
@@ -70,11 +72,38 @@ export const ProcessGrid = () => {
                   {step.description}
                 </p>
                 
-                {/* Visual Mockup Area - Placeholder */}
+                {/* Visual Mockup Area */}
                 <div className="bg-white/40 backdrop-blur-sm border border-gray-200 rounded-xl p-6 min-h-[200px] flex items-center justify-center">
-                  <span className="text-sm text-gray-400">
-                    [Illustration - {step.title}]
-                  </span>
+                  {step.id === 3 ? (
+                    <div className="w-full flex justify-center">
+                      <DatabaseWithRestApi 
+                        className="scale-50 md:scale-60" 
+                        circleText="Hiems" 
+                        title="" 
+                        badgeTexts={{
+                          first: "Samtal",
+                          second: "SMS",
+                          third: "Mail",
+                          fourth: "Reviews"
+                        }} 
+                        badgeIcons={{
+                          first: Phone,
+                          second: MessageSquare,
+                          third: Mail,
+                          fourth: Star
+                        }}
+                        buttonTexts={{
+                          first: "Hiems",
+                          second: "Dashboard"
+                        }} 
+                        lightColor="hsl(var(--primary))" 
+                      />
+                    </div>
+                  ) : (
+                    <span className="text-sm text-gray-400">
+                      [Illustration - {step.title}]
+                    </span>
+                  )}
                 </div>
               </div>
             </AnimatedSection>
