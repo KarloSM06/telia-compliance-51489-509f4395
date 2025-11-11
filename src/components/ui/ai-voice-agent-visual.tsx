@@ -19,9 +19,8 @@ export const AIVoiceAgentVisual: React.FC<AIVoiceAgentVisualProps> = ({
   }];
   return <div className={`h-[500px] w-full max-w-[900px] mx-auto flex items-center justify-center ${className}`}>
       <div className="grid md:grid-cols-2 gap-12 items-center w-full">
-        {/* Left Side - SiriOrb with Waveform */}
-        <div className="flex flex-col items-center justify-center space-y-6">
-          {/* SiriOrb */}
+        {/* Left Side - SiriOrb */}
+        <div className="flex flex-col items-center justify-center">
           <motion.div animate={{
           scale: [1, 1.05, 1]
         }} transition={{
@@ -31,29 +30,10 @@ export const AIVoiceAgentVisual: React.FC<AIVoiceAgentVisualProps> = ({
         }}>
             <SiriOrb size="280px" animationDuration={25} className="drop-shadow-2xl" />
           </motion.div>
-
-          {/* Microphone Icon in Center (overlay) */}
-          <div className="absolute">
-            <motion.div animate={{
-            scale: [0.9, 1.1, 0.9]
-          }} transition={{
-            duration: 1.5,
-            repeat: Infinity,
-            ease: "easeInOut"
-          }} className="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center">
-              
-            </motion.div>
-          </div>
-
-          {/* Waveform Bars */}
-          
         </div>
 
         {/* Right Side - Chat Window */}
         <div className="space-y-4">
-          <h3 className="text-xl font-display font-normal text-gray-900 mb-6">
-            Live Conversation
-          </h3>
 
           {/* Conversation Bubbles */}
           <div className="space-y-4">
@@ -69,8 +49,8 @@ export const AIVoiceAgentVisual: React.FC<AIVoiceAgentVisualProps> = ({
           }} className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}>
                 <div className={`flex items-start gap-3 max-w-[80%] ${message.type === 'user' ? 'flex-row-reverse' : ''}`}>
                   {/* Avatar */}
-                  <div className={`w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 ${message.type === 'user' ? 'bg-gray-200' : 'bg-gradient-to-br from-indigo-500 to-purple-600'}`}>
-                    {message.type === 'user' ? <User className="w-5 h-5 text-gray-600" /> : <Mic className="w-5 h-5 text-white" />}
+                  <div className={`w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 ${message.type === 'user' ? 'bg-white/80 border border-gray-200' : 'bg-gradient-to-br from-indigo-500 via-purple-500 to-purple-600'}`}>
+                    {message.type === 'user' ? <User className="size-5 text-foreground/75" strokeWidth={1.5} /> : <Mic className="size-5 text-white" strokeWidth={1.5} />}
                   </div>
 
                   {/* Message Bubble */}
@@ -81,7 +61,7 @@ export const AIVoiceAgentVisual: React.FC<AIVoiceAgentVisualProps> = ({
               }} transition={{
                 duration: 0.3,
                 delay: idx * 0.8 + 0.2
-              }} className={`px-5 py-3 rounded-2xl ${message.type === 'user' ? 'bg-gray-900 text-white' : 'bg-white/80 backdrop-blur-sm border border-gray-200 text-gray-900'}`}>
+              }} className="px-5 py-3 rounded-2xl bg-white/80 backdrop-blur-sm border border-gray-200 text-gray-900">
                     <p className="text-sm font-medium">{message.text}</p>
                   </motion.div>
                 </div>
@@ -96,7 +76,7 @@ export const AIVoiceAgentVisual: React.FC<AIVoiceAgentVisualProps> = ({
         }} transition={{
           delay: 2
         }} className="flex items-center gap-2 mt-6 text-sm text-gray-600">
-            <motion.div className="w-2 h-2 bg-green-500 rounded-full" animate={{
+            <motion.div className="w-2 h-2 rounded-full bg-gradient-to-r from-indigo-500 to-purple-600" animate={{
             opacity: [1, 0.3, 1]
           }} transition={{
             duration: 2,

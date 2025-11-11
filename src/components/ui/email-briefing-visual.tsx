@@ -23,10 +23,10 @@ export const EmailBriefingVisual: React.FC<EmailBriefingVisualProps> = ({ classN
       {/* Header */}
       <div className="bg-white/90 backdrop-blur-xl border-b border-gray-200 px-8 py-5 flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <Mail className="w-5 h-5 text-indigo-600" />
+          <Mail className="size-8 md:size-10 text-foreground/75" strokeWidth={1} aria-hidden />
           <h3 className="text-xl font-display font-normal text-gray-900">E-mail briefing</h3>
         </div>
-        <Search className="w-5 h-5 text-gray-400 hover:text-gray-600 cursor-pointer transition-colors" />
+        <Search className="size-8 text-foreground/75" strokeWidth={1} aria-hidden />
       </div>
 
       {/* Tab Navigation */}
@@ -36,7 +36,7 @@ export const EmailBriefingVisual: React.FC<EmailBriefingVisualProps> = ({ classN
             key={tab}
             className={`text-sm font-medium pb-2 transition-all ${
               tab === activeTab 
-                ? 'text-indigo-600 border-b-2 border-indigo-600' 
+                ? 'text-gray-900 border-b-2 border-gray-900' 
                 : 'text-gray-500 hover:text-gray-700'
             }`}
           >
@@ -57,20 +57,23 @@ export const EmailBriefingVisual: React.FC<EmailBriefingVisualProps> = ({ classN
           <div className="flex items-start justify-between">
             <div className="flex items-center gap-4">
               {/* Avatar */}
-              <div className="w-16 h-16 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-full flex items-center justify-center text-white text-xl font-bold">
+              <div className="w-16 h-16 bg-gradient-to-br from-indigo-500 via-purple-500 to-purple-600 rounded-full flex items-center justify-center text-white text-xl font-bold">
                 JD
               </div>
               <div>
                 <div className="flex items-center gap-2 mb-1">
                   <h4 className="text-lg font-semibold text-gray-900">Jack Daniels</h4>
-                  <CheckCircle className="w-4 h-4 text-blue-500" />
+                  <div className="flex items-center gap-1 px-2 py-0.5 bg-white/60 border border-gray-200 rounded-full">
+                    <CheckCircle className="w-3 h-3 text-foreground/75" strokeWidth={1.5} />
+                    <span className="text-xs text-gray-700">Verified</span>
+                  </div>
                 </div>
                 <p className="text-sm text-gray-600 mb-1">Contact</p>
                 <p className="text-sm text-gray-500">Email: jack@techcorp.com</p>
                 <p className="text-sm text-gray-500">Company: Tech Corp</p>
               </div>
             </div>
-            <button className="text-sm text-indigo-600 hover:text-indigo-700 font-medium transition-colors">
+            <button className="text-sm text-gray-700 hover:text-gray-900 font-medium transition-colors">
               +More info
             </button>
           </div>
@@ -105,11 +108,11 @@ export const EmailBriefingVisual: React.FC<EmailBriefingVisualProps> = ({ classN
           <div className="space-y-2">
             <div className="flex justify-between items-center">
               <span className="text-sm text-gray-700 font-medium">Engagement Rate</span>
-              <span className="text-sm font-mono font-bold text-indigo-600">72%</span>
+              <span className="text-sm font-mono font-bold text-gray-900">72%</span>
             </div>
             <div className="h-3 bg-gray-200 rounded-full overflow-hidden">
               <motion.div
-                className="h-full bg-gradient-to-r from-blue-500 via-indigo-600 to-purple-600 rounded-full"
+                className="h-full bg-gradient-to-r from-indigo-500 via-purple-500 to-purple-600 rounded-full"
                 initial={{ scaleX: 0 }}
                 animate={{ scaleX: 0.72 }}
                 transition={{ duration: 2, delay: 0.5, ease: "easeOut" }}

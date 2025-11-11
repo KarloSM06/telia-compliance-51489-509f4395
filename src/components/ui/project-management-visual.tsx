@@ -56,7 +56,7 @@ export const ProjectManagementVisual: React.FC<ProjectManagementVisualProps> = (
       }} className="bg-white/90 backdrop-blur-md border border-gray-200 rounded-xl p-6">
           <div className="flex items-center justify-between mb-6">
             <h4 className="text-base font-semibold text-gray-900">Schedule</h4>
-            <Calendar className="w-5 h-5 text-gray-400" />
+            <Calendar className="size-8 md:size-10 text-foreground/75" strokeWidth={1} aria-hidden />
           </div>
 
           {/* Timeline */}
@@ -77,7 +77,7 @@ export const ProjectManagementVisual: React.FC<ProjectManagementVisualProps> = (
 
             {/* Timeline Line */}
             <div className="relative h-1 bg-gray-200 rounded-full">
-              <motion.div className="absolute h-full bg-gradient-to-r from-indigo-500 via-blue-500 to-indigo-600 rounded-full" initial={{
+              <motion.div className="absolute h-full bg-gradient-to-r from-indigo-500 via-purple-500 to-purple-600 rounded-full" initial={{
               width: "0%"
             }} animate={{
               width: "75%"
@@ -88,7 +88,7 @@ export const ProjectManagementVisual: React.FC<ProjectManagementVisualProps> = (
             }} />
               
               {/* Dots */}
-              {dates.map((_, idx) => <motion.div key={idx} className="absolute top-1/2 -translate-y-1/2 w-4 h-4 bg-indigo-600 border-2 border-white rounded-full shadow-md" style={{
+              {dates.map((_, idx) => <motion.div key={idx} className="absolute top-1/2 -translate-y-1/2 w-4 h-4 bg-gradient-to-br from-indigo-500 to-purple-600 border-2 border-white rounded-full shadow-md" style={{
               left: `${idx / (dates.length - 1) * 100}%`,
               transform: 'translate(-50%, -50%)'
             }} initial={{
@@ -124,7 +124,7 @@ export const ProjectManagementVisual: React.FC<ProjectManagementVisualProps> = (
                   <span className="text-sm font-mono font-bold text-gray-900">{resource.percentage}%</span>
                 </div>
                 <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
-                  <motion.div className={`h-full rounded-full ${resource.color === 'indigo' ? 'bg-indigo-600' : resource.color === 'blue' ? 'bg-blue-500' : 'bg-purple-600'}`} initial={{
+                  <motion.div className="h-full rounded-full bg-gradient-to-r from-indigo-500 via-purple-500 to-purple-600" initial={{
                 scaleX: 0
               }} animate={{
                 scaleX: resource.percentage / 100

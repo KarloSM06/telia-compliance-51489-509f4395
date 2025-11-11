@@ -17,9 +17,9 @@ export const WorkflowChecklistVisual: React.FC<WorkflowChecklistVisualProps> = (
   ];
 
   const workflowCards = [
-    { icon: FileText, label: "Invoice Processing", color: "indigo" },
-    { icon: Mail, label: "Email Follow-up", color: "blue" },
-    { icon: Send, label: "Complete", color: "green" },
+    { icon: FileText, label: "Invoice Processing" },
+    { icon: Mail, label: "Email Follow-up" },
+    { icon: Send, label: "Complete" },
   ];
 
   return (
@@ -38,11 +38,15 @@ export const WorkflowChecklistVisual: React.FC<WorkflowChecklistVisualProps> = (
               transition={{ delay: idx * 0.15, duration: 0.5 }}
               className="flex items-center gap-3 group cursor-pointer hover:bg-white/60 rounded-lg p-2 transition-all"
             >
-              {item.completed ? (
-                <CheckCircle2 className="w-6 h-6 text-green-500 flex-shrink-0" />
-              ) : (
-                <Circle className="w-6 h-6 text-gray-400 flex-shrink-0" />
-              )}
+              <div className={`w-5 h-5 rounded-full flex items-center justify-center ${
+                item.completed 
+                  ? 'border-2 border-gray-400' 
+                  : 'border-2 border-gray-300'
+              }`}>
+                {item.completed && (
+                  <CheckCircle2 className="w-3 h-3 text-foreground/75" strokeWidth={1.5} />
+                )}
+              </div>
               <span className={`text-sm ${item.completed ? 'text-gray-900 font-medium' : 'text-gray-500'}`}>
                 {item.label}
               </span>
@@ -75,28 +79,31 @@ export const WorkflowChecklistVisual: React.FC<WorkflowChecklistVisualProps> = (
                     delay: idx * 0.5
                   }
                 }}
-                className={`
-                  relative bg-white/90 backdrop-blur-md border-2 
-                  ${card.color === 'indigo' ? 'border-indigo-500/30' : ''}
-                  ${card.color === 'blue' ? 'border-blue-500/30' : ''}
-                  ${card.color === 'green' ? 'border-green-500/30' : ''}
-                  rounded-xl p-6 shadow-lg w-64 z-${30 - idx * 10}
-                `}
+                className="relative bg-white/90 backdrop-blur-md border border-gray-200 rounded-xl p-6 shadow-lg w-64"
               >
                 <div className="flex items-center gap-4">
-                  <div className={`
-                    p-3 rounded-lg
-                    ${card.color === 'indigo' ? 'bg-indigo-100 text-indigo-600' : ''}
-                    ${card.color === 'blue' ? 'bg-blue-100 text-blue-600' : ''}
-                    ${card.color === 'green' ? 'bg-green-100 text-green-600' : ''}
-                  `}>
-                    <card.icon className="w-6 h-6" />
+                  <div className="p-3 rounded-lg bg-white/60 border border-gray-200">
+                    <card.icon className="size-8 text-foreground/75" strokeWidth={1} aria-hidden />
                   </div>
                   <div>
                     <p className="text-sm font-semibold text-gray-900">{card.label}</p>
-                    <p className="text-xs text-gray-500 mt-1">
-                      {card.color === 'green' ? 'Done' : 'Processing...'}
-                    </p>
+                    <div className="flex items-center gap-1 mt-1">
+                      {idx === 2 ? (
+                        <>
+                          <CheckCircle2 className="w-3 h-3 text-foreground/75" strokeWidth={1.5} />
+                          <span className="text-xs text-gray-600">Complete</span>
+                        </>
+                      ) : (
+                        <>
+                          <motion.div
+                            className="w-2 h-2 rounded-full bg-gradient-to-r from-indigo-500 to-purple-600"
+                            animate={{ scale: [1, 1.2, 1] }}
+                            transition={{ duration: 1.5, repeat: Infinity }}
+                          />
+                          <span className="text-xs text-gray-600">Processing...</span>
+                        </>
+                      )}
+                    </div>
                   </div>
                 </div>
               </motion.div>
@@ -132,14 +139,14 @@ export const WorkflowChecklistVisual: React.FC<WorkflowChecklistVisualProps> = (
           {/* Status Badges at Bottom */}
           <div className="absolute bottom-0 flex gap-2">
             <motion.span 
-              className="text-xs px-3 py-1 bg-indigo-100 text-indigo-700 rounded-full"
+              className="text-xs px-3 py-1 bg-gradient-to-r from-indigo-500/10 via-purple-500/10 to-purple-600/10 text-gray-700 border border-gray-200 rounded-full"
               animate={{ opacity: [0.5, 1, 0.5] }}
               transition={{ duration: 2, repeat: Infinity }}
             >
               Auto-triggered
             </motion.span>
             <motion.span 
-              className="text-xs px-3 py-1 bg-blue-100 text-blue-700 rounded-full"
+              className="text-xs px-3 py-1 bg-gradient-to-r from-indigo-500/10 via-purple-500/10 to-purple-600/10 text-gray-700 border border-gray-200 rounded-full"
               animate={{ opacity: [0.5, 1, 0.5] }}
               transition={{ duration: 2, delay: 0.5, repeat: Infinity }}
             >
