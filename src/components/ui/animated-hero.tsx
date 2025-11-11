@@ -1,4 +1,4 @@
-import Spline from '@splinetool/react-spline';
+import { LazySpline } from './spline-lazy';
 import { useState } from "react";
 import { useIsMobile } from "@/hooks/use-mobile";
 interface AnimatedHeroProps {
@@ -21,19 +21,27 @@ function AnimatedHero({
           {splineError && <div className="absolute inset-0 flex items-center justify-center">
               <p className="text-destructive">Kunde inte ladda 3D-animation: {splineError}</p>
             </div>}
-          <Spline scene="https://prod.spline.design/dtyy9Rk8l8FAgcgA/scene.splinecode" onLoad={() => {
-          console.log('✅ Spline loaded successfully');
-          setIsSplineLoading(false);
-        }} onError={error => {
-          console.error('❌ Spline error:', error);
-          setSplineError('Kunde inte ladda 3D-scenen');
-          setIsSplineLoading(false);
-        }} style={{
-          width: '100%',
-          height: '100%',
-          pointerEvents: 'none',
-          opacity: 1.0
-        }} />
+          <LazySpline 
+            scene="https://prod.spline.design/dtyy9Rk8l8FAgcgA/scene.splinecode" 
+            onLoad={() => {
+              console.log('✅ Spline loaded successfully');
+              setIsSplineLoading(false);
+            }} 
+            onError={error => {
+              console.error('❌ Spline error:', error);
+              setSplineError('Kunde inte ladda 3D-scenen');
+              setIsSplineLoading(false);
+            }} 
+            style={{
+              width: '100%',
+              height: '100%',
+              pointerEvents: 'none',
+              opacity: 1.0
+            }}
+            fallback={
+              <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/10 via-purple-500/10 to-violet-600/10 animate-pulse" />
+            }
+          />
         </div>
       )}
 

@@ -9,6 +9,15 @@ export default defineConfig(({ mode }) => ({
   server: {
     host: "::",
     port: 8080,
+    headers: {
+      'Cache-Control': 'public, max-age=31536000',
+    },
+  },
+  preview: {
+    headers: {
+      // Cache static assets aggressively
+      'Cache-Control': 'public, max-age=31536000, immutable',
+    },
   },
   plugins: [
     react(),
@@ -26,26 +35,21 @@ export default defineConfig(({ mode }) => ({
       output: {
         manualChunks: {
           'react-vendor': ['react', 'react-dom', 'react-router-dom'],
-          'ui-radix-dialogs': [
+          'ui-vendor': [
             '@radix-ui/react-dialog',
             '@radix-ui/react-alert-dialog',
             '@radix-ui/react-popover',
-          ],
-          'ui-radix-forms': [
             '@radix-ui/react-select',
             '@radix-ui/react-checkbox',
             '@radix-ui/react-dropdown-menu',
-          ],
-          'ui-radix-display': [
             '@radix-ui/react-accordion',
             '@radix-ui/react-avatar',
             '@radix-ui/react-tabs',
             '@radix-ui/react-tooltip',
           ],
+          'data-vendor': ['@supabase/supabase-js', '@tanstack/react-query'],
           'charts': ['recharts'],
           'forms': ['react-hook-form', 'zod', '@hookform/resolvers'],
-          'supabase': ['@supabase/supabase-js'],
-          'query': ['@tanstack/react-query'],
           'animations': ['framer-motion'],
           'spline': ['@splinetool/react-spline', '@splinetool/runtime'],
         },
