@@ -18,10 +18,10 @@ export const IntegrationConnectionVisual = () => {
     return () => clearInterval(interval);
   }, []);
   const currentProgram = ALL_PROGRAMS[currentIndex];
-  return <div className="relative h-auto min-h-[200px] md:h-[280px] w-full flex items-center justify-center gap-8 md:gap-16 px-4 md:px-8 bg-white/60 backdrop-blur-md border border-gray-300 rounded-xl shadow-lg">
+  return <div className="relative h-auto min-h-[200px] md:h-[280px] w-full flex flex-col md:flex-row items-center justify-center gap-4 md:gap-10 lg:gap-16 px-2 md:px-6 lg:px-8 bg-white/60 backdrop-blur-md border border-gray-300 rounded-xl shadow-lg overflow-hidden">
       {/* Left: Animated Orb - "Our Solution" */}
-      <div className="flex flex-col items-center gap-3">
-        <div className="relative w-[60px] h-[60px] md:w-[80px] md:h-[80px]">
+      <div className="flex flex-col items-center gap-2 md:gap-3 z-10">
+        <div className="relative w-[50px] h-[50px] md:w-[70px] md:h-[70px] lg:w-[80px] lg:h-[80px]">
           {/* Outer expanding rings */}
           <motion.div className="absolute inset-0 rounded-full border-2 border-indigo-400" animate={{
           scale: [1, 1.5, 2],
@@ -62,7 +62,7 @@ export const IntegrationConnectionVisual = () => {
         }} />
 
           {/* Inner glow - pulsating */}
-          <motion.div className="absolute inset-[20px] rounded-full bg-white/40" animate={{
+          <motion.div className="absolute inset-[15px] md:inset-[20px] rounded-full bg-white/40" animate={{
           scale: [1, 1.2, 1],
           opacity: [0.4, 0.6, 0.4]
         }} transition={{
@@ -71,77 +71,70 @@ export const IntegrationConnectionVisual = () => {
           ease: "easeInOut"
         }} />
         </div>
-        <span className="text-sm font-medium text-gray-900">Our Solution</span>
+        <span className="text-xs md:text-sm font-medium text-gray-900">Our Solution</span>
       </div>
 
-      {/* Connecting beams with animated particles */}
-      <div className="relative flex-1 h-full flex items-center">
-        <svg className="absolute inset-0 w-full h-full" style={{
-        overflow: "visible"
-      }}>
-          {/* Top curved path */}
-          <motion.path d="M 0 80 Q 120 40, 240 80" stroke="url(#gradient1)" strokeWidth="2" fill="none" strokeDasharray="5 5" initial={{
-          strokeDashoffset: 0
-        }} animate={{
-          strokeDashoffset: -10
-        }} transition={{
-          duration: 2,
-          repeat: Infinity,
-          ease: "linear"
-        }} />
-          
-          {/* Middle straight path */}
-          <motion.path d="M 0 140 L 240 140" stroke="url(#gradient2)" strokeWidth="3" fill="none" strokeDasharray="8 4" initial={{
-          strokeDashoffset: 0
-        }} animate={{
-          strokeDashoffset: -12
-        }} transition={{
-          duration: 1.5,
-          repeat: Infinity,
-          ease: "linear"
-        }} />
-          
-          {/* Bottom curved path */}
-          <motion.path d="M 0 200 Q 120 240, 240 200" stroke="url(#gradient3)" strokeWidth="2" fill="none" strokeDasharray="5 5" initial={{
-          strokeDashoffset: 0
-        }} animate={{
-          strokeDashoffset: -10
-        }} transition={{
-          duration: 2.5,
-          repeat: Infinity,
-          ease: "linear",
-          delay: 0.5
-        }} />
+      {/* Connecting beams - RESPONSIVE SVG WITH VIEWBOX */}
+      <svg className="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 240 280" preserveAspectRatio="xMidYMid meet">
+        <defs>
+          <linearGradient id="gradient1" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stopColor="rgba(99, 102, 241, 0.2)" />
+            <stop offset="50%" stopColor="rgba(139, 92, 246, 0.6)" />
+            <stop offset="100%" stopColor="rgba(167, 139, 250, 0.2)" />
+          </linearGradient>
+          <linearGradient id="gradient2" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stopColor="rgba(99, 102, 241, 0.3)" />
+            <stop offset="50%" stopColor="rgba(139, 92, 246, 0.8)" />
+            <stop offset="100%" stopColor="rgba(167, 139, 250, 0.3)" />
+          </linearGradient>
+          <linearGradient id="gradient3" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stopColor="rgba(99, 102, 241, 0.2)" />
+            <stop offset="50%" stopColor="rgba(139, 92, 246, 0.6)" />
+            <stop offset="100%" stopColor="rgba(167, 139, 250, 0.2)" />
+          </linearGradient>
+        </defs>
 
-          {/* Gradients for beams */}
-          <defs>
-            <linearGradient id="gradient1" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stopColor="rgba(99, 102, 241, 0.2)" />
-              <stop offset="50%" stopColor="rgba(139, 92, 246, 0.6)" />
-              <stop offset="100%" stopColor="rgba(167, 139, 250, 0.2)" />
-            </linearGradient>
-            <linearGradient id="gradient2" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stopColor="rgba(99, 102, 241, 0.3)" />
-              <stop offset="50%" stopColor="rgba(139, 92, 246, 0.8)" />
-              <stop offset="100%" stopColor="rgba(167, 139, 250, 0.3)" />
-            </linearGradient>
-            <linearGradient id="gradient3" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stopColor="rgba(99, 102, 241, 0.2)" />
-              <stop offset="50%" stopColor="rgba(139, 92, 246, 0.6)" />
-              <stop offset="100%" stopColor="rgba(167, 139, 250, 0.2)" />
-            </linearGradient>
-          </defs>
-        </svg>
-
-        {/* Animated particles on paths */}
+        {/* Top curved path - HIDDEN ON MOBILE */}
+        <motion.path 
+          className="hidden sm:block"
+          d="M 0 80 Q 120 40, 240 80" 
+          stroke="url(#gradient1)" 
+          strokeWidth="1.5" 
+          fill="none" 
+          strokeDasharray="5 5" 
+          initial={{ strokeDashoffset: 0 }}
+          animate={{ strokeDashoffset: -10 }}
+          transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+        />
         
+        {/* Middle straight path */}
+        <motion.path 
+          d="M 0 140 L 240 140" 
+          stroke="url(#gradient2)" 
+          strokeWidth="2" 
+          fill="none" 
+          strokeDasharray="8 4" 
+          initial={{ strokeDashoffset: 0 }}
+          animate={{ strokeDashoffset: -12 }}
+          transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
+        />
         
-        
-      </div>
+        {/* Bottom curved path */}
+        <motion.path 
+          d="M 0 200 Q 120 240, 240 200" 
+          stroke="url(#gradient3)" 
+          strokeWidth="1.5" 
+          fill="none" 
+          strokeDasharray="5 5" 
+          initial={{ strokeDashoffset: 0 }}
+          animate={{ strokeDashoffset: -10 }}
+          transition={{ duration: 2.5, repeat: Infinity, ease: "linear", delay: 0.5 }}
+        />
+      </svg>
 
       {/* Right: Rotating Integration Logos */}
-      <div className="flex flex-col items-center gap-3">
-        <div className="relative w-[60px] h-[60px] md:w-[80px] md:h-[80px]">
+      <div className="flex flex-col items-center gap-2 md:gap-3 z-10">
+        <div className="relative w-[50px] h-[50px] md:w-[70px] md:h-[70px] lg:w-[80px] lg:h-[80px]">
           <AnimatePresence mode="wait">
             <motion.div key={currentIndex} initial={{
             opacity: 0,
@@ -158,7 +151,7 @@ export const IntegrationConnectionVisual = () => {
           }} transition={{
             duration: 0.5,
             ease: "easeInOut"
-          }} className="absolute inset-0 rounded-xl bg-white/80 backdrop-blur-md border border-gray-200 flex items-center justify-center shadow-lg p-3">
+          }} className="absolute inset-0 rounded-xl bg-white/80 backdrop-blur-md border border-gray-200 flex items-center justify-center shadow-lg p-2 md:p-3">
               <img src={currentProgram.logo} alt={currentProgram.name} className="w-full h-full object-contain" loading="lazy" decoding="async" />
             </motion.div>
           </AnimatePresence>
@@ -175,7 +168,7 @@ export const IntegrationConnectionVisual = () => {
           y: -10
         }} transition={{
           duration: 0.3
-        }} className="text-sm font-medium text-gray-900">
+        }} className="text-xs md:text-sm font-medium text-gray-900">
             {currentProgram.name}
           </motion.span>
         </AnimatePresence>
