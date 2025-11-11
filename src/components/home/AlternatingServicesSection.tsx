@@ -131,11 +131,11 @@ export const AlternatingServicesSection = () => {
                   </div>
                 </div>
                 
-                {/* Mockup side - Glassmorphism container */}
-                <div className={`bg-white/80 backdrop-blur-xl border border-gray-100 rounded-2xl p-8 shadow-lg ${service.isReversed ? 'md:col-start-1' : ''}`}>
+                {/* Mockup side - Direct rendering without extra frame */}
+                <div className={service.isReversed ? 'md:col-start-1' : ''}>
                   {service.id === 1 ? (
                     // DatabaseWithRestApi figur för Dashboards & Decision Intelligence
-                    <div className="w-full flex justify-center -my-8">
+                    <div className="w-full flex justify-center">
                       <DatabaseWithRestApi 
                         className="scale-90 md:scale-100" 
                         circleText="Hiems" 
