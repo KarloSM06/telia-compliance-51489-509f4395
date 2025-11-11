@@ -85,7 +85,7 @@ export const ProductSelection = () => {
         <WorkflowTimeline />
 
         {/* 11. Testimonials Grid */}
-        <TestimonialsGrid />
+        {/* <TestimonialsGrid /> */}
 
         {/* 16. FAQ Accordion */}
         <FAQAccordion />
