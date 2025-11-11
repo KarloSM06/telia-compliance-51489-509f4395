@@ -5,9 +5,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useState } from "react";
 import { ConsultationModal } from "@/components/ConsultationModal";
-import { AnimatedSection } from "@/components/AnimatedSection";
 import { ConsultationCTA } from "@/components/ConsultationCTA";
-import { WorkflowTimeline } from "@/components/home/WorkflowTimeline";
 import { AlternatingServicesSection } from "@/components/home/AlternatingServicesSection";
 import { ProcessGrid } from "@/components/home/ProcessGrid";
 import { CaseStudyShowcase } from "@/components/home/CaseStudyShowcase";
@@ -17,7 +15,6 @@ import { TestimonialsGrid } from "@/components/home/TestimonialsGrid";
 import { FAQAccordion } from "@/components/home/FAQAccordion";
 import { industries } from "@/data/industries";
 import { caseStudies } from "@/data/caseStudies";
-import heroBackground from "@/assets/hero-background.jpg";
 import karloImage from "@/assets/karlo-mangione.png";
 import antonImage from "@/assets/anton-sallnas.png";
 import emilImage from "@/assets/emil-westerberg.png";
@@ -25,10 +22,6 @@ import { Sparkles, Zap, Target, CheckCircle, Award, Users, Wrench, ArrowRight } 
 import { AuroraBackground } from "@/components/ui/aurora-background";
 import { AnimatedHero } from "@/components/ui/animated-hero";
 import IntegrationHero from "@/components/ui/integration-hero";
-import { ServicesGrid } from "@/components/home/ServicesGrid";
-import { UnifiedDashboard } from "@/components/home/UnifiedDashboard";
-import { LandingAccordionItem } from "@/components/home/LandingAccordionItem";
-import { UnifiedEcosystem } from "@/components/home/UnifiedEcosystem";
 import dashboardScreenshot from "@/assets/dashboard-screenshot.png";
 import calendarScreenshot from "@/assets/calendar-screenshot.png";
 export const ProductSelection = () => {
