@@ -181,9 +181,9 @@ export const AlternatingServicesSection = () => {
                     </div>
                   ) : service.id === 3 ? (
                     // AIVoiceAgentVisual för AI Voice Agents
-                    <div className="w-full flex flex-col items-center justify-center gap-4">
+                    <div className="w-full flex flex-col items-center justify-center gap-2">
                       <AIVoiceAgentVisual className="scale-90 md:scale-100" />
-                      <AIVoiceInput demoMode={true} className="mt-4" />
+                      <AIVoiceInput demoMode={true} className="-mt-6" />
                     </div>
                   ) : service.id === 4 ? (
                     // EmailBriefingVisual för Accelerate Sales Growth

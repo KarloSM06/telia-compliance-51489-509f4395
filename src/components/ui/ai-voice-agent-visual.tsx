@@ -17,23 +17,15 @@ export const AIVoiceAgentVisual: React.FC<AIVoiceAgentVisualProps> = ({
     type: "ai",
     text: "✓ Möte bokat med Sara kl 14:00"
   }];
-  return <div className={`h-[500px] w-full max-w-[900px] mx-auto flex items-center justify-center ${className}`}>
-      <div className="grid md:grid-cols-2 gap-12 items-center w-full">
-        {/* Left Side - SiriOrb */}
-        <div className="flex flex-col items-center justify-center">
-          <motion.div animate={{
-          scale: [1, 1.05, 1]
-        }} transition={{
-          duration: 2,
-          repeat: Infinity,
-          ease: "easeInOut"
-        }}>
-            <SiriOrb size="280px" animationDuration={25} className="drop-shadow-2xl" />
-          </motion.div>
-        </div>
-
-        {/* Right Side - Chat Window */}
-        
-      </div>
+  return <div className={`h-[350px] w-full max-w-[400px] mx-auto flex flex-col items-center justify-center gap-4 ${className}`}>
+      <motion.div animate={{
+        scale: [1, 1.05, 1]
+      }} transition={{
+        duration: 2,
+        repeat: Infinity,
+        ease: "easeInOut"
+      }}>
+        <SiriOrb size="220px" animationDuration={25} className="drop-shadow-2xl" />
+      </motion.div>
     </div>;
 };
