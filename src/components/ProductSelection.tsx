@@ -1,25 +1,36 @@
-import { lazy, Suspense, useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Card, CardContent } from "@/components/ui/card";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useState } from "react";
 import { ConsultationModal } from "@/components/ConsultationModal";
+import { AnimatedSection } from "@/components/AnimatedSection";
+import { ConsultationCTA } from "@/components/ConsultationCTA";
+import { WorkflowTimeline } from "@/components/home/WorkflowTimeline";
+import { AlternatingServicesSection } from "@/components/home/AlternatingServicesSection";
+import { ProcessGrid } from "@/components/home/ProcessGrid";
+import { CaseStudyShowcase } from "@/components/home/CaseStudyShowcase";
+import { BenefitsGrid } from "@/components/home/BenefitsGrid";
+import { PricingCards } from "@/components/home/PricingCards";
+import { TestimonialsGrid } from "@/components/home/TestimonialsGrid";
+import { FAQAccordion } from "@/components/home/FAQAccordion";
+import { industries } from "@/data/industries";
+import { caseStudies } from "@/data/caseStudies";
+import heroBackground from "@/assets/hero-background.jpg";
+import karloImage from "@/assets/karlo-mangione.png";
+import antonImage from "@/assets/anton-sallnas.png";
+import emilImage from "@/assets/emil-westerberg.png";
+import { Sparkles, Zap, Target, CheckCircle, Award, Users, Wrench, ArrowRight } from "lucide-react";
 import { AuroraBackground } from "@/components/ui/aurora-background";
 import { AnimatedHero } from "@/components/ui/animated-hero";
-
-// Lazy load sektioner för bättre performance
-const AlternatingServicesSection = lazy(() => import("@/components/home/AlternatingServicesSection").then(m => ({ default: m.AlternatingServicesSection })));
-const ProcessGrid = lazy(() => import("@/components/home/ProcessGrid").then(m => ({ default: m.ProcessGrid })));
-const BenefitsGrid = lazy(() => import("@/components/home/BenefitsGrid").then(m => ({ default: m.BenefitsGrid })));
-const PricingCards = lazy(() => import("@/components/home/PricingCards").then(m => ({ default: m.PricingCards })));
-const FAQAccordion = lazy(() => import("@/components/home/FAQAccordion").then(m => ({ default: m.FAQAccordion })));
-const ConsultationCTA = lazy(() => import("@/components/ConsultationCTA").then(m => ({ default: m.ConsultationCTA })));
-const IntegrationHero = lazy(() => import("@/components/ui/integration-hero"));
-
-// Skeleton för lazy loaded sektioner
-const SectionSkeleton = () => (
-  <div className="py-12 md:py-16 lg:py-24">
-    <div className="mx-auto max-w-7xl px-4 md:px-8">
-      <div className="h-96 bg-white/60 rounded-3xl animate-pulse" />
-    </div>
-  </div>
-);
+import IntegrationHero from "@/components/ui/integration-hero";
+import { ServicesGrid } from "@/components/home/ServicesGrid";
+import { UnifiedDashboard } from "@/components/home/UnifiedDashboard";
+import { LandingAccordionItem } from "@/components/home/LandingAccordionItem";
+import { UnifiedEcosystem } from "@/components/home/UnifiedEcosystem";
+import dashboardScreenshot from "@/assets/dashboard-screenshot.png";
+import calendarScreenshot from "@/assets/calendar-screenshot.png";
 export const ProductSelection = () => {
   const [isConsultationModalOpen, setIsConsultationModalOpen] = useState(false);
   const [selectedIndustry, setSelectedIndustry] = useState<string>('');
@@ -47,39 +58,28 @@ export const ProductSelection = () => {
         <AnimatedHero onBookDemo={() => setIsConsultationModalOpen(true)} onViewPackages={() => scrollToSection('paket')} />
 
         {/* 2. Alternating Services */}
-        <Suspense fallback={<SectionSkeleton />}>
-          <AlternatingServicesSection />
-        </Suspense>
+        <AlternatingServicesSection />
 
-        {/* 3. Process Grid (4 steg) */}
-        <Suspense fallback={<SectionSkeleton />}>
-          <ProcessGrid />
-        </Suspense>
+        {/* 3. Integration Hero (verktygskarusell) */}
+        <IntegrationHero />
 
-        {/* 4. Benefits Grid */}
-        <Suspense fallback={<SectionSkeleton />}>
-          <BenefitsGrid />
-        </Suspense>
+        {/* 4. Process Grid (4 steg) */}
+        <ProcessGrid />
 
-        {/* 5. Pricing Cards */}
-        <Suspense fallback={<SectionSkeleton />}>
-          <PricingCards />
-        </Suspense>
+        {/* 5. Benefits Grid */}
+        <BenefitsGrid />
 
-        {/* 6. Integration Hero (verktygskarusell) */}
-        <Suspense fallback={<SectionSkeleton />}>
-          <IntegrationHero />
-        </Suspense>
+        {/* 6. Case Study Showcase */}
+        <CaseStudyShowcase />
 
-        {/* 7. FAQ Accordion */}
-        <Suspense fallback={<SectionSkeleton />}>
-          <FAQAccordion />
-        </Suspense>
+        {/* 7. Pricing Cards */}
+        <PricingCards />
 
-        {/* 8. Consultation CTA */}
-        <Suspense fallback={<SectionSkeleton />}>
-          <ConsultationCTA />
-        </Suspense>
+        {/* 8. FAQ Accordion */}
+        <FAQAccordion />
+
+        {/* 17. Consultation CTA */}
+        <ConsultationCTA />
       </AuroraBackground>
 
       {/* Branschspecifika lösningar */}

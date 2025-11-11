@@ -66,23 +66,44 @@ export function ConsultationModal({ open, onOpenChange }: ConsultationModalProps
 
     setIsLoading(true);
     try {
-      // Förenklad data - endast det som faktiskt används
-      const bookingData = {
+      const formData = {
         company_name: companyName,
         contact_person: contactPerson,
         email,
         phone,
-        message: message || null,
+        business_description: message,
+        // Set other fields to null
+        ai_goals: null,
+        ai_goals_other: null,
+        success_definition: null,
+        ai_priority: null,
+        manual_processes: null,
+        existing_ai: null,
+        current_systems: null,
+        data_types: null,
+        data_types_other: null,
+        historical_data: null,
+        data_quality: null,
+        gdpr_compliant: null,
+        internal_resources: null,
+        internal_resources_other: null,
+        budget: null,
+        timeframe: null,
+        ai_users: null,
+        ai_users_other: null,
+        training_needed: null,
+        regulatory_requirements: null,
+        sensitive_data: null,
+        ethical_limitations: null,
+        long_term_goals: null,
+        open_to_experiments: null,
       };
 
       const { error } = await supabase
-        .from('booking_requests')
-        .insert(bookingData);
+        .from('ai_consultations')
+        .insert(formData);
 
-      if (error) {
-        console.error("Booking submission error:", error);
-        throw error;
-      }
+      if (error) throw error;
 
       toast({
         title: "Tack för din förfrågan!",

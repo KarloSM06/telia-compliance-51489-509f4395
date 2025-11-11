@@ -59,7 +59,7 @@ export const ProcessGrid = () => {
           {processSteps.map((step, index) => (
             <div 
               key={step.id}
-              className="animate-[fadeInUp_0.6s_ease-out] border-2 border-white/10 bg-white/5 backdrop-blur-sm rounded-3xl p-6 md:p-8 lg:p-10 shadow-lg hover:shadow-xl transition-all h-[580px] md:h-[650px] lg:h-[700px] flex flex-col justify-between"
+              className="animate-[fadeInUp_0.6s_ease-out] border-2 border-white/10 bg-white/5 backdrop-blur-sm rounded-3xl p-6 md:p-8 lg:p-10 shadow-lg hover:shadow-xl transition-all h-auto min-h-[240px] md:h-[280px] flex flex-col"
               style={{ animationDelay: `${index * 100}ms` }}
             >
                 {/* Step Badge */}
@@ -75,29 +75,27 @@ export const ProcessGrid = () => {
                 </h3>
                 
                 {/* Description */}
-                <p className="text-sm md:text-base text-gray-600 leading-relaxed mb-4">
+                <p className="text-sm md:text-base text-gray-600 leading-relaxed mb-2 flex-1">
                   {step.description}
                 </p>
                 
-                {/* Visual Mockup Area - FIXED HEIGHT CONTAINER */}
-                <div className="h-[280px] md:h-[320px] lg:h-[350px] w-full flex items-center justify-center overflow-hidden">
-                {step.id === 1 && (
-                  <Suspense fallback={<div className="h-full w-full bg-white/60 rounded-xl animate-pulse" />}>
-                    <ScanningAnalysisVisual />
-                  </Suspense>
-                )}
-                {step.id === 2 && (
-                  <Suspense fallback={<div className="h-full w-full bg-white/60 rounded-xl animate-pulse" />}>
-                    <CodeEditorVisual />
-                  </Suspense>
-                )}
-                {step.id === 3 && <IntegrationConnectionVisual />}
-                {step.id === 4 && (
-                  <Suspense fallback={<div className="h-full w-full bg-white/60 rounded-xl animate-pulse" />}>
-                    <SystemScalingVisual />
-                  </Suspense>
-                )}
-                </div>
+                {/* Visual Mockup Area */}
+              {step.id === 1 && (
+                <Suspense fallback={<div className="h-[200px] md:h-[280px] bg-white/60 rounded-xl animate-pulse" />}>
+                  <ScanningAnalysisVisual />
+                </Suspense>
+              )}
+              {step.id === 2 && (
+                <Suspense fallback={<div className="h-[200px] md:h-[280px] bg-white/60 rounded-xl animate-pulse" />}>
+                  <CodeEditorVisual />
+                </Suspense>
+              )}
+              {step.id === 3 && <IntegrationConnectionVisual />}
+              {step.id === 4 && (
+                <Suspense fallback={<div className="h-[200px] md:h-[280px] bg-white/60 rounded-xl animate-pulse" />}>
+                  <SystemScalingVisual />
+                </Suspense>
+              )}
             </div>
           ))}
         </div>

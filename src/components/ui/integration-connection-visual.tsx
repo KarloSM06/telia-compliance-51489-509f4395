@@ -18,13 +18,13 @@ export const IntegrationConnectionVisual = () => {
     return () => clearInterval(interval);
   }, []);
   const currentProgram = ALL_PROGRAMS[currentIndex];
-  return <div className="relative h-full w-full flex flex-col md:flex-row items-center justify-center gap-2 md:gap-8 lg:gap-16 px-2 md:px-6 lg:px-8 bg-white/60 backdrop-blur-md border border-gray-300 rounded-xl shadow-lg overflow-hidden">
+  return <div className="relative h-auto min-h-[200px] md:h-[280px] w-full flex flex-col md:flex-row items-center justify-center gap-4 md:gap-10 lg:gap-16 px-2 md:px-6 lg:px-8 bg-white/60 backdrop-blur-md border border-gray-300 rounded-xl shadow-lg overflow-hidden">
       {/* Left: Animated Orb - "Our Solution" */}
-      <div className="flex flex-col items-center gap-1 md:gap-3 z-10">
-        <div className="relative w-[35px] h-[35px] md:w-[60px] md:h-[60px] lg:w-[80px] lg:h-[80px]">
+      <div className="flex flex-col items-center gap-2 md:gap-3 z-10">
+        <div className="relative w-[50px] h-[50px] md:w-[70px] md:h-[70px] lg:w-[80px] lg:h-[80px]">
           {/* Outer expanding rings */}
           <motion.div className="absolute inset-0 rounded-full border-2 border-indigo-400" animate={{
-          scale: [1, 1.3, 1.6],
+          scale: [1, 1.5, 2],
           opacity: [0.6, 0.3, 0]
         }} transition={{
           duration: 1.5,
@@ -32,7 +32,7 @@ export const IntegrationConnectionVisual = () => {
           ease: "easeOut"
         }} />
           <motion.div className="absolute inset-0 rounded-full border-2 border-purple-400" animate={{
-          scale: [1, 1.3, 1.6],
+          scale: [1, 1.5, 2],
           opacity: [0.6, 0.3, 0]
         }} transition={{
           duration: 2.5,
@@ -41,7 +41,7 @@ export const IntegrationConnectionVisual = () => {
           delay: 0.5
         }} />
           <motion.div className="absolute inset-0 rounded-full border-2 border-violet-400" animate={{
-          scale: [1, 1.3, 1.6],
+          scale: [1, 1.5, 2],
           opacity: [0.6, 0.3, 0]
         }} transition={{
           duration: 4,
@@ -71,7 +71,7 @@ export const IntegrationConnectionVisual = () => {
           ease: "easeInOut"
         }} />
         </div>
-        <span className="text-[10px] md:text-xs lg:text-sm font-medium text-gray-900">Our Solution</span>
+        <span className="text-xs md:text-sm font-medium text-gray-900">Our Solution</span>
       </div>
 
       {/* Connecting beams - RESPONSIVE SVG WITH VIEWBOX */}
@@ -168,7 +168,7 @@ export const IntegrationConnectionVisual = () => {
           y: -10
         }} transition={{
           duration: 0.3
-        }} className="text-[10px] md:text-xs lg:text-sm font-medium text-gray-900">
+        }} className="text-xs md:text-sm font-medium text-gray-900">
             {currentProgram.name}
           </motion.span>
         </AnimatePresence>

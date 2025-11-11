@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "lucide-react";
-import { AnimatedSection } from "@/components/shared/AnimatedSection";
+import { AnimatedSection } from "@/components/AnimatedSection";
 import { ConsultationModal } from "@/components/ConsultationModal";
 
 export const ConsultationCTA = () => {

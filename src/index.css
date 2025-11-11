@@ -157,113 +157,6 @@ All colors MUST be HSL.
   }
 }
 
-/* CSS Keyframes for Performance-Optimized Animations */
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-@keyframes fadeInLeft {
-  from {
-    opacity: 0;
-    transform: translateX(-20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-@keyframes scaleIn {
-  from {
-    opacity: 0;
-    transform: scale(0.95);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-@keyframes rotate {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-/* Hero-specifika animationer */
-@keyframes heroFadeInDown {
-  from { opacity: 0; transform: translateY(-30px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes heroFadeIn {
-  from { opacity: 0; transform: translateY(-20px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes heroScale {
-  from { opacity: 0; transform: scale(0.9); }
-  to { opacity: 1; transform: scale(1); }
-}
-
-.animate-hero-title {
-  animation: heroFadeInDown 0.8s ease-out;
-}
-
-.animate-hero-subtitle {
-  animation: heroFadeIn 0.8s ease-out 0.2s backwards;
-}
-
-.animate-hero-cta {
-  animation: heroScale 0.6s ease-out 0.4s backwards;
-}
-
-@keyframes float {
-  0%, 100% {
-    transform: translateY(0px);
-  }
-  50% {
-    transform: translateY(-2px);
-  }
-}
-
-@keyframes bounceSlow {
-  0%, 100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-8px);
-  }
-}
-
-@keyframes progress {
-  from {
-    stroke-dasharray: 0 175.84;
-  }
-  to {
-    stroke-dasharray: var(--progress-value, 131.88) 175.84;
-  }
-}
-
 @layer base {
   * {
     @apply border-border;
@@ -271,9 +164,20 @@ All colors MUST be HSL.
 
   html {
     scroll-padding-top: 80px;
-    scroll-behavior: smooth;
     overflow-x: clip;
-    overflow-y: auto;
+    /* Lenis handles scroll-behavior via JS */
+  }
+  
+  html.lenis, html.lenis body {
+    height: auto;
+  }
+
+  .lenis.lenis-smooth {
+    scroll-behavior: auto !important;
+  }
+
+  .lenis.lenis-smooth [data-lenis-prevent] {
+    overscroll-behavior: contain;
   }
 
   /* Branch section performance optimizations */
@@ -289,6 +193,14 @@ All colors MUST be HSL.
   #branscher img {
     backface-visibility: hidden;
     transform: translateZ(0);
+  }
+
+  .lenis.lenis-stopped {
+    overflow: hidden;
+  }
+
+  .lenis.lenis-scrolling iframe {
+    pointer-events: none;
   }
 
   body {
@@ -662,38 +574,4 @@ All colors MUST be HSL.
     transform: translateY(0px) scale(1);
   }
 }
-
-/* New Performance-Optimized Animation Utilities */
-.animate-fade-in-up {
-  animation: fadeInUp 0.6s ease-out forwards;
-}
-
-.animate-fade-in {
-  animation: fadeIn 0.6s ease-out forwards;
-}
-
-.animate-fade-in-left {
-  animation: fadeInLeft 0.6s ease-out forwards;
-}
-
-.animate-scale-in {
-  animation: scaleIn 0.6s ease-out forwards;
-}
-
-.animate-rotate {
-  animation: rotate 4s linear infinite;
-}
-
-.animate-float {
-  animation: float 4s ease-in-out infinite;
-}
-
-.animate-bounce-slow {
-  animation: bounceSlow 2s ease-in-out infinite;
-}
-
-.animate-progress {
-  animation: progress 1.5s ease-out forwards;
-}
-
 

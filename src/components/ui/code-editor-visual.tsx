@@ -68,7 +68,7 @@ export const CodeEditorVisual = () => {
   };
 
   return (
-    <div className="relative h-full w-full flex bg-white/60 backdrop-blur-md border border-gray-300 rounded-xl overflow-hidden shadow-lg">
+    <div className="relative h-auto min-h-[200px] md:h-[280px] w-full flex bg-white/60 backdrop-blur-md border border-gray-300 rounded-xl overflow-hidden shadow-lg">
       {/* Sidebar - HIDDEN ON MOBILE */}
       <div className="hidden sm:flex w-8 md:w-10 lg:w-12 bg-white/20 border-r border-gray-200 flex-col items-center gap-4 py-4">
         <motion.div whileHover={{ scale: 1.1 }} className="cursor-pointer">
@@ -102,7 +102,7 @@ export const CodeEditorVisual = () => {
         </div>
 
         {/* Code area - RESPONSIVE TEXT & SCROLL */}
-        <div className="flex-1 p-1 md:p-2 lg:p-4 font-mono text-[13px] md:text-sm overflow-x-auto overflow-y-auto leading-normal">
+        <div className="flex-1 p-2 md:p-3 lg:p-4 font-mono text-sm md:text-xs overflow-x-auto overflow-y-auto leading-normal">
           <div className="space-y-0.5">
             {displayedCode.map((line, index) => (
               <motion.div
