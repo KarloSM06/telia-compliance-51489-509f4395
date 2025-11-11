@@ -70,7 +70,7 @@ export const ProductSelection = () => {
         <BenefitsGrid />
 
         {/* 6. Case Study Showcase */}
-        {/* <CaseStudyShowcase /> */}
+        <CaseStudyShowcase />
 
         {/* 7. Pricing Cards */}
         <PricingCards />
