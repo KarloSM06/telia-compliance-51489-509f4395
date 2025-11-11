@@ -17,7 +17,7 @@ export const ScanningAnalysisVisual = () => {
     label: "Repetitive task",
     status: "error"
   }];
-  return <div className="relative h-auto min-h-[200px] md:h-[280px] w-full flex items-center justify-between gap-2 md:gap-6 px-3 md:px-6 lg:px-10 bg-white/60 backdrop-blur-md border border-gray-300 rounded-xl shadow-lg">
+  return <div className="relative h-full w-full flex items-center justify-between gap-2 md:gap-6 px-3 md:px-6 lg:px-10 bg-white/60 backdrop-blur-md border border-gray-300 rounded-xl shadow-lg">
       {/* Left side: Circular radar scanner - LARGER */}
       <div className="relative w-[100px] h-[100px] md:w-[140px] md:h-[140px] lg:w-[180px] lg:h-[180px] flex-shrink-0">
         {/* Concentric circles - 4 rings with thicker strokes */}
