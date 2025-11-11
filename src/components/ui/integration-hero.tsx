@@ -19,14 +19,11 @@ export default function IntegrationHero() {
   const halfLength = Math.ceil(ALL_PROGRAMS.length / 2);
   const row1 = ALL_PROGRAMS.slice(0, halfLength);
   const row2 = ALL_PROGRAMS.slice(halfLength);
-  return <section className="relative py-8 md:py-12 overflow-hidden overflow-x-hidden bg-white">
+  return <section className="relative py-8 md:py-12 overflow-hidden overflow-x-hidden">
       <div className="relative w-full px-6 md:px-12 text-center">
         
         <AnimatedSection>
-          <h1 className="text-3xl lg:text-4xl font-bold tracking-tight text-gray-900 mb-3">​Våra favoritverktyg för att skapa resultat</h1>
-          <p className="mt-2 text-base lg:text-lg text-gray-600 max-w-2xl mx-auto">
-            Vi integrerar sömlöst med alla era befintliga system och verktyg.
-          </p>
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-display font-normal text-gray-900 mb-3">Sömlös Integration med er Techstack</h1>
         </AnimatedSection>
         
 
@@ -70,8 +67,8 @@ export default function IntegrationHero() {
           </AnimatedSection>
 
           {/* Fade overlays */}
-          <div className="absolute left-0 top-0 h-full w-24 bg-gradient-to-r from-white to-transparent pointer-events-none z-10" />
-          <div className="absolute right-0 top-0 h-full w-24 bg-gradient-to-l from-white to-transparent pointer-events-none z-10" />
+          <div className="absolute left-0 top-0 h-full w-24 bg-gradient-to-r from-background to-transparent pointer-events-none z-10" />
+          <div className="absolute right-0 top-0 h-full w-24 bg-gradient-to-l from-background to-transparent pointer-events-none z-10" />
         </div>
       </div>
     </section>;
