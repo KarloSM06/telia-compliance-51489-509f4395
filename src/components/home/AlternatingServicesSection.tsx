@@ -85,28 +85,28 @@ const servicesData = [
 
 export const AlternatingServicesSection = () => {
   return (
-    <section className="py-16 md:py-24">
-      <div className="max-w-7xl mx-auto px-6">
+    <section className="py-12 md:py-16 lg:py-24">
+      <div className="max-w-7xl mx-auto px-4 md:px-6">
         {/* Section Header */}
-        <div className="text-center mb-16 md:mb-24">
-          <h2 className="text-4xl md:text-5xl lg:text-6xl font-display font-normal text-gray-900 mb-6">
+        <div className="text-center mb-12 md:mb-16">
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-display font-normal text-gray-900 mb-6">
             AI-Lösningar som Levererar
           </h2>
-          <p className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto">
+          <p className="text-base md:text-lg text-gray-600 max-w-3xl mx-auto">
             Live KPI-tavlor, prognoser och tydliga handlingsrekommendationer—så teamet agerar, inte gissar.
           </p>
         </div>
 
-        <div className="space-y-16 md:space-y-24">
+        <div className="space-y-12 md:space-y-16">
         {servicesData.map((service, index) => (
           <div 
             key={service.id}
-            className="animate-[fadeInUp_0.6s_ease-out] border-2 border-white/10 bg-white/5 backdrop-blur-sm rounded-3xl p-10 md:p-16 shadow-lg hover:shadow-xl transition-all"
+            className="animate-[fadeInUp_0.6s_ease-out] border-2 border-white/10 bg-white/5 backdrop-blur-sm rounded-3xl p-6 md:p-10 lg:p-16 shadow-lg hover:shadow-xl transition-all"
             style={{ animationDelay: `${index * 100}ms` }}
           >
-              <div className={`grid md:grid-cols-2 gap-12 items-center ${service.isReversed ? 'md:grid-flow-dense' : ''}`}>
+              <div className={`grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 items-center ${service.isReversed ? 'lg:grid-flow-dense' : ''}`}>
                 {/* Text side */}
-                <div className={service.isReversed ? 'md:col-start-2' : ''}>
+                <div className={service.isReversed ? 'lg:col-start-2' : ''}>
                   {/* Category Badge */}
                   <div className="mb-4">
                     <span className="text-xs uppercase tracking-wider text-gray-900 bg-white/60 backdrop-blur-sm border border-gray-200 px-4 py-2 rounded-full">
@@ -114,10 +114,10 @@ export const AlternatingServicesSection = () => {
                     </span>
                   </div>
                   
-                  <h2 className="text-4xl md:text-5xl font-display font-normal text-gray-900 mb-4">
+                  <h2 className="text-2xl md:text-3xl lg:text-4xl font-display font-normal text-gray-900 mb-4">
                     {service.title}
                   </h2>
-                  <p className="text-lg text-gray-600 mb-6">
+                  <p className="text-base md:text-lg text-gray-600 mb-6">
                     {service.description}
                   </p>
                   
@@ -130,8 +130,8 @@ export const AlternatingServicesSection = () => {
                     ))}
                   </div>
                   
-                  <div className="flex gap-4">
-                    <button className="border border-gray-300 text-gray-900 px-6 py-3 rounded-full hover:bg-gray-50 transition-colors">
+                  <div className="flex flex-col sm:flex-row gap-4">
+                    <button className="border border-gray-300 text-gray-900 px-8 py-3.5 rounded-full hover:bg-gray-50 transition-colors">
                       Läs mer
                     </button>
                     <button 
@@ -142,7 +142,7 @@ export const AlternatingServicesSection = () => {
                           bookButton?.click();
                         }
                       }}
-                      className="bg-gray-900 hover:bg-gray-800 text-white px-6 py-3 rounded-full transition-colors"
+                      className="bg-gray-900 hover:bg-gray-800 text-white px-8 py-3.5 rounded-full transition-colors"
                     >
                       Boka ett möte
                     </button>
@@ -150,7 +150,7 @@ export const AlternatingServicesSection = () => {
                 </div>
                 
                 {/* Mockup side - Direct rendering without extra frame */}
-                <div className={service.isReversed ? 'md:col-start-1' : ''}>
+                <div className={service.isReversed ? 'lg:col-start-1' : ''}>
                   {service.id === 1 ? (
                     // DatabaseWithRestApi figur för Dashboards & Decision Intelligence
                     <div className="w-full flex justify-center">

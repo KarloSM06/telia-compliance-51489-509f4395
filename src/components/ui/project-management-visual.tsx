@@ -2,12 +2,14 @@
 
 import { motion } from "framer-motion";
 import { CheckSquare, Calendar, Info, Check } from "lucide-react";
+import { useIsMobile } from "@/hooks/use-mobile";
 interface ProjectManagementVisualProps {
   className?: string;
 }
 export const ProjectManagementVisual: React.FC<ProjectManagementVisualProps> = ({
   className = ""
 }) => {
+  const isMobile = useIsMobile();
   const dates = ["Dec 22", "Dec 25", "Dec 27", "Dec 30"];
   const resources = [{
     label: "Development",
@@ -19,7 +21,7 @@ export const ProjectManagementVisual: React.FC<ProjectManagementVisualProps> = (
     label: "Testing",
     percentage: 75
   }];
-  return <div className={`h-[500px] w-full max-w-[900px] mx-auto bg-white/80 backdrop-blur-xl border border-gray-100 rounded-2xl shadow-lg p-8 ${className}`}>
+  return <div className={`h-auto min-h-[300px] md:h-[500px] w-full max-w-[900px] mx-auto bg-white/80 backdrop-blur-xl border border-gray-100 rounded-2xl shadow-lg p-6 md:p-8 ${className}`}>
       <div className="space-y-4">
         {/* New Details Header */}
         <motion.div initial={{
@@ -120,7 +122,7 @@ export const ProjectManagementVisual: React.FC<ProjectManagementVisualProps> = (
             }} />
               
               {/* Dots */}
-              {dates.map((_, idx) => <motion.div key={idx} className="absolute top-1/2 -translate-y-1/2 w-3 h-3 bg-gradient-to-br from-indigo-500 to-purple-600 border-2 border-white rounded-full shadow-md" style={{
+              {dates.map((_, idx) => <motion.div key={idx} className="absolute top-1/2 -translate-y-1/2 w-2.5 h-2.5 md:w-3 md:h-3 bg-gradient-to-br from-indigo-500 to-purple-600 border-2 border-white rounded-full shadow-md" style={{
               left: `${idx / (dates.length - 1) * 100}%`,
               transform: 'translate(-50%, -50%)'
             }} initial={{

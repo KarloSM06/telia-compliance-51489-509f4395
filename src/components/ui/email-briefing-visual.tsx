@@ -3,12 +3,14 @@
 import { motion } from "framer-motion";
 import { Mail, Search, CheckCircle, TrendingUp, MapPin, Phone } from "lucide-react";
 import { useState, useEffect } from "react";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface EmailBriefingVisualProps {
   className?: string;
 }
 
 export const EmailBriefingVisual: React.FC<EmailBriefingVisualProps> = ({ className = "" }) => {
+  const isMobile = useIsMobile();
   const tabs = ["LinkedIn", "Timeline", "Contact"];
   const activeTab = "Contact";
 
@@ -60,9 +62,9 @@ export const EmailBriefingVisual: React.FC<EmailBriefingVisualProps> = ({ classN
   ];
 
   return (
-    <div className={`h-[500px] w-full max-w-[900px] mx-auto bg-white/80 backdrop-blur-xl border border-gray-100 rounded-2xl shadow-lg overflow-hidden ${className}`}>
+    <div className={`h-auto min-h-[300px] md:h-[500px] w-full max-w-[900px] mx-auto bg-white/80 backdrop-blur-xl border border-gray-100 rounded-2xl shadow-lg overflow-hidden ${className}`}>
       {/* Header */}
-      <div className="bg-white/90 backdrop-blur-xl border-b border-gray-200 px-8 py-3 flex items-center justify-between">
+      <div className="bg-white/90 backdrop-blur-xl border-b border-gray-200 px-4 md:px-8 py-3 flex items-center justify-between">
         <div className="flex items-center gap-3">
           <Mail className="size-8 text-foreground/75" strokeWidth={1} aria-hidden />
           <h3 className="text-sm font-semibold text-gray-900 uppercase tracking-wider">E-mail briefing</h3>
@@ -71,7 +73,7 @@ export const EmailBriefingVisual: React.FC<EmailBriefingVisualProps> = ({ classN
       </div>
 
       {/* Tab Navigation */}
-      <div className="bg-white/60 backdrop-blur-sm border-b border-gray-200 px-8 py-2 flex gap-6">
+      <div className="bg-white/60 backdrop-blur-sm border-b border-gray-200 px-4 md:px-8 py-2 flex gap-4 md:gap-6">
         {tabs.map((tab) => (
           <button
             key={tab}
@@ -87,7 +89,7 @@ export const EmailBriefingVisual: React.FC<EmailBriefingVisualProps> = ({ classN
       </div>
 
       {/* Content */}
-      <div className="p-8 space-y-4">
+      <div className="p-4 md:p-8 space-y-4">
         {/* Contact Card */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -101,7 +103,7 @@ export const EmailBriefingVisual: React.FC<EmailBriefingVisualProps> = ({ classN
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
               transition={{ duration: 0.5, delay: 0.2, type: "spring" }}
-              className="w-12 h-12 bg-gradient-to-br from-indigo-500 via-purple-500 to-purple-600 rounded-full flex items-center justify-center text-white font-display text-base flex-shrink-0 shadow-md"
+              className="w-10 h-10 md:w-12 md:h-12 bg-gradient-to-br from-indigo-500 via-purple-500 to-purple-600 rounded-full flex items-center justify-center text-white font-display text-sm md:text-base flex-shrink-0 shadow-md"
             >
               JD
             </motion.div>
@@ -136,7 +138,7 @@ export const EmailBriefingVisual: React.FC<EmailBriefingVisualProps> = ({ classN
           <h5 className="text-sm font-semibold text-gray-900 mb-3">Campaign Performance</h5>
           
           {/* Stats Grid with subtle background */}
-          <div className="grid grid-cols-2 gap-3 mb-3 bg-white/60 backdrop-blur-sm border border-gray-100 rounded-lg p-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3 bg-white/60 backdrop-blur-sm border border-gray-100 rounded-lg p-3">
             {stats.map((stat, idx) => {
               const Icon = stat.icon;
               return (
@@ -149,14 +151,14 @@ export const EmailBriefingVisual: React.FC<EmailBriefingVisualProps> = ({ classN
                 >
                   <Icon className="size-5 text-foreground/75 mx-auto mb-1" strokeWidth={1} aria-hidden />
                   <motion.p
-                    className="text-lg font-mono font-bold text-gray-900 mb-0.5"
+                    className="text-base md:text-lg font-mono font-bold text-gray-900 mb-0.5"
                     initial={{ scale: 1 }}
                     animate={{ scale: [1, 1.05, 1] }}
                     transition={{ duration: 0.3, delay: 0.3 + idx * 0.1 }}
                   >
                     {stat.value}
                   </motion.p>
-                  <p className="text-xs text-gray-600 uppercase tracking-wide">{stat.label}</p>
+                  <p className="text-xs md:text-sm text-gray-600 uppercase tracking-wide">{stat.label}</p>
                 </motion.div>
               );
             })}

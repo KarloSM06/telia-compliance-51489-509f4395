@@ -56,30 +56,30 @@ export const PricingCards = () => {
   const [isConsultationModalOpen, setIsConsultationModalOpen] = useState(false);
 
   return (
-    <section className="py-16 md:py-24 bg-white">
-      <div className="max-w-7xl mx-auto px-6">
+    <section className="py-12 md:py-16 lg:py-24 bg-white">
+      <div className="max-w-7xl mx-auto px-4 md:px-6">
         <AnimatedSection>
-          <div className="text-center mb-16">
+          <div className="text-center mb-12 md:mb-16">
             <div className="mb-4">
               <span className="text-xs uppercase tracking-wider text-gray-900 bg-white/60 backdrop-blur-sm border border-gray-200 px-4 py-2 rounded-full">
                 Priser
               </span>
             </div>
-            <h2 className="text-4xl md:text-5xl lg:text-6xl font-display font-normal text-gray-900 mb-6">
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-display font-normal text-gray-900 mb-6">
               Bästa AI-Automation till Rätt Pris
             </h2>
-            <p className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto">
+            <p className="text-base md:text-lg text-gray-600 max-w-3xl mx-auto">
               Välj en plan som passar era affärsbehov och börja automatisera med AI
             </p>
           </div>
         </AnimatedSection>
         
-        <div className="grid md:grid-cols-3 gap-6">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
           {pricingPlans.map((plan, index) => (
             <div 
               key={plan.id}
-              className={`animate-[fadeInUp_0.6s_ease-out] border-2 backdrop-blur-sm rounded-3xl p-8 shadow-lg hover:shadow-xl transition-all ${
-                plan.popular ? 'border-gray-900 bg-white/10 scale-105' : 'border-white/10 bg-white/5'
+              className={`animate-[fadeInUp_0.6s_ease-out] border-2 backdrop-blur-sm rounded-3xl p-6 md:p-8 shadow-lg hover:shadow-xl transition-all ${
+                plan.popular ? 'border-gray-900 bg-white/10 md:scale-105' : 'border-white/10 bg-white/5'
               }`}
               style={{ animationDelay: `${index * 100}ms` }}
             >
@@ -111,8 +111,8 @@ export const PricingCards = () => {
                 <button 
                   onClick={() => setIsConsultationModalOpen(true)}
                   className={plan.popular 
-                    ? "w-full bg-gray-900 hover:bg-gray-800 text-white py-3 rounded-full transition-colors"
-                    : "w-full border border-gray-300 text-gray-900 py-3 rounded-full hover:bg-gray-50 transition-colors"
+                    ? "w-full bg-gray-900 hover:bg-gray-800 text-white py-3.5 rounded-full transition-colors"
+                    : "w-full border border-gray-300 text-gray-900 py-3.5 rounded-full hover:bg-gray-50 transition-colors"
                   }
                 >
                   {plan.cta}

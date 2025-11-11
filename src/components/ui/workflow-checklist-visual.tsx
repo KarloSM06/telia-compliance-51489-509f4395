@@ -2,12 +2,14 @@
 
 import { motion } from "framer-motion";
 import { CheckCircle2, Circle, FileText, Mail, Send } from "lucide-react";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface WorkflowChecklistVisualProps {
   className?: string;
 }
 
 export const WorkflowChecklistVisual: React.FC<WorkflowChecklistVisualProps> = ({ className = "" }) => {
+  const isMobile = useIsMobile();
   const workflowItems = [
     { label: "Smart Analysering", completed: true },
     { label: "Lead Generation", completed: true },
@@ -23,8 +25,8 @@ export const WorkflowChecklistVisual: React.FC<WorkflowChecklistVisualProps> = (
   ];
 
   return (
-    <div className={`h-[500px] w-full max-w-[900px] mx-auto bg-white/80 backdrop-blur-xl border border-gray-100 rounded-2xl shadow-lg p-8 ${className}`}>
-      <div className="grid grid-cols-[1fr_2fr] gap-8 h-full">
+    <div className={`h-auto min-h-[300px] md:h-[500px] w-full max-w-[900px] mx-auto bg-white/80 backdrop-blur-xl border border-gray-100 rounded-2xl shadow-lg p-6 md:p-8 ${className}`}>
+      <div className="grid grid-cols-1 lg:grid-cols-[1fr_2fr] gap-6 md:gap-8 h-full">
         {/* Left Sidebar - Checklist */}
         <div className="space-y-3">
           <h3 className="text-sm font-semibold text-gray-900 mb-4 uppercase tracking-wider">
@@ -57,7 +59,7 @@ export const WorkflowChecklistVisual: React.FC<WorkflowChecklistVisualProps> = (
         {/* Right Side - Central Workflow Animation */}
         <div className="relative flex flex-col items-center justify-center">
           {/* Workflow Cards with Vertical Flow */}
-          <div className="relative h-full w-full flex flex-col items-center justify-center gap-6">
+          <div className="relative h-full w-full flex flex-col items-center justify-center gap-4 md:gap-6">
             {workflowCards.map((card, idx) => (
               <motion.div
                 key={idx}

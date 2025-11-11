@@ -4,6 +4,7 @@ import React from "react";
 import { motion } from "framer-motion";
 import { Folder, HeartHandshakeIcon, SparklesIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface DatabaseWithRestApiProps {
   className?: string;
@@ -37,6 +38,7 @@ const DatabaseWithRestApi = ({
   title,
   lightColor,
 }: DatabaseWithRestApiProps) => {
+  const isMobile = useIsMobile();
   const Icon1 = badgeIcons?.first;
   const Icon2 = badgeIcons?.second;
   const Icon3 = badgeIcons?.third;
@@ -44,16 +46,17 @@ const DatabaseWithRestApi = ({
   return (
     <div
       className={cn(
-        "relative flex h-[500px] w-full max-w-[900px] flex-col items-center",
+        "relative flex h-auto min-h-[300px] md:h-[500px] w-full max-w-[900px] flex-col items-center px-4 md:px-0",
         className
       )}
     >
       {/* SVG Paths  */}
       <svg
-        className="h-full sm:w-full text-primary/40"
+        className="h-full w-full text-primary/40"
         width="100%"
         height="100%"
         viewBox="0 0 200 100"
+        preserveAspectRatio="xMidYMid meet"
       >
         <g
           stroke="currentColor"
@@ -137,7 +140,7 @@ const DatabaseWithRestApi = ({
               y="12"
               fill="white"
               stroke="none"
-              fontSize="5"
+              fontSize={isMobile ? "5.5" : "5"}
               fontWeight="600"
             >
               {badgeTexts?.first || "GET"}
@@ -274,7 +277,7 @@ const DatabaseWithRestApi = ({
           </span>
         </div>
         {/* box outter circle */}
-        <div className="absolute -bottom-8 z-30 grid h-[70px] w-[70px] place-items-center rounded-full border-2 border-primary/40 bg-primary/20 backdrop-blur font-bold text-sm text-foreground">
+        <div className="absolute -bottom-8 z-30 grid h-[70px] w-[70px] place-items-center rounded-full border-2 border-primary/40 bg-primary/20 backdrop-blur font-bold text-xs md:text-sm text-foreground">
           {circleText ? circleText : "API"}
         </div>
         {/* box content */}

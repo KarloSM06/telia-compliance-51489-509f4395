@@ -4,12 +4,15 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { ConsultationModal } from "@/components/ConsultationModal";
 import hiems_logo from "@/assets/hiems_snowflake_logo.png";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 export function FloatingNavbar() {
   const navigate = useNavigate();
   const [isConsultationModalOpen, setIsConsultationModalOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+
+  const isMobile = useIsMobile();
 
   useEffect(() => {
     const handleScroll = () => {

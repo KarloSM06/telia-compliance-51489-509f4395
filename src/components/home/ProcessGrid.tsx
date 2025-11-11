@@ -33,10 +33,10 @@ const processSteps = [
 
 export const ProcessGrid = () => {
   return (
-    <section className="py-16 md:py-24">
-      <div className="max-w-7xl mx-auto px-6">
+    <section className="py-12 md:py-16 lg:py-24 bg-white">
+      <div className="max-w-7xl mx-auto px-4 md:px-6">
         {/* Section Header */}
-        <div className="text-center mb-16 md:mb-24">
+        <div className="text-center mb-12 md:mb-16">
           {/* Category Badge */}
           <div className="mb-4">
             <span className="text-xs uppercase tracking-wider text-gray-900 bg-white/60 backdrop-blur-sm border border-gray-200 px-4 py-2 rounded-full">
@@ -44,20 +44,20 @@ export const ProcessGrid = () => {
             </span>
           </div>
           
-          <h2 className="text-4xl md:text-5xl lg:text-6xl font-display font-normal text-gray-900 mb-6">
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-display font-normal text-gray-900 mb-6">
             Vår Enkla, Smarta och Skalbara Process
           </h2>
-          <p className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto">
+          <p className="text-base md:text-lg text-gray-600 max-w-3xl mx-auto">
             Vi designar, utvecklar och implementerar automationsverktyg som hjälper er jobba smartare, inte hårdare
           </p>
         </div>
         
         {/* Process Steps Grid */}
-        <div className="grid md:grid-cols-2 gap-6 md:gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
           {processSteps.map((step, index) => (
             <div 
               key={step.id}
-              className="animate-[fadeInUp_0.6s_ease-out] border-2 border-white/10 bg-white/5 backdrop-blur-sm rounded-3xl p-10 md:p-12 shadow-lg hover:shadow-xl transition-all"
+              className="animate-[fadeInUp_0.6s_ease-out] border-2 border-white/10 bg-white/5 backdrop-blur-sm rounded-3xl p-6 md:p-8 lg:p-10 shadow-lg hover:shadow-xl transition-all h-auto min-h-[240px] md:h-[280px] flex flex-col"
               style={{ animationDelay: `${index * 100}ms` }}
             >
                 {/* Step Badge */}
@@ -68,12 +68,12 @@ export const ProcessGrid = () => {
                 </div>
                 
                 {/* Title */}
-                <h3 className="text-2xl md:text-3xl lg:text-4xl font-display font-normal text-gray-900 mb-4">
+                <h3 className="text-xl md:text-2xl lg:text-3xl font-display font-normal text-gray-900 mb-3">
                   {step.title}
                 </h3>
                 
                 {/* Description */}
-                <p className="text-gray-600 leading-relaxed mb-2">
+                <p className="text-sm md:text-base text-gray-600 leading-relaxed mb-2 flex-1">
                   {step.description}
                 </p>
                 

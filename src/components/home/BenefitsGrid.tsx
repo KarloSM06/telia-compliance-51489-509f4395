@@ -42,35 +42,35 @@ const benefits = [
 
 export const BenefitsGrid = () => {
   return (
-    <section className="py-16 md:py-24 bg-white">
-      <div className="max-w-7xl mx-auto px-6">
+    <section className="py-12 md:py-16 lg:py-24 bg-white">
+      <div className="max-w-7xl mx-auto px-4 md:px-6">
         <AnimatedSection>
-          <div className="text-center mb-16">
+          <div className="text-center mb-12 md:mb-16">
             <div className="mb-4">
               <span className="text-xs uppercase tracking-wider text-gray-900 bg-white/60 backdrop-blur-sm border border-gray-200 px-4 py-2 rounded-full">
                 Fördelar
               </span>
             </div>
-            <h2 className="text-4xl md:text-5xl lg:text-6xl font-display font-normal text-gray-900 mb-6">
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-display font-normal text-gray-900 mb-6">
               AI är inte bara ett verktyg — det är den nya infrastrukturen för företag
             </h2>
-            <p className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto">
+            <p className="text-base md:text-lg text-gray-600 max-w-3xl mx-auto">
               Vi hjälper er att utnyttja det för att röra sig snabbare, tänka smartare och skala bortom gränser
             </p>
           </div>
         </AnimatedSection>
         
-        <div className="grid md:grid-cols-3 gap-6">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
           {benefits.map((benefit, index) => {
             const Icon = benefit.icon;
             return (
               <div 
                 key={benefit.id}
-                className="animate-[fadeInUp_0.6s_ease-out] border-2 border-white/10 bg-white/5 backdrop-blur-sm rounded-3xl p-8 shadow-lg hover:shadow-xl transition-all h-[280px] flex flex-col"
+                className="animate-[fadeInUp_0.6s_ease-out] border-2 border-white/10 bg-white/5 backdrop-blur-sm rounded-3xl p-6 md:p-8 shadow-lg hover:shadow-xl transition-all h-auto min-h-[240px] md:h-[280px] flex flex-col"
                 style={{ animationDelay: `${index * 100}ms` }}
               >
                   <div className="mb-4">
-                    <Icon className="w-8 h-8 md:w-10 md:h-10 text-gray-900 stroke-[1]" />
+                    <Icon className="w-10 h-10 md:w-12 md:h-12 text-gray-900 stroke-[1]" />
                   </div>
                   <h3 className="text-xl font-display font-normal text-gray-900 mb-3">
                     {benefit.title}
