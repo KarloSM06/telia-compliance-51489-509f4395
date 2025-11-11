@@ -88,7 +88,7 @@ export const ProductSelection = () => {
         
 
         {/* 11. Unified Ecosystem */}
-        <UnifiedEcosystem primaryImageSrc={dashboardScreenshot} secondaryImageSrc={calendarScreenshot} />
+        
 
         {/* 12. Workflow Timeline */}
         <AnimatedSection>
