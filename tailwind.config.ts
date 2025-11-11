@@ -194,6 +194,36 @@ export default {
           "50%": {
             "background-position": "100% 50%"
           }
+        },
+        liquidRipple: {
+          "0%": {
+            transform: "translate(-50%, -50%) scale(0)",
+            opacity: "1"
+          },
+          "100%": {
+            transform: "translate(-50%, -50%) scale(20)",
+            opacity: "0"
+          }
+        },
+        liquidWobble: {
+          "0%": {
+            transform: "translate(var(--wobble-start-x, 0), var(--wobble-start-y, 0))"
+          },
+          "20%": {
+            transform: "translate(calc(var(--wobble-start-x, 0) * 0.7), calc(var(--wobble-start-y, 0) * 0.7))"
+          },
+          "40%": {
+            transform: "translate(calc(var(--wobble-start-x, 0) * -0.4), calc(var(--wobble-start-y, 0) * -0.4))"
+          },
+          "60%": {
+            transform: "translate(calc(var(--wobble-start-x, 0) * 0.2), calc(var(--wobble-start-y, 0) * 0.2))"
+          },
+          "80%": {
+            transform: "translate(calc(var(--wobble-start-x, 0) * -0.1), calc(var(--wobble-start-y, 0) * -0.1))"
+          },
+          "100%": {
+            transform: "translate(0, 0)"
+          }
         }
       },
       animation: {
@@ -208,7 +238,9 @@ export default {
         "subtle-float": "subtle-float 120s ease-in-out infinite",
         "scroll-left": "scroll-left 40s linear infinite",
         "scroll-right": "scroll-right 40s linear infinite",
-        rainbow: "rainbow 3s ease-in-out infinite"
+        rainbow: "rainbow 3s ease-in-out infinite",
+        "liquid-ripple": "liquidRipple 0.6s ease-out forwards",
+        "liquid-wobble": "liquidWobble 1.8s cubic-bezier(0.36, 0.07, 0.19, 0.97)"
       },
     },
   },

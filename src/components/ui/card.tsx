@@ -1,10 +1,27 @@
+"use client"
+
 import * as React from "react";
-
 import { cn } from "@/lib/utils";
+import { LiquidGlass } from "./liquid-glass";
 
-const Card = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(({ className, ...props }, ref) => (
-  <div ref={ref} className={cn("rounded-2xl border-2 border-white/10 bg-white/5 backdrop-blur-sm text-primary shadow-elegant transition-all duration-300 hover:border-white/20 hover:bg-white/10", className)} {...props} />
-));
+const Card = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
+  ({ className, children, onClick, ...props }, ref) => (
+    <LiquidGlass
+      variant="card"
+      intensity="medium"
+      rippleEffect={true}
+      onClick={onClick}
+      className={cn(
+        "text-primary shadow-elegant",
+        className
+      )}
+    >
+      <div ref={ref} {...props}>
+        {children}
+      </div>
+    </LiquidGlass>
+  )
+);
 Card.displayName = "Card";
 
 const CardHeader = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
