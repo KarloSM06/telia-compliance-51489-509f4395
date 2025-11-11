@@ -41,7 +41,7 @@ export default defineConfig(({ mode }) => ({
           'forms': ['react-hook-form', 'zod', '@hookform/resolvers'],
           'supabase': ['@supabase/supabase-js'],
           'query': ['@tanstack/react-query'],
-          'animations': ['framer-motion', 'lenis'],
+          'animations': ['framer-motion'],
         },
       },
     },
