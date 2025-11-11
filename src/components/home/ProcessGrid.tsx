@@ -68,16 +68,16 @@ export const ProcessGrid = () => {
                 </h3>
                 
                 {/* Description */}
-                <p className="text-gray-600 leading-relaxed mb-6">
+                <p className="text-gray-600 leading-relaxed mb-4">
                   {step.description}
                 </p>
                 
                 {/* Visual Mockup Area */}
-                <div className="bg-white/40 backdrop-blur-sm border border-gray-200 rounded-xl p-6 min-h-[200px] flex items-center justify-center">
-                  {step.id === 3 ? (
-                    <div className="w-full flex justify-center">
+                {step.id === 3 ? (
+                  <div className="bg-white/40 backdrop-blur-sm border border-gray-200 rounded-xl p-4 flex items-center justify-center">
+                    <div className="w-full flex justify-center -my-4">
                       <DatabaseWithRestApi 
-                        className="scale-50 md:scale-60" 
+                        className="scale-90 md:scale-100" 
                         circleText="Hiems" 
                         title="" 
                         badgeTexts={{
@@ -99,12 +99,14 @@ export const ProcessGrid = () => {
                         lightColor="hsl(var(--primary))" 
                       />
                     </div>
-                  ) : (
+                  </div>
+                ) : (
+                  <div className="bg-white/40 backdrop-blur-sm border border-gray-200 rounded-xl p-6 min-h-[200px] flex items-center justify-center">
                     <span className="text-sm text-gray-400">
                       [Illustration - {step.title}]
                     </span>
-                  )}
-                </div>
+                  </div>
+                )}
               </div>
             </AnimatedSection>
           ))}
