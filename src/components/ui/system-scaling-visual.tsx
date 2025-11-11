@@ -43,10 +43,8 @@ export const SystemScalingVisual = () => {
         >
           {/* Left side: Icon + Text */}
           <div className="flex items-center gap-4">
-            {/* Icon container - LARGER with gradient */}
-            <div className="w-14 h-14 rounded-lg bg-gradient-to-br from-indigo-500/20 to-purple-500/10 border border-indigo-400/40 flex items-center justify-center">
-              <system.icon className="w-7 h-7 text-indigo-600" strokeWidth={2} />
-            </div>
+            {/* Icon - standard style matching homepage */}
+            <system.icon className="size-8 md:size-10 text-foreground/75" strokeWidth={1} />
 
             {/* Text */}
             <div className="flex flex-col">
