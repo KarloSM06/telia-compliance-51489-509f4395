@@ -1,8 +1,10 @@
 "use client"
 
 import { motion } from "framer-motion"
-import { Puzzle, Link2, Workflow, ArrowUpRight, type LucideIcon } from "lucide-react"
+import { Puzzle, Link2, Workflow, ArrowUpRight, Database, Cloud, Zap, Server, GitBranch, Globe, Box, type LucideIcon } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { useRef } from "react"
+import { AnimatedBeam } from "@/components/magicui/animated-beam"
 
 interface IntegrationHubVisualProps {
   className?: string
@@ -44,7 +46,21 @@ export const IntegrationHubVisual = ({
   const IconThird = badgeIcons.third || Workflow
   const IconFourth = badgeIcons.fourth || ArrowUpRight
 
-  // 8 radial angles for hub-and-spoke
+  const containerRef = useRef<HTMLDivElement>(null)
+  const centerRef = useRef<HTMLDivElement>(null)
+  
+  // Refs for 8 peripheral nodes
+  const node1Ref = useRef<HTMLDivElement>(null)
+  const node2Ref = useRef<HTMLDivElement>(null)
+  const node3Ref = useRef<HTMLDivElement>(null)
+  const node4Ref = useRef<HTMLDivElement>(null)
+  const node5Ref = useRef<HTMLDivElement>(null)
+  const node6Ref = useRef<HTMLDivElement>(null)
+  const node7Ref = useRef<HTMLDivElement>(null)
+  const node8Ref = useRef<HTMLDivElement>(null)
+
+  const nodeRefs = [node1Ref, node2Ref, node3Ref, node4Ref, node5Ref, node6Ref, node7Ref, node8Ref]
+  const nodeIcons = [Database, Cloud, Workflow, Zap, Server, GitBranch, Globe, Box]
   const angles = [0, 45, 90, 135, 180, 225, 270, 315]
 
   return (
@@ -71,143 +87,91 @@ export const IntegrationHubVisual = ({
           </div>
         </div>
 
-        {/* SVG Hub-and-Spoke with slow rotation */}
-        <motion.div 
-          className="absolute inset-0 flex items-center justify-center"
-          animate={{ rotate: 360 }}
-          transition={{ duration: 60, repeat: Infinity, ease: "linear" }}
-        >
-          <svg viewBox="0 0 200 100" className="w-full h-full" style={{ maxWidth: '800px' }}>
-            <defs>
-              <linearGradient id="spokeGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop offset="0%" stopColor={lightColor} stopOpacity="0" />
-                <stop offset="50%" stopColor={lightColor} stopOpacity="1" />
-                <stop offset="100%" stopColor={lightColor} stopOpacity="0" />
-              </linearGradient>
-              
-              {/* Masks for each spoke with alternating directions */}
-              {angles.map((angle, index) => {
-                const radian = (angle * Math.PI) / 180
-                const endX = 100 + Math.cos(radian) * 40
-                const endY = 50 + Math.sin(radian) * 40
-                
-                return (
-                  <mask key={`mask-${angle}`} id={`spokeMask${angle}`}>
-                    <rect width="200" height="100" fill="black" />
-                    <motion.circle
-                      cx={index % 2 === 0 ? 100 : endX}
-                      cy={index % 2 === 0 ? 50 : endY}
-                      r="2"
-                      fill="white"
-                      animate={
-                        index % 2 === 0
-                          ? { cx: endX, cy: endY }
-                          : { cx: 100, cy: 50 }
-                      }
-                      transition={{
-                        duration: 2,
-                        repeat: Infinity,
-                        delay: index * 0.25,
-                        ease: "easeInOut"
-                      }}
-                    />
-                  </mask>
-                )
-              })}
-            </defs>
+        {/* Hub and Spoke Layout with AnimatedBeam */}
+        <div ref={containerRef} className="absolute inset-0 flex items-center justify-center">
+          <div className="relative w-[600px] h-[600px] max-w-full">
             
-            {/* 8 Radial spokes with animated lights */}
-            {angles.map((angle) => {
-              const radian = (angle * Math.PI) / 180
-              const endX = 100 + Math.cos(radian) * 40
-              const endY = 50 + Math.sin(radian) * 40
+            {/* Peripheral nodes positioned in a circle */}
+            {nodeRefs.map((ref, index) => {
+              const angle = angles[index]
+              const radius = 45 // percentage from center
+              const x = 50 + radius * Math.cos((angle - 90) * Math.PI / 180)
+              const y = 50 + radius * Math.sin((angle - 90) * Math.PI / 180)
+              const NodeIcon = nodeIcons[index]
               
               return (
-                <g key={angle}>
-                  {/* Static spoke line */}
-                  <line
-                    x1="100"
-                    y1="50"
-                    x2={endX}
-                    y2={endY}
-                    stroke="hsl(var(--primary))"
-                    strokeWidth="0.5"
-                    opacity="0.3"
-                  />
-                  
-                  {/* Animated light on spoke */}
-                  <line
-                    x1="100"
-                    y1="50"
-                    x2={endX}
-                    y2={endY}
-                    stroke="url(#spokeGradient)"
-                    strokeWidth="1"
-                    mask={`url(#spokeMask${angle})`}
-                  />
-                  
-                  {/* Peripheral node with pulse */}
-                  <motion.circle
-                    cx={endX}
-                    cy={endY}
-                    r="3"
-                    fill={lightColor}
-                    opacity="0.6"
-                    animate={{
-                      scale: [1, 1.3, 1],
-                      opacity: [0.6, 0.9, 0.6]
-                    }}
-                    transition={{
-                      duration: 2,
-                      repeat: Infinity,
-                      delay: angle / 45 * 0.25,
-                      ease: "easeInOut"
-                    }}
-                  />
-                </g>
+                <div
+                  key={index}
+                  ref={ref}
+                  className="absolute flex items-center justify-center w-16 h-16 border-2 border-primary/30 bg-primary/10 backdrop-blur-md rounded-xl shadow-lg"
+                  style={{
+                    left: `${x}%`,
+                    top: `${y}%`,
+                    transform: 'translate(-50%, -50%)'
+                  }}
+                >
+                  <NodeIcon className="w-6 h-6 text-primary" />
+                </div>
               )
             })}
-          </svg>
-        </motion.div>
 
-        {/* Central Hub - non-rotating */}
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-          <div className="relative">
-            {/* Pulsing ring */}
-            <motion.div
-              className="absolute inset-0 rounded-full border-2 border-primary/30"
-              style={{
-                width: '100px',
-                height: '100px',
-                top: '50%',
-                left: '50%',
-                transform: 'translate(-50%, -50%)',
-              }}
-              animate={{
-                scale: [1, 1.2, 1],
-                opacity: [0.5, 0, 0.5],
-              }}
-              transition={{
-                duration: 3,
-                repeat: Infinity,
-                ease: "easeInOut"
-              }}
-            />
-            
-            {/* Central box */}
-            <div className="relative z-10 w-24 h-24 flex items-center justify-center border-2 border-primary/30 bg-white/90 backdrop-blur rounded-2xl shadow-lg">
-              <span className="text-2xl font-display font-normal text-gray-900">{circleText}</span>
+            {/* Central Hub with concentric circles */}
+            <div className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 pointer-events-none">
+              {/* Pulsing concentric rings */}
+              {[0, 1, 2, 3].map((index) => (
+                <motion.div
+                  key={index}
+                  className="absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-primary/20"
+                  style={{
+                    width: `${112 + index * 32}px`,
+                    height: `${112 + index * 32}px`
+                  }}
+                  initial={{ scale: 0.8, opacity: 0 }}
+                  animate={{ scale: 1, opacity: [0, 0.5, 0] }}
+                  transition={{
+                    duration: 3,
+                    repeat: Infinity,
+                    delay: index * 0.7,
+                    ease: "easeInOut"
+                  }}
+                />
+              ))}
+              
+              <div
+                ref={centerRef}
+                className="relative flex items-center justify-center w-28 h-28 border-2 border-primary/30 bg-primary/20 backdrop-blur-md rounded-2xl shadow-lg pointer-events-auto"
+              >
+                <div className="absolute inset-0 rounded-2xl bg-primary/10 blur-xl" />
+                <span className="relative text-sm font-medium text-gray-900 text-center px-2">{circleText}</span>
+              </div>
             </div>
+
+            {/* AnimatedBeams connecting peripheral nodes to center */}
+            {nodeRefs.map((ref, index) => (
+              <AnimatedBeam
+                key={index}
+                containerRef={containerRef}
+                fromRef={index < 4 ? ref : centerRef}
+                toRef={index < 4 ? centerRef : ref}
+                curvature={index % 2 === 0 ? 50 : -50}
+                duration={3 + (index % 3)}
+                pathColor="hsl(var(--primary))"
+                gradientStartColor={lightColor}
+                gradientStopColor={lightColor}
+                pathOpacity={0.3}
+                reverse={index >= 4}
+              />
+            ))}
           </div>
         </div>
 
         {/* Bottom Badges */}
         <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex gap-4">
           <div className="px-4 py-2 rounded-full border border-primary/20 bg-primary/10 backdrop-blur">
-            <span className="text-sm font-medium text-gray-900">Smart Router</span>
+            <span className="text-sm font-medium text-gray-900">Real-time Sync</span>
           </div>
           <div className="px-4 py-2 rounded-full border border-primary/20 bg-primary/10 backdrop-blur">
-            <span className="text-sm font-medium text-gray-900">Auto Scale</span>
+            <span className="text-sm font-medium text-gray-900">API First</span>
           </div>
         </div>
       </div>

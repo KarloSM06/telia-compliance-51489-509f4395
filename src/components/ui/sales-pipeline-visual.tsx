@@ -3,6 +3,7 @@
 import { motion } from "framer-motion"
 import { Users, Target, TrendingUp, BarChart3, type LucideIcon } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { useEffect, useState } from "react"
 
 interface SalesPipelineVisualProps {
   className?: string
@@ -44,6 +45,34 @@ export const SalesPipelineVisual = ({
   const IconThird = badgeIcons.third || TrendingUp
   const IconFourth = badgeIcons.fourth || BarChart3
 
+  const [counts, setCounts] = useState({ leads: 0, qualified: 0, opportunity: 0, closed: 0 })
+
+  useEffect(() => {
+    // Animate counters on mount
+    const targets = { leads: 100, qualified: 40, opportunity: 15, closed: 5 }
+    const duration = 2000
+    const steps = 60
+    const stepDuration = duration / steps
+
+    let currentStep = 0
+    const interval = setInterval(() => {
+      currentStep++
+      const progress = currentStep / steps
+      setCounts({
+        leads: Math.floor(targets.leads * progress),
+        qualified: Math.floor(targets.qualified * progress),
+        opportunity: Math.floor(targets.opportunity * progress),
+        closed: Math.floor(targets.closed * progress)
+      })
+      if (currentStep >= steps) {
+        setCounts(targets)
+        clearInterval(interval)
+      }
+    }, stepDuration)
+
+    return () => clearInterval(interval)
+  }, [])
+
   return (
     <div className={cn("h-[500px] w-full max-w-[900px] mx-auto", className)}>
       <div className="relative h-full w-full overflow-hidden">
@@ -68,57 +97,152 @@ export const SalesPipelineVisual = ({
           </div>
         </div>
 
-        {/* SVG Funnel with flowing dots */}
+        {/* SVG Curved Funnel with flowing dots and metrics */}
         <div className="absolute inset-0 flex items-center justify-center">
-          <svg viewBox="0 0 200 100" className="w-full h-full" style={{ maxWidth: '800px' }}>
+          <svg viewBox="0 0 200 120" className="w-full h-full" style={{ maxWidth: '800px' }}>
             <defs>
-              <linearGradient id="funnelGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-                <stop offset="0%" stopColor={lightColor} stopOpacity="0.3" />
-                <stop offset="100%" stopColor={lightColor} stopOpacity="0.8" />
+              <linearGradient id="funnelGradient1" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stopColor="hsl(220, 90%, 60%)" stopOpacity="0.4" />
+                <stop offset="100%" stopColor="hsl(220, 90%, 50%)" stopOpacity="0.2" />
+              </linearGradient>
+              <linearGradient id="funnelGradient2" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stopColor="hsl(230, 85%, 55%)" stopOpacity="0.4" />
+                <stop offset="100%" stopColor="hsl(230, 85%, 45%)" stopOpacity="0.2" />
+              </linearGradient>
+              <linearGradient id="funnelGradient3" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stopColor="hsl(240, 80%, 50%)" stopOpacity="0.4" />
+                <stop offset="100%" stopColor="hsl(240, 80%, 40%)" stopOpacity="0.2" />
+              </linearGradient>
+              <linearGradient id="funnelGradient4" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stopColor="hsl(250, 75%, 45%)" stopOpacity="0.5" />
+                <stop offset="100%" stopColor="hsl(250, 75%, 35%)" stopOpacity="0.3" />
               </linearGradient>
             </defs>
             
-            {/* Funnel shape - trapezoid */}
+            {/* Curved funnel sections with metrics */}
+            {/* Stage 1: Leads */}
             <path
-              d="M 60 25 L 140 25 L 120 75 L 80 75 Z"
-              fill="url(#funnelGradient)"
+              d="M 50 25 Q 50 25, 50 25 L 150 25 Q 150 25, 150 25 L 140 42 Q 100 43, 60 42 Z"
+              fill="url(#funnelGradient1)"
               stroke="hsl(var(--primary))"
               strokeWidth="0.5"
-              opacity="0.5"
+              opacity="0.6"
             />
             
-            {/* Stage dividers */}
-            <line x1="65" y1="37.5" x2="135" y2="37.5" stroke="hsl(var(--primary))" strokeWidth="0.3" opacity="0.4" />
-            <line x1="70" y1="50" x2="130" y2="50" stroke="hsl(var(--primary))" strokeWidth="0.3" opacity="0.4" />
-            <line x1="75" y1="62.5" x2="125" y2="62.5" stroke="hsl(var(--primary))" strokeWidth="0.3" opacity="0.4" />
+            {/* Stage 2: Qualified */}
+            <path
+              d="M 60 42 Q 100 43, 140 42 L 130 59 Q 100 60, 70 59 Z"
+              fill="url(#funnelGradient2)"
+              stroke="hsl(var(--primary))"
+              strokeWidth="0.5"
+              opacity="0.6"
+            />
             
-            {/* Animated dots flowing through funnel */}
-            {[0, 1, 2, 3, 4].map((index) => (
-              <motion.circle
-                key={index}
-                cx="100"
-                cy="25"
-                r="2"
-                fill={lightColor}
-                initial={{ cy: 25, opacity: 0.8 }}
-                animate={{ cy: 75, opacity: 0.2 }}
-                transition={{
-                  duration: 2.5,
-                  repeat: Infinity,
-                  delay: index * 0.5,
-                  ease: "easeInOut"
-                }}
-              />
-            ))}
+            {/* Stage 3: Opportunity */}
+            <path
+              d="M 70 59 Q 100 60, 130 59 L 120 76 Q 100 77, 80 76 Z"
+              fill="url(#funnelGradient3)"
+              stroke="hsl(var(--primary))"
+              strokeWidth="0.5"
+              opacity="0.6"
+            />
+            
+            {/* Stage 4: Closed */}
+            <path
+              d="M 80 76 Q 100 77, 120 76 L 110 93 Q 100 94, 90 93 Z"
+              fill="url(#funnelGradient4)"
+              stroke="hsl(var(--primary))"
+              strokeWidth="0.5"
+              opacity="0.7"
+            />
+            
+            {/* Stage icons and labels with metrics */}
+            <g>
+              <foreignObject x="85" y="28" width="30" height="10">
+                <div className="flex items-center justify-center">
+                  <Users className="w-3 h-3 text-primary" />
+                </div>
+              </foreignObject>
+              <text x="100" y="52" textAnchor="middle" className="text-xs font-medium fill-gray-900">
+                {counts.leads}
+              </text>
+            </g>
+            
+            <g>
+              <foreignObject x="85" y="45" width="30" height="10">
+                <div className="flex items-center justify-center">
+                  <Target className="w-3 h-3 text-primary" />
+                </div>
+              </foreignObject>
+              <text x="100" y="69" textAnchor="middle" className="text-xs font-medium fill-gray-900">
+                {counts.qualified}
+              </text>
+              <text x="100" y="78" textAnchor="middle" className="text-[8px] fill-gray-600">
+                40%
+              </text>
+            </g>
+            
+            <g>
+              <foreignObject x="85" y="62" width="30" height="10">
+                <div className="flex items-center justify-center">
+                  <TrendingUp className="w-3 h-3 text-primary" />
+                </div>
+              </foreignObject>
+              <text x="100" y="86" textAnchor="middle" className="text-xs font-medium fill-gray-900">
+                {counts.opportunity}
+              </text>
+              <text x="100" y="95" textAnchor="middle" className="text-[8px] fill-gray-600">
+                38%
+              </text>
+            </g>
+            
+            <g>
+              <foreignObject x="85" y="79" width="30" height="10">
+                <div className="flex items-center justify-center">
+                  <BarChart3 className="w-3 h-3 text-primary" />
+                </div>
+              </foreignObject>
+              <text x="100" y="103" textAnchor="middle" className="text-xs font-medium fill-gray-900">
+                {counts.closed}
+              </text>
+              <text x="100" y="112" textAnchor="middle" className="text-[8px] fill-gray-600">
+                33%
+              </text>
+            </g>
+            
+            {/* Multiple animated dots flowing through funnel with random X positions */}
+            {Array.from({ length: 20 }).map((_, index) => {
+              const randomOffset = (Math.random() - 0.5) * 30
+              const startDelay = index * 0.3
+              const shouldDropOff = Math.random() > 0.7
+              
+              return (
+                <motion.circle
+                  key={index}
+                  cx={100 + randomOffset * 0.3}
+                  cy="25"
+                  r="1.5"
+                  fill={lightColor}
+                  initial={{ cy: 25, cx: 100 + randomOffset * 0.3, opacity: 0.8 }}
+                  animate={shouldDropOff ? {
+                    cy: [25, 50, 50],
+                    cx: [100 + randomOffset * 0.3, 100 + randomOffset * 0.6, 100 + randomOffset * 0.6 + 30],
+                    opacity: [0.8, 0.6, 0]
+                  } : {
+                    cy: 93,
+                    cx: 100 + randomOffset * 0.8,
+                    opacity: [0.8, 0.6, 0.4, 0.2]
+                  }}
+                  transition={{
+                    duration: shouldDropOff ? 2 : 3.5,
+                    repeat: Infinity,
+                    delay: startDelay,
+                    ease: "easeInOut"
+                  }}
+                />
+              )
+            })}
           </svg>
-        </div>
-
-        {/* Stage labels */}
-        <div className="absolute inset-0 flex flex-col items-center justify-center gap-6 pointer-events-none">
-          <div className="text-xs font-medium text-gray-900 opacity-60">Leads</div>
-          <div className="text-xs font-medium text-gray-900 opacity-60">Qualified</div>
-          <div className="text-xs font-medium text-gray-900 opacity-60">Opportunity</div>
-          <div className="text-xs font-medium text-gray-900 opacity-60">Closed</div>
         </div>
 
         {/* Bottom Badges */}

@@ -1,7 +1,7 @@
 "use client"
 
 import { motion } from "framer-motion"
-import { FileText, Mail, Calendar, FolderOpen, type LucideIcon } from "lucide-react"
+import { FileText, Mail, Calendar, FolderOpen, ArrowDown, Check, Zap, Send, type LucideIcon } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 interface AutomationFlowVisualProps {
@@ -44,6 +44,14 @@ export const AutomationFlowVisual = ({
   const IconThird = badgeIcons.third || Calendar
   const IconFourth = badgeIcons.fourth || FolderOpen
 
+  // Stage positions on circular path (0°, 90°, 180°, 270°)
+  const stages = [
+    { angle: 0, icon: ArrowDown, label: "Input" },
+    { angle: 90, icon: Zap, label: "Process" },
+    { angle: 180, icon: Check, label: "Validate" },
+    { angle: 270, icon: Send, label: "Output" }
+  ]
+
   return (
     <div className={cn("h-[500px] w-full max-w-[900px] mx-auto", className)}>
       <div className="relative h-full w-full overflow-hidden">
@@ -68,92 +76,150 @@ export const AutomationFlowVisual = ({
           </div>
         </div>
 
-        {/* SVG Circular Flow */}
+        {/* SVG Circular Flow with multiple animated lights and stage indicators */}
         <div className="absolute inset-0 flex items-center justify-center">
-          <svg viewBox="0 0 200 100" className="w-full h-full" style={{ maxWidth: '800px' }}>
+          <svg viewBox="0 0 200 200" className="w-full h-full" style={{ maxWidth: '600px' }}>
             <defs>
-              <linearGradient id="flowGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop offset="0%" stopColor={lightColor} stopOpacity="0" />
-                <stop offset="50%" stopColor={lightColor} stopOpacity="1" />
-                <stop offset="100%" stopColor={lightColor} stopOpacity="0" />
+              <linearGradient id="pathGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stopColor={lightColor} stopOpacity="0.3" />
+                <stop offset="100%" stopColor={lightColor} stopOpacity="0.1" />
               </linearGradient>
-              <mask id="flowMask">
-                <rect width="200" height="100" fill="black" />
-                <motion.circle
-                  cx="0"
-                  cy="0"
-                  r="3"
-                  fill="white"
-                  initial={{ offsetDistance: "0%" }}
-                  animate={{ offsetDistance: "100%" }}
-                  transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
-                  style={{ offsetPath: "path('M 60 30 Q 100 20, 140 30 Q 160 40, 160 50 Q 160 60, 140 70 Q 100 80, 60 70 Q 40 60, 40 50 Q 40 40, 60 30')" }}
-                />
-              </mask>
+              <radialGradient id="glowGradient">
+                <stop offset="0%" stopColor={lightColor} stopOpacity="0.6" />
+                <stop offset="100%" stopColor={lightColor} stopOpacity="0" />
+              </radialGradient>
             </defs>
             
             {/* Circular path */}
-            <path
-              d="M 60 30 Q 100 20, 140 30 Q 160 40, 160 50 Q 160 60, 140 70 Q 100 80, 60 70 Q 40 60, 40 50 Q 40 40, 60 30"
+            <circle
+              cx="100"
+              cy="100"
+              r="60"
               fill="none"
-              stroke="hsl(var(--primary))"
-              strokeWidth="0.5"
-              opacity="0.3"
+              stroke="url(#pathGradient)"
+              strokeWidth="2"
+              opacity="0.5"
             />
             
-            {/* Animated light */}
-            <path
-              d="M 60 30 Q 100 20, 140 30 Q 160 40, 160 50 Q 160 60, 140 70 Q 100 80, 60 70 Q 40 60, 40 50 Q 40 40, 60 30"
-              fill="none"
-              stroke="url(#flowGradient)"
-              strokeWidth="1"
-              mask="url(#flowMask)"
-            />
-          </svg>
-        </div>
-
-        {/* Central Circle with Pulsing Rings */}
-        <div className="absolute inset-0 flex items-center justify-center">
-          <div className="relative">
-            {/* Pulsing concentric circles */}
-            {[0, 1, 2, 3].map((index) => (
-              <motion.div
-                key={index}
-                className="absolute inset-0 rounded-full border-2 border-primary/30"
-                style={{
-                  width: '80px',
-                  height: '80px',
-                  top: '50%',
-                  left: '50%',
-                  transform: 'translate(-50%, -50%)',
-                }}
-                animate={{
-                  scale: [1, 1.5, 1],
-                  opacity: [0.6, 0, 0.6],
-                }}
+            {/* Stage indicator nodes on the path */}
+            {stages.map((stage, index) => {
+              const x = 100 + 60 * Math.cos((stage.angle - 90) * Math.PI / 180)
+              const y = 100 + 60 * Math.sin((stage.angle - 90) * Math.PI / 180)
+              
+              return (
+                <g key={index}>
+                  {/* Pulsing circle */}
+                  <motion.circle
+                    cx={x}
+                    cy={y}
+                    r="6"
+                    fill={lightColor}
+                    opacity="0.3"
+                    initial={{ scale: 1 }}
+                    animate={{ scale: [1, 1.3, 1] }}
+                    transition={{
+                      duration: 2,
+                      repeat: Infinity,
+                      delay: index * 0.5,
+                      ease: "easeInOut"
+                    }}
+                  />
+                  <circle
+                    cx={x}
+                    cy={y}
+                    r="4"
+                    fill={lightColor}
+                    opacity="0.8"
+                  />
+                </g>
+              )
+            })}
+            
+            {/* Multiple animated lights moving along the path - clockwise */}
+            {[0, 1, 2].map((index) => (
+              <motion.circle
+                key={`cw-${index}`}
+                cx="160"
+                cy="100"
+                r="3"
+                fill={lightColor}
+                initial={{ rotate: index * 120 }}
+                animate={{ rotate: index * 120 + 360 }}
                 transition={{
-                  duration: 3,
+                  duration: 3.5,
                   repeat: Infinity,
-                  delay: index * 0.75,
-                  ease: "easeInOut"
+                  ease: "linear",
+                  delay: index * 1.2
+                }}
+                style={{
+                  originX: "100px",
+                  originY: "100px"
                 }}
               />
             ))}
             
-            {/* Central box */}
-            <div className="relative z-10 w-24 h-24 flex items-center justify-center border-2 border-primary/30 bg-white/90 backdrop-blur rounded-2xl shadow-lg">
-              <span className="text-2xl font-display font-normal text-gray-900">{circleText}</span>
-            </div>
+            {/* Counter-clockwise lights for bi-directional flow */}
+            {[0, 1].map((index) => (
+              <motion.circle
+                key={`ccw-${index}`}
+                cx="160"
+                cy="100"
+                r="2.5"
+                fill={lightColor}
+                opacity="0.6"
+                initial={{ rotate: index * 180 }}
+                animate={{ rotate: index * 180 - 360 }}
+                transition={{
+                  duration: 4,
+                  repeat: Infinity,
+                  ease: "linear",
+                  delay: index * 2
+                }}
+                style={{
+                  originX: "100px",
+                  originY: "100px"
+                }}
+              />
+            ))}
+          </svg>
+        </div>
+
+        {/* Central Automation Engine Box with concentric circles */}
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+          {/* Concentric pulsing rings */}
+          {[0, 1, 2, 3].map((index) => (
+            <motion.div
+              key={index}
+              className="absolute rounded-full border-2 border-primary/20"
+              style={{
+                width: `${80 + index * 24}px`,
+                height: `${80 + index * 24}px`
+              }}
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: [0, 0.5, 0] }}
+              transition={{
+                duration: 3,
+                repeat: Infinity,
+                delay: index * 0.7,
+                ease: "easeInOut"
+              }}
+            />
+          ))}
+          
+          {/* Central box with glow */}
+          <div className="relative flex items-center justify-center w-24 h-24 border-2 border-primary/30 bg-primary/20 backdrop-blur-md rounded-2xl shadow-lg">
+            <div className="absolute inset-0 rounded-2xl bg-primary/10 blur-xl" />
+            <span className="relative text-sm font-medium text-gray-900 text-center px-2">{circleText}</span>
           </div>
         </div>
 
         {/* Bottom Badges */}
         <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex gap-4">
           <div className="px-4 py-2 rounded-full border border-primary/20 bg-primary/10 backdrop-blur">
-            <span className="text-sm font-medium text-gray-900">AI Engine</span>
+            <span className="text-sm font-medium text-gray-900">24/7 Active</span>
           </div>
           <div className="px-4 py-2 rounded-full border border-primary/20 bg-primary/10 backdrop-blur">
-            <span className="text-sm font-medium text-gray-900">Auto Trigger</span>
+            <span className="text-sm font-medium text-gray-900">Zero Errors</span>
           </div>
         </div>
       </div>
