@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
-
 interface AIVoiceInputProps {
   onStart?: () => void;
   onStop?: (duration: number) => void;
@@ -11,7 +10,6 @@ interface AIVoiceInputProps {
   demoInterval?: number;
   className?: string;
 }
-
 export function AIVoiceInput({
   onStart,
   onStop,
@@ -23,30 +21,24 @@ export function AIVoiceInput({
   const [submitted, setSubmitted] = useState(false);
   const [time, setTime] = useState(0);
   const [isClient, setIsClient] = useState(false);
-
   useEffect(() => {
     setIsClient(true);
   }, []);
-
   useEffect(() => {
     let intervalId: NodeJS.Timeout;
-
     if (submitted) {
       onStart?.();
       intervalId = setInterval(() => {
-        setTime((t) => t + 1);
+        setTime(t => t + 1);
       }, 1000);
     } else {
       onStop?.(time);
       setTime(0);
     }
-
     return () => clearInterval(intervalId);
   }, [submitted, time, onStart, onStop]);
-
   useEffect(() => {
     if (!demoMode) return;
-
     let timeoutId: NodeJS.Timeout;
     const runAnimation = () => {
       setSubmitted(true);
@@ -55,55 +47,35 @@ export function AIVoiceInput({
         timeoutId = setTimeout(runAnimation, 1000);
       }, demoInterval);
     };
-
     const initialTimeout = setTimeout(runAnimation, 100);
     return () => {
       clearTimeout(timeoutId);
       clearTimeout(initialTimeout);
     };
   }, [demoMode, demoInterval]);
-
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
     return `${mins.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
   };
-
-  return (
-    <div className={cn("w-full py-4", className)}>
+  return <div className={cn("w-full py-4", className)}>
       <div className="relative max-w-xl w-full mx-auto flex items-center flex-col gap-2">
-        <div className="w-16 h-16 rounded-xl flex items-center justify-center">
-          <div
-            className="w-6 h-6 rounded-sm animate-spin bg-gray-900"
-            style={{ animationDuration: "3s" }}
-          />
-        </div>
+        
 
         <span className="font-mono text-sm text-gray-700">
           {formatTime(time)}
         </span>
 
         <div className="h-4 w-64 flex items-center justify-center gap-0.5">
-          {[...Array(visualizerBars)].map((_, i) => (
-            <div
-              key={i}
-              className="w-0.5 rounded-full transition-all duration-300 bg-gray-900/50 animate-pulse"
-              style={
-                isClient
-                  ? {
-                      height: `${20 + Math.random() * 80}%`,
-                      animationDelay: `${i * 0.05}s`,
-                    }
-                  : undefined
-              }
-            />
-          ))}
+          {[...Array(visualizerBars)].map((_, i) => <div key={i} className="w-0.5 rounded-full transition-all duration-300 bg-gray-900/50 animate-pulse" style={isClient ? {
+          height: `${20 + Math.random() * 80}%`,
+          animationDelay: `${i * 0.05}s`
+        } : undefined} />)}
         </div>
 
         <p className="h-4 text-xs text-gray-700">
           Listening...
         </p>
       </div>
-    </div>
-  );
+    </div>;
 }
