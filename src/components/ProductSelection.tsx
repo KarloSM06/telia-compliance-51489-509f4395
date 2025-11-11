@@ -32,7 +32,6 @@ import { ServicesGrid } from "@/components/home/ServicesGrid";
 import { UnifiedDashboard } from "@/components/home/UnifiedDashboard";
 import { LandingAccordionItem } from "@/components/home/LandingAccordionItem";
 import { UnifiedEcosystem } from "@/components/home/UnifiedEcosystem";
-import { ServiceDataFlow } from "@/components/home/ServiceDataFlow";
 import dashboardScreenshot from "@/assets/dashboard-screenshot.png";
 import calendarScreenshot from "@/assets/calendar-screenshot.png";
 export const ProductSelection = () => {
@@ -70,53 +69,50 @@ export const ProductSelection = () => {
         {/* 3. Process Grid (4 steg) */}
         <ProcessGrid />
 
-        {/* 4. Våra Tjänster & Teknologier */}
-        <ServicesGrid />
-
-        {/* 5. Så Flödar Data Genom Våra System */}
-        <ServiceDataFlow />
-
-        {/* 6. Benefits Grid */}
+        {/* 4. Benefits Grid */}
         <BenefitsGrid />
 
-        {/* 7. Pricing Cards */}
+        {/* 5. Pricing Cards */}
         <PricingCards />
 
-        {/* 8. Client Logos */}
+        {/* 6. Client Logos */}
         <ClientLogoCloud />
 
-        {/* 9. Integration Hero (verktygskarusell) */}
+        {/* 7. Integration Hero (verktygskarusell) */}
         <IntegrationHero />
 
-        {/* 10. Unified Dashboard */}
+        {/* 8. Services Grid */}
+        <ServicesGrid />
+
+        {/* 9. Unified Dashboard */}
         <UnifiedDashboard />
 
-        {/* 11. AI Capabilities Accordion */}
+        {/* 10. AI Capabilities Accordion */}
         <LandingAccordionItem />
 
-        {/* 12. Unified Ecosystem */}
+        {/* 11. Unified Ecosystem */}
         <UnifiedEcosystem primaryImageSrc={dashboardScreenshot} secondaryImageSrc={calendarScreenshot} />
 
-        {/* 13. Workflow Timeline */}
+        {/* 12. Workflow Timeline */}
         <AnimatedSection>
           <section id="process" className="relative py-12">
             <WorkflowTimeline />
           </section>
         </AnimatedSection>
 
-        {/* 14. Sticky Package Cards */}
+        {/* 13. Sticky Package Cards */}
         <StickyPackageCards packages={aiPackages} onBookDemo={() => setIsConsultationModalOpen(true)} onViewDetails={() => scrollToSection('kontakt')} />
 
-        {/* 15. Case Study Showcase */}
+        {/* 14. Case Study Showcase */}
         <CaseStudyShowcase />
 
-        {/* 16. Testimonials Grid */}
+        {/* 15. Testimonials Grid */}
         <TestimonialsGrid />
 
-        {/* 17. FAQ Accordion */}
+        {/* 16. FAQ Accordion */}
         <FAQAccordion />
 
-        {/* 18. Consultation CTA */}
+        {/* 17. Consultation CTA */}
         <ConsultationCTA />
       </AuroraBackground>
 
