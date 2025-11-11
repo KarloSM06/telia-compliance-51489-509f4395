@@ -2,7 +2,15 @@ import { AnimatedSection } from "@/components/shared/AnimatedSection";
 import dashboardScreenshot from "@/assets/dashboard-screenshot.png";
 import DatabaseWithRestApi from "@/components/ui/database-with-rest-api";
 import { SiriOrb } from "@/components/ui/siri-orb";
-import { Phone, MessageSquare, Mail, Star } from "lucide-react";
+import { AutomationFlowVisual } from "@/components/ui/automation-flow-visual";
+import { SalesPipelineVisual } from "@/components/ui/sales-pipeline-visual";
+import { IntegrationHubVisual } from "@/components/ui/integration-hub-visual";
+import { 
+  Phone, MessageSquare, Mail, Star,
+  FileText, Calendar, FolderOpen,
+  Users, Target, TrendingUp, BarChart3,
+  Puzzle, Link2, Workflow, ArrowUpRight
+} from "lucide-react";
 
 const servicesData = [
   {
@@ -159,6 +167,27 @@ export const AlternatingServicesSection = () => {
                         lightColor="hsl(var(--primary))" 
                       />
                     </div>
+                  ) : service.id === 2 ? (
+                    // AutomationFlowVisual för Automate repetitive tasks
+                    <div className="w-full flex justify-center">
+                      <AutomationFlowVisual
+                        className="scale-90 md:scale-100"
+                        circleText="Auto"
+                        badgeTexts={{
+                          first: "Faktura",
+                          second: "Email",
+                          third: "Kalender",
+                          fourth: "Dokument"
+                        }}
+                        badgeIcons={{
+                          first: FileText,
+                          second: Mail,
+                          third: Calendar,
+                          fourth: FolderOpen
+                        }}
+                        lightColor="hsl(var(--primary))"
+                      />
+                    </div>
                   ) : service.id === 3 ? (
                     // SiriOrb för AI Voice Agents
                     <div className="w-full flex flex-col items-center justify-center py-8">
@@ -176,8 +205,50 @@ export const AlternatingServicesSection = () => {
                         </p>
                       </div>
                     </div>
+                  ) : service.id === 4 ? (
+                    // SalesPipelineVisual för Accelerate Sales Growth
+                    <div className="w-full flex justify-center">
+                      <SalesPipelineVisual
+                        className="scale-90 md:scale-100"
+                        circleText="Sälj"
+                        badgeTexts={{
+                          first: "Leads",
+                          second: "Kvalificera",
+                          third: "Prognos",
+                          fourth: "Pipeline"
+                        }}
+                        badgeIcons={{
+                          first: Users,
+                          second: Target,
+                          third: TrendingUp,
+                          fourth: BarChart3
+                        }}
+                        lightColor="hsl(var(--primary))"
+                      />
+                    </div>
+                  ) : service.id === 5 ? (
+                    // IntegrationHubVisual för Build Smarter Systems
+                    <div className="w-full flex justify-center">
+                      <IntegrationHubVisual
+                        className="scale-90 md:scale-100"
+                        circleText="Hub"
+                        badgeTexts={{
+                          first: "Anpassad",
+                          second: "API",
+                          third: "Arbetsflöde",
+                          fourth: "Skala"
+                        }}
+                        badgeIcons={{
+                          first: Puzzle,
+                          second: Link2,
+                          third: Workflow,
+                          fourth: ArrowUpRight
+                        }}
+                        lightColor="hsl(var(--primary))"
+                      />
+                    </div>
                   ) : (
-                    // Standard screenshot för alla andra tjänster
+                    // Fallback för eventuella andra tjänster
                     <img 
                       src={service.mockup} 
                       alt={service.title} 
