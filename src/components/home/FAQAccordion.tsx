@@ -56,12 +56,14 @@ export const FAQAccordion = () => {
               <AccordionItem 
                 key={faq.id} 
                 value={faq.id} 
-                className="bg-white/80 backdrop-blur-xl border border-gray-100 rounded-xl px-6 shadow-lg"
+                className="bg-white/80 backdrop-blur-xl border border-gray-100 rounded-xl px-6 shadow-lg relative overflow-hidden"
               >
-                <AccordionTrigger className="text-gray-900 text-lg hover:no-underline">
+                {/* Gradient fade overlay - diagonal for variety */}
+                <div className="absolute top-0 right-0 w-64 h-32 bg-gradient-to-bl from-indigo-400/12 via-purple-400/6 to-transparent pointer-events-none" />
+                <AccordionTrigger className="text-gray-900 text-lg hover:no-underline relative z-10">
                   {faq.question}
                 </AccordionTrigger>
-                <AccordionContent className="text-gray-600">
+                <AccordionContent className="text-gray-600 relative z-10">
                   {faq.answer}
                 </AccordionContent>
               </AccordionItem>
