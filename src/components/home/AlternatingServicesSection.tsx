@@ -64,7 +64,7 @@ export const AlternatingServicesSection = () => {
               Våra Lösningar
             </span>
           </div>
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-display font-normal leading-tight text-gray-900 mb-6">
+          <h2 className="text-4xl md:text-5xl lg:text-6xl font-display font-normal text-gray-900 mb-6">
             AI-Lösningar som Levererar
           </h2>
           <p className="text-base md:text-lg text-gray-600 max-w-3xl mx-auto">
