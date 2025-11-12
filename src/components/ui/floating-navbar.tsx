@@ -1,13 +1,11 @@
 import { Button } from "@/components/ui/button";
 import { Menu, X, Calendar } from "lucide-react";
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import { ConsultationModal } from "@/components/ConsultationModal";
 import hiems_logo from "@/assets/hiems_snowflake_logo.png";
 import { useIsMobile } from "@/hooks/use-mobile";
 
 export function FloatingNavbar() {
-  const navigate = useNavigate();
   const [isConsultationModalOpen, setIsConsultationModalOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
@@ -34,15 +32,7 @@ export function FloatingNavbar() {
         behavior: 'smooth'
       });
       setIsMobileMenuOpen(false);
-    } else {
-      navigate(`/#${sectionId}`);
-      setIsMobileMenuOpen(false);
     }
-  };
-
-  const navigateToPage = (path: string) => {
-    navigate(path);
-    setIsMobileMenuOpen(false);
   };
 
   return (
@@ -62,7 +52,7 @@ export function FloatingNavbar() {
           <div className="flex items-center justify-between">
             {/* Logo */}
             <button 
-              onClick={() => navigateToPage("/")} 
+              onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} 
               className={`cursor-pointer group flex items-center gap-3 transition-all duration-300 hover:scale-105 ${
                 isScrolled ? "ml-2" : ""
               }`}
@@ -91,10 +81,28 @@ export function FloatingNavbar() {
                 Tjänster
               </button>
               <button
+                onClick={() => scrollToSection("process")}
+                className="text-sm font-medium text-primary/80 transition-colors hover:text-primary"
+              >
+                Process
+              </button>
+              <button
                 onClick={() => scrollToSection("fordelar")}
                 className="text-sm font-medium text-primary/80 transition-colors hover:text-primary"
               >
                 Fördelar
+              </button>
+              <button
+                onClick={() => scrollToSection("priser")}
+                className="text-sm font-medium text-primary/80 transition-colors hover:text-primary"
+              >
+                Priser
+              </button>
+              <button
+                onClick={() => scrollToSection("faq")}
+                className="text-sm font-medium text-primary/80 transition-colors hover:text-primary"
+              >
+                FAQ
               </button>
               <button
                 onClick={() => scrollToSection("kontakt")}
@@ -105,13 +113,12 @@ export function FloatingNavbar() {
             </div>
 
             {/* CTA Button - Desktop */}
-            <Button
-              size="sm"
+            <button
               onClick={() => setIsConsultationModalOpen(true)}
-              className="hidden md:inline-flex px-8 py-3.5 bg-gray-900 hover:bg-gray-800 text-white rounded-full font-medium transition-all duration-300 hover:scale-105"
+              className="hidden md:inline-flex px-8 py-3.5 md:px-10 md:py-4 bg-gray-900 hover:bg-gray-800 text-white rounded-full text-base font-medium transition-all duration-300 hover:scale-105"
             >
               Boka ett möte
-            </Button>
+            </button>
 
             {/* Mobile Menu Toggle */}
             <button
@@ -146,11 +153,38 @@ export function FloatingNavbar() {
               <button
                 onClick={() => {
                   setIsMobileMenuOpen(false);
+                  scrollToSection("process");
+                }}
+                className="text-left px-4 py-3 text-lg font-medium text-primary hover:text-primary/80 transition-colors rounded-lg hover:bg-white/10"
+              >
+                Process
+              </button>
+              <button
+                onClick={() => {
+                  setIsMobileMenuOpen(false);
                   scrollToSection("fordelar");
                 }}
                 className="text-left px-4 py-3 text-lg font-medium text-primary hover:text-primary/80 transition-colors rounded-lg hover:bg-white/10"
               >
                 Fördelar
+              </button>
+              <button
+                onClick={() => {
+                  setIsMobileMenuOpen(false);
+                  scrollToSection("priser");
+                }}
+                className="text-left px-4 py-3 text-lg font-medium text-primary hover:text-primary/80 transition-colors rounded-lg hover:bg-white/10"
+              >
+                Priser
+              </button>
+              <button
+                onClick={() => {
+                  setIsMobileMenuOpen(false);
+                  scrollToSection("faq");
+                }}
+                className="text-left px-4 py-3 text-lg font-medium text-primary hover:text-primary/80 transition-colors rounded-lg hover:bg-white/10"
+              >
+                FAQ
               </button>
               <button
                 onClick={() => {
@@ -162,17 +196,15 @@ export function FloatingNavbar() {
                 Kontakt
               </button>
               <div className="border-t border-white/10 pt-4 mt-4">
-                <Button
-                  size="lg"
-                  className="w-full bg-gradient-gold text-primary font-bold shadow-button hover:shadow-glow hover:-translate-y-0.5 transition-all duration-300"
+                <button
+                  className="w-full px-8 py-3.5 md:px-10 md:py-4 bg-gray-900 hover:bg-gray-800 text-white rounded-full text-base font-medium transition-all duration-300 hover:scale-105"
                   onClick={() => {
                     setIsMobileMenuOpen(false);
                     setIsConsultationModalOpen(true);
                   }}
                 >
-                  <Calendar className="w-5 h-5 mr-2" />
                   Boka ett möte
-                </Button>
+                </button>
               </div>
             </nav>
           </div>

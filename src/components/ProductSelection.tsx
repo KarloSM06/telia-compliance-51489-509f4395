@@ -58,9 +58,11 @@ export const ProductSelection = () => {
         </div>
 
         {/* 3. Process Grid (4 steg) */}
-        <Suspense fallback={<SectionSkeleton />}>
-          <ProcessGrid />
-        </Suspense>
+        <div id="process">
+          <Suspense fallback={<SectionSkeleton />}>
+            <ProcessGrid />
+          </Suspense>
+        </div>
 
         {/* 4. Benefits Grid */}
         <div id="fordelar">
@@ -73,9 +75,11 @@ export const ProductSelection = () => {
         <CaseStudyShowcase />
 
         {/* 6. Pricing Cards */}
-        <Suspense fallback={<SectionSkeleton />}>
-          <PricingCards />
-        </Suspense>
+        <div id="priser">
+          <Suspense fallback={<SectionSkeleton />}>
+            <PricingCards />
+          </Suspense>
+        </div>
 
         {/* 7. Integration Hero (verktygskarusell) */}
         <Suspense fallback={<SectionSkeleton />}>
@@ -83,9 +87,11 @@ export const ProductSelection = () => {
         </Suspense>
 
         {/* 8. FAQ Accordion */}
-        <Suspense fallback={<SectionSkeleton />}>
-          <FAQAccordion />
-        </Suspense>
+        <div id="faq">
+          <Suspense fallback={<SectionSkeleton />}>
+            <FAQAccordion />
+          </Suspense>
+        </div>
 
         {/* 9. Consultation CTA */}
         <Suspense fallback={<SectionSkeleton />}>
