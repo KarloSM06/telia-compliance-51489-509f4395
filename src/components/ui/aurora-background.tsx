@@ -15,17 +15,10 @@ export const AuroraBackground = ({
 }: AuroraBackgroundProps) => {
   return (
     <main>
-      <div
-        className={cn(
-          "relative flex flex-col items-center justify-start bg-white text-gray-900 transition-bg z-10",
-          className
-        )}
-        {...props}
-      >
-        <div className="fixed inset-0 overflow-hidden z-0">
-          <div
-            className={cn(
-              `
+      <div className="fixed inset-0 overflow-hidden -z-10">
+        <div
+          className={cn(
+            `
             [--white-gradient:repeating-linear-gradient(100deg,var(--white)_0%,var(--white)_7%,var(--transparent)_10%,var(--transparent)_12%,var(--white)_16%)]
             [--dark-gradient:repeating-linear-gradient(100deg,var(--black)_0%,var(--black)_7%,var(--transparent)_10%,var(--transparent)_12%,var(--black)_16%)]
             [--aurora:repeating-linear-gradient(100deg,var(--blue-500)_10%,var(--indigo-400)_15%,var(--blue-400)_20%,var(--violet-300)_25%,var(--blue-500)_30%)]
@@ -39,12 +32,20 @@ export const AuroraBackground = ({
             pointer-events-none
             absolute -inset-[100px] opacity-50 will-change-[background-position]`,
 
-              showRadialGradient &&
-                `[mask-image:radial-gradient(ellipse_at_100%_0%,black_10%,var(--transparent)_70%)]`
-            )}
-            style={{ willChange: 'background-position' }}
-          ></div>
-        </div>
+            showRadialGradient &&
+              `[mask-image:radial-gradient(ellipse_at_100%_0%,black_10%,var(--transparent)_70%)]`
+          )}
+          style={{ willChange: 'background-position' }}
+        ></div>
+      </div>
+      
+      <div
+        className={cn(
+          "relative flex flex-col items-center justify-start bg-transparent text-gray-900 transition-bg",
+          className
+        )}
+        {...props}
+      >
         {children}
       </div>
     </main>
