@@ -13,7 +13,7 @@ interface AIVoiceInputProps {
 export function AIVoiceInput({
   onStart,
   onStop,
-  visualizerBars = 48,
+  visualizerBars = 24,
   demoMode = true,
   demoInterval = 3000,
   className

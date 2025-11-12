@@ -1,5 +1,6 @@
-import { Suspense, lazy } from "react";
+import { Suspense, lazy, useEffect, useState } from "react";
 import { Phone, MessageSquare, Mail, Star } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 // Lazy load visualizations för bättre performance
 const DatabaseWithRestApi = lazy(() => import("@/components/ui/database-with-rest-api"));
@@ -58,6 +59,14 @@ const servicesData = [{
   isReversed: false
 }];
 export const AlternatingServicesSection = () => {
+  const [isMacOSSafari, setIsMacOSSafari] = useState(false);
+
+  useEffect(() => {
+    const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+    const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
+    setIsMacOSSafari(isSafari && isMac);
+  }, []);
+
   return <section className="py-12 md:py-16 lg:py-24">
       <div className="max-w-7xl mx-auto px-4 md:px-6">
         {/* Section Header */}
@@ -108,7 +117,10 @@ export const AlternatingServicesSection = () => {
               // CpuArchitecture (Hiems) för Dashboards & Decision Intelligence
               <Suspense fallback={<div className="h-[300px] md:h-[500px] bg-white/5 rounded-2xl animate-pulse" />}>
                       <div className="w-full flex justify-center items-center">
-                        <div className="bg-white/5 border-2 border-white/10 rounded-2xl shadow-lg p-8 md:p-12 hover:bg-white/10 transition-all duration-300">
+                        <div className={cn(
+                          "border-2 border-white/10 rounded-2xl shadow-lg p-8 md:p-12 hover:bg-white/10 transition-all duration-300",
+                          isMacOSSafari ? "bg-white/20" : "bg-white/5 backdrop-blur-sm"
+                        )}>
                           <CpuArchitecture className="scale-75 md:scale-90 lg:scale-100" width="500" height="250" text="Hiems" />
                         </div>
                       </div>
@@ -116,7 +128,10 @@ export const AlternatingServicesSection = () => {
               // WorkflowChecklistVisual för Automate repetitive tasks
               <Suspense fallback={<div className="h-[300px] md:h-[500px] bg-white/5 rounded-2xl animate-pulse" />}>
                       <div className="w-full flex justify-center">
-                        <div className="bg-white/5 border-2 border-white/10 rounded-2xl shadow-lg p-8 md:p-12 hover:bg-white/10 transition-all duration-300">
+                        <div className={cn(
+                          "border-2 border-white/10 rounded-2xl shadow-lg p-8 md:p-12 hover:bg-white/10 transition-all duration-300",
+                          isMacOSSafari ? "bg-white/20" : "bg-white/5 backdrop-blur-sm"
+                        )}>
                           <WorkflowChecklistVisual className="scale-90 md:scale-100" />
                         </div>
                       </div>
@@ -124,7 +139,10 @@ export const AlternatingServicesSection = () => {
               // AIVoiceAgentVisual för AI Voice Agents - Kort endast runt SiriOrb och Listening
               <Suspense fallback={<div className="h-[300px] md:h-[500px] bg-white/5 rounded-2xl animate-pulse" />}>
                       <div className="w-full flex flex-col items-center justify-center gap-2">
-                        <div className="bg-white/5 border-2 border-white/10 rounded-2xl shadow-lg p-8 md:p-12 hover:bg-white/10 transition-all duration-300">
+                        <div className={cn(
+                          "border-2 border-white/10 rounded-2xl shadow-lg p-8 md:p-12 hover:bg-white/10 transition-all duration-300",
+                          isMacOSSafari ? "bg-white/20" : "bg-white/5 backdrop-blur-sm"
+                        )}>
                           <AIVoiceAgentVisual className="scale-90 md:scale-100" />
                           <AIVoiceInput demoMode={true} className="-mt-6" />
                         </div>
@@ -133,7 +151,10 @@ export const AlternatingServicesSection = () => {
               // EmailBriefingVisual för Accelerate Sales Growth
               <Suspense fallback={<div className="h-[300px] md:h-[500px] bg-white/5 rounded-2xl animate-pulse" />}>
                       <div className="w-full flex justify-center">
-                        <div className="bg-white/5 border-2 border-white/10 rounded-2xl shadow-lg p-8 md:p-12 hover:bg-white/10 transition-all duration-300">
+                        <div className={cn(
+                          "border-2 border-white/10 rounded-2xl shadow-lg p-8 md:p-12 hover:bg-white/10 transition-all duration-300",
+                          isMacOSSafari ? "bg-white/20" : "bg-white/5 backdrop-blur-sm"
+                        )}>
                           <EmailBriefingVisual className="scale-90 md:scale-100" />
                         </div>
                       </div>
@@ -141,7 +162,10 @@ export const AlternatingServicesSection = () => {
               // ProjectManagementVisual för Build Smarter Systems
               <Suspense fallback={<div className="h-[300px] md:h-[500px] bg-white/5 rounded-2xl animate-pulse" />}>
                       <div className="w-full flex justify-center">
-                        <div className="bg-white/5 border-2 border-white/10 rounded-2xl shadow-lg p-8 md:p-12 hover:bg-white/10 transition-all duration-300">
+                        <div className={cn(
+                          "border-2 border-white/10 rounded-2xl shadow-lg p-8 md:p-12 hover:bg-white/10 transition-all duration-300",
+                          isMacOSSafari ? "bg-white/20" : "bg-white/5 backdrop-blur-sm"
+                        )}>
                           <ProjectManagementVisual className="scale-90 md:scale-100" />
                         </div>
                       </div>
