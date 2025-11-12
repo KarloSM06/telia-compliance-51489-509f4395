@@ -71,7 +71,7 @@ export const AlternatingServicesSection = () => {
         {servicesData.map((service, index) => <div key={service.id} className="animate-[fadeInUp_0.6s_ease-out]" style={{
           animationDelay: `${index * 100}ms`
         }}>
-              <div className={`grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 items-center ${service.isReversed ? 'lg:grid-flow-dense' : ''}`}>
+              <div className={`grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 items-center ${service.isReversed ? 'lg:grid-flow-dense' : ''} ${service.id === 1 || service.id === 3 ? 'border-2 border-white/10 bg-white/5 backdrop-blur-sm rounded-3xl p-6 md:p-10 lg:p-16 shadow-lg hover:shadow-xl transition-all' : ''}`}>
                 {/* Text side */}
                 <div className={`relative z-10 ${service.isReversed ? 'lg:col-start-2' : ''}`}>
                   {/* Category Badge */}
@@ -112,7 +112,7 @@ export const AlternatingServicesSection = () => {
                   {service.id === 1 ?
               // DatabaseWithRestApi figur för Dashboards & Decision Intelligence
               <Suspense fallback={<div className="h-[300px] md:h-[500px] bg-white/60 rounded-2xl animate-pulse" />}>
-                      <div className="w-full flex justify-center border-2 border-white/10 bg-white/5 backdrop-blur-sm rounded-3xl p-6 md:p-10 shadow-lg hover:shadow-xl transition-all">
+                      <div className="w-full flex justify-center">
                         <DatabaseWithRestApi className="scale-90 md:scale-100" circleText="Hiems" title="" badgeTexts={{
                     first: "Samtal",
                     second: "SMS",
@@ -137,7 +137,7 @@ export const AlternatingServicesSection = () => {
                     </Suspense> : service.id === 3 ?
               // AIVoiceAgentVisual för AI Voice Agents
               <Suspense fallback={<div className="h-[300px] md:h-[500px] bg-white/60 rounded-2xl animate-pulse" />}>
-                      <div className="w-full flex flex-col items-center justify-center gap-2 border-2 border-white/10 bg-white/5 backdrop-blur-sm rounded-3xl p-6 md:p-10 shadow-lg hover:shadow-xl transition-all">
+                      <div className="w-full flex flex-col items-center justify-center gap-2">
                         <AIVoiceAgentVisual className="scale-90 md:scale-100" />
                         <AIVoiceInput demoMode={true} className="-mt-6" />
                       </div>
