@@ -62,14 +62,14 @@ export const BenefitsGrid = () => {
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
           {benefits.map((benefit, index) => {
             const Icon = benefit.icon;
-            // Varying gradient directions for visual variety - stronger opacity for visibility
+            // Varying gradient directions for visual variety - moderate opacity for subtle effect
             const gradients = [
-              'bg-gradient-to-t from-indigo-500/25 via-purple-500/15 to-transparent', // bottom to top
-              'bg-gradient-to-br from-purple-500/25 via-indigo-500/15 to-transparent', // top-left to bottom-right
-              'bg-gradient-to-b from-indigo-500/25 via-purple-500/15 to-transparent', // top to bottom
-              'bg-gradient-to-bl from-purple-500/25 via-indigo-500/15 to-transparent', // top-right to bottom-left
-              'bg-gradient-to-tr from-indigo-500/25 via-purple-500/15 to-transparent', // bottom-left to top-right
-              'bg-gradient-to-tl from-purple-500/25 via-indigo-500/15 to-transparent', // bottom-right to top-left
+              'bg-gradient-to-t from-indigo-500/15 via-purple-500/8 to-transparent', // bottom to top
+              'bg-gradient-to-br from-purple-500/15 via-indigo-500/8 to-transparent', // top-left to bottom-right
+              'bg-gradient-to-b from-indigo-500/15 via-purple-500/8 to-transparent', // top to bottom
+              'bg-gradient-to-bl from-purple-500/15 via-indigo-500/8 to-transparent', // top-right to bottom-left
+              'bg-gradient-to-tr from-indigo-500/15 via-purple-500/8 to-transparent', // bottom-left to top-right
+              'bg-gradient-to-tl from-purple-500/15 via-indigo-500/8 to-transparent', // bottom-right to top-left
             ];
             
             return (
