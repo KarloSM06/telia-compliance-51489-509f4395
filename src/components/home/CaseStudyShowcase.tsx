@@ -7,7 +7,7 @@ export const CaseStudyShowcase = () => {
   // Use Stockholm AC & Bremilers case study
   const caseStudy = caseStudies.find(cs => cs.id === 'stockholm-ac-bremilers') || caseStudies[0];
   
-  return <section className="py-20">
+  return <section className="relative py-24 md:py-40">
       <div className="max-w-7xl mx-auto px-6">
         <AnimatedSection>
           <div className="text-center mb-16">
@@ -49,11 +49,11 @@ export const CaseStudyShowcase = () => {
         
         <AnimatedSection delay={200}>
           <div className="grid md:grid-cols-2 gap-12">
-            <div className="border border-gray-100 bg-white/80 backdrop-blur-xl rounded-3xl p-8 shadow-lg hover:shadow-xl transition-all duration-300">
+            <div>
               <h3 className="text-2xl font-display font-normal text-gray-900 mb-4">Problem</h3>
               <p className="text-gray-600">{caseStudy.problem}</p>
             </div>
-            <div className="border border-gray-100 bg-white/80 backdrop-blur-xl rounded-3xl p-8 shadow-lg hover:shadow-xl transition-all duration-300">
+            <div>
               <h3 className="text-2xl font-display font-normal text-gray-900 mb-4">Lösning</h3>
               <p className="text-gray-600">{caseStudy.solution}</p>
             </div>
