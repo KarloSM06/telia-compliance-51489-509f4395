@@ -28,11 +28,7 @@ export const AIVoiceAgentVisual: React.FC<AIVoiceAgentVisualProps> = ({
         repeat: Infinity,
         ease: "easeInOut"
       }}>
-        <SiriOrb 
-          size="220px" 
-          animationDuration={25} 
-          className="drop-shadow-2xl" 
-        />
+        <SiriOrb size={isMobile ? "160px" : "220px"} animationDuration={25} className="drop-shadow-2xl" />
       </motion.div>
     </div>;
 };
