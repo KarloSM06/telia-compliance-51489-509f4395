@@ -73,7 +73,7 @@ export const AlternatingServicesSection = () => {
         }}>
               <div className={`grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 items-center ${service.isReversed ? 'lg:grid-flow-dense' : ''}`}>
                 {/* Text side */}
-                <div className={service.isReversed ? 'lg:col-start-2' : ''}>
+                <div className={`relative z-10 ${service.isReversed ? 'lg:col-start-2' : ''}`}>
                   {/* Category Badge */}
                   
                   
