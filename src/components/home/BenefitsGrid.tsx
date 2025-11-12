@@ -65,16 +65,18 @@ export const BenefitsGrid = () => {
             return (
               <div 
                 key={benefit.id}
-                className="animate-[fadeInUp_0.6s_ease-out] border-2 border-white/10 bg-white/5 backdrop-blur-sm rounded-3xl p-6 md:p-8 shadow-lg hover:shadow-xl transition-all h-auto min-h-[240px] md:h-[280px] flex flex-col"
+                className="animate-[fadeInUp_0.6s_ease-out] border-2 border-white/10 bg-white/5 backdrop-blur-sm rounded-3xl p-6 md:p-8 shadow-lg hover:shadow-xl transition-all h-auto min-h-[240px] md:h-[280px] flex flex-col relative overflow-hidden"
                 style={{ animationDelay: `${index * 100}ms` }}
               >
-                  <div className="mb-4">
+                {/* Subtle gradient fade overlay at top */}
+                <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-indigo-500/10 via-purple-500/5 to-transparent pointer-events-none" />
+                  <div className="mb-4 relative z-10">
                     <Icon className="w-10 h-10 md:w-12 md:h-12 text-gray-900 stroke-[1]" />
                   </div>
-                  <h3 className="text-xl font-display font-normal text-gray-900 mb-3">
+                  <h3 className="text-xl font-display font-normal text-gray-900 mb-3 relative z-10">
                     {benefit.title}
                   </h3>
-                  <p className="text-gray-600 leading-relaxed flex-1">
+                  <p className="text-gray-600 leading-relaxed flex-1 relative z-10">
                     {benefit.description}
                   </p>
                 </div>
