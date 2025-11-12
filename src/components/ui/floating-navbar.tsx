@@ -120,7 +120,7 @@ export function FloatingNavbar() {
             <Button
               size="sm"
               onClick={() => setIsConsultationModalOpen(true)}
-              className="hidden md:inline-flex bg-white text-black hover:bg-gray-100 [text-shadow:_0_1px_2px_rgb(0_0_0_/_10%)] font-medium transition-all duration-300 hover:scale-105 shadow-button"
+              className="hidden md:inline-flex px-8 py-3.5 bg-gray-900 hover:bg-gray-800 text-white rounded-full font-medium transition-all duration-300 hover:scale-105"
             >
               Boka ett möte
             </Button>
