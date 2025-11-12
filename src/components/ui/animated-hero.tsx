@@ -12,35 +12,31 @@ function AnimatedHero({
   const [isSplineLoading, setIsSplineLoading] = useState(true);
   const [splineError, setSplineError] = useState<string | null>(null);
   return <div className="relative w-full min-h-[85vh] md:min-h-screen lg:min-h-[140vh] overflow-hidden pb-24 md:pb-40">
-      {/* Spline 3D Animation - Only on desktop */}
-      {!isMobile && (
-        <div className="absolute inset-0 z-5 animate-subtle-float">
-          {isSplineLoading && <div className="absolute inset-0 flex items-center justify-center">
-              <p className="text-muted-foreground">Laddar 3D-animation...</p>
-            </div>}
-          {splineError && <div className="absolute inset-0 flex items-center justify-center">
-              <p className="text-destructive">Kunde inte ladda 3D-animation: {splineError}</p>
-            </div>}
-          <Spline scene="https://prod.spline.design/dtyy9Rk8l8FAgcgA/scene.splinecode" onLoad={() => {
-          console.log('✅ Spline loaded successfully');
-          setIsSplineLoading(false);
-        }} onError={error => {
-          console.error('❌ Spline error:', error);
-          setSplineError('Kunde inte ladda 3D-scenen');
-          setIsSplineLoading(false);
-        }} style={{
-          width: '100%',
-          height: '100%',
-          pointerEvents: 'none',
-          opacity: 1.0
-        }} />
-        </div>
-      )}
-
-      {/* Fallback gradient för mobil */}
-      {isMobile && (
-        <div className="absolute inset-0 z-5 bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 opacity-60" />
-      )}
+      {/* Spline 3D Animation - Edge-to-edge, 75% on mobile */}
+      <div className="absolute inset-0 z-5">
+        {isSplineLoading && <div className="absolute inset-0 flex items-center justify-center">
+            <p className="text-muted-foreground">Laddar 3D-animation...</p>
+          </div>}
+        {splineError && <div className="absolute inset-0 flex items-center justify-center">
+            <p className="text-destructive">Kunde inte ladda 3D-animation: {splineError}</p>
+          </div>}
+        <Spline scene="https://prod.spline.design/dtyy9Rk8l8FAgcgA/scene.splinecode" onLoad={() => {
+        console.log('✅ Spline loaded successfully');
+        setIsSplineLoading(false);
+      }} onError={error => {
+        console.error('❌ Spline error:', error);
+        setSplineError('Kunde inte ladda 3D-scenen');
+        setIsSplineLoading(false);
+      }} className="scale-75 md:scale-100 transition-transform duration-300" style={{
+        width: '100%',
+        height: '100%',
+        pointerEvents: 'none',
+        opacity: 1.0,
+        willChange: 'opacity, transform',
+        transform: 'translateZ(0)',
+        backfaceVisibility: 'hidden'
+      }} />
+      </div>
 
       {/* Hero Content - On top of everything */}
       <div className="relative z-20 container mx-auto max-w-4xl px-6 py-32 lg:py-48">
