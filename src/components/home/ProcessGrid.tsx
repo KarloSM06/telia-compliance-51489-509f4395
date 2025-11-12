@@ -1,6 +1,5 @@
 import { Suspense, lazy } from "react";
 import IntegrationConnectionVisual from "@/components/ui/integration-connection-visual";
-import { AnimatedSection } from "@/components/shared/AnimatedSection";
 
 // Lazy load visualizations för bättre performance
 const ScanningAnalysisVisual = lazy(() => import("@/components/ui/scanning-analysis-visual"));
@@ -39,34 +38,30 @@ export const ProcessGrid = () => {
     <section className="py-12 md:py-16 lg:py-24 bg-white">
       <div className="max-w-7xl mx-auto px-4 md:px-6">
         {/* Section Header */}
-        <AnimatedSection animation="fade" duration={600}>
-          <div className="text-center mb-12 md:mb-16">
-            {/* Category Badge */}
-            <div className="mb-4">
-              <span className="text-xs uppercase tracking-wider text-gray-900 bg-white/60 backdrop-blur-sm border border-gray-200 px-4 py-2 rounded-full">
-                Vår Process
-              </span>
-            </div>
-            
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-display font-normal leading-tight text-gray-900 mb-6">
-              Vår Enkla, Smarta och Skalbara Process
-            </h2>
-            <p className="text-base md:text-lg text-gray-600 max-w-3xl mx-auto">
-              Vi designar, utvecklar och implementerar automationsverktyg som hjälper er jobba smartare, inte hårdare
-            </p>
+        <div className="text-center mb-12 md:mb-16">
+          {/* Category Badge */}
+          <div className="mb-4">
+            <span className="text-xs uppercase tracking-wider text-gray-900 bg-white/60 backdrop-blur-sm border border-gray-200 px-4 py-2 rounded-full">
+              Vår Process
+            </span>
           </div>
-        </AnimatedSection>
+          
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-display font-normal leading-tight text-gray-900 mb-6">
+            Vår Enkla, Smarta och Skalbara Process
+          </h2>
+          <p className="text-base md:text-lg text-gray-600 max-w-3xl mx-auto">
+            Vi designar, utvecklar och implementerar automationsverktyg som hjälper er jobba smartare, inte hårdare
+          </p>
+        </div>
         
         {/* Process Steps Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
           {processSteps.map((step, index) => (
-            <AnimatedSection
+            <div 
               key={step.id}
-              animation="fadeUp"
-              delay={index * 100}
-              duration={800}
+              className="animate-[fadeInUp_0.6s_ease-out] border-2 border-white/10 bg-white/5 backdrop-blur-sm rounded-3xl p-6 md:p-8 lg:p-10 shadow-lg hover:shadow-xl transition-all h-[580px] md:h-[650px] lg:h-[700px] flex flex-col justify-between"
+              style={{ animationDelay: `${index * 100}ms` }}
             >
-              <div className="border-2 border-white/10 bg-white/5 backdrop-blur-sm rounded-3xl p-6 md:p-8 lg:p-10 shadow-lg hover:shadow-xl transition-all h-[580px] md:h-[650px] lg:h-[700px] flex flex-col justify-between">
                 {/* Step Badge */}
                 <div className="mb-4">
                   <span className="text-xs uppercase tracking-wider text-gray-900 bg-white/60 backdrop-blur-sm border border-gray-200 px-3 py-1 rounded-full">
@@ -86,27 +81,24 @@ export const ProcessGrid = () => {
                 
                 {/* Visual Mockup Area - FIXED HEIGHT CONTAINER */}
                 <div className="h-[280px] md:h-[320px] lg:h-[350px] w-full flex items-center justify-center overflow-hidden">
-                  <AnimatedSection animation="scale" delay={150} duration={1000}>
-                    {step.id === 1 && (
-                      <Suspense fallback={<div className="h-full w-full bg-white/60 rounded-xl animate-pulse" />}>
-                        <ScanningAnalysisVisual />
-                      </Suspense>
-                    )}
-                    {step.id === 2 && (
-                      <Suspense fallback={<div className="h-full w-full bg-white/60 rounded-xl animate-pulse" />}>
-                        <CodeEditorVisual />
-                      </Suspense>
-                    )}
-                    {step.id === 3 && <IntegrationConnectionVisual />}
-                    {step.id === 4 && (
-                      <Suspense fallback={<div className="h-full w-full bg-white/60 rounded-xl animate-pulse" />}>
-                        <SystemScalingVisual />
-                      </Suspense>
-                    )}
-                  </AnimatedSection>
+                {step.id === 1 && (
+                  <Suspense fallback={<div className="h-full w-full bg-white/60 rounded-xl animate-pulse" />}>
+                    <ScanningAnalysisVisual />
+                  </Suspense>
+                )}
+                {step.id === 2 && (
+                  <Suspense fallback={<div className="h-full w-full bg-white/60 rounded-xl animate-pulse" />}>
+                    <CodeEditorVisual />
+                  </Suspense>
+                )}
+                {step.id === 3 && <IntegrationConnectionVisual />}
+                {step.id === 4 && (
+                  <Suspense fallback={<div className="h-full w-full bg-white/60 rounded-xl animate-pulse" />}>
+                    <SystemScalingVisual />
+                  </Suspense>
+                )}
                 </div>
-              </div>
-            </AnimatedSection>
+            </div>
           ))}
         </div>
       </div>

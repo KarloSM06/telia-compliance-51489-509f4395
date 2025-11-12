@@ -1,5 +1,4 @@
 import { TrendingUp, Heart, Clock, DollarSign, BarChart3, Rocket } from "lucide-react";
-import { AnimatedSection } from "@/components/shared/AnimatedSection";
 
 const benefits = [
   {
@@ -44,7 +43,7 @@ export const BenefitsGrid = () => {
   return (
     <section className="py-12 md:py-16 lg:py-24 bg-white">
       <div className="max-w-7xl mx-auto px-4 md:px-6">
-        <AnimatedSection animation="fade" duration={600}>
+        <div className="animate-[fadeIn_0.6s_ease-out]">
           <div className="text-center mb-12 md:mb-16">
             <div className="mb-4">
               <span className="text-xs uppercase tracking-wider text-gray-900 bg-white/60 backdrop-blur-sm border border-gray-200 px-4 py-2 rounded-full">
@@ -58,23 +57,17 @@ export const BenefitsGrid = () => {
               Vi hjälper er att utnyttja det för att röra sig snabbare, tänka smartare och skala bortom gränser
             </p>
           </div>
-        </AnimatedSection>
+        </div>
         
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
           {benefits.map((benefit, index) => {
             const Icon = benefit.icon;
-            const row = Math.floor(index / 3);
-            const col = index % 3;
-            const delay = row * 150 + col * 100;
-            
             return (
-              <AnimatedSection
+              <div 
                 key={benefit.id}
-                animation="fadeUp"
-                delay={delay}
-                duration={800}
+                className="animate-[fadeInUp_0.6s_ease-out] border-2 border-white/10 bg-white/5 backdrop-blur-sm rounded-3xl p-6 md:p-8 shadow-lg hover:shadow-xl transition-all h-auto min-h-[240px] md:h-[280px] flex flex-col"
+                style={{ animationDelay: `${index * 100}ms` }}
               >
-                <div className="border-2 border-white/10 bg-white/5 backdrop-blur-sm rounded-3xl p-6 md:p-8 shadow-lg hover:shadow-xl transition-all h-auto min-h-[240px] md:h-[280px] flex flex-col">
                   <div className="mb-4">
                     <Icon className="w-10 h-10 md:w-12 md:h-12 text-gray-900 stroke-[1]" />
                   </div>
@@ -85,10 +78,9 @@ export const BenefitsGrid = () => {
                     {benefit.description}
                   </p>
                 </div>
-              </AnimatedSection>
-            );
-          })}
-        </div>
+              );
+            })}
+          </div>
       </div>
     </section>
   );

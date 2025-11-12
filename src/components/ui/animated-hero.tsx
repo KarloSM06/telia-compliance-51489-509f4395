@@ -1,7 +1,6 @@
 import Spline from '@splinetool/react-spline';
 import { useState } from "react";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { AnimatedSection } from "@/components/shared/AnimatedSection";
 interface AnimatedHeroProps {
   onBookDemo?: () => void;
   onViewPackages?: () => void;
@@ -47,27 +46,21 @@ function AnimatedHero({
       <div className="relative z-20 container mx-auto max-w-4xl px-6 py-32 lg:py-48">
         <div className="flex flex-col items-center justify-center gap-4 lg:gap-6 text-center">
           {/* Main Headline */}
-          <AnimatedSection animation="fadeUp" delay={200} duration={800}>
-            <h1 className="text-5xl md:text-6xl lg:text-7xl font-display font-normal leading-tight md:leading-[1.1] tracking-tighter text-gray-900">
-              Vi bygger intelligenta system som gör jobbet åt dig
-            </h1>
-          </AnimatedSection>
+          <h1 className="animate-hero-title text-5xl md:text-6xl lg:text-7xl font-display font-normal leading-tight md:leading-[1.1] tracking-tighter text-gray-900">
+            Vi bygger intelligenta system som gör jobbet åt dig
+          </h1>
 
           {/* Subheadline */}
-          <AnimatedSection animation="fadeUp" delay={400} duration={800}>
-            <p className="text-base md:text-lg text-gray-600 max-w-2xl leading-relaxed">
-              Hiems hjälper företag att implementera verkliga AI-lösningar — röstagenter, automationer och dashboards som ger resultat, inte bara rapporter
-            </p>
-          </AnimatedSection>
+          <p className="animate-hero-subtitle text-base md:text-lg text-gray-600 max-w-2xl leading-relaxed">
+            Hiems hjälper företag att implementera verkliga AI-lösningar — röstagenter, automationer och dashboards som ger resultat, inte bara rapporter
+          </p>
 
           {/* CTA Buttons */}
-          <AnimatedSection animation="scale" delay={600} duration={700}>
-            <div className="flex gap-4 mt-2">
-              <button onClick={onBookDemo} className="px-8 py-3.5 md:px-10 md:py-4 bg-gray-900 hover:bg-gray-800 text-white rounded-full text-base font-medium transition-all duration-300 hover:scale-105">
-                Boka ett möte
-              </button>
-            </div>
-          </AnimatedSection>
+          <div className="animate-hero-cta flex gap-4 mt-2">
+            <button onClick={onBookDemo} className="px-8 py-3.5 md:px-10 md:py-4 bg-gray-900 hover:bg-gray-800 text-white rounded-full text-base font-medium transition-all duration-300 hover:scale-105">
+              Boka ett möte
+            </button>
+          </div>
         </div>
       </div>
     </div>;

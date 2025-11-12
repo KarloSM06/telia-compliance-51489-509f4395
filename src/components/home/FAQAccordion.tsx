@@ -38,7 +38,7 @@ export const FAQAccordion = () => {
   return (
     <section className="py-20 bg-white">
       <div className="max-w-4xl mx-auto px-6">
-        <AnimatedSection animation="fade" duration={600}>
+        <AnimatedSection>
           <div className="text-center mb-12">
             <p className="text-sm text-gray-900 uppercase tracking-wider mb-2">Vanliga Frågor</p>
             <h2 className="text-4xl md:text-5xl font-display font-normal text-gray-900 mb-4">
@@ -50,30 +50,24 @@ export const FAQAccordion = () => {
           </div>
         </AnimatedSection>
         
-        <div className="space-y-4">
+        <AnimatedSection delay={200}>
           <Accordion type="single" collapsible className="space-y-4">
-            {faqs.map((faq, index) => (
-              <AnimatedSection
-                key={faq.id}
-                animation="fadeUp"
-                delay={index * 100}
-                duration={700}
+            {faqs.map((faq) => (
+              <AccordionItem 
+                key={faq.id} 
+                value={faq.id} 
+                className="bg-white/80 backdrop-blur-xl border border-gray-100 rounded-xl px-6 shadow-lg"
               >
-                <AccordionItem 
-                  value={faq.id} 
-                  className="bg-white/80 backdrop-blur-xl border border-gray-100 rounded-xl px-6 shadow-lg"
-                >
-                  <AccordionTrigger className="text-gray-900 text-lg hover:no-underline">
-                    {faq.question}
-                  </AccordionTrigger>
-                  <AccordionContent className="text-gray-600">
-                    {faq.answer}
-                  </AccordionContent>
-                </AccordionItem>
-              </AnimatedSection>
+                <AccordionTrigger className="text-gray-900 text-lg hover:no-underline">
+                  {faq.question}
+                </AccordionTrigger>
+                <AccordionContent className="text-gray-600">
+                  {faq.answer}
+                </AccordionContent>
+              </AccordionItem>
             ))}
           </Accordion>
-        </div>
+        </AnimatedSection>
       </div>
     </section>
   );
