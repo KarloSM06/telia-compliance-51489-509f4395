@@ -105,20 +105,7 @@ export const AlternatingServicesSection = () => {
               // DatabaseWithRestApi figur för Dashboards & Decision Intelligence
               <Suspense fallback={<div className="h-[300px] md:h-[500px] bg-white/5 rounded-2xl animate-pulse" />}>
                       <div className="w-full flex justify-center">
-                        <DatabaseWithRestApi className="scale-90 md:scale-100" circleText="Hiems" title="" badgeTexts={{
-                    first: "Samtal",
-                    second: "SMS",
-                    third: "Mail",
-                    fourth: "Reviews"
-                  }} badgeIcons={{
-                    first: Phone,
-                    second: MessageSquare,
-                    third: Mail,
-                    fourth: Star
-                  }} buttonTexts={{
-                    first: "Hiems",
-                    second: "Dashboard"
-                  }} lightColor="hsl(var(--primary))" />
+                        
                       </div>
                     </Suspense> : service.id === 2 ?
               // WorkflowChecklistVisual för Automate repetitive tasks
