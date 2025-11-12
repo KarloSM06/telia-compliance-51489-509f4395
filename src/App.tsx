@@ -4,7 +4,6 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
-import Paket from "./pages/Paket";
 import NotFound from "./pages/NotFound";
 
 // Optimized QueryClient configuration
@@ -28,7 +27,6 @@ const App = () => {
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Index />} />
-            <Route path="/paket" element={<Paket />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>

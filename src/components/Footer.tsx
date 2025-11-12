@@ -7,7 +7,6 @@ const navigation = {
   navigering: [
     { name: "Hem", href: "/" },
     { name: "Tjänster", href: "/#tjanster" },
-    { name: "Paket", href: "/paket" },
     { name: "Fördelar", href: "/#fordelar" },
   ],
   foretag: [
