@@ -62,14 +62,24 @@ export const BenefitsGrid = () => {
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
           {benefits.map((benefit, index) => {
             const Icon = benefit.icon;
+            // Varying gradient directions for visual variety
+            const gradients = [
+              'bg-gradient-to-t from-indigo-500/8 via-purple-500/4 to-transparent', // bottom to top
+              'bg-gradient-to-br from-purple-500/8 via-indigo-500/4 to-transparent', // top-left to bottom-right
+              'bg-gradient-to-b from-indigo-500/8 via-purple-500/4 to-transparent', // top to bottom
+              'bg-gradient-to-bl from-purple-500/8 via-indigo-500/4 to-transparent', // top-right to bottom-left
+              'bg-gradient-to-tr from-indigo-500/8 via-purple-500/4 to-transparent', // bottom-left to top-right
+              'bg-gradient-to-tl from-purple-500/8 via-indigo-500/4 to-transparent', // bottom-right to top-left
+            ];
+            
             return (
               <div 
                 key={benefit.id}
                 className="animate-[fadeInUp_0.6s_ease-out] border-2 border-white/10 bg-white/5 backdrop-blur-sm rounded-3xl p-6 md:p-8 shadow-lg hover:shadow-xl transition-all h-auto min-h-[240px] md:h-[280px] flex flex-col relative overflow-hidden"
                 style={{ animationDelay: `${index * 100}ms` }}
               >
-                {/* Subtle gradient fade overlay at bottom - matching reference style */}
-                <div className="absolute bottom-0 left-0 right-0 h-48 bg-gradient-to-t from-indigo-500/8 via-purple-500/4 to-transparent pointer-events-none" />
+                {/* Varying gradient fade overlay - matching reference style */}
+                <div className={`absolute inset-0 h-full ${gradients[index]} pointer-events-none`} />
                   <div className="mb-4 relative z-10">
                     <Icon className="w-10 h-10 md:w-12 md:h-12 text-gray-900 stroke-[1]" />
                   </div>
