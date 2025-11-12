@@ -1,13 +1,1 @@
 project_id = "shskknkivuewuqonjdjc"
-
-[functions.initial-telephony-sync]
-verify_jwt = true
-
-[functions.encrypt-telephony-credentials]
-verify_jwt = true
-
-[functions.decrypt-telephony-credentials]
-verify_jwt = true
-
-[functions.validate-api-key]
-verify_jwt = false
