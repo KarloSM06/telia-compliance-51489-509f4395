@@ -22,35 +22,13 @@ export default defineConfig(({ mode }) => ({
     },
   },
   build: {
+    // Disable code splitting to prevent race conditions
     rollupOptions: {
       output: {
-        manualChunks: {
-          'react-vendor': ['react', 'react-dom', 'react-router-dom'],
-          'ui-radix-dialogs': [
-            '@radix-ui/react-dialog',
-            '@radix-ui/react-alert-dialog',
-            '@radix-ui/react-popover',
-          ],
-          'ui-radix-forms': [
-            '@radix-ui/react-select',
-            '@radix-ui/react-checkbox',
-            '@radix-ui/react-dropdown-menu',
-          ],
-          'ui-radix-display': [
-            '@radix-ui/react-accordion',
-            '@radix-ui/react-avatar',
-            '@radix-ui/react-tabs',
-            '@radix-ui/react-tooltip',
-          ],
-          'charts': ['recharts'],
-          'forms': ['react-hook-form', 'zod', '@hookform/resolvers'],
-          'supabase': ['@supabase/supabase-js'],
-          'query': ['@tanstack/react-query'],
-          'animations': ['framer-motion'],
-          'spline': ['@splinetool/react-spline', '@splinetool/runtime'],
-        },
+        manualChunks: undefined,
       },
     },
+    chunkSizeWarningLimit: 2000,
     target: 'es2020',
     minify: 'terser',
     terserOptions: {
@@ -61,8 +39,19 @@ export default defineConfig(({ mode }) => ({
       },
     },
     cssCodeSplit: true,
-    chunkSizeWarningLimit: 500,
     sourcemap: mode === 'development',
     reportCompressedSize: false,
+  },
+
+  // Pre-bundle critical deps to avoid pre-bundling race conditions
+  optimizeDeps: {
+    include: [
+      'react',
+      'react-dom',
+      'react-router-dom',
+      '@tanstack/react-query',
+      '@radix-ui/react-tooltip',
+    ],
+    force: true,
   },
 }));
