@@ -25,7 +25,6 @@ export default defineConfig(({ mode }) => ({
     rollupOptions: {
       output: {
         manualChunks: {
-          'react-vendor': ['react', 'react-dom', 'react-router-dom'],
           'ui-radix-dialogs': [
             '@radix-ui/react-dialog',
             '@radix-ui/react-alert-dialog',
@@ -50,6 +49,15 @@ export default defineConfig(({ mode }) => ({
           'spline': ['@splinetool/react-spline', '@splinetool/runtime'],
         },
       },
+    },
+    optimizeDeps: {
+      include: [
+        'react',
+        'react-dom',
+        'react-router-dom',
+        '@tanstack/react-query',
+        '@radix-ui/react-tooltip',
+      ],
     },
     target: 'es2020',
     minify: 'terser',
