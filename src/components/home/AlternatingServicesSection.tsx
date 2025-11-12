@@ -59,6 +59,11 @@ export const AlternatingServicesSection = () => {
       <div className="max-w-7xl mx-auto px-4 md:px-6">
         {/* Section Header */}
         <div className="text-center mb-12 md:mb-16">
+          <div className="mb-4">
+            <span className="text-xs uppercase tracking-wider text-gray-900 bg-white/60 backdrop-blur-sm border border-gray-200 px-4 py-2 rounded-full">
+              Våra Lösningar
+            </span>
+          </div>
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-display font-normal leading-tight text-gray-900 mb-6">
             AI-Lösningar som Levererar
           </h2>
