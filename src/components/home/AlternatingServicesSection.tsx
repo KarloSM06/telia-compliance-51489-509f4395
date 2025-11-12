@@ -3,6 +3,9 @@ import { Phone, MessageSquare, Mail, Star } from "lucide-react";
 
 // Lazy load visualizations för bättre performance
 const DatabaseWithRestApi = lazy(() => import("@/components/ui/database-with-rest-api"));
+const CpuArchitecture = lazy(() => import("@/components/ui/cpu-architecture").then(m => ({
+  default: m.CpuArchitecture
+})));
 const WorkflowChecklistVisual = lazy(() => import("@/components/ui/workflow-checklist-visual").then(m => ({
   default: m.WorkflowChecklistVisual
 })));
@@ -101,11 +104,12 @@ export const AlternatingServicesSection = () => {
                 
                 {/* Mockup side - Direct rendering without extra frame */}
                 <div className={service.isReversed ? 'lg:col-start-1' : ''}>
-                  {service.id === 1 ?
-              // DatabaseWithRestApi figur för Dashboards & Decision Intelligence
+                {service.id === 1 ?
+              // CpuArchitecture (Hiems) bredvid DatabaseWithRestApi för Dashboards & Decision Intelligence
               <Suspense fallback={<div className="h-[300px] md:h-[500px] bg-white/5 rounded-2xl animate-pulse" />}>
-                      <div className="w-full flex justify-center">
-                        
+                      <div className="w-full flex justify-center items-center gap-8">
+                        <DatabaseWithRestApi className="scale-75 md:scale-90" />
+                        <CpuArchitecture className="scale-75 md:scale-90" width="400" height="200" />
                       </div>
                     </Suspense> : service.id === 2 ?
               // WorkflowChecklistVisual för Automate repetitive tasks
