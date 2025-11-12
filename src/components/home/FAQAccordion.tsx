@@ -59,7 +59,7 @@ export const FAQAccordion = () => {
                 className="bg-white/80 backdrop-blur-xl border border-gray-100 rounded-xl px-6 shadow-lg relative overflow-hidden"
               >
                 {/* Gradient fade overlay - diagonal for variety */}
-                <div className="absolute top-0 right-0 w-full h-48 bg-gradient-to-bl from-indigo-500/25 via-purple-500/15 to-transparent pointer-events-none" />
+                <div className="absolute top-0 right-0 w-full h-48 bg-gradient-to-bl from-indigo-500/8 via-purple-500/4 to-transparent pointer-events-none" />
                 <AccordionTrigger className="text-gray-900 text-lg hover:no-underline relative z-10">
                   {faq.question}
                 </AccordionTrigger>

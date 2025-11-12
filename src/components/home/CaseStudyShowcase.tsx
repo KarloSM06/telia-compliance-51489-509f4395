@@ -51,13 +51,13 @@ export const CaseStudyShowcase = () => {
             <div className="grid md:grid-cols-2 gap-12">
               <div className="border border-gray-100 bg-white/80 backdrop-blur-xl rounded-3xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 relative overflow-hidden">
                 {/* Gradient from top-left for Problem card */}
-                <div className="absolute top-0 left-0 w-full h-48 bg-gradient-to-br from-indigo-500/25 via-purple-500/15 to-transparent pointer-events-none" />
+                <div className="absolute top-0 left-0 w-full h-48 bg-gradient-to-br from-indigo-500/8 via-purple-500/4 to-transparent pointer-events-none" />
                 <h3 className="text-2xl font-display font-normal text-gray-900 mb-4 relative z-10">Problem</h3>
                 <p className="text-gray-600 relative z-10">{caseStudy.problem}</p>
               </div>
               <div className="border border-gray-100 bg-white/80 backdrop-blur-xl rounded-3xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 relative overflow-hidden">
                 {/* Gradient from top-right for Solution card */}
-                <div className="absolute top-0 right-0 w-full h-48 bg-gradient-to-bl from-purple-500/25 via-indigo-500/15 to-transparent pointer-events-none" />
+                <div className="absolute top-0 right-0 w-full h-48 bg-gradient-to-bl from-purple-500/8 via-indigo-500/4 to-transparent pointer-events-none" />
                 <h3 className="text-2xl font-display font-normal text-gray-900 mb-4 relative z-10">Lösning</h3>
                 <p className="text-gray-600 relative z-10">{caseStudy.solution}</p>
               </div>
