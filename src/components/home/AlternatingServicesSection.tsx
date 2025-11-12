@@ -109,7 +109,7 @@ export const AlternatingServicesSection = () => {
               <Suspense fallback={<div className="h-[300px] md:h-[500px] bg-white/5 rounded-2xl animate-pulse" />}>
                       <div className="w-full flex justify-center items-center gap-8">
                         
-                        <CpuArchitecture className="scale-75 md:scale-90" width="400" height="200" />
+                        <CpuArchitecture className="scale-100 md:scale-125 lg:scale-150" width="600" height="300" text="Hiems" />
                       </div>
                     </Suspense> : service.id === 2 ?
               // WorkflowChecklistVisual för Automate repetitive tasks
