@@ -111,19 +111,19 @@ export function ConsultationModal({ open, onOpenChange }: ConsultationModalProps
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-md">
-        <DialogHeader>
-          <DialogTitle className="text-2xl font-display font-normal text-gray-900">
+      <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto px-4 sm:px-6">
+        <DialogHeader className="pb-2">
+          <DialogTitle className="text-xl sm:text-2xl font-display font-normal text-gray-900">
             Boka ett möte
           </DialogTitle>
-          <DialogDescription className="text-gray-600">
+          <DialogDescription className="text-sm sm:text-base text-gray-600">
             Fyll i formuläret så kontaktar vi dig inom 24 timmar
           </DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit} className="space-y-4 mt-4">
-          <div className="space-y-2">
-            <Label htmlFor="company">Företagsnamn *</Label>
+        <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4 mt-2 pb-2">
+          <div className="space-y-1.5">
+            <Label htmlFor="company" className="text-sm">Företagsnamn *</Label>
             <Input
               id="company"
               value={companyName}
@@ -133,11 +133,12 @@ export function ConsultationModal({ open, onOpenChange }: ConsultationModalProps
               inputMode="text"
               enterKeyHint="next"
               required
+              className="h-10"
             />
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="contact">Kontaktperson & roll *</Label>
+          <div className="space-y-1.5">
+            <Label htmlFor="contact" className="text-sm">Kontaktperson & roll *</Label>
             <Input
               id="contact"
               value={contactPerson}
@@ -147,11 +148,12 @@ export function ConsultationModal({ open, onOpenChange }: ConsultationModalProps
               inputMode="text"
               enterKeyHint="next"
               required
+              className="h-10"
             />
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="email">E-post *</Label>
+          <div className="space-y-1.5">
+            <Label htmlFor="email" className="text-sm">E-post *</Label>
             <Input
               id="email"
               type="email"
@@ -162,11 +164,12 @@ export function ConsultationModal({ open, onOpenChange }: ConsultationModalProps
               inputMode="email"
               enterKeyHint="next"
               required
+              className="h-10"
             />
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="phone">Telefon *</Label>
+          <div className="space-y-1.5">
+            <Label htmlFor="phone" className="text-sm">Telefon *</Label>
             <Input
               id="phone"
               type="tel"
@@ -177,24 +180,26 @@ export function ConsultationModal({ open, onOpenChange }: ConsultationModalProps
               inputMode="tel"
               enterKeyHint="next"
               required
+              className="h-10"
             />
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="message">Beskriv era behov (valfritt)</Label>
+          <div className="space-y-1.5">
+            <Label htmlFor="message" className="text-sm">Beskriv era behov (valfritt)</Label>
             <Textarea
               id="message"
               value={message}
               onChange={(e) => setMessage(e.target.value)}
               placeholder="Berätta kort om vad ni behöver hjälp med..."
-              rows={4}
+              rows={3}
               enterKeyHint="done"
+              className="min-h-[80px] resize-none"
             />
           </div>
 
           <Button 
             type="submit" 
-            className="w-full bg-gray-900 hover:bg-gray-800 text-white"
+            className="w-full bg-gray-900 hover:bg-gray-800 text-white h-11 mt-2"
             disabled={isLoading}
           >
             {isLoading ? (
