@@ -102,10 +102,10 @@ export const AlternatingServicesSection = () => {
                   
                 </div>
                 
-                {/* Mockup side - Direct rendering without extra frame */}
+                {/* Mockup side - All visualizations in glassmorphism cards */}
                 <div className={service.isReversed ? 'lg:col-start-1' : ''}>
                 {service.id === 1 ?
-              // CpuArchitecture (Hiems) bredvid DatabaseWithRestApi för Dashboards & Decision Intelligence
+              // CpuArchitecture (Hiems) för Dashboards & Decision Intelligence
               <Suspense fallback={<div className="h-[300px] md:h-[500px] bg-white/5 rounded-2xl animate-pulse" />}>
                       <div className="w-full flex justify-center items-center">
                         <div className="bg-white/5 backdrop-blur-sm border-2 border-white/10 rounded-2xl shadow-lg p-8 md:p-12 hover:bg-white/10 transition-all duration-300">
@@ -116,26 +116,34 @@ export const AlternatingServicesSection = () => {
               // WorkflowChecklistVisual för Automate repetitive tasks
               <Suspense fallback={<div className="h-[300px] md:h-[500px] bg-white/5 rounded-2xl animate-pulse" />}>
                       <div className="w-full flex justify-center">
-                        <WorkflowChecklistVisual className="scale-90 md:scale-100" />
+                        <div className="bg-white/5 backdrop-blur-sm border-2 border-white/10 rounded-2xl shadow-lg p-8 md:p-12 hover:bg-white/10 transition-all duration-300">
+                          <WorkflowChecklistVisual className="scale-90 md:scale-100" />
+                        </div>
                       </div>
                     </Suspense> : service.id === 3 ?
-              // AIVoiceAgentVisual för AI Voice Agents
+              // AIVoiceAgentVisual för AI Voice Agents - Kort endast runt SiriOrb och Listening
               <Suspense fallback={<div className="h-[300px] md:h-[500px] bg-white/5 rounded-2xl animate-pulse" />}>
                       <div className="w-full flex flex-col items-center justify-center gap-2">
-                        <AIVoiceAgentVisual className="scale-90 md:scale-100" />
-                        <AIVoiceInput demoMode={true} className="-mt-6" />
+                        <div className="bg-white/5 backdrop-blur-sm border-2 border-white/10 rounded-2xl shadow-lg p-8 md:p-12 hover:bg-white/10 transition-all duration-300">
+                          <AIVoiceAgentVisual className="scale-90 md:scale-100" />
+                          <AIVoiceInput demoMode={true} className="-mt-6" />
+                        </div>
                       </div>
                     </Suspense> : service.id === 4 ?
               // EmailBriefingVisual för Accelerate Sales Growth
               <Suspense fallback={<div className="h-[300px] md:h-[500px] bg-white/5 rounded-2xl animate-pulse" />}>
                       <div className="w-full flex justify-center">
-                        <EmailBriefingVisual className="scale-90 md:scale-100" />
+                        <div className="bg-white/5 backdrop-blur-sm border-2 border-white/10 rounded-2xl shadow-lg p-8 md:p-12 hover:bg-white/10 transition-all duration-300">
+                          <EmailBriefingVisual className="scale-90 md:scale-100" />
+                        </div>
                       </div>
                     </Suspense> : service.id === 5 ?
               // ProjectManagementVisual för Build Smarter Systems
               <Suspense fallback={<div className="h-[300px] md:h-[500px] bg-white/5 rounded-2xl animate-pulse" />}>
                       <div className="w-full flex justify-center">
-                        <ProjectManagementVisual className="scale-90 md:scale-100" />
+                        <div className="bg-white/5 backdrop-blur-sm border-2 border-white/10 rounded-2xl shadow-lg p-8 md:p-12 hover:bg-white/10 transition-all duration-300">
+                          <ProjectManagementVisual className="scale-90 md:scale-100" />
+                        </div>
                       </div>
                     </Suspense> :
               // Fallback - ska aldrig nås med nuvarande services
