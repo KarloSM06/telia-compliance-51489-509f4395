@@ -108,7 +108,7 @@ export const AlternatingServicesSection = () => {
               // CpuArchitecture (Hiems) bredvid DatabaseWithRestApi för Dashboards & Decision Intelligence
               <Suspense fallback={<div className="h-[300px] md:h-[500px] bg-white/5 rounded-2xl animate-pulse" />}>
                       <div className="w-full flex justify-center items-center gap-8">
-                        <DatabaseWithRestApi className="scale-75 md:scale-90" />
+                        
                         <CpuArchitecture className="scale-75 md:scale-90" width="400" height="200" />
                       </div>
                     </Suspense> : service.id === 2 ?
