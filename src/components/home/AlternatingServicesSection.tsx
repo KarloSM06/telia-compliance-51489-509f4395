@@ -86,7 +86,7 @@ export const AlternatingServicesSection = () => {
                   
                   {/* Pill-formade tags istället för bullets */}
                   <div className="flex flex-wrap gap-2 mb-8">
-                    {service.bullets.map((bullet, idx) => <span key={idx} className="text-sm text-gray-700 bg-white/60 backdrop-blur-sm border border-gray-200 px-4 py-2 rounded-full">
+                    {service.bullets.map((bullet, idx) => <span key={idx} className="text-sm text-gray-700 bg-white/5 backdrop-blur-sm border-2 border-white/10 px-4 py-2 rounded-full">
                         {bullet}
                       </span>)}
                   </div>
@@ -111,7 +111,7 @@ export const AlternatingServicesSection = () => {
                 <div className={service.isReversed ? 'lg:col-start-1' : ''}>
                   {service.id === 1 ?
               // DatabaseWithRestApi figur för Dashboards & Decision Intelligence
-              <Suspense fallback={<div className="h-[300px] md:h-[500px] bg-white/60 rounded-2xl animate-pulse" />}>
+              <Suspense fallback={<div className="h-[300px] md:h-[500px] bg-white/5 rounded-2xl animate-pulse" />}>
                       <div className="w-full flex justify-center">
                         <DatabaseWithRestApi className="scale-90 md:scale-100" circleText="Hiems" title="" badgeTexts={{
                     first: "Samtal",
@@ -130,32 +130,32 @@ export const AlternatingServicesSection = () => {
                       </div>
                     </Suspense> : service.id === 2 ?
               // WorkflowChecklistVisual för Automate repetitive tasks
-              <Suspense fallback={<div className="h-[300px] md:h-[500px] bg-white/60 rounded-2xl animate-pulse" />}>
+              <Suspense fallback={<div className="h-[300px] md:h-[500px] bg-white/5 rounded-2xl animate-pulse" />}>
                       <div className="w-full flex justify-center">
                         <WorkflowChecklistVisual className="scale-90 md:scale-100" />
                       </div>
                     </Suspense> : service.id === 3 ?
               // AIVoiceAgentVisual för AI Voice Agents
-              <Suspense fallback={<div className="h-[300px] md:h-[500px] bg-white/60 rounded-2xl animate-pulse" />}>
+              <Suspense fallback={<div className="h-[300px] md:h-[500px] bg-white/5 rounded-2xl animate-pulse" />}>
                       <div className="w-full flex flex-col items-center justify-center gap-2">
                         <AIVoiceAgentVisual className="scale-90 md:scale-100" />
                         <AIVoiceInput demoMode={true} className="-mt-6" />
                       </div>
                     </Suspense> : service.id === 4 ?
               // EmailBriefingVisual för Accelerate Sales Growth
-              <Suspense fallback={<div className="h-[300px] md:h-[500px] bg-white/60 rounded-2xl animate-pulse" />}>
+              <Suspense fallback={<div className="h-[300px] md:h-[500px] bg-white/5 rounded-2xl animate-pulse" />}>
                       <div className="w-full flex justify-center">
                         <EmailBriefingVisual className="scale-90 md:scale-100" />
                       </div>
                     </Suspense> : service.id === 5 ?
               // ProjectManagementVisual för Build Smarter Systems
-              <Suspense fallback={<div className="h-[300px] md:h-[500px] bg-white/60 rounded-2xl animate-pulse" />}>
+              <Suspense fallback={<div className="h-[300px] md:h-[500px] bg-white/5 rounded-2xl animate-pulse" />}>
                       <div className="w-full flex justify-center">
                         <ProjectManagementVisual className="scale-90 md:scale-100" />
                       </div>
                     </Suspense> :
               // Fallback - ska aldrig nås med nuvarande services
-              <div className="h-[300px] md:h-[500px] bg-white/60 rounded-2xl" />}
+              <div className="h-[300px] md:h-[500px] bg-white/5 rounded-2xl" />}
                 </div>
               </div>
             </div>)}

@@ -62,9 +62,9 @@ export const EmailBriefingVisual: React.FC<EmailBriefingVisualProps> = ({ classN
   ];
 
   return (
-    <div className={`h-auto min-h-[300px] md:h-[500px] w-full max-w-[900px] mx-auto bg-white/80 backdrop-blur-xl border border-gray-100 rounded-2xl shadow-lg overflow-hidden ${className}`}>
+    <div className={`h-auto min-h-[300px] md:h-[500px] w-full max-w-[900px] mx-auto bg-white/5 backdrop-blur-sm border-2 border-white/10 rounded-2xl shadow-lg overflow-hidden ${className}`}>
       {/* Header */}
-      <div className="bg-white/90 backdrop-blur-xl border-b border-gray-200 px-4 md:px-8 py-3 flex items-center justify-between">
+      <div className="bg-white/5 backdrop-blur-sm border-b-2 border-white/10 px-4 md:px-8 py-3 flex items-center justify-between">
         <div className="flex items-center gap-3">
           <Mail className="size-8 text-foreground/75" strokeWidth={1} aria-hidden />
           <h3 className="text-sm font-semibold text-gray-900 uppercase tracking-wider">E-mail briefing</h3>
@@ -73,7 +73,7 @@ export const EmailBriefingVisual: React.FC<EmailBriefingVisualProps> = ({ classN
       </div>
 
       {/* Tab Navigation */}
-      <div className="bg-white/60 backdrop-blur-sm border-b border-gray-200 px-4 md:px-8 py-2 flex gap-4 md:gap-6">
+      <div className="bg-white/5 backdrop-blur-sm border-b-2 border-white/10 px-4 md:px-8 py-2 flex gap-4 md:gap-6">
         {tabs.map((tab) => (
           <button
             key={tab}
@@ -95,7 +95,7 @@ export const EmailBriefingVisual: React.FC<EmailBriefingVisualProps> = ({ classN
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="bg-white/90 backdrop-blur-md border border-gray-200 rounded-xl p-4 hover:bg-white/95 hover:shadow-md transition-all duration-300"
+          className="bg-white/5 backdrop-blur-sm border-2 border-white/10 rounded-xl p-4 hover:bg-white/10 hover:shadow-md transition-all duration-300"
         >
           <div className="flex items-start gap-3">
             {/* Avatar with SiriOrb gradient */}
@@ -133,12 +133,12 @@ export const EmailBriefingVisual: React.FC<EmailBriefingVisualProps> = ({ classN
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.2 }}
-          className="bg-white/90 backdrop-blur-md border border-gray-200 rounded-xl p-4 hover:bg-white/95 hover:shadow-md transition-all duration-300"
+          className="bg-white/5 backdrop-blur-sm border-2 border-white/10 rounded-xl p-4 hover:bg-white/10 hover:shadow-md transition-all duration-300"
         >
           <h5 className="text-sm font-semibold text-gray-900 mb-3">Campaign Performance</h5>
           
           {/* Stats Grid with subtle background */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3 bg-white/60 backdrop-blur-sm border border-gray-100 rounded-lg p-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3 bg-white/5 backdrop-blur-sm border-2 border-white/10 rounded-lg p-3">
             {stats.map((stat, idx) => {
               const Icon = stat.icon;
               return (

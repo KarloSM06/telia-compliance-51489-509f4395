@@ -21,7 +21,7 @@ export const ProjectManagementVisual: React.FC<ProjectManagementVisualProps> = (
     label: "Testing",
     percentage: 75
   }];
-  return <div className={`h-auto min-h-[300px] md:h-[500px] w-full max-w-[900px] mx-auto bg-white/80 backdrop-blur-xl border border-gray-100 rounded-2xl shadow-lg p-6 md:p-8 ${className}`}>
+  return <div className={`h-auto min-h-[300px] md:h-[500px] w-full max-w-[900px] mx-auto bg-white/5 backdrop-blur-sm border-2 border-white/10 rounded-2xl shadow-lg p-6 md:p-8 ${className}`}>
       <div className="space-y-4">
         {/* New Details Header */}
         <motion.div initial={{
@@ -49,7 +49,7 @@ export const ProjectManagementVisual: React.FC<ProjectManagementVisualProps> = (
       }} transition={{
         duration: 0.5,
         delay: 0.2
-      }} className="bg-white/90 backdrop-blur-md border border-gray-200 rounded-xl p-4 hover:bg-white/95 hover:shadow-md transition-all duration-300">
+      }} className="bg-white/5 backdrop-blur-sm border-2 border-white/10 rounded-xl p-4 hover:bg-white/10 hover:shadow-md transition-all duration-300">
           <div className="flex items-start justify-between">
             <div className="flex items-start gap-3">
               {/* Gradient Checkmark */}
@@ -87,7 +87,7 @@ export const ProjectManagementVisual: React.FC<ProjectManagementVisualProps> = (
       }} transition={{
         duration: 0.5,
         delay: 0.3
-      }} className="bg-white/90 backdrop-blur-md border border-gray-200 rounded-xl p-4 hover:bg-white/95 hover:shadow-md transition-all duration-300">
+      }} className="bg-white/5 backdrop-blur-sm border-2 border-white/10 rounded-xl p-4 hover:bg-white/10 hover:shadow-md transition-all duration-300">
           <div className="flex items-center justify-between mb-4">
             <h4 className="text-sm font-semibold text-gray-900">Schedule</h4>
             <Calendar className="size-8 text-foreground/75" strokeWidth={1} aria-hidden />
@@ -148,7 +148,7 @@ export const ProjectManagementVisual: React.FC<ProjectManagementVisualProps> = (
       }} transition={{
         duration: 0.5,
         delay: 0.4
-      }} className="bg-white/90 backdrop-blur-md border border-gray-200 rounded-xl p-4 hover:bg-white/95 hover:shadow-md transition-all duration-300">
+      }} className="bg-white/5 backdrop-blur-sm border-2 border-white/10 rounded-xl p-4 hover:bg-white/10 hover:shadow-md transition-all duration-300">
           <h4 className="text-sm font-semibold text-gray-900 mb-3">Resource load</h4>
           
           <div className="space-y-3">
