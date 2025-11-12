@@ -17,16 +17,36 @@ function AnimatedHero({
   const [isSplineLoading, setIsSplineLoading] = useState(true);
   const [splineError, setSplineError] = useState<string | null>(null);
   const [isMacOS, setIsMacOS] = useState(false);
+  const [isSafari, setIsSafari] = useState(false);
+  const [willChangeActive, setWillChangeActive] = useState(true);
 
-  // Detect macOS for performance optimization
+  // Detect Safari and macOS for performance optimization
   useEffect(() => {
     const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
+    const safariDetect = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
     setIsMacOS(isMac);
+    setIsSafari(safariDetect);
+    
+    if (safariDetect) {
+      console.log('🦁 Safari detected - using gradient fallback instead of Spline');
+    }
   }, []);
 
-  // Intersection Observer - Load Spline only when hero is in viewport
+  // will-change management - Remove after 5s to save GPU resources
   useEffect(() => {
-    if (isMobile) return; // Skip on mobile
+    if (!willChangeActive) return;
+    
+    const timer = setTimeout(() => {
+      console.log('⚡ Removing will-change after 5s to save GPU');
+      setWillChangeActive(false);
+    }, 5000);
+
+    return () => clearTimeout(timer);
+  }, [willChangeActive]);
+
+  // Intersection Observer - Load Spline only when hero is in viewport (NOT on Safari)
+  useEffect(() => {
+    if (isMobile || isSafari) return; // Skip on mobile and Safari
     
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -43,10 +63,10 @@ function AnimatedHero({
     }
 
     return () => observer.disconnect();
-  }, [isMobile, shouldLoadSpline]);
+  }, [isMobile, isSafari, shouldLoadSpline]);
   return <div ref={heroRef} className="relative w-full min-h-[85vh] md:min-h-screen lg:min-h-[140vh] overflow-hidden pb-24 md:pb-40">
-      {/* Spline 3D Animation - Lazy loaded when in viewport */}
-      {!isMobile && shouldLoadSpline && (
+      {/* Spline 3D Animation - Lazy loaded when in viewport (NOT on Safari) */}
+      {!isMobile && !isSafari && shouldLoadSpline && (
         <div className="absolute inset-0 z-5 animate-subtle-float">
           <Suspense fallback={
             <div className="absolute inset-0 flex items-center justify-center">
@@ -71,7 +91,7 @@ function AnimatedHero({
             height: '100%',
             pointerEvents: 'none',
             opacity: isMacOS ? 0.4 : 1.0,
-            willChange: 'opacity, transform',
+            willChange: willChangeActive ? 'opacity, transform' : 'auto',
             transform: 'translateZ(0)',
             backfaceVisibility: 'hidden'
           }} />
@@ -79,9 +99,9 @@ function AnimatedHero({
         </div>
       )}
 
-      {/* Fallback gradient för mobil */}
-      {isMobile && (
-        <div className="absolute inset-0 z-5 bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 opacity-60" />
+      {/* Gradient Fallback - För mobil OCH Safari */}
+      {(isMobile || isSafari) && (
+        <div className="absolute inset-0 z-5 bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 opacity-60 animate-subtle-float" />
       )}
 
       {/* Hero Content - On top of everything */}
