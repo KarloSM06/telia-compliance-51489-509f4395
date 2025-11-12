@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import React, { useEffect, useRef, useState } from "react";
+import React from "react";
 
 export interface CpuArchitectureSvgProps {
   className?: string;
@@ -24,45 +24,12 @@ const CpuArchitecture = ({
   animateLines = true,
   animateMarkers = true,
 }: CpuArchitectureSvgProps) => {
-  const svgRef = useRef<SVGSVGElement>(null);
-  const [isVisible, setIsVisible] = useState(false);
-
-  // Intersection Observer to pause animations when not visible
-  useEffect(() => {
-    const svg = svgRef.current;
-    if (!svg) return;
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        setIsVisible(entry.isIntersecting);
-        
-        // Pause/resume CSS animations
-        const elements = svg.querySelectorAll('.cpu-architecture');
-        elements.forEach((el) => {
-          if (el instanceof HTMLElement || el instanceof SVGElement) {
-            (el as any).style.animationPlayState = entry.isIntersecting ? 'running' : 'paused';
-          }
-        });
-      },
-      { threshold: 0.1 }
-    );
-
-    observer.observe(svg);
-    return () => observer.disconnect();
-  }, []);
-
   return (
     <svg
-      ref={svgRef}
       className={cn("text-muted", className)}
       width={width}
       height={height}
       viewBox="0 0 200 100"
-      style={{
-        willChange: isVisible ? 'transform' : 'auto',
-        transform: 'translateZ(0)',
-        backfaceVisibility: 'hidden'
-      }}
     >
       {/* Paths */}
       <g
@@ -126,7 +93,17 @@ const CpuArchitecture = ({
           fill="url(#cpu-blue-grad)"
         />
       </g>
-      {/* 2. Pink Light */}
+      {/* 2. Yellow Light */}
+      <g mask="url(#cpu-mask-2)">
+        <circle
+          className="cpu-architecture cpu-line-2"
+          cx="0"
+          cy="0"
+          r="8"
+          fill="url(#cpu-yellow-grad)"
+        />
+      </g>
+      {/* 3. Pinkish Light */}
       <g mask="url(#cpu-mask-3)">
         <circle
           className="cpu-architecture cpu-line-3"
@@ -136,7 +113,17 @@ const CpuArchitecture = ({
           fill="url(#cpu-pinkish-grad)"
         />
       </g>
-      {/* 3. Green Light */}
+      {/* 4. White Light */}
+      <g mask="url(#cpu-mask-4)">
+        <circle
+          className="cpu-architecture cpu-line-4"
+          cx="0"
+          cy="0"
+          r="8"
+          fill="url(#cpu-white-grad)"
+        />
+      </g>
+      {/* 5. Green Light */}
       <g mask="url(#cpu-mask-5)">
         <circle
           className="cpu-architecture cpu-line-5"
@@ -146,7 +133,17 @@ const CpuArchitecture = ({
           fill="url(#cpu-green-grad)"
         />
       </g>
-      {/* 4. Cyan Light */}
+      {/* 6. Orange Light */}
+      <g mask="url(#cpu-mask-6)">
+        <circle
+          className="cpu-architecture cpu-line-6"
+          cx="0"
+          cy="0"
+          r="8"
+          fill="url(#cpu-orange-grad)"
+        />
+      </g>
+      {/* 7. Cyan Light */}
       <g mask="url(#cpu-mask-7)">
         <circle
           className="cpu-architecture cpu-line-7"
@@ -154,6 +151,16 @@ const CpuArchitecture = ({
           cy="0"
           r="8"
           fill="url(#cpu-cyan-grad)"
+        />
+      </g>
+      {/* 8. Rose Light */}
+      <g mask="url(#cpu-mask-8)">
+        <circle
+          className="cpu-architecture cpu-line-8"
+          cx="0"
+          cy="0"
+          r="8"
+          fill="url(#cpu-rose-grad)"
         />
       </g>
       {/* CPU Box */}

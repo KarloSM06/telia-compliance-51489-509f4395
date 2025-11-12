@@ -24,12 +24,7 @@ export default defineConfig(({ mode }) => ({
   build: {
     rollupOptions: {
       output: {
-        manualChunks: {
-          'vendor': ['react', 'react-dom', 'react-router-dom'],
-          'animations': ['framer-motion'],
-          'spline': ['@splinetool/react-spline', '@splinetool/runtime'],
-          'ui': ['@radix-ui/react-dialog', '@radix-ui/react-accordion', '@radix-ui/react-label'],
-        },
+        manualChunks: undefined, // ✅ INGEN code splitting - allt i main.js för att eliminera race conditions
       },
     },
     optimizeDeps: {

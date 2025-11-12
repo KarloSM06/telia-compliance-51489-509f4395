@@ -1,8 +1,6 @@
-import { useState, useEffect, useRef, lazy, Suspense } from "react";
+import Spline from '@splinetool/react-spline';
+import { useState } from "react";
 import { useIsMobile } from "@/hooks/use-mobile";
-
-// Lazy load Spline for better initial load performance
-const Spline = lazy(() => import('@splinetool/react-spline'));
 interface AnimatedHeroProps {
   onBookDemo?: () => void;
   onViewServices?: () => void;
@@ -12,96 +10,37 @@ function AnimatedHero({
   onViewServices
 }: AnimatedHeroProps) {
   const isMobile = useIsMobile();
-  const heroRef = useRef<HTMLDivElement>(null);
-  const [shouldLoadSpline, setShouldLoadSpline] = useState(false);
   const [isSplineLoading, setIsSplineLoading] = useState(true);
   const [splineError, setSplineError] = useState<string | null>(null);
-  const [isMacOS, setIsMacOS] = useState(false);
-  const [isSafari, setIsSafari] = useState(false);
-  const [willChangeActive, setWillChangeActive] = useState(true);
-
-  // Detect Safari and macOS for performance optimization
-  useEffect(() => {
-    const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
-    const safariDetect = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
-    setIsMacOS(isMac);
-    setIsSafari(safariDetect);
-    
-    if (safariDetect) {
-      console.log('🦁 Safari detected - using gradient fallback instead of Spline');
-    }
-  }, []);
-
-  // will-change management - Remove after 5s to save GPU resources
-  useEffect(() => {
-    if (!willChangeActive) return;
-    
-    const timer = setTimeout(() => {
-      console.log('⚡ Removing will-change after 5s to save GPU');
-      setWillChangeActive(false);
-    }, 5000);
-
-    return () => clearTimeout(timer);
-  }, [willChangeActive]);
-
-  // Intersection Observer - Load Spline only when hero is in viewport (NOT on Safari)
-  useEffect(() => {
-    if (isMobile || isSafari) return; // Skip on mobile and Safari
-    
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting && !shouldLoadSpline) {
-          console.log('🎯 Hero in viewport - loading Spline...');
-          setShouldLoadSpline(true);
-        }
-      },
-      { threshold: 0.1, rootMargin: '50px' }
-    );
-
-    if (heroRef.current) {
-      observer.observe(heroRef.current);
-    }
-
-    return () => observer.disconnect();
-  }, [isMobile, isSafari, shouldLoadSpline]);
-  return <div ref={heroRef} className="relative w-full min-h-[85vh] md:min-h-screen lg:min-h-[140vh] overflow-hidden pb-24 md:pb-40">
-      {/* Spline 3D Animation - Lazy loaded when in viewport (NOT on Safari) */}
-      {!isMobile && !isSafari && shouldLoadSpline && (
+  return <div className="relative w-full min-h-[85vh] md:min-h-screen lg:min-h-[140vh] overflow-hidden pb-24 md:pb-40">
+      {/* Spline 3D Animation - Only on desktop */}
+      {!isMobile && (
         <div className="absolute inset-0 z-5 animate-subtle-float">
-          <Suspense fallback={
-            <div className="absolute inset-0 flex items-center justify-center">
+          {isSplineLoading && <div className="absolute inset-0 flex items-center justify-center">
               <p className="text-muted-foreground">Laddar 3D-animation...</p>
-            </div>
-          }>
-            {isSplineLoading && <div className="absolute inset-0 flex items-center justify-center">
-                <p className="text-muted-foreground">Initierar 3D-scen...</p>
-              </div>}
-            {splineError && <div className="absolute inset-0 flex items-center justify-center">
-                <p className="text-destructive">Kunde inte ladda 3D-animation: {splineError}</p>
-              </div>}
-            <Spline scene="https://prod.spline.design/dtyy9Rk8l8FAgcgA/scene.splinecode" onLoad={() => {
-            console.log('✅ Spline loaded successfully');
-            setIsSplineLoading(false);
-          }} onError={error => {
-            console.error('❌ Spline error:', error);
-            setSplineError('Kunde inte ladda 3D-scenen');
-            setIsSplineLoading(false);
-          }} style={{
-            width: '100%',
-            height: '100%',
-            pointerEvents: 'none',
-            opacity: isMacOS ? 0.4 : 1.0,
-            willChange: willChangeActive ? 'opacity, transform' : 'auto',
-            transform: 'translateZ(0)',
-            backfaceVisibility: 'hidden'
-          }} />
-          </Suspense>
+            </div>}
+          {splineError && <div className="absolute inset-0 flex items-center justify-center">
+              <p className="text-destructive">Kunde inte ladda 3D-animation: {splineError}</p>
+            </div>}
+          <Spline scene="https://prod.spline.design/dtyy9Rk8l8FAgcgA/scene.splinecode" onLoad={() => {
+          console.log('✅ Spline loaded successfully');
+          setIsSplineLoading(false);
+        }} onError={error => {
+          console.error('❌ Spline error:', error);
+          setSplineError('Kunde inte ladda 3D-scenen');
+          setIsSplineLoading(false);
+        }} style={{
+          width: '100%',
+          height: '100%',
+          pointerEvents: 'none',
+          opacity: 1.0
+        }} />
         </div>
       )}
 
-      {/* Gradient Fallback - För mobil OCH Safari */}
-      {(isMobile || isSafari) && (
-        <div className="absolute inset-0 z-5 bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 opacity-60 animate-subtle-float" />
+      {/* Fallback gradient för mobil */}
+      {isMobile && (
+        <div className="absolute inset-0 z-5 bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 opacity-60" />
       )}
 
       {/* Hero Content - On top of everything */}

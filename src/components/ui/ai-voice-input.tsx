@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
 interface AIVoiceInputProps {
   onStart?: () => void;
@@ -13,7 +13,7 @@ interface AIVoiceInputProps {
 export function AIVoiceInput({
   onStart,
   onStop,
-  visualizerBars = 24,
+  visualizerBars = 48,
   demoMode = true,
   demoInterval = 3000,
   className
@@ -21,27 +21,8 @@ export function AIVoiceInput({
   const [submitted, setSubmitted] = useState(false);
   const [time, setTime] = useState(0);
   const [isClient, setIsClient] = useState(false);
-  const [isVisible, setIsVisible] = useState(false);
-  const containerRef = useRef<HTMLDivElement>(null);
-
   useEffect(() => {
     setIsClient(true);
-  }, []);
-
-  // Intersection Observer to pause animations when not visible
-  useEffect(() => {
-    const container = containerRef.current;
-    if (!container) return;
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        setIsVisible(entry.isIntersecting);
-      },
-      { threshold: 0.1 }
-    );
-
-    observer.observe(container);
-    return () => observer.disconnect();
   }, []);
   useEffect(() => {
     let intervalId: NodeJS.Timeout;
@@ -77,7 +58,7 @@ export function AIVoiceInput({
     const secs = seconds % 60;
     return `${mins.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
   };
-  return <div ref={containerRef} className={cn("w-full py-4", className)}>
+  return <div className={cn("w-full py-4", className)}>
       <div className="relative max-w-xl w-full mx-auto flex items-center flex-col gap-2">
         
 
@@ -88,11 +69,7 @@ export function AIVoiceInput({
         <div className="h-4 w-64 flex items-center justify-center gap-0.5">
           {[...Array(visualizerBars)].map((_, i) => <div key={i} className="w-0.5 rounded-full transition-all duration-300 bg-gray-900/50 animate-pulse" style={isClient ? {
           height: `${20 + Math.random() * 80}%`,
-          animationDelay: `${i * 0.05}s`,
-          animationPlayState: isVisible ? 'running' : 'paused',
-          willChange: isVisible ? 'height' : 'auto',
-          transform: 'translateZ(0)',
-          backfaceVisibility: 'hidden'
+          animationDelay: `${i * 0.05}s`
         } : undefined} />)}
         </div>
 
