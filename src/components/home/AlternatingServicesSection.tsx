@@ -112,7 +112,7 @@ export const AlternatingServicesSection = () => {
                   {service.id === 1 ?
               // DatabaseWithRestApi figur för Dashboards & Decision Intelligence
               <Suspense fallback={<div className="h-[300px] md:h-[500px] bg-white/60 rounded-2xl animate-pulse" />}>
-                      <div className="w-full flex justify-center">
+                      <div className="w-full flex justify-center border-2 border-white/10 bg-white/5 backdrop-blur-sm rounded-3xl p-6 md:p-10 shadow-lg hover:shadow-xl transition-all">
                         <DatabaseWithRestApi className="scale-90 md:scale-100" circleText="Hiems" title="" badgeTexts={{
                     first: "Samtal",
                     second: "SMS",
@@ -137,7 +137,7 @@ export const AlternatingServicesSection = () => {
                     </Suspense> : service.id === 3 ?
               // AIVoiceAgentVisual för AI Voice Agents
               <Suspense fallback={<div className="h-[300px] md:h-[500px] bg-white/60 rounded-2xl animate-pulse" />}>
-                      <div className="w-full flex flex-col items-center justify-center gap-2">
+                      <div className="w-full flex flex-col items-center justify-center gap-2 border-2 border-white/10 bg-white/5 backdrop-blur-sm rounded-3xl p-6 md:p-10 shadow-lg hover:shadow-xl transition-all">
                         <AIVoiceAgentVisual className="scale-90 md:scale-100" />
                         <AIVoiceInput demoMode={true} className="-mt-6" />
                       </div>
