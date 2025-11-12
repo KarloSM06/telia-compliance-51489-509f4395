@@ -108,7 +108,7 @@ export const AlternatingServicesSection = () => {
               // CpuArchitecture (Hiems) bredvid DatabaseWithRestApi för Dashboards & Decision Intelligence
               <Suspense fallback={<div className="h-[300px] md:h-[500px] bg-white/5 rounded-2xl animate-pulse" />}>
                       <div className="w-full flex justify-center items-center">
-                        <div className="bg-white/5 backdrop-blur-sm border-2 border-white/10 rounded-3xl p-8 md:p-12 hover:bg-white/10 transition-all duration-300">
+                        <div className="bg-white/5 backdrop-blur-sm border-2 border-white/10 rounded-2xl shadow-lg p-8 md:p-12 hover:bg-white/10 transition-all duration-300">
                           <CpuArchitecture className="scale-75 md:scale-90 lg:scale-100" width="500" height="250" text="Hiems" />
                         </div>
                       </div>
