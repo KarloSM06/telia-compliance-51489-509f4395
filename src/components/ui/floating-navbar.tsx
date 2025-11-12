@@ -115,7 +115,7 @@ export function FloatingNavbar() {
             {/* CTA Button - Desktop */}
             <button
               onClick={() => setIsConsultationModalOpen(true)}
-              className="hidden md:inline-flex px-8 py-3.5 md:px-10 md:py-4 bg-gray-900 hover:bg-gray-800 text-white rounded-full text-base font-medium transition-all duration-300 hover:scale-105"
+              className="hidden md:inline-flex px-6 py-2.5 bg-gray-900 hover:bg-gray-800 text-white rounded-full text-sm font-medium transition-all duration-300 hover:scale-105"
             >
               Boka ett möte
             </button>
@@ -197,7 +197,7 @@ export function FloatingNavbar() {
               </button>
               <div className="border-t border-white/10 pt-4 mt-4">
                 <button
-                  className="w-full px-8 py-3.5 md:px-10 md:py-4 bg-gray-900 hover:bg-gray-800 text-white rounded-full text-base font-medium transition-all duration-300 hover:scale-105"
+                  className="w-full px-6 py-2.5 bg-gray-900 hover:bg-gray-800 text-white rounded-full text-sm font-medium transition-all duration-300 hover:scale-105"
                   onClick={() => {
                     setIsMobileMenuOpen(false);
                     setIsConsultationModalOpen(true);
