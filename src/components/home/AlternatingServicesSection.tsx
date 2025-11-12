@@ -108,7 +108,7 @@ export const AlternatingServicesSection = () => {
               // CpuArchitecture (Hiems) för Dashboards & Decision Intelligence
               <Suspense fallback={<div className="h-[300px] md:h-[500px] bg-white/5 rounded-2xl animate-pulse" />}>
                       <div className="w-full flex justify-center items-center">
-                        <div className="bg-white/5 backdrop-blur-sm border-2 border-white/10 rounded-2xl shadow-lg p-8 md:p-12 hover:bg-white/10 transition-all duration-300">
+                        <div className="bg-white/5 border-2 border-white/10 rounded-2xl shadow-lg p-8 md:p-12 hover:bg-white/10 transition-all duration-300">
                           <CpuArchitecture className="scale-75 md:scale-90 lg:scale-100" width="500" height="250" text="Hiems" />
                         </div>
                       </div>
@@ -116,7 +116,7 @@ export const AlternatingServicesSection = () => {
               // WorkflowChecklistVisual för Automate repetitive tasks
               <Suspense fallback={<div className="h-[300px] md:h-[500px] bg-white/5 rounded-2xl animate-pulse" />}>
                       <div className="w-full flex justify-center">
-                        <div className="bg-white/5 backdrop-blur-sm border-2 border-white/10 rounded-2xl shadow-lg p-8 md:p-12 hover:bg-white/10 transition-all duration-300">
+                        <div className="bg-white/5 border-2 border-white/10 rounded-2xl shadow-lg p-8 md:p-12 hover:bg-white/10 transition-all duration-300">
                           <WorkflowChecklistVisual className="scale-90 md:scale-100" />
                         </div>
                       </div>
@@ -124,7 +124,7 @@ export const AlternatingServicesSection = () => {
               // AIVoiceAgentVisual för AI Voice Agents - Kort endast runt SiriOrb och Listening
               <Suspense fallback={<div className="h-[300px] md:h-[500px] bg-white/5 rounded-2xl animate-pulse" />}>
                       <div className="w-full flex flex-col items-center justify-center gap-2">
-                        <div className="bg-white/5 backdrop-blur-sm border-2 border-white/10 rounded-2xl shadow-lg p-8 md:p-12 hover:bg-white/10 transition-all duration-300">
+                        <div className="bg-white/5 border-2 border-white/10 rounded-2xl shadow-lg p-8 md:p-12 hover:bg-white/10 transition-all duration-300">
                           <AIVoiceAgentVisual className="scale-90 md:scale-100" />
                           <AIVoiceInput demoMode={true} className="-mt-6" />
                         </div>
@@ -133,7 +133,7 @@ export const AlternatingServicesSection = () => {
               // EmailBriefingVisual för Accelerate Sales Growth
               <Suspense fallback={<div className="h-[300px] md:h-[500px] bg-white/5 rounded-2xl animate-pulse" />}>
                       <div className="w-full flex justify-center">
-                        <div className="bg-white/5 backdrop-blur-sm border-2 border-white/10 rounded-2xl shadow-lg p-8 md:p-12 hover:bg-white/10 transition-all duration-300">
+                        <div className="bg-white/5 border-2 border-white/10 rounded-2xl shadow-lg p-8 md:p-12 hover:bg-white/10 transition-all duration-300">
                           <EmailBriefingVisual className="scale-90 md:scale-100" />
                         </div>
                       </div>
@@ -141,7 +141,7 @@ export const AlternatingServicesSection = () => {
               // ProjectManagementVisual för Build Smarter Systems
               <Suspense fallback={<div className="h-[300px] md:h-[500px] bg-white/5 rounded-2xl animate-pulse" />}>
                       <div className="w-full flex justify-center">
-                        <div className="bg-white/5 backdrop-blur-sm border-2 border-white/10 rounded-2xl shadow-lg p-8 md:p-12 hover:bg-white/10 transition-all duration-300">
+                        <div className="bg-white/5 border-2 border-white/10 rounded-2xl shadow-lg p-8 md:p-12 hover:bg-white/10 transition-all duration-300">
                           <ProjectManagementVisual className="scale-90 md:scale-100" />
                         </div>
                       </div>

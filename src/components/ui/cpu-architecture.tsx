@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 export interface CpuArchitectureSvgProps {
   className?: string;
@@ -24,12 +24,45 @@ const CpuArchitecture = ({
   animateLines = true,
   animateMarkers = true,
 }: CpuArchitectureSvgProps) => {
+  const svgRef = useRef<SVGSVGElement>(null);
+  const [isVisible, setIsVisible] = useState(false);
+
+  // Intersection Observer to pause animations when not visible
+  useEffect(() => {
+    const svg = svgRef.current;
+    if (!svg) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsVisible(entry.isIntersecting);
+        
+        // Pause/resume CSS animations
+        const elements = svg.querySelectorAll('.cpu-architecture');
+        elements.forEach((el) => {
+          if (el instanceof HTMLElement || el instanceof SVGElement) {
+            (el as any).style.animationPlayState = entry.isIntersecting ? 'running' : 'paused';
+          }
+        });
+      },
+      { threshold: 0.1 }
+    );
+
+    observer.observe(svg);
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <svg
+      ref={svgRef}
       className={cn("text-muted", className)}
       width={width}
       height={height}
       viewBox="0 0 200 100"
+      style={{
+        willChange: isVisible ? 'transform' : 'auto',
+        transform: 'translateZ(0)',
+        backfaceVisibility: 'hidden'
+      }}
     >
       {/* Paths */}
       <g

@@ -1,5 +1,5 @@
 import Spline from '@splinetool/react-spline';
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useIsMobile } from "@/hooks/use-mobile";
 interface AnimatedHeroProps {
   onBookDemo?: () => void;
@@ -12,8 +12,15 @@ function AnimatedHero({
   const isMobile = useIsMobile();
   const [isSplineLoading, setIsSplineLoading] = useState(true);
   const [splineError, setSplineError] = useState<string | null>(null);
+  const [isMacOS, setIsMacOS] = useState(false);
+
+  // Detect macOS for performance optimization
+  useEffect(() => {
+    const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
+    setIsMacOS(isMac);
+  }, []);
   return <div className="relative w-full min-h-[85vh] md:min-h-screen lg:min-h-[140vh] overflow-hidden pb-24 md:pb-40">
-      {/* Spline 3D Animation - Only on desktop */}
+      {/* Spline 3D Animation - Optimized for macOS */}
       {!isMobile && (
         <div className="absolute inset-0 z-5 animate-subtle-float">
           {isSplineLoading && <div className="absolute inset-0 flex items-center justify-center">
@@ -33,7 +40,10 @@ function AnimatedHero({
           width: '100%',
           height: '100%',
           pointerEvents: 'none',
-          opacity: 1.0
+          opacity: isMacOS ? 0.4 : 1.0,
+          willChange: 'opacity, transform',
+          transform: 'translateZ(0)',
+          backfaceVisibility: 'hidden'
         }} />
         </div>
       )}
