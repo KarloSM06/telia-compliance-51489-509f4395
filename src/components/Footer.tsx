@@ -6,12 +6,11 @@ import { Linkedin, Sun, Moon, ArrowUp, Mail, Phone, Instagram, Facebook } from "
 const navigation = {
   navigering: [
     { name: "Hem", href: "/" },
-    { name: "Lösningar", href: "/#paket" },
-    { name: "Bransch", href: "/#branscher" },
-    { name: "Case", href: "/#case" },
+    { name: "Tjänster", href: "/#tjanster" },
+    { name: "Paket", href: "/paket" },
+    { name: "Fördelar", href: "/#fordelar" },
   ],
   foretag: [
-    { name: "Om oss", href: "/om-oss" },
     { name: "Kontakt", href: "/#kontakt" },
   ],
   legal: [

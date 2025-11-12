@@ -48,9 +48,11 @@ export const ProductSelection = () => {
         <AnimatedHero onBookDemo={() => setIsConsultationModalOpen(true)} onViewPackages={() => scrollToSection('paket')} />
 
         {/* 2. Alternating Services */}
-        <Suspense fallback={<SectionSkeleton />}>
-          <AlternatingServicesSection />
-        </Suspense>
+        <div id="tjanster">
+          <Suspense fallback={<SectionSkeleton />}>
+            <AlternatingServicesSection />
+          </Suspense>
+        </div>
 
         {/* 3. Process Grid (4 steg) */}
         <Suspense fallback={<SectionSkeleton />}>
@@ -58,9 +60,11 @@ export const ProductSelection = () => {
         </Suspense>
 
         {/* 4. Benefits Grid */}
-        <Suspense fallback={<SectionSkeleton />}>
-          <BenefitsGrid />
-        </Suspense>
+        <div id="fordelar">
+          <Suspense fallback={<SectionSkeleton />}>
+            <BenefitsGrid />
+          </Suspense>
+        </div>
 
         {/* 5. Case Study */}
         <CaseStudyShowcase />

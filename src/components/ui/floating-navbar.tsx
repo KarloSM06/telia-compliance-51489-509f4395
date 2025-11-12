@@ -97,16 +97,10 @@ export function FloatingNavbar() {
                 Paket
               </button>
               <button
-                onClick={() => scrollToSection("branscher")}
+                onClick={() => scrollToSection("fordelar")}
                 className="text-sm font-medium text-primary/80 transition-colors hover:text-primary"
               >
-                Branscher
-              </button>
-              <button
-                onClick={() => navigateToPage("/about")}
-                className="text-sm font-medium text-primary/80 transition-colors hover:text-primary"
-              >
-                Om oss
+                Fördelar
               </button>
               <button
                 onClick={() => scrollToSection("kontakt")}
@@ -167,20 +161,11 @@ export function FloatingNavbar() {
               <button
                 onClick={() => {
                   setIsMobileMenuOpen(false);
-                  scrollToSection("branscher");
+                  scrollToSection("fordelar");
                 }}
                 className="text-left px-4 py-3 text-lg font-medium text-primary hover:text-primary/80 transition-colors rounded-lg hover:bg-white/10"
               >
-                Branscher
-              </button>
-              <button
-                onClick={() => {
-                  setIsMobileMenuOpen(false);
-                  navigateToPage("/about");
-                }}
-                className="text-left px-4 py-3 text-lg font-medium text-primary hover:text-primary/80 transition-colors rounded-lg hover:bg-white/10"
-              >
-                Om oss
+                Fördelar
               </button>
               <button
                 onClick={() => {
