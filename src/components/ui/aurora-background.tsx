@@ -45,7 +45,9 @@ export const AuroraBackground = ({
             style={{ willChange: 'background-position' }}
           ></div>
         </div>
-        {children}
+        <div className="relative z-10">
+          {children}
+        </div>
       </div>
     </main>
   );
