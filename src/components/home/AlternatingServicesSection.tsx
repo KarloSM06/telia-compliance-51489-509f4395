@@ -2,6 +2,7 @@ import { Suspense, lazy } from "react";
 import { 
   Phone, MessageSquare, Mail, Star
 } from "lucide-react";
+import { AnimatedSection } from "@/components/shared/AnimatedSection";
 
 // Lazy load visualizations för bättre performance
 const DatabaseWithRestApi = lazy(() => import("@/components/ui/database-with-rest-api"));
@@ -84,22 +85,26 @@ export const AlternatingServicesSection = () => {
     <section className="py-12 md:py-16 lg:py-24">
       <div className="max-w-7xl mx-auto px-4 md:px-6">
         {/* Section Header */}
-        <div className="text-center mb-12 md:mb-16">
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-display font-normal leading-tight text-gray-900 mb-6">
-            AI-Lösningar som Levererar
-          </h2>
-          <p className="text-base md:text-lg text-gray-600 max-w-3xl mx-auto">
-            Live KPI-tavlor, prognoser och tydliga handlingsrekommendationer—så teamet agerar, inte gissar.
-          </p>
-        </div>
+        <AnimatedSection animation="fade" duration={600}>
+          <div className="text-center mb-12 md:mb-16">
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-display font-normal leading-tight text-gray-900 mb-6">
+              AI-Lösningar som Levererar
+            </h2>
+            <p className="text-base md:text-lg text-gray-600 max-w-3xl mx-auto">
+              Live KPI-tavlor, prognoser och tydliga handlingsrekommendationer—så teamet agerar, inte gissar.
+            </p>
+          </div>
+        </AnimatedSection>
 
         <div className="space-y-12 md:space-y-16">
         {servicesData.map((service, index) => (
-          <div 
+          <AnimatedSection
             key={service.id}
-            className="animate-[fadeInUp_0.6s_ease-out] border-2 border-white/10 bg-white/5 backdrop-blur-sm rounded-3xl p-6 md:p-10 lg:p-16 shadow-lg hover:shadow-xl transition-all"
-            style={{ animationDelay: `${index * 100}ms` }}
+            animation="fadeUp"
+            delay={index * 150}
+            duration={800}
           >
+            <div className="border-2 border-white/10 bg-white/5 backdrop-blur-sm rounded-3xl p-6 md:p-10 lg:p-16 shadow-lg hover:shadow-xl transition-all">
               <div className={`grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 items-center ${service.isReversed ? 'lg:grid-flow-dense' : ''}`}>
                 {/* Text side */}
                 <div className={service.isReversed ? 'lg:col-start-2' : ''}>
@@ -147,11 +152,12 @@ export const AlternatingServicesSection = () => {
                 
                 {/* Mockup side - Direct rendering without extra frame */}
                 <div className={service.isReversed ? 'lg:col-start-1' : ''}>
-                  {service.id === 1 ? (
-                    // DatabaseWithRestApi figur för Dashboards & Decision Intelligence
-                    <Suspense fallback={<div className="h-[300px] md:h-[500px] bg-white/60 rounded-2xl animate-pulse" />}>
-                      <div className="w-full flex justify-center">
-                        <DatabaseWithRestApi 
+                  <AnimatedSection animation="scale" delay={200} duration={1000}>
+                    {service.id === 1 ? (
+                      // DatabaseWithRestApi figur för Dashboards & Decision Intelligence
+                      <Suspense fallback={<div className="h-[300px] md:h-[500px] bg-white/60 rounded-2xl animate-pulse" />}>
+                        <div className="w-full flex justify-center">
+                          <DatabaseWithRestApi
                           className="scale-90 md:scale-100" 
                           circleText="Hiems" 
                           title="" 
@@ -204,14 +210,16 @@ export const AlternatingServicesSection = () => {
                         <ProjectManagementVisual className="scale-90 md:scale-100" />
                       </div>
                     </Suspense>
-                  ) : (
-                    // Fallback - ska aldrig nås med nuvarande services
-                    <div className="h-[300px] md:h-[500px] bg-white/60 rounded-2xl" />
-                  )}
+                    ) : (
+                      // Fallback - ska aldrig nås med nuvarande services
+                      <div className="h-[300px] md:h-[500px] bg-white/60 rounded-2xl" />
+                    )}
+                  </AnimatedSection>
                 </div>
               </div>
             </div>
-          ))}
+          </AnimatedSection>
+        ))}
         </div>
       </div>
     </section>

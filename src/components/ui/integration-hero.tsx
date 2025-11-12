@@ -27,7 +27,7 @@ export default function IntegrationHero() {
   return <section className="relative py-12 md:py-16 overflow-hidden overflow-x-hidden">
       <div className="relative w-full px-4 md:px-6 text-center">
         
-        <AnimatedSection>
+        <AnimatedSection animation="fade" duration={600}>
           <h1 className="text-3xl md:text-4xl lg:text-5xl font-display font-normal text-gray-900 mb-3">Sömlös Integration med er Techstack</h1>
         </AnimatedSection>
         
