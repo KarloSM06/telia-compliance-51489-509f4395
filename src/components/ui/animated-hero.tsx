@@ -1,6 +1,8 @@
-import Spline from '@splinetool/react-spline';
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, lazy, Suspense } from "react";
 import { useIsMobile } from "@/hooks/use-mobile";
+
+// Lazy load Spline for better initial load performance
+const Spline = lazy(() => import('@splinetool/react-spline'));
 interface AnimatedHeroProps {
   onBookDemo?: () => void;
   onViewServices?: () => void;
@@ -10,6 +12,8 @@ function AnimatedHero({
   onViewServices
 }: AnimatedHeroProps) {
   const isMobile = useIsMobile();
+  const heroRef = useRef<HTMLDivElement>(null);
+  const [shouldLoadSpline, setShouldLoadSpline] = useState(false);
   const [isSplineLoading, setIsSplineLoading] = useState(true);
   const [splineError, setSplineError] = useState<string | null>(null);
   const [isMacOS, setIsMacOS] = useState(false);
@@ -19,32 +23,59 @@ function AnimatedHero({
     const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
     setIsMacOS(isMac);
   }, []);
-  return <div className="relative w-full min-h-[85vh] md:min-h-screen lg:min-h-[140vh] overflow-hidden pb-24 md:pb-40">
-      {/* Spline 3D Animation - Optimized for macOS */}
-      {!isMobile && (
+
+  // Intersection Observer - Load Spline only when hero is in viewport
+  useEffect(() => {
+    if (isMobile) return; // Skip on mobile
+    
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && !shouldLoadSpline) {
+          console.log('🎯 Hero in viewport - loading Spline...');
+          setShouldLoadSpline(true);
+        }
+      },
+      { threshold: 0.1, rootMargin: '50px' }
+    );
+
+    if (heroRef.current) {
+      observer.observe(heroRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, [isMobile, shouldLoadSpline]);
+  return <div ref={heroRef} className="relative w-full min-h-[85vh] md:min-h-screen lg:min-h-[140vh] overflow-hidden pb-24 md:pb-40">
+      {/* Spline 3D Animation - Lazy loaded when in viewport */}
+      {!isMobile && shouldLoadSpline && (
         <div className="absolute inset-0 z-5 animate-subtle-float">
-          {isSplineLoading && <div className="absolute inset-0 flex items-center justify-center">
+          <Suspense fallback={
+            <div className="absolute inset-0 flex items-center justify-center">
               <p className="text-muted-foreground">Laddar 3D-animation...</p>
-            </div>}
-          {splineError && <div className="absolute inset-0 flex items-center justify-center">
-              <p className="text-destructive">Kunde inte ladda 3D-animation: {splineError}</p>
-            </div>}
-          <Spline scene="https://prod.spline.design/dtyy9Rk8l8FAgcgA/scene.splinecode" onLoad={() => {
-          console.log('✅ Spline loaded successfully');
-          setIsSplineLoading(false);
-        }} onError={error => {
-          console.error('❌ Spline error:', error);
-          setSplineError('Kunde inte ladda 3D-scenen');
-          setIsSplineLoading(false);
-        }} style={{
-          width: '100%',
-          height: '100%',
-          pointerEvents: 'none',
-          opacity: isMacOS ? 0.4 : 1.0,
-          willChange: 'opacity, transform',
-          transform: 'translateZ(0)',
-          backfaceVisibility: 'hidden'
-        }} />
+            </div>
+          }>
+            {isSplineLoading && <div className="absolute inset-0 flex items-center justify-center">
+                <p className="text-muted-foreground">Initierar 3D-scen...</p>
+              </div>}
+            {splineError && <div className="absolute inset-0 flex items-center justify-center">
+                <p className="text-destructive">Kunde inte ladda 3D-animation: {splineError}</p>
+              </div>}
+            <Spline scene="https://prod.spline.design/dtyy9Rk8l8FAgcgA/scene.splinecode" onLoad={() => {
+            console.log('✅ Spline loaded successfully');
+            setIsSplineLoading(false);
+          }} onError={error => {
+            console.error('❌ Spline error:', error);
+            setSplineError('Kunde inte ladda 3D-scenen');
+            setIsSplineLoading(false);
+          }} style={{
+            width: '100%',
+            height: '100%',
+            pointerEvents: 'none',
+            opacity: isMacOS ? 0.4 : 1.0,
+            willChange: 'opacity, transform',
+            transform: 'translateZ(0)',
+            backfaceVisibility: 'hidden'
+          }} />
+          </Suspense>
         </div>
       )}
 
