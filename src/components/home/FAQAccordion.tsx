@@ -53,14 +53,14 @@ export const FAQAccordion = () => {
         <AnimatedSection delay={200}>
           <Accordion type="single" collapsible className="space-y-4">
             {faqs.map((faq, index) => {
-              // Alternate gradient directions for visual variety
+              // Alternate gradient directions for visual variety - stronger opacity
               const gradientClasses = [
-                'top-0 left-0 bg-gradient-to-br from-indigo-400/8 via-purple-400/4',
-                'top-0 right-0 bg-gradient-to-bl from-purple-400/8 via-indigo-400/4',
-                'top-0 left-0 bg-gradient-to-br from-purple-500/8 via-indigo-500/4',
-                'top-0 right-0 bg-gradient-to-bl from-indigo-500/8 via-purple-500/4',
-                'top-0 left-0 bg-gradient-to-br from-indigo-400/8 via-purple-400/4',
-                'top-0 right-0 bg-gradient-to-bl from-purple-500/8 via-indigo-500/4'
+                'top-0 left-0 bg-gradient-to-br from-indigo-400/25 via-purple-400/15',
+                'top-0 right-0 bg-gradient-to-bl from-purple-400/25 via-indigo-400/15',
+                'top-0 left-0 bg-gradient-to-br from-purple-500/25 via-indigo-500/15',
+                'top-0 right-0 bg-gradient-to-bl from-indigo-500/25 via-purple-500/15',
+                'top-0 left-0 bg-gradient-to-br from-indigo-400/25 via-purple-400/15',
+                'top-0 right-0 bg-gradient-to-bl from-purple-500/25 via-indigo-500/15'
               ];
               
               return (
@@ -69,8 +69,8 @@ export const FAQAccordion = () => {
                   value={faq.id} 
                   className="bg-white/80 backdrop-blur-xl border border-gray-100 rounded-xl px-6 shadow-lg relative overflow-hidden"
                 >
-                  {/* Subtle gradient fade overlay - alternates direction */}
-                  <div className={`absolute ${gradientClasses[index]} to-transparent w-full h-40 pointer-events-none z-0`} />
+                  {/* Gradient fade overlay - alternates direction */}
+                  <div className={`absolute ${gradientClasses[index]} to-transparent w-full h-48 pointer-events-none z-0`} />
                   <AccordionTrigger className="text-gray-900 text-lg hover:no-underline relative z-10">
                     {faq.question}
                   </AccordionTrigger>

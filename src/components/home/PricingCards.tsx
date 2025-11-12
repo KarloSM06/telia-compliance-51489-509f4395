@@ -83,12 +83,12 @@ export const PricingCards = () => {
               }`}
               style={{ animationDelay: `${index * 100}ms` }}
             >
-                {/* Subtle gradient fade overlay - varies by plan */}
+                {/* Gradient fade overlay - varies by plan */}
                 <div className={`absolute top-0 ${
-                  plan.id === 1 ? 'left-0 bg-gradient-to-br from-indigo-400/10 via-purple-400/5' : 
-                  plan.id === 2 ? 'left-0 right-0 bg-gradient-to-b from-purple-500/12 via-indigo-500/6' : 
-                  'right-0 bg-gradient-to-bl from-indigo-500/10 via-purple-500/5'
-                } to-transparent h-40 pointer-events-none z-0`} />
+                  plan.id === 1 ? 'left-0 bg-gradient-to-br from-indigo-400/25 via-purple-400/15' : 
+                  plan.id === 2 ? 'left-0 right-0 bg-gradient-to-b from-purple-500/30 via-indigo-500/18' : 
+                  'right-0 bg-gradient-to-bl from-indigo-500/25 via-purple-500/15'
+                } to-transparent h-48 pointer-events-none z-0`} />
                 {plan.popular && (
                   <div className="bg-gray-900 text-white px-4 py-1 rounded-full text-sm inline-block mb-4 font-medium relative z-10">
                     Populär

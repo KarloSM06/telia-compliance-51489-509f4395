@@ -62,14 +62,14 @@ export const BenefitsGrid = () => {
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
           {benefits.map((benefit, index) => {
             const Icon = benefit.icon;
-            // Vary gradient direction for each card
+            // Vary gradient direction for each card - stronger opacity
             const gradientClasses = [
-              'from-indigo-400/8 via-purple-400/4 to-transparent bg-gradient-to-br', // top-left
-              'from-purple-400/8 via-indigo-400/4 to-transparent bg-gradient-to-bl', // top-right
-              'from-indigo-500/8 via-purple-500/4 to-transparent bg-gradient-to-b',  // top-center
-              'from-purple-500/8 via-indigo-500/4 to-transparent bg-gradient-to-br', // top-left
-              'from-indigo-400/8 via-purple-400/4 to-transparent bg-gradient-to-bl', // top-right
-              'from-purple-400/8 via-indigo-400/4 to-transparent bg-gradient-to-b'   // top-center
+              'from-indigo-400/25 via-purple-400/15 to-transparent bg-gradient-to-br', // top-left
+              'from-purple-400/25 via-indigo-400/15 to-transparent bg-gradient-to-bl', // top-right
+              'from-indigo-500/25 via-purple-500/15 to-transparent bg-gradient-to-b',  // top-center
+              'from-purple-500/25 via-indigo-500/15 to-transparent bg-gradient-to-br', // top-left
+              'from-indigo-400/25 via-purple-400/15 to-transparent bg-gradient-to-bl', // top-right
+              'from-purple-400/25 via-indigo-400/15 to-transparent bg-gradient-to-b'   // top-center
             ];
             
             return (
@@ -78,8 +78,8 @@ export const BenefitsGrid = () => {
                 className="animate-[fadeInUp_0.6s_ease-out] border-2 border-white/10 bg-white/5 backdrop-blur-sm rounded-3xl p-6 md:p-8 shadow-lg hover:shadow-xl transition-all h-auto min-h-[240px] md:h-[280px] flex flex-col relative overflow-hidden"
                 style={{ animationDelay: `${index * 100}ms` }}
               >
-                {/* Subtle gradient fade overlay - varies by card */}
-                <div className={`absolute top-0 left-0 right-0 h-40 ${gradientClasses[index]} pointer-events-none`} />
+                {/* Gradient fade overlay - varies by card */}
+                <div className={`absolute top-0 left-0 right-0 h-48 ${gradientClasses[index]} pointer-events-none`} />
                   <div className="mb-4 relative z-10">
                     <Icon className="w-10 h-10 md:w-12 md:h-12 text-gray-900 stroke-[1]" />
                   </div>
