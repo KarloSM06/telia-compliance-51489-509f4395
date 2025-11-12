@@ -45,7 +45,10 @@ export const ProductSelection = () => {
       {/* Hero Section and All Content with Aurora Background */}
       <AuroraBackground className="h-auto">
         {/* 1. Hero */}
-        <AnimatedHero onBookDemo={() => setIsConsultationModalOpen(true)} onViewPackages={() => scrollToSection('paket')} />
+        <AnimatedHero 
+          onBookDemo={() => setIsConsultationModalOpen(true)} 
+          onViewServices={() => scrollToSection('tjanster')} 
+        />
 
         {/* 2. Alternating Services */}
         <div id="tjanster">

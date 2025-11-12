@@ -3,10 +3,11 @@ import { useState } from "react";
 import { useIsMobile } from "@/hooks/use-mobile";
 interface AnimatedHeroProps {
   onBookDemo?: () => void;
-  onViewPackages?: () => void;
+  onViewServices?: () => void;
 }
 function AnimatedHero({
-  onBookDemo
+  onBookDemo,
+  onViewServices
 }: AnimatedHeroProps) {
   const isMobile = useIsMobile();
   const [isSplineLoading, setIsSplineLoading] = useState(true);
@@ -59,6 +60,9 @@ function AnimatedHero({
           <div className="animate-hero-cta flex gap-4 mt-2">
             <button onClick={onBookDemo} className="px-8 py-3.5 md:px-10 md:py-4 bg-gray-900 hover:bg-gray-800 text-white rounded-full text-base font-medium transition-all duration-300 hover:scale-105">
               Boka ett möte
+            </button>
+            <button onClick={onViewServices} className="px-8 py-3.5 md:px-10 md:py-4 bg-white/20 hover:bg-white/30 backdrop-blur-sm border-2 border-white/30 text-gray-900 rounded-full text-base font-medium transition-all duration-300 hover:scale-105">
+              Se våra tjänster
             </button>
           </div>
         </div>
