@@ -7,7 +7,7 @@ export const CaseStudyShowcase = () => {
   // Use Stockholm AC & Bremilers case study
   const caseStudy = caseStudies.find(cs => cs.id === 'stockholm-ac-bremilers') || caseStudies[0];
   
-  return <section className="relative py-24 md:py-40">
+  return <section className="relative py-12 md:py-16 lg:py-24">
       <div className="max-w-7xl mx-auto px-6">
         <AnimatedSection>
           <div className="text-center mb-16">
@@ -16,10 +16,10 @@ export const CaseStudyShowcase = () => {
                 Senaste Projekt Vi är Stolta Över
               </span>
             </div>
-            <h2 className="text-4xl md:text-5xl lg:text-6xl font-display font-normal text-gray-900 mb-6">
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-display font-normal text-gray-900 mb-6">
               {caseStudy.company}
             </h2>
-            <p className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto mb-12">
+            <p className="text-base md:text-lg text-gray-600 max-w-3xl mx-auto mb-12">
               {caseStudy.industry}
             </p>
 
